@@ -48,47 +48,24 @@ public class Client {
     private final String XNAME_ENTRY = "{http://www.w3.org/2005/Atom}entry";
     private final String XNAME_CONTENT = "{http://www.w3.org/2005/Atom}content";
 
-    public Service service = null;
+    public Binding bind = null;
 
     public Client() {
         // wkcfix do we need a default constructor?
     }
 
     public void connect() throws IOException {
-        this.service = new Service();
-        this.service.connect();
+        this.bind = new Binding();
+        this.bind.login();
     }
 
     public void connect(String host, String port, String username, String password, String scheme) throws IOException {
-        this.service = new Service();
-        this.service.connect(host, port, username, password, scheme);
+        this.bind = new Binding();
+        this.bind.login(host, port, username, password, scheme);
     }
 
-    public class Service {
-        Binding bind = null;
-
-        private void connect() throws IOException {
-            this.bind = new Binding();
-            this.bind.login();
-        }
-
-        private void connect(String host, String port, String username, String password, String scheme) throws IOException {
-            this.bind = new Binding();
-            this.bind.login(host, port, username, password, scheme);
-        }
-
-        public void Service() {
-            // wkcfix do we need a default constructor?
-        }
-
-        // wkcfix -- need a better mechanism for accessing collections:
-        // perhaps better thean apps().get() or apps().post() ... etc?
-        // what about nice indexing? like apps['myapp'] (i.e. from python).
-        // or is this better handled at the collection class?
-
-        public Collection apps() throws IOException {
-            return new Collection(bind, PATH_APPS, "apps");
-        }
+    public Collection apps() throws IOException {
+        return new Collection(bind, PATH_APPS, "apps");
     }
 
     public class Endpoint {
