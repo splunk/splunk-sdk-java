@@ -468,7 +468,7 @@ public class sample {
         System.out.println("Client Connect...");
         try {
             client.connect();
-            System.out.println(client.apps().get());
+            System.out.println(client.Apps().get());
         } catch (Exception e) {
             System.out.println("Failed to connect");
         }

@@ -24,6 +24,10 @@ import java.util.HashMap;
 
 // UNDONE: need to deal with data representation -- other than straight XML.
 
+/**
+ * Mid level splunk sdk API; uses lower level Binding sdk API.
+ */
+
 public class Client {
 
     private final String PATH_APPS = "apps/local/";
@@ -54,19 +58,29 @@ public class Client {
         // wkcfix do we need a default constructor?
     }
 
+    /**
+     * Connect to a splunkd instance using default login arguments
+     *
+     * @throws IOException
+     */
     public void connect() throws IOException {
         this.bind = new Binding();
         this.bind.login();
     }
 
+    /**
+     * Connect to a splunkd instance using supplied arguments. NB: all need to be supplied.
+     *
+     * @throws IOException
+     */
     public void connect(String host, String port, String username, String password, String scheme) throws IOException {
         this.bind = new Binding();
         this.bind.login(host, port, username, password, scheme);
     }
 
-    public Collection apps() throws IOException {
-        return new Collection(bind, PATH_APPS, "apps");
-    }
+    /**
+     * Endpoint class: Represents the class all accesses use. Get/p[ost/delete.
+     */
 
     public class Endpoint {
         Binding binding = null;
@@ -81,7 +95,7 @@ public class Client {
         // overloads for get
         public String get(String relpath, HashMap<String,String> mymap) throws IOException {
             String fullpath = path + relpath;
-            return binding.get(path, mymap);
+            return binding.get(fullpath, mymap);
         }
         public String get(HashMap<String,String> mymap) throws IOException {
             return binding.get(path, mymap);
@@ -93,7 +107,7 @@ public class Client {
         // overloads for post
         public String post(String relpath, HashMap<String,String> mymap) throws IOException {
             String fullpath = path + relpath;
-            return binding.get(path, mymap);
+            return binding.get(fullpath, mymap);
         }
         public String post(HashMap<String,String> mymap) throws IOException {
             return binding.get(path, mymap);
@@ -105,7 +119,7 @@ public class Client {
         // overloads for post
         public String delete(String relpath, HashMap<String,String> mymap) throws IOException {
             String fullpath = path + relpath;
-            return binding.delete(path, mymap);
+            return binding.delete(fullpath, mymap);
         }
         public String delete(HashMap<String,String> mymap) throws IOException {
             return binding.delete(path, mymap);
@@ -115,6 +129,10 @@ public class Client {
         }
 
     }
+
+    /**
+     * Collection class: Represents a collection of splunkd objects.
+     */
 
     public class Collection {
 
@@ -141,6 +159,10 @@ public class Client {
 
     }
 
+    /**
+     * Entity class: Represents a single splunkd object.
+     */
+
     public class Entity {
 
         Endpoint endp = null;
@@ -163,29 +185,65 @@ public class Client {
         }
     }
 
+    /**
+     * apps class: Represents the application splunkd objects
+     */
+
+    public Collection Apps() throws IOException {
+        return new Collection(bind, PATH_APPS, "apps");
+    }
+
+    /**
+     * apps class: Represents the configuration splunkd objects
+     */
+
     public class Conf  {
 
     }
+
+    /**
+     * apps class: Represents the Index splunkd objects
+     */
 
     public class Index {
 
     }
 
+    /**
+     * apps class: Represents the Input splunkd objects
+     */
+
     public class Input {
 
     }
+
+    /**
+     * apps class: Represents the Inputs splunkd objects
+     */
 
     public class Inputs {
 
     }
 
+    /**
+     * apps class: Represents the JOB splunkd objects
+     */
+
     public class Job {
 
     }
 
+    /**
+     * apps class: Represents the Jobs splunkd objects
+     */
+
     public class Jobs {
 
     }
+
+    /**
+     * apps class: Represents the Message splunkd objects
+     */
 
     public class Message {
 
