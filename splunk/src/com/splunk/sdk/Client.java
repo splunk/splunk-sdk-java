@@ -1,7 +1,6 @@
 package com.splunk.sdk;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 /**
@@ -82,7 +81,7 @@ public class Client {
             // wkcfix do we need a default constructor?
         }
 
-        // wkcsfix -- need a better mechanism for accessing collections:
+        // wkcfix -- need a better mechanism for accessing collections:
         // perhaps better thean apps().get() or apps().post() ... etc?
         // what about nice indexing? like apps['myapp'] (i.e. from python).
         // or is this better handled at the collection class?
