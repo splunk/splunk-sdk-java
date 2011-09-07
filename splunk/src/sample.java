@@ -1,4 +1,5 @@
-import com.splunk.binding.Binding;
+import com.splunk.sdk.Binding;
+import com.splunk.sdk.Client;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -404,14 +405,11 @@ public class sample {
             "/servicesNS/admin/search/alerts/fired_alerts/-"
     );
 
-    /**
-     * main()
-     *
-     * @param args the command line arguments; but this sample application does not use program parameters
-     */
-    public static void main(String[] args) {
-        // try some splunkContext accesses
-        System.out.println("Starting");
+
+
+    private static void splunk_binding() {
+
+        System.out.println("Binding Connect...");
 
         // create a new splunkContext SplunkBinding
         Binding splunk = new Binding();
@@ -458,6 +456,40 @@ public class sample {
             System.out.println(data);
         } catch (IOException e) {
             System.out.println("POST: " + url + " SplunkException: " + e);
+        }
+        System.out.println("Binding Finished");
+
+    }
+
+    private static void splunk_client() {
+
+        Client client = new Client();
+
+        System.out.println("Client Connect...");
+        try {
+            client.connect();
+            System.out.println(client.service.apps().get());
+        } catch (Exception e) {
+            System.out.println("Failed to connect");
+        }
+        System.out.println("Client Finished");
+    }
+
+    /**
+     * main()
+     *
+     * @param args the command line arguments; but this sample application does not use program parameters
+     */
+    public static void main(String[] args) {
+        // try some splunkContext accesses
+        System.out.println("Starting");
+
+        int path = 1;
+
+        if (path == 1) {
+            splunk_client();
+        } else {
+            splunk_binding();
         }
 
         System.out.println("Finished!");
