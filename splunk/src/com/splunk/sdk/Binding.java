@@ -24,6 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import sun.font.TrueTypeFont;
 
 import javax.net.ssl.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -250,26 +251,22 @@ public class Binding {
      */
     private String encodeArgs(HashMap<String, String> args) throws UnsupportedEncodingException {
 
-        String encodedArgs = "";
-        Set<Map.Entry<String, String>> set = args.entrySet();
-        Iterator<Map.Entry<String, String>> it = set.iterator();
+        StringBuilder encodedArgs = new StringBuilder();
+        boolean first = true;
 
-        while (it.hasNext()) {
-            Map.Entry<String, String> kv = it.next();
+        for (Map.Entry<String, String>kv: args.entrySet()) {
 
-            encodedArgs = encodedArgs + kv.getKey()
-                    + "="
-                    + kv.getValue();
-
-            // URLencoding seems to have gotten broken in last upgrade(?)
-            //encodedArgs = encodedArgs + URLEncoder.encode(kv.getKey(), "UTF-8")
-            //        + "="
-            //        + URLEncoder.encode(args.get(kv.getValue()), "UTF-8");
-            if (it.hasNext()) {
-                encodedArgs = encodedArgs + "&";
+            if (!first) {
+                encodedArgs.append("&");
             }
+            first = false;
+
+            encodedArgs.append(URLEncoder.encode(kv.getKey(), "UTF-8"));
+            encodedArgs.append("=");
+            encodedArgs.append(URLEncoder.encode(kv.getValue(), "UTF-8"));
+
         }
-        return encodedArgs;
+        return encodedArgs.toString();
     }
 
     // Public API -------------------------------------------------------------------

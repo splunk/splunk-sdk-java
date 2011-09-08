@@ -185,6 +185,9 @@ public class Client {
         }
     }
 
+
+    // wkcfix ... methods or classes?
+
     /**
      * apps class: Represents the application splunkd objects
      */
