@@ -335,6 +335,8 @@ public class Binding {
 
         // Get the response
         rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+        // TODO: don't do the reading here; rather implements something like results.py.
         String line;
         String composite = "";
         while ((line = rd.readLine()) != null) {
@@ -401,6 +403,7 @@ public class Binding {
          */
         rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
+        // TODO: don't do the reading here; rather implements something like results.py.
         String line;
         String composite = "";
         while ((line = rd.readLine()) != null) {
@@ -458,6 +461,8 @@ public class Binding {
 
         // Get the response
         rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+        // TODO: don't do the reading here; rather implements something like results.py.
         String line;
         String composite = "";
         while ((line = rd.readLine()) != null) {
