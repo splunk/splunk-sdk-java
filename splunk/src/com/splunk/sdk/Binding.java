@@ -283,6 +283,17 @@ public class Binding {
         return encodedArgs.toString();
     }
 
+    private void setUrlConnection(HttpURLConnection urlConnection)
+    {
+        urlConnection.setDoOutput(true);
+        urlConnection.setDoInput(true);
+        urlConnection.setUseCaches(false);
+        urlConnection.setAllowUserInteraction(false);
+        if (this.context.getContextValue("sessionKey").length() > 0) {
+            urlConnection.setRequestProperty("Authorization", "Splunk " + this.context.getContextValue("sessionKey"));
+        }
+    }
+
     // Public API -------------------------------------------------------------------
 
     /**
@@ -312,13 +323,7 @@ public class Binding {
         // build connection operation and encoding
         urlConnection.setRequestMethod("POST");
         urlConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-        urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
-        urlConnection.setUseCaches(false);
-        urlConnection.setAllowUserInteraction(false);
-        if (this.context.getContextValue("sessionKey").length() > 0) {
-            urlConnection.setRequestProperty("Authorization", "Splunk " + this.context.getContextValue("sessionKey"));
-        }
+        setUrlConnection(urlConnection);
 
         // write the post
         wr = new OutputStreamWriter(urlConnection.getOutputStream());
@@ -381,12 +386,7 @@ public class Binding {
 
         // build connection operation and encoding
         urlConnection.setRequestMethod("GET");
-        urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
-        urlConnection.setUseCaches(false);
-        urlConnection.setAllowUserInteraction(false);
-        if (this.context.getContextValue("sessionKey").length() > 0)
-            urlConnection.setRequestProperty("Authorization", "Splunk " + this.context.getContextValue("sessionKey"));
+        setUrlConnection(urlConnection);
 
         // TODO: should we deal/handle all response codes?
         int response = urlConnection.getResponseCode();
@@ -451,13 +451,7 @@ public class Binding {
 
         // build connection operation and encoding
         urlConnection.setRequestMethod("DELETE");
-        urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
-        urlConnection.setUseCaches(false);
-        urlConnection.setAllowUserInteraction(false);
-        if (this.context.getContextValue("sessionKey").length() > 0) {
-            urlConnection.setRequestProperty("Authorization", "Splunk " + this.context.getContextValue("sessionKey"));
-        }
+        setUrlConnection(urlConnection);
 
         // TODO: should we deal/handle all response codes?
         int response = urlConnection.getResponseCode();
