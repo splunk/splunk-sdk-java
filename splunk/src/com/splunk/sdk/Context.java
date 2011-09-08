@@ -21,7 +21,7 @@ package com.splunk.sdk;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
@@ -30,7 +30,7 @@ import java.util.StringTokenizer;
 public class Context {
 
     // contextData is the local store of information that defines the splunk context
-    private final Hashtable<String, String> contextData = new Hashtable<String, String>();
+    private final HashMap<String, String> contextData = new HashMap<String, String>();
 
     /**
      * processes a line of the form: key=value or key value primarily for

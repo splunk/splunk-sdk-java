@@ -24,7 +24,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import sun.font.TrueTypeFont;
 
 import javax.net.ssl.*;
 import javax.xml.parsers.DocumentBuilder;
@@ -34,10 +33,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Low level splunk sdk and communication layer between java client and splunkd.
@@ -156,14 +155,14 @@ public class Binding {
     }
 
     /**
-     * turn a url path into a fully qualified url, add key/value pair hashtable for args
+     * turn a url path into a fully qualified url, add key/value pair HashMap for args
      *
      * @param path String of path
-     * @param args hashtable of query arguments
+     * @param args HashMap of query arguments
      * @return string of fully qualified path
      * @throws UnsupportedEncodingException on bad encoding
      */
-    private String splunkURL(String path, HashMap<String, String> args) throws UnsupportedEncodingException {
+    private String splunkURL(String path, HashMap<String, Object> args) throws UnsupportedEncodingException {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
         if (path.startsWith(this.context.getContextValue("scheme")))
@@ -202,7 +201,7 @@ public class Binding {
     private void commonLogin() throws IOException, SplunkException {
 
         // build args from splunkContext
-        HashMap<String, String> arguments = new HashMap<String, String>();
+        HashMap<String, Object> arguments = new HashMap<String, Object>();
         arguments.put("username", this.context.getContextValue("username"));
         arguments.put("password", this.context.getContextValue("password"));
 
@@ -245,25 +244,40 @@ public class Binding {
     /**
      * encode key/value pairs into URL safe, UTF-8 encoded string
      *
-     * @param args hashtable of key/value pairs
+     * @param args HashMap of key/value pairs
      * @return encoded argument in a sinlgle string
      * @throws UnsupportedEncodingException but shouldn't happen, encoding is hard-coded to UTF-8
      */
-    private String encodeArgs(HashMap<String, String> args) throws UnsupportedEncodingException {
+    private String encodeArgs(HashMap<String, Object> args) throws UnsupportedEncodingException {
 
         StringBuilder encodedArgs = new StringBuilder();
         boolean first = true;
 
-        for (Map.Entry<String, String>kv: args.entrySet()) {
+        for (Map.Entry<String, Object>kv: args.entrySet()) {
 
-            if (!first) {
-                encodedArgs.append("&");
+
+            if (kv.getValue() instanceof String) {
+                if (!first) {
+                    encodedArgs.append("&");
+                }
+                first = false;
+                encodedArgs.append(URLEncoder.encode(kv.getKey(), "UTF-8"));
+                encodedArgs.append("=");
+                encodedArgs.append(URLEncoder.encode(kv.getValue().toString(), "UTF-8"));
+            } else if (kv.getValue() instanceof ArrayList) {
+                List values = (List)kv.getValue();
+                for (Object value: values) {
+                    if (!first) {
+                        encodedArgs.append("&");
+                    }
+                    first = false;
+                    encodedArgs.append(URLEncoder.encode(kv.getKey(), "UTF-8"));
+                    encodedArgs.append("=");
+                    encodedArgs.append(URLEncoder.encode(value.toString(), "UTF-8"));
+                }
+            } else {
+                throw new SplunkException("Argument keys must be String or ArrayList of Strings");
             }
-            first = false;
-
-            encodedArgs.append(URLEncoder.encode(kv.getKey(), "UTF-8"));
-            encodedArgs.append("=");
-            encodedArgs.append(URLEncoder.encode(kv.getValue(), "UTF-8"));
 
         }
         return encodedArgs.toString();
@@ -279,7 +293,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String post(String url, HashMap<String, String> args) throws IOException {
+    public String post(String url, HashMap<String, Object> args) throws IOException {
         HttpURLConnection urlConnection;
         URL splunkd;
         OutputStreamWriter wr;
@@ -334,11 +348,11 @@ public class Binding {
      *
      * @param url   partial or fully qualified URL to POST to
      * @param query standard query arguments encoded into URL
-     * @param args  un-encoded hashtable key/value pair arguments to POST
+     * @param args  un-encoded HashMap key/value pair arguments to POST
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String post(String url, HashMap<String, String> query, HashMap<String, String> args) throws IOException {
+    public String post(String url, HashMap<String, Object> query, HashMap<String, Object> args) throws IOException {
 
         String queryURL = encodeArgs(query);
         url = url + "?" + queryURL;
@@ -407,7 +421,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String get(String url, HashMap<String, String> args) throws IOException {
+    public String get(String url, HashMap<String, Object> args) throws IOException {
 
         // fully qualify the URL, idempotent
         url = splunkURL(url, args);
@@ -470,7 +484,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String delete(String url, HashMap<String, String> args) throws IOException {
+    public String delete(String url, HashMap<String, Object> args) throws IOException {
 
         // fully qualify the URL, idempotent
         url = splunkURL(url, args);

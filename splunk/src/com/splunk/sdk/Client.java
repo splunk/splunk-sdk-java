@@ -93,11 +93,11 @@ public class Client {
         }
 
         // overloads for get
-        public String get(String relpath, HashMap<String,String> mymap) throws IOException {
+        public String get(String relpath, HashMap<String,Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.get(fullpath, mymap);
         }
-        public String get(HashMap<String,String> mymap) throws IOException {
+        public String get(HashMap<String,Object> mymap) throws IOException {
             return binding.get(path, mymap);
         }
         public String get() throws IOException {
@@ -105,11 +105,11 @@ public class Client {
         }
 
         // overloads for post
-        public String post(String relpath, HashMap<String,String> mymap) throws IOException {
+        public String post(String relpath, HashMap<String,Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.get(fullpath, mymap);
         }
-        public String post(HashMap<String,String> mymap) throws IOException {
+        public String post(HashMap<String,Object> mymap) throws IOException {
             return binding.get(path, mymap);
         }
         public String post() throws IOException {
@@ -117,11 +117,11 @@ public class Client {
         }
 
         // overloads for post
-        public String delete(String relpath, HashMap<String,String> mymap) throws IOException {
+        public String delete(String relpath, HashMap<String,Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.delete(fullpath, mymap);
         }
-        public String delete(HashMap<String,String> mymap) throws IOException {
+        public String delete(HashMap<String,Object> mymap) throws IOException {
             return binding.delete(path, mymap);
         }
         public String delete() throws IOException {

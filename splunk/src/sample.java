@@ -442,7 +442,7 @@ public class sample {
 
         // sample POST
         String url = "/services/search/jobs";
-        HashMap<String, String> argsList = new HashMap<String, String>();
+        HashMap<String, Object> argsList = new HashMap<String,Object>();
         argsList.put("search", "search");
         argsList.put("index", "_internal");
         argsList.put("group", "mpool");
