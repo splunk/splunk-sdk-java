@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.*;
 
 /**
  * Low level splunk sdk and communication layer between java client and splunkd.
@@ -206,8 +207,10 @@ public class Binding {
         arguments.put("password", this.context.getContextValue("password"));
 
         try {
+            Results results = new Results();
+
             // POST using un-encoded username and password key/value pairs
-            String returnXML = post("/services/auth/login", arguments);
+            String returnXML = results.getContents(post("/services/auth/login", arguments));
 
             // extract sid from XML
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -304,7 +307,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String post(String url, HashMap<String, Object> args) throws IOException {
+    public HttpURLConnection post(String url, HashMap<String, Object> args) throws IOException {
         HttpURLConnection urlConnection;
         URL splunkd;
         OutputStreamWriter wr;
@@ -325,29 +328,14 @@ public class Binding {
         urlConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
         setUrlConnection(urlConnection);
 
-        // write the post
+        // write the post, flush and close.
         wr = new OutputStreamWriter(urlConnection.getOutputStream());
         wr.write(data);
         wr.flush();
-
-        // TODO: should we deal/handle all response codes?
-        int response = urlConnection.getResponseCode();
-
-        // Get the response
-        rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-        // TODO: don't do the reading here; rather implements something like results.py.
-        String line;
-        String composite = "";
-        while ((line = rd.readLine()) != null) {
-            composite = composite + line;
-        }
-
-        // close reader and writer
         wr.close();
-        rd.close();
 
-        return composite;
+        // return the urlConnection object to be accessed at a later time
+        return urlConnection;
     }
 
     /**
@@ -359,7 +347,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String post(String url, HashMap<String, Object> query, HashMap<String, Object> args) throws IOException {
+    public HttpURLConnection post(String url, HashMap<String, Object> query, HashMap<String, Object> args) throws IOException {
 
         String queryURL = encodeArgs(query);
         url = url + "?" + queryURL;
@@ -374,7 +362,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String get(String url) throws IOException {
+    public HttpURLConnection get(String url) throws IOException {
         HttpURLConnection urlConnection;
         URL splunkd;
         BufferedReader rd;
@@ -390,30 +378,8 @@ public class Binding {
         urlConnection.setRequestMethod("GET");
         setUrlConnection(urlConnection);
 
-        // TODO: should we deal/handle all response codes?
-        int response = urlConnection.getResponseCode();
-        if (response == 204) // success, but no content
-        {
-            return "";
-        }
-
-        /*
-         * Get the response. N.B. if there was an error (like 404, 401, 500, etc...)
-         * this will throw an IOException with the appropriate information
-         */
-        rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-        // TODO: don't do the reading here; rather implements something like results.py.
-        String line;
-        String composite = "";
-        while ((line = rd.readLine()) != null) {
-            composite = composite + line;
-        }
-
-        // close reader
-        rd.close();
-
-        return composite;
+        // return the urlConnection object to be accessed at a later time
+        return urlConnection;
     }
 
     /**
@@ -424,7 +390,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String get(String url, HashMap<String, Object> args) throws IOException {
+    public HttpURLConnection get(String url, HashMap<String, Object> args) throws IOException {
 
         // fully qualify the URL, idempotent
         url = splunkURL(url, args);
@@ -440,7 +406,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String delete(String url) throws IOException {
+    public HttpURLConnection delete(String url) throws IOException {
         HttpURLConnection urlConnection;
         URL splunkd;
         BufferedReader rd;
@@ -456,23 +422,8 @@ public class Binding {
         urlConnection.setRequestMethod("DELETE");
         setUrlConnection(urlConnection);
 
-        // TODO: should we deal/handle all response codes?
-        int response = urlConnection.getResponseCode();
-
-        // Get the response
-        rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-        // TODO: don't do the reading here; rather implements something like results.py.
-        String line;
-        String composite = "";
-        while ((line = rd.readLine()) != null) {
-            composite = composite + line;
-        }
-
-        // close reader
-        rd.close();
-
-        return composite;
+        // return the urlConnection object to be accessed at a later time
+        return urlConnection;
     }
 
      /**
@@ -483,7 +434,7 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public String delete(String url, HashMap<String, Object> args) throws IOException {
+    public HttpURLConnection delete(String url, HashMap<String, Object> args) throws IOException {
 
         // fully qualify the URL, idempotent
         url = splunkURL(url, args);

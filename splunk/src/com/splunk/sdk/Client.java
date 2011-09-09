@@ -1,6 +1,7 @@
 package com.splunk.sdk;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 
 /**
@@ -93,38 +94,38 @@ public class Client {
         }
 
         // overloads for get
-        public String get(String relpath, HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection get(String relpath, HashMap<String,Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.get(fullpath, mymap);
         }
-        public String get(HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection get(HashMap<String,Object> mymap) throws IOException {
             return binding.get(path, mymap);
         }
-        public String get() throws IOException {
+        public HttpURLConnection get() throws IOException {
             return binding.get(path);
         }
 
         // overloads for post
-        public String post(String relpath, HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection post(String relpath, HashMap<String,Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.get(fullpath, mymap);
         }
-        public String post(HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection post(HashMap<String,Object> mymap) throws IOException {
             return binding.get(path, mymap);
         }
-        public String post() throws IOException {
+        public HttpURLConnection post() throws IOException {
             return binding.get(path);
         }
 
         // overloads for post
-        public String delete(String relpath, HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection delete(String relpath, HashMap<String,Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.delete(fullpath, mymap);
         }
-        public String delete(HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection delete(HashMap<String,Object> mymap) throws IOException {
             return binding.delete(path, mymap);
         }
-        public String delete() throws IOException {
+        public HttpURLConnection delete() throws IOException {
             return binding.delete(path);
         }
 
@@ -147,13 +148,13 @@ public class Client {
         // wkcfix -- add methods to deal with individual elements of the collection
         // i.e. Entities
 
-        public String get() throws IOException {
+        public HttpURLConnection get() throws IOException {
             return endp.get();
         }
-        public String post() throws IOException {
+        public HttpURLConnection post() throws IOException {
             return endp.post();
         }
-        public String delete() throws IOException {
+        public HttpURLConnection delete() throws IOException {
             return endp.delete();
         }
 
@@ -174,13 +175,13 @@ public class Client {
         }
 
         // wkcfix -- add methods or cleanup for individual elements, not just XML blobs
-        public String get() throws IOException {
+        public HttpURLConnection get() throws IOException {
             return endp.get();
         }
-        public String post() throws IOException {
+        public HttpURLConnection post() throws IOException {
             return endp.post();
         }
-        public String delete() throws IOException {
+        public HttpURLConnection delete() throws IOException {
             return endp.delete();
         }
     }

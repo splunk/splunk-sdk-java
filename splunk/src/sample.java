@@ -1,5 +1,6 @@
 import com.splunk.sdk.Binding;
 import com.splunk.sdk.Client;
+import com.splunk.sdk.Results;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -430,9 +431,9 @@ public class sample {
                 // access a splunk GET REST endpoint
                 url = getEndpoint;
                 System.out.println("[GET] endpoint: " + url);
-                String data = splunk.get(url);
+                Results results = new Results();
                 // print out the result
-                System.out.println(data);
+                System.out.println(results.getContents(splunk.get(url)));
             } catch (IOException e) {
                 System.out.println("GET: " + url + " SplunkException: " + e);
             }
@@ -451,9 +452,9 @@ public class sample {
         try {
             // POST to REST endpoint
             System.out.println("[POST] endpoint: " + url);
-            String data = splunk.post(url, argsList);
+            Results results = new Results();
             // print out the result
-            System.out.println(data);
+            System.out.println(results.getContents(splunk.post(url, argsList)));
         } catch (IOException e) {
             System.out.println("POST: " + url + " SplunkException: " + e);
         }
@@ -468,9 +469,10 @@ public class sample {
         System.out.println("Client Connect...");
         try {
             client.connect();
-            System.out.println(client.Apps().get());
+            Results results = new Results();
+            System.out.println(results.getContents(client.Apps().get()));
         } catch (Exception e) {
-            System.out.println("Failed to connect");
+            System.out.println("Failed to connect: " + e);
         }
         System.out.println("Client Finished");
     }
