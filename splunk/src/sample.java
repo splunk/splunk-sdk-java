@@ -424,6 +424,8 @@ public class sample {
             return;
         }
 
+        Results results = new Results();
+
         // GETS
         for (String getEndpoint : getEndpoints) {
             String url = null;
@@ -431,7 +433,6 @@ public class sample {
                 // access a splunk GET REST endpoint
                 url = getEndpoint;
                 System.out.println("[GET] endpoint: " + url);
-                Results results = new Results();
                 // print out the result
                 System.out.println(results.getContents(splunk.get(url)));
             } catch (IOException e) {
@@ -452,7 +453,6 @@ public class sample {
         try {
             // POST to REST endpoint
             System.out.println("[POST] endpoint: " + url);
-            Results results = new Results();
             // print out the result
             System.out.println(results.getContents(splunk.post(url, argsList)));
         } catch (IOException e) {
@@ -486,7 +486,7 @@ public class sample {
         // try some splunkContext accesses
         System.out.println("Starting");
 
-        int path = 1;
+        int path = 0;
 
         if (path == 1) {
             splunk_client();
