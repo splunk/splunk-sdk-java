@@ -486,7 +486,7 @@ public class sample {
         // try some splunkContext accesses
         System.out.println("Starting");
 
-        int path = 0;
+        int path = 1;
 
         if (path == 1) {
             splunk_client();
