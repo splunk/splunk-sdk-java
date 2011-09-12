@@ -27,7 +27,14 @@ import javax.net.ssl.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.lang.Exception;
+import java.lang.Object;
+import java.lang.String;
+import java.lang.StringBuilder;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -35,7 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.lang.*;
 
 /**
  * Low level splunk sdk and communication layer between java client and splunkd.
@@ -254,7 +260,7 @@ public class Binding {
         StringBuilder encodedArgs = new StringBuilder();
         boolean first = true;
 
-        for (Map.Entry<String, Object>kv: args.entrySet()) {
+        for (Map.Entry<String, Object> kv : args.entrySet()) {
 
 
             if (kv.getValue() instanceof String) {
@@ -266,8 +272,8 @@ public class Binding {
                 encodedArgs.append("=");
                 encodedArgs.append(URLEncoder.encode(kv.getValue().toString(), "UTF-8"));
             } else if (kv.getValue() instanceof ArrayList) {
-                List values = (List)kv.getValue();
-                for (Object value: values) {
+                List values = (List) kv.getValue();
+                for (Object value : values) {
                     if (!first) {
                         encodedArgs.append("&");
                     }
@@ -284,8 +290,7 @@ public class Binding {
         return encodedArgs.toString();
     }
 
-    private void setUrlConnection(HttpURLConnection urlConnection)
-    {
+    private void setUrlConnection(HttpURLConnection urlConnection) {
         urlConnection.setDoOutput(true);
         urlConnection.setDoInput(true);
         urlConnection.setUseCaches(false);
@@ -424,7 +429,7 @@ public class Binding {
         return urlConnection;
     }
 
-     /**
+    /**
      * perform an HTTP DELETE with un-encoded hashmap key/value pair args
      *
      * @param url  partial or fully qualified URL to GET from

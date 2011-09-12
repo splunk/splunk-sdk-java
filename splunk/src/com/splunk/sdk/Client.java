@@ -91,37 +91,43 @@ public class Client {
         }
 
         // overloads for get
-        public HttpURLConnection get(String relpath, HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection get(String relpath, HashMap<String, Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.get(fullpath, mymap);
         }
-        public HttpURLConnection get(HashMap<String,Object> mymap) throws IOException {
+
+        public HttpURLConnection get(HashMap<String, Object> mymap) throws IOException {
             return binding.get(path, mymap);
         }
+
         public HttpURLConnection get() throws IOException {
             return binding.get(path);
         }
 
         // overloads for post
-        public HttpURLConnection post(String relpath, HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection post(String relpath, HashMap<String, Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.get(fullpath, mymap);
         }
-        public HttpURLConnection post(HashMap<String,Object> mymap) throws IOException {
+
+        public HttpURLConnection post(HashMap<String, Object> mymap) throws IOException {
             return binding.get(path, mymap);
         }
+
         public HttpURLConnection post() throws IOException {
             return binding.get(path);
         }
 
         // overloads for post
-        public HttpURLConnection delete(String relpath, HashMap<String,Object> mymap) throws IOException {
+        public HttpURLConnection delete(String relpath, HashMap<String, Object> mymap) throws IOException {
             String fullpath = path + relpath;
             return binding.delete(fullpath, mymap);
         }
-        public HttpURLConnection delete(HashMap<String,Object> mymap) throws IOException {
+
+        public HttpURLConnection delete(HashMap<String, Object> mymap) throws IOException {
             return binding.delete(path, mymap);
         }
+
         public HttpURLConnection delete() throws IOException {
             return binding.delete(path);
         }
@@ -148,9 +154,11 @@ public class Client {
         public HttpURLConnection get() throws IOException {
             return endp.get();
         }
+
         public HttpURLConnection post() throws IOException {
             return endp.post();
         }
+
         public HttpURLConnection delete() throws IOException {
             return endp.delete();
         }
@@ -175,9 +183,11 @@ public class Client {
         public HttpURLConnection get() throws IOException {
             return endp.get();
         }
+
         public HttpURLConnection post() throws IOException {
             return endp.post();
         }
+
         public HttpURLConnection delete() throws IOException {
             return endp.delete();
         }
@@ -198,7 +208,7 @@ public class Client {
      * apps class: Represents the configuration splunkd objects
      */
 
-    public class Conf  {
+    public class Conf {
 
     }
 
