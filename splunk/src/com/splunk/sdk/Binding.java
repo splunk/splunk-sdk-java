@@ -1,8 +1,4 @@
-package com.splunk.sdk;
-
-/**
- * Binding
- * version 1.0
+/*
  * Copyright 2011 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -17,6 +13,8 @@ package com.splunk.sdk;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
+package com.splunk.sdk;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

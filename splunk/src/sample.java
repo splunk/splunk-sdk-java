@@ -1,15 +1,4 @@
-import com.splunk.sdk.Binding;
-import com.splunk.sdk.Client;
-import com.splunk.sdk.Results;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-/**
- * Sample
- * version 1.0
+/*
  * Copyright 2011 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -24,6 +13,15 @@ import java.util.List;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
+import com.splunk.sdk.Binding;
+import com.splunk.sdk.Client;
+import com.splunk.sdk.Results;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class sample {
 

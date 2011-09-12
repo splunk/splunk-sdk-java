@@ -1,12 +1,4 @@
-package com.splunk.sdk;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.HashMap;
-
-/**
- * Client
- * version 1.0
+/*
  * Copyright 2011 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
@@ -22,6 +14,11 @@ import java.util.HashMap;
  * under the License.
  */
 
+package com.splunk.sdk;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.HashMap;
 
 // UNDONE: need to deal with data representation -- other than straight XML.
 
