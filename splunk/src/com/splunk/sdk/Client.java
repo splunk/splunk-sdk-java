@@ -69,6 +69,11 @@ public class Client {
     /**
      * Connect to a splunkd instance using supplied arguments. NB: all need to be supplied.
      *
+     * @param host     hostname (DNS or IPaddress) of splunkd server
+     * @param port     port that splunkd listens on
+     * @param username username to login as
+     * @param password password to login with
+     * @param scheme   either http or https
      * @throws IOException
      */
     public void connect(String host, String port, String username, String password, String scheme) throws IOException {
