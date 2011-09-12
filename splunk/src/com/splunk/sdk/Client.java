@@ -153,7 +153,7 @@ public class Client {
             this.name = name;
         }
 
-        // wkcfix -- add methods to deal with individual elements of the collection
+        // TODO: wkcfix -- add methods to deal with individual elements of the collection
         // i.e. Entities
 
         public HttpURLConnection get() throws IOException {
@@ -184,7 +184,7 @@ public class Client {
             this.name = name;
         }
 
-        // wkcfix -- add methods or cleanup for individual elements, not just XML blobs
+        // TODO: wkcfix -- add methods or cleanup for individual elements, not just XML blobs
         public HttpURLConnection get() throws IOException {
             return endp.get();
         }
@@ -199,7 +199,7 @@ public class Client {
     }
 
 
-    // wkcfix ... methods or classes?
+    // TODO: wkcfix ... methods or classes?
 
     /**
      * apps class: Represents the application splunkd objects
