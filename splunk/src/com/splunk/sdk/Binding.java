@@ -215,11 +215,11 @@ public class Binding {
         arguments.put("username", context.getContextValue("username"));
         arguments.put("password", context.getContextValue("password"));
 
-        Results results = new Results();
+        XMLReader XMLReader = new XMLReader();
         try {
             // POST using un-encoded username and password key/value pairs
-            XMLEventReader ereader = results.Results(post("/services/auth/login", arguments));
-            String returnXML = results.getContentsString(ereader);
+            XMLEventReader ereader = XMLReader.Results(post("/services/auth/login", arguments));
+            String returnXML = XMLReader.getContentsString(ereader);
 
             // extract sid from XML
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

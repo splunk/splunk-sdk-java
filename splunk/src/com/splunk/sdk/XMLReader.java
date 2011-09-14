@@ -28,7 +28,7 @@ import javax.xml.stream.events.XMLEvent;
  * Low level splunk sdk http incremental reader and data converter
  */
 
-public class Results {
+public class XMLReader {
     /**
      * Create a streaming XML event reader from out HTTP url connection
      *
@@ -39,9 +39,7 @@ public class Results {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);   // default true
 
-        XMLEventReader ereader = factory.createXMLEventReader(new InputStreamReader(urlconn.getInputStream()));
-
-        return ereader;
+        return(factory.createXMLEventReader(new InputStreamReader(urlconn.getInputStream())));
     }
 
     /**
@@ -54,7 +52,7 @@ public class Results {
     public XMLEvent getContentsEvent(XMLEventReader ereader) throws XMLStreamException {
         StringBuilder composite = new StringBuilder();
 
-        // TODO: break out XML processing (?)
+        // TODO: do we need to break out XML processing?
         return ereader.nextEvent();
     }
 
@@ -76,8 +74,4 @@ public class Results {
         }
         return bstring.toString();
     }
-
-    //TODO: add other methods like getHeaders(), getStatusCode(), etc...
-    // int response = urlconn.getResponseCode();
-
 }

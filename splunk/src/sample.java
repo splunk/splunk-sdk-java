@@ -16,7 +16,7 @@
 
 import com.splunk.sdk.Binding;
 import com.splunk.sdk.Client;
-import com.splunk.sdk.Results;
+import com.splunk.sdk.XMLReader;
 
 import javax.xml.stream.XMLEventReader;
 import java.util.Arrays;
@@ -430,7 +430,7 @@ public class sample {
 
         // create a new splunkContext SplunkBinding
         Binding splunk = new Binding();
-        Results results = new Results();
+        XMLReader XMLReader = new XMLReader();
 
         // login to splunkd using credentials from the .splunkrc
         try {
@@ -449,9 +449,9 @@ public class sample {
                 url = getEndpoint;
                 System.out.println("[GET] endpoint: " + url);
                 // print out the result
-                Results reader = new Results();
+                XMLReader reader = new XMLReader();
                 XMLEventReader ereader = reader.Results(splunk.get(url));
-                System.out.println(results.getContentsString(ereader));
+                System.out.println(XMLReader.getContentsString(ereader));
             } catch (Exception e) {
                 System.out.println("GET: " + url + " SplunkException: " + e);
             }
@@ -471,8 +471,8 @@ public class sample {
             // POST to REST endpoint
             System.out.println("[POST] endpoint: " + url);
             // print out the result
-            XMLEventReader ereader = results.Results(splunk.post(url, argsList));
-            System.out.println(results.getContentsString(ereader));
+            XMLEventReader ereader = XMLReader.Results(splunk.post(url, argsList));
+            System.out.println(XMLReader.getContentsString(ereader));
         } catch (Exception e) {
             System.out.println("POST: " + url + " SplunkException: " + e);
         }
@@ -483,15 +483,14 @@ public class sample {
     private static void splunk_client() {
 
         Client client = new Client();
-        Results results = new Results();
+        XMLReader XMLReader = new XMLReader();
 
         System.out.println("Client Connect...");
         try {
             client.connect();
-            //
 
-            XMLEventReader ereader = results.Results(client.Apps().get());
-            System.out.println(results.getContentsString(ereader));
+            XMLEventReader ereader = XMLReader.Results(client.Apps().get());
+            System.out.println(XMLReader.getContentsString(ereader));
         } catch (Exception e) {
             System.out.println("Failed to connect: " + e);
         }
