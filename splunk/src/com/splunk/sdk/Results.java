@@ -32,8 +32,7 @@ import javax.xml.stream.events.XMLEvent;
 public class Results {
 
     public String getContents(HttpURLConnection urlconn) throws IOException, XMLStreamException {
-        BufferedReader rd;
-        String composite = "";
+        StringBuilder composite = new StringBuilder();
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);   // default true
@@ -44,15 +43,13 @@ public class Results {
         while(ereader.hasNext()) {
             XMLEvent event = ereader.nextEvent();
             if (event.getEventType() != XMLEvent.END_DOCUMENT) {
-                composite = composite + event.toString();
-                System.out.print(event.toString());
-            } else {
-                System.out.println("\n" + event.toString());
+                composite.append(event.toString());
             }
         }
 
-        return composite;
+        return composite.toString();
     }
+
 
     //TODO: add other methods like getHeaders(), getStatusCode(), etc...
     // int response = urlconn.getResponseCode();
