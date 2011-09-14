@@ -18,7 +18,6 @@ import com.splunk.sdk.Binding;
 import com.splunk.sdk.Client;
 import com.splunk.sdk.Results;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
