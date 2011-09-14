@@ -18,9 +18,28 @@ import com.splunk.sdk.Binding;
 import com.splunk.sdk.Client;
 import com.splunk.sdk.Results;
 
+import javax.xml.stream.XMLEventReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+/**
+ * Sample
+ * version 1.0
+ * Copyright 2011 Splunk, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"): you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 
 public class sample {
 
@@ -411,6 +430,7 @@ public class sample {
 
         // create a new splunkContext SplunkBinding
         Binding splunk = new Binding();
+        Results results = new Results();
 
         // login to splunkd using credentials from the .splunkrc
         try {
@@ -421,8 +441,6 @@ public class sample {
             return;
         }
 
-        Results results = new Results();
-
         // GETS
         for (String getEndpoint : getEndpoints) {
             String url = null;
@@ -431,7 +449,9 @@ public class sample {
                 url = getEndpoint;
                 System.out.println("[GET] endpoint: " + url);
                 // print out the result
-                System.out.println(results.getContents(splunk.get(url)));
+                Results reader = new Results();
+                XMLEventReader ereader = reader.Results(splunk.get(url));
+                System.out.println(results.getContentsString(ereader));
             } catch (Exception e) {
                 System.out.println("GET: " + url + " SplunkException: " + e);
             }
@@ -451,7 +471,8 @@ public class sample {
             // POST to REST endpoint
             System.out.println("[POST] endpoint: " + url);
             // print out the result
-            System.out.println(results.getContents(splunk.post(url, argsList)));
+            XMLEventReader ereader = results.Results(splunk.post(url, argsList));
+            System.out.println(results.getContentsString(ereader));
         } catch (Exception e) {
             System.out.println("POST: " + url + " SplunkException: " + e);
         }
@@ -462,12 +483,15 @@ public class sample {
     private static void splunk_client() {
 
         Client client = new Client();
+        Results results = new Results();
 
         System.out.println("Client Connect...");
         try {
             client.connect();
-            Results results = new Results();
-            System.out.println(results.getContents(client.Apps().get()));
+            //
+
+            XMLEventReader ereader = results.Results(client.Apps().get());
+            System.out.println(results.getContentsString(ereader));
         } catch (Exception e) {
             System.out.println("Failed to connect: " + e);
         }

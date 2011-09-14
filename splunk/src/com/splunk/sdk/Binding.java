@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 
 /**
@@ -217,7 +218,8 @@ public class Binding {
         Results results = new Results();
         try {
             // POST using un-encoded username and password key/value pairs
-            String returnXML = results.getContents(post("/services/auth/login", arguments));
+            XMLEventReader ereader = results.Results(post("/services/auth/login", arguments));
+            String returnXML = results.getContentsString(ereader);
 
             // extract sid from XML
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

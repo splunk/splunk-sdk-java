@@ -30,25 +30,34 @@ import javax.xml.stream.events.XMLEvent;
 
 public class Results {
 
-    public String getContents(HttpURLConnection urlconn) throws IOException, XMLStreamException {
-        StringBuilder composite = new StringBuilder();
-
+    public XMLEventReader Results(HttpURLConnection urlconn) throws IOException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);   // default true
 
         XMLEventReader ereader = factory.createXMLEventReader(new InputStreamReader(urlconn.getInputStream()));
 
-        // TODO: break out XML processing
+        return ereader;
+    }
+
+    public XMLEvent getContentsEvent(XMLEventReader ereader) throws XMLStreamException {
+        StringBuilder composite = new StringBuilder();
+
+        // TODO: break out XML processing (?)
+        return ereader.nextEvent();
+    }
+
+    // common occurrence for samples and examples or known small XML returns
+    public String getContentsString(XMLEventReader ereader)  throws XMLStreamException {
+        StringBuilder bstring = new StringBuilder();
+
         while(ereader.hasNext()) {
             XMLEvent event = ereader.nextEvent();
             if (event.getEventType() != XMLEvent.END_DOCUMENT) {
-                composite.append(event.toString());
+                bstring.append(event.toString());
             }
         }
-
-        return composite.toString();
+        return bstring.toString();
     }
-
 
     //TODO: add other methods like getHeaders(), getStatusCode(), etc...
     // int response = urlconn.getResponseCode();
