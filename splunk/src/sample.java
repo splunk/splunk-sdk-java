@@ -433,7 +433,7 @@ public class sample {
                 System.out.println("[GET] endpoint: " + url);
                 // print out the result
                 System.out.println(results.getContents(splunk.get(url)));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println("GET: " + url + " SplunkException: " + e);
             }
         }
@@ -453,7 +453,7 @@ public class sample {
             System.out.println("[POST] endpoint: " + url);
             // print out the result
             System.out.println(results.getContents(splunk.post(url, argsList)));
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("POST: " + url + " SplunkException: " + e);
         }
         System.out.println("Binding Finished");

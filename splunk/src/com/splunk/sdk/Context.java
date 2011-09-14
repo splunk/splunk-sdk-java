@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
  */
 public class Context {
 
+    // Why not define typed fields instead of using a map?
     // contextData is the local store of information that defines the splunk context
     private final HashMap<String, String> contextData = new HashMap<String, String>();
 
@@ -144,6 +145,7 @@ public class Context {
      * @param key Key string to look up
      * @return String of value in splunkContext, or a string with ERROR NO SUCH KEY: [key request]
      */
+    // Does caller need to check for the error string?  Either throw exception or define fields to avoid errors in the first place.
     public String getContextValue(String key) {
         if (contextData.containsKey(key))
             return contextData.get(key);
@@ -158,6 +160,7 @@ public class Context {
      * @param value Value to set
      * @return 0 on success, -1 if key not in allowed set of keys to set
      */
+    // boolean is more appropriate return type here.
     public int setContextValue(String key, String value) {
         // restrict the keys to the following list (as opposed to an open k/v pairing)
         String KEYS = "host port username password namespace scheme sessionKey";

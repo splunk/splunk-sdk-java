@@ -23,7 +23,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,10 +36,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.Exception;
-import java.lang.Object;
-import java.lang.String;
-import java.lang.StringBuilder;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -42,6 +43,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Low level splunk sdk and communication layer between java client and splunkd.
@@ -90,6 +93,7 @@ public class Binding {
 
         // Install the all-trusting trust manager
         try {
+
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -121,13 +125,13 @@ public class Binding {
     private String url(String path) {
 
         // if already prefixed with scheme, return as is
-        if (path.startsWith(this.context.getContextValue("scheme")))
+        if (path.startsWith(context.getContextValue("scheme")))
             return path;
         // if already absolute, return as is
         if (path.startsWith("/"))
             return path;
         // if there is no namespace pre-pend splunk root and append path
-        if (this.context.getContextValue("namespace").length() == 0) {
+        if (context.getContextValue("namespace").length() == 0) {
             return "/services/" + path;
         }
 
@@ -135,7 +139,7 @@ public class Binding {
          * Since there is a namespace, pull apart, converting wildcards to
          * splunk notation and NameSpace root path.
          */
-        String[] parts = this.context.getContextValue("namespace").split(":");
+        String[] parts = context.getContextValue("namespace").split(":");
         String username = (parts[0].equals("*")) ? "-" : parts[0];
         String appname = (parts[1].equals("*")) ? "-" : parts[1];
         return "/servicesNS/" + username + "/" + appname + "/" + path;
@@ -150,12 +154,12 @@ public class Binding {
     private String splunkURL(String path) {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
-        if (path.startsWith(this.context.getContextValue("scheme")))
+        if (path.startsWith(context.getContextValue("scheme")))
             return url(path);
 
-        return this.context.getContextValue("scheme") + "://" +
-                this.context.getContextValue("host") + ":" +
-                this.context.getContextValue("port") + url(path);
+        return context.getContextValue("scheme") + "://" +
+                context.getContextValue("host") + ":" +
+                context.getContextValue("port") + url(path);
 
     }
 
@@ -170,12 +174,12 @@ public class Binding {
     private String splunkURL(String path, HashMap<String, Object> args) throws UnsupportedEncodingException {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
-        if (path.startsWith(this.context.getContextValue("scheme")))
+        if (path.startsWith(context.getContextValue("scheme")))
             return url(path) + "?" + encodeArgs(args);
 
-        return this.context.getContextValue("scheme") + "://" +
-                this.context.getContextValue("host") + ":" +
-                this.context.getContextValue("port") + url(path) + "?" +
+        return context.getContextValue("scheme") + "://" +
+                context.getContextValue("host") + ":" +
+                context.getContextValue("port") + url(path) + "?" +
                 encodeArgs(args);
     }
 
@@ -189,12 +193,12 @@ public class Binding {
     private String splunkURL(String path, String args) {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
-        if (path.startsWith(this.context.getContextValue("scheme")))
+        if (path.startsWith(context.getContextValue("scheme")))
             return url(path) + "?" + args;
 
-        return this.context.getContextValue("scheme") + "://" +
-                this.context.getContextValue("host") + ":" +
-                this.context.getContextValue("port") + url(path) + "?" + args;
+        return context.getContextValue("scheme") + "://" +
+                context.getContextValue("host") + ":" +
+                context.getContextValue("port") + url(path) + "?" + args;
     }
 
     /**
@@ -207,12 +211,11 @@ public class Binding {
 
         // build args from splunkContext
         HashMap<String, Object> arguments = new HashMap<String, Object>();
-        arguments.put("username", this.context.getContextValue("username"));
-        arguments.put("password", this.context.getContextValue("password"));
+        arguments.put("username", context.getContextValue("username"));
+        arguments.put("password", context.getContextValue("password"));
 
+        Results results = new Results();
         try {
-            Results results = new Results();
-
             // POST using un-encoded username and password key/value pairs
             String returnXML = results.getContents(post("/services/auth/login", arguments));
 
@@ -238,13 +241,22 @@ public class Binding {
             } catch (ParserConfigurationException e) {
                 throw new SplunkException("Login XML parse failed to find security token");
             } catch (SAXException e) {
+                System.out.println(e.getMessage());
                 throw new SplunkException("Login XML parse failed");
             }
 
             // save sessionkKey in splunkContext
-            this.context.setContextValue("sessionKey", sid);
+            context.setContextValue("sessionKey", sid);
+        } catch (XMLStreamException e) {
+            throw new SplunkException("Login XML stream exception ");
+        }
+    }
+
+    private static String urlencode(String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            // shouldn't happen, since we hard-code UTF-8
+            throw new RuntimeException(e);
         }
     }
 
@@ -253,24 +265,22 @@ public class Binding {
      *
      * @param args HashMap of key/value pairs
      * @return encoded argument in a sinlgle string
-     * @throws UnsupportedEncodingException but shouldn't happen, encoding is hard-coded to UTF-8
      */
-    private String encodeArgs(HashMap<String, Object> args) throws UnsupportedEncodingException {
+    private String encodeArgs(HashMap<String, Object> args) {
 
         StringBuilder encodedArgs = new StringBuilder();
         boolean first = true;
 
         for (Map.Entry<String, Object> kv : args.entrySet()) {
 
-
             if (kv.getValue() instanceof String) {
                 if (!first) {
                     encodedArgs.append("&");
                 }
                 first = false;
-                encodedArgs.append(URLEncoder.encode(kv.getKey(), "UTF-8"));
+                encodedArgs.append(urlencode(kv.getKey()));
                 encodedArgs.append("=");
-                encodedArgs.append(URLEncoder.encode(kv.getValue().toString(), "UTF-8"));
+                encodedArgs.append(urlencode(kv.getValue().toString()));
             } else if (kv.getValue() instanceof ArrayList) {
                 List values = (List) kv.getValue();
                 for (Object value : values) {
@@ -278,9 +288,9 @@ public class Binding {
                         encodedArgs.append("&");
                     }
                     first = false;
-                    encodedArgs.append(URLEncoder.encode(kv.getKey(), "UTF-8"));
+                    encodedArgs.append(urlencode(kv.getKey()));
                     encodedArgs.append("=");
-                    encodedArgs.append(URLEncoder.encode(value.toString(), "UTF-8"));
+                    encodedArgs.append(urlencode(value.toString()));
                 }
             } else {
                 throw new SplunkException("Argument keys must be String or ArrayList of Strings");
@@ -295,8 +305,8 @@ public class Binding {
         urlConnection.setDoInput(true);
         urlConnection.setUseCaches(false);
         urlConnection.setAllowUserInteraction(false);
-        if (this.context.getContextValue("sessionKey").length() > 0) {
-            urlConnection.setRequestProperty("Authorization", "Splunk " + this.context.getContextValue("sessionKey"));
+        if (context.getContextValue("sessionKey").length() > 0) {
+            urlConnection.setRequestProperty("Authorization", "Splunk " + context.getContextValue("sessionKey"));
         }
     }
 
@@ -455,9 +465,10 @@ public class Binding {
     public void login() throws IOException, SplunkException {
         try {
             // initialize Context from .splunkrc file
-            this.context.initSplunkContext();
+            context.initSplunkContext();
         } catch (SplunkException e) {
             System.out.println("WARNING: could not initialize splunk splunkContext: " + e);
+            throw e;
         }
         commonLogin();
     }
@@ -476,11 +487,11 @@ public class Binding {
     public void login(String host, String port, String username, String password, String scheme) throws IOException, SplunkException {
 
         // seed Context with passed in values
-        this.context.setContextValue("host", host);
-        this.context.setContextValue("port", port);
-        this.context.setContextValue("username", username);
-        this.context.setContextValue("password", password);
-        this.context.setContextValue("scheme", scheme);
+        context.setContextValue("host", host);
+        context.setContextValue("port", port);
+        context.setContextValue("username", username);
+        context.setContextValue("password", password);
+        context.setContextValue("scheme", scheme);
 
         commonLogin();
     }
