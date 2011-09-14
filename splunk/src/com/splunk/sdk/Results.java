@@ -29,7 +29,12 @@ import javax.xml.stream.events.XMLEvent;
  */
 
 public class Results {
-
+    /**
+     * Create a streaming XML event reader from out HTTP url connection
+     *
+     * @param urlconn previously established url connection to splunkd
+     * @return a streaming XML event reader
+     */
     public XMLEventReader Results(HttpURLConnection urlconn) throws IOException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);   // default true
@@ -39,6 +44,13 @@ public class Results {
         return ereader;
     }
 
+    /**
+     * return next XML event
+     *
+     * @param ereader the streaming XML event reader handle
+     * @return the next XML event
+     */
+
     public XMLEvent getContentsEvent(XMLEventReader ereader) throws XMLStreamException {
         StringBuilder composite = new StringBuilder();
 
@@ -46,7 +58,13 @@ public class Results {
         return ereader.nextEvent();
     }
 
-    // common occurrence for samples and examples or known small XML returns
+    /**
+     * A common occurrence for samples and examples or known small XML returns, to return entire XML stringß
+     *
+     * @param ereader the streaming XML event reader handle
+     * @return the entire XML string
+     */
+
     public String getContentsString(XMLEventReader ereader)  throws XMLStreamException {
         StringBuilder bstring = new StringBuilder();
 
