@@ -152,7 +152,7 @@ public class Binding {
      * @param path String of path
      * @return string of fully qualified path
      */
-    private String splunkURL(String path) {
+    private String fullURL(String path) {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
         if (path.startsWith(context.getContextValue("scheme")))
@@ -172,7 +172,7 @@ public class Binding {
      * @return string of fully qualified path
      * @throws UnsupportedEncodingException on bad encoding
      */
-    private String splunkURL(String path, HashMap<String, Object> args) throws UnsupportedEncodingException {
+    private String fullURL(String path, HashMap<String, Object> args) throws UnsupportedEncodingException {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
         if (path.startsWith(context.getContextValue("scheme")))
@@ -191,7 +191,7 @@ public class Binding {
      * @param args String of query arguments
      * @return string of fully qualified path
      */
-    private String splunkURL(String path, String args) {
+    private String fullURL(String path, String args) {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
         if (path.startsWith(context.getContextValue("scheme")))
@@ -304,9 +304,7 @@ public class Binding {
 
     private void setUrlConnection(HttpURLConnection urlConnection) {
         urlConnection.setDoOutput(true);
-        urlConnection.setDoInput(true);
         urlConnection.setUseCaches(false);
-        urlConnection.setAllowUserInteraction(false);
         if (context.getContextValue("sessionKey").length() > 0) {
             urlConnection.setRequestProperty("Authorization", "Splunk " + context.getContextValue("sessionKey"));
         }
@@ -332,7 +330,7 @@ public class Binding {
         String data = encodeArgs(args);
 
         // fully qualify the URL, idempotent
-        url = splunkURL(url);
+        url = fullURL(url);
 
         // connect to the endpoint
         splunkd = new URL(url);
@@ -383,7 +381,7 @@ public class Binding {
         BufferedReader rd;
 
         // Fully qualify the URL, idempotent
-        String fullUrl = splunkURL(url);
+        String fullUrl = fullURL(url);
 
         // connect to the endpoint
         splunkd = new URL(fullUrl);
@@ -408,7 +406,7 @@ public class Binding {
     public HttpURLConnection get(String url, HashMap<String, Object> args) throws IOException {
 
         // fully qualify the URL, idempotent
-        url = splunkURL(url, args);
+        url = fullURL(url, args);
 
         // return common get
         return get(url);
@@ -427,7 +425,7 @@ public class Binding {
         BufferedReader rd;
 
         // Fully qualify the URL, idempotent
-        String fullUrl = splunkURL(url);
+        String fullUrl = fullURL(url);
 
         // connect to the endpoint
         splunkd = new URL(fullUrl);
@@ -452,7 +450,7 @@ public class Binding {
     public HttpURLConnection delete(String url, HashMap<String, Object> args) throws IOException {
 
         // fully qualify the URL, idempotent
-        url = splunkURL(url, args);
+        url = fullURL(url, args);
 
         // return common get
         return delete(url);

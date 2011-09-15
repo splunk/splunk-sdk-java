@@ -63,7 +63,7 @@ public class XMLReader {
      * @return the entire XML string
      */
 
-    public String getContentsString(XMLEventReader ereader)  throws XMLStreamException {
+    public String getContentsString(XMLEventReader ereader) throws XMLStreamException {
         StringBuilder bstring = new StringBuilder();
 
         while(ereader.hasNext()) {
