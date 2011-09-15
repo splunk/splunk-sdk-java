@@ -170,9 +170,8 @@ public class Binding {
      * @param path String of path
      * @param args HashMap of query arguments
      * @return string of fully qualified path
-     * @throws UnsupportedEncodingException on bad encoding
      */
-    private String fullURL(String path, HashMap<String, Object> args) throws UnsupportedEncodingException {
+    private String fullURL(String path, HashMap<String, Object> args) {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
         if (path.startsWith(context.getContextValue("scheme")))
