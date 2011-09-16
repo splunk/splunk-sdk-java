@@ -539,6 +539,7 @@ public class Binding {
                                      String url,
                                      HashMap<String, Object> query,
                                      HashMap<String, Object> args) throws IOException, SplunkException {
+
         operation = operation.toUpperCase();
 
         if (operation == "POST") {
