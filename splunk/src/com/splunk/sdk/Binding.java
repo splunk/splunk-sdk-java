@@ -494,9 +494,11 @@ public class Binding {
     public HttpURLConnection request(String operation,
                                      String url) throws IOException, SplunkException {
 
+        operation = operation.toUpperCase();
+
         if (operation == "GET" || operation == "DELETE") {
             return prequest(operation, url);
-        } else if (operation.toUpperCase() == "POST") {
+        } else if (operation == "POST") {
             throw new SplunkException("POST request requires at least the args parameter");
         } else {
             throw new SplunkException("Request operation must be GET, POST or DELETE");
