@@ -509,7 +509,7 @@ public class sample {
 
         int path = 1;
 
-        if (path == 0) {
+        if (path == 1) {
             splunk_client();
         } else {
             splunk_binding();
