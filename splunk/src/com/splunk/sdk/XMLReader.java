@@ -65,13 +65,18 @@ public class XMLReader {
 
     public String getContentsString(XMLEventReader ereader) throws XMLStreamException {
         StringBuilder bstring = new StringBuilder();
-
-        while(ereader.hasNext()) {
-            XMLEvent event = ereader.nextEvent();
-            if (event.getEventType() != XMLEvent.END_DOCUMENT) {
-                bstring.append(event.toString());
+        try {
+            while(ereader.hasNext()) {
+                XMLEvent event = ereader.nextEvent();
+                if (event.getEventType() != XMLEvent.END_DOCUMENT) {
+                    bstring.append(event.toString());
+                }
             }
+            return bstring.toString();
+
+        } catch (XMLStreamException e) {
+            // if empty XML, this gets thrown. Perhaps if other malformed XML gets thrown to? wkcfix
+            return "";
         }
-        return bstring.toString();
     }
 }

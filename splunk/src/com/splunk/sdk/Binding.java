@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -171,7 +172,8 @@ public class Binding {
      * @param args HashMap of query arguments
      * @return string of fully qualified path
      */
-    private String fullURL(String path, HashMap<String, Object> args) {
+    private String fullURL(String path,
+                           HashMap<String, Object> args) {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
         if (path.startsWith(context.getContextValue("scheme")))
@@ -190,7 +192,8 @@ public class Binding {
      * @param args String of query arguments
      * @return string of fully qualified path
      */
-    private String fullURL(String path, String args) {
+    private String fullURL(String path,
+                           String args) {
 
         // fully qualify the URL into <scheme>://<host>:<port>/<url(root)>
         if (path.startsWith(context.getContextValue("scheme")))
@@ -301,32 +304,25 @@ public class Binding {
         return encodedArgs.toString();
     }
 
-    private void setUrlConnection(HttpURLConnection urlConnection) {
+    private void setUrlConnection(HttpURLConnection urlConnection, String method) {
+
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
+        try {
+            urlConnection.setRequestMethod(method);
+        } catch (ProtocolException e) {
+            throw new RuntimeException(e);
+        }
+        urlConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
         if (context.getContextValue("sessionKey").length() > 0) {
             urlConnection.setRequestProperty("Authorization", "Splunk " + context.getContextValue("sessionKey"));
         }
     }
 
-    // Public API -------------------------------------------------------------------
-
-    /**
-     * private/common HTTP POST for multiple/overloaded POSTs
-     *
-     * @param url  partial or fully qualified URL to post to
-     * @param args string encoded POST data
-     * @return XML string from splunkd server
-     * @throws IOException percolates IOException from lower level HTTP access
-     */
-    public HttpURLConnection post(String url, HashMap<String, Object> args) throws IOException {
+    private HttpURLConnection prequest(String operation,
+                                       String url) throws IOException {
         HttpURLConnection urlConnection;
         URL splunkd;
-        OutputStreamWriter wr;
-        BufferedReader rd;
-
-        // pack writable data
-        String data = encodeArgs(args);
 
         // fully qualify the URL, idempotent
         url = fullURL(url);
@@ -334,11 +330,65 @@ public class Binding {
         // connect to the endpoint
         splunkd = new URL(url);
         urlConnection = (HttpURLConnection) splunkd.openConnection();
+        setUrlConnection(urlConnection, operation);
 
-        // build connection operation and encoding
-        urlConnection.setRequestMethod("POST");
-        urlConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-        setUrlConnection(urlConnection);
+        return urlConnection;
+    }
+
+    private HttpURLConnection prequest(String operation,
+                                       String url,
+                                       HashMap<String, Object> args) throws IOException {
+        HttpURLConnection urlConnection;
+        URL splunkd;
+
+        /*
+         * overload get/post/delete with similar arguments. For post,
+         * args are written. For get/delete they are part of the url.
+         */
+        if (operation == "POST") {
+            url = fullURL(url);
+        } else {
+            url = fullURL(url, args);
+        }
+
+        // connect to the endpoint
+        splunkd = new URL(url);
+        urlConnection = (HttpURLConnection) splunkd.openConnection();
+        setUrlConnection(urlConnection, operation);
+
+        if (operation == "POST") {
+            OutputStreamWriter wr;
+
+            // pack writable data
+            String data = encodeArgs(args);
+
+
+            // write the post, flush and close.
+            wr = new OutputStreamWriter(urlConnection.getOutputStream());
+            wr.write(data);
+            wr.flush();
+            wr.close();
+        }
+
+        return urlConnection;
+    }
+
+    private HttpURLConnection prequest(String operation,
+                                       String url,
+                                       HashMap<String, Object> query,
+                                       HashMap<String, Object> args) throws IOException {
+        // only POST has query and args
+        HttpURLConnection urlConnection;
+        OutputStreamWriter wr;
+        URL splunkd;
+
+        // connect to the endpoint
+        splunkd = new URL(fullURL(url, query));
+        urlConnection = (HttpURLConnection) splunkd.openConnection();
+        setUrlConnection(urlConnection, operation);
+
+        // pack writable data
+        String data = encodeArgs(args);
 
         // write the post, flush and close.
         wr = new OutputStreamWriter(urlConnection.getOutputStream());
@@ -346,8 +396,23 @@ public class Binding {
         wr.flush();
         wr.close();
 
-        // return the urlConnection object to be accessed at a later time
         return urlConnection;
+    }
+
+    // Public API -------------------------------------------------------------------
+
+    /**
+     * perform an HTTP POST with dual arguments (standard query + standard post arguments)
+     *
+     * @param url   partial or fully qualified URL to POST to
+     * @param args  un-encoded HashMap key/value pair arguments to POST
+     * @return XML string from splunkd server
+     * @throws IOException percolates IOException from lower level HTTP access
+     */
+    public HttpURLConnection post(String url,
+                                  HashMap<String, Object> args) throws IOException {
+        // return common request
+        return prequest("POST", url, args);
     }
 
     /**
@@ -359,12 +424,11 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public HttpURLConnection post(String url, HashMap<String, Object> query, HashMap<String, Object> args) throws IOException {
-
-        String queryURL = encodeArgs(query);
-        url = url + "?" + queryURL;
-
-        return post(url, args);
+    public HttpURLConnection post(String url,
+                                  HashMap<String, Object> query,
+                                  HashMap<String, Object> args) throws IOException {
+        // return common request
+        return prequest("POST", url, query, args);
     }
 
     /**
@@ -375,23 +439,8 @@ public class Binding {
      * @throws IOException percolates IOException from lower level HTTP access
      */
     public HttpURLConnection get(String url) throws IOException {
-        HttpURLConnection urlConnection;
-        URL splunkd;
-        BufferedReader rd;
-
-        // Fully qualify the URL, idempotent
-        String fullUrl = fullURL(url);
-
-        // connect to the endpoint
-        splunkd = new URL(fullUrl);
-        urlConnection = (HttpURLConnection) splunkd.openConnection();
-
-        // build connection operation and encoding
-        urlConnection.setRequestMethod("GET");
-        setUrlConnection(urlConnection);
-
-        // return the urlConnection object to be accessed at a later time
-        return urlConnection;
+        // return common request
+        return prequest("GET", url);
     }
 
     /**
@@ -402,13 +451,10 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public HttpURLConnection get(String url, HashMap<String, Object> args) throws IOException {
-
-        // fully qualify the URL, idempotent
-        url = fullURL(url, args);
-
-        // return common get
-        return get(url);
+    public HttpURLConnection get(String url,
+                                 HashMap<String, Object> args) throws IOException {
+        // return common request
+        return prequest("GET", url, args);
     }
 
     /**
@@ -419,23 +465,8 @@ public class Binding {
      * @throws IOException percolates IOException from lower level HTTP access
      */
     public HttpURLConnection delete(String url) throws IOException {
-        HttpURLConnection urlConnection;
-        URL splunkd;
-        BufferedReader rd;
-
-        // Fully qualify the URL, idempotent
-        String fullUrl = fullURL(url);
-
-        // connect to the endpoint
-        splunkd = new URL(fullUrl);
-        urlConnection = (HttpURLConnection) splunkd.openConnection();
-
-        // build connection operation and encoding
-        urlConnection.setRequestMethod("DELETE");
-        setUrlConnection(urlConnection);
-
-        // return the urlConnection object to be accessed at a later time
-        return urlConnection;
+        // return common request
+        return prequest("DELETE", url);
     }
 
     /**
@@ -446,13 +477,78 @@ public class Binding {
      * @return XML string from splunkd server
      * @throws IOException percolates IOException from lower level HTTP access
      */
-    public HttpURLConnection delete(String url, HashMap<String, Object> args) throws IOException {
+    public HttpURLConnection delete(String url,
+                                    HashMap<String, Object> args) throws IOException {
+        // return common request
+        return prequest("DELETE", url, args);
+    }
 
-        // fully qualify the URL, idempotent
-        url = fullURL(url, args);
+    // main methods login() and request(), and their overloads
 
-        // return common get
-        return delete(url);
+    /**
+     * request from splunk
+     * @param operation        GET, DELETE or POST
+     * @param url  partial or fully qualified URL to GET from
+     * @throws IOException     percolates IOException from lower level HTTP access
+     * @throws SplunkException Splunk contextual exceptions
+     */
+    public HttpURLConnection request(String operation,
+                                     String url) throws IOException, SplunkException {
+
+        if (operation == "GET" || operation == "DELETE") {
+            return prequest(operation, url);
+        } else if (operation.toUpperCase() == "POST") {
+            throw new SplunkException("POST request requires at least the args parameter");
+        } else {
+            throw new SplunkException("Request operation must be GET, POST or DELETE");
+        }
+    }
+
+    /**
+     * request from splunk
+     * @param operation        GET, DELETE or POST
+     * @param url  partial or fully qualified URL to GET from
+     * @param args  un-encoded HashMap key/value pair arguments to POST
+     * @throws IOException     percolates IOException from lower level HTTP access
+     * @throws SplunkException Splunk contextual exceptions
+     */
+    public HttpURLConnection request(String operation,
+                                     String url,
+                                     HashMap<String, Object> args) throws IOException, SplunkException {
+
+        operation = operation.toUpperCase();
+
+        if (operation == "POST" || operation == "DELETE" || operation == "POST") {
+            return prequest(operation, url, args);
+        } else {
+            throw new SplunkException("Request operation must be GET, POST or DELETE");
+        }
+    }
+
+    /**
+     * request from splunk
+     * @param operation        GET, DELETE or POST
+     * @param url  partial or fully qualified URL to GET from
+     * @param query standard query arguments encoded into URL
+     * @param args  un-encoded HashMap key/value pair arguments to POST
+     * @throws IOException     percolates IOException from lower level HTTP access
+     * @throws SplunkException Splunk contextual exceptions
+     */
+    public HttpURLConnection request(String operation,
+                                     String url,
+                                     HashMap<String, Object> query,
+                                     HashMap<String, Object> args) throws IOException, SplunkException {
+        operation = operation.toUpperCase();
+
+        if (operation == "POST") {
+            return prequest(operation, url, query, args);
+        } else {
+            if (operation == "GET" || operation == "DELETE") {
+                throw new SplunkException("GET or DELETE does not take a query parameter");
+            } else {
+                throw new SplunkException("Request operation must be GET, POST or DELETE");
+            }
+        }
     }
 
     /**
@@ -462,6 +558,7 @@ public class Binding {
      * @throws SplunkException Splunk contextual exceptions
      */
     public void login() throws IOException, SplunkException {
+
         try {
             // initialize Context from .splunkrc file
             context.initSplunkContext();
@@ -469,9 +566,9 @@ public class Binding {
             System.out.println("WARNING: could not initialize splunk splunkContext: " + e);
             throw e;
         }
+
         commonLogin();
     }
-
     /**
      * login to splunk, overriding/bypassing credentials from .splunkrc with specified arguments
      *
@@ -483,7 +580,11 @@ public class Binding {
      * @throws IOException     percolates IOException from lower level HTTP access
      * @throws SplunkException Splunk contextual exceptions
      */
-    public void login(String host, String port, String username, String password, String scheme) throws IOException, SplunkException {
+    public void login(String host,
+                      String port,
+                      String username,
+                      String password,
+                      String scheme) throws IOException, SplunkException {
 
         // seed Context with passed in values
         context.setContextValue("host", host);

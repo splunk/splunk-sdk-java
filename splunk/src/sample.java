@@ -19,6 +19,9 @@ import com.splunk.sdk.Client;
 import com.splunk.sdk.XMLReader;
 
 import javax.xml.stream.XMLEventReader;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +38,7 @@ public class sample {
 
     //sample endpoints for GETs
     private final static List<String> getEndpoints = Arrays.asList(
+/*
             "/services/apps/XXX",
             "/services/server/logger/AdminHandler:AuthenticationHandler",
             "/services",
@@ -90,7 +94,7 @@ public class sample {
             "/services/server/logger/ApplicationManager",
             "/services/server/info/server-info",
             "/services/search/commands",
-/*
+
  * N.B.: some of these endpoints resets the open SSL connection...
  *
             "/services/search/distributed",
@@ -401,7 +405,7 @@ public class sample {
             "/services/alerts/fired_alerts",
 
 */
-            "/servicesNS/admin/search/alerts/fired_alerts/-"
+            //"/servicesNS/admin/search/alerts/fired_alerts/-"
     );
 
 
@@ -452,8 +456,24 @@ public class sample {
             // POST to REST endpoint
             System.out.println("[POST] endpoint: " + url);
             // print out the result
-            XMLEventReader ereader = xreader.Results(splunk.post(url, argsList));
-            System.out.println(xreader.getContentsString(ereader));
+
+            int foo = 0;
+            if (foo == 1) {
+                HttpURLConnection conn = splunk.post(url, argsList);
+                InputStreamReader rd = new InputStreamReader(conn.getInputStream());
+                BufferedReader buff = new BufferedReader(rd);
+                String line;
+                try {
+                    while ((line = buff.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (Exception e) {
+                    System.out.println("exception: " + e);
+                }
+            } else {
+                XMLEventReader ereader = xreader.Results(splunk.post(url, argsList));
+                System.out.println(xreader.getContentsString(ereader));
+            }
         } catch (Exception e) {
             System.out.println("POST: " + url + " SplunkException: " + e);
         }
@@ -489,7 +509,7 @@ public class sample {
 
         int path = 1;
 
-        if (path == 1) {
+        if (path == 0) {
             splunk_client();
         } else {
             splunk_binding();
