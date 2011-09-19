@@ -102,15 +102,15 @@ public class Client {
      * Collection class: Represents a collection of splunkd objects.
      */
 
-    public class Collection extends Endpoint {
+    public class Entity  extends Endpoint {
 
         Endpoint endp = null;
 
-        public Collection() {
+        public Entity() {
             // nothing
         }
 
-        public Collection(Binding service, String pth) {
+        public Entity (Binding service, String pth) {
             endp = new Endpoint(service, pth);
         }
 
@@ -124,22 +124,24 @@ public class Client {
      * Entity class: Represents a single splunkd object.
      */
 
-    public class Entity extends Collection {
+    public class Collection extends Entity {
 
-        Collection coll = null;
+        Entity ent = null;
 
-        public Entity() {
+        public Collection() {
             // nothing
         }
 
-        public Entity(Binding service, String base, String path) {
-            coll = new Collection(service, base + path)  ;
+        public Collection(Binding service, String  path) {
+            ent = new Entity(service, path)  ;
         }
 
         public HttpURLConnection get() throws IOException {
             // TODO: wkcfix, correct way to reach into extended classes?
-            return bind.get(coll.endp.path);
+            return bind.get(ent.endp.path);
         }
+
+        // TODO: in addition to get/post/delete, add semantical routines like create, delete, list, etc.
     }
 
     /**
@@ -147,7 +149,7 @@ public class Client {
      */
 
     public Entity app(String name) {
-        return new Entity(bind, PATH_APPS, name);
+        return new Entity(bind, PATH_APPS + name);
     }
 
     public Collection apps() {
