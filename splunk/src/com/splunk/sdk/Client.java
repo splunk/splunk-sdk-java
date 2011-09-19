@@ -30,7 +30,7 @@ public class Client {
 
     private final String PATH_APPS = "apps/local/";
     private final String PATH_CAPABILITIES = "authorization/capabilities/";
-    private final String PATH_CONF = "configs/conf-%s/"; // (config file
+    private final String PATH_CONF = "configs/conf-%s/"; // (config file)
     private final String PATH_CONFS = "properties/";
     private final String PATH_INDEXES = "data/indexes/";
     private final String PATH_INPUTS = "data/inputs/";
@@ -53,7 +53,7 @@ public class Client {
     public Binding bind = null;
 
     public Client() {
-        // wkcfix do we need a default constructor?
+        // TODO: wkcfix do we need a default constructor?
     }
 
     /**
@@ -62,8 +62,8 @@ public class Client {
      * @throws IOException
      */
     public void connect() throws IOException {
-        this.bind = new Binding();
-        this.bind.login();
+        bind = new Binding();
+        bind.login();
     }
 
     /**
@@ -77,136 +77,84 @@ public class Client {
      * @throws IOException
      */
     public void connect(String host, String port, String username, String password, String scheme) throws IOException {
-        this.bind = new Binding();
-        this.bind.login(host, port, username, password, scheme);
+        bind = new Binding();
+        bind.login(host, port, username, password, scheme);
     }
 
     /**
-     * Endpoint class: Represents the class all accesses use. Get/p[ost/delete.
+     * Endpoint class: Represents the class all accesses use. Get/post/delete.
      */
 
-    public class Endpoint {
-        Binding binding = null;
+    public class Endpoint extends Binding {
         String path = null;
+
+        public Endpoint() {
+            // nothing
+        }
 
         public Endpoint(Binding bind, String pth) {
             if (!pth.endsWith("/")) pth += "/";
-            binding = bind;
             path = pth;
         }
-
-        // overloads for get
-        public HttpURLConnection get(String relpath, HashMap<String, Object> mymap) throws IOException {
-            String fullpath = path + relpath;
-            return binding.get(fullpath, mymap);
-        }
-
-        public HttpURLConnection get(HashMap<String, Object> mymap) throws IOException {
-            return binding.get(path, mymap);
-        }
-
-        public HttpURLConnection get() throws IOException {
-            return binding.get(path);
-        }
-
-        // overloads for post
-        public HttpURLConnection post(String relpath, HashMap<String, Object> mymap) throws IOException {
-            String fullpath = path + relpath;
-            return binding.get(fullpath, mymap);
-        }
-
-        public HttpURLConnection post(HashMap<String, Object> mymap) throws IOException {
-            return binding.get(path, mymap);
-        }
-
-        public HttpURLConnection post() throws IOException {
-            return binding.get(path);
-        }
-
-        // overloads for post
-        public HttpURLConnection delete(String relpath, HashMap<String, Object> mymap) throws IOException {
-            String fullpath = path + relpath;
-            return binding.delete(fullpath, mymap);
-        }
-
-        public HttpURLConnection delete(HashMap<String, Object> mymap) throws IOException {
-            return binding.delete(path, mymap);
-        }
-
-        public HttpURLConnection delete() throws IOException {
-            return binding.delete(path);
-        }
-
-    }
-
-    /**
-     * Collection class: Represents a collection of splunkd objects.
-     */
-
-    public class Collection {
-
-        Endpoint endp = null;
-        String name = null;
-
-        public Collection(Binding service, String path, String name) {
-            this.endp = new Endpoint(service, path);
-            this.name = name;
-        }
-
-        // TODO: wkcfix -- add methods to deal with individual elements of the collection
-        // i.e. Entities
-
-        public HttpURLConnection get() throws IOException {
-            return endp.get();
-        }
-
-        public HttpURLConnection post() throws IOException {
-            return endp.post();
-        }
-
-        public HttpURLConnection delete() throws IOException {
-            return endp.delete();
-        }
-
     }
 
     /**
      * Entity class: Represents a single splunkd object.
      */
 
-    public class Entity {
+    public class Entity extends Endpoint {
 
         Endpoint endp = null;
-        String name = null;
 
-        public Entity(Binding service, String path, String name) {
-            this.endp = new Endpoint(service, path);
-            this.name = name;
+        public Entity() {
+            // nothing
         }
 
-        // TODO: wkcfix -- add methods or cleanup for individual elements, not just XML blobs
+        public Entity(Binding service, String path) {
+            endp = new Endpoint(service, path);
+        }
+
         public HttpURLConnection get() throws IOException {
-            return endp.get();
+            // TODO: wkcfix, correct way to reach into extended classes?
+            return bind.get(endp.path);
+        }
+    }
+
+    /**
+     * Collection class: Represents a collection of splunkd objects.
+     */
+
+    public class Collection extends Entity {
+
+        Entity ent = null;
+
+        public Collection() {
+            // nothing
         }
 
-        public HttpURLConnection post() throws IOException {
-            return endp.post();
+        public Collection(Binding service, String pth) {
+            ent = new Entity(service, pth);
+            // nothing
         }
 
-        public HttpURLConnection delete() throws IOException {
-            return endp.delete();
+        public HttpURLConnection get() throws IOException {
+            // TODO: wkcfix, correct way to reach into extended classes?
+            return bind.get(ent.endp.path);
         }
     }
 
 
     // TODO: wkcfix ... methods or classes?
-
     /**
      * apps class: Represents the application splunkd objects
      */
 
-    public Collection Apps() throws IOException {
-        return new Collection(bind, PATH_APPS, "apps");
+    public Entity app(String name) {
+        return new Entity(bind, PATH_APPS + name);
+    }
+
+    public Collection apps() {
+        return new Collection(bind, PATH_APPS);
     }
 
     /**
