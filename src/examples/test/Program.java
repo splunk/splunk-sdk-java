@@ -14,10 +14,13 @@
  * under the License.
  */
 
-import com.splunk.http.Service;
+package test;
 
-public class Test {
+import com.splunk.http.*;
+
+public class Program {
     public static void main(String[] args) {
+        System.out.println("Hello World!");
         Service service = new Service();
     }
 }

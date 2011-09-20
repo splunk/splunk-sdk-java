@@ -19,34 +19,65 @@
 <project name="splunk-sdk-java" basedir="." default="build">
 
     <property name="dir.build" location="build"/>
-    <property name="dir.build.examples" location="${build}/examples"/>
-    <property name="dir.build.splunk" location="${build}/splunk"/>
-    <property name="dir.build.test" location="${build}/test"/>
+    <property name="dir.build.examples" location="${dir.build}/examples"/>
+    <property name="dir.build.examples.test" location="${dir.build.examples}/test"/>
+    <property name="dir.build.splunk" location="${dir.build}/splunk"/>
+    <property name="dir.build.test" location="${dir.build}/test"/>
     <property name="dir.dist" location="dist"/>
+    <property name="dir.dist.examples" location="${dir.dist}/examples"/>
     <property name="dir.src" location="src"/>
     <property name="dir.src.examples" location="${dir.src}/examples"/>
-    <property name="dir.src.splunk" location="${dir.src}/java/main"/>
+    <property name="dir.src.examples.test" location="${dir.src.examples}/test"/>
+    <property name="dir.src.splunk" location="${dir.src}/main/java"/>
     <property name="dir.src.test" location="${dir.src}/test"/>
 
     <target name="build" depends="dist"/>
 
-    <target name="compile">
-        <mkdir dir="${dir.build.splunk}"}
-        <javac 
+    <target name="clean">
+        <delete dir="${dir.build}"/>
+        <delete dir="${dir.dist}"/>
+    </target>
+
+    <target name="compile-splunk">
+        <mkdir dir="${dir.build.splunk}"/>
+        <javac includeantruntime="false"
          srcdir="${dir.src.splunk}"
          destdir="${dir.build.splunk}"/>
     </target>
 
-    <target name="dist" depends="compile">
-        <mkdir dir="${dir.dist}"/>
-        <jar 
-         destfile="${dir.dist}/splunk.jar"
-         includes="${dir.build.splunk}/**/*.class"/>
+    <target name="compile-examples" depends="compile-splunk">
+        <mkdir dir="${dir.build.examples.test}"/>
+        <javac includeantruntime="false"
+         classpath="${dir.build.splunk}"
+         srcdir="${dir.src.examples.test}"
+         destdir="${dir.build.examples.test}"/>
     </target>
 
-    <target name="clean">
-        <delete dir="${dir.build}"/>
-        <delete dir="${dir.dist}"/>
+    <target name="dist" depends="dist-splunk,dist-examples"/>
+
+    <target name="dist-splunk" depends="compile-splunk">
+        <mkdir dir="${dir.dist}"/>
+        <jar 
+         basedir="${dir.build.splunk}"
+         destfile="${dir.dist}/splunk.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="com.splunk.http.Program"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist-examples" depends="compile-examples">
+        <mkdir dir="${dir.dist.examples}"/>
+        <jar 
+         basedir="${dir.build.examples.test}"
+         destfile="${dir.dist.examples}/test.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="test.Program"/>
+                <attribute name="Class-Path" value="../splunk.jar"/>
+            </manifest>
+        </jar>
     </target>
 
     <target name="units"></target>
