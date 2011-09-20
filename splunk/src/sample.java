@@ -490,8 +490,13 @@ public class sample {
         try {
             client.connect();
 
-            XMLEventReader ereader = xreader.Results(client.Apps().get());
+            XMLEventReader ereader = xreader.Results(client.apps().get());
             System.out.println(xreader.getContentsString(ereader));
+
+            System.out.println("******************************");
+
+            XMLEventReader ereader2 = xreader.Results(client.app("SplunkLightForwarder").get());
+            System.out.println(xreader.getContentsString(ereader2));
         } catch (Exception e) {
             System.out.println("Failed to connect: " + e);
         }
@@ -509,7 +514,7 @@ public class sample {
 
         int path = 1;
 
-        if (path == 0) {
+        if (path == 1) {
             splunk_client();
         } else {
             splunk_binding();
