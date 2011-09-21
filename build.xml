@@ -60,11 +60,7 @@
         <jar 
          basedir="${dir.build.splunk}"
          destfile="${dir.dist}/splunk.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="com.splunk.http.Program"/>
-            </manifest>
-        </jar>
+         includes="**/*.class"/>
     </target>
 
     <target name="dist-examples" depends="compile-examples">
@@ -74,7 +70,7 @@
          destfile="${dir.dist.examples}/test.jar"
          includes="**/*.class">
             <manifest>
-                <attribute name="Main-Class" value="test.Program"/>
+                <attribute name="Main-Class" value="Program"/>
                 <attribute name="Class-Path" value="../splunk.jar"/>
             </manifest>
         </jar>

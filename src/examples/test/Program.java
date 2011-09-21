@@ -14,13 +14,12 @@
  * under the License.
  */
 
-package test;
-
 import com.splunk.http.*;
 
 public class Program {
     public static void main(String[] args) {
         System.out.println("Hello World!");
         Service service = new Service();
+        System.out.println("Goodby World!");
     }
 }
