@@ -24,6 +24,17 @@ public class RequestMessage {
     MessageHeader header = null;
     Object content = null;
 
+    public RequestMessage() {}
+
+    public RequestMessage(String method) {
+        this.method = method;
+    }
+
+    public RequestMessage(String method, String path) {
+        this.method = method;
+        this.path = path;
+    }
+
     boolean checkMethod(String value) {
         return
             value == "GET" ||

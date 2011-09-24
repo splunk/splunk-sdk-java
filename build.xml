@@ -22,14 +22,13 @@
     <property name="dir.build.examples" location="${dir.build}/examples"/>
     <property name="dir.build.examples.test" location="${dir.build.examples}/test"/>
     <property name="dir.build.splunk" location="${dir.build}/splunk"/>
-    <property name="dir.build.test" location="${dir.build}/test"/>
+    <property name="dir.build.tests" location="${dir.build}/tests"/>
     <property name="dir.dist" location="dist"/>
     <property name="dir.dist.examples" location="${dir.dist}/examples"/>
-    <property name="dir.src" location="src"/>
-    <property name="dir.src.examples" location="${dir.src}/examples"/>
-    <property name="dir.src.examples.test" location="${dir.src.examples}/test"/>
-    <property name="dir.src.splunk" location="${dir.src}/main/java"/>
-    <property name="dir.src.test" location="${dir.src}/test"/>
+    <property name="dir.examples" location="examples"/>
+    <property name="dir.examples.test" location="${dir.examples}/test"/>
+    <property name="dir.splunk" location="splunk"/>
+    <property name="dir.tests" location="tests"/>
 
     <target name="build" depends="dist"/>
 
@@ -41,7 +40,7 @@
     <target name="compile-splunk">
         <mkdir dir="${dir.build.splunk}"/>
         <javac includeantruntime="false"
-         srcdir="${dir.src.splunk}"
+         srcdir="${dir.splunk}"
          destdir="${dir.build.splunk}"/>
     </target>
 
@@ -49,7 +48,7 @@
         <mkdir dir="${dir.build.examples.test}"/>
         <javac includeantruntime="false"
          classpath="${dir.build.splunk}"
-         srcdir="${dir.src.examples.test}"
+         srcdir="${dir.examples.test}"
          destdir="${dir.build.examples.test}"/>
     </target>
 

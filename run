@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#
+# Shell script to build SDK jar and launch named sample.
+#
+#   Usage: run {sample}
+#
+
+echo Building ..
+ant -q -logfile build.log
+if [ $? -ne 0 ] ; then
+    cat build.log
+    exit $?
+fi
+echo Running $1.jar ..
+java -jar dist/examples/$1.jar

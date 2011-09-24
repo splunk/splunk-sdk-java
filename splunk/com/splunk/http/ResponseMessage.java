@@ -16,18 +16,31 @@
 
 package com.splunk.http;
 
-import java.io.OutputStream;
+import java.io.InputStream;
 
 public class ResponseMessage {
     int status;
     MessageHeader header = null;
-    OutputStream content;
+    InputStream content;
 
-    public OutputStream getContent() {
+    ResponseMessage() {}
+
+    ResponseMessage(int status) {
+        this.status = status;
+    }
+
+    ResponseMessage(int status, InputStream content) {
+        this.status = status;
+        this.content = content;
+    }
+
+    public InputStream getContent() {
         return this.content;
     }
 
     public MessageHeader getHeader() {
+        if (this.header == null)
+            this.header = new MessageHeader();
         return this.header;
     }
 
