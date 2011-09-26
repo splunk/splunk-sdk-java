@@ -37,6 +37,41 @@ public class Service {
     int port = 8089;
 
     public Service() {
+        setTrustPolicy();
+    }
+
+    public Service(String host) {
+        this.host = host;
+        setTrustPolicy();
+    }
+
+    public Service(String host, int port) {
+        this.host = host;
+        this.port = port;
+        setTrustPolicy();
+    }
+
+    public Service(String host, int port, String scheme) {
+        this.host = host;
+        this.port = port;
+        this.scheme = scheme;
+        setTrustPolicy();
+    }
+
+    public String getHost() { 
+        return this.host; 
+    }
+
+    public void setHost(String value) {
+        this.host = value;
+    }
+
+    public int getPort() {
+        return this.port;
+    }
+
+    // Set trust policy to be used by this instance.
+    void setTrustPolicy() {
         TrustManager[] trustAll = new TrustManager[] {
             new X509TrustManager() {
                 public X509Certificate[] getAcceptedIssuers() { return null; }
@@ -59,33 +94,6 @@ public class Service {
         catch (Exception e) {
             throw new RuntimeException("Error installing trust manager.");
         }
-    }
-
-    public Service(String host) {
-        this.host = host;
-    }
-
-    public Service(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
-
-    public Service(String host, int port, String scheme) {
-        this.host = host;
-        this.port = port;
-        this.scheme = scheme;
-    }
-
-    public String getHost() { 
-        return this.host; 
-    }
-
-    public void setHost(String value) {
-        this.host = value;
-    }
-
-    public int getPort() {
-        return this.port;
     }
 
     public void setPort(int value) {

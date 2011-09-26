@@ -20,15 +20,27 @@
 
     <property name="dir.build" location="build"/>
     <property name="dir.build.examples" location="${dir.build}/examples"/>
-    <property name="dir.build.examples.test" location="${dir.build.examples}/test"/>
+    <property 
+     name="dir.build.examples.spurl" 
+     location="${dir.build.examples}/spurl"/>
+    <property 
+     name="dir.build.examples.test" 
+     location="${dir.build.examples}/test"/>
     <property name="dir.build.splunk" location="${dir.build}/splunk"/>
     <property name="dir.build.tests" location="${dir.build}/tests"/>
     <property name="dir.dist" location="dist"/>
     <property name="dir.dist.examples" location="${dir.dist}/examples"/>
     <property name="dir.examples" location="examples"/>
+    <property name="dir.examples.spurl" location="${dir.examples}/spurl"/>
     <property name="dir.examples.test" location="${dir.examples}/test"/>
+    <property name="dir.lib" location="lib"/>
     <property name="dir.splunk" location="splunk"/>
     <property name="dir.tests" location="tests"/>
+
+    <path id="classpath.examples">
+        <pathelement location="${dir.dist}/splunk.jar"/>
+        <pathelement location="${dir.lib}/commons-cli-1.2.jar"/>
+    </path>
 
     <target name="build" depends="dist"/>
 
@@ -44,7 +56,20 @@
          destdir="${dir.build.splunk}"/>
     </target>
 
-    <target name="compile-examples" depends="compile-splunk">
+    <target 
+     name="compile-examples" 
+     depends="compile-examples-spurl,compile-examples-test"/>
+
+    <target name="compile-examples-spurl" depends="compile-splunk">
+        <mkdir dir="${dir.build.examples.spurl}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.examples.spurl}"
+         destdir="${dir.build.examples.spurl}">
+            <classpath refid="classpath.examples"/>
+        </javac>
+    </target>
+
+    <target name="compile-examples-test" depends="compile-splunk">
         <mkdir dir="${dir.build.examples.test}"/>
         <javac includeantruntime="false"
          classpath="${dir.build.splunk}"
@@ -64,6 +89,19 @@
 
     <target name="dist-examples" depends="compile-examples">
         <mkdir dir="${dir.dist.examples}"/>
+
+        <jar 
+         basedir="${dir.build.examples.spurl}"
+         destfile="${dir.dist.examples}/spurl.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="../splunk.jar ../../lib/commons-cli-1.2.jar"/>
+            </manifest>
+        </jar>
+
         <jar 
          basedir="${dir.build.examples.test}"
          destfile="${dir.dist.examples}/test.jar"

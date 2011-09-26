@@ -13,4 +13,4 @@ if [ $? -ne 0 ] ; then
     exit $?
 fi
 echo Running $1.jar ..
-java -jar dist/examples/$1.jar
+java -jar dist/examples/$1.jar $2 $3 $4 $5 $6 $7 $8 $9

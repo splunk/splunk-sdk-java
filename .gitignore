@@ -2,4 +2,6 @@
 *.iml
 *.DS_Store*
 build
+build.log
 dist
+out
