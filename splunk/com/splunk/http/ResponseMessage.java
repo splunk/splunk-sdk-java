@@ -17,10 +17,12 @@
 package com.splunk.http;
 
 import java.io.InputStream;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ResponseMessage {
     int status;
-    MessageHeader header = null;
+    Map<String, String> header = null;
     InputStream content;
 
     ResponseMessage() {}
@@ -38,9 +40,9 @@ public class ResponseMessage {
         return this.content;
     }
 
-    public MessageHeader getHeader() {
+    public Map<String, String> getHeader() {
         if (this.header == null)
-            this.header = new MessageHeader();
+            this.header = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
         return this.header;
     }
 

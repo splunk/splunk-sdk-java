@@ -1,6 +1,7 @@
-.idea
-*.iml
 *.DS_Store*
+*.iml
+*.swp
+.idea
 build
 build.log
 dist

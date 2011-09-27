@@ -16,13 +16,24 @@
 
 // UNDONE: Support for pluggable trust managers.
 
+//
+// HTTP headers are case *in*sensitive
+// URL query arguments are case *in*sensitive
+// HTML Form POST arguments are case sensitive
+//
+
 package com.splunk.http;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -35,6 +46,11 @@ public class Service {
     String scheme = "https";
     String host = "localhost";
     int port = 8089;
+
+    static Map<String, String> defaultHeader = new HashMap<String, String>() {{
+        put("User-Agent", "splunk-sdk-java/0.1");
+        put("Accept", "*/*");
+    }};
 
     public Service() {
         setTrustPolicy();
@@ -56,6 +72,28 @@ public class Service {
         this.port = port;
         this.scheme = scheme;
         setTrustPolicy();
+    }
+
+    public String encode(String value) {
+        if (value == null) return "";
+        String result = null;
+        try {
+            result = URLEncoder.encode(value, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) { assert false; }
+        return result;
+    }
+
+    public String encode(Map<String, String> args) {
+        StringBuilder builder = new StringBuilder();
+        for (Entry<String, String> entry : args.entrySet()) {
+            if (builder.length() > 0)
+                builder.append('&');
+            builder.append(encode(entry.getKey()));
+            builder.append('=');
+            builder.append(encode(entry.getValue()));
+        }
+        return builder.toString();
     }
 
     public String getHost() { 
@@ -108,52 +146,62 @@ public class Service {
         this.scheme = value;
     }
 
-    public ResponseMessage send(RequestMessage request)
-        throws
-            IOException,
-            MalformedURLException,
-            ProtocolException
+    public ResponseMessage post(String path, Map<String, String> args)
+        throws IOException
     {
-        String method = request.getMethod();
+        RequestMessage request = new RequestMessage("POST", path);
+        request.getHeader().put(
+            "Content-Type", "application/x-www-form-urlencoded");
+        request.setContent(encode(args));
+        return send(request);
+    }
 
+    public ResponseMessage send(RequestMessage request) throws IOException {
         String prefix = String.format("%s://%s:%d",
             this.scheme, this.host, this.port);
         URL url = new URL(prefix + request.getPath());
 
         HttpURLConnection cn = (HttpURLConnection)url.openConnection();
-        cn.setRequestMethod(method);
-
-        // UNDONE: Process request.header
-
-        // UNDONE: The following should be defaults if not already passed
-        // in the messages header.
-        cn.setRequestProperty("User-Agent", "splunk-sdk-java/0.1");
-        cn.setRequestProperty("Accept", "*/*");
-
-        // Explicitly disable some features we don't want
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
 
-        // UNDONE: Handle various request content types (stream, string, etc)
-        // and set Content-Length accordingly.
+        String method = request.getMethod();
+        cn.setRequestMethod(method);
 
-        if (method == "GET") {
-            cn.setRequestProperty("Content-Length", "0");
-            cn.connect();
-            return new ResponseMessage(
-                cn.getResponseCode(),
-                cn.getInputStream());
+        Map<String, String> header = request.getHeader();
+        for (Entry<String, String> entry : header.entrySet())
+            cn.setRequestProperty(entry.getKey(), entry.getValue());
+
+        // Add default headers that were absent from the request message
+        for (Entry<String, String> entry : defaultHeader.entrySet()) {
+            String key = entry.getKey();
+            if (header.containsKey(key)) continue;
+            cn.setRequestProperty(key, entry.getValue());
         }
 
-        if (method == "POST") {
-            cn.setDoOutput(true); 
+        Object content = request.getContent();
+        if (content != null) {
+            cn.setDoOutput(true);
+            OutputStream stream = cn.getOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(stream);
+            // UNDONE: Figure out how to support streaming request content
+            writer.write((String)content);
+            writer.close();
         }
 
-        if (method == "DELETE") {
-        }
+        // System.out.format("%s %s => ", method, url.toString());
 
-        throw new IllegalArgumentException(
-            String.format("Unsupported method: '%s'", method));
+        // Execute the request
+        cn.connect();
+
+        // UNDONE: Populate response header
+        ResponseMessage response = new ResponseMessage(
+            cn.getResponseCode(),
+            cn.getInputStream());
+
+        // System.out.format("%d\n", response.getStatus());
+
+        return response;
     }
 }
 

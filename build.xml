@@ -16,6 +16,25 @@
   under the License.
 -->
 
+<!--
+  UNDONE: Should build be a single file at root? or separate files for eg:
+  splunk, examples and tests? or even more granular?
+
+  UNDONE: How should manifest Class-Path be set for sample jars? They are 
+  currently hardcoded to the corresponding relative repo paths, but that
+  seems suspect.
+
+  UNDONE: Example targets are hightly repetitive, seems like we should be
+  able to do something better, eg: macroize?
+
+  UNDONE: Should we factor properties into a separate build.properties file?
+
+  UNDONE: Do we need debug & retail builds?
+
+  UNDONE: Should we add "run" targets (for tests & examples) to the build file?
+  instead of using the run script?
+-->
+
 <project name="splunk-sdk-java" basedir="." default="build">
 
     <property name="dir.build" location="build"/>

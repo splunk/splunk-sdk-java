@@ -17,11 +17,13 @@
 package com.splunk.http;
 
 import java.io.OutputStream;
+import java.util.TreeMap;
+import java.util.Map;
 
 public class RequestMessage {
     String method = "GET";  // "GET" | "PUT" | "POST" | "DELETE"
     String path = null;
-    MessageHeader header = null;
+    Map<String, String> header = null;
     Object content = null;
 
     public RequestMessage() {}
@@ -37,10 +39,16 @@ public class RequestMessage {
 
     boolean checkMethod(String value) {
         return
-            value == "GET" ||
-            value == "PUT" ||
-            value == "POST" ||
-            value == "DELETE";
+            value.equalsIgnoreCase("GET") ||
+            value.equalsIgnoreCase("PUT") ||
+            value.equalsIgnoreCase("POST") ||
+            value.equalsIgnoreCase("DELETE");
+    }
+
+    public Map<String, String> getHeader() {
+        if (this.header == null)
+            this.header = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+        return this.header;
     }
 
     public String getMethod() {

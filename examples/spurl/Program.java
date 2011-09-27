@@ -14,7 +14,9 @@
  * under the License.
  */
 
-import com.splunk.http.*;
+import com.splunk.Service;
+import com.splunk.http.RequestMessage;
+import com.splunk.http.ResponseMessage;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -25,7 +27,6 @@ import org.apache.commons.cli.PosixParser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Properties;
 
 public class Program {
     public static void main(String[] args) {
@@ -67,10 +68,13 @@ public class Program {
         String host = cmdline.getOptionValue("host", "localhost");
         String port = cmdline.getOptionValue("port", "8089");
         String scheme = cmdline.getOptionValue("scheme", "https");
-        String username = cmdline.getOptionValue("username");
-        String password = cmdline.getOptionValue("password");
+
+        // UNDONE: Don't default credentials
+        String username = cmdline.getOptionValue("username", "admin");
+        String password = cmdline.getOptionValue("password", "changeme");
 
         Service service = new Service(host, Integer.parseInt(port), scheme);
+        service.login(username, password);
 
         String[] args = cmdline.getArgs();
         String path = args.length > 0 ? args[0] : "/";
