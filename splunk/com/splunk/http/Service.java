@@ -15,12 +15,7 @@
  */
 
 // UNDONE: Support for pluggable trust managers.
-
-//
-// HTTP headers are case *in*sensitive
-// URL query arguments are case *in*sensitive
-// HTML Form POST arguments are case sensitive
-//
+// UNDONE: Timeouts, connection & request.
 
 package com.splunk.http;
 
@@ -165,9 +160,11 @@ public class Service {
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
 
+        // Set the reqeust method
         String method = request.getMethod();
         cn.setRequestMethod(method);
 
+        // Add headers from request message
         Map<String, String> header = request.getHeader();
         for (Entry<String, String> entry : header.entrySet())
             cn.setRequestProperty(entry.getKey(), entry.getValue());
@@ -179,6 +176,7 @@ public class Service {
             cn.setRequestProperty(key, entry.getValue());
         }
 
+        // Write out request content, if any
         Object content = request.getContent();
         if (content != null) {
             cn.setDoOutput(true);
