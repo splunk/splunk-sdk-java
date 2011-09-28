@@ -18,14 +18,11 @@ import com.splunk.Service;
 import com.splunk.http.RequestMessage;
 import com.splunk.http.ResponseMessage;
 
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.Map;
 
 public class Program {
     public static void main(String[] args) {
@@ -45,6 +42,11 @@ public class Program {
             System.exit(1);
         }
 
+        if (command.help) {
+            command.printHelp("spurl");
+            return;
+        }
+
         try {
             run(command);
         }
@@ -55,27 +57,13 @@ public class Program {
     }
 
     static void run(Command command) throws Exception {
-        String host = "localhost";
-        String port = "8089";
-        String scheme = "https";
+        Service service = new Service(
+            command.host,
+            command.port,
+            command.scheme).login(command.username, command.password);
 
-        if (command.opts.containsKey("host"))
-            host = command.opts.get("host");
-        if (command.opts.containsKey("port"))
-            port = command.opts.get("port");
-        if (command.opts.containsKey("scheme"))
-            scheme = command.opts.get("scheme");
-
-        String username = command.opts.get("username");
-        String password = command.opts.get("password");
-
-        Service service = new Service(host, Integer.parseInt(port), scheme);
-        service.login(username, password);
-
-        String[] args = command.args.toArray(new String[command.args.size()]);
-        String path = args.length > 0 ? args[0] : "/";
-        ResponseMessage response =
-            service.send(new RequestMessage("GET", path));
+        String path = command.args.length > 0 ? command.args[0] : "/";
+        ResponseMessage response = service.send(new RequestMessage("GET", path));
 
         int status = response.getStatus();
         System.out.println(String.format("=> %d", status));
@@ -87,10 +75,5 @@ public class Program {
             if (line == null) break;
             System.out.println(line);
         }
-    }
-
-    static void help(String app, Options options) {
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(app, options);
     }
 }

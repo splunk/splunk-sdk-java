@@ -42,9 +42,10 @@ public class Service extends com.splunk.http.Service {
         args.put("username", username);
         args.put("password", password);
         ResponseMessage response = super.post("/services/auth/login/", args);
-        Document root = parseXml(response);
-        Node node = root.getElementsByTagName("sessionKey").item(0);
-        String sessionKey = node.getTextContent();
+        String sessionKey = parseXml(response)
+            .getElementsByTagName("sessionKey")
+            .item(0)
+            .getTextContent();
         this.token = "Splunk " + sessionKey;
         return this;
     }
@@ -53,14 +54,16 @@ public class Service extends com.splunk.http.Service {
     Document parseXml(ResponseMessage response) {
         try {
             InputStream content = response.getContent();
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = 
+                DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             InputSource inputSource = new InputSource();
             inputSource.setCharacterStream(new InputStreamReader(content));
             return builder.parse(inputSource);
         }
         catch (Exception e) {
-            throw new RuntimeException(e.getMessage()); // UNDONE: SplunkException
+            // UNDONE: SplunkException
+            throw new RuntimeException(e.getMessage());
         }
     }
 
