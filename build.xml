@@ -46,6 +46,7 @@
      name="dir.build.examples.test" 
      location="${dir.build.examples}/test"/>
     <property name="dir.build.splunk" location="${dir.build}/splunk"/>
+    <property name="dir.build.splunk-sdk" location="${dir.build}/splunk-sdk"/>
     <property name="dir.build.tests" location="${dir.build}/tests"/>
     <property name="dir.dist" location="dist"/>
     <property name="dir.dist.examples" location="${dir.dist}/examples"/>
@@ -54,11 +55,16 @@
     <property name="dir.examples.test" location="${dir.examples}/test"/>
     <property name="dir.lib" location="lib"/>
     <property name="dir.splunk" location="splunk"/>
+    <property name="dir.splunk-sdk" location="splunk-sdk"/>
     <property name="dir.tests" location="tests"/>
+
+    <path id="classpath.splunk-sdk">
+        <pathelement location="${dir.lib}/commons-cli-1.2.jar"/>
+    </path>
 
     <path id="classpath.examples">
         <pathelement location="${dir.dist}/splunk.jar"/>
-        <pathelement location="${dir.lib}/commons-cli-1.2.jar"/>
+        <pathelement location="${dir.dist}/splunk-sdk.jar"/>
     </path>
 
     <target name="build" depends="dist"/>
@@ -68,6 +74,12 @@
         <delete dir="${dir.dist}"/>
     </target>
 
+    <target name="compile-libs"
+     depends="compile-splunk,compile-splunk-sdk"/>
+
+    <target name="compile-examples" 
+     depends="compile-examples-spurl,compile-examples-test"/>
+
     <target name="compile-splunk">
         <mkdir dir="${dir.build.splunk}"/>
         <javac includeantruntime="false"
@@ -75,11 +87,16 @@
          destdir="${dir.build.splunk}"/>
     </target>
 
-    <target 
-     name="compile-examples" 
-     depends="compile-examples-spurl,compile-examples-test"/>
+    <target name="compile-splunk-sdk">
+        <mkdir dir="${dir.build.splunk-sdk}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.splunk-sdk}"
+         destdir="${dir.build.splunk-sdk}">
+            <classpath refid="classpath.splunk-sdk"/>
+        </javac>
+    </target>
 
-    <target name="compile-examples-spurl" depends="compile-splunk">
+    <target name="compile-examples-spurl" depends="compile-libs">
         <mkdir dir="${dir.build.examples.spurl}"/>
         <javac includeantruntime="false"
          srcdir="${dir.examples.spurl}"
@@ -88,15 +105,20 @@
         </javac>
     </target>
 
-    <target name="compile-examples-test" depends="compile-splunk">
+    <target name="compile-examples-test" depends="compile-libs">
         <mkdir dir="${dir.build.examples.test}"/>
         <javac includeantruntime="false"
-         classpath="${dir.build.splunk}"
          srcdir="${dir.examples.test}"
-         destdir="${dir.build.examples.test}"/>
+         destdir="${dir.build.examples.test}">
+            <classpath refid="classpath.examples"/>
+        </javac>
     </target>
 
-    <target name="dist" depends="dist-splunk,dist-examples"/>
+    <target name="dist" 
+     depends="dist-libs,dist-examples"/>
+
+    <target name="dist-libs" 
+     depends="dist-splunk,dist-splunk-sdk"/>
 
     <target name="dist-splunk" depends="compile-splunk">
         <mkdir dir="${dir.dist}"/>
@@ -104,6 +126,21 @@
          basedir="${dir.build.splunk}"
          destfile="${dir.dist}/splunk.jar"
          includes="**/*.class"/>
+    </target>
+
+    <target name="dist-splunk-sdk" depends="compile-splunk-sdk">
+        <mkdir dir="${dir.dist}"/>
+        <jar 
+         basedir="${dir.build.splunk-sdk}"
+         destfile="${dir.dist}/splunk-sdk.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="../lib/commons-cli-1.2.jar"/>
+            </manifest>
+        </jar>
     </target>
 
     <target name="dist-examples" depends="compile-examples">
@@ -117,7 +154,7 @@
                 <attribute name="Main-Class" value="Program"/>
                 <attribute 
                  name="Class-Path" 
-                 value="../splunk.jar ../../lib/commons-cli-1.2.jar"/>
+                 value="../splunk.jar ../splunk-sdk.jar"/>
             </manifest>
         </jar>
 
