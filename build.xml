@@ -37,34 +37,21 @@
 
 <project name="splunk-sdk-java" basedir="." default="build">
 
-    <property name="dir.build" location="build"/>
-    <property name="dir.build.examples" location="${dir.build}/examples"/>
-    <property 
-     name="dir.build.examples.spurl" 
-     location="${dir.build.examples}/spurl"/>
-    <property 
-     name="dir.build.examples.test" 
-     location="${dir.build.examples}/test"/>
-    <property name="dir.build.splunk" location="${dir.build}/splunk"/>
-    <property name="dir.build.splunk-sdk" location="${dir.build}/splunk-sdk"/>
-    <property name="dir.build.tests" location="${dir.build}/tests"/>
-    <property name="dir.dist" location="dist"/>
-    <property name="dir.dist.examples" location="${dir.dist}/examples"/>
-    <property name="dir.examples" location="examples"/>
-    <property name="dir.examples.spurl" location="${dir.examples}/spurl"/>
-    <property name="dir.examples.test" location="${dir.examples}/test"/>
-    <property name="dir.lib" location="lib"/>
-    <property name="dir.splunk" location="splunk"/>
-    <property name="dir.splunk-sdk" location="splunk-sdk"/>
-    <property name="dir.tests" location="tests"/>
+    <property file="build.properties"/>
 
     <path id="classpath.splunk-sdk">
-        <pathelement location="${dir.lib}/commons-cli-1.2.jar"/>
+        <pathelement location="${lib.commons-cli}"/>
     </path>
 
     <path id="classpath.examples">
-        <pathelement location="${dir.dist}/splunk.jar"/>
-        <pathelement location="${dir.dist}/splunk-sdk.jar"/>
+        <pathelement location="${dist.splunk}"/>
+        <pathelement location="${dist.splunk-sdk}"/>
+    </path>
+
+    <path id="classpath.tests">
+        <pathelement location="${dist.splunk}"/>
+        <pathelement location="${dist.splunk-sdk}"/>
+        <pathelement location="${lib.junit}"/>
     </path>
 
     <target name="build" depends="dist"/>
@@ -76,9 +63,6 @@
 
     <target name="compile-libs"
      depends="compile-splunk,compile-splunk-sdk"/>
-
-    <target name="compile-examples" 
-     depends="compile-examples-spurl,compile-examples-test"/>
 
     <target name="compile-splunk">
         <mkdir dir="${dir.build.splunk}"/>
@@ -95,6 +79,9 @@
             <classpath refid="classpath.splunk-sdk"/>
         </javac>
     </target>
+
+    <target name="compile-examples" 
+     depends="compile-examples-spurl,compile-examples-test"/>
 
     <target name="compile-examples-spurl" depends="compile-libs">
         <mkdir dir="${dir.build.examples.spurl}"/>
@@ -114,8 +101,12 @@
         </javac>
     </target>
 
+    <target name="compile-tests">
+        <!-- UNDONE -->
+    </target>
+
     <target name="dist" 
-     depends="dist-libs,dist-examples"/>
+     depends="dist-libs,dist-examples,dist-tests"/>
 
     <target name="dist-libs" 
      depends="dist-splunk,dist-splunk-sdk"/>
@@ -169,5 +160,10 @@
         </jar>
     </target>
 
-    <target name="units"></target>
+    <target name="dist-tests" depends="compile-tests">
+        <!-- UNDONE -->
+    </target>
+
+    <target name="test" depends="dist">
+    </target>
 </project>
