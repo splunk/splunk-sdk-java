@@ -18,37 +18,14 @@ import com.splunk.Service;
 import com.splunk.http.RequestMessage;
 import com.splunk.http.ResponseMessage;
 
-import org.apache.commons.cli.ParseException;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 
-public class Program {
+public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
-        Command command = new Command();
-
+        Program program = new Program();
         try {
-            // Load default options from the .splunkrc file
-            String home = System.getProperty("user.home");
-            String path = home + File.separator + ".splunkrc";
-            command.load(path);
-
-            // Parse command line arguments
-            command.parse(args);
-        }
-        catch (ParseException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }
-
-        if (command.help) {
-            command.printHelp("spurl");
-            return;
-        }
-
-        try {
-            run(command);
+            program.init(args).run();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -56,13 +33,11 @@ public class Program {
         }
     }
 
-    static void run(Command command) throws Exception {
-        Service service = new Service(
-            command.host,
-            command.port,
-            command.scheme).login(command.username, command.password);
+    public void run() throws Exception {
+        Service service = new Service(this.host, this.port, this.scheme);
+        service.login(this.username, this.password);
 
-        String path = command.args.length > 0 ? command.args[0] : "/";
+        String path = this.args.length > 0 ? this.args[0] : "/";
         ResponseMessage response = service.send(new RequestMessage("GET", path));
 
         int status = response.getStatus();

@@ -17,6 +17,8 @@
 // UNDONE: Support for other builtin types?
 // UNDONE: Automatically build rules by reflecting over option fields.
 
+package com.splunk.sdk;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
