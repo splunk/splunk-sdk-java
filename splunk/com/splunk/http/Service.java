@@ -14,6 +14,7 @@
  * under the License.
  */
 
+// UNDONE: Support for Splunk namespaces
 // UNDONE: Support for pluggable trust managers.
 // UNDONE: Timeouts, connection & request.
 
@@ -141,13 +142,25 @@ public class Service {
         this.scheme = value;
     }
 
+    public ResponseMessage get(String path) throws IOException {
+        return send(new RequestMessage("GET", path));
+    }
+
+    public ResponseMessage get(String path, Map<String, String> args)
+        throws IOException 
+    {
+        if (args != null) path = path + "?" + encode(args);
+        RequestMessage request = new RequestMessage("GET", path);
+        return send(request);
+    }
+
     public ResponseMessage post(String path, Map<String, String> args)
         throws IOException
     {
         RequestMessage request = new RequestMessage("POST", path);
         request.getHeader().put(
             "Content-Type", "application/x-www-form-urlencoded");
-        request.setContent(encode(args));
+        if (args != null) request.setContent(encode(args));
         return send(request);
     }
 

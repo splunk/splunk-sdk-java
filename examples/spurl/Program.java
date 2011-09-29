@@ -35,14 +35,17 @@ public class Program extends com.splunk.sdk.Program {
 
     public void run() throws Exception {
         Service service = new Service(this.host, this.port, this.scheme);
+
         service.login(this.username, this.password);
 
         String path = this.args.length > 0 ? this.args[0] : "/";
-        ResponseMessage response = service.send(new RequestMessage("GET", path));
+        ResponseMessage response = 
+            service.send(new RequestMessage("GET", path));
 
         int status = response.getStatus();
         System.out.println(String.format("=> %d", status));
         if (status != 200) return;
+
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(response.getContent()));
         while (true) {

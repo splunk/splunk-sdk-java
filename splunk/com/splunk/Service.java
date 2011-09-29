@@ -42,6 +42,7 @@ public class Service extends com.splunk.http.Service {
         args.put("username", username);
         args.put("password", password);
         ResponseMessage response = super.post("/services/auth/login/", args);
+        // UNDONE: Check status
         String sessionKey = parseXml(response)
             .getElementsByTagName("sessionKey")
             .item(0)
