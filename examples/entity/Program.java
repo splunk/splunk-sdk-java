@@ -23,10 +23,11 @@ import com.splunk.data.Header;
 
 import java.util.ArrayList;
 
-public class Program {
+public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
+        Program program = new Program();
         try {
-            run();
+            program.init(args).run();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -64,9 +65,9 @@ public class Program {
         dumpEntries(entity.entry);
     }
 
-    static void run() throws Exception {
-        Service service = new Service("192.168.242.114", 8089, "https");
-        service.login("admin", "changed");
+    public void run() throws Exception {
+        Service service = new Service(this.host, this.port, this.scheme);
+        service.login(this.username, this.password);
 
         Client client = new Client(service);
 
