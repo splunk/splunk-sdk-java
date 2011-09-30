@@ -88,7 +88,7 @@
     </target>
 
     <target name="compile-examples" 
-     depends="compile-examples-spurl,compile-examples-test"/>
+     depends="compile-examples-spurl,compile-examples-test,compile-examples-entity"/>
 
     <target name="compile-examples-spurl" depends="dist-libs">
         <mkdir dir="${dir.build.examples.spurl}"/>
@@ -104,6 +104,15 @@
         <javac includeantruntime="false"
          srcdir="${dir.examples.test}"
          destdir="${dir.build.examples.test}">
+            <classpath refid="classpath.examples"/>
+        </javac>
+    </target>
+
+    <target name="compile-examples-entity" depends="compile-libs">
+        <mkdir dir="${dir.build.examples.entity}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.examples.entity}"
+         destdir="${dir.build.examples.entity}">
             <classpath refid="classpath.examples"/>
         </javac>
     </target>
@@ -170,6 +179,18 @@
                 <attribute name="Class-Path" value="../splunk.jar"/>
             </manifest>
         </jar>
+
+        <jar 
+         basedir="${dir.build.examples.entity}"
+         destfile="${dir.dist.examples}/entity.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="../splunk.jar ../splunk-sdk.jar"/>
+            </manifest>
+        </jar>
     </target>
 
     <target name="dist-tests" depends="compile-tests">
@@ -188,19 +209,6 @@
     </target>
 
     <!-- Execute unit tests -->
-
-    <!--
-    <target name="test" depends="dist">
-        <junit fork="yes" haltonfailure="no">
-            <batchtest todir="${dir.dist}">
-                <fileset dir="${dir.build.tests}" includes="**/*.class"/>
-            </batchtest>
-            <classpath refid="classpath.test"/>
-            <formatter type="plain" usefile="false"/>
-        </junit>
-    </target>
-    -->
-
     <target name="test" depends="dist">
         <junit fork="yes" haltonfailure="no">
             <batchtest>
