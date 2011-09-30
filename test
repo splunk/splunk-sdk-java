@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#
+# Shell script to build SDK and run named unit test.
+#
+#   Usage: test {test-class}
+#
+# Example: ./test ServiceTest
+#
+
+echo Building ..
+ant -q -logfile build.log
+if [ $? -ne 0 ] ; then
+    cat build.log
+    exit $?
+fi
+echo junit $1 ..
+java -cp ./build/tests:./lib/junit-4.8.1.jar org.junit.runner.JUnitCore com.splunk.sdk.tests.$1 $2 $3 $4 $5 $6 $7 $8 $9

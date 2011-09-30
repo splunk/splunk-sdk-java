@@ -48,10 +48,17 @@
         <pathelement location="${dist.splunk-sdk}"/>
     </path>
 
+    <!-- Classpaath for building tests -->
     <path id="classpath.tests">
         <pathelement location="${dist.splunk}"/>
         <pathelement location="${dist.splunk-sdk}"/>
         <pathelement location="${lib.junit}"/>
+    </path>
+
+    <!-- Classpath for executing test target -->
+    <path id="classpath.test">
+        <pathelement location="${lib.junit}"/>
+        <pathelement location="${dir.build.tests}"/>
     </path>
 
     <target name="build" depends="dist"/>
@@ -83,7 +90,7 @@
     <target name="compile-examples" 
      depends="compile-examples-spurl,compile-examples-test"/>
 
-    <target name="compile-examples-spurl" depends="compile-libs">
+    <target name="compile-examples-spurl" depends="dist-libs">
         <mkdir dir="${dir.build.examples.spurl}"/>
         <javac includeantruntime="false"
          srcdir="${dir.examples.spurl}"
@@ -92,7 +99,7 @@
         </javac>
     </target>
 
-    <target name="compile-examples-test" depends="compile-libs">
+    <target name="compile-examples-test" depends="dist-libs">
         <mkdir dir="${dir.build.examples.test}"/>
         <javac includeantruntime="false"
          srcdir="${dir.examples.test}"
@@ -101,8 +108,13 @@
         </javac>
     </target>
 
-    <target name="compile-tests">
-        <!-- UNDONE -->
+    <target name="compile-tests" depends="dist-libs">
+        <mkdir dir="${dir.build.tests}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.tests}"
+         destdir="${dir.build.tests}">
+            <classpath refid="classpath.tests"/>
+        </javac>
     </target>
 
     <target name="dist" 
@@ -115,7 +127,7 @@
         <mkdir dir="${dir.dist}"/>
         <jar 
          basedir="${dir.build.splunk}"
-         destfile="${dir.dist}/splunk.jar"
+         destfile="${dist.splunk}"
          includes="**/*.class"/>
     </target>
 
@@ -123,7 +135,7 @@
         <mkdir dir="${dir.dist}"/>
         <jar 
          basedir="${dir.build.splunk-sdk}"
-         destfile="${dir.dist}/splunk-sdk.jar"
+         destfile="${dist.splunk-sdk}"
          includes="**/*.class">
             <manifest>
                 <attribute name="Main-Class" value="Program"/>
@@ -161,9 +173,43 @@
     </target>
 
     <target name="dist-tests" depends="compile-tests">
-        <!-- UNDONE -->
+        <mkdir dir="${dir.dist}"/>
+        <jar 
+         basedir="${dir.build.tests}"
+         destfile="${dist.tests}"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute name="Class-Path" 
+                 value="splunk.jar splunk-sdk.jar"/>
+            </manifest>
+        </jar>
+
     </target>
 
+    <!-- Execute unit tests -->
+
+    <!--
     <target name="test" depends="dist">
+        <junit fork="yes" haltonfailure="no">
+            <batchtest todir="${dir.dist}">
+                <fileset dir="${dir.build.tests}" includes="**/*.class"/>
+            </batchtest>
+            <classpath refid="classpath.test"/>
+            <formatter type="plain" usefile="false"/>
+        </junit>
+    </target>
+    -->
+
+    <target name="test" depends="dist">
+        <junit fork="yes" haltonfailure="no">
+            <batchtest>
+                <zipfileset src="${dist.tests}">
+                    <include name="**/*Test.class"/>
+                </zipfileset>
+            </batchtest>
+            <classpath refid="classpath.test"/>
+            <formatter type="plain" usefile="false"/>
+        </junit>
     </target>
 </project>

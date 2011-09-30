@@ -5,6 +5,8 @@
 #
 #   Usage: run {sample}
 #
+# Example: ./run spurl --host=localhost /services/search/jobs
+#
 
 echo Building ..
 ant -q -logfile build.log

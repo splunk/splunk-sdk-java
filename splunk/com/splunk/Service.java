@@ -14,6 +14,7 @@
  * under the License.
  */
 
+// UNDONE: Support for splunk path fragments (prefix based on namespace)
 // UNDONE: Figure out where to put public response parsers for XML, JSON, ..
 
 package com.splunk;
