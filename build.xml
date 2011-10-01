@@ -57,8 +57,10 @@
 
     <!-- Classpath for executing test target -->
     <path id="classpath.test">
-        <pathelement location="${lib.junit}"/>
         <pathelement location="${dir.build.tests}"/>
+        <pathelement location="${dist.splunk}"/>
+        <pathelement location="${dist.splunk-sdk}"/>
+        <pathelement location="${lib.junit}"/>
     </path>
 
     <target name="build" depends="dist"/>
@@ -200,24 +202,23 @@
          destfile="${dist.tests}"
          includes="**/*.class">
             <manifest>
-                <attribute name="Main-Class" value="Program"/>
                 <attribute name="Class-Path" 
-                 value="splunk.jar splunk-sdk.jar"/>
+                 value="./splunk.jar ./splunk-sdk.jar ../lib/junit-4.8.1.jar"/>
             </manifest>
         </jar>
-
     </target>
 
     <!-- Execute unit tests -->
     <target name="test" depends="dist">
         <junit fork="yes" haltonfailure="no">
-            <batchtest>
-                <zipfileset src="${dist.tests}">
-                    <include name="**/*Test.class"/>
-                </zipfileset>
-            </batchtest>
             <classpath refid="classpath.test"/>
+            <batchtest>
+                <fileset dir="${dir.build.tests}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
             <formatter type="plain" usefile="false"/>
         </junit>
     </target>
+
 </project>

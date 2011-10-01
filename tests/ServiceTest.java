@@ -27,12 +27,28 @@ package com.splunk.sdk.tests;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-public class ServiceTest {
+import com.splunk.*;
+// import com.splunk.http.*;
+import com.splunk.sdk.Program;
+
+public class ServiceTest extends Program {
     public ServiceTest() {}
 
+    @Before
+    public void setUp() {
+        super.init(); // Pick up .splunkrc settings
+    }
+
     @Test 
-    public void testFoo() {
-        assertTrue(true);
+    public void testLogin() {
+        try {
+            Service service = new Service(this.host, this.port, this.scheme);
+            service.login(this.username, this.password);
+            assertTrue(true);
+        }
+        catch (Exception e) {
+            assertTrue(false);
+        }
     }
 
     @Test 
@@ -45,4 +61,3 @@ public class ServiceTest {
         assertTrue(true);
     }
 }
-

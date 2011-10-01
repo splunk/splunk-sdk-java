@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" filepath="$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/examples/spurl/spurl.iml" filepath="$PROJECT_DIR$/examples/spurl/spurl.iml" />
       <module fileurl="file://$PROJECT_DIR$/examples/test/test.iml" filepath="$PROJECT_DIR$/examples/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
     </modules>
   </component>
 </project>
