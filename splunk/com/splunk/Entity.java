@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.data;
+package com.splunk;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

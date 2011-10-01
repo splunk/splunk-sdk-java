@@ -15,18 +15,19 @@
  */
 
 
-import com.splunk.Client;
-import com.splunk.Service;
-import com.splunk.data.Entity;
-import com.splunk.data.Entry;
-import com.splunk.data.Header;
+import com.splunk.*;
+
+import com.splunk.Entity;
+import com.splunk.Entry;
+import com.splunk.Header;
 
 import java.util.ArrayList;
 
-public class Program {
+public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
+        Program program = new Program();
         try {
-            run();
+            program.init(args).run();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -64,14 +65,28 @@ public class Program {
         dumpEntries(entity.entry);
     }
 
-    static void run() throws Exception {
-        Service service = new Service("192.168.242.114", 8089, "https");
-        service.login("admin", "changed");
+    public void run() throws Exception {
+        Service service = new Service(this.host, this.port, this.scheme);
+        service.login(this.username, this.password);
 
-        Client client = new Client(service);
+        System.out.println("APPLICATIONS **********************************************\n");
+        Apps application =  new Apps(service);
+        System.out.println("APP List:" + application.list() + "\n");
+        dumpEntity(application.get("eaitest"));
+        dumpEntity(application.get());
 
-        dumpEntity(client.app("eaitest"));
-        dumpEntity(client.apps());
 
+        System.out.println("INDEXES ***************************************************\n");
+        Indexes indexes =  new Indexes(service);
+        System.out.println("Indexes List:" + indexes.list() + "\n");
+        dumpEntity(indexes.get("_internal"));
+        dumpEntity(indexes.get());
+
+        System.out.println("INPUTS ****************************************************\n");
+        Inputs inputs =  new Inputs(service);
+        System.out.println("Inputs List:" + inputs.list() + "\n");
+        dumpEntity(inputs.get("tcp"));
+        dumpEntity(inputs.get("tcp/ssl"));
+        dumpEntity(inputs.get());
     }
 }

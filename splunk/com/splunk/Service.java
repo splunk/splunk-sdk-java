@@ -55,7 +55,7 @@ public class Service extends com.splunk.http.Service {
     }
 
     // Returns the response content as an XML DOM.
-    Document parseXml(ResponseMessage response) {
+    public Document parseXml(ResponseMessage response) {
         try {
             InputStream content = response.getContent();
             DocumentBuilderFactory factory = 

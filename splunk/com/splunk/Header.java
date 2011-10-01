@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.data;
+package com.splunk;
 
 import java.util.ArrayList;
 import java.util.HashMap;

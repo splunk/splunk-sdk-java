@@ -16,26 +16,30 @@
 
 package com.splunk;
 
-import com.splunk.data.Entity;
-import com.splunk.http.RequestMessage;
-import com.splunk.http.ResponseMessage;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
-// UNDONE: Need to refactor for more than just get's.
+import java.util.ArrayList;
 
 /**
- * Mid level splunk sdk API; uses lower level Binding sdk API.
+ * Parent class that all other endpoints classes will derive from
  */
 
 public class Client {
 
-    Service service = null;
+    public Service service = null;
 
-    // UNDONE: need to normalize paths. URL namespace processing needs to be in place
-    private final String PATH_APPS = "/services/apps/local/";
+    public Client() {
+        // default constructor
+    }
+    public Client(Service serv) {
+        service = serv;
+    }
+
+    // UNDONE: need to normalize paths, and moved to individual classes (in progress)
     private final String PATH_CAPABILITIES = "authorization/capabilities/";
     private final String PATH_CONF = "configs/conf-%s/"; // (config file)
     private final String PATH_CONFS = "properties/";
-    private final String PATH_INDEXES = "data/indexes/";
     private final String PATH_INPUTS = "data/inputs/";
     private final String PATH_JOBS = "search/jobs/";
     private final String PATH_LOGGER = "server/logger/";
@@ -53,96 +57,32 @@ public class Client {
     private final String XNAME_ENTRY = "{http://www.w3.org/2005/Atom}entry";
     private final String XNAME_CONTENT = "{http://www.w3.org/2005/Atom}content";
 
-    public Client(Service serv) {
-        service = serv;
-    }
+    private ArrayList<String> getList(Document doc) {
+        ArrayList<String> outlist = new ArrayList<String>();
+        NodeList nl = doc.getElementsByTagName("title");
 
-    private ResponseMessage get(String path) throws Exception {
-        ResponseMessage response = service.get(path);
-        int status = response.getStatus();
-        if (status > 201) {
-            System.out.println("get failed, status is " + status);
+        // index 0 is always header title
+        for (int idx=1; idx < nl.getLength(); idx++) {
+            outlist.add(nl.item(idx).getTextContent());
         }
-        return response;
+
+        return outlist;
     }
 
-    /**
-     * app
-     */
-
-    public Entity app(String name) throws Exception {
+    public Entity get(String path) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(get(PATH_APPS + name).getContent());
+        return converter.convertXMLData(service.get(path).getContent());
     }
 
-    public Entity apps() throws Exception {
+    public Entity delete(String path) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(get(PATH_APPS).getContent());
+        // place holder -- service needs a delete method
+        return converter.convertXMLData(service.get/*deletegoeshere*/(path).getContent());
     }
 
-    /**
-     * apps
-     */
-
-/*    public Collection apps(Service service) throws Exception {
-        return new Collection(PATH_APPS);
+    public ArrayList<String> list(String path) throws Exception {
+        Document doc = service.parseXml(service.get(path));
+        ArrayList<String> applist = getList(doc);
+        return applist;
     }
-
-    /**
-     * conf
-     */
-/*
-    public com.splunk.Data.Entity conf (Service service, String name) throws Exception {
-        return new Entity(PATH_CONF + name);
-    }
-
-    /**
-     * confs
-     */
-/*
-    public Entity confs (Service service) throws Exception {
-        return new Entity(PATH_CONFS);
-    }
-
-    /**
-     * index
-     */
-/*
-    public Entity index(Service service, String name) throws Exception {
-        return new Entity(PATH_INDEXES + name);
-    }
-
-    /**
-     * inputs
-     */
-/*
-    public Entity inputs(Service service) throws Exception {
-        return new Entity(PATH_INPUTS);
-    }
-
-    /**
-     * job
-     */
-/*
-    public Entity Job (Service service) throws Exception {
-        return new Entity(PATH_JOBS);
-    }
-
-    /**
-     * jobs
-     */
-/*
-    public Entity Jobs (Service service) throws Exception {
-        return new Entity(PATH_JOBS);
-    }
-
-    /**
-     * messagess
-     */
-/*
-    public Entity messages(Service service) throws Exception {
-        return new Entity(PATH_MESSAGES);
-
-    }
-    */
 }

@@ -14,17 +14,19 @@
  * under the License.
  */
 
-package com.splunk.sdk;
+package com.splunk;
 
-public class SplunkException extends RuntimeException {
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    private static final long serialVersionUID = 1L;
+public class Entry {
+    // basic entry elements
+    public String title;
+    public String id;
+    public String updated;
 
-    public SplunkException(SplunkException e) {
-        super(e);
-    }
-
-    public SplunkException(String err) {
-        super(err);
-    }
+    // non-scalar and somewhat dynamic
+    public ArrayList<HashMap<String,String>> link = new ArrayList<HashMap<String,String>> ();
+    public HashMap<String,String> author = new HashMap<String, String>();
+    public HashMap<String,String> content = new HashMap<String, String>();
 }

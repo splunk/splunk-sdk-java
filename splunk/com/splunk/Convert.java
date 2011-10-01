@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.sdk.SplunkException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,7 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.splunk.data.Entity;
+import java.lang.RuntimeException;
 
 public class Convert {
 
@@ -183,7 +182,7 @@ public class Convert {
                 node = node.getNextSibling();
             }
         } catch (Exception e) {
-            throw new SplunkException("XML parse failed: " + e.getMessage());
+            throw new RuntimeException("XML parse failed: " + e.getMessage());
         }
 
         return entity;
@@ -200,11 +199,11 @@ public class Convert {
             return convert(dom);
 
         } catch (ParserConfigurationException e) {
-            throw new SplunkException("XML parse failed: " + e.getMessage());
+            throw new RuntimeException("XML parse failed: " + e.getMessage());
         } catch (SAXException e) {
-            throw new SplunkException("XML parse failed: " + e.getMessage());
+            throw new RuntimeException("XML parse failed: " + e.getMessage());
         } catch (IOException e) {
-            throw new SplunkException("XML parse failed (IO): " + e.getMessage());
+            throw new RuntimeException("XML parse failed (IO): " + e.getMessage());
         }
     }
 
@@ -222,11 +221,11 @@ public class Convert {
             return convert(dom);
 
         } catch (ParserConfigurationException e) {
-            throw new SplunkException("XML parse failed: " + e.getMessage());
+            throw new RuntimeException("XML parse failed: " + e.getMessage());
         } catch (SAXException e) {
-            throw new SplunkException("XML parse failed: " + e.getMessage());
+            throw new RuntimeException("XML parse failed: " + e.getMessage());
         } catch (IOException e) {
-            throw new SplunkException("XML parse failed (IO): " + e.getMessage());
+            throw new RuntimeException("XML parse failed (IO): " + e.getMessage());
         }
     }
 }
