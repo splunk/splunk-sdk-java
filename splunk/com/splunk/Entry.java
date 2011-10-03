@@ -24,6 +24,7 @@ public class Entry {
     public String title;
     public String id;
     public String updated;
+    public String published;
 
     // non-scalar and somewhat dynamic
     public ArrayList<HashMap<String,String>> link = new ArrayList<HashMap<String,String>> ();

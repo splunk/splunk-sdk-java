@@ -39,7 +39,6 @@ public class Inputs extends Client {
         return super.get(PATH_INPUTS + name);
     }
 
-    // place holder
     public ArrayList<String> list(String name) throws Exception {
         return super.list(PATH_INPUTS + name);
     }

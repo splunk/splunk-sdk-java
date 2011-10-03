@@ -41,11 +41,19 @@ public class Program extends com.splunk.sdk.Program {
         System.out.println("title:        " + header.title);
         System.out.println("updated:      " + header.updated);
         System.out.println("author:       " + header.author);
-        System.out.println("link:         " + header.link);
-        System.out.println("itemsperpage: " + header.itemsPerPage);
-        System.out.println("startindex:   " + header.startIndex);
-        System.out.println("totalresults: " + header.totalResults);
-        System.out.println("messages:     " + header.messages + "\n");
+
+        // semi-optional
+        if (header.link.size() > 0)
+            System.out.println("link:         " + header.link);
+        if (header.itemsPerPage != -1)
+            System.out.println("itemsperpage: " + header.itemsPerPage);
+        if (header.startIndex != -1)
+            System.out.println("startindex:   " + header.startIndex);
+        if (header.totalResults != -1)
+            System.out.println("totalresults: " + header.totalResults);
+        if (header.messages != null && header.messages.length() > 0)
+            System.out.println("messages:     " + header.messages);
+        System.out.println("");
     }
 
     private static void dumpEntries(ArrayList<Entry> entries) {
@@ -56,7 +64,13 @@ public class Program extends com.splunk.sdk.Program {
              System.out.println("    ID:           " + entry.id);
              System.out.println("    updated:      " + entry.updated);
              System.out.println("    title:        " + entry.title);
-             System.out.println("    content:      " + entry.content + "\n");
+
+            // semi-optional
+             if (entry.published != null)
+                System.out.println("    published:    " + entry.published);
+             if (!entry.content.isEmpty())
+                System.out.println("    content:      " + entry.content);
+             System.out.println("");
          }
     }
 
@@ -75,7 +89,6 @@ public class Program extends com.splunk.sdk.Program {
         dumpEntity(application.get("eaitest"));
         dumpEntity(application.get());
 
-
         System.out.println("INDEXES ***************************************************\n");
         Indexes indexes =  new Indexes(service);
         System.out.println("Indexes List:" + indexes.list() + "\n");
@@ -88,5 +101,78 @@ public class Program extends com.splunk.sdk.Program {
         dumpEntity(inputs.get("tcp"));
         dumpEntity(inputs.get("tcp/ssl"));
         dumpEntity(inputs.get());
+
+        System.out.println("CAPABILITIES **********************************************\n");
+        Capabilities capabilities  =  new Capabilities(service);
+        System.out.println("Capabilities List:" + capabilities.list() + "\n");
+        dumpEntity(capabilities.get());
+
+        System.out.println("CONFS *****************************************************\n");
+        Confs confs =  new Confs(service);
+        System.out.println("Confs List:" + confs.list() + "\n");
+        dumpEntity(confs.get("authentication"));
+        dumpEntity(confs.get());
+
+        System.out.println("JOBS ******************************************************\n");
+        Jobs jobs =  new Jobs(service);
+        //System.out.println("Jobs List:" + jobs.list() + "\n");
+        dumpEntity(jobs.get());
+
+        System.out.println("LOGGER ****************************************************\n");
+        Logger logger  =  new Logger(service);
+        System.out.println("Logger List:" + logger.list() + "\n");
+        dumpEntity(logger.get("AdminHandler:AuthenticationHandler"));
+        dumpEntity(logger.get());
+
+        System.out.println("MESSAGES **************************************************\n");
+        Messages messages =  new Messages(service);
+        System.out.println("Messages List:" + messages.list() + "\n");
+        dumpEntity(messages.get());
+
+        System.out.println("ROLES *****************************************************\n");
+        Roles roles =  new Roles(service);
+        System.out.println("Roles List:" + roles.list() + "\n");
+        dumpEntity(roles.get("admin"));
+        dumpEntity(roles.get());
+
+        System.out.println("USERS *****************************************************\n");
+        Users users =  new Users(service);
+        System.out.println("Users List:" + users.list() + "\n");
+        dumpEntity(users.get("admin"));
+        dumpEntity(users.get());
+
+        System.out.println("DEPLOYMENT SERVER *****************************************\n");
+        DeploymentServer ds =  new DeploymentServer(service);
+        System.out.println("Deployment Server List:" + ds.list() + "\n");
+        dumpEntity(ds.get("default"));
+        dumpEntity(ds.get());
+
+        System.out.println("DEPLOYMENT CLIENT *****************************************\n");
+        DeploymentClient dc =  new DeploymentClient(service);
+        System.out.println("Deployment Client List:" + dc.list() + "\n");
+        dumpEntity(dc.get());
+
+        System.out.println("DEPLOYMENT SERVER CLASS ***********************************\n");
+        DeploymentServerclass dsc =  new DeploymentServerclass(service);
+        System.out.println("Deployment Serverclass:" + dsc.list() + "\n");
+        dumpEntity(dsc.get());
+
+        System.out.println("DEPLOYMENT TENANTS ****************************************\n");
+        DeploymentTenants dt =  new DeploymentTenants(service);
+        System.out.println("Deployment Tenants:" + dt.list() + "\n");
+        dumpEntity(dt.get("default"));
+        dumpEntity(dt.get());
+
+        System.out.println("DISTRIBUTED SEARCH PEERS **********************************\n");
+        DistributedPeers dsp =  new DistributedPeers(service);
+        System.out.println("Distributed Search Peers:" + dsp.list() + "\n");
+        //dumpEntity(dsp.get("default"));
+        dumpEntity(dsp.get());
+
+        System.out.println("DISTRIBUTED SEARCH CONFIG *********************************\n");
+        DistributedConfig dsconfig =  new DistributedConfig(service);
+        System.out.println("Distributed Search Peers:" + dsconfig.list() + "\n");
+        dumpEntity(dsconfig.get("distributedSearch"));
+        dumpEntity(dsconfig.get());
     }
 }

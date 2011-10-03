@@ -154,7 +154,7 @@ public class Entity {
         Entry entry = new Entry();
 
         // parse: build up an Entity object, high level data
-        List<String> firstLevel = Arrays.asList("id", "title", "updated", "link", "entry", "author");
+        List<String> firstLevel = Arrays.asList("id", "title", "updated", "link", "entry", "author", "published");
         Node node = root.getFirstChild();
         while (node != null) {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -187,6 +187,8 @@ public class Entity {
                                 }
                             }
                             entry.link.add(attributes);
+                        } else if (name.equals("published")) {
+                            entry.published = value;
                         }
                     } else {
                         // only non-leaf at first level is author.

@@ -18,17 +18,17 @@ package com.splunk;
 
 import java.util.ArrayList;
 
-// UNDONE: check http status
-public class Apps extends Client {
+// UNDONE: This class needs to be extended to handle the interesting flexibility of this endpoint
+public class Jobs extends Client {
 
-    private final String PATH_APPS = "/services/apps/local/";
+    private final String PATH_JOBS = "/services/search/jobs/";
 
-    public Apps(Service service) {
+    public Jobs(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_APPS + name);
+        return super.get(PATH_JOBS + name);
     }
 
     public Entity get() throws Exception {
@@ -36,11 +36,12 @@ public class Apps extends Client {
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_APPS + name);
+        return super.get(PATH_JOBS + name);
     }
 
+    // UNDONE: a list is better suited to collect the ID's of the content and remove the prefix (like python)
     public ArrayList<String> list(String name) throws Exception {
-        return super.list(PATH_APPS + name);
+        return super.list(PATH_JOBS + name);
     }
 
     public ArrayList<String> list() throws Exception {

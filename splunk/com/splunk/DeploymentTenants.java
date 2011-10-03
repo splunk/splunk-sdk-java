@@ -18,32 +18,31 @@ package com.splunk;
 
 import java.util.ArrayList;
 
-// UNDONE: check http status
-public class Apps extends Client {
+public class DeploymentTenants extends Client {
 
-    private final String PATH_APPS = "/services/apps/local/";
+    private final String PATH_DEP_TENANT = "/services/deployment/tenants/";
 
-    public Apps(Service service) {
+    public DeploymentTenants(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_APPS + name);
+        return super.get(PATH_DEP_TENANT + name);
     }
 
     public Entity get() throws Exception {
-        return get("");
+        return super.get(PATH_DEP_TENANT);
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_APPS + name);
+        return super.get(PATH_DEP_TENANT + name);
     }
 
     public ArrayList<String> list(String name) throws Exception {
-        return super.list(PATH_APPS + name);
+        return super.list(PATH_DEP_TENANT + name);
     }
 
     public ArrayList<String> list() throws Exception {
-        return list("");
+        return super.list(PATH_DEP_TENANT);
     }
 }

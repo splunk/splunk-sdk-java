@@ -39,7 +39,6 @@ public class Indexes extends Client {
         return super.get(PATH_INDEXES + name);
     }
 
-    // place holder
     public ArrayList<String> list(String name) throws Exception {
         return super.list(PATH_INDEXES + name);
     }

@@ -86,6 +86,14 @@ public class Convert {
             }
         }
     }
+
+    private void dumpNodes(Node node) {
+        // debug print
+        while (node != null) {
+            dumpNode(node, 1);
+            node = node.getNextSibling();
+        }
+    }
     // end debug stuff
 
 
@@ -100,11 +108,7 @@ public class Convert {
             // root is the feed, and everything else is its children
             node = root.getFirstChild();
 
-            // debug print
-            //while (node != null) {
-            //    dumpNode(node, 1);
-            //    node = node.getNextSibling();
-            //}
+            // dumpNodes(node); /* debug print */
 
             // parse: get first level header information
             List<String> firstLevel = Arrays.asList("generator", "id", "title", "updated",

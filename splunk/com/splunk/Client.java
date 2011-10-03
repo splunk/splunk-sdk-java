@@ -36,27 +36,6 @@ public class Client {
         service = serv;
     }
 
-    // UNDONE: need to normalize paths, and moved to individual classes (in progress)
-    private final String PATH_CAPABILITIES = "authorization/capabilities/";
-    private final String PATH_CONF = "configs/conf-%s/"; // (config file)
-    private final String PATH_CONFS = "properties/";
-    private final String PATH_INPUTS = "data/inputs/";
-    private final String PATH_JOBS = "search/jobs/";
-    private final String PATH_LOGGER = "server/logger/";
-    private final String PATH_MESSAGES = "messages/";
-    private final String PATH_ROLES = "authentication/roles/";
-    private final String PATH_STANZA = "configs/conf-%s/%s"; // (config file, stanza)
-    private final String PATH_USERS = "authentication/users/";
-    private final String PATH_DEP_SERV = "deployment/server/";
-    private final String PATH_DEP_CLI = "deployment/client/";
-    private final String PATH_DEP_SERV_CL = "deployment/serverclass/";
-    private final String PATH_DEP_TENANT = "deployment/tenants/";
-    private final String PATH_DSEARCH_PEER = "search/distributed/peers/";
-    private final String PATH_DSEARCH_CONF = "search/distributed/config/";
-
-    private final String XNAME_ENTRY = "{http://www.w3.org/2005/Atom}entry";
-    private final String XNAME_CONTENT = "{http://www.w3.org/2005/Atom}content";
-
     private ArrayList<String> getList(Document doc) {
         ArrayList<String> outlist = new ArrayList<String>();
         NodeList nl = doc.getElementsByTagName("title");
