@@ -16,17 +16,15 @@
 
 //
 // UNDONE:
-//   * Authentication
-//   * send/get/post/delete
-//       - Status code, response schema
+//   * POST, DELETE
+//   * Response schema
 //   * Namespaces
 //       - Path fragments
-//
-// UNDONE: What message should we print on exception?
 //
 
 package com.splunk;
 
+import java.io.IOException;
 import junit.framework.TestCase;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -44,49 +42,61 @@ public class ServiceTest extends TestCase {
         assertEquals(response.getStatus(), 200);
     }
 
+    Service connect() throws IOException {
+        return new Service(
+            program.host, program.port, program.scheme)
+                .login(program.username, program.password);
+    }
+
     @Before public void setUp() {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testLogin() {
-        // UNDONE: Should be a better way in JUnit to check for exception
+    @Test public void testLogin() throws IOException {
+        Service service = new Service(
+            program.host, program.port, program.scheme);
+        service.login(program.username, program.password);
+    }
+
+    @Test public void testLoginFail() throws IOException {
+        Service service = new Service(
+            program.host, program.port, program.scheme);
+
         try {
-            Service service = new Service(
-                program.host, program.port, program.scheme);
-            service.login(program.username, program.password);
-            assertTrue(true);
+            // Swap username & password so we know this will fail
+            service.login(program.password, program.username);
+            fail("Login was expected to fail");
         }
-        catch (Exception e) {
-            assertTrue(false);
+        catch (Exception e) {}
+    }
+
+    @Test public void testLogout() throws IOException {
+        Service service = connect();
+
+        ResponseMessage response;
+
+        // Logged in, request should succeed
+        response = service.get("/services");
+        checkResponse(response);
+
+        // Logged out, the request should fail
+        service.logout();
+        try {
+            response = service.get("/services");
+            fail("Expected request to fail");
         }
+        catch (Exception e) {}
     }
 
     // Make a few simple requests and make sure the results look ok.
-    @Test public void testAtom() {
-        Service service;
+    @Test public void testGet() throws IOException {
+        Service service = connect();
 
-        // UNDONE: login throws an IOException
-        try {
-            service = new Service(
-                program.host, program.port, program.scheme)
-                    .login(program.username, program.password);
-        }
-        catch (Exception e) {
-            assertTrue(false);
-            return;
-        }
-
-        try {
-            ResponseMessage response = service.get("/");
+        String[] paths = { "/", "/services", "/services/search/jobs" };
+        for (String path : paths) {
+            ResponseMessage response = service.get(path);
             checkResponse(response);
         }
-        catch (Exception e) {
-            assertTrue(false);
-        }
-    }
-
-    @Test public void testBaz() {
-        assertTrue(true);
     }
 }
 

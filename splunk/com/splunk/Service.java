@@ -16,6 +16,8 @@
 
 // UNDONE: Support for splunk path fragments (prefix based on namespace)
 // UNDONE: Figure out where to put public response parsers for XML, JSON, ..
+// UNDONE: Consider a static connect method that returns a logged-in service
+//  instance. Issue: what overloads? its a little awkward with 5 params.
 
 package com.splunk;
 
@@ -51,6 +53,12 @@ public class Service extends com.splunk.http.Service {
             .item(0)
             .getTextContent();
         this.token = "Splunk " + sessionKey;
+        return this;
+    }
+
+    // Forget the session token
+    public Service logout() {
+        this.token = null;
         return this;
     }
 

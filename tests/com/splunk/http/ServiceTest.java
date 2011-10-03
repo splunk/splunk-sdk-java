@@ -25,6 +25,8 @@
 
 package com.splunk.http;
 
+import java.io.IOException;
+import java.util.HashMap;
 import junit.framework.TestCase;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -37,33 +39,38 @@ public class ServiceTest extends TestCase {
 
     public ServiceTest() {}
 
-    void checkResponse(ResponseMessage response) {
-        assertEquals(response.getStatus(), 200);
-    }
-
     @Before public void setUp() {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void test() {
-        Service service;
-        try {
-            service = new Service(
-                program.host, program.port, program.scheme);
-            assertTrue(true);
-        }
-        catch (Exception e) {
-            assertTrue(false);
-            return;
-        }
+    @Test public void testGet() throws IOException {
+        Service service = new Service(
+            program.host, program.port, program.scheme);
+        ResponseMessage response = service.get("/");
+        assertEquals(200, response.getStatus());
+    }
 
-        try {
-            ResponseMessage response = service.get("/");
-            assertEquals(200, response.getStatus());
-        }
-        catch (Exception e) {
-            assertTrue(false);
-        }
+    @Test public void testPost() throws IOException {
+        Service service = new Service(
+            program.host, program.port, program.scheme);
+        HashMap<String, String> args = new HashMap<String, String>();
+        args.put("foo", "bar");
+        ResponseMessage response = service.post("/", args);
+        // We are taking advantage of the fact that a post to the root of
+        // the REST API hierarchy ignores POST args and returns the same
+        // results as a GET. It could be argued this is not a very good
+        // test because we can't distinguish between a GET & POST result ..
+        // But I dont have a better idea for how to excercise this code path
+        // at this layer (without authenticating against Splunk).
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test public void testSend() throws IOException {
+        Service service = new Service(
+            program.host, program.port, program.scheme);
+        RequestMessage request = new RequestMessage("GET", "/");
+        ResponseMessage response = service.send(request);
+        assertEquals(200, response.getStatus());
     }
 }
 
