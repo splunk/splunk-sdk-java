@@ -34,6 +34,8 @@ import com.splunk.http.*;
 public class Service extends com.splunk.http.Service {
     String token = null;
 
+    public Service() { }
+
     public Service(String host, int port, String scheme) {
         super(host, port, scheme);
     }

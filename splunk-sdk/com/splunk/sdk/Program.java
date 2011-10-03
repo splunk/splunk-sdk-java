@@ -19,10 +19,14 @@ package com.splunk.sdk;
 import java.io.File;
 import org.apache.commons.cli.ParseException;
 
-// Abstract base class that coordinates common program initialization,
-// including loading of default options from .splunkrc file and processing
-// of command line arguments.
-public abstract class Program extends Command {
+// The Program class coordinates common program initialization, including
+// loading of default options from .splunkrc file and processing of command
+// line arguments.
+public class Program extends Command {
+    public Program init() {
+        return init(null);
+    }
+
     // Load default options and process command line.
     public Program init(String[] args) {
         try {
@@ -31,7 +35,7 @@ public abstract class Program extends Command {
             load(home + File.separator + ".splunkrc");
 
             // Parse command line arguments
-            parse(args);
+            if (args != null) parse(args);
         }
         catch (ParseException e) {
             System.err.println(e.getMessage());
@@ -46,5 +50,5 @@ public abstract class Program extends Command {
         return this;
     }
 
-    public abstract void run() throws Exception;
+    public void run() throws Exception {}
 }

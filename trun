@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#
+# Shell script to build SDK and run a single named unit test.
+#
+#   Usage: trun {test-class}
+#
+# Example: ./trun com.splunk.ServiceTest
+#
+
+echo Building ..
+ant -q -logfile build.log
+if [ $? -ne 0 ] ; then
+    cat build.log
+    exit $?
+fi
+echo Running $1 ..
+java -cp ./build/tests:./lib/junit-4.8.1.jar:./dist/splunk.jar:./dist/splunk-sdk.jar org.junit.runner.JUnitCore $1 $2 $3 $4 $5 $6 $7 $8 $9
