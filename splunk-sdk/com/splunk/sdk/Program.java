@@ -19,10 +19,10 @@ package com.splunk.sdk;
 import java.io.File;
 import org.apache.commons.cli.ParseException;
 
-// Abstract base class that coordinates common program initialization,
-// including loading of default options from .splunkrc file and processing
-// of command line arguments.
-public abstract class Program extends Command {
+// The Program class coordinates common program initialization, including
+// loading of default options from .splunkrc file and processing of command
+// line arguments.
+public class Program extends Command {
     public Program init() {
         return init(null);
     }
