@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DeploymentServer extends Client {
 
@@ -38,11 +38,11 @@ public class DeploymentServer extends Client {
         return super.get(PATH_DEP_SERV + name);
     }
 
-    public ArrayList<String> list(String name) throws Exception {
+    public List<String> list(String name) throws Exception {
         return super.list(PATH_DEP_SERV + name);
     }
 
-    public ArrayList<String> list() throws Exception {
+    public List<String> list() throws Exception {
         return super.list(PATH_DEP_SERV);
     }
 }

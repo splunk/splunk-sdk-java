@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Messages extends Client {
 
@@ -38,11 +38,11 @@ public class Messages extends Client {
         return super.get(PATH_MESSAGES + name);
     }
 
-    public ArrayList<String> list(String name) throws Exception {
+    public List<String> list(String name) throws Exception {
         return super.list(PATH_MESSAGES + name);
     }
 
-    public ArrayList<String> list() throws Exception {
+    public List<String> list() throws Exception {
         return super.list(PATH_MESSAGES);
     }
 }

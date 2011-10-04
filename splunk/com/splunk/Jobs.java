@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import java.util.ArrayList;
+import java.util.List;
 
 // UNDONE: This class needs to be extended to handle the interesting flexibility of this endpoint
 public class Jobs extends Client {
@@ -40,11 +40,11 @@ public class Jobs extends Client {
     }
 
     // UNDONE: a list is better suited to collect the ID's of the content and remove the prefix (like python)
-    public ArrayList<String> list(String name) throws Exception {
+    public List<String> list(String name) throws Exception {
         return super.list(PATH_JOBS + name);
     }
 
-    public ArrayList<String> list() throws Exception {
+    public List<String> list() throws Exception {
         return list("");
     }
 }

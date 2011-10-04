@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Confs extends  Client {
 
@@ -39,11 +39,11 @@ public class Confs extends  Client {
         return super.get(PATH_CONF + name + "/");
     }
 
-    public ArrayList<String> list(String name) throws Exception {
+    public List<String> list(String name) throws Exception {
         return super.list(PATH_CONF + name + "/");
     }
 
-    public ArrayList<String> list() throws Exception {
+    public List<String> list() throws Exception {
         return super.list(PATH_CONFS);
     }
 }

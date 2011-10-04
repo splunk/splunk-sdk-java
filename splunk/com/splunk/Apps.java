@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import java.util.ArrayList;
+import java.util.List;
 
 // UNDONE: check http status
 public class Apps extends Client {
@@ -39,11 +39,11 @@ public class Apps extends Client {
         return super.get(PATH_APPS + name);
     }
 
-    public ArrayList<String> list(String name) throws Exception {
+    public List<String> list(String name) throws Exception {
         return super.list(PATH_APPS + name);
     }
 
-    public ArrayList<String> list() throws Exception {
+    public List<String> list() throws Exception {
         return list("");
     }
 }

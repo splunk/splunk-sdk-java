@@ -18,6 +18,8 @@ package com.splunk;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
 public class Header {
     // basic elements
@@ -30,7 +32,7 @@ public class Header {
     public int totalResults = -1;
 
     // non-scalar
-    public HashMap<String,String> author = new HashMap<String, String>();
-    public ArrayList<HashMap<String,String>> link = new ArrayList<HashMap<String,String>> ();
-    public HashMap<String,String> generator = new HashMap<String, String>();
+    public Map<String,String> author = new HashMap<String, String>();
+    public List<HashMap<String,String>> link = new ArrayList<HashMap<String,String>> ();
+    public Map<String,String> generator = new HashMap<String, String>();
 }

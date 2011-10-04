@@ -20,6 +20,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +35,7 @@ public class Entity {
     // In order to correctly represent a collection of entities, entries is a list.
     // This means that a single Entity has a list of one Entry, while a collection
     // has a list of more than one.
-    public ArrayList<Entry> entry = new ArrayList<Entry>();
+    public List<Entry> entry = new ArrayList<Entry>();
 
     public Entity() {
         // default constructor: nothing
@@ -67,11 +68,11 @@ public class Entity {
         return buffer.toString();
     }
 
-    private HashMap<String, String> nodeToHashMap(Node node) {
+    private Map<String, String> nodeToHashMap(Node node) {
         return nodeToHashMap(node, null);
     }
 
-    private HashMap<String, String> nodeToHashMap(Node node, String prefix) {
+    private Map<String, String> nodeToHashMap(Node node, String prefix) {
         NodeList contents = node.getChildNodes();
         HashMap<String, String> primitive = new LinkedHashMap<String, String>();
         for(int i=0; i<contents.getLength(); i++)
@@ -98,7 +99,7 @@ public class Entity {
                                             name = prefix + "." + name;
                                         }
                                         // unfold them
-                                        HashMap<String, String> subPrimitive = nodeToHashMap(keyNode, name);
+                                        Map<String, String> subPrimitive = nodeToHashMap(keyNode, name);
                                         primitive.putAll(subPrimitive);
                                         break;
                                     }

@@ -18,6 +18,8 @@ package com.splunk;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Entry {
     // basic entry elements
@@ -27,7 +29,8 @@ public class Entry {
     public String published;
 
     // non-scalar and somewhat dynamic
-    public ArrayList<HashMap<String,String>> link = new ArrayList<HashMap<String,String>> ();
-    public HashMap<String,String> author = new HashMap<String, String>();
-    public HashMap<String,String> content = new HashMap<String, String>();
+    public List<HashMap<String,String>> link = new ArrayList<HashMap<String,String>> ();
+    public Map<String,String> author = new HashMap<String, String>();
+    public Map<String,String> content = new HashMap<String, String>();
+
 }

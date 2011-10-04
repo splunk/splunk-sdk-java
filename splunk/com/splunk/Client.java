@@ -20,6 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parent class that all other endpoints classes will derive from
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 
 public class Client {
 
+    // UNDONE -- make inner class to support more than one iterator per client.
     public Service service = null;
 
     public Client() {
@@ -36,8 +38,8 @@ public class Client {
         service = serv;
     }
 
-    private ArrayList<String> getList(Document doc) {
-        ArrayList<String> outlist = new ArrayList<String>();
+    private List<String> getList(Document doc) {
+        List<String> outlist = new ArrayList<String>();
         NodeList nl = doc.getElementsByTagName("title");
 
         // index 0 is always header title
@@ -59,9 +61,8 @@ public class Client {
         return converter.convertXMLData(service.get/*deletegoeshere*/(path).getContent());
     }
 
-    public ArrayList<String> list(String path) throws Exception {
+    public List<String> list(String path) throws Exception {
         Document doc = service.parseXml(service.get(path));
-        ArrayList<String> applist = getList(doc);
-        return applist;
+        return getList(doc);
     }
 }
