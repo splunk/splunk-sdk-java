@@ -20,29 +20,29 @@ import java.util.List;
 
 public class DistributedConfig extends Client {
 
-    private final String PATH_DSEARCH_CONF = "/services/search/distributed/config/";
+    private final String path = "/services/search/distributed/config/";
 
     public DistributedConfig(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_DSEARCH_CONF + name);
+        return super.get(path + name);
     }
 
     public Entity get() throws Exception {
-        return super.get(PATH_DSEARCH_CONF);
+        return super.get(path);
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_DSEARCH_CONF + name);
+        return super.get(path + name);
     }
 
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_DSEARCH_CONF + name);
+    public List<String> nameList(String name) throws Exception {
+        return super.nameList(path + name);
     }
 
-    public List<String> list() throws Exception {
-        return super.list(PATH_DSEARCH_CONF);
+    public List<String> nameList() throws Exception {
+        return nameList("");
     }
 }

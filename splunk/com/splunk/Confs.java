@@ -20,30 +20,30 @@ import java.util.List;
 
 public class Confs extends  Client {
 
-    private final String PATH_CONF = "/services/configs/conf-"; // (config file)
-    private final String PATH_CONFS = "/services/properties";
+    private final String path = "/services/configs/conf-"; // (config file)
+    private final String pathp = "/services/properties";
 
    public Confs(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_CONF + name + "/");
+        return super.get(path + name + "/");
     }
 
     public Entity get() throws Exception {
-        return super.get(PATH_CONFS);
+        return super.get(path);
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_CONF + name + "/");
+        return super.get(path + name + "/");
     }
 
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_CONF + name + "/");
+    public List<String> nameList(String name) throws Exception {
+        return super.nameList(path + name + "/");
     }
 
-    public List<String> list() throws Exception {
-        return super.list(PATH_CONFS);
+    public List<String> nameList() throws Exception {
+        return super.nameList(pathp);
     }
 }

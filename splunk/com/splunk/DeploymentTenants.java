@@ -20,29 +20,29 @@ import java.util.List;
 
 public class DeploymentTenants extends Client {
 
-    private final String PATH_DEP_TENANT = "/services/deployment/tenants/";
+    private final String path = "/services/deployment/tenants/";
 
     public DeploymentTenants(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_DEP_TENANT + name);
+        return super.get(path + name);
     }
 
     public Entity get() throws Exception {
-        return super.get(PATH_DEP_TENANT);
+        return super.get(path);
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_DEP_TENANT + name);
+        return super.get(path + name);
     }
 
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_DEP_TENANT + name);
+    public List<String> nameList(String name) throws Exception {
+        return super.nameList(path + name);
     }
 
-    public List<String> list() throws Exception {
-        return super.list(PATH_DEP_TENANT);
+    public List<String> nameList() throws Exception {
+        return nameList("");
     }
 }

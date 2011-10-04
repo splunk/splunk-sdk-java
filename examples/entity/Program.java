@@ -70,7 +70,7 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     private static void dumpEntries(Collection <Entry> entries) {
-        // Iterator over entries
+        // Iterate over entries
          for (Entry entry: entries) {
              dumpEntry(entry);
          }
@@ -87,93 +87,93 @@ public class Program extends com.splunk.sdk.Program {
 
         System.out.println("APPLICATIONS **********************************************\n");
         Apps application =  new Apps(service);
-        System.out.println("APP List:" + application.list() + "\n");
+        System.out.println("APP List:" + application.nameList() + "\n");
         dumpEntity(application.get("eaitest"));
         dumpEntity(application.get());
 
         System.out.println("INDEXES ***************************************************\n");
         Indexes indexes =  new Indexes(service);
-        System.out.println("Indexes List:" + indexes.list() + "\n");
+        System.out.println("Indexes List:" + indexes.nameList() + "\n");
         dumpEntity(indexes.get("_internal"));
         dumpEntity(indexes.get());
 
         System.out.println("INPUTS ****************************************************\n");
         Inputs inputs =  new Inputs(service);
-        System.out.println("Inputs List:" + inputs.list() + "\n");
+        System.out.println("Inputs List:" + inputs.nameList() + "\n");
         dumpEntity(inputs.get("tcp"));
         dumpEntity(inputs.get("tcp/ssl"));
         dumpEntity(inputs.get());
 
         System.out.println("CAPABILITIES **********************************************\n");
         Capabilities capabilities  =  new Capabilities(service);
-        System.out.println("Capabilities List:" + capabilities.list() + "\n");
+        System.out.println("Capabilities List:" + capabilities.nameList() + "\n");
         dumpEntity(capabilities.get());
 
         System.out.println("CONFS *****************************************************\n");
         Confs confs =  new Confs(service);
-        System.out.println("Confs List:" + confs.list() + "\n");
+        System.out.println("Confs List:" + confs.nameList() + "\n");
         dumpEntity(confs.get("authentication"));
         dumpEntity(confs.get());
 
         System.out.println("JOBS ******************************************************\n");
         Jobs jobs =  new Jobs(service);
-        //System.out.println("Jobs List:" + jobs.list() + "\n");
+        System.out.println("Jobs List:" + jobs.nameList() + "\n");
         dumpEntity(jobs.get());
 
         System.out.println("LOGGER ****************************************************\n");
         Logger logger  =  new Logger(service);
-        System.out.println("Logger List:" + logger.list() + "\n");
+        System.out.println("Logger List:" + logger.nameList() + "\n");
         dumpEntity(logger.get("AdminHandler:AuthenticationHandler"));
         dumpEntity(logger.get());
 
         System.out.println("MESSAGES **************************************************\n");
         Messages messages =  new Messages(service);
-        System.out.println("Messages List:" + messages.list() + "\n");
+        System.out.println("Messages List:" + messages.nameList() + "\n");
         dumpEntity(messages.get());
 
         System.out.println("ROLES *****************************************************\n");
         Roles roles =  new Roles(service);
-        System.out.println("Roles List:" + roles.list() + "\n");
+        System.out.println("Roles List:" + roles.nameList() + "\n");
         dumpEntity(roles.get("admin"));
         dumpEntity(roles.get());
 
         System.out.println("USERS *****************************************************\n");
         Users users =  new Users(service);
-        System.out.println("Users List:" + users.list() + "\n");
+        System.out.println("Users List:" + users.nameList() + "\n");
         dumpEntity(users.get("admin"));
         dumpEntity(users.get());
 
         System.out.println("DEPLOYMENT SERVER *****************************************\n");
         DeploymentServer ds =  new DeploymentServer(service);
-        System.out.println("Deployment Server List:" + ds.list() + "\n");
+        System.out.println("Deployment Server List:" + ds.nameList() + "\n");
         dumpEntity(ds.get("default"));
         dumpEntity(ds.get());
 
         System.out.println("DEPLOYMENT CLIENT *****************************************\n");
         DeploymentClient dc =  new DeploymentClient(service);
-        System.out.println("Deployment Client List:" + dc.list() + "\n");
+        System.out.println("Deployment Client List:" + dc.nameList() + "\n");
         dumpEntity(dc.get());
 
         System.out.println("DEPLOYMENT SERVER CLASS ***********************************\n");
         DeploymentServerclass dsc =  new DeploymentServerclass(service);
-        System.out.println("Deployment Serverclass:" + dsc.list() + "\n");
+        System.out.println("Deployment Serverclass:" + dsc.nameList() + "\n");
         dumpEntity(dsc.get());
 
         System.out.println("DEPLOYMENT TENANTS ****************************************\n");
         DeploymentTenants dt =  new DeploymentTenants(service);
-        System.out.println("Deployment Tenants:" + dt.list() + "\n");
+        System.out.println("Deployment Tenants:" + dt.nameList() + "\n");
         dumpEntity(dt.get("default"));
         dumpEntity(dt.get());
 
         System.out.println("DISTRIBUTED SEARCH PEERS **********************************\n");
         DistributedPeers dsp =  new DistributedPeers(service);
-        System.out.println("Distributed Search Peers:" + dsp.list() + "\n");
+        System.out.println("Distributed Search Peers:" + dsp.nameList() + "\n");
         //dumpEntity(dsp.get("default"));
         dumpEntity(dsp.get());
 
         System.out.println("DISTRIBUTED SEARCH CONFIG *********************************\n");
         DistributedConfig dsconfig =  new DistributedConfig(service);
-        System.out.println("Distributed Search Peers:" + dsconfig.list() + "\n");
+        System.out.println("Distributed Search Peers:" + dsconfig.nameList() + "\n");
         dumpEntity(dsconfig.get("distributedSearch"));
         dumpEntity(dsconfig.get());
     }

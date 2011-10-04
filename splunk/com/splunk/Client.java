@@ -38,7 +38,7 @@ public class Client {
         service = serv;
     }
 
-    private List<String> getList(Document doc) {
+    public List<String> getList(Document doc) {
         List<String> outlist = new ArrayList<String>();
         NodeList nl = doc.getElementsByTagName("title");
 
@@ -61,7 +61,7 @@ public class Client {
         return converter.convertXMLData(service.get/*deletegoeshere*/(path).getContent());
     }
 
-    public List<String> list(String path) throws Exception {
+    public List<String> nameList(String path) throws Exception {
         Document doc = service.parseXml(service.get(path));
         return getList(doc);
     }

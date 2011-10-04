@@ -20,29 +20,29 @@ import java.util.List;
 
 public class DistributedPeers extends Client {
 
-    private final String PATH_DSEARCH_PEER = "/services/search/distributed/peers/";
+    private final String path = "/services/search/distributed/peers/";
 
     public DistributedPeers(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_DSEARCH_PEER + name);
+        return super.get(path + name);
     }
 
     public Entity get() throws Exception {
-        return super.get(PATH_DSEARCH_PEER);
+        return super.get(path);
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_DSEARCH_PEER + name);
+        return super.get(path + name);
     }
 
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_DSEARCH_PEER + name);
+    public List<String> nameList(String name) throws Exception {
+        return super.nameList(path + name);
     }
 
-    public List<String> list() throws Exception {
-        return super.list(PATH_DSEARCH_PEER);
+    public List<String> nameList() throws Exception {
+        return nameList("");
     }
 }

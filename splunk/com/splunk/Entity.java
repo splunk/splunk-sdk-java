@@ -32,9 +32,9 @@ public class Entity {
     // header
     public Header header = new Header();
 
-    // In order to correctly represent a collection of entities, entries is a list.
-    // This means that a single Entity has a list of one Entry, while a collection
-    // has a list of more than one.
+    // In order to correctly represent a collection of entities, entries is a nameList.
+    // This means that a single Entity has a nameList of one Entry, while a collection
+    // has a nameList of more than one.
     public List<Entry> entry = new ArrayList<Entry>();
 
     public Entity() {
@@ -126,8 +126,8 @@ public class Entity {
                         }
                     }
                 }
-                else if( containerNode.getNodeName().equals("s:list")) {
-                    // get s:list node
+                else if( containerNode.getNodeName().equals("s:nameList")) {
+                    // get s:nameList node
                     if (prefix != null) {
                         name = prefix;
                     }
@@ -135,7 +135,7 @@ public class Entity {
                         name = node.getAttributes().getNamedItem("name").getTextContent();
                     }
 
-                    // get s:key child nodes of s:list
+                    // get s:key child nodes of s:nameList
                     List<String> values = new ArrayList<String>();
                     for (Node keyNode=containerNode.getFirstChild(); keyNode!=null; keyNode=keyNode.getNextSibling()) {
                         if( keyNode.getNodeType() == Node.ELEMENT_NODE ) {

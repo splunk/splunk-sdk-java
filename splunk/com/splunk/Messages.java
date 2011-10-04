@@ -20,29 +20,29 @@ import java.util.List;
 
 public class Messages extends Client {
 
-    private final String PATH_MESSAGES = "/services/messages/";
+    private final String path = "/services/messages/";
 
     public Messages(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_MESSAGES + name);
+        return super.get(path + name);
     }
 
     public Entity get() throws Exception {
-        return super.get(PATH_MESSAGES);
+        return super.get(path);
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_MESSAGES + name);
+        return super.get(path + name);
     }
 
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_MESSAGES + name);
+    public List<String> nameList(String name) throws Exception {
+        return super.nameList(path + name);
     }
 
-    public List<String> list() throws Exception {
-        return super.list(PATH_MESSAGES);
+    public List<String> nameList() throws Exception {
+        return nameList("");
     }
 }

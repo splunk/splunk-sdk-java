@@ -21,14 +21,14 @@ import java.util.List;
 // UNDONE: check http status
 public class Apps extends Client {
 
-    private final String PATH_APPS = "/services/apps/local/";
+    private final String path = "/services/apps/local/";
 
     public Apps(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_APPS + name);
+        return super.get(path + name);
     }
 
     public Entity get() throws Exception {
@@ -36,14 +36,14 @@ public class Apps extends Client {
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_APPS + name);
+        return super.get(path + name);
     }
 
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_APPS + name);
+    public List<String> nameList(String name) throws Exception {
+        return super.nameList(path + name);
     }
 
-    public List<String> list() throws Exception {
-        return list("");
+    public List<String> nameList() throws Exception {
+        return nameList("");
     }
 }

@@ -16,12 +16,32 @@
 
 package com.splunk;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 // UNDONE: This class needs to be extended to handle the interesting flexibility of this endpoint
 public class Jobs extends Client {
 
     private final String PATH_JOBS = "/services/search/jobs/";
+
+    private List<String> getItems(Document doc, String item) {
+        List<String> outlist = new ArrayList<String>();
+        NodeList nl = doc.getElementsByTagName(item);
+
+        // index 0 is always header title
+        for (int idx=1; idx < nl.getLength(); idx++) {
+            String raw = nl.item(idx).getTextContent();
+            String[] parts = raw.split("/services/search/jobs/");
+            if (parts.length >= 1) {
+                outlist.add(parts[1]);
+            }
+        }
+
+        return outlist;
+    }
 
     public Jobs(Service service) {
         super(service);
@@ -39,12 +59,13 @@ public class Jobs extends Client {
         return super.get(PATH_JOBS + name);
     }
 
-    // UNDONE: a list is better suited to collect the ID's of the content and remove the prefix (like python)
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_JOBS + name);
+    // UNDONE: a nameList is better suited to collect the ID's of the content and remove the prefix (like python)
+    public List<String> nameList(String name) throws Exception {
+        Document doc = service.parseXml(service.get(PATH_JOBS + name));
+        return getItems(doc, "id");
     }
 
-    public List<String> list() throws Exception {
-        return list("");
+    public List<String> nameList() throws Exception {
+        return nameList("");
     }
 }

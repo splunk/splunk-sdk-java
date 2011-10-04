@@ -20,29 +20,29 @@ import java.util.List;
 
 public class Roles extends Client {
 
-    private final String PATH_ROLES = "/services/authentication/roles/";
+    private final String path = "/services/authentication/roles/";
 
     public Roles(Service service) {
         super(service);
     }
 
     public Entity get(String name) throws Exception {
-        return super.get(PATH_ROLES + name);
+        return super.get(path + name);
     }
 
     public Entity get() throws Exception {
-        return super.get(PATH_ROLES);
+        return super.get(path);
     }
 
     public Entity delete(String name) throws Exception {
-        return super.get(PATH_ROLES + name);
+        return super.get(path + name);
     }
 
-    public List<String> list(String name) throws Exception {
-        return super.list(PATH_ROLES + name);
+    public List<String> nameList(String name) throws Exception {
+        return super.nameList(path + name);
     }
 
-    public List<String> list() throws Exception {
-        return super.list(PATH_ROLES);
+    public List<String> nameList() throws Exception {
+        return nameList("");
     }
 }
