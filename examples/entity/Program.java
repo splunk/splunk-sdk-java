@@ -17,10 +17,6 @@
 
 import com.splunk.*;
 
-import com.splunk.Entity;
-import com.splunk.Entry;
-import com.splunk.Header;
-
 import java.util.Collection;
 
 public class Program extends com.splunk.sdk.Program {
