@@ -38,13 +38,17 @@ public class Client {
         service = serv;
     }
 
-    public List<String> getList(Document doc) {
+    public List<String> getList(Document doc, String path) {
         List<String> outlist = new ArrayList<String>();
-        NodeList nl = doc.getElementsByTagName("title");
+        NodeList nl = doc.getElementsByTagName("id");
 
-        // index 0 is always header title
+        // get everything in ID after base path
         for (int idx=1; idx < nl.getLength(); idx++) {
-            outlist.add(nl.item(idx).getTextContent());
+            String [] parts = nl.item(idx).getTextContent().split(path);
+            if (parts.length >= 2) {
+                // UNDONE: recode to non-url-safe?
+                outlist.add(parts[1]);
+            }
         }
 
         return outlist;
@@ -63,6 +67,6 @@ public class Client {
 
     public List<String> nameList(String path) throws Exception {
         Document doc = service.parseXml(service.get(path));
-        return getList(doc);
+        return getList(doc, path);
     }
 }

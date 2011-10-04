@@ -21,7 +21,7 @@ import java.util.List;
 public class Confs extends  Client {
 
     private final String path = "/services/configs/conf-"; // (config file)
-    private final String pathp = "/services/properties";
+    private final String pathp = "/services/properties/";
 
    public Confs(Service service) {
         super(service);

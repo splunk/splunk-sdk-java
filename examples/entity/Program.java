@@ -73,8 +73,8 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     private static void dumpEntity(Entity entity) {
-        dumpHeader(entity.header);
-        dumpEntries(entity.entry);
+        //dumpHeader(entity.header);
+        //dumpEntries(entity.entry);
     }
 
     public void run() throws Exception {
