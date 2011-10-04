@@ -41,14 +41,15 @@ public class Client {
     public List<String> getList(Document doc, String path) {
         List<String> outlist = new ArrayList<String>();
         NodeList nl = doc.getElementsByTagName("id");
+        // extract last element of base path
+        String [] bits = path.split("/");
+        String delimiter = bits[bits.length-1] + "/";
 
-        // get everything in ID after base path
+        // get everything in ID after last path prefix element
         for (int idx=1; idx < nl.getLength(); idx++) {
-            String [] parts = nl.item(idx).getTextContent().split(path);
-            if (parts.length >= 2) {
-                // UNDONE: recode to non-url-safe?
-                outlist.add(parts[1]);
-            }
+            String [] pieces = nl.item(idx).getTextContent().split(delimiter);
+            // UNDONE: re-encode url safe string back to regular string?
+            outlist.add(pieces[1]);
         }
 
         return outlist;
