@@ -21,7 +21,7 @@ import com.splunk.Entity;
 import com.splunk.Entry;
 import com.splunk.Header;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
@@ -56,21 +56,23 @@ public class Program extends com.splunk.sdk.Program {
         System.out.println("");
     }
 
-    private static void dumpEntries(ArrayList<Entry> entries) {
-        // collections is just an entity with more than one entry
-         for (int idx = 0; idx < entries.size(); idx++ ) {
-             Entry entry = entries.get(idx);
+    private static void dumpEntry(Entry entry) {
+        System.out.println("    ID:           " + entry.id);
+        System.out.println("    updated:      " + entry.updated);
+        System.out.println("    title:        " + entry.title);
 
-             System.out.println("    ID:           " + entry.id);
-             System.out.println("    updated:      " + entry.updated);
-             System.out.println("    title:        " + entry.title);
+        // semi-optional
+        if (entry.published != null)
+            System.out.println("    published:    " + entry.published);
+        if (!entry.content.isEmpty())
+            System.out.println("    content:      " + entry.content);
+        System.out.println("");
+    }
 
-            // semi-optional
-             if (entry.published != null)
-                System.out.println("    published:    " + entry.published);
-             if (!entry.content.isEmpty())
-                System.out.println("    content:      " + entry.content);
-             System.out.println("");
+    private static void dumpEntries(Collection <Entry> entries) {
+        // Iterator over entries
+         for (Entry entry: entries) {
+             dumpEntry(entry);
          }
     }
 
