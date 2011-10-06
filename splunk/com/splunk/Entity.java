@@ -219,4 +219,6 @@ public class Entity {
 
         return entry;
     }
+
+    // UNDONE: add operations to entities, like update, delete(?), in addition to or extension of client ops.
 }

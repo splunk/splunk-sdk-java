@@ -21,6 +21,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Parent class that all other endpoints classes will derive from
@@ -38,7 +39,7 @@ public class Client {
         service = serv;
     }
 
-    public List<String> getList(Document doc, String path) {
+    private List<String> getList(Document doc, String path) {
         List<String> outlist = new ArrayList<String>();
         NodeList nl = doc.getElementsByTagName("id");
         // extract last element of base path
@@ -63,7 +64,12 @@ public class Client {
     public Entity delete(String path) throws Exception {
         Convert converter = new Convert();
         // place holder -- service needs a delete method
-        return converter.convertXMLData(service.get/*deletegoeshere*/(path).getContent());
+        return converter.convertXMLData(service.delete(path).getContent());
+    }
+
+    public Entity create(String path, Map<String,String>args) throws Exception {
+        Convert converter = new Convert();
+        return converter.convertXMLData(service.post(path, args).getContent());
     }
 
     public List<String> nameList(String path) throws Exception {

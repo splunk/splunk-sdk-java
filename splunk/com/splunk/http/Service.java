@@ -164,6 +164,21 @@ public class Service {
         return send(request);
     }
 
+    public ResponseMessage delete(String path)
+        throws IOException
+    {
+        RequestMessage request = new RequestMessage("DELETE", path);
+        return send(request);
+    }
+
+    public ResponseMessage delete(String path, Map<String, String> args)
+        throws IOException
+    {
+        if (args != null) path = path + "?" + encode(args);
+        RequestMessage request = new RequestMessage("DELETE", path);
+        return send(request);
+    }
+
     public ResponseMessage send(RequestMessage request) throws IOException {
         String prefix = String.format("%s://%s:%d",
             this.scheme, this.host, this.port);

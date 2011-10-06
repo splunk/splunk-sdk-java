@@ -18,6 +18,8 @@
 import com.splunk.*;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
@@ -172,5 +174,15 @@ public class Program extends com.splunk.sdk.Program {
         System.out.println("Distributed Search Peers:" + dsconfig.nameList() + "\n");
         dumpEntity(dsconfig.get("distributedSearch"));
         dumpEntity(dsconfig.get());
+
+
+        // N.B. in order for create/delete app to work, splunk must be restarted after the delete.
+        //System.out.println("CREATE/DEL APP ********************************************\n");
+        //
+        //if (!application.nameList().contains("wkc-tests")) {
+        //    dumpEntity(application.create("wkc-tests"));
+        //}
+        //dumpEntity(application.delete("wkc-tests"));
+
     }
 }
