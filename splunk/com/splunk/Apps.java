@@ -16,57 +16,10 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 // UNDONE: check http status
-public class Apps extends Client {
-
-    private final String path = "/services/apps/local/";
+public class Apps extends Collection {
 
     public Apps(Service service) {
-        super(service);
-    }
-
-    public Entity get(String name) throws Exception {
-        return super.get(path + name);
-    }
-
-    public Entity get() throws Exception {
-        return get("");
-    }
-
-    public Entity create(String name) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Entity create(String name, Map<String,String> args) throws Exception {
-        if (args.containsKey("name")) {
-            throw new Exception("name not allowed in argument map if explicitly requested");
-        }
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Entity create(Map<String,String> args) throws Exception {
-        if (!args.containsKey("name")) {
-            throw new Exception("name must be in argument map");
-        }
-        return super.create(path, args);
-    }
-
-    public Entity delete(String name) throws Exception {
-        return super.delete(path + name);
-    }
-
-    public List<String> nameList(String name) throws Exception {
-        return super.nameList(path + name);
-    }
-
-    public List<String> nameList() throws Exception {
-        return nameList("");
+        super(service, "/services/apps/local/");
     }
 }

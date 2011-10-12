@@ -17,7 +17,6 @@
 package com.splunk;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -97,13 +96,13 @@ public class Convert {
     // end debug stuff
 
 
-    private Entity convert(Document dom) {
+    private Element convert(Document dom) {
         Node node;
-        Entity entity = new Entity();
+        Element element = new Element();
 
         // parse XML
         try {
-            Element root = dom.getDocumentElement();
+            org.w3c.dom.Element root = dom.getDocumentElement();
 
             // root is the feed, and everything else is its children
             node = root.getFirstChild();
@@ -140,23 +139,23 @@ public class Convert {
                                 }
                             }
                             if (name.equals("generator")) {
-                                entity.header.generator = attributes;
+                                element.header.generator = attributes;
                             } else if (name.equals("id")) {
-                                entity.header.id = value;
+                                element.header.id = value;
                             } else if (name.equals("title")) {
-                                entity.header.title = value;
+                                element.header.title = value;
                             } else if (name.equals("updated")) {
-                                entity.header.updated = value;
+                                element.header.updated = value;
                             } else if (name.equals("link")) {
-                                entity.header.link.add(attributes);
+                                element.header.link.add(attributes);
                             } else if (name.equals("itemsPerPage")) {
-                                entity.header.itemsPerPage = Integer.parseInt(value);
+                                element.header.itemsPerPage = Integer.parseInt(value);
                             } else if (name.equals("messages")) {
-                                entity.header.messages = value;
+                                element.header.messages = value;
                             } else if (name.equals("startIndex")) {
-                                entity.header.startIndex = Integer.parseInt(value);
+                                element.header.startIndex = Integer.parseInt(value);
                             } else if (name.equals("totalResults")) {
-                                entity.header.totalResults = Integer.parseInt(value);
+                                element.header.totalResults = Integer.parseInt(value);
                             } else {
                                 System.out.println("did not find   '" + name + "'");
                             }
@@ -169,7 +168,7 @@ public class Convert {
                                     if (child.getNodeType() == Node.ELEMENT_NODE) {
                                         String cname = child.getNodeName();
                                         String cvalue = child.getTextContent().trim();
-                                        entity.header.author.put(cname, cvalue);
+                                        element.header.author.put(cname, cvalue);
                                     }
                                     child = child.getNextSibling();
                                 }
@@ -177,7 +176,7 @@ public class Convert {
                         }
                     } else {
                         if (name.equals("entry")) {
-                            entity.entry.add(entity.parseEntry(node));
+                            element.entry.add(element.parseEntry(node));
                         } else {
                             System.out.println("[1] NOT IN LIST: " + name);
                         }
@@ -189,11 +188,11 @@ public class Convert {
             throw new RuntimeException("XML parse failed: " + e.getMessage());
         }
 
-        return entity;
+        return element;
     }
 
     // convert an xml input stream into a an Entity object
-    public Entity convertXMLData(InputStream inStream) {
+    public Element convertXMLData(InputStream inStream) {
         try {
             DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();
@@ -212,7 +211,7 @@ public class Convert {
     }
 
     // convert an xml string into a an Entity object
-    public Entity convertXMLData(String xml) {
+    public Element convertXMLData(String xml) {
 
         // parse XML
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

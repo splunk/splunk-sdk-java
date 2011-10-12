@@ -16,57 +16,9 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public class Confs extends Collection {
 
-public class Confs extends  Client {
-
-    private final String path = "/services/configs/conf-"; // (config file)
-    private final String pathp = "/services/properties/";
-
-   public Confs(Service service) {
-        super(service);
-    }
-
-    public Entity get(String name) throws Exception {
-        return super.get(path + name + "/");
-    }
-
-    public Entity get() throws Exception {
-        return super.get(path);
-    }
-
-    public Entity create(String file, Map<String,String> args) throws Exception {
-        if (!args.containsKey("name")) {
-            throw new Exception("name (stanza) required in argument map if not explicitly passed");
-        }
-        return super.create(path + file + "/", args);
-    }
-
-    public Entity create(String file, String stanza) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("name", stanza);
-        return super.create(path + file + "/", args);
-    }
-
-    public Entity create(String file, String stanza, Map<String,String> args) throws Exception {
-        if (args.containsKey("name")) {
-            throw new Exception("name already found in arguments");
-        }
-        args.put("name", stanza);
-        return super.create(path + file + "/", args);
-    }
-
-    public Entity delete(String file, String stanza) throws Exception {
-        return super.delete(path + file + "/" + stanza);
-    }
-
-    public List<String> nameList(String name) throws Exception {
-        return super.nameList(pathp + name + "/");
-    }
-
-    public List<String> nameList() throws Exception {
-        return super.nameList(pathp);
+    public Confs(Service service) {
+        super(service, "/services/properties/");
     }
 }

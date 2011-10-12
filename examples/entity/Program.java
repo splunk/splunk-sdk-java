@@ -18,8 +18,6 @@
 import com.splunk.*;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
@@ -74,115 +72,55 @@ public class Program extends com.splunk.sdk.Program {
          }
     }
 
-    private static void dumpEntity(Entity entity) {
-        dumpHeader(entity.header);
-        dumpEntries(entity.entry);
+    private static void dumpEntity(Element element) {
+        dumpHeader(element.header);
+        dumpEntries(element.entry);
     }
 
     public void run() throws Exception {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        System.out.println("APPLICATIONS **********************************************\n");
-        Apps application =  new Apps(service);
-        System.out.println("APP List:" + application.nameList() + "\n");
-        dumpEntity(application.get("eaitest"));
-        dumpEntity(application.get());
 
-        System.out.println("INDEXES ***************************************************\n");
+        System.out.println("APPLICATIONS redux ****************************************\n");
+        Apps apps =  new Apps(service);
+        System.out.println("Application list: " + apps.list() + "\n");
+
+        System.out.println("Collection, index one item");
+        dumpEntity(apps.get("eaitest"));
+        System.out.println("Collection: ");
+        dumpEntity(apps.get());
+
+        System.out.println("Entity: (single item)");
+        App app =  new App(service, "eaitest");
+        dumpEntity(app.read());
+
+        System.out.println("INDEX redux ***********************************************\n");
         Indexes indexes =  new Indexes(service);
-        System.out.println("Indexes List:" + indexes.nameList() + "\n");
-        dumpEntity(indexes.get("_internal"));
         dumpEntity(indexes.get());
+        dumpEntity(indexes.get("_internal"));
 
-        System.out.println("INPUTS ****************************************************\n");
-        Inputs inputs =  new Inputs(service);
-        System.out.println("Inputs List:" + inputs.nameList() + "\n");
-        dumpEntity(inputs.get("tcp"));
-        dumpEntity(inputs.get("tcp/ssl"));
-        dumpEntity(inputs.get());
+        System.out.println("Index list: " + indexes.list() + "\n");
+        for (String index: indexes.list()) {
+            Index idx = new Index(service, index);
+            dumpEntity(idx.get());
+            System.out.println(idx.readmeta());
+        }
 
-        System.out.println("CAPABILITIES **********************************************\n");
-        Capabilities capabilities  =  new Capabilities(service);
-        System.out.println("Capabilities List:" + capabilities.nameList() + "\n");
-        dumpEntity(capabilities.get());
+        Index idx = new Index(service, "wkc");
+        idx.clean();
 
-        System.out.println("CONFS *****************************************************\n");
+        System.out.println("CONFS redux ****************************************\n");
         Confs confs =  new Confs(service);
-        System.out.println("Confs List:" + confs.nameList() + "\n");
-        dumpEntity(confs.get("authentication"));
+        System.out.println("Conf list: " + confs.list());
         dumpEntity(confs.get());
+        dumpEntity(confs.get("app"));
 
-        System.out.println("JOBS ******************************************************\n");
+        Conf conf =  new Conf(service, "app");
+        dumpEntity(conf.read());
+
+        System.out.println("JOBS redux ****************************************\n");
         Jobs jobs =  new Jobs(service);
-        System.out.println("Jobs List:" + jobs.nameList() + "\n");
-        dumpEntity(jobs.get());
-
-        System.out.println("LOGGER ****************************************************\n");
-        Logger logger  =  new Logger(service);
-        System.out.println("Logger List:" + logger.nameList() + "\n");
-        dumpEntity(logger.get("AdminHandler:AuthenticationHandler"));
-        dumpEntity(logger.get());
-
-        System.out.println("MESSAGES **************************************************\n");
-        Messages messages =  new Messages(service);
-        System.out.println("Messages List:" + messages.nameList() + "\n");
-        dumpEntity(messages.get());
-
-        System.out.println("ROLES *****************************************************\n");
-        Roles roles =  new Roles(service);
-        System.out.println("Roles List:" + roles.nameList() + "\n");
-        dumpEntity(roles.get("admin"));
-        dumpEntity(roles.get());
-
-        System.out.println("USERS *****************************************************\n");
-        Users users =  new Users(service);
-        System.out.println("Users List:" + users.nameList() + "\n");
-        dumpEntity(users.get("admin"));
-        dumpEntity(users.get());
-
-        System.out.println("DEPLOYMENT SERVER *****************************************\n");
-        DeploymentServer ds =  new DeploymentServer(service);
-        System.out.println("Deployment Server List:" + ds.nameList() + "\n");
-        dumpEntity(ds.get("default"));
-        dumpEntity(ds.get());
-
-        System.out.println("DEPLOYMENT CLIENT *****************************************\n");
-        DeploymentClient dc =  new DeploymentClient(service);
-        System.out.println("Deployment Client List:" + dc.nameList() + "\n");
-        dumpEntity(dc.get());
-
-        System.out.println("DEPLOYMENT SERVER CLASS ***********************************\n");
-        DeploymentServerclass dsc =  new DeploymentServerclass(service);
-        System.out.println("Deployment Serverclass:" + dsc.nameList() + "\n");
-        dumpEntity(dsc.get());
-
-        System.out.println("DEPLOYMENT TENANTS ****************************************\n");
-        DeploymentTenants dt =  new DeploymentTenants(service);
-        System.out.println("Deployment Tenants:" + dt.nameList() + "\n");
-        dumpEntity(dt.get("default"));
-        dumpEntity(dt.get());
-
-        System.out.println("DISTRIBUTED SEARCH PEERS **********************************\n");
-        DistributedPeers dsp =  new DistributedPeers(service);
-        System.out.println("Distributed Search Peers:" + dsp.nameList() + "\n");
-        //dumpEntity(dsp.get("default"));
-        dumpEntity(dsp.get());
-
-        System.out.println("DISTRIBUTED SEARCH CONFIG *********************************\n");
-        DistributedConfig dsconfig =  new DistributedConfig(service);
-        System.out.println("Distributed Search Peers:" + dsconfig.nameList() + "\n");
-        dumpEntity(dsconfig.get("distributedSearch"));
-        dumpEntity(dsconfig.get());
-
-
-        // N.B. in order for create/delete app to work, splunk must be restarted after the delete.
-        //System.out.println("CREATE/DEL APP ********************************************\n");
-        //
-        //if (!application.nameList().contains("wkc-tests")) {
-        //    dumpEntity(application.create("wkc-tests"));
-        //}
-        //dumpEntity(application.delete("wkc-tests"));
-
+        System.out.println("jobs list: " + jobs.list());
     }
 }

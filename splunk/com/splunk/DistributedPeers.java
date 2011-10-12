@@ -16,56 +16,10 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class DistributedPeers extends Client {
-
-    private final String path = "/services/search/distributed/peers/";
+public class DistributedPeers extends Entity {
 
     public DistributedPeers(Service service) {
-        super(service);
+        super(service, "/services/search/distributed/peers/");
     }
 
-    public Entity get(String name) throws Exception {
-        return super.get(path + name);
-    }
-
-    public Entity get() throws Exception {
-        return super.get(path);
-    }
-
-    public Entity create(String name) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Entity create(String name, Map<String,String> args) throws Exception {
-        if (args.containsKey("name")) {
-            throw new Exception("name not allowed in argument map if explicitly requested");
-        }
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Entity create(Map<String,String> args) throws Exception {
-        if (!args.containsKey("name")) {
-            throw new Exception("name must be in argument map");
-        }
-        return super.create(path, args);
-    }
-
-    public Entity delete(String name) throws Exception {
-        return super.get(path + name);
-    }
-
-    public List<String> nameList(String name) throws Exception {
-        return super.nameList(path + name);
-    }
-
-    public List<String> nameList() throws Exception {
-        return nameList("");
-    }
 }

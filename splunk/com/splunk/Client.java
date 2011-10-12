@@ -56,18 +56,18 @@ public class Client {
         return outlist;
     }
 
-    public Entity get(String path) throws Exception {
+    public Element get(String path) throws Exception {
         Convert converter = new Convert();
         return converter.convertXMLData(service.get(path).getContent());
     }
 
-    public Entity delete(String path) throws Exception {
+    public Element delete(String path) throws Exception {
         Convert converter = new Convert();
         // place holder -- service needs a delete method
         return converter.convertXMLData(service.delete(path).getContent());
     }
 
-    public Entity create(String path, Map<String,String>args) throws Exception {
+    public Element create(String path, Map<String,String>args) throws Exception {
         Convert converter = new Convert();
         return converter.convertXMLData(service.post(path, args).getContent());
     }

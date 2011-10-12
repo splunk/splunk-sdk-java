@@ -16,66 +16,26 @@
 
 package com.splunk;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-// UNDONE: This class needs to be extended to handle the interesting flexibility of this endpoint
-public class Jobs extends Client {
-
-    private final String path = "/services/search/jobs/";
+public class Jobs extends Collection {
 
     public Jobs(Service service) {
-        super(service);
+        super(service, "/services/search/jobs/");
     }
 
-    // get and its overloads
-    public Entity get(String name) throws Exception {
-        return super.get(path + name);
-    }
+    // Handle lists a little differently than the parent class, which uses title.
+    // Here we use the last portion of the id, which is a URL.
+    public List<String> list() throws Exception {
+        List<String> retList = new ArrayList<String>();
+        Element element = super.get();
 
-    public Entity get() throws Exception {
-        return get("");
-    }
-
-    // UNDONE: need to handle all those interesting jobs thingies.
-    // create and its overloads
-    public Entity create(String name) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Entity create(String name, Map<String,String> args) throws Exception {
-        if (args.containsKey("name")) {
-            throw new Exception("name not allowed in arguments");
+        for (Entry entry: element.entry) {
+            String [] parts = entry.id.split("/");
+            if (parts.length > 0) retList.add(parts[parts.length - 1]);
         }
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Entity create(Map<String,String> args) throws Exception {
-        if (!args.containsKey("name")) {
-            throw new Exception("name must be in args");
-        }
-        return super.create(path, args);
-    }
-
-    // delete
-    public Entity delete(String name) throws Exception {
-        return super.get(path + name);
-    }
-
-    // list and its overloads
-    public List<String> nameList(String name) throws Exception {
-        return super.nameList(path);
-    }
-
-    public List<String> nameList() throws Exception {
-        return nameList("");
+        return retList;
     }
 }

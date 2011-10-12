@@ -16,57 +16,90 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-// UNDONE: check http status
-public class Inputs extends Client {
-
-    private final String path = "/services/data/inputs/";
+public class Inputs extends Collection {
 
     public Inputs(Service service) {
-        super(service);
+        super(service, "/services/data/inputs/");
     }
 
-    public Entity get(String name) throws Exception {
-        return super.get(path + name);
-    }
+    // UNDONE:
 
-    public Entity get() throws Exception {
-        return get("");
-    }
+/*
 
-    public Entity create(String name) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("name", name);
-        return super.create(path, args);
-    }
+    // wkc -- may move some to super class?
 
-    public Entity create(String name, Map<String,String> args) throws Exception {
-        if (args.containsKey("name")) {
-            throw new Exception("name not allowed in argument map if explicitly requested");
-        }
-        args.put("name", name);
-        return super.create(path, args);
-    }
+    def create(self, kind, name, **kwargs):
+        """Creates an input of the given kind, with the given name & args."""
+        response = self.post(self._kindmap[kind], name=name, **kwargs)
+        return self.refresh()[self.itemkey(kind, name)]
 
-    public Entity create(Map<String,String> args) throws Exception {
-        if (!args.containsKey("name")) {
-            throw new Exception("name must be in argument map");
-        }
-        return super.create(path, args);
-    }
+    def delete(self, key):
+        """Deletes the input with the given key."""
+        response = self.service.delete(self._infos[key]['path'])
+        self.refresh()
+        return self
 
-    public Entity delete(String name) throws Exception {
-        return super.get(path + name);
-    }
+    def itemkey(self, kind, name):
+        """Constructs a key from the given kind and item name."""
+        if not kind in self._kindmap.keys():
+            raise ValueError("Unknown kind '%s'" % kind)
+        return "%s:%s" % (kind, name)
 
-    public List<String> nameList(String name) throws Exception {
-        return super.nameList(path + name);
-    }
+    def itemmeta(self, kind):
+        """Returns metadata for members of the given kind."""
+        response = self.get("%s/_new" % self._kindmap[kind])
+        content = load(response, MATCH_ENTRY_CONTENT)
+        return record({
+            'eai:acl': content['eai:acl'],
+            'eai:attributes': content['eai:attributes']
+        })
 
-    public List<String> nameList() throws Exception {
-        return nameList("");
-    }
+    @property
+    def kinds(self):
+        """Returns the list of kinds that this collection may contain."""
+        return self._kindmap.keys()
+
+    def kindpath(self, kind):
+        """Returns the path to resources of the given kind."""
+        return self.path + self._kindmap[kind]
+
+    # args: kind*
+    def list(self, *args):
+        """Returns a list of collection keys, optionally filtered by kind."""
+        if len(args) == 0: return self._infos.keys()
+        return [k for k, v in self._infos.iteritems() if v['kind'] in args]
+
+    # Refreshes the
+    def refresh(self):
+        """Refreshes the internal directory of entities and entity metadata."""
+        self._infos = {}
+        for kind in self.kinds:
+
+            response = None
+            try:
+                response = self.service.get(self.kindpath(kind), count=-1)
+            except HTTPError as e:
+                if e.status == 404:
+                    continue # Nothing of this kind
+                else:
+                    raise
+
+            entry = load(response).feed.get('entry', None)
+            if entry is None: continue
+            if not isinstance(entry, list): entry = [entry]
+            for item in entry:
+                name = item.title
+                key = self.itemkey(kind, name)
+                path = urlparse(item.id).path
+                links = dict([(link.rel, link.href) for link in item.link])
+                self._infos[key] = {
+                    'key': key,
+                    'kind': kind,
+                    'name': name,
+                    'path': path,
+                    'links': links,
+                }
+        return self
+
+*/
 }

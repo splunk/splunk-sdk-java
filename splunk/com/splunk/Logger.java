@@ -28,21 +28,21 @@ public class Logger extends Client {
         super(service);
     }
 
-    public Entity get(String name) throws Exception {
+    public Element get(String name) throws Exception {
         return super.get(path + name);
     }
 
-    public Entity get() throws Exception {
+    public Element get() throws Exception {
         return super.get(path);
     }
 
-    public Entity create(String name) throws Exception {
+    public Element create(String name) throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("name", name);
         return super.create(path, args);
     }
 
-    public Entity create(String name, Map<String,String> args) throws Exception {
+    public Element create(String name, Map<String,String> args) throws Exception {
         if (args.containsKey("name")) {
             throw new Exception("name not allowed in argument map if explicitly requested");
         }
@@ -50,14 +50,14 @@ public class Logger extends Client {
         return super.create(path, args);
     }
 
-    public Entity create(Map<String,String> args) throws Exception {
+    public Element create(Map<String,String> args) throws Exception {
         if (!args.containsKey("name")) {
             throw new Exception("name must be in argument map");
         }
         return super.create(path, args);
     }
 
-    public Entity delete(String name) throws Exception {
+    public Element delete(String name) throws Exception {
         return super.get(path + name);
     }
 
