@@ -16,11 +16,10 @@
 
 package com.splunk;
 
-public class Input extends Entity {
+public class Loggers extends Collection {
 
-    public Input(Service service, String name) {
-        super(service, "/services/data/inputs/" + name);
+    public Loggers(Service service) {
+        super(service, "/services/server/logger/");
     }
 
-    // UNDONE: kind-ness
 }

@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -16,11 +16,10 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class Users extends Collection {
 
+    public Users(Service service) {
+        super(service, "/services/authentication/users/");
+    }
 
 }

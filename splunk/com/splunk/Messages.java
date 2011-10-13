@@ -16,56 +16,9 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class Messages extends Client {
-
-    private final String path = "/services/messages/";
+public class Messages extends Collection {
 
     public Messages(Service service) {
-        super(service);
-    }
-
-    public Element get(String name) throws Exception {
-        return super.get(path + name);
-    }
-
-    public Element get() throws Exception {
-        return super.get(path);
-    }
-
-    public Element create(String name) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Element create(String name, Map<String,String> args) throws Exception {
-        if (args.containsKey("name")) {
-            throw new Exception("name not allowed in argument map if explicitly requested");
-        }
-        args.put("name", name);
-        return super.create(path, args);
-    }
-
-    public Element create(Map<String,String> args) throws Exception {
-        if (!args.containsKey("name")) {
-            throw new Exception("name must be in argument map");
-        }
-        return super.create(path, args);
-    }
-
-    public Element delete(String name) throws Exception {
-        return super.get(path + name);
-    }
-
-    public List<String> nameList(String name) throws Exception {
-        return super.nameList(path + name);
-    }
-
-    public List<String> nameList() throws Exception {
-        return nameList("");
+        super(service, "/services/messages/");
     }
 }
