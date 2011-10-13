@@ -28,12 +28,4 @@ public class Conf extends Entity {
         // UNDONE: test to see if this is correct usage
         return super.post(stanza);
     }
-
-    public Element read(String relpath) throws Exception {
-        return super.get(relpath);
-    }
-
-    public Element read() throws Exception {
-        return super.get();
-    }
 }
