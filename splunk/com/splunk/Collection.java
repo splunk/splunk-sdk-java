@@ -80,4 +80,43 @@ public class Collection extends Endpoint {
         }
         return response;
     }
+
+    // delete should delete an element of the collection, thus we require a relative path that
+    // has at least one character.
+    public Element delete(String relpath, Map<String,String> args) throws Exception {
+        if (relpath.length() == 0) {
+            throw new Exception("relative path must be a string with at least one character");
+        }
+        Convert converter = new Convert();
+        return converter.convertXMLData(service.delete(path + relpath, args).getContent());
+    }
+
+    public Element delete(String relpath) throws Exception {
+        if (relpath.length() == 0) {
+            throw new Exception("relative path must be a string with at least one character");
+        }
+        Convert converter = new Convert();
+        return converter.convertXMLData(service.delete(path + relpath).getContent());
+    }
+
+
+    // allow for a few variants of create
+    public Element create(Map<String,String> args) throws Exception {
+        Convert converter = new Convert();
+        // assume 'name' has already been added to the argument list.
+        return converter.convertXMLData(service.post(path, args).getContent());
+    }
+
+    public Element create(String name, Map<String,String> args) throws Exception {
+        Convert converter = new Convert();
+        args.put("name", name); // if already there, we forcibly overwrite
+        return converter.convertXMLData(service.post(path, args).getContent());
+    }
+
+    public Element create(String name) throws Exception {
+        Convert converter = new Convert();
+        Map<String,String> args = new HashMap<String, String>();
+        args.put("name", name);
+        return converter.convertXMLData(service.post(path, args).getContent());
+    }
 }

@@ -16,10 +16,9 @@
 
 package com.splunk;
 
-public class Capabilities extends Entity {
+public class Info extends Entity {
 
-    // Although 'plural', capabilities is an Entity object
-    public Capabilities(Service service) {
-        super(service, "/services/authorization/capabilities/");
+    public Info(Service service) {
+        super(service, "/services/server/info");
     }
 }

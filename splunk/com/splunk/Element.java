@@ -69,7 +69,7 @@ public class Element {
     }
 
     private Map<String, String> nodeToHashMap(Node node) {
-        return nodeToHashMap(node, null);
+        return nodeToHashMap(node, "");
     }
 
     private Map<String, String> nodeToHashMap(Node node, String prefix) {
@@ -95,7 +95,7 @@ public class Element {
                                     if ( childNode.getNodeType() == Node.ELEMENT_NODE ) {
                                         // of them take element nodes
                                         name = keyNode.getAttributes().getNamedItem("name").getTextContent();
-                                        if (prefix != null) {
+                                        if (prefix.length() > 0) {
                                             name = prefix + "." + name;
                                         }
                                         // unfold them
@@ -106,7 +106,7 @@ public class Element {
                                     else if( childNode.getNodeType() == Node.TEXT_NODE && childNodes.getLength() == 1) {
                                         // and text nodes, but if there's no other nodes
                                         name = keyNode.getAttributes().getNamedItem("name").getTextContent();
-                                        if (prefix != null) {
+                                        if (prefix.length() > 0) {
                                             name = prefix + "." + name;
                                         }
                                         val = childNode.getTextContent();
@@ -117,7 +117,7 @@ public class Element {
                             else {
                                 // terminal key nodes
                                 name = keyNode.getAttributes().getNamedItem("name").getTextContent();
-                                if (prefix != null) {
+                                if (prefix.length() > 0) {
                                     name = prefix + "." + name;
                                 }
                                 val = keyNode.getTextContent();
@@ -126,9 +126,9 @@ public class Element {
                         }
                     }
                 }
-                else if( containerNode.getNodeName().equals("s:nameList")) {
+                else if (containerNode.getNodeName().equals("s:nameList")) {
                     // get s:nameList node
-                    if (prefix != null) {
+                    if (prefix.length() > 0) {
                         name = prefix;
                     }
                     else {
@@ -143,6 +143,26 @@ public class Element {
                         }
                     }
                     primitive.put(name, join(values, ","));
+                }
+                else if (containerNode.getNodeName().equals("s:list")){
+                    // get s:list node
+                    if (prefix.length() > 0) {
+                        name = prefix;
+                    }
+                    else {
+                        name = node.getAttributes().getNamedItem("name").getTextContent();
+                    }
+
+                    // get s:item child nodes of s:list
+                    List<String> values = new ArrayList<String>();
+                    for (Node keyNode=containerNode.getFirstChild(); keyNode!=null; keyNode=keyNode.getNextSibling()) {
+                        if( keyNode.getNodeType() == Node.ELEMENT_NODE ) {
+                            values.add(keyNode.getTextContent());
+                        }
+                    }
+                    primitive.put(name, join(values, ","));
+                } else {
+                    System.out.println("internal error in nodeToHashMap() -- missed case: "+ containerNode.getNodeName());
                 }
             }
         }
@@ -210,7 +230,7 @@ public class Element {
                         // content is usually a series of (perhaps) nested dictionaries, lists and keys.
                         entry.content = nodeToHashMap(node);
                     } else {
-                        System.out.println("[2] NOT IN LIST: " + name);
+                        System.out.println("internal error parseEntry, not in list: " + name);
                     }
                 }
             }
@@ -218,5 +238,19 @@ public class Element {
         }
 
         return entry;
+    }
+
+    public Map<String,String> read(List<String> items) throws Exception {
+        Map<String,String> response = new HashMap<String, String>();
+        for (String item: items) {
+            for (Entry ent: entry) {
+                for (String key: ent.content.keySet()) {
+                    if (key.startsWith(item)) {
+                        response.put(key, ent.content.get(key));
+                    }
+                }
+            }
+        }
+        return response;
     }
 }

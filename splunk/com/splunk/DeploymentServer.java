@@ -18,7 +18,7 @@ package com.splunk;
 
 public class DeploymentServer extends Entity {
 
-    public DeploymentServer(Service service) {
-        super(service, "/services/deployment/server/");
+    public DeploymentServer(Service service, String name) {
+        super(service, "/services/deployment/server/" + name);
     }
 }
