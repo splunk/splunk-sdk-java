@@ -81,6 +81,43 @@ public class ClientTest extends TestCase {
 */
     }
 
+    @Test public void testDeployments() throws Exception {
+
+        System.out.println("Testing Deployments");
+
+        Service service = connect();
+
+        DeploymentClients dclients =  new DeploymentClients(service);
+        for (String index: dclients.list()) {
+            DeploymentClient dclient = new DeploymentClient(service, index);
+            dclient.get(); // force a read and do nothing with the data
+        }
+
+        DeploymentServers dservers =  new DeploymentServers(service);
+        for (String index: dservers.list()) {
+            DeploymentServer dserver = new DeploymentServer(service, index);
+            dserver.get(); // force a read and do nothing with the data
+        }
+
+        DeploymentServerclasses dsclasses =  new DeploymentServerclasses(service);
+        for (String index: dsclasses.list()) {
+            DeploymentServerclass dsclass = new DeploymentServerclass(service, index);
+            dsclass.get(); // force a read and do nothing with the data
+        }
+
+        DeploymentTenants dtenants =  new DeploymentTenants(service);
+        for (String index: dtenants.list()) {
+            DeploymentTenant dtenant = new DeploymentTenant(service, index);
+            dtenant.get(); // force a read and do nothing with the data
+        }
+
+        DistributedPeers dpeers =  new DistributedPeers(service);
+        for (String index: dpeers.list()) {
+            DistributedPeer dpeer = new DistributedPeer(service, index);
+            dpeer.get(); // force a read and do nothing with the data
+        }
+    }
+
     @Test public void testCapabilities() throws Exception {
 
         System.out.println("Testing Capabilities");
@@ -141,6 +178,159 @@ public class ClientTest extends TestCase {
         }
     }
 
+    @Test public void testConfs() throws Exception {
+
+        System.out.println("Testing Config/Stanza");
+
+        Service service = connect();
+
+        Confs confs = new Confs(service);
+        for (String index: confs.list()) {
+            Conf conf = new Conf(service, index);
+            conf.get(); // force a read and do nothing with the data
+        }
+
+        Assert.assertTrue(confs.contains("props"));
+        Conf props = new Conf(service, "props");
+        Element stanza = props.create("sdk-tests");
+        Assert.assertTrue(props.contains("sdk-tests"));
+
+        Map<String,String> map;
+        List<String> getme = new ArrayList<String>();
+        getme.add("name");
+        getme.add("maxDist");
+        map = stanza.read(getme);
+        Assert.assertTrue(map.containsKey("maxDist"));
+
+        int value = Integer.parseInt(map.get("maxDist"));
+        map.put("maxDist", Integer.toString(value+1));
+        stanza = props.update("sdk-tests", map);
+        map = stanza.read(getme);
+        int value2 = Integer.parseInt(map.get("maxDist"));
+        Assert.assertEquals(value+1, value2);
+
+        props.delete("sdk-tests");
+        Assert.assertFalse(props.contains("sdk-tests"));
+    }
+
+    @Test public void testIndexes() throws Exception {
+
+        System.out.println("Testing Indexes");
+
+        Service service = connect();
+
+        Indexes indexes = new Indexes(service);
+
+        for (String index: indexes.list()) {
+            Index idx = new Index(service, index);
+            idx.get(); // force a read and do nothing with the data
+        }
+
+        if (!indexes.contains("sdk-tests")) {
+            indexes.create("sdk-tests");
+        }
+
+        Assert.assertTrue(indexes.contains("sdk-tests"));
+
+        List<String> attrs = new ArrayList<String>();
+        attrs.add("thawedPath");
+        attrs.add("quarantineFutureSecs");
+        attrs.add("isInternal");
+        attrs.add("maxHotBuckets");
+        attrs.add("disabled");
+        attrs.add("homePath");
+        attrs.add("compressRawdata");
+        attrs.add("maxWarmDBCount");
+        attrs.add("frozenTimePeriodInSecs");
+        attrs.add("memPoolMB");
+        attrs.add("maxHotSpanSecs");
+        attrs.add("minTime");
+        attrs.add("blockSignatureDatabase");
+        attrs.add("serviceMetaPeriod");
+        attrs.add("coldToFrozenDir");
+        attrs.add("quarantinePastSecs");
+        attrs.add("maxConcurrentOptimizes");
+        attrs.add("maxMetaEntries");
+        attrs.add("minRawFileSyncSecs");
+        attrs.add("maxMemMB");
+        attrs.add("maxTime");
+        attrs.add("partialServiceMetaPeriod");
+        attrs.add("maxHotIdleSecs");
+        attrs.add("coldToFrozenScript");
+        attrs.add("thawedPath_expanded");
+        attrs.add("coldPath_expanded");
+        attrs.add("defaultDatabase");
+        attrs.add("throttleCheckPeriod");
+        attrs.add("totalEventCount");
+        attrs.add("enableRealtimeSearch");
+        attrs.add("indexThreads");
+        attrs.add("maxDataSize");
+        attrs.add("currentDBSizeMB");
+        attrs.add("homePath_expanded");
+        attrs.add("blockSignSize");
+        attrs.add("syncMeta");
+        attrs.add("assureUTF8");
+        attrs.add("rotatePeriodInSecs");
+        attrs.add("sync");
+        attrs.add("suppressBannerList");
+        attrs.add("rawChunkSizeBytes");
+        attrs.add("coldPath");
+        attrs.add("maxTotalDataSizeMB");
+
+        for (String index: indexes.list()) {
+            Index idx = new Index(service, index);
+            Element element = idx.get();
+            Map<String,String> map = element.read(attrs);
+            for (String attr: attrs) {
+                Assert.assertTrue(map.containsKey(attr));
+            }
+        }
+
+        Map<String,String> map;
+        Index index = new Index(service, "sdk-tests");
+        Element element;
+        List<String> getme = new ArrayList<String>();
+        getme.add("disabled");
+        getme.add("totalEventCount");
+
+        element = index.disable();
+        map = element.read(getme);
+        Assert.assertEquals(map.get("disabled"), "1");
+
+        element = index.enable();
+        map = element.read(getme);
+        Assert.assertEquals(map.get("disabled"), "0");
+
+        element = index.clean();
+        map = element.read(getme);
+        Assert.assertEquals(map.get("totalEventCount"), "0");
+
+/*
+        UNDONE: attach and submit
+
+        cn = index.attach()
+        cn.write("Hello World!")
+        cn.close()
+        wait_event_count(index, '1', 30)
+        self.assertEqual(index['totalEventCount'], '1')
+
+        index.submit("Hello again!!")
+        wait_event_count(index, '2', 30)
+        self.assertEqual(index['totalEventCount'], '2')
+
+        # test must run on machine where splunkd runs,
+        # otherwise an failure is expected
+        testpath = path.dirname(path.abspath(__file__))
+        index.upload(path.join(testpath, "testfile.txt"))
+        wait_event_count(index, '3', 30)
+        self.assertEqual(index['totalEventCount'], '3')
+
+        index.clean()
+        self.assertEqual(index['totalEventCount'], '0')
+ */
+
+    }
+
     @Test public void testInfo() throws Exception {
 
         System.out.println("Testing System Information");
@@ -169,44 +359,5 @@ public class ClientTest extends TestCase {
         for (String index: expected) {
             Assert.assertTrue(map.get(index).length() > 0);
         }
-
-    }
-    // Make a few simple requests and make sure the results look ok.
-    @Test public void testDeployments() throws Exception {
-
-        System.out.println("Testing Deployments");
-
-        Service service = connect();
-
-        DeploymentClients dclients =  new DeploymentClients(service);
-        for (String index: dclients.list()) {
-            DeploymentClient dclient = new DeploymentClient(service, index);
-            dclient.get(); // force a read and do nothing with the data
-        }
-
-        DeploymentServers dservers =  new DeploymentServers(service);
-        for (String index: dservers.list()) {
-            DeploymentServer dserver = new DeploymentServer(service, index);
-            dserver.get(); // force a read and do nothing with the data
-        }
-
-        DeploymentServerclasses dsclasses =  new DeploymentServerclasses(service);
-        for (String index: dsclasses.list()) {
-            DeploymentServerclass dsclass = new DeploymentServerclass(service, index);
-            dsclass.get(); // force a read and do nothing with the data
-        }
-
-        DeploymentTenants dtenants =  new DeploymentTenants(service);
-        for (String index: dtenants.list()) {
-            DeploymentTenant dtenant = new DeploymentTenant(service, index);
-            dtenant.get(); // force a read and do nothing with the data
-        }
-
-        DistributedPeers dpeers =  new DistributedPeers(service);
-        for (String index: dpeers.list()) {
-            DistributedPeer dpeer = new DistributedPeer(service, index);
-            dpeer.get(); // force a read and do nothing with the data
-        }
-
     }
 }

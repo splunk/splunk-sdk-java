@@ -34,7 +34,9 @@ public class Collection extends Endpoint {
 
     private Map<String,String> read(List<String> items) throws Exception {
         Map<String,String> response = new HashMap<String, String>();
-        Element element = super.get();
+        Map<String,String> count = new HashMap<String, String>();
+        count.put("count", "-1");
+        Element element = super.get(count);
         for (String item: items) {
             for (Entry entry: element.entry) {
                 for (String key: entry.content.keySet()) {
@@ -54,7 +56,9 @@ public class Collection extends Endpoint {
 
     public List<String> list() throws Exception {
         List<String> retList = new ArrayList<String>();
-        Element element = super.get();
+        Map<String,String> count = new HashMap<String, String>();
+        count.put("count", "-1");
+        Element element = super.get(count);
 
          for (Entry entry: element.entry) {
              retList.add(entry.title);
@@ -67,8 +71,10 @@ public class Collection extends Endpoint {
         List<String> items = new ArrayList<String>();
         items.add("eai:acl");
         items.add("eai:attributes");
+        Map<String,String> count = new HashMap<String, String>();
+        count.put("count", "-1");
+        Element element = super.get(count);
 
-        Element element = super.get();
         for (String item: items) {
             for (Entry entry: element.entry) {
                 for (String key: entry.content.keySet()) {
@@ -88,7 +94,7 @@ public class Collection extends Endpoint {
             throw new Exception("relative path must be a string with at least one character");
         }
         Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path + relpath, args).getContent());
+        return converter.convertXMLData(service.delete(path + "/" + relpath, args).getContent());
     }
 
     public Element delete(String relpath) throws Exception {
@@ -96,7 +102,7 @@ public class Collection extends Endpoint {
             throw new Exception("relative path must be a string with at least one character");
         }
         Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path + relpath).getContent());
+        return converter.convertXMLData(service.delete(path + "/" + relpath).getContent());
     }
 
 

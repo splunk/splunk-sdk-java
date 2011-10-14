@@ -56,7 +56,7 @@ public class Index extends Entity {
           */
     }
 
-    public void clean () throws Exception {
+    public Element clean () throws Exception {
         List<String> list = new ArrayList<String>();
         list.add("maxTotalDataSizeMB");
         list.add("frozenTimePeriodInSecs");
@@ -79,7 +79,7 @@ public class Index extends Entity {
                 break;
             }
         }
-        super.update(saved);
+        return super.update(saved);
     }
 
     public void submit() {

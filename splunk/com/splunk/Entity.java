@@ -33,7 +33,9 @@ public class Entity extends Endpoint {
 
     public Map<String,String> read(List<String> items) throws Exception {
         Map<String,String> response = new HashMap<String, String>();
-        Element element = super.get();
+        Map<String,String> count = new HashMap<String, String>();
+        count.put("count", "-1");
+        Element element = super.get(count);
         for (String item: items) {
             for (Entry entry: element.entry) {
                 for (String key: entry.content.keySet()) {
@@ -53,20 +55,23 @@ public class Entity extends Endpoint {
         return read(itemList);
     }
 
-    public void update(Map<String,String> args) throws Exception {
-        super.post(args);
+    public Element update(Map<String,String> args) throws Exception {
+        return super.post(args);
     }
 
     public Element disable() throws Exception {
-        return super.post("disable");
+        super.post("/disable");
+        return super.get();
     }
 
     public Element enable () throws Exception {
-        return super.post("enable");
+        super.post("/enable");
+        return super.get();
     }
 
     public Element reload () throws Exception {
-        return super.post("_reload");
+        super.post("/_reload");
+        return super.get();
     }
 
     public Element delete(Map<String,String> args) throws Exception {

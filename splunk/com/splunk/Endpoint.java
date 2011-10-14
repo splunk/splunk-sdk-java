@@ -35,6 +35,11 @@ public class Endpoint {
 
     // UNDONE: some overloads may not be relevant.
 
+    public Element get(Map<String,String> args) throws Exception {
+        Convert converter = new Convert();
+        return converter.convertXMLData(service.get(path,args).getContent());
+    }
+
     public Element get(String relpath) throws Exception {
         Convert converter = new Convert();
         return converter.convertXMLData(service.get(path + relpath).getContent());

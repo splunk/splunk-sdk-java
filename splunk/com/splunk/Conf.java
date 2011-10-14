@@ -16,16 +16,21 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public class Conf extends Entity {
+public class Conf extends Collection  {
 
     public Conf(Service service, String name) {
         super(service, "/services/configs/conf-" + name);
     }
 
-    public Element submit(Map<String,String> stanza) throws Exception {
+    public Element submit(Map<String,String> args) throws Exception {
         // UNDONE: test to see if this is correct usage
-        return super.post(stanza);
+        return super.post(args);
+    }
+
+    public Element update(String stanza, Map<String,String>args) throws Exception {
+        return super.post("/" + stanza, args);
     }
 }

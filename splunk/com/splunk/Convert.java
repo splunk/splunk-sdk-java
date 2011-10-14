@@ -149,7 +149,13 @@ public class Convert {
                             } else if (name.equals("link")) {
                                 element.header.link.add(attributes);
                             } else if (name.equals("itemsPerPage")) {
-                                element.header.itemsPerPage = Integer.parseInt(value);
+                                // hack. for some reason "-1" aka 4294967295 blows up
+                                // in parseInt().
+                                if (value.equals("4294967295")) {
+                                    element.header.itemsPerPage = -1;
+                                } else {
+                                    element.header.itemsPerPage = Integer.parseInt(value);
+                                }
                             } else if (name.equals("messages")) {
                                 element.header.messages = value;
                             } else if (name.equals("startIndex")) {
@@ -185,6 +191,10 @@ public class Convert {
                 node = node.getNextSibling();
             }
         } catch (Exception e) {
+            // for debug -- when XML is not parsing
+            org.w3c.dom.Element root = dom.getDocumentElement();
+            node = root.getFirstChild();
+            dumpNodes(node);
             throw new RuntimeException("XML parse failed: " + e.getMessage());
         }
 
