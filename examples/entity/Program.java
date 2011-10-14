@@ -17,6 +17,9 @@
 
 import com.splunk.*;
 
+import java.util.*;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Program extends com.splunk.sdk.Program {
@@ -72,7 +75,7 @@ public class Program extends com.splunk.sdk.Program {
          }
     }
 
-    private static void dumpEntity(Element element) {
+    private static void dumpElement(Element element) {
         dumpHeader(element.header);
         dumpEntries(element.entry);
     }
@@ -87,24 +90,26 @@ public class Program extends com.splunk.sdk.Program {
         System.out.println("Application list: " + apps.list() + "\n");
 
         System.out.println("Collection, index one item");
-        dumpEntity(apps.get("eaitest"));
+        dumpElement(apps.get("eaitest"));
         System.out.println("Collection: ");
-        dumpEntity(apps.get());
+        dumpElement(apps.get());
 
         System.out.println("Entity: (single item)");
         App app =  new App(service, "eaitest");
-        dumpEntity(app.read());
-
+        dumpElement(app.get());
+/*
         System.out.println("INDEX redux ***********************************************\n");
         Indexes indexes =  new Indexes(service);
-        dumpEntity(indexes.get());
-        dumpEntity(indexes.get("_internal"));
+        dumpElement(indexes.get());
 
         System.out.println("Index list: " + indexes.list() + "\n");
+
         for (String index: indexes.list()) {
             Index idx = new Index(service, index);
-            dumpEntity(idx.get());
-            System.out.println(idx.readmeta());
+            List<String> item = new ArrayList<String>();
+            item.add("totalEventCount");
+            Map<String,String> data = idx.read(item);
+            System.out.println(index + " (" + data.get("totalEventCount") + ")");
         }
 
         Index idx = new Index(service, "wkc");
@@ -122,5 +127,6 @@ public class Program extends com.splunk.sdk.Program {
         System.out.println("JOBS redux ****************************************\n");
         Jobs jobs =  new Jobs(service);
         System.out.println("jobs list: " + jobs.list());
+*/
     }
 }
