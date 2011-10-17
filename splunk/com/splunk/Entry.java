@@ -33,4 +33,17 @@ public class Entry {
     public Map<String,String> author = new HashMap<String, String>();
     public Map<String,String> content = new HashMap<String, String>();
 
+    // UNDONE -- access routines for extracting content information.
+
+    public Map<String,String> read(List<String> items) {
+        Map<String,String> response = new HashMap<String, String>();
+        for (String item: items) {
+            for (String key: content.keySet()) {
+                if (key.startsWith(item)) {
+                    response.put(key, content.get(key));
+                }
+            }
+        }
+        return response;
+    }
 }

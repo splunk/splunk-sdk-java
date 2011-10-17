@@ -16,11 +16,12 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Input extends Entity {
 
     public Input(Service service, String name) {
         super(service, "/services/data/inputs/" + name);
     }
-
-    // UNDONE: kind-ness
 }

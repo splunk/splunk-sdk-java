@@ -107,7 +107,7 @@ public class Convert {
             // root is the feed, and everything else is its children
             node = root.getFirstChild();
 
-            // dumpNodes(node); /* debug print */
+            //dumpNodes(node); /* debug print */
 
             // parse: get first level header information
             List<String> firstLevel = Arrays.asList("generator", "id", "title", "updated",

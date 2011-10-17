@@ -33,4 +33,12 @@ public class Conf extends Collection  {
     public Element update(String stanza, Map<String,String>args) throws Exception {
         return super.post("/" + stanza, args);
     }
+
+    public Element delete(String relpath, Map<String,String> args) throws Exception {
+        return super.delete("/" + relpath, args);
+    }
+
+    public Element delete(String relpath) throws Exception {
+        return super.delete("/" + relpath);
+    }
 }

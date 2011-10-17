@@ -56,7 +56,8 @@ public class Entity extends Endpoint {
     }
 
     public Element update(Map<String,String> args) throws Exception {
-        return super.post(args);
+        super.post(args);
+        return super.get();
     }
 
     public Element disable() throws Exception {

@@ -14,7 +14,6 @@
  * under the License.
  */
 
-import com.splunk.Entity;
 import com.splunk.Service;
 import com.splunk.Indexes;
 import com.splunk.Index;

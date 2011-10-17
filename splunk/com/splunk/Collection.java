@@ -94,7 +94,7 @@ public class Collection extends Endpoint {
             throw new Exception("relative path must be a string with at least one character");
         }
         Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path + "/" + relpath, args).getContent());
+        return converter.convertXMLData(service.delete(path + relpath, args).getContent());
     }
 
     public Element delete(String relpath) throws Exception {
@@ -102,7 +102,7 @@ public class Collection extends Endpoint {
             throw new Exception("relative path must be a string with at least one character");
         }
         Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path + "/" + relpath).getContent());
+        return converter.convertXMLData(service.delete(path + relpath).getContent());
     }
 
 

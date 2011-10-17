@@ -16,34 +16,76 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Inputs extends Collection {
+
+    private Map<String,String> kindMap = new HashMap<String, String>();
+    private void initmap() {
+        kindMap.put("ad", "ad");
+        kindMap.put("monitor", "monitor");
+        kindMap.put("registry", "registry");
+        kindMap.put("script", "script");
+        kindMap.put("ad", "ad");
+        kindMap.put("tcp", "tcp/raw");
+        kindMap.put("splunktcp", "tcp/cooked");
+        kindMap.put("udp", "udp");
+        kindMap.put("win-event-log-collections", "win-event-log-collections");
+        kindMap.put("win-perfmon", "win-perfmon");
+        kindMap.put("win-wmi-collections", "win-wmi-collections");
+    }
 
     public Inputs(Service service) {
         super(service, "/services/data/inputs/");
+        initmap();
     }
 
-    // UNDONE:
+    public Element create(String kind, String name, Map<String,String> args) throws Exception {
+        if (!kindMap.containsKey(kind)) {
+            throw new Exception("Input creation requires a valid kind of input, from: " + kindMap);
+        }
+        args.put("name", name);
+        super.post(kindMap.get(kind), args);
+        return super.get();
+    }
+
+    public Element create(String kind, String name) throws Exception {
+        Map<String,String> args = new HashMap<String, String>();
+        return create(kind, name, args);
+    }
+
+    public Element delete(String kind, String name) throws Exception {
+        if (!kindMap.containsKey(kind)) {
+            throw new Exception("Input creation requires a valid kind of input, from: " + kindMap);
+        }
+        return super.delete(kindMap.get(kind) + "/" + name);
+    }
+
+    public Map<String,String> kinds() {
+        return kindMap;
+    }
+
+    public String kindpath(String kind) {
+        return kindMap.get(kind);
+    }
+
+    public String itemkey(String kind, String name) throws Exception {
+        if (!kindMap.containsKey(kind)) {
+            throw new Exception("Input creation requires a valid kind of input, from: " + kindMap);
+        }
+        return kind + ":" + name;
+    }
+
 
 /*
-
-    // wkc -- may move some to super class?
-
-    def create(self, kind, name, **kwargs):
-        """Creates an input of the given kind, with the given name & args."""
-        response = self.post(self._kindmap[kind], name=name, **kwargs)
-        return self.refresh()[self.itemkey(kind, name)]
+    // UNDONE:
 
     def delete(self, key):
         """Deletes the input with the given key."""
         response = self.service.delete(self._infos[key]['path'])
         self.refresh()
         return self
-
-    def itemkey(self, kind, name):
-        """Constructs a key from the given kind and item name."""
-        if not kind in self._kindmap.keys():
-            raise ValueError("Unknown kind '%s'" % kind)
-        return "%s:%s" % (kind, name)
 
     def itemmeta(self, kind):
         """Returns metadata for members of the given kind."""
@@ -53,21 +95,6 @@ public class Inputs extends Collection {
             'eai:acl': content['eai:acl'],
             'eai:attributes': content['eai:attributes']
         })
-
-    @property
-    def kinds(self):
-        """Returns the list of kinds that this collection may contain."""
-        return self._kindmap.keys()
-
-    def kindpath(self, kind):
-        """Returns the path to resources of the given kind."""
-        return self.path + self._kindmap[kind]
-
-    # args: kind*
-    def list(self, *args):
-        """Returns a list of collection keys, optionally filtered by kind."""
-        if len(args) == 0: return self._infos.keys()
-        return [k for k, v in self._infos.iteritems() if v['kind'] in args]
 
     # Refreshes the
     def refresh(self):

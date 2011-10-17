@@ -234,20 +234,36 @@ public class Element {
         return entry;
     }
 
-    // extract variable items from the content area.
-
-    public Map<String,String> read(List<String> items) throws Exception {
-        Map<String,String> response = new HashMap<String, String>();
-        for (String item: items) {
-            for (Entry ent: entry) {
-                for (String key: ent.content.keySet()) {
-                    if (key.startsWith(item)) {
-                        response.put(key, ent.content.get(key));
-                    }
-                }
+    // extract variable items from the content area:
+    // for list and read we will use the last portion of the URI
+    // N.B.: this may also be done with title, not sure which is better (UNDONE)
+    public List<String> list() {
+        List<String> response = new ArrayList<String>();
+        for (Entry ent: entry) {
+            String [] idpart = ent.id.split("/");
+            if (idpart.length > 0) {
+                response.add(idpart[idpart.length-1]);
             }
         }
         return response;
+    }
+
+    public Entry locate(String id) {
+        for (Entry item: entry) {
+            String [] idpart = item.id.split("/");
+            if (idpart.length > 0) {
+                if (idpart[idpart.length-1].equals(id)) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Map<String,String> read(List<String> items) {
+        // assume the caller needs the very first entry -- used with objects
+        // that normally only have one element.
+        return entry.get(0).read(items);
     }
 
     // utility dump routines

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import com.splunk.Service;
 import junit.framework.TestCase;
@@ -48,7 +49,6 @@ public class ClientTest extends TestCase {
     // Nota Bene: deleting an app, then creating one requires a splunk reboot in between.
     @Test public void testApps() throws Exception {
 /*
-
         System.out.println("Testing Applications");
 
         Service service = connect();
@@ -88,32 +88,32 @@ public class ClientTest extends TestCase {
         Service service = connect();
 
         DeploymentClients dclients =  new DeploymentClients(service);
-        for (String index: dclients.list()) {
-            DeploymentClient dclient = new DeploymentClient(service, index);
+        for (String name: dclients.list()) {
+            DeploymentClient dclient = new DeploymentClient(service, name);
             dclient.get(); // force a read and do nothing with the data
         }
 
         DeploymentServers dservers =  new DeploymentServers(service);
-        for (String index: dservers.list()) {
-            DeploymentServer dserver = new DeploymentServer(service, index);
+        for (String name: dservers.list()) {
+            DeploymentServer dserver = new DeploymentServer(service, name);
             dserver.get(); // force a read and do nothing with the data
         }
 
         DeploymentServerclasses dsclasses =  new DeploymentServerclasses(service);
-        for (String index: dsclasses.list()) {
-            DeploymentServerclass dsclass = new DeploymentServerclass(service, index);
+        for (String name: dsclasses.list()) {
+            DeploymentServerclass dsclass = new DeploymentServerclass(service, name);
             dsclass.get(); // force a read and do nothing with the data
         }
 
         DeploymentTenants dtenants =  new DeploymentTenants(service);
-        for (String index: dtenants.list()) {
-            DeploymentTenant dtenant = new DeploymentTenant(service, index);
+        for (String name: dtenants.list()) {
+            DeploymentTenant dtenant = new DeploymentTenant(service, name);
             dtenant.get(); // force a read and do nothing with the data
         }
 
         DistributedPeers dpeers =  new DistributedPeers(service);
-        for (String index: dpeers.list()) {
-            DistributedPeer dpeer = new DistributedPeer(service, index);
+        for (String name: dpeers.list()) {
+            DistributedPeer dpeer = new DistributedPeer(service, name);
             dpeer.get(); // force a read and do nothing with the data
         }
     }
@@ -173,8 +173,8 @@ public class ClientTest extends TestCase {
         List<String> cap = new ArrayList<String>();
         cap.add("capabilities");
         Map<String,String> map = element.read(cap);
-        for (String index: expected) {
-            Assert.assertTrue(map.get("capabilities").contains(index));
+        for (String name: expected) {
+            Assert.assertTrue(map.get("capabilities").contains(name));
         }
     }
 
@@ -185,8 +185,8 @@ public class ClientTest extends TestCase {
         Service service = connect();
 
         Confs confs = new Confs(service);
-        for (String index: confs.list()) {
-            Conf conf = new Conf(service, index);
+        for (String name: confs.list()) {
+            Conf conf = new Conf(service, name);
             conf.get(); // force a read and do nothing with the data
         }
 
@@ -221,8 +221,8 @@ public class ClientTest extends TestCase {
 
         Indexes indexes = new Indexes(service);
 
-        for (String index: indexes.list()) {
-            Index idx = new Index(service, index);
+        for (String name: indexes.list()) {
+            Index idx = new Index(service, name);
             idx.get(); // force a read and do nothing with the data
         }
 
@@ -277,8 +277,8 @@ public class ClientTest extends TestCase {
         attrs.add("coldPath");
         attrs.add("maxTotalDataSizeMB");
 
-        for (String index: indexes.list()) {
-            Index idx = new Index(service, index);
+        for (String name: indexes.list()) {
+            Index idx = new Index(service, name);
             Element element = idx.get();
             Map<String,String> map = element.read(attrs);
             for (String attr: attrs) {
@@ -331,6 +331,28 @@ public class ClientTest extends TestCase {
 
     }
 
+
+    @Test public void testIndexMetadata() throws Exception {
+
+        System.out.println("Testing Index metadata");
+
+        Service service = connect();
+
+        Indexes indexes = new Indexes(service);
+
+        List<String> getme = new ArrayList<String>();
+        getme.add("eai:acl");
+        getme.add("eai:attributes");
+        Map<String,String> map = indexes.get().read(getme);
+        Assert.assertTrue(map.size() > 0);
+
+        for (String name: indexes.list()) {
+            Entity ent = new Index(service, name);
+            map = ent.readmeta();
+            Assert.assertTrue(map.size() > 0);
+        }
+    }
+
     @Test public void testInfo() throws Exception {
 
         System.out.println("Testing System Information");
@@ -356,8 +378,80 @@ public class ClientTest extends TestCase {
 
         Info info = new Info(service);
         Map<String,String> map = info.read(expected);
-        for (String index: expected) {
-            Assert.assertTrue(map.get(index).length() > 0);
+        for (String name: expected) {
+            Assert.assertTrue(map.get(name).length() > 0);
         }
+    }
+
+    @Test public void testInputs() throws Exception {
+
+        System.out.println("Testing Inputs");
+
+        Service service = connect();
+
+        Inputs allInputs = new Inputs(service);
+        Input tcpInput;
+        Input nnnnInput;
+
+        List<String> getme = new ArrayList<String>();
+        getme.add("disabled");
+        getme.add("index");
+
+        for (String name: allInputs.list()) {
+            Input input = new Input(service, name);
+            Element element = input.get();
+            for (Entry entry: element.entry) {
+                if (entry.content.size() > 0) {
+                    for (String attr: getme) {
+                        Assert.assertTrue(entry.content.containsKey(attr));
+                    }
+                }
+            }
+        }
+
+        tcpInput = new Input(service, allInputs.kindpath("tcp"));
+        Element element = tcpInput.get();
+
+        if (element.list().contains("9999")) {
+            element = allInputs.delete("tcp", "9999");
+        }
+        Assert.assertFalse(element.list().contains("9999"));
+
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("host", "sdk-test");
+        allInputs.create("tcp", "9999", map);
+        element = tcpInput.get();
+        Assert.assertTrue(element.list().contains("9999"));
+
+        Entry ent = element.locate("9999");
+        getme.clear();
+        getme.add("host");
+        map = ent.read(getme);
+        Assert.assertTrue(map.get("host").equals("sdk-test"));
+
+        nnnnInput = new Input(service, allInputs.kindpath("tcp") + "/9999");
+        map.clear();
+        map.put("host", "foo");
+        map.put("sourcetype", "bar");
+        element = nnnnInput.update(map);
+
+        getme.add("sourcetype");
+        ent = element.locate("9999");
+        map = ent.read(getme);
+        Assert.assertTrue(map.get("host").equals("foo"));
+        Assert.assertTrue(map.get("sourcetype").equals("bar"));
+
+        allInputs.delete("tcp", "9999");
+        element = tcpInput.get();
+        Assert.assertFalse(element.list().contains("9999"));
+
+        /*
+        UNDONE:
+        for kind in inputs.kinds:
+            for key in inputs.list(kind):
+                input = inputs[key]
+                self.assertEqual(input.kind, kind)
+
+         */
     }
 }
