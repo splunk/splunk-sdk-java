@@ -90,7 +90,7 @@
     </target>
 
     <target name="compile-examples" 
-     depends="compile-examples-spurl,compile-examples-test,compile-examples-entity"/>
+     depends="compile-examples-spurl,compile-examples-test,compile-examples-index"/>
 
     <target name="compile-examples-spurl" depends="dist-libs">
         <mkdir dir="${dir.build.examples.spurl}"/>
@@ -110,11 +110,11 @@
         </javac>
     </target>
 
-    <target name="compile-examples-entity" depends="compile-libs">
-        <mkdir dir="${dir.build.examples.entity}"/>
+    <target name="compile-examples-index" depends="compile-libs">
+        <mkdir dir="${dir.build.examples.index}"/>
         <javac includeantruntime="false"
-         srcdir="${dir.examples.entity}"
-         destdir="${dir.build.examples.entity}">
+         srcdir="${dir.examples.index}"
+         destdir="${dir.build.examples.index}">
             <classpath refid="classpath.examples"/>
         </javac>
     </target>
@@ -183,8 +183,8 @@
         </jar>
 
         <jar 
-         basedir="${dir.build.examples.entity}"
-         destfile="${dir.dist.examples}/entity.jar"
+         basedir="${dir.build.examples.index}"
+         destfile="${dir.dist.examples}/index.jar"
          includes="**/*.class">
             <manifest>
                 <attribute name="Main-Class" value="Program"/>
