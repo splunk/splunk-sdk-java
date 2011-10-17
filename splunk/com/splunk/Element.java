@@ -19,13 +19,7 @@ package com.splunk;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 public class Element {
 
@@ -240,6 +234,8 @@ public class Element {
         return entry;
     }
 
+    // extract variable items from the content area.
+
     public Map<String,String> read(List<String> items) throws Exception {
         Map<String,String> response = new HashMap<String, String>();
         for (String item: items) {
@@ -252,5 +248,53 @@ public class Element {
             }
         }
         return response;
+    }
+
+    // utility dump routines
+
+    private static void dumpHeader(Header header) {
+        System.out.println("ID:           " + header.id);
+        System.out.println("generator:    " + header.generator);
+        System.out.println("title:        " + header.title);
+        System.out.println("updated:      " + header.updated);
+        System.out.println("author:       " + header.author);
+
+        // semi-optional
+        if (header.link.size() > 0)
+            System.out.println("link:         " + header.link);
+        if (header.itemsPerPage != -1)
+            System.out.println("itemsperpage: " + header.itemsPerPage);
+        if (header.startIndex != -1)
+            System.out.println("startindex:   " + header.startIndex);
+        if (header.totalResults != -1)
+            System.out.println("totalresults: " + header.totalResults);
+        if (header.messages != null && header.messages.length() > 0)
+            System.out.println("messages:     " + header.messages);
+        System.out.println("");
+    }
+
+    private static void dumpEntry(Entry entry) {
+        System.out.println("    ID:           " + entry.id);
+        System.out.println("    updated:      " + entry.updated);
+        System.out.println("    title:        " + entry.title);
+
+        // semi-optional
+        if (entry.published != null)
+            System.out.println("    published:    " + entry.published);
+        if (!entry.content.isEmpty())
+            System.out.println("    content:      " + entry.content);
+        System.out.println("");
+    }
+
+    private static void dumpEntries(java.util.Collection<Entry> entries) {
+        // Iterate over entries
+         for (Entry entry: entries) {
+             dumpEntry(entry);
+         }
+    }
+
+    public void dumpElement() {
+        dumpHeader(this.header);
+        dumpEntries(this.entry);
     }
 }
