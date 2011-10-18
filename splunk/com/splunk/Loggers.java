@@ -21,5 +21,4 @@ public class Loggers extends Collection {
     public Loggers(Service service) {
         super(service, "/services/server/logger/");
     }
-
 }

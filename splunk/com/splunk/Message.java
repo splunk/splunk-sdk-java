@@ -16,9 +16,9 @@
 
 package com.splunk;
 
-public class Users extends Collection {
+public class Message extends Entity {
 
-    public Users(Service service) {
-        super(service, "/services/authentication/users/");
+    public Message(Service service, String name) {
+        super(service, "/services/messages/" + name);
     }
 }

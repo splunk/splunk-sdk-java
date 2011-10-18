@@ -21,5 +21,4 @@ public class DistributedConfig extends Entity {
     public DistributedConfig(Service service) {
         super(service, "/services/search/distributed/config/");
     }
-
 }

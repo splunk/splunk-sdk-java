@@ -113,5 +113,4 @@ public class Index extends Entity {
                                     .post("/services/data/inputs/oneshot", args)
                                     .getContent());
     }
-
 }

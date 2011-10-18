@@ -21,5 +21,4 @@ public class Logger extends Entity {
     public Logger(Service service, String name) {
         super(service, "/services/server/logger/" + name);
     }
-
 }

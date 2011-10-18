@@ -236,16 +236,13 @@ public class ClientTest extends TestCase {
         getme.add("totalEventCount");
 
         element = index.disable();
-        map = element.read(getme);
-        Assert.assertEquals(map.get("disabled"), "1");
+        Assert.assertEquals(element.read(getme).get("disabled"), "1");
 
         element = index.enable();
-        map = element.read(getme);
-        Assert.assertEquals(map.get("disabled"), "0");
+        Assert.assertEquals(element.read(getme).get("disabled"), "0");
 
         element = index.clean();
-        map = element.read(getme);
-        Assert.assertEquals(map.get("totalEventCount"), "0");
+        Assert.assertEquals(element.read(getme).get("totalEventCount"), "0");
 
 /*
         UNDONE: attach and submit
@@ -383,5 +380,91 @@ public class ClientTest extends TestCase {
                 self.assertEqual(input.kind, kind)
 
          */
+    }
+
+    @Test public void testLoggers() throws Exception {
+
+        System.out.println("Testing Loggers");
+
+        Service service = connect();
+
+        List <String> expected = Arrays.asList(
+                "INFO", "WARN", "ERROR", "DEBUG", "CRIT");
+
+        Loggers loggers = new Loggers(service);
+        List<String> getme = new ArrayList<String>();
+        getme.add("level");
+
+        for (String name: loggers.list()) {
+            Logger logger = new Logger(service, name);
+            Element element = logger.get();
+
+            Map<String,String> levels = element.read(getme);
+            Assert.assertTrue(expected.contains(levels.get("level")));
+        }
+
+        Assert.assertTrue(loggers.list().contains("AuditLogger"));
+        Logger logger = new Logger(service, "AuditLogger");
+
+        Map<String,String> saved = logger.get().read(getme);
+
+        for (String level: expected) {
+            Map<String,String> update = new HashMap<String,String>();
+            update.clear();
+            update.put("level", level);
+            logger.update(update);
+            Map<String,String> updated = logger.get().read(getme);
+            Assert.assertEquals(level, updated.get("level"));
+        }
+
+        logger.update(saved);
+        Assert.assertEquals(saved.get("level"), logger
+                                        .get()
+                                        .read(getme)
+                                        .get("level"));
+    }
+
+
+    @Test public void testMessages() throws Exception {
+
+        System.out.println("Testing Messages");
+
+        Service service = connect();
+
+        Messages messages = new Messages(service);
+
+        if (messages.list().contains("sdk-test-message1")) {
+            messages.delete("sdk-test-message1");
+        }
+
+        if (messages.list().contains("sdk-test-message2")) {
+            messages.delete("sdk-test-message2");
+        }
+
+        Assert.assertFalse(messages.list().contains("sdk-test-message1"));
+        Assert.assertFalse(messages.list().contains("sdk-test-message2"));
+
+        //UNDONE: message should be placed into "value" put appears to be placed
+        // into key-name 'sdk-test-message1'
+        Map<String,String> args1 = new HashMap<String, String>();
+        args1.put("value", "hello.");
+        messages.create("sdk-test-message1", args1);
+        Assert.assertTrue(messages.list().contains("sdk-test-message1"));
+        Message message1 = new Message(service, "sdk-test-message1");
+        message1.get().dumpElement();
+
+        //UNDONE: message should be placed into "value" put appears to be placed
+        // into key-name 'sdk-test-message2'
+        Map<String,String> args2 = new HashMap<String, String>();
+        args2.put("value", "world.");
+        messages.create("sdk-test-message2", args2);
+        Assert.assertTrue(messages.list().contains("sdk-test-message2"));
+        Message message2 = new Message(service, "sdk-test-message2");
+        message2.get().dumpElement();
+
+        messages.delete("sdk-test-message1");
+        messages.delete("sdk-test-message2");
+        Assert.assertFalse(messages.list().contains("sdk-test-message1"));
+        Assert.assertFalse(messages.list().contains("sdk-test-message2"));
     }
 }

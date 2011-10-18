@@ -21,5 +21,4 @@ public class DeploymentTenant extends Entity {
     public DeploymentTenant(Service service, String name) {
         super(service, "/services/deployment/tenants/" + name);
     }
-
 }

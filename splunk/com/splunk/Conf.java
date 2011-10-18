@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Conf extends Collection  {

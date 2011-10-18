@@ -21,5 +21,4 @@ public class DeploymentTenants extends Collection {
     public DeploymentTenants(Service service) {
         super(service, "/services/deployment/tenants/");
     }
-
 }

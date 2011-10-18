@@ -21,5 +21,4 @@ public class Roles extends Collection {
     public Roles(Service service) {
         super(service, "/services/authentication/roles/");
     }
-
 }

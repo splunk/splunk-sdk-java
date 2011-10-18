@@ -21,5 +21,4 @@ public class Role extends Entity {
     public Role(Service service, String name) {
         super(service, "/services/authentication/roles/" + name);
     }
-
 }

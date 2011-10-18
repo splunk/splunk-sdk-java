@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-// UNDONE: check http status
 public class Apps extends Collection {
 
     public Apps(Service service) {
