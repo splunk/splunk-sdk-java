@@ -98,13 +98,9 @@ public class Collection extends Endpoint {
     }
 
     public Element delete(String relpath) throws Exception {
-        if (relpath.length() == 0) {
-            throw new Exception("relative path must be a string with at least one character");
-        }
-        Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path + relpath).getContent());
+        Map<String,String> args = new HashMap<String, String>();
+        return delete(relpath, args);
     }
-
 
     // allow for a few variants of create
     public Element create(Map<String,String> args) throws Exception {
@@ -120,9 +116,7 @@ public class Collection extends Endpoint {
     }
 
     public Element create(String name) throws Exception {
-        Convert converter = new Convert();
         Map<String,String> args = new HashMap<String, String>();
-        args.put("name", name);
-        return converter.convertXMLData(service.post(path, args).getContent());
+        return create(name, args);
     }
 }
