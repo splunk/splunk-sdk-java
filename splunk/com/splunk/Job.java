@@ -19,13 +19,13 @@ package com.splunk;
 import java.util.HashMap;
 import java.util.Map;
 
+// UNDONE: testing. may need to perform a get after posts to return
+// same element (as opposed to parent element).
 public class Job extends Entity {
 
     public Job(Service service, String name) {
         super(service, "/services/search/jobs/" + name);
     }
-
-    // UNDONE: return entities?
 
     public Element cancel() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
