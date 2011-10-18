@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.*;
 
 import com.splunk.Service;
-import com.sun.jdi.ArrayReference;
 import junit.framework.TestCase;
 import org.junit.*;
 
