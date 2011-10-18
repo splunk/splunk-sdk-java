@@ -41,9 +41,12 @@ public class Inputs extends Collection {
         initmap();
     }
 
-    public Element create(String kind, String name, Map<String,String> args) throws Exception {
+    public Element create(String kind,
+                          String name,
+                          Map<String,String> args) throws Exception {
         if (!kindMap.containsKey(kind)) {
-            throw new Exception("Input creation requires a valid kind of input, from: " + kindMap);
+            throw new Exception("Input creation requires a valid 'kind', from: "
+                    + kindMap);
         }
         args.put("name", name);
         super.post(kindMap.get(kind), args);
@@ -57,7 +60,8 @@ public class Inputs extends Collection {
 
     public Element delete(String kind, String name) throws Exception {
         if (!kindMap.containsKey(kind)) {
-            throw new Exception("Input creation requires a valid kind of input, from: " + kindMap);
+            throw new Exception("Input creation requires a valid 'kind', from: "
+                    + kindMap);
         }
         return super.delete(kindMap.get(kind) + "/" + name);
     }
@@ -72,7 +76,8 @@ public class Inputs extends Collection {
 
     public String itemkey(String kind, String name) throws Exception {
         if (!kindMap.containsKey(kind)) {
-            throw new Exception("Input creation requires a valid kind of input, from: " + kindMap);
+            throw new Exception("Input creation requires a valid 'kind', from: "
+                    + kindMap);
         }
         return kind + ":" + name;
     }

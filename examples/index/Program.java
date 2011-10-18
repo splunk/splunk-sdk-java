@@ -49,7 +49,7 @@ public class Program extends com.splunk.sdk.Program {
             List<String> item = new ArrayList<String>();
             item.add("totalEventCount");
             Map<String,String> data = idx.read(item);
-            System.out.println(index + " (" + data.get("totalEventCount") + ")");
+            System.out.println(index+" ("+data.get("totalEventCount")+")");
         }
 
         Index idx = new Index(service, "sdk-tests");

@@ -149,7 +149,7 @@ public class Service {
     public ResponseMessage get(String path, Map<String, String> args)
         throws IOException 
     {
-        if (args != null) path = path + "?" + encode(args);
+        if (args != null && args.size() > 0) path = path + "?" + encode(args);
         RequestMessage request = new RequestMessage("GET", path);
         return send(request);
     }
@@ -160,7 +160,7 @@ public class Service {
         RequestMessage request = new RequestMessage("POST", path);
         request.getHeader().put(
             "Content-Type", "application/x-www-form-urlencoded");
-        if (args != null) request.setContent(encode(args));
+        if (args != null && args.size() > 0) request.setContent(encode(args));
         return send(request);
     }
 
@@ -174,7 +174,7 @@ public class Service {
     public ResponseMessage delete(String path, Map<String, String> args)
         throws IOException
     {
-        if (args != null) path = path + "?" + encode(args);
+        if (args != null && args.size() > 0) path = path + "?" + encode(args);
         RequestMessage request = new RequestMessage("DELETE", path);
         return send(request);
     }

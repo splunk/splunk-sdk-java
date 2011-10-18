@@ -77,12 +77,16 @@ public class Entity extends Endpoint {
 
     public Element delete(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path, args).getContent());
+        return converter.convertXMLData(service
+                                            .delete(path, args)
+                                            .getContent());
     }
 
     public Element delete() throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path).getContent());
+        return converter.convertXMLData(service
+                                            .delete(path)
+                                            .getContent());
     }
 }
 

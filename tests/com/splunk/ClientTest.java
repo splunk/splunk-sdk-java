@@ -17,12 +17,10 @@
 package com.splunk.sdk.tests.com.splunk;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 import com.splunk.Service;
+import com.sun.jdi.ArrayReference;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -99,9 +97,10 @@ public class ClientTest extends TestCase {
             dserver.get(); // force a read and do nothing with the data
         }
 
-        DeploymentServerclasses dsclasses =  new DeploymentServerclasses(service);
+        DeploymentServerclasses dsclasses = new DeploymentServerclasses(service);
         for (String name: dsclasses.list()) {
-            DeploymentServerclass dsclass = new DeploymentServerclass(service, name);
+            DeploymentServerclass dsclass = new DeploymentServerclass(service,
+                                                                      name);
             dsclass.get(); // force a read and do nothing with the data
         }
 
@@ -124,47 +123,21 @@ public class ClientTest extends TestCase {
 
         Service service = connect();
 
-        List <String> expected = new ArrayList <String>();
-        expected.add("admin_all_objects");
-        expected.add("change_authentication");
-        expected.add("change_own_password");
-        expected.add("delete_by_keyword");
-        expected.add("edit_deployment_client");
-        expected.add("edit_deployment_server");
-        expected.add("edit_dist_peer");
-        expected.add("edit_forwarders");
-        expected.add("edit_httpauths");
-        expected.add("edit_input_defaults");
-        expected.add("edit_monitor");
-        expected.add("edit_roles");
-        expected.add("edit_scripted");
-        expected.add("edit_search_server");
-        expected.add("edit_server");
-        expected.add("edit_splunktcp");
-        expected.add("edit_splunktcp_ssl");
-        expected.add("edit_tcp");
-        expected.add("edit_udp");
-        expected.add("edit_user");
-        expected.add("edit_web_settings");
-        expected.add("get_metadata");
-        expected.add("get_typeahead");
-        expected.add("indexes_edit");
-        expected.add("license_edit");
-        expected.add("license_tab");
-        expected.add("list_deployment_client");
-        expected.add("list_forwarders");
-        expected.add("list_httpauths");
-        expected.add("list_inputs");
-        expected.add("request_remote_tok");
-        expected.add("rest_apps_management");
-        expected.add("rest_apps_view");
-        expected.add("rest_properties_get");
-        expected.add("rest_properties_set");
-        expected.add("restart_splunkd");
-        expected.add("rtsearch");
-        expected.add("schedule_search");
-        expected.add("search");
-        expected.add("use_file_operator");
+        List <String> expected = Arrays.asList(
+                "admin_all_objects", "change_authentication",
+                "change_own_password", "delete_by_keyword",
+                "edit_deployment_client", "edit_deployment_server",
+                "edit_dist_peer", "edit_forwarders", "edit_httpauths",
+                "edit_input_defaults", "edit_monitor", "edit_roles",
+                "edit_scripted", "edit_search_server", "edit_server",
+                "edit_splunktcp", "edit_splunktcp_ssl", "edit_tcp", "edit_udp",
+                "edit_user", "edit_web_settings", "get_metadata",
+                "get_typeahead", "indexes_edit", "license_edit", "license_tab",
+                "list_deployment_client", "list_forwarders", "list_httpauths",
+                "list_inputs", "request_remote_tok", "rest_apps_management",
+                "rest_apps_view", "rest_properties_get", "rest_properties_set",
+                "restart_splunkd", "rtsearch", "schedule_search", "search",
+                "use_file_operator");
 
         Capabilities caps = new Capabilities(service);
         Element element = caps.get();
@@ -232,50 +205,20 @@ public class ClientTest extends TestCase {
 
         Assert.assertTrue(indexes.contains("sdk-tests"));
 
-        List<String> attrs = new ArrayList<String>();
-        attrs.add("thawedPath");
-        attrs.add("quarantineFutureSecs");
-        attrs.add("isInternal");
-        attrs.add("maxHotBuckets");
-        attrs.add("disabled");
-        attrs.add("homePath");
-        attrs.add("compressRawdata");
-        attrs.add("maxWarmDBCount");
-        attrs.add("frozenTimePeriodInSecs");
-        attrs.add("memPoolMB");
-        attrs.add("maxHotSpanSecs");
-        attrs.add("minTime");
-        attrs.add("blockSignatureDatabase");
-        attrs.add("serviceMetaPeriod");
-        attrs.add("coldToFrozenDir");
-        attrs.add("quarantinePastSecs");
-        attrs.add("maxConcurrentOptimizes");
-        attrs.add("maxMetaEntries");
-        attrs.add("minRawFileSyncSecs");
-        attrs.add("maxMemMB");
-        attrs.add("maxTime");
-        attrs.add("partialServiceMetaPeriod");
-        attrs.add("maxHotIdleSecs");
-        attrs.add("coldToFrozenScript");
-        attrs.add("thawedPath_expanded");
-        attrs.add("coldPath_expanded");
-        attrs.add("defaultDatabase");
-        attrs.add("throttleCheckPeriod");
-        attrs.add("totalEventCount");
-        attrs.add("enableRealtimeSearch");
-        attrs.add("indexThreads");
-        attrs.add("maxDataSize");
-        attrs.add("currentDBSizeMB");
-        attrs.add("homePath_expanded");
-        attrs.add("blockSignSize");
-        attrs.add("syncMeta");
-        attrs.add("assureUTF8");
-        attrs.add("rotatePeriodInSecs");
-        attrs.add("sync");
-        attrs.add("suppressBannerList");
-        attrs.add("rawChunkSizeBytes");
-        attrs.add("coldPath");
-        attrs.add("maxTotalDataSizeMB");
+        List<String> attrs = Arrays.asList(
+            "thawedPath", "quarantineFutureSecs", "isInternal", "maxHotBuckets",
+            "disabled", "homePath", "compressRawdata", "maxWarmDBCount",
+            "frozenTimePeriodInSecs", "memPoolMB", "maxHotSpanSecs", "minTime",
+            "blockSignatureDatabase", "serviceMetaPeriod", "coldToFrozenDir",
+            "quarantinePastSecs", "maxConcurrentOptimizes", "maxMetaEntries",
+            "minRawFileSyncSecs", "maxMemMB", "maxTime",
+            "partialServiceMetaPeriod", "maxHotIdleSecs", "coldToFrozenScript",
+            "thawedPath_expanded", "coldPath_expanded", "defaultDatabase",
+            "throttleCheckPeriod", "totalEventCount", "enableRealtimeSearch",
+            "indexThreads", "maxDataSize", "currentDBSizeMB",
+            "homePath_expanded", "blockSignSize", "syncMeta", "assureUTF8",
+            "rotatePeriodInSecs", "sync", "suppressBannerList",
+            "rawChunkSizeBytes", "coldPath", "maxTotalDataSizeMB");
 
         for (String name: indexes.list()) {
             Index idx = new Index(service, name);
@@ -359,22 +302,10 @@ public class ClientTest extends TestCase {
 
         Service service = connect();
 
-        List <String> expected = new ArrayList <String>();
-        expected.add("build");
-        expected.add("cpu_arch");
-        expected.add("guid");
-        expected.add("isFree");
-        expected.add("isTrial");
-        expected.add("licenseKeys");
-        expected.add("licenseSignature");
-        expected.add("licenseState");
-        expected.add("master_guid");
-        expected.add("mode");
-        expected.add("os_build");
-        expected.add("os_name");
-        expected.add("os_version");
-        expected.add("serverName");
-        expected.add("version");
+        List <String> expected = Arrays.asList(
+            "build", "cpu_arch", "guid", "isFree", "isTrial", "licenseKeys",
+            "licenseSignature", "licenseState", "master_guid", "mode",
+            "os_build", "os_name", "os_version", "serverName", "version");
 
         Info info = new Info(service);
         Map<String,String> map = info.read(expected);

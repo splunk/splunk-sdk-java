@@ -25,7 +25,7 @@ public class Jobs extends Collection {
         super(service, "/services/search/jobs/");
     }
 
-    // Handle lists a little differently than the parent class, which uses title.
+    // Handle lists a little differently than the parent class, which uses title
     // Here we use the last portion of the id, which is a URL.
     public List<String> list() throws Exception {
         List<String> retList = new ArrayList<String>();

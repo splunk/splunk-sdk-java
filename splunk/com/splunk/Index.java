@@ -102,12 +102,16 @@ public class Index extends Entity {
           */
     }
 
-    public Element upload(String filename, Map<String, String> args) throws Exception {
+    public Element upload(String filename,
+                          Map<String, String> args) throws Exception {
         args.put("name", filename);
         args.put("index", localname); // established at class instantiation
-        // not a base-relative path, need to reach into the endpoints class to post
+        // not a base-relative path
+        // need to reach into the endpoints class to post
         Convert converter = new Convert();
-        return converter.convertXMLData(service.post("/services/data/inputs/oneshot", args).getContent());
+        return converter.convertXMLData(service
+                                    .post("/services/data/inputs/oneshot", args)
+                                    .getContent());
     }
 
 }

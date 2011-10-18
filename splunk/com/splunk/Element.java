@@ -26,9 +26,11 @@ public class Element {
     // header
     public Header header = new Header();
 
-    // In order to correctly represent a collection of entities, entries is a nameList.
-    // This means that a single Entity has a nameList of one Entry, while a collection
-    // has a nameList of more than one.
+    // In order to correctly represent a collection of entities, entries is a
+    // nameList.
+    //
+    // This means that a single Entity has a nameList of one Entry, while a
+    // collection has a nameList of more than one.
     public List<Entry> entry = new ArrayList<Entry>();
 
     public Element() {
@@ -78,28 +80,40 @@ public class Element {
 
                 if (containerNode.getNodeName().equals("s:dict")) {
                     // get s:dict node
-                    for (Node keyNode=containerNode.getFirstChild(); keyNode!=null; keyNode=keyNode.getNextSibling()) {
+                    for (Node keyNode=containerNode.getFirstChild();
+                         keyNode!=null;
+                         keyNode=keyNode.getNextSibling()) {
                         // get s:key child nodes of s:dict
-                        if( keyNode.getNodeType() == Node.ELEMENT_NODE ){
-                            if(keyNode.hasChildNodes()) {
+                        if (keyNode.getNodeType() == Node.ELEMENT_NODE ){
+                            if (keyNode.hasChildNodes()) {
                                 // non-terminal key nodes
                                 NodeList childNodes = keyNode.getChildNodes();
-                                for( int j=0; j<childNodes.getLength(); j++ ) {
+                                for (int j=0; j<childNodes.getLength(); j++ ) {
                                     Node childNode = childNodes.item(j);
-                                    if ( childNode.getNodeType() == Node.ELEMENT_NODE ) {
+                                    if (childNode.getNodeType() ==
+                                            Node.ELEMENT_NODE ) {
                                         // of them take element nodes
-                                        name = keyNode.getAttributes().getNamedItem("name").getTextContent();
+                                        name = keyNode
+                                                .getAttributes()
+                                                .getNamedItem("name")
+                                                .getTextContent();
                                         if (prefix.length() > 0) {
                                             name = prefix + "." + name;
                                         }
                                         // unfold them
-                                        Map<String, String> subPrimitive = nodeToHashMap(keyNode, name);
+                                        Map<String, String> subPrimitive =
+                                                nodeToHashMap(keyNode, name);
                                         primitive.putAll(subPrimitive);
                                         break;
                                     }
-                                    else if( childNode.getNodeType() == Node.TEXT_NODE && childNodes.getLength() == 1) {
-                                        // and text nodes, but if there's no other nodes
-                                        name = keyNode.getAttributes().getNamedItem("name").getTextContent();
+                                    else if ((childNode.getNodeType() ==
+                                            Node.TEXT_NODE) &&
+                                            childNodes.getLength() == 1) {
+                                        // and text nodes, only if there is
+                                        // no other nodes
+                                        name = keyNode.getAttributes()
+                                                .getNamedItem("name")
+                                                .getTextContent();
                                         if (prefix.length() > 0) {
                                             name = prefix + "." + name;
                                         }
@@ -110,7 +124,10 @@ public class Element {
                             }
                             else {
                                 // terminal key nodes
-                                name = keyNode.getAttributes().getNamedItem("name").getTextContent();
+                                name = keyNode
+                                        .getAttributes()
+                                        .getNamedItem("name")
+                                        .getTextContent();
                                 if (prefix.length() > 0) {
                                     name = prefix + "." + name;
                                 }
@@ -126,12 +143,17 @@ public class Element {
                         name = prefix;
                     }
                     else {
-                        name = node.getAttributes().getNamedItem("name").getTextContent();
+                        name = node
+                                .getAttributes()
+                                .getNamedItem("name")
+                                .getTextContent();
                     }
 
                     // get s:key child nodes of s:nameList
                     List<String> values = new ArrayList<String>();
-                    for (Node keyNode=containerNode.getFirstChild(); keyNode!=null; keyNode=keyNode.getNextSibling()) {
+                    for (Node keyNode=containerNode.getFirstChild();
+                         keyNode!=null;
+                         keyNode=keyNode.getNextSibling()) {
                         if( keyNode.getNodeType() == Node.ELEMENT_NODE ) {
                             values.add(keyNode.getTextContent());
                         }
@@ -144,19 +166,25 @@ public class Element {
                         name = prefix;
                     }
                     else {
-                        name = node.getAttributes().getNamedItem("name").getTextContent();
+                        name = node
+                                .getAttributes()
+                                .getNamedItem("name")
+                                .getTextContent();
                     }
 
                     // get s:item child nodes of s:list
                     List<String> values = new ArrayList<String>();
-                    for (Node keyNode=containerNode.getFirstChild(); keyNode!=null; keyNode=keyNode.getNextSibling()) {
+                    for (Node keyNode=containerNode.getFirstChild();
+                         keyNode!=null;
+                         keyNode=keyNode.getNextSibling()) {
                         if( keyNode.getNodeType() == Node.ELEMENT_NODE ) {
                             values.add(keyNode.getTextContent());
                         }
                     }
                     primitive.put(name, join(values, ","));
                 } else {
-                    System.out.println("internal error in nodeToHashMap() -- missed case: "+ containerNode.getNodeName());
+                    System.out.println("internal error in nodeToHashMap() " +
+                            "-- missed case: "+ containerNode.getNodeName());
                 }
             }
         }
@@ -169,12 +197,15 @@ public class Element {
         Entry entry = new Entry();
 
         // parse: build up an Entity object, high level data
-        List<String> firstLevel = Arrays.asList("id", "title", "updated", "link", "entry", "author", "published");
+        List<String> firstLevel = Arrays.asList(
+                "id", "title", "updated", "link", "entry", "author",
+                "published");
         Node node = root.getFirstChild();
         while (node != null) {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 String name = node.getNodeName();
-                // remove prefix through to colon, if one exists -- to behave like python SDK
+                // remove prefix through to colon,
+                // if one exists -- behaves like python SDK
                 if (name.contains(":")) {
                     name = name.split(":")[1];
                 }
@@ -197,7 +228,12 @@ public class Element {
                                 int count = attrs.getLength();
                                 if (count > 0) {
                                     for (int idx=0; idx<count; idx++) {
-                                        attributes.put(attrs.item(idx).getNodeName(), attrs.item(idx).getNodeValue());
+                                        attributes.put(attrs
+                                                        .item(idx)
+                                                        .getNodeName(),
+                                                       attrs
+                                                        .item(idx)
+                                                        .getNodeValue());
                                     }
                                 }
                             }
@@ -212,8 +248,8 @@ public class Element {
                             while (child != null) {
                                 if (child.getNodeType() == Node.ELEMENT_NODE) {
                                     String cname = child.getNodeName();
-                                    String cvalue = child.getTextContent().trim();
-                                    entry.author.put(cname, cvalue);
+                                    String cval = child.getTextContent().trim();
+                                    entry.author.put(cname, cval);
                                 }
                                 child = child.getNextSibling();
                             }
@@ -221,10 +257,12 @@ public class Element {
                     }
                 } else {
                     if (name.equals("content")) {
-                        // content is usually a series of (perhaps) nested dictionaries, lists and keys.
+                        // content is usually a series of (perhaps) nested
+                        // dictionaries, lists and keys.
                         entry.content = nodeToHashMap(node);
                     } else {
-                        System.out.println("internal error parseEntry, not in list: " + name);
+                        System.out.println("internal error parseEntry, " +
+                                "not in list: " + name);
                     }
                 }
             }

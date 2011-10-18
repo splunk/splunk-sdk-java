@@ -67,7 +67,8 @@ public class Client {
         return converter.convertXMLData(service.delete(path).getContent());
     }
 
-    public Element create(String path, Map<String,String>args) throws Exception {
+    public Element create(String path,
+                          Map<String,String>args) throws Exception {
         Convert converter = new Convert();
         return converter.convertXMLData(service.post(path, args).getContent());
     }

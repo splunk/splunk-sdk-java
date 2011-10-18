@@ -37,12 +37,16 @@ public class Endpoint {
 
     public Element get(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service.get(path,args).getContent());
+        return converter.convertXMLData(service
+                                            .get(path,args)
+                                            .getContent());
     }
 
     public Element get(String relpath) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service.get(path + relpath).getContent());
+        return converter.convertXMLData(service
+                                            .get(path + relpath)
+                                            .getContent());
     }
 
     public Element get() throws Exception {
@@ -52,25 +56,34 @@ public class Endpoint {
 
 
 
-    public Element post(String relpath, Map<String,String> args) throws Exception {
+    public Element post(String relpath,
+                        Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service.post(path + relpath, args).getContent());
+        return converter.convertXMLData(service
+                                            .post(path + relpath, args)
+                                            .getContent());
     }
 
     public Element post(String relpath) throws Exception {
         Map<String,String> args = new HashMap<String,String>();
         Convert converter = new Convert();
-        return converter.convertXMLData(service.post(path + relpath, args).getContent());
+        return converter.convertXMLData(service
+                                            .post(path + relpath, args)
+                                            .getContent());
     }
 
     public Element post(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service.post(path, args).getContent());
+        return converter.convertXMLData(service
+                                            .post(path, args)
+                                            .getContent());
     }
 
     public Element post() throws Exception {
         Map<String,String> args = new HashMap<String,String>();
         Convert converter = new Convert();
-        return converter.convertXMLData(service.post(path, args).getContent());
+        return converter.convertXMLData(service
+                                            .post(path, args)
+                                            .getContent());
     }
 }

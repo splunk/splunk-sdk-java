@@ -50,7 +50,8 @@ public class Collection extends Endpoint {
     }
 
     public boolean contains(String key) throws Exception {
-        List<String> names = list(); //UNDONE: check to see if this is what we should be looking through.
+        //UNDONE: check to see if this is what we should be looking through.
+        List<String> names = list();
         return names.contains(key);
     }
 
@@ -87,14 +88,23 @@ public class Collection extends Endpoint {
         return response;
     }
 
-    // delete should delete an element of the collection, thus we require a relative path that
-    // has at least one character.
-    public Element delete(String relpath, Map<String,String> args) throws Exception {
+    // delete should delete an element of the collection, thus we require a
+    // relative path that has at least one character.
+    public Element delete(String relpath,
+                          Map<String,String> args) throws Exception {
         if (relpath.length() == 0) {
-            throw new Exception("relative path must be a string with at least one character");
+            throw new Exception("Must supply relative path");
         }
         Convert converter = new Convert();
-        return converter.convertXMLData(service.delete(path + relpath, args).getContent());
+        // sanitize: remove double "//" and add when none exist
+        if (path.endsWith("/") && relpath.startsWith("/")) {
+           relpath = relpath.replaceFirst("/", "");
+        } else if (!path.endsWith("/") && !relpath.endsWith("/")) {
+            relpath = "/" + relpath;
+        }
+        return converter.convertXMLData(service
+                                        .delete(path + relpath, args)
+                                        .getContent());
     }
 
     public Element delete(String relpath) throws Exception {
@@ -106,13 +116,18 @@ public class Collection extends Endpoint {
     public Element create(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
         // assume 'name' has already been added to the argument list.
-        return converter.convertXMLData(service.post(path, args).getContent());
+        return converter.convertXMLData(service
+                                        .post(path, args)
+                                        .getContent());
     }
 
-    public Element create(String name, Map<String,String> args) throws Exception {
+    public Element create(String name,
+                          Map<String,String> args) throws Exception {
         Convert converter = new Convert();
         args.put("name", name); // if already there, we forcibly overwrite
-        return converter.convertXMLData(service.post(path, args).getContent());
+        return converter.convertXMLData(service
+                                        .post(path, args)
+                                        .getContent());
     }
 
     public Element create(String name) throws Exception {

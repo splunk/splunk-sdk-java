@@ -60,7 +60,8 @@ public class Convert {
             if (isLeaf(node)) {
                 if (node.getTextContent().trim().length() > 0) {
                     fill(level, "   ");
-                    System.out.println("TEXT: '" + node.getTextContent().trim() + "'");
+                    System.out.println("TEXT: '" +
+                            node.getTextContent().trim() + "'");
                 }
             }
 
@@ -71,7 +72,9 @@ public class Convert {
                     fill(level, "   ");
                     System.out.print("ATTRS: ");
                     for (int idx=0; idx<count; idx++) {
-                        System.out.print(foo.item(idx).getNodeName() + "->'" + foo.item(idx).getNodeValue() + "', ");
+                        System.out.print(foo.item(idx).getNodeName()
+                                + "->'"
+                                + foo.item(idx).getNodeValue() + "', ");
                     }
                     System.out.println("");
                 }
@@ -110,13 +113,14 @@ public class Convert {
             //dumpNodes(node); /* debug print */
 
             // parse: get first level header information
-            List<String> firstLevel = Arrays.asList("generator", "id", "title", "updated",
-                    "author", "itemsPerPage", "link", "messages", "startIndex",
-                    "totalResults");
+            List<String> firstLevel = Arrays.asList("generator", "id", "title",
+                    "updated", "author", "itemsPerPage", "link", "messages",
+                    "startIndex", "totalResults");
             while (node != null) {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     String name = node.getNodeName();
-                    // remove prefix through to colon, if one exists -- to behave like python SDK
+                    // remove prefix through to colon, if one exists.
+                    // behaves like python SDK
                     if (name.contains(":")) {
                         name = name.split(":")[1];
                     }
@@ -127,13 +131,20 @@ public class Convert {
                         org.w3c.dom.NamedNodeMap attrs = node.getAttributes();
 
                         if (isLeaf(node)) {
-                            // generator and link require getting attributes from the node
-                            if (name.equals("generator") || name.equals("link")) {
+                            // generator and link require getting attributes
+                            // from the node
+                            if (name.equals("generator") ||
+                                name.equals("link")) {
                                 if (attrs != null) {
                                     int count = attrs.getLength();
                                     if (count > 0) {
                                         for (int idx=0; idx<count; idx++) {
-                                            attributes.put(attrs.item(idx).getNodeName(), attrs.item(idx).getNodeValue());
+                                            attributes.put(attrs
+                                                            .item(idx)
+                                                            .getNodeName(),
+                                                           attrs
+                                                            .item(idx)
+                                                            .getNodeValue());
                                         }
                                     }
                                 }
@@ -149,32 +160,39 @@ public class Convert {
                             } else if (name.equals("link")) {
                                 element.header.link.add(attributes);
                             } else if (name.equals("itemsPerPage")) {
-                                // hack. for some reason "-1" aka 4294967295 blows up
-                                // in parseInt().
+                                // ParseInt is signed, +/- 2G (roughly).
+                                // Splunk treats -1 as unsigned. Detect
+                                // unsigned -1 from splunk and convert to
+                                // literal -1.
                                 if (value.equals("4294967295")) {
                                     element.header.itemsPerPage = -1;
                                 } else {
-                                    element.header.itemsPerPage = Integer.parseInt(value);
+                                    element.header.itemsPerPage =
+                                            Integer.parseInt(value);
                                 }
                             } else if (name.equals("messages")) {
                                 element.header.messages = value;
                             } else if (name.equals("startIndex")) {
-                                element.header.startIndex = Integer.parseInt(value);
+                                element.header.startIndex =
+                                        Integer.parseInt(value);
                             } else if (name.equals("totalResults")) {
-                                element.header.totalResults = Integer.parseInt(value);
+                                element.header.totalResults =
+                                        Integer.parseInt(value);
                             } else {
-                                System.out.println("did not find   '" + name + "'");
+                                System.out.println("did not find '"+name+"'");
                             }
                         } else {
                             // only non-leaf at first level is author.
-
                             if (name.equals("author")) {
                                 Node child = node.getFirstChild();
                                 while (child != null) {
-                                    if (child.getNodeType() == Node.ELEMENT_NODE) {
+                                    if (child.getNodeType() ==
+                                            Node.ELEMENT_NODE) {
                                         String cname = child.getNodeName();
-                                        String cvalue = child.getTextContent().trim();
-                                        element.header.author.put(cname, cvalue);
+                                        String cvalue = child
+                                                .getTextContent()
+                                                .trim();
+                                        element.header.author.put(cname,cvalue);
                                     }
                                     child = child.getNextSibling();
                                 }
@@ -216,7 +234,7 @@ public class Convert {
         } catch (SAXException e) {
             throw new RuntimeException("XML parse failed: " + e.getMessage());
         } catch (IOException e) {
-            throw new RuntimeException("XML parse failed (IO): " + e.getMessage());
+            throw new RuntimeException("XML parse failed: " + e.getMessage());
         }
     }
 
@@ -238,7 +256,7 @@ public class Convert {
         } catch (SAXException e) {
             throw new RuntimeException("XML parse failed: " + e.getMessage());
         } catch (IOException e) {
-            throw new RuntimeException("XML parse failed (IO): " + e.getMessage());
+            throw new RuntimeException("XML parse failed: " + e.getMessage());
         }
     }
 }

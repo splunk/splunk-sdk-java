@@ -30,15 +30,11 @@ public class Conf extends Collection  {
         return super.post(args);
     }
 
-    public Element update(String stanza, Map<String,String>args) throws Exception {
-        return super.post("/" + stanza, args);
-    }
-
-    public Element delete(String relpath, Map<String,String> args) throws Exception {
-        return super.delete("/" + relpath, args);
-    }
-
-    public Element delete(String relpath) throws Exception {
-        return super.delete("/" + relpath);
+    public Element update(String stanza,
+                          Map<String,String>args) throws Exception {
+        if (!stanza.startsWith("/")) {
+            stanza = "/" + stanza;
+        }
+        return super.post(stanza, args);
     }
 }
