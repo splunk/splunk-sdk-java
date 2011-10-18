@@ -25,9 +25,17 @@
 package com.splunk;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.TestCase;
 import org.junit.*;
 import static org.junit.Assert.*;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.splunk.*;
 import com.splunk.http.*;
@@ -40,12 +48,38 @@ public class ServiceTest extends TestCase {
 
     void checkResponse(ResponseMessage response) {
         assertEquals(response.getStatus(), 200);
+        try {
+            Document root = parse(response);
+            // UNDONE: Check basic structure of ATOM response
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     Service connect() throws IOException {
         return new Service(
             program.host, program.port, program.scheme)
                 .login(program.username, program.password);
+    }
+
+    // Returns the response content as an XML DOM.
+    public Document parse(ResponseMessage response) 
+        throws IOException, SAXException 
+    {
+        try {
+            InputStream content = response.getContent();
+            DocumentBuilderFactory factory = 
+                DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource inputSource = new InputSource();
+            inputSource.setCharacterStream(new InputStreamReader(content));
+            return builder.parse(inputSource);
+        }
+        catch (ParserConfigurationException e) {
+            // Convert an obscure exception to runtime
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Before public void setUp() {
@@ -73,16 +107,14 @@ public class ServiceTest extends TestCase {
     @Test public void testLogout() throws IOException {
         Service service = connect();
 
-        ResponseMessage response;
-
         // Logged in, request should succeed
-        response = service.get("/services");
+        ResponseMessage response = service.get("/services");
         checkResponse(response);
 
         // Logged out, the request should fail
         service.logout();
         try {
-            response = service.get("/services");
+            service.get("/services");
             fail("Expected request to fail");
         }
         catch (Exception e) {}
