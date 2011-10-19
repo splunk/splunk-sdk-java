@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/examples/entity/entity.iml" filepath="$PROJECT_DIR$/examples/entity/entity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/util/DumpElement.iml" filepath="$PROJECT_DIR$/examples/util/DumpElement.iml" />
+      <module fileurl="file://$PROJECT_DIR$/splunk-example/com/splunk/example/example.iml" filepath="$PROJECT_DIR$/splunk-example/com/splunk/example/example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/entity/index.iml" filepath="$PROJECT_DIR$/examples/entity/index.iml" />
       <module fileurl="file://$PROJECT_DIR$/splunk/splunk.iml" filepath="$PROJECT_DIR$/splunk/splunk.iml" />
       <module fileurl="file://$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" filepath="$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/examples/spurl/spurl.iml" filepath="$PROJECT_DIR$/examples/spurl/spurl.iml" />
