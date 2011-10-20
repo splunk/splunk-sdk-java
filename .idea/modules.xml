@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/examples/index/index.iml" filepath="$PROJECT_DIR$/examples/index/index.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examples/info/info.iml" filepath="$PROJECT_DIR$/examples/info/info.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examples/loaded/loaded.iml" filepath="$PROJECT_DIR$/examples/loaded/loaded.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/index/index.iml" filepath="$PROJECT_DIR$/examples/index/index.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/examples/info/info.iml" filepath="$PROJECT_DIR$/examples/info/info.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/examples/loaded/loaded.iml" filepath="$PROJECT_DIR$/examples/loaded/loaded.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/splunk/splunk.iml" filepath="$PROJECT_DIR$/splunk/splunk.iml" />
       <module fileurl="file://$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" filepath="$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examples/spurl/spurl.iml" filepath="$PROJECT_DIR$/examples/spurl/spurl.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examples/test/test.iml" filepath="$PROJECT_DIR$/examples/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/spurl/spurl.iml" filepath="$PROJECT_DIR$/examples/spurl/spurl.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/examples/test/test.iml" filepath="$PROJECT_DIR$/examples/test/test.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
     </modules>
   </component>
