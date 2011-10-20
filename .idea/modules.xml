@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/examples/index/index.iml" filepath="$PROJECT_DIR$/examples/index/index.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/info/info.iml" filepath="$PROJECT_DIR$/examples/info/info.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/examples/inputs/inputs.iml" filepath="$PROJECT_DIR$/examples/inputs/inputs.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/loaded/loaded.iml" filepath="$PROJECT_DIR$/examples/loaded/loaded.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/splunk/splunk.iml" filepath="$PROJECT_DIR$/splunk/splunk.iml" />
       <module fileurl="file://$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" filepath="$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" />
