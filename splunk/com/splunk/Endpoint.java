@@ -33,8 +33,6 @@ public class Endpoint {
         path = pth;
     }
 
-    // UNDONE: some overloads may not be relevant.
-
     public Element get(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
         return converter.convertXMLData(service

@@ -29,7 +29,6 @@ import java.util.Map;
 
 public class Client {
 
-    // UNDONE -- make inner class to support more than one iterator per client.
     public Service service = null;
 
     public Client() {
@@ -49,7 +48,6 @@ public class Client {
         // get everything in ID after last path prefix element
         for (int idx=1; idx < nl.getLength(); idx++) {
             String [] pieces = nl.item(idx).getTextContent().split(delimiter);
-            // UNDONE: re-encode url safe string back to regular string?
             outlist.add(pieces[1]);
         }
 

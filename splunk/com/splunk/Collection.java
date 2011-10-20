@@ -50,7 +50,6 @@ public class Collection extends Endpoint {
     }
 
     public boolean contains(String key) throws Exception {
-        //UNDONE: check to see if this is what we should be looking through.
         List<String> names = list();
         return names.contains(key);
     }
