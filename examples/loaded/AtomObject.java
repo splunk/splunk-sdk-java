@@ -18,10 +18,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 class AtomObject {
-    String Id;
-    Properties Links = new Properties();
-    String Title;
-    String Updated;
+    public String Id;
+    public Properties Links = new Properties();
+    public String Title;
+    public String Updated;
 
     AtomObject() {}
 

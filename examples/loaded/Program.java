@@ -38,7 +38,7 @@ public class Program extends com.splunk.sdk.Program {
         return service;
     }
 
-    void printAtomObject(AtomObject item) {
+    static void printAtomObject(AtomObject item) {
         System.out.format("Id = '%s'\n", item.Id);
         System.out.format("Title = '%s'\n", item.Title);
         System.out.format("Updated = '%s'\n", item.Updated);
@@ -48,7 +48,7 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    void printFeed(AtomFeed feed) {
+    static void printAtomFeed(AtomFeed feed) {
         printAtomObject(feed);
         System.out.format("ItemsPerPage = %d\n", feed.ItemsPerPage);
         System.out.format("StartIndex = %d\n", feed.StartIndex);
@@ -59,10 +59,12 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    void printAtomEntry(AtomEntry entry) {
+    static void printAtomEntry(AtomEntry entry) {
         printAtomObject(entry);
-        System.out.format("Published = '%s'\n", entry.Published);
-        System.out.format("Content = '%s'\n", entry.Content);
+        if (entry.Published != null)
+            System.out.format("Published = '%s'\n", entry.Published);
+        if (entry.Content != null)
+            System.out.format("Content = '%s'\n", entry.Content.toString());
     }
 
     public void run() throws Exception {
@@ -75,9 +77,10 @@ public class Program extends com.splunk.sdk.Program {
         if (status != 200)
             throw new RuntimeException(String.format("HTTP Error: %d", status));
 
+        System.out.format("Loading %s ..\n", path);
         AtomFeed feed = AtomFeed.create(response.getContent());
 
-        printFeed(feed);
+        printAtomFeed(feed);
     }
 }
 

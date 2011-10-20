@@ -59,6 +59,9 @@ class AtomFeed extends AtomObject {
             AtomEntry entry = AtomEntry.create(element);
             this.Entries.put(entry.Id, entry);
         }
+        else if (name.equals("s:messages")) {
+            // UNDONE
+        }
         else if (name.equals("opensearch:totalResults")) {
             String value = element.getTextContent().trim();
             this.TotalResults = Integer.parseInt(value);

@@ -1,5 +1,6 @@
 *.DS_Store*
 *.swp
+.idea/misc.xml
 .idea/workspace.xml
 build
 build.log
