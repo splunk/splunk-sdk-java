@@ -451,7 +451,6 @@ public class ClientTest extends TestCase {
         messages.create("sdk-test-message1", args1);
         Assert.assertTrue(messages.list().contains("sdk-test-message1"));
         Message message1 = new Message(service, "sdk-test-message1");
-        message1.get().dumpElement();
 
         //UNDONE: message should be placed into "value" put appears to be placed
         // into key-name 'sdk-test-message2'
@@ -460,7 +459,6 @@ public class ClientTest extends TestCase {
         messages.create("sdk-test-message2", args2);
         Assert.assertTrue(messages.list().contains("sdk-test-message2"));
         Message message2 = new Message(service, "sdk-test-message2");
-        message2.get().dumpElement();
 
         messages.delete("sdk-test-message1");
         messages.delete("sdk-test-message2");
