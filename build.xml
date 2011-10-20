@@ -94,7 +94,8 @@
               compile-examples-test,
               compile-examples-index,
               compile-examples-info,
-              compile-examples-inputs"/>
+              compile-examples-inputs,
+              compile-examples-loaded"/>
 
     <target name="compile-examples-spurl" depends="dist-libs">
         <mkdir dir="${dir.build.examples.spurl}"/>
@@ -137,6 +138,15 @@
         <javac includeantruntime="false"
          srcdir="${dir.examples.inputs}"
          destdir="${dir.build.examples.inputs}">
+            <classpath refid="classpath.examples"/>
+        </javac>
+    </target>
+
+    <target name="compile-examples-loaded" depends="compile-libs">
+        <mkdir dir="${dir.build.examples.loaded}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.examples.loaded}"
+         destdir="${dir.build.examples.loaded}">
             <classpath refid="classpath.examples"/>
         </javac>
     </target>
@@ -231,6 +241,19 @@
         <jar 
          basedir="${dir.build.examples.inputs}"
          destfile="${dir.dist.examples}/inputs.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="../splunk.jar ../splunk-sdk.jar"/>
+            </manifest>
+        </jar>
+
+
+        <jar 
+         basedir="${dir.build.examples.loaded}"
+         destfile="${dir.dist.examples}/loaded.jar"
          includes="**/*.class">
             <manifest>
                 <attribute name="Main-Class" value="Program"/>
