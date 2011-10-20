@@ -34,33 +34,32 @@ public class Program extends com.splunk.sdk.Program {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        Inputs inputs = new Inputs(service);
-        Element els = inputs.get();
-        System.out.println(inputs.kinds());
+        Inputs allInputs = new Inputs(service);
+        Element all = allInputs.get();
 
-        for (Entry entry: els.entry) {
-            Input input = new Input(service, entry.title);
-            Element element = input.get();
+        for (Entry entry: all.entry) {
+            Input baseInput = new Input(service, entry.title);
+            Element element = baseInput.get();
 
             System.out.println(entry.title + ":");
-            for (Entry subent: element.entry) {
-                System.out.println("  " + subent.title);
+            for (Entry base: element.entry) {
+                System.out.print("  " + base.title + " --> " +
+                        element.locateComplete(base.title).content);
+
+                System.out.println();
+                try {
+                    Input subInput = new Input(service,
+                                                entry.title,
+                                                base.title);
+                    Element subele = subInput.get();
+                    for (Entry sub: subele.entry) {
+                        System.out.println("    :"
+                                + sub.title + " --> " + sub.content);
+                    }
+                } catch (Exception e) {
+                    // ignore
+                }
             }
-
         }
-/*
-def main():
-    opts = parse(sys.argv[1:], {}, ".splunkrc")
-    service = connect(**opts.kwargs)
-
-    for item in service.inputs:
-        print "%s (%s)" % (item.name, item.kind)
-        entity = item.read()
-        for key in sorted(entity.keys()):
-            value = entity[key]
-            print "    %s: %s" % (key, value)
-
-
- */
     }
 }

@@ -19,6 +19,7 @@ package com.splunk;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.net.URLDecoder;
 import java.util.*;
 
 public class Element {
@@ -218,7 +219,12 @@ public class Element {
 
                     if (isLeaf(node)) {
                         if (name.equals("id")) {
-                            entry.id = value;
+                            try {
+                                entry.id = URLDecoder.decode(value, "UTF-8");
+                                entry.id = entry.id.replace("%2F", "/");
+                            } catch (Exception e) {
+                                // eat exception -- can't occur.
+                            }
                         } else if (name.equals("title")) {
                             entry.title = value;
                         } else if (name.equals("updated")) {
@@ -286,13 +292,22 @@ public class Element {
         return response;
     }
 
-    public Entry locate(String id) {
+    public Entry locatePartial(String id) {
         for (Entry item: entry) {
             String [] idpart = item.id.split("/");
             if (idpart.length > 0) {
                 if (idpart[idpart.length-1].equals(id)) {
                     return item;
                 }
+            }
+        }
+        return null;
+    }
+
+    public Entry locateComplete(String id) {
+        for (Entry item: entry) {
+            if (item.id.contains(id)) {
+                return item;
             }
         }
         return null;

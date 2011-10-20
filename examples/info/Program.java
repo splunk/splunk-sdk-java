@@ -35,7 +35,9 @@ public class Program extends com.splunk.sdk.Program {
         service.login(this.username, this.password);
 
         Info info =  new Info(service);
-        Map<String,String> content = info.get().locate("server-info").content;
+        Map<String,String> content = info.get()
+                                        .locatePartial("server-info")
+                                        .content;
 
         System.out.println("Content Keys:");
         for (String key: content.keySet()) {
@@ -43,7 +45,7 @@ public class Program extends com.splunk.sdk.Program {
         }
 
         Settings settings = new Settings(service);
-        content = settings.get().locate("settings").content;
+        content = settings.get().locatePartial("settings").content;
 
         System.out.println("\nSettings:");
         for (String key: content.keySet()) {

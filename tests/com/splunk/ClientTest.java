@@ -350,20 +350,20 @@ public class ClientTest extends TestCase {
         element = tcpInput.get();
         Assert.assertTrue(element.list().contains("9999"));
 
-        Entry ent = element.locate("9999");
+        Entry ent = element.locatePartial("9999");
         getme.clear();
         getme.add("host");
         map = ent.read(getme);
         Assert.assertTrue(map.get("host").equals("sdk-test"));
 
-        nnnnInput = new Input(service, allInputs.kindpath("tcp") + "/9999");
+        nnnnInput = new Input(service, allInputs.kindpath("tcp"), "9999");
         map.clear();
         map.put("host", "foo");
         map.put("sourcetype", "bar");
         element = nnnnInput.update(map);
 
         getme.add("sourcetype");
-        ent = element.locate("9999");
+        ent = element.locatePartial("9999");
         map = ent.read(getme);
         Assert.assertTrue(map.get("host").equals("foo"));
         Assert.assertTrue(map.get("sourcetype").equals("bar"));

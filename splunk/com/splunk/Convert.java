@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import java.net.URLDecoder;
+
 import java.lang.RuntimeException;
 
 public class Convert {
@@ -152,7 +154,8 @@ public class Convert {
                             if (name.equals("generator")) {
                                 element.header.generator = attributes;
                             } else if (name.equals("id")) {
-                                element.header.id = value;
+                                element.header.id = URLDecoder.decode(value,
+                                                                   "UTF-8");
                             } else if (name.equals("title")) {
                                 element.header.title = value;
                             } else if (name.equals("updated")) {
