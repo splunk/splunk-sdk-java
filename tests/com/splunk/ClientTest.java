@@ -139,12 +139,11 @@ public class ClientTest extends TestCase {
                 "use_file_operator");
 
         Capabilities caps = new Capabilities(service);
-        Element element = caps.get();
 
         // capabilities is a list in the "capabilities" key
         List<String> cap = new ArrayList<String>();
         cap.add("capabilities");
-        Map<String,String> map = element.read(cap);
+        Map<String,String> map = caps.get().read(cap);
         for (String name: expected) {
             Assert.assertTrue(map.get("capabilities").contains(name));
         }
@@ -164,15 +163,16 @@ public class ClientTest extends TestCase {
 
         Assert.assertTrue(confs.contains("props"));
         Conf props = new Conf(service, "props");
-        Element stanza = props.create("sdk-tests");
+        props.create("sdk-tests");
         Assert.assertTrue(props.contains("sdk-tests"));
 
+        /*
         Map<String,String> map;
         List<String> getme = new ArrayList<String>();
         getme.add("name");
         getme.add("maxDist");
-        map = stanza.read(getme);
-        Assert.assertTrue(map.containsKey("maxDist"));
+        props.get("sdk-tests").read(getme);
+        //Assert.assertTrue(props.element.entry.concontainsKey("maxDist"));
 
         int value = Integer.parseInt(map.get("maxDist"));
         map.put("maxDist", Integer.toString(value+1));
@@ -180,7 +180,7 @@ public class ClientTest extends TestCase {
         map = stanza.read(getme);
         int value2 = Integer.parseInt(map.get("maxDist"));
         Assert.assertEquals(value+1, value2);
-
+          */
         props.delete("sdk-tests");
         Assert.assertFalse(props.contains("sdk-tests"));
     }
@@ -221,8 +221,7 @@ public class ClientTest extends TestCase {
 
         for (String name: indexes.list()) {
             Index idx = new Index(service, name);
-            Element element = idx.get();
-            Map<String,String> map = element.read(attrs);
+            Map<String,String> map = idx.get().element.read(attrs);
             for (String attr: attrs) {
                 Assert.assertTrue(map.containsKey(attr));
             }
@@ -235,14 +234,26 @@ public class ClientTest extends TestCase {
         getme.add("disabled");
         getme.add("totalEventCount");
 
-        element = index.disable();
-        Assert.assertEquals(element.read(getme).get("disabled"), "1");
+        Assert.assertEquals(index
+                .disable()
+                .get()
+                .element
+                .read(getme)
+                .get("disabled"), "1");
 
-        element = index.enable();
-        Assert.assertEquals(element.read(getme).get("disabled"), "0");
+        Assert.assertEquals(index
+                .enable()
+                .get()
+                .element
+                .read(getme)
+                .get("disabled"), "0");
 
-        element = index.clean();
-        Assert.assertEquals(element.read(getme).get("totalEventCount"), "0");
+        Assert.assertEquals(index
+                .clean()
+                .get()
+                .element
+                .read(getme)
+                .get("totalEventCount"), "0");
 
 /*
         UNDONE: attach and submit
@@ -326,8 +337,7 @@ public class ClientTest extends TestCase {
 
         for (String name: allInputs.list()) {
             Input input = new Input(service, name);
-            Element element = input.get();
-            for (Entry entry: element.entry) {
+            for (Entry entry: input.get().element.entry) {
                 if (entry.content.size() > 0) {
                     for (String attr: getme) {
                         Assert.assertTrue(entry.content.containsKey(attr));
@@ -337,20 +347,18 @@ public class ClientTest extends TestCase {
         }
 
         tcpInput = new Input(service, allInputs.kindpath("tcp"));
-        Element element = tcpInput.get();
 
-        if (element.list().contains("9999")) {
-            element = allInputs.delete("tcp", "9999");
+        if (tcpInput.get().element.list().contains("9999")) {
+            allInputs.delete("tcp", "9999");
         }
-        Assert.assertFalse(element.list().contains("9999"));
+        Assert.assertFalse(tcpInput.get().element.list().contains("9999"));
 
         Map<String,String> map = new HashMap<String, String>();
         map.put("host", "sdk-test");
         allInputs.create("tcp", "9999", map);
-        element = tcpInput.get();
-        Assert.assertTrue(element.list().contains("9999"));
+        Assert.assertTrue(tcpInput.get().element.list().contains("9999"));
 
-        Entry ent = element.locatePartial("9999");
+        Entry ent = tcpInput.get().element.locatePartial("9999");
         getme.clear();
         getme.add("host");
         map = ent.read(getme);
@@ -360,17 +368,16 @@ public class ClientTest extends TestCase {
         map.clear();
         map.put("host", "foo");
         map.put("sourcetype", "bar");
-        element = nnnnInput.update(map);
+        nnnnInput.update(map);
 
         getme.add("sourcetype");
-        ent = element.locatePartial("9999");
+        ent = nnnnInput.get().element.locatePartial("9999");
         map = ent.read(getme);
         Assert.assertTrue(map.get("host").equals("foo"));
         Assert.assertTrue(map.get("sourcetype").equals("bar"));
 
         allInputs.delete("tcp", "9999");
-        element = tcpInput.get();
-        Assert.assertFalse(element.list().contains("9999"));
+        Assert.assertFalse(tcpInput.get().element.list().contains("9999"));
 
         /*
         UNDONE:
@@ -397,9 +404,7 @@ public class ClientTest extends TestCase {
 
         for (String name: loggers.list()) {
             Logger logger = new Logger(service, name);
-            Element element = logger.get();
-
-            Map<String,String> levels = element.read(getme);
+            Map<String,String> levels = logger.get().element.read(getme);
             Assert.assertTrue(expected.contains(levels.get("level")));
         }
 

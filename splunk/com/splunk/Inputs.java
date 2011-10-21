@@ -41,7 +41,7 @@ public class Inputs extends Collection {
         initmap();
     }
 
-    public Element create(String kind,
+    public Inputs create(String kind,
                           String name,
                           Map<String,String> args) throws Exception {
         if (!kindMap.containsKey(kind)) {
@@ -50,20 +50,21 @@ public class Inputs extends Collection {
         }
         args.put("name", name);
         super.post(kindMap.get(kind), args);
-        return super.get();
+        return this;
     }
 
-    public Element create(String kind, String name) throws Exception {
+    public Inputs create(String kind, String name) throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         return create(kind, name, args);
     }
 
-    public Element delete(String kind, String name) throws Exception {
+    public Inputs delete(String kind, String name) throws Exception {
         if (!kindMap.containsKey(kind)) {
             throw new Exception("Input creation requires a valid 'kind', from: "
                     + kindMap);
         }
-        return super.delete(kindMap.get(kind) + "/" + name);
+        super.delete(kindMap.get(kind) + "/" + name);
+        return this;
     }
 
     public Map<String,String> kinds() {

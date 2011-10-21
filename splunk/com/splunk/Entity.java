@@ -35,7 +35,7 @@ public class Entity extends Endpoint {
         Map<String,String> response = new HashMap<String, String>();
         Map<String,String> count = new HashMap<String, String>();
         count.put("count", "-1");
-        Element element = super.get(count);
+        super.get(count);
         for (String item: items) {
             for (Entry entry: element.entry) {
                 for (String key: entry.content.keySet()) {
@@ -55,38 +55,39 @@ public class Entity extends Endpoint {
         return read(itemList);
     }
 
-    public Element update(Map<String,String> args) throws Exception {
+    public Entity update(Map<String,String> args) throws Exception {
         super.post(args);
-        return super.get();
+        return this;
     }
 
-    public Element disable() throws Exception {
+    public Entity disable() throws Exception {
         super.post("/disable");
-        return super.get();
+        return this;
     }
 
-    public Element enable () throws Exception {
+    public Entity enable() throws Exception {
         super.post("/enable");
-        return super.get();
+        return this;
     }
 
-    public Element reload () throws Exception {
+    public Entity reload() throws Exception {
         super.post("/_reload");
-        return super.get();
+        return this;
     }
 
-    public Element delete(Map<String,String> args) throws Exception {
-        Convert converter = new Convert();
-        return converter.convertXMLData(service
-                                            .delete(path, args)
-                                            .getContent());
+    public Entity delete(Map<String,String> args) throws Exception {
+        service.delete(path, args).getContent();
+        return this;
     }
 
-    public Element delete() throws Exception {
-        Convert converter = new Convert();
-        return converter.convertXMLData(service
-                                            .delete(path)
-                                            .getContent());
+    public Entity delete() throws Exception {
+        service.delete(path).getContent();
+        return this;
+    }
+
+    public Entity get() throws Exception {
+        super.get();
+        return this;
     }
 }
 

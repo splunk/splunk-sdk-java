@@ -32,11 +32,11 @@ public class Collection extends Endpoint {
         super(serv, path);
     }
 
-    private Map<String,String> read(List<String> items) throws Exception {
+    public Map<String,String> read(List<String> items) throws Exception {
         Map<String,String> response = new HashMap<String, String>();
         Map<String,String> count = new HashMap<String, String>();
         count.put("count", "-1");
-        Element element = super.get(count);
+        super.get(count);
         for (String item: items) {
             for (Entry entry: element.entry) {
                 for (String key: entry.content.keySet()) {
@@ -58,7 +58,7 @@ public class Collection extends Endpoint {
         List<String> retList = new ArrayList<String>();
         Map<String,String> count = new HashMap<String, String>();
         count.put("count", "-1");
-        Element element = super.get(count);
+        super.get(count);
 
          for (Entry entry: element.entry) {
              retList.add(entry.title);
@@ -73,7 +73,7 @@ public class Collection extends Endpoint {
         items.add("eai:attributes");
         Map<String,String> count = new HashMap<String, String>();
         count.put("count", "-1");
-        Element element = super.get(count);
+        super.get(count);
 
         for (String item: items) {
             for (Entry entry: element.entry) {
@@ -89,7 +89,7 @@ public class Collection extends Endpoint {
 
     // delete should delete an element of the collection, thus we require a
     // relative path that has at least one character.
-    public Element delete(String relpath,
+    public Collection delete(String relpath,
                           Map<String,String> args) throws Exception {
         if (relpath.length() == 0) {
             throw new Exception("Must supply relative path");
@@ -101,12 +101,11 @@ public class Collection extends Endpoint {
         } else if (!path.endsWith("/") && !relpath.endsWith("/")) {
             relpath = "/" + relpath;
         }
-        return converter.convertXMLData(service
-                                        .delete(path + relpath, args)
-                                        .getContent());
+        service.delete(path + relpath, args).getContent();
+        return this;
     }
 
-    public Element delete(String relpath) throws Exception {
+    public Collection delete(String relpath) throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         return delete(relpath, args);
     }
@@ -120,16 +119,15 @@ public class Collection extends Endpoint {
                                         .getContent());
     }
 
-    public Element create(String name,
+    public Collection create(String name,
                           Map<String,String> args) throws Exception {
         Convert converter = new Convert();
         args.put("name", name); // if already there, we forcibly overwrite
-        return converter.convertXMLData(service
-                                        .post(path, args)
-                                        .getContent());
+        service.post(path, args).getContent();
+        return this;
     }
 
-    public Element create(String name) throws Exception {
+    public Collection create(String name) throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         return create(name, args);
     }

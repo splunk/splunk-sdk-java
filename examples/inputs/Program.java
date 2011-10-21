@@ -35,24 +35,21 @@ public class Program extends com.splunk.sdk.Program {
         service.login(this.username, this.password);
 
         Inputs allInputs = new Inputs(service);
-        Element all = allInputs.get();
 
-        for (Entry entry: all.entry) {
+        for (Entry entry: allInputs.get().element.entry) {
             Input baseInput = new Input(service, entry.title);
-            Element element = baseInput.get();
 
             System.out.println(entry.title + ":");
-            for (Entry base: element.entry) {
+            for (Entry base: baseInput.get().element.entry) {
                 System.out.print("  " + base.title + " --> " +
-                        element.locateComplete(base.title).content);
+                        baseInput.element.locateComplete(base.title).content);
 
                 System.out.println();
                 try {
                     Input subInput = new Input(service,
                                                 entry.title,
                                                 base.title);
-                    Element subele = subInput.get();
-                    for (Entry sub: subele.entry) {
+                    for (Entry sub: subInput.get().element.entry) {
                         System.out.println("    :"
                                 + sub.title + " --> " + sub.content);
                     }

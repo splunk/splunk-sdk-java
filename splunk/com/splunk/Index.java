@@ -16,6 +16,11 @@
 
 package com.splunk;
 
+import com.splunk.http.RequestMessage;
+
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,39 +29,21 @@ import java.util.Map;
 public class Index extends Entity {
 
     private String localname = null;
+    HttpURLConnection cn = null;
 
     public Index(Service service, String relpath) {
         super(service, "/services/data/indexes/" + relpath);
         localname = relpath;
     }
 
-    public void attach() {
-
-        //UNDONE
-        /*
-        def attach(self, host=None, source=None, sourcetype=None):
-            """Opens a stream for writing events to the index."""
-            args = { 'index': self.name }
-            if host is not None: args['host'] = host
-            if source is not None: args['source'] = source
-            if sourcetype is not None: args['sourcetype'] = sourcetype
-            path = "receivers/stream?%s" % urlencode(args)
-
-            # Since we need to stream to the index connection, we have to keep
-            # the connection open and use the Splunk extension headers to note
-            # the input mode
-            cn = self.service.connect()
-            cn.write("POST %s HTTP/1.1\r\n" % self.service.fullpath(path))
-            cn.write("Host: %s:%s\r\n" % (self.service.host, self.service.port))
-            cn.write("Accept-Encoding: identity\r\n")
-            cn.write("Authorization: %s\r\n" % self.service.token)
-            cn.write("X-Splunk-Input-Mode: Streaming\r\n")
-            cn.write("\r\n")
-            return cn
-          */
+    public void attach() throws IOException {
+        RequestMessage request = new RequestMessage("POST",
+                        "/services/receivers/stream?index=" + localname);
+        request.getHeader().put("X-Splunk-Input-Mode", "Streaming");
+        cn = service.streamingConnection(request, service.token);
     }
 
-    public Element clean () throws Exception {
+    public Index clean () throws Exception {
         List<String> list = new ArrayList<String>();
         list.add("maxTotalDataSizeMB");
         list.add("frozenTimePeriodInSecs");
@@ -79,38 +66,27 @@ public class Index extends Entity {
                 break;
             }
         }
-        return super.update(saved);
+        super.update(saved);
+        return this;
     }
 
-    public void submit() {
-        // UNDONE
-         /*
-    def submit(self, event, host=None, source=None, sourcetype=None):
-        """Submits an event to the index via HTTP POST."""
-        args = { 'index': self.name }
-        if host is not None: args['host'] = host
-        if source is not None: args['source'] = source
-        if sourcetype is not None: args['sourcetype'] = sourcetype
+    public void submit(String data) throws Exception {
 
-        # The reason we use service.request directly rather than POST
-        # is that we are not sending a POST request encoded using
-        # x-www-form-urlencoded (as we do not have a key=value body),
-        # because we aren't really sending a "form".
-        path = "receivers/simple?%s" % urlencode(args)
-        message = { 'method': "POST", 'body': event }
-        response = self.service.request(path, message)
-          */
+        if (cn == null) {
+            throw new Exception("Connection not established");
+        }
+
+        service.stream(cn, data);
     }
 
-    public Element upload(String filename,
+    public Index upload(String filename,
                           Map<String, String> args) throws Exception {
         args.put("name", filename);
         args.put("index", localname); // established at class instantiation
         // not a base-relative path
         // need to reach into the endpoints class to post
         Convert converter = new Convert();
-        return converter.convertXMLData(service
-                                    .post("/services/data/inputs/oneshot", args)
-                                    .getContent());
+        service.post("/services/data/inputs/oneshot", args).getContent();
+        return this;
     }
 }

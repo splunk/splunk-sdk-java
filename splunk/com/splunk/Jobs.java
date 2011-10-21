@@ -29,7 +29,7 @@ public class Jobs extends Collection {
     // Here we use the last portion of the id, which is a URL.
     public List<String> list() throws Exception {
         List<String> retList = new ArrayList<String>();
-        Element element = super.get();
+        super.get();
 
         for (Entry entry: element.entry) {
             String [] parts = entry.id.split("/");

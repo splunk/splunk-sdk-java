@@ -228,5 +228,66 @@ public class Service {
 
         return response;
     }
+
+    public HttpURLConnection streamingConnection(RequestMessage request,
+                                                 String token)
+                                                        throws IOException {
+        String prefix = String.format("%s://%s:%d",
+            this.scheme, this.host, this.port);
+        URL url = new URL(prefix + request.getPath());
+
+        HttpURLConnection cn = (HttpURLConnection)url.openConnection();
+        cn.setUseCaches(false);
+        cn.setAllowUserInteraction(false);
+        cn.setDoOutput(true);
+
+        // Set the reqeust method
+        cn.setRequestMethod(request.getMethod());
+
+        // set our authorization token
+        request.getHeader().put("Authorization", token);
+
+        // Add headers from request message
+        Map<String, String> header = request.getHeader();
+        for (Entry<String, String> entry : header.entrySet()) {
+            cn.setRequestProperty(entry.getKey(), entry.getValue());
+        }
+
+        // Add default headers that were absent from the request message
+        for (Entry<String, String> entry : defaultHeader.entrySet()) {
+            String key = entry.getKey();
+            if (header.containsKey(key)) continue;
+            cn.setRequestProperty(key, entry.getValue());
+        }
+
+        // Write out request content, if any
+        Object content = request.getContent();
+        if (content != null) {
+            OutputStream stream = cn.getOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(stream);
+            writer.write((String)content);
+            writer.close();
+        }
+
+        // perform
+        cn.connect();
+
+        return cn;
+    }
+
+    public void stream(HttpURLConnection cn, String content)
+                                                        throws IOException {
+
+        if (content != null && content.length() > 0) {
+            System.out.println("writing ... " + content);
+            OutputStream stream = cn.getOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(stream);
+            writer.write(content);
+            writer.close();
+
+            // perform
+            cn.connect();
+        }
+    }
 }
 
