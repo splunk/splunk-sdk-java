@@ -24,16 +24,28 @@ public class Conf extends Collection  {
         super(service, "/services/configs/conf-" + name);
     }
 
-    public Element submit(Map<String,String> args) throws Exception {
+    public Conf submit(Map<String,String> args) throws Exception {
         // UNDONE: test to see if this is correct usage
-        return super.post(args);
+        super.post(args);
+        return this;
     }
 
-    public Element update(String stanza,
+    public Conf update(String stanza,
                           Map<String,String>args) throws Exception {
         if (!stanza.startsWith("/")) {
             stanza = "/" + stanza;
         }
-        return super.post(stanza, args);
+        super.post(stanza, args);
+        return this;
+    }
+
+    public Conf get() throws Exception {
+        super.get();
+        return this;
+    }
+
+    public Conf get(String relpath) throws Exception {
+        super.get(relpath);
+        return this;
     }
 }

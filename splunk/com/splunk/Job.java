@@ -27,60 +27,69 @@ public class Job extends Entity {
         super(service, "/services/search/jobs/" + name);
     }
 
-    public Element cancel() throws Exception {
+    public Job cancel() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "cancel");
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element disable_preview() throws Exception {
+    public Job disable_preview() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "disablepreview");
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element enable_preview() throws Exception {
+    public Job enable_preview() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "enablepreview");
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element finalise() throws Exception {
+    public Job finalise() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "finalize");
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element pause() throws Exception {
+    public Job pause() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "pause");
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element unpause() throws Exception {
+    public Job unpause() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "unpause");
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element setpriority(int priority ) throws Exception {
+    public Job setpriority(int priority ) throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "setpriority");
         args.put("priority", Integer.toString(priority));
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element touch() throws Exception {
+    public Job touch() throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "touch");
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
-    public Element setttl(int ttl ) throws Exception {
+    public Job setttl(int ttl ) throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         args.put("action", "setttl");
         args.put("ttl", Integer.toString(ttl));
-        return super.post("control", args);
+        super.post("control", args);
+        return this;
     }
 
     /*  UNDONE:

@@ -55,5 +55,11 @@ public class Program extends com.splunk.sdk.Program {
         Index idx = new Index(service, "sdk-tests");
         idx.clean();
 
+        idx.attach();
+        idx.submit("ONE");
+        idx.submit("TWO");
+        idx.submit("THREE");
+
+        System.out.println("fofofofo");
     }
 }

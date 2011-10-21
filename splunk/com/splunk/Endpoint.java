@@ -24,6 +24,8 @@ public class Endpoint {
     public Service service = null;
     public String path = null;
 
+    public Element element = null;
+
     public Endpoint() {
 
     }
@@ -33,55 +35,62 @@ public class Endpoint {
         path = pth;
     }
 
-    public Element get(Map<String,String> args) throws Exception {
+    public Endpoint get(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service
+        element = converter.convertXMLData(service
                                             .get(path,args)
                                             .getContent());
+        return this;
     }
 
-    public Element get(String relpath) throws Exception {
+    public Endpoint get(String relpath) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service
+        element = converter.convertXMLData(service
                                             .get(path + relpath)
                                             .getContent());
+        return this;
     }
 
-    public Element get() throws Exception {
+    public Endpoint get() throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service.get(path).getContent());
+        element = converter.convertXMLData(service.get(path).getContent());
+        return this;
     }
 
 
 
-    public Element post(String relpath,
+    public Endpoint post(String relpath,
                         Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service
+        element = converter.convertXMLData(service
                                             .post(path + relpath, args)
                                             .getContent());
+        return this;
     }
 
-    public Element post(String relpath) throws Exception {
+    public Endpoint post(String relpath) throws Exception {
         Map<String,String> args = new HashMap<String,String>();
         Convert converter = new Convert();
-        return converter.convertXMLData(service
+        element = converter.convertXMLData(service
                                             .post(path + relpath, args)
                                             .getContent());
+        return this;
     }
 
-    public Element post(Map<String,String> args) throws Exception {
+    public Endpoint post(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        return converter.convertXMLData(service
+        element = converter.convertXMLData(service
                                             .post(path, args)
                                             .getContent());
+        return this;
     }
 
-    public Element post() throws Exception {
+    public Endpoint post() throws Exception {
         Map<String,String> args = new HashMap<String,String>();
         Convert converter = new Convert();
-        return converter.convertXMLData(service
+        element = converter.convertXMLData(service
                                             .post(path, args)
                                             .getContent());
+        return this;
     }
 }
