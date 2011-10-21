@@ -14,6 +14,8 @@
  * under the License.
  */
 
+package com.splunk.atom;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-class AtomEntry extends AtomObject {
+public class AtomEntry extends AtomObject {
     public String Published;
     public Map Content;
 
@@ -88,15 +90,16 @@ class AtomEntry extends AtomObject {
 
         List<Element> children = getChildElements(element);
 
-        HashMap result = new HashMap();
+        int count = children.size();
+        if (count == 0) return null;
 
+        HashMap result = new HashMap();
         for (Element child : children) {
             assert(child.getTagName().equals("s:key"));
             String key = child.getAttribute("name");
             Object value = parseValue(child);
             if (value != null) result.put(key, value);
         }
-
         return result;
     }
 
@@ -109,15 +112,14 @@ class AtomEntry extends AtomObject {
         List<Element> children = getChildElements(element);
 
         int count = children.size();
+        if (count == 0) return null;
 
         List result = new ArrayList(count);
-
         for (Element child : children) {
             assert(child.getTagName().equals("s:item"));
             Object value = parseValue(child);
             if (value != null) result.add(value);
         }
-
         return result;
     }
 
@@ -151,7 +153,6 @@ class AtomEntry extends AtomObject {
             return parseList(child);
 
         assert(false); // Unreached
-
         return null;
     }
 }

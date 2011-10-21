@@ -14,12 +14,16 @@
  * under the License.
  */
 
+package com.splunk.atom;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-class AtomObject {
+public class AtomObject {
     public String Id;
-    public Properties Links = new Properties();
+    public Map<String, String> Links = new HashMap<String, String>();
     public String Title;
     public String Updated;
 

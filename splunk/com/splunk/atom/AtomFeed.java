@@ -14,6 +14,8 @@
  * under the License.
  */
 
+package com.splunk.atom;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -24,7 +26,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-class AtomFeed extends AtomObject {
+public class AtomFeed extends AtomObject {
     public Map<String, AtomEntry> Entries =
         new HashMap<String, AtomEntry>();
     public int ItemsPerPage = 0;
