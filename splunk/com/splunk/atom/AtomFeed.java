@@ -27,11 +27,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 public class AtomFeed extends AtomObject {
-    public Map<String, AtomEntry> Entries =
-        new HashMap<String, AtomEntry>();
-    public int ItemsPerPage = 0;
-    public int StartIndex = 0;
-    public int TotalResults = 0;
+    public Map<String, AtomEntry> entries = new HashMap<String, AtomEntry>();
+    public int itemsPerPage = 0;
+    public int startIndex = 0;
+    public int totalResults = 0;
 
     static AtomFeed create() {
         return new AtomFeed();
@@ -59,22 +58,22 @@ public class AtomFeed extends AtomObject {
         String name = element.getTagName();
         if (name.equals("entry")) {
             AtomEntry entry = AtomEntry.create(element);
-            this.Entries.put(entry.Id, entry);
+            this.entries.put(entry.id, entry);
         }
         else if (name.equals("s:messages")) {
             // UNDONE
         }
         else if (name.equals("opensearch:totalResults")) {
             String value = element.getTextContent().trim();
-            this.TotalResults = Integer.parseInt(value);
+            this.totalResults = Integer.parseInt(value);
         }
         else if (name.equals("opensearch:itemsPerPage")) {
             String value = element.getTextContent().trim();
-            this.ItemsPerPage = Integer.parseInt(value);
+            this.itemsPerPage = Integer.parseInt(value);
         }
         else if (name.equals("opensearch:startIndex")) {
             String value = element.getTextContent().trim();
-            this.StartIndex = Integer.parseInt(value);
+            this.startIndex = Integer.parseInt(value);
         }
         else {
             super.init(element);

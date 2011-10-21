@@ -164,8 +164,7 @@ public class Service {
         return send(request);
     }
 
-    public ResponseMessage delete(String path)
-        throws IOException
+    public ResponseMessage delete(String path) throws IOException
     {
         RequestMessage request = new RequestMessage("DELETE", path);
         return send(request);

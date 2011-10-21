@@ -16,7 +16,6 @@
 
 import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
-import com.splunk.Service;
 
 import java.io.IOException;
 import java.util.Map;
@@ -39,49 +38,57 @@ public class Program extends com.splunk.sdk.Program {
         return service;
     }
 
-    static void printAtomObject(AtomObject item) {
-        System.out.format("Id = '%s'\n", item.Id);
-        System.out.format("Title = '%s'\n", item.Title);
-        System.out.format("Updated = '%s'\n", item.Updated);
-        for (Map.Entry<String, String> entry : item.Links.entrySet()) {
-            // System.out.format("Link %s => %s\n", entry.getKey(), entry.getValue());
-            System.out.format("Link %s => ...\n", entry.getKey());
+    public void printActions(Map<String, String> actions) {
+        if (actions != null) {
+            for (Map.Entry entry : actions.entrySet()) {
+                System.out.format("* %s => %s\n", 
+                    entry.getKey(), entry.getValue());
+            }
         }
     }
 
-    static void printAtomFeed(AtomFeed feed) {
-        printAtomObject(feed);
-        System.out.format("ItemsPerPage = %d\n", feed.ItemsPerPage);
-        System.out.format("StartIndex = %d\n", feed.StartIndex);
-        System.out.format("TotalResults = %d\n", feed.TotalResults);
-        for (AtomEntry entry : feed.Entries.values()) {
-            System.out.format("**********\n");
-            printAtomEntry(entry);
+    public void printEntity(Entity entity) {
+        System.out.format("## %s\n", entity.path);
+        System.out.format("title = %s\n", entity.title);
+        printActions(entity.actions);
+        if (entity.content != null) {
+            for (Map.Entry entry : entity.content.entrySet()) {
+                System.out.format("%s = %s\n",
+                    entry.getKey(), entry.getValue().toString());
+            }
         }
+        System.out.println("");
     }
 
-    static void printAtomEntry(AtomEntry entry) {
-        printAtomObject(entry);
-        if (entry.Published != null)
-            System.out.format("Published = '%s'\n", entry.Published);
-        if (entry.Content != null)
-            System.out.format("Content = '%s'\n", entry.Content.toString());
+    public void printEntities(EntityCollection entities) {
+        System.out.format("# %s\n", entities.path);
+        printActions(entities.actions);
+        for (Entity entity : entities) 
+            printEntity(entity);
     }
 
     public void run() throws Exception {
         Service service = connect();
 
-        String path = this.args.length > 0 ? this.args[0] : "/";
-        ResponseMessage response = service.get(path);
+        EntityCollection entities;
+        
+        entities = service.getApplications();
+        printEntities(entities);
 
-        int status = response.getStatus();
-        if (status != 200)
-            throw new RuntimeException(String.format("HTTP Error: %d", status));
+        entities = service.getIndexes();
+        printEntities(entities);
 
-        System.out.format("Loading %s ..\n", path);
-        AtomFeed feed = AtomFeed.create(response.getContent());
+        entities = service.getJobs();
+        printEntities(entities);
 
-        printAtomFeed(feed);
+        entities = service.getLoggers();
+        printEntities(entities);
+
+        entities = service.getRoles();
+        printEntities(entities);
+
+        entities = service.getUsers();
+        printEntities(entities);
     }
 }
 

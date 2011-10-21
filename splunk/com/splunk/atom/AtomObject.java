@@ -22,28 +22,28 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class AtomObject {
-    public String Id;
-    public Map<String, String> Links = new HashMap<String, String>();
-    public String Title;
-    public String Updated;
+    public String id;
+    public Map<String, String> links = new HashMap<String, String>();
+    public String title;
+    public String updated;
 
     AtomObject() {}
 
     void init(Element element) {
         String name = element.getTagName();
         if (name.equals("id")) {
-            this.Id = element.getTextContent().trim();
+            this.id = element.getTextContent().trim();
         } 
         else if (name.equals("link")) {
             String rel = element.getAttribute("rel");
             String href = element.getAttribute("href");
-            this.Links.put(rel, href);
+            this.links.put(rel, href);
         }
         else if (name.equals("title")) {
-            this.Title = element.getTextContent().trim();
+            this.title = element.getTextContent().trim();
         }
         else if (name.equals("updated")) {
-            this.Updated = element.getTextContent().trim();
+            this.updated = element.getTextContent().trim();
         }
         else if (name.equals("author") || name.equals("generator")) {
             // Ignore

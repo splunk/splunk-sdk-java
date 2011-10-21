@@ -24,8 +24,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class AtomEntry extends AtomObject {
-    public String Published;
-    public Map Content;
+    public String published;
+    public Map content;
 
     static AtomEntry create() {
         return new AtomEntry();
@@ -40,10 +40,10 @@ public class AtomEntry extends AtomObject {
     @Override void init(Element element) {
         String name = element.getTagName();
         if (name.equals("published")) {
-            this.Published = element.getTextContent().trim();
+            this.published = element.getTextContent().trim();
         }
         else if (name.equals("content")) {
-            this.Content = parseContent(element);
+            this.content = parseContent(element);
         }
         else {
             super.init(element);
