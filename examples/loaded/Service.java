@@ -67,7 +67,7 @@ public class Service extends com.splunk.Service {
     }
 
     public EntityCollection getJobs() {
-        return new EntityCollection(this, "/services/search/jobs");
+        return new EntityCollection(this, "/services/search/jobs", Job.class);
     }
 
     public EntityCollection getLoggers() {

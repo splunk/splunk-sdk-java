@@ -19,28 +19,28 @@ public class Application extends Entity {
         super(service, path);
     }
 
-    public Boolean getCheckForUpdates() {
-        return Value.getBoolean(getContent(), "check_for_updates");
+    public boolean getCheckForUpdates() {
+        return getBoolean("check_for_updates");
     }
 
     public String getLabel() {
-        return Value.getString(getContent(), "label", "");
+        return getString("label", "");
     }
 
     public String getVersion() {
-        return Value.getString(getContent(), "version", null);
+        return getString("version", null);
     }
 
-    public Boolean isConfigured() {
-        return Value.getBoolean(getContent(), "configured");
+    public boolean isConfigured() {
+        return getBoolean("configured");
     }
 
-    public Boolean isManageable() {
-        return Value.getBoolean(getContent(), "manageable");
+    public boolean isManageable() {
+        return getBoolean("manageable");
     }
 
-    public Boolean isVisible() {
-        return Value.getBoolean(getContent(), "visible");
+    public boolean isVisible() {
+        return getBoolean("visible");
     }
 }
 

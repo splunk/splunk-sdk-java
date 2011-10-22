@@ -24,7 +24,7 @@ import java.util.Map;
 public abstract class Resource extends Endpoint {
     Map<String, String> actions;
     String id;
-    Boolean maybe = false;
+    boolean maybe = false;
 
     public Resource(Service service, String path) {
         super(service, path);

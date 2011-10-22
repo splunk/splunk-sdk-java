@@ -14,20 +14,31 @@
  * under the License.
  */
 
+import java.util.Date;
 import java.util.Map;
 
 // Value conversion helpers
 public class Value {
-    public static Boolean getBoolean(Map<String, Object> map, String key) {
+    public static boolean getBoolean(Map<String, Object> map, String key) {
         return toBoolean(map.get(key).toString());
     }
 
-    // Retrieve the given field as a boolean value, returning the given
-    // default if the field does not exist.
-    public static Boolean 
-    getBoolean(Map<String, Object> map, String key, Boolean defaultValue) {
+    public static boolean 
+    getBoolean(Map<String, Object> map, String key, boolean defaultValue) {
         if (!map.containsKey(key)) return defaultValue;
         return toBoolean(map.get(key).toString());
+    }
+
+    public static Date getDate(Map<String, Object> map, String key) {
+        return toDate(map.get(key).toString());
+    }
+
+    public static float getFloat(Map<String, Object> map, String key) {
+        return toFloat(map.get(key).toString());
+    }
+
+    public static int getInteger(Map<String, Object> map, String key) {
+        return toInteger(map.get(key).toString());
     }
 
     public static int 
@@ -43,7 +54,7 @@ public class Value {
     }
 
     // Convert the given string to a boolean value.
-    public static Boolean toBoolean(String value) {
+    public static boolean toBoolean(String value) {
         if (value == null) return false;
         if (value.equals("0"))
             return false;
@@ -55,6 +66,14 @@ public class Value {
             return true;
         String message = String.format("Value error: '%s'", value);
         throw new RuntimeException(message); // UNDONE
+    }
+
+    public static Date toDate(String value) {
+        return null; // UNDONE
+    }
+
+    public static float toFloat(String value) {
+        return Float.parseFloat(value);
     }
 
     public static int toInteger(String value) {

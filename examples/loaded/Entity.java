@@ -19,6 +19,7 @@ import com.splunk.http.ResponseMessage;
 import com.splunk.Args;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 public class Entity extends Resource {
@@ -48,12 +49,44 @@ public class Entity extends Resource {
         return this.content;
     }
 
+    protected boolean getBoolean(String key) {
+        return Value.getBoolean(getContent(), key);
+    }
+
+    protected boolean getBoolean(String key, boolean defaultValue) {
+        return Value.getBoolean(getContent(), key, defaultValue);
+    }
+
+    protected Date getDate(String key) {
+        return Value.getDate(getContent(), key);
+    }
+
+    protected float getFloat(String key) {
+        return Value.getFloat(getContent(), key);
+    }
+
+    protected int getInteger(String key) {
+        return Value.getInteger(getContent(), key);
+    }
+
+    protected int getInteger(String key, int defaultValue) {
+        return Value.getInteger(getContent(), key, defaultValue);
+    }
+
+    protected String getString(String key) {
+        return getContent().get(key).toString();
+    }
+
+    protected String getString(String key, String defaultValue) {
+        return Value.getString(getContent(), key, defaultValue);
+    }
+
     public String getTitle() {
         validate();
         return this.title;
     }
 
-    public Boolean isDisabled() {
+    public boolean isDisabled() {
         return Value.getBoolean(getContent(), "disabled", false);
     }
 
@@ -64,7 +97,7 @@ public class Entity extends Resource {
     }
 
     public void update(Args args) {
-        invoke("udpate", args);
+        invoke("edit", args);
         invalidate();
     }
 

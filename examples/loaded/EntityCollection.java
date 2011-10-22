@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class EntityCollection extends Resource implements Iterable<Entity> {
-    Map<String, Entity> entities;
+    private Map<String, Entity> entities;
 
     Class entityClass = Entity.class;
 
