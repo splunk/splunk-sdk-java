@@ -14,25 +14,69 @@
  * under the License.
  */
 
-import com.splunk.atom.*;
+import com.splunk.atom.AtomObject;
 import com.splunk.http.ResponseMessage;
+import com.splunk.Args;
 import com.splunk.Service;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Iterator;
 
-public class Resource extends Endpoint {
-    public Map<String, String> actions;
-    public String id;
+public abstract class Resource extends Endpoint {
+    Map<String, String> actions;
+    String id;
+    Boolean maybe = false;
 
     public Resource(Service service, String path) {
         super(service, path);
     }
 
+    public Map<String, String> getActions() {
+        validate();
+        return this.actions;
+    }
+
+    public String getId() {
+        validate();
+        return this.id;
+    }
+
+    public void invalidate() {
+        maybe = false;
+    }
+
+    public void invoke(String action) {
+        invoke(action, null);
+    }
+
+    public void invoke(String action, Args args) {
+        String path = getActions().get(action);
+        if (path == null) {
+            String message = String.format(
+                "Action invalid for this resoruces: '%s'", action);
+            throw new RuntimeException(message);
+        }
+        ResponseMessage response;
+        try {
+            response = service.post(path, args);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        assert(response.getStatus() == 200); // UNDONE
+    }
+
     void load(AtomObject value) {
         this.actions = value.links;
         this.id = value.id;
+        this.maybe = true; // Maybe up to date :) ..
+    }
+
+    public abstract void refresh();
+
+    void validate() {
+        if (maybe == false) refresh();
     }
 }
 

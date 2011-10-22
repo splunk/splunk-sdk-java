@@ -14,6 +14,20 @@
  * under the License.
  */
 
+// UNDONE: Deployment Server
+//   deployment/client
+//   deployment/server
+//   deployment/serverclass
+//   deployment/tenants
+// UNDONE: Licenser
+//   licenser/groups
+//   licenser/licenses
+//   licenser/messages
+//   licenser/pools
+//   licenser/slaves
+//   licenser/stacks
+// UNDONE: storage/passwords
+
 import java.io.IOException;
 import java.util.List;
 
@@ -33,6 +47,12 @@ public class Service extends com.splunk.Service {
     public List<String> getCapabilities() {
         return null; // UNDONE
     }
+
+    public EntityCollection getEventTypes() {
+        return new EntityCollection(this, "/services/saved/eventtypes");
+    }
+
+    // UNDONE: getFiredAlerts?
 
     public EntityCollection getIndexes() {
         return new EntityCollection(this, "/services/data/indexes");
@@ -58,8 +78,14 @@ public class Service extends com.splunk.Service {
         return null; // UNDONE
     }
 
+    // UNDONE: getOutputs
+
     public EntityCollection getRoles() {
         return new EntityCollection(this, "/services/authentication/roles");
+    }
+
+    public EntityCollection getSearches() {
+        return new EntityCollection(this, "/services/saved/searches");
     }
 
     public Object getSettings() {
@@ -71,5 +97,6 @@ public class Service extends com.splunk.Service {
     }
 
     // public Object parse(String query) {}
+    // public void restart() {}
 }
 

@@ -39,18 +39,16 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public void printActions(Map<String, String> actions) {
-        if (actions != null) {
-            for (Map.Entry entry : actions.entrySet()) {
-                System.out.format("* %s => %s\n", 
-                    entry.getKey(), entry.getValue());
-            }
+        for (Map.Entry entry : actions.entrySet()) {
+            System.out.format("* %s => %s\n", 
+                entry.getKey(), entry.getValue());
         }
     }
 
     public void printEntity(Entity entity) {
-        System.out.format("## %s\n", entity.path);
-        System.out.format("title = %s\n", entity.title);
-        printActions(entity.actions);
+        System.out.format("## %s\n", entity.getPath());
+        System.out.format("title = %s\n", entity.getTitle());
+        printActions(entity.getActions());
         if (entity.content != null) {
             for (Map.Entry entry : entity.content.entrySet()) {
                 System.out.format("%s = %s\n",
@@ -61,8 +59,8 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public void printEntities(EntityCollection entities) {
-        System.out.format("# %s\n", entities.path);
-        printActions(entities.actions);
+        System.out.format("# %s\n", entities.getPath());
+        printActions(entities.getActions());
         for (Entity entity : entities) 
             printEntity(entity);
     }
@@ -75,6 +73,9 @@ public class Program extends com.splunk.sdk.Program {
         entities = service.getApplications();
         printEntities(entities);
 
+        entities = service.getEventTypes();
+        printEntities(entities);
+
         entities = service.getIndexes();
         printEntities(entities);
 
@@ -85,6 +86,9 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(entities);
 
         entities = service.getRoles();
+        printEntities(entities);
+
+        entities = service.getSearches();
         printEntities(entities);
 
         entities = service.getUsers();

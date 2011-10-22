@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class EntityCollection extends Resource implements Iterable<Entity> {
-    public Map<String, Entity> entities = null; // indicates pre-load
+    Map<String, Entity> entities;
 
     Class entityClass = Entity.class;
 
@@ -41,13 +41,23 @@ public class EntityCollection extends Resource implements Iterable<Entity> {
         this.entityClass = entityClass;
     }
 
+    public Entity create(String name) {
+        return null; // UNDONE
+    }
+
+    public Map<String, Entity> getEntities() {
+        validate();
+        return this.entities;
+    }
+
     public Iterator<Entity> iterator() {
-        if (this.entities == null) refresh();
+        validate();
         return this.entities.values().iterator();
     }
 
     void load(AtomFeed value) {
         try {
+            super.load(value);
             Constructor ctor = entityClass.getConstructor(
                 new Class[] { Service.class, String.class });
             Object[] args = new Object[2];

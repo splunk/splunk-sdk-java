@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.Iterator;
 
 public class Endpoint {
-    public String path;
-    public Service service;
+    String path;
+    Service service;
 
     public Endpoint(Service service, String path) {
         this.path = path;
@@ -41,8 +41,16 @@ public class Endpoint {
         return service.get(this.path, args);
     }
 
+    public String getPath() {
+        return this.path;
+    }
+
     public ResponseMessage post(Map<String, String> args) throws IOException {
         return service.post(this.path, args);
+    }
+
+    public Service getService() {
+        return this.service;
     }
 }
 
