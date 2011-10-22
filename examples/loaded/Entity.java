@@ -79,9 +79,7 @@ public class Entity extends Resource {
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.create(response.getContent());
         assert(feed.entries.size() == 1);
-        // UNDONE: The following would be simpler if AtomFeed.entries was
-        // a list .. and I now can't think of a good reason for it to be a map.
-        AtomEntry entry = (AtomEntry)feed.entries.values().toArray()[0];
+        AtomEntry entry = feed.entries.get(0);
         load(entry);
     }
 

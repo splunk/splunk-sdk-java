@@ -62,7 +62,7 @@ public class EntityCollection extends Resource implements Iterable<Entity> {
             Object[] args = new Object[2];
             args[0] = service;
             this.entities = new HashMap<String, Entity>();
-            for (AtomEntry entry : value.entries.values()) {
+            for (AtomEntry entry : value.entries) {
                 args[1] = entry.id;
                 Entity entity = (Entity)ctor.newInstance(args);
                 entity.load(entry);

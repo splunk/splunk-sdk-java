@@ -18,8 +18,7 @@ package com.splunk.atom;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
@@ -27,7 +26,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 public class AtomFeed extends AtomObject {
-    public Map<String, AtomEntry> entries = new HashMap<String, AtomEntry>();
+    public ArrayList<AtomEntry> entries = new ArrayList<AtomEntry>();
     public int itemsPerPage = 0;
     public int startIndex = 0;
     public int totalResults = 0;
@@ -58,7 +57,7 @@ public class AtomFeed extends AtomObject {
         String name = element.getTagName();
         if (name.equals("entry")) {
             AtomEntry entry = AtomEntry.create(element);
-            this.entries.put(entry.id, entry);
+            this.entries.add(entry);
         }
         else if (name.equals("s:messages")) {
             // UNDONE
