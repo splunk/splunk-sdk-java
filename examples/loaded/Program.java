@@ -49,8 +49,9 @@ public class Program extends com.splunk.sdk.Program {
         System.out.format("## %s\n", entity.getPath());
         System.out.format("title = %s\n", entity.getTitle());
         printActions(entity.getActions());
-        if (entity.content != null) {
-            for (Map.Entry entry : entity.content.entrySet()) {
+        Map<String, Object> content = entity.getContent();
+        if (content != null) {
+            for (Map.Entry entry : content.entrySet()) {
                 System.out.format("%s = %s\n",
                     entry.getKey(), entry.getValue().toString());
             }

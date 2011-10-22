@@ -17,15 +17,13 @@
 import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
 import com.splunk.Args;
-import com.splunk.Service;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Iterator;
 
 public class Entity extends Resource {
-    Map<String, Object> content;
-    String title;
+    private Map<String, Object> content;
+    private String title;
 
     public Entity(Service service, String path) {
         super(service, path);
@@ -45,7 +43,7 @@ public class Entity extends Resource {
         invalidate();
     }
 
-    Map<String, Object> getContent() {
+    public Map<String, Object> getContent() {
         validate();
         return this.content;
     }
@@ -53,6 +51,10 @@ public class Entity extends Resource {
     public String getTitle() {
         validate();
         return this.title;
+    }
+
+    public Boolean isDisabled() {
+        return Value.getBoolean(getContent(), "disabled", false);
     }
 
     void load(AtomEntry entry) {
@@ -77,7 +79,9 @@ public class Entity extends Resource {
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.create(response.getContent());
         assert(feed.entries.size() == 1);
-        AtomEntry entry = feed.entries.get(0);
+        // UNDONE: The following would be simpler if AtomFeed.entries was
+        // a list .. and I now can't think of a good reason for it to be a map.
+        AtomEntry entry = (AtomEntry)feed.entries.values().toArray()[0];
         load(entry);
     }
 

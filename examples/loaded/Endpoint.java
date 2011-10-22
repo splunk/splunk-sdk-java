@@ -16,13 +16,10 @@
 
 // UNDONE: Implement get/post/delete
 
-import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
-import com.splunk.Service;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Iterator;
 
 public class Endpoint {
     String path;

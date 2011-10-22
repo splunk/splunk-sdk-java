@@ -19,7 +19,6 @@
 
 import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
-import com.splunk.Service;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;

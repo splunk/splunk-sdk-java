@@ -17,11 +17,9 @@
 import com.splunk.atom.AtomObject;
 import com.splunk.http.ResponseMessage;
 import com.splunk.Args;
-import com.splunk.Service;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Iterator;
 
 public abstract class Resource extends Endpoint {
     Map<String, String> actions;
@@ -46,11 +44,11 @@ public abstract class Resource extends Endpoint {
         maybe = false;
     }
 
-    public void invoke(String action) {
+    void invoke(String action) {
         invoke(action, null);
     }
 
-    public void invoke(String action, Args args) {
+    void invoke(String action, Args args) {
         String path = getActions().get(action);
         if (path == null) {
             String message = String.format(
@@ -75,7 +73,7 @@ public abstract class Resource extends Endpoint {
 
     public abstract void refresh();
 
-    void validate() {
+    public void validate() {
         if (maybe == false) refresh();
     }
 }

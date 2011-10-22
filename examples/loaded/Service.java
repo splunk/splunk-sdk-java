@@ -28,7 +28,6 @@
 //   licenser/stacks
 // UNDONE: storage/passwords
 
-import java.io.IOException;
 import java.util.List;
 
 public class Service extends com.splunk.Service {
@@ -37,7 +36,8 @@ public class Service extends com.splunk.Service {
     }
 
     public EntityCollection getApplications() {
-        return new EntityCollection(this, "/services/apps/local");
+        return new EntityCollection(
+            this, "/services/apps/local", Application.class);
     }
 
     public EntityCollection getConfigurations() {

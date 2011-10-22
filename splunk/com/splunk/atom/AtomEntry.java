@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
 
 public class AtomEntry extends AtomObject {
     public String published;
-    public Map content;
+    public Map<String, Object> content;
 
     static AtomEntry create() {
         return new AtomEntry();
@@ -62,10 +62,10 @@ public class AtomEntry extends AtomObject {
     }
 
     // Parse the <content> element of an Atom entry.
-    Map parseContent(Element element) {
+    Map<String, Object> parseContent(Element element) {
         assert(element.getTagName().equals("content"));
 
-        Map content = null;
+        Map<String, Object> content = null;
 
         List<Element> children = getChildElements(element);
 
@@ -83,7 +83,7 @@ public class AtomEntry extends AtomObject {
     }
 
     // Parse a <dict> element and return a corresponding Map object.
-    Map parseDict(Element element) {
+    Map<String, Object> parseDict(Element element) {
         assert(element.getTagName().equals("s:dict"));
 
         if (!element.hasChildNodes()) return null;
@@ -93,7 +93,7 @@ public class AtomEntry extends AtomObject {
         int count = children.size();
         if (count == 0) return null;
 
-        HashMap result = new HashMap();
+        HashMap<String, Object> result = new HashMap<String, Object>();
         for (Element child : children) {
             assert(child.getTagName().equals("s:key"));
             String key = child.getAttribute("name");
