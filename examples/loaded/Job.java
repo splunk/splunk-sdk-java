@@ -21,10 +21,6 @@ public class Job extends Entity {
         super(service, path);
     }
 
-    public String getSearch() {
-        return getTitle(); // Yes, its true ..
-    }
-
     public Date getCursorTime() {
         return getDate("cursorTime");
     }
@@ -113,12 +109,12 @@ public class Job extends Entity {
         return getInteger("resultCount");
     }
 
-    public boolean getResultIsStream() {
-        return getBoolean("resultIsStream");
+    public boolean getResultIsStreaming() {
+        return getBoolean("resultIsStreaming");
     }
 
-    public boolean getResultPreviewCount() {
-        return getBoolean("resultPreviewCount");
+    public int getResultPreviewCount() {
+        return getInteger("resultPreviewCount");
     }
 
     public float getRunDuration() {
@@ -129,12 +125,16 @@ public class Job extends Entity {
         return getInteger("scanCount");
     }
 
-    public Date getSearchEarliestTime() {
-        return getDate("searchEarliestTime");
+    public String getSearch() {
+        return getTitle();
     }
 
-    public Date getSearchLatestTime() {
-        return getDate("searchLatestTime");
+    public String getSearchEarliestTime() {
+        return getString("searchEarliestTime");
+    }
+
+    public String getSearchLatestTime() {
+        return getString("searchLatestTime");
     }
 
     public String getSid() {

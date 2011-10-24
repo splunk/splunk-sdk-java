@@ -14,8 +14,12 @@
  * under the License.
  */
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // Value conversion helpers
 public class Value {
@@ -68,8 +72,30 @@ public class Value {
         throw new RuntimeException(message); // UNDONE
     }
 
+    private static SimpleDateFormat dateFormat = null;
+    private static Pattern datePattern = null;
     public static Date toDate(String value) {
-        return null; // UNDONE
+        if (dateFormat == null) {
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            dateFormat.setLenient(true);
+        }
+        if (datePattern == null) {
+            String pattern = "(.*)\\.\\d+([\\-+]\\d+):(\\d+)";
+            datePattern = Pattern.compile(pattern);
+        }
+        Date result;
+        try {
+            // Must first remove the colon (':') from the timezone
+            // field, or SimpleDataFormat will not parse correctly.
+            // Eg: 2010-01-01T12:00:00+01:00 => 2010-01-01T12:00:00+0100
+            Matcher matcher = datePattern.matcher(value);
+            value = matcher.replaceAll("$1$2$3");
+            result = dateFormat.parse(value);
+        }
+        catch (ParseException e) {
+            throw new RuntimeException(e.getMessage()); // UNDONE
+        }
+        return result;
     }
 
     public static float toFloat(String value) {
