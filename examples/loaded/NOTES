@@ -1,6 +1,14 @@
+* Additional endpoints
+* Finish typed objects
 * Finish actions
-* Tyepd entity collection, eg: EntityCollection<T>
 * Non-conforming endpoints
-    - Jobs
     - Info, Settings, Messages
 * Handle EAI metadata
+* Inputs collection
+* Explorer sample
+
+* Job
+    - Additional methods
+
+* Serice
+    - Implment parse, restart

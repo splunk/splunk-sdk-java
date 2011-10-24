@@ -108,37 +108,69 @@ public class Program extends com.splunk.sdk.Program {
         System.out.format("IsSaved = %b\n", job.isSaved());
         System.out.format("IsSavedSearch = %b\n", job.isSavedSearch());
         System.out.format("IsZombie = %s\n", job.isZombie());
+        System.out.println("");
     }
 
     public void run() throws Exception {
         Service service = connect();
 
-        EntityCollection entities;
-        
-        entities = service.getApplications();
-        printEntities(entities);
+        System.out.println("**** Applications ****");
+        printEntities(service.getApplications());
 
-        entities = service.getEventTypes();
-        printEntities(entities);
+        System.out.println("**** DeploymentClient ****");
+        // printEntity(service.getDeploymentClient());
 
-        entities = service.getIndexes();
-        printEntities(entities);
+        System.out.println("**** DeploymentServers ****");
+        printEntities(service.getDeploymentServers());
 
-        entities = service.getJobs();
+        System.out.println("**** DeploymentServerClasses ****");
+        printEntities(service.getDeploymentServerClasses());
+
+        System.out.println("**** DeploymentTenants ****");
+        printEntities(service.getDeploymentTenants());
+
+        System.out.println("**** EventTypes ****");
+        printEntities(service.getEventTypes());
+
+        System.out.println("**** Indexes ****");
+        printEntities(service.getIndexes());
+
+        System.out.println("**** Jobs ****");
         for (Entity job : service.getJobs())
             printJob((Job)job);
 
-        entities = service.getLoggers();
-        printEntities(entities);
+        System.out.println("**** LicenseGroups ****");
+        printEntities(service.getLicenseGroups());
 
-        entities = service.getRoles();
-        printEntities(entities);
+        System.out.println("**** LicenseMessages ****");
+        printEntities(service.getLicenseMessages());
 
-        entities = service.getSearches();
-        printEntities(entities);
+        System.out.println("**** LicensePools ****");
+        printEntities(service.getLicensePools());
 
-        entities = service.getUsers();
-        printEntities(entities);
+        System.out.println("**** LicenseSlaves ****");
+        printEntities(service.getLicenseSlaves());
+
+        System.out.println("**** LicenseStacks ****");
+        printEntities(service.getLicenseStacks());
+
+        System.out.println("**** Licenses ****");
+        printEntities(service.getLicenses());
+
+        System.out.println("**** Loggers ****");
+        printEntities(service.getLoggers());
+
+        System.out.println("**** Info ****");
+        printEntity(service.getInfo());
+
+        System.out.println("**** Roles ****");
+        printEntities(service.getRoles());
+
+        System.out.println("**** Searches ****");
+        printEntities(service.getSearches());
+
+        System.out.println("**** Users ****");
+        printEntities(service.getUsers());
     }
 }
 

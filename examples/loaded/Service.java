@@ -14,18 +14,6 @@
  * under the License.
  */
 
-// UNDONE: Deployment Server
-//   deployment/client
-//   deployment/server
-//   deployment/serverclass
-//   deployment/tenants
-// UNDONE: Licenser
-//   licenser/groups
-//   licenser/licenses
-//   licenser/messages
-//   licenser/pools
-//   licenser/slaves
-//   licenser/stacks
 // UNDONE: storage/passwords
 
 import java.util.List;
@@ -48,6 +36,23 @@ public class Service extends com.splunk.Service {
         return null; // UNDONE
     }
 
+    public Entity getDeploymentClient() {
+        // return new Entity(this, "/services/deployment/client");
+        return null; // UNDONE: Handle case where client does not exist
+    }
+
+    public EntityCollection getDeploymentServers() {
+        return new EntityCollection(this, "/services/deployment/server");
+    }
+
+    public EntityCollection getDeploymentServerClasses() {
+        return new EntityCollection(this, "/services/deployment/serverclass");
+    }
+
+    public EntityCollection getDeploymentTenants() {
+        return new EntityCollection(this, "/services/deployment/tenants");
+    }
+
     public EntityCollection getEventTypes() {
         return new EntityCollection(this, "/services/saved/eventtypes");
     }
@@ -58,8 +63,8 @@ public class Service extends com.splunk.Service {
         return new EntityCollection(this, "/services/data/indexes");
     }
 
-    public Object getInfo() {
-        return null; // UNDONE
+    public Entity getInfo() {
+        return new Entity(this, "/services/server/info");
     }
 
     public EntityCollection getInputs() {
@@ -68,6 +73,30 @@ public class Service extends com.splunk.Service {
 
     public EntityCollection getJobs() {
         return new EntityCollection(this, "/services/search/jobs", Job.class);
+    }
+
+    public EntityCollection getLicenseGroups() {
+        return new EntityCollection(this, "/services/licenser/groups");
+    }
+
+    public EntityCollection getLicenseMessages() {
+        return new EntityCollection(this, "/services/licenser/messages");
+    }
+
+    public EntityCollection getLicensePools() {
+        return new EntityCollection(this, "/services/licenser/pools");
+    }
+
+    public EntityCollection getLicenseSlaves() {
+        return new EntityCollection(this, "/services/licenser/slaves");
+    }
+
+    public EntityCollection getLicenseStacks() {
+        return new EntityCollection(this, "/services/licenser/stacks");
+    }
+
+    public EntityCollection getLicenses() {
+        return new EntityCollection(this, "/services/licenser/licenses");
     }
 
     public EntityCollection getLoggers() {
