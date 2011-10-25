@@ -17,7 +17,6 @@
 import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class Program extends com.splunk.sdk.Program {
@@ -32,7 +31,7 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public Service connect() throws IOException {
+    public Service connect() {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
         return service;

@@ -41,7 +41,7 @@ public class Service extends com.splunk.http.Service {
         super(host, port, scheme);
     }
 
-    public Service login(String username, String password) throws IOException {
+    public Service login(String username, String password) {
         HashMap<String, String> args = new HashMap<String, String>();
         args.put("username", username);
         args.put("password", password);
@@ -78,7 +78,7 @@ public class Service extends com.splunk.http.Service {
         }
     }
 
-    public ResponseMessage send(RequestMessage request) throws IOException {
+    public ResponseMessage send(RequestMessage request) {
         request.getHeader().put("Authorization", token);
         return super.send(request);
     }

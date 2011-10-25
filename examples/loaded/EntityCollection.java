@@ -20,7 +20,6 @@
 import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,15 +74,10 @@ public class EntityCollection extends Resource implements Iterable<Entity> {
     }
 
     public void refresh() {
-        try {
-            ResponseMessage response = get();
-            assert(response.getStatus() == 200); // UNDONE
-            AtomFeed feed = AtomFeed.create(response.getContent());
-            load(feed);
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        ResponseMessage response = get();
+        assert(response.getStatus() == 200); // UNDONE
+        AtomFeed feed = AtomFeed.create(response.getContent());
+        load(feed);
     }
 }
 

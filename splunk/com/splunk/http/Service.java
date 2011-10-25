@@ -21,14 +21,17 @@
 package com.splunk.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HttpsURLConnection;
@@ -142,21 +145,21 @@ public class Service {
         this.scheme = value;
     }
 
-    public ResponseMessage get(String path) throws IOException {
+    public ResponseMessage get(String path) {
         return send(new RequestMessage("GET", path));
     }
 
-    public ResponseMessage get(String path, Map<String, String> args)
-        throws IOException 
-    {
+    public ResponseMessage get(String path, Map<String, String> args) {
         if (args != null && args.size() > 0) path = path + "?" + encode(args);
         RequestMessage request = new RequestMessage("GET", path);
         return send(request);
     }
 
-    public ResponseMessage post(String path, Map<String, String> args)
-        throws IOException
-    {
+    public ResponseMessage post(String path) {
+        return post(path, null);
+    }
+
+    public ResponseMessage post(String path, Map<String, String> args) {
         RequestMessage request = new RequestMessage("POST", path);
         request.getHeader().put(
             "Content-Type", "application/x-www-form-urlencoded");
@@ -164,32 +167,49 @@ public class Service {
         return send(request);
     }
 
-    public ResponseMessage delete(String path) throws IOException
-    {
+    public ResponseMessage delete(String path) {
         RequestMessage request = new RequestMessage("DELETE", path);
         return send(request);
     }
 
-    public ResponseMessage delete(String path, Map<String, String> args)
-        throws IOException
-    {
+    public ResponseMessage delete(String path, Map<String, String> args) {
         if (args != null && args.size() > 0) path = path + "?" + encode(args);
         RequestMessage request = new RequestMessage("DELETE", path);
         return send(request);
     }
 
-    public ResponseMessage send(RequestMessage request) throws IOException {
+    public ResponseMessage send(RequestMessage request) {
         String prefix = String.format("%s://%s:%d",
             this.scheme, this.host, this.port);
-        URL url = new URL(prefix + request.getPath());
 
-        HttpURLConnection cn = (HttpURLConnection)url.openConnection();
+        // Construct a full URL to the resource
+        URL url;
+        try {
+            url = new URL(prefix + request.getPath());
+        }
+        catch (MalformedURLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        // Create and initialize the connection object
+        HttpURLConnection cn;
+        try {
+            cn = (HttpURLConnection)url.openConnection();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
 
         // Set the reqeust method
         String method = request.getMethod();
-        cn.setRequestMethod(method);
+        try {
+            cn.setRequestMethod(method);
+        }
+        catch (ProtocolException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
         // Add headers from request message
         Map<String, String> header = request.getHeader();
@@ -204,33 +224,56 @@ public class Service {
         }
 
         // Write out request content, if any
-        Object content = request.getContent();
-        if (content != null) {
-            cn.setDoOutput(true);
-            OutputStream stream = cn.getOutputStream();
-            OutputStreamWriter writer = new OutputStreamWriter(stream);
-            // UNDONE: Figure out how to support streaming request content
-            writer.write((String)content);
-            writer.close();
+        try {
+            Object content = request.getContent();
+            if (content != null) {
+                cn.setDoOutput(true);
+                OutputStream stream = cn.getOutputStream();
+                OutputStreamWriter writer = new OutputStreamWriter(stream);
+                // UNDONE: Figure out how to support streaming request content
+                writer.write((String)content);
+                writer.close();
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
 
         // System.out.format("%s %s => ", method, url.toString());
 
         // Execute the request
-        cn.connect();
+        try {
+            cn.connect();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
-        // UNDONE: Populate response header
-        ResponseMessage response = new ResponseMessage(
-            cn.getResponseCode(),
-            cn.getInputStream());
+        int status;
+        try {
+            status = cn.getResponseCode();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
-        // System.out.format("%d\n", response.getStatus());
+        InputStream input = null;
+        try {
+            input = status >= 400 
+                ? cn.getErrorStream() 
+                : cn.getInputStream();
+        }
+        catch (IOException e) { assert(false); }
+
+        // UNDONE: Populate response headers
+        ResponseMessage response = new ResponseMessage(status, input);
+
+        // System.out.format("%d\n", status);
 
         return response;
     }
 
-    public Object streamConnect(RequestMessage request)
-                                                 throws IOException {
+    public Object streamConnect(RequestMessage request) throws IOException {
         String prefix = String.format("%s://%s:%d",
             this.scheme, this.host, this.port);
         URL url = new URL(prefix + request.getPath());
@@ -267,7 +310,7 @@ public class Service {
             writer.close();
         }
 
-        // perform connection
+        // Execute the request
         cn.connect();
 
         return cn;

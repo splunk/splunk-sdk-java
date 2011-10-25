@@ -47,7 +47,7 @@ public class ServiceTest extends TestCase {
     public ServiceTest() {}
 
     void checkResponse(ResponseMessage response) {
-        assertEquals(response.getStatus(), 200);
+        assertEquals(200, response.getStatus());
         try {
             Document root = parse(response);
             // UNDONE: Check basic structure of ATOM response
@@ -65,7 +65,7 @@ public class ServiceTest extends TestCase {
 
     // Returns the response content as an XML DOM.
     public Document parse(ResponseMessage response) 
-        throws IOException, SAXException 
+        throws IOException, SAXException
     {
         try {
             InputStream content = response.getContent();
@@ -87,48 +87,40 @@ public class ServiceTest extends TestCase {
     }
 
     @Test public void testLogin() throws IOException {
+        ResponseMessage response;
+
         Service service = new Service(
-            program.host, program.port, program.scheme);
-        service.login(program.username, program.password);
-    }
+            program.host, 
+            program.port, 
+            program.scheme);
 
-    @Test public void testLoginFail() throws IOException {
-        Service service = new Service(
-            program.host, program.port, program.scheme);
-
-        try {
-            // Swap username & password so we know this will fail
-            service.login(program.password, program.username);
-            fail("Login was expected to fail");
-        }
-        catch (Exception e) {}
-    }
-
-    @Test public void testLogout() throws IOException {
-        Service service = connect();
+        // Not logged in, should fail with 401
+        response = service.get("/services/authentication/users");
+        assertEquals(response.getStatus(), 401);
 
         // Logged in, request should succeed
-        ResponseMessage response = service.get("/services");
+        service.login(program.username, program.password);
+        response = service.get("/services/authentication/users");
         checkResponse(response);
 
-        // Logged out, the request should fail
+        // Logout, the request should fail with a 401
         service.logout();
-        try {
-            service.get("/services");
-            fail("Expected request to fail");
-        }
-        catch (Exception e) {}
+        response = service.get("/services/authentication/users");
+        assertEquals(response.getStatus(), 401);
     }
 
     // Make a few simple requests and make sure the results look ok.
     @Test public void testGet() throws IOException {
         Service service = connect();
 
+        // Check a few paths that we know exist
         String[] paths = { "/", "/services", "/services/search/jobs" };
-        for (String path : paths) {
-            ResponseMessage response = service.get(path);
-            checkResponse(response);
-        }
+        for (String path : paths)
+            checkResponse(service.get(path));
+
+        // And make sure we get the expected 404
+        ResponseMessage response = service.get("/zippy");
+        assertEquals(response.getStatus(), 404);
     }
 }
 

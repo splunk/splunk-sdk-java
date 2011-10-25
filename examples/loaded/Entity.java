@@ -18,7 +18,6 @@ import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
 import com.splunk.Args;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
@@ -30,17 +29,17 @@ public class Entity extends Resource {
         super(service, path);
     }
 
-    public ResponseMessage get() throws IOException {
+    public ResponseMessage get() {
         return service.get(path);
     }
 
     public void disable() {
-        invoke("disable");
+        service.post(actionPath("disable"));
         invalidate();
     }
 
     public void enable() {
-        invoke("enable");
+        service.post(actionPath("disable"));
         invalidate();
     }
 
@@ -107,7 +106,7 @@ public class Entity extends Resource {
     }
 
     public void update(Args args) {
-        invoke("edit", args);
+        service.post(actionPath("edit"), args);
         invalidate();
     }
 
@@ -130,13 +129,7 @@ public class Entity extends Resource {
     // entity objects?
     //
     static Entity read(Service service, String path) {
-        ResponseMessage response;
-        try {
-            response = service.get(path);
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.create(response.getContent());
         int count = feed.entries.size();
@@ -150,13 +143,7 @@ public class Entity extends Resource {
 
     // Refresh the current (singleton) entity instance.
     public void refresh() {
-        ResponseMessage response;
-        try {
-            response = get();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        ResponseMessage response = get();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.create(response.getContent());
         assert(feed.entries.size() == 1);
@@ -165,8 +152,7 @@ public class Entity extends Resource {
     }
 
     public void remove() {
-        invoke("remove");
-        // UNDONE: would like to set maybe = false on container
+        service.delete(actionPath("remove"));
     }
 }
 

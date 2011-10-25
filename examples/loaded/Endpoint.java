@@ -18,7 +18,6 @@
 
 import com.splunk.http.ResponseMessage;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class Endpoint {
@@ -30,11 +29,11 @@ public class Endpoint {
         this.service = service;
     }
 
-    public ResponseMessage get() throws IOException {
+    public ResponseMessage get() {
         return service.get(path);
     }
 
-    public ResponseMessage get(Map<String, String> args) throws IOException {
+    public ResponseMessage get(Map<String, String> args) {
         return service.get(this.path, args);
     }
 
@@ -42,7 +41,7 @@ public class Endpoint {
         return this.path;
     }
 
-    public ResponseMessage post(Map<String, String> args) throws IOException {
+    public ResponseMessage post(Map<String, String> args) {
         return service.post(this.path, args);
     }
 

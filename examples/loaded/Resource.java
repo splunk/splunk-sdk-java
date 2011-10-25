@@ -18,7 +18,6 @@ import com.splunk.atom.AtomObject;
 import com.splunk.http.ResponseMessage;
 import com.splunk.Args;
 
-import java.io.IOException;
 import java.util.Map;
 
 public abstract class Resource extends Endpoint {
@@ -28,6 +27,11 @@ public abstract class Resource extends Endpoint {
 
     public Resource(Service service, String path) {
         super(service, path);
+    }
+
+    // Returns the path corresponding to the given action.
+    public String actionPath(String action) {
+        return getActions().get(action);
     }
 
     public Map<String, String> getActions() {
@@ -42,27 +46,6 @@ public abstract class Resource extends Endpoint {
 
     public void invalidate() {
         maybe = false;
-    }
-
-    void invoke(String action) {
-        invoke(action, null);
-    }
-
-    void invoke(String action, Args args) {
-        String path = getActions().get(action);
-        if (path == null) {
-            String message = String.format(
-                "Action invalid for this resoruces: '%s'", action);
-            throw new RuntimeException(message);
-        }
-        ResponseMessage response;
-        try {
-            response = service.post(path, args);
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        assert(response.getStatus() == 200); // UNDONE
     }
 
     void load(AtomObject value) {
