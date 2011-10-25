@@ -18,7 +18,6 @@ package com.splunk;
 
 import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
-import com.splunk.Args;
 
 import java.util.Date;
 import java.util.Map;

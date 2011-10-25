@@ -34,10 +34,40 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 public class Service extends com.splunk.http.Service {
-    String token = null;
+    protected String token = null;
+    protected String namespace = null;
+    private String prefix = null;
+
+    public static String DEFAULT_HOST = "localhost";
+    public static int DEFAULT_PORT = 8089;
+    public static String DEFAULT_SCHEME = "https";
+
+    public Service(String host) {
+        super(host);
+    }
+
+    public Service(String host, int port) {
+        super(host, port);
+    }
 
     public Service(String host, int port, String scheme) {
         super(host, port, scheme);
+    }
+
+    public Service(ServiceInfo info) {
+        super();
+        this.host = info.host == null ? DEFAULT_HOST : info.host;
+        this.port = info.port == null ? DEFAULT_PORT : info.port;
+        this.scheme = info.scheme == null ? DEFAULT_SCHEME : info.scheme;
+        this.namespace = info.namespace;
+    }
+
+    protected String fullpath(String path) {
+        if (path.startsWith("/")) 
+            return path;
+        if (namespace == null)
+            return "/services/" + path;
+        return String.format("/servicesNS/%s/%s", namespace, path);
     }
 
     public EntityCollection getApplications() {

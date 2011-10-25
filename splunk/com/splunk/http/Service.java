@@ -46,9 +46,9 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.SSLSocket;
 
 public class Service {
-    String scheme = "https";
-    String host = "localhost";
-    int port = 8089;
+    protected String scheme = "https";
+    protected String host = "localhost";
+    protected int port = 8089;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
         put("User-Agent", "splunk-sdk-java/0.1");
@@ -126,7 +126,8 @@ public class Service {
         try {
             SSLContext context = SSLContext.getInstance("SSL");
             context.init(null, trustAll, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+            HttpsURLConnection.setDefaultSSLSocketFactory(
+                context.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(
                 new HostnameVerifier() {
                     public boolean verify(
