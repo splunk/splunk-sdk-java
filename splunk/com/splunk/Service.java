@@ -184,7 +184,6 @@ public class Service extends com.splunk.http.Service {
         return super.send(request);
     }
 
-    // UNDONE
     public Object streamConnect(RequestMessage request) throws IOException {
         request.getHeader().put("Authorization", token);
         return (Object)super.streamConnect(request);

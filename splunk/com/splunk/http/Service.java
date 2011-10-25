@@ -20,6 +20,7 @@
 
 package com.splunk.http;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.Socket;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -40,6 +42,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLSocket;
 
 public class Service {
     String scheme = "https";
@@ -50,6 +54,16 @@ public class Service {
         put("User-Agent", "splunk-sdk-java/0.1");
         put("Accept", "*/*");
     }};
+
+    TrustManager[] trustAll = new TrustManager[] {
+        new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() { return null; }
+            public void checkClientTrusted(
+                        X509Certificate[] certs, String authType) { }
+            public void checkServerTrusted(
+                        X509Certificate[] certs, String authType) { }
+        }
+    };
 
     public Service() {
         setTrustPolicy();
@@ -109,15 +123,6 @@ public class Service {
 
     // Set trust policy to be used by this instance.
     void setTrustPolicy() {
-        TrustManager[] trustAll = new TrustManager[] {
-            new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() { return null; }
-                public void checkClientTrusted(
-                    X509Certificate[] certs, String authType) { }
-                public void checkServerTrusted(
-                    X509Certificate[] certs, String authType) { }
-            }
-        };
         try {
             SSLContext context = SSLContext.getInstance("SSL");
             context.init(null, trustAll, new java.security.SecureRandom());
@@ -274,57 +279,80 @@ public class Service {
     }
 
     public Object streamConnect(RequestMessage request) throws IOException {
-        String prefix = String.format("%s://%s:%d",
-            this.scheme, this.host, this.port);
-        URL url = new URL(prefix + request.getPath());
+        // https
+        SSLSocketFactory sslsocketfactory;
+        SSLSocket sslsocket;
 
-        HttpURLConnection cn = (HttpURLConnection)url.openConnection();
-        cn.setUseCaches(false);
-        cn.setAllowUserInteraction(false);
-        cn.setDoOutput(true);
-        cn.setChunkedStreamingMode(0);
+        // http
+        Socket socket;
+        OutputStream ostream;
+        DataOutputStream ds;
 
-        // Set the request method
-        cn.setRequestMethod(request.getMethod());
-
-        // Add headers from request message
-        Map<String, String> header = request.getHeader();
-        for (Entry<String, String> entry : header.entrySet()) {
-            cn.setRequestProperty(entry.getKey(), entry.getValue());
-        }
-
-        // Add default headers that were absent from the request message
-        for (Entry<String, String> entry : defaultHeader.entrySet()) {
-            String key = entry.getKey();
-            if (header.containsKey(key)) continue;
-            cn.setRequestProperty(key, entry.getValue());
-
-        }
-
-        // Write out request content, if any
+        Object retsocket;
         Object content = request.getContent();
-        if (content != null) {
-            OutputStream stream = cn.getOutputStream();
-            OutputStreamWriter writer = new OutputStreamWriter(stream);
-            writer.write((String)content);
-            writer.close();
+
+
+        String postString = String.format("POST %s HTTP/1.1\r\n",
+            request.getPath());
+        String hostString = String.format("Host: %s:%d\r\n",
+                this.host, this.port);
+        String authString = String.format("Authorization: %s\r\n",
+                request.getHeader().get("Authorization"));
+
+
+        if (this.scheme.equals("https")) {
+            try {
+                SSLContext context = SSLContext.getInstance("SSL");
+                context.init(null, trustAll, new java.security.SecureRandom());
+
+                sslsocketfactory = context.getSocketFactory();
+            }
+            catch (Exception e) {
+                throw new RuntimeException("Error installing trust manager.");
+            }
+
+            sslsocket = (SSLSocket)sslsocketfactory.createSocket(
+                    this.host, this.port);
+            ostream = sslsocket.getOutputStream();
+            retsocket = sslsocket;
+        } else {
+            socket = new Socket(this.host, this.port);
+            ostream = socket.getOutputStream();
+            retsocket = socket;
         }
 
-        // Execute the request
-        cn.connect();
+        ds = new DataOutputStream(ostream);
+        ds.writeBytes(postString);
+        ds.writeBytes(hostString);
+        ds.writeBytes("Accept-Encoding: identity\r\n");
+        ds.writeBytes(authString);
+        ds.writeBytes("X-Splunk-Input-Mode: Streaming\r\n");
+        ds.writeBytes("\r\n");
+        if (content != null) {
+            ds.writeBytes(content.toString());
+            ds.writeBytes("\r\n");
+        }
 
-        return cn;
+        return retsocket;
     }
 
-    public void streamDisconnect(Object cn) {
-        ((HttpURLConnection) cn).disconnect();
+    public void streamDisconnect(Object cn) throws IOException {
+
+        Socket socket = (Socket)cn;
+        OutputStream sockOutput = socket.getOutputStream();
+        sockOutput.flush();
+        sockOutput.close();
+        socket.close();
     }
 
     public void stream(Object cn, String data) throws IOException {
-        OutputStream stream = ((HttpURLConnection) cn).getOutputStream();
-        OutputStreamWriter writer = new OutputStreamWriter(stream);
-        writer.write(data);
-        writer.close();
+        Socket socket = (Socket)cn;
+        OutputStream ostream = socket.getOutputStream();
+
+        DataOutputStream ds = new DataOutputStream(ostream);
+        ds.writeBytes(data);
+        ds.writeBytes("\r\n");
     }
+
 }
 
