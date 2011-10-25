@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import sun.jvm.hotspot.runtime.ArgumentSizeComputer;
-
 import java.util.Map;
 import java.util.HashMap;
 

@@ -33,12 +33,12 @@ public class Service extends com.splunk.Service {
     }
 
     public List<String> getCapabilities() {
-        return null; // UNDONE
+        Entity caps = Entity.read(this, "/services/authorization/capabilities");
+        return (List<String>)caps.getValue("capabilities");
     }
 
     public Entity getDeploymentClient() {
-        // return new Entity(this, "/services/deployment/client");
-        return null; // UNDONE: Handle case where client does not exist
+        return Entity.read(this, "/services/deployment/client");
     }
 
     public EntityCollection getDeploymentServers() {
@@ -64,7 +64,7 @@ public class Service extends com.splunk.Service {
     }
 
     public Entity getInfo() {
-        return new Entity(this, "/services/server/info");
+        return Entity.read(this, "/services/server/info");
     }
 
     public EntityCollection getInputs() {

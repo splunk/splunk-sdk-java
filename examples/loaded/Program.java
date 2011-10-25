@@ -46,6 +46,10 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public void printEntity(Entity entity) {
+        if (entity == null) {
+            System.out.println("null\n");
+            return;
+        }
         System.out.format("## %s\n", entity.getPath());
         System.out.format("title = %s\n", entity.getTitle());
         printActions(entity.getActions());
@@ -117,8 +121,13 @@ public class Program extends com.splunk.sdk.Program {
         System.out.println("**** Applications ****");
         printEntities(service.getApplications());
 
+        System.out.println("**** Capabilities ****");
+        for (String capability : service.getCapabilities())
+            System.out.println(capability);
+        System.out.println("");
+
         System.out.println("**** DeploymentClient ****");
-        // printEntity(service.getDeploymentClient());
+        printEntity(service.getDeploymentClient());
 
         System.out.println("**** DeploymentServers ****");
         printEntities(service.getDeploymentServers());

@@ -49,36 +49,46 @@ public class Entity extends Resource {
         return this.content;
     }
 
-    protected boolean getBoolean(String key) {
+    boolean getBoolean(String key) {
         return Value.getBoolean(getContent(), key);
     }
 
-    protected boolean getBoolean(String key, boolean defaultValue) {
+    boolean getBoolean(String key, boolean defaultValue) {
         return Value.getBoolean(getContent(), key, defaultValue);
     }
 
-    protected Date getDate(String key) {
+    Date getDate(String key) {
         return Value.getDate(getContent(), key);
     }
 
-    protected float getFloat(String key) {
+    float getFloat(String key) {
         return Value.getFloat(getContent(), key);
     }
 
-    protected int getInteger(String key) {
+    int getInteger(String key) {
         return Value.getInteger(getContent(), key);
     }
 
-    protected int getInteger(String key, int defaultValue) {
+    int getInteger(String key, int defaultValue) {
         return Value.getInteger(getContent(), key, defaultValue);
     }
 
-    protected String getString(String key) {
+    String getString(String key) {
         return getContent().get(key).toString();
     }
 
-    protected String getString(String key, String defaultValue) {
+    String getString(String key, String defaultValue) {
         return Value.getString(getContent(), key, defaultValue);
+    }
+
+    Object getValue(String key) {
+        return getContent().get(key);
+    }
+
+    Object getValue(String key, Object defaultValue) {
+        Map<String, Object> map = getContent();
+        if (!map.containsKey(key)) return defaultValue;
+        return map.get(key);
     }
 
     public String getTitle() {
@@ -101,6 +111,44 @@ public class Entity extends Resource {
         invalidate();
     }
 
+    //
+    // Read and construct a singleton Entity instance. Returns null if no
+    // entity exists at this resource (indicated by a valid Atom response
+    // that does not contain an entry element).
+    //
+    // Note that singleton Entity "reads" are immediate not deferred like
+    // collections because we need to figure out up front if they actually 
+    // exist or not and return null if they do not exist, as can be the case
+    // in eg: deployment/client
+    //
+    // CONSIDER:
+    //   It's possible we could hoist the existence check into a separate 
+    //   code path and only use in the cases (few) where its possible for 
+    //   the entity to not exist and allow the other cases to be deferred.
+    //
+    // UNDONE: How should this singleton factory method interact with typed
+    // entity objects?
+    //
+    static Entity read(Service service, String path) {
+        ResponseMessage response;
+        try {
+            response = service.get(path);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        assert(response.getStatus() == 200); // UNDONE
+        AtomFeed feed = AtomFeed.create(response.getContent());
+        int count = feed.entries.size();
+        if (count == 0) return null;
+        assert(count == 1);
+        AtomEntry entry = feed.entries.get(0);
+        Entity result = new Entity(service, path);
+        result.load(entry);
+        return result;
+    }
+
+    // Refresh the current (singleton) entity instance.
     public void refresh() {
         ResponseMessage response;
         try {
