@@ -14,6 +14,8 @@
  * under the License.
  */
 
+package com.splunk;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +36,12 @@ public class Value {
     }
 
     public static Date getDate(Map<String, Object> map, String key) {
+        return toDate(map.get(key).toString());
+    }
+
+    public static 
+    Date getDate(Map<String, Object> map, String key, Date defaultValue) {
+        if (!map.containsKey(key)) return defaultValue;
         return toDate(map.get(key).toString());
     }
 

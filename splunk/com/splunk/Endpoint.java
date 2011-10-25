@@ -16,107 +16,37 @@
 
 package com.splunk;
 
+import com.splunk.http.ResponseMessage;
+
 import java.util.Map;
-import java.util.HashMap;
 
 public class Endpoint {
+    String path;
+    Service service;
 
-    public Service service = null;
-    public String path = null;
-
-    public Element element = null;
-
-    public Endpoint() {
-
+    public Endpoint(Service service, String path) {
+        this.path = path;
+        this.service = service;
     }
 
-    public Endpoint(Service serv, String pth) {
-        this.service = serv;
-        this.path = pth;
+    public ResponseMessage get() {
+        return service.get(path);
     }
 
-    private String sanePath(String relpath) {
-        // sanity
-        if (path.endsWith("/") && relpath.startsWith("/")) {
-           relpath = relpath.replaceFirst("/", "");
-        } else if (!path.endsWith("/") && !relpath.startsWith("/")) {
-            relpath = "/" + relpath;
-        }
-        return  path + relpath;
+    public ResponseMessage get(Map<String, String> args) {
+        return service.get(this.path, args);
     }
 
-    public Endpoint get(Map<String,String> args) throws Exception {
-        Convert converter = new Convert();
-        if (!args.containsKey("count")) {
-            args.put("count", "-1");
-        }
-        this.element = converter.convertXMLData(service
-                                            .get(path, args)
-                                            .getContent());
-        return this;
+    public String getPath() {
+        return this.path;
     }
 
-    public Endpoint get(String relpath) throws Exception {
-        Convert converter = new Convert();
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("count", "-1");
-
-        this.element = converter.convertXMLData(service
-                                            .get(path + relpath)
-                                            .getContent());
-        return this;
+    public ResponseMessage post(Map<String, String> args) {
+        return service.post(this.path, args);
     }
 
-    public Endpoint get() throws Exception {
-        Convert converter = new Convert();
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("count", "-1");
-        this.element = converter.convertXMLData(service.get(path, args)
-                                                  .getContent());
-        return this;
-    }
-
-
-
-    public Endpoint post(String relpath,
-                        Map<String,String> args) throws Exception {
-        Convert converter = new Convert();
-        String fullpath = sanePath(relpath);
-        this.element = converter.convertXMLData(service
-                                            .post(fullpath, args)
-                                            .getContent());
-        return this;
-    }
-
-    public Endpoint post(String relpath) throws Exception {
-        Map<String,String> args = new HashMap<String,String>();
-        Convert converter = new Convert();
-        // sanity
-        if (path.endsWith("/") && relpath.startsWith("/")) {
-           relpath = relpath.replaceFirst("/", "");
-        } else if (!path.endsWith("/") && !relpath.startsWith("/")) {
-            relpath = "/" + relpath;
-        }
-        this.element = converter.convertXMLData(service
-                                            .post(path + relpath, args)
-                                            .getContent());
-        return this;
-    }
-
-    public Endpoint post(Map<String,String> args) throws Exception {
-        Convert converter = new Convert();
-        this.element = converter.convertXMLData(service
-                                            .post(path, args)
-                                            .getContent());
-        return this;
-    }
-
-    public Endpoint post() throws Exception {
-        Map<String,String> args = new HashMap<String,String>();
-        Convert converter = new Convert();
-        this.element = converter.convertXMLData(service
-                                            .post(path, args)
-                                            .getContent());
-        return this;
+    public Service getService() {
+        return this.service;
     }
 }
+

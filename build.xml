@@ -90,12 +90,13 @@
     </target>
 
     <target name="compile-examples" 
-     depends="compile-examples-spurl,
-              compile-examples-test,
-              compile-examples-index,
-              compile-examples-info,
-              compile-examples-inputs,
-              compile-examples-loaded"/>
+     depends="
+        compile-examples-index,
+        compile-examples-info,
+        compile-examples-inputs,
+        compile-examples-loaded,
+        compile-examples-spurl,
+        compile-examples-test"/>
 
     <target name="compile-examples-spurl" depends="dist-libs">
         <mkdir dir="${dir.build.examples.spurl}"/>
@@ -189,31 +190,19 @@
         </jar>
     </target>
 
-    <target name="dist-examples" depends="compile-examples">
+    <!--
+        dist-examples-index,
+        dist-examples-info,
+        dist-examples-inputs,
+    -->
+    <target name="dist-examples"
+     depends="
+        dist-examples-loaded,
+        dist-examples-spurl,
+        dist-examples-test"/>
+
+    <target name="dist-examples-index" depends="compile-examples-index">
         <mkdir dir="${dir.dist.examples}"/>
-
-        <jar 
-         basedir="${dir.build.examples.spurl}"
-         destfile="${dir.dist.examples}/spurl.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
-
-        <jar 
-         basedir="${dir.build.examples.test}"
-         destfile="${dir.dist.examples}/test.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute name="Class-Path" value="../splunk.jar"/>
-            </manifest>
-        </jar>
-
         <jar 
          basedir="${dir.build.examples.index}"
          destfile="${dir.dist.examples}/index.jar"
@@ -225,7 +214,10 @@
                  value="../splunk.jar ../splunk-sdk.jar"/>
             </manifest>
         </jar>
+    </target>
 
+    <target name="dist-examples-info" depends="compile-examples-info">
+        <mkdir dir="${dir.dist.examples}"/>
         <jar 
          basedir="${dir.build.examples.info}"
          destfile="${dir.dist.examples}/info.jar"
@@ -237,7 +229,10 @@
                  value="../splunk.jar ../splunk-sdk.jar"/>
             </manifest>
         </jar>
+    </target>
 
+    <target name="dist-examples-inputs" depends="compile-examples-inputs">
+        <mkdir dir="${dir.dist.examples}"/>
         <jar 
          basedir="${dir.build.examples.inputs}"
          destfile="${dir.dist.examples}/inputs.jar"
@@ -249,8 +244,10 @@
                  value="../splunk.jar ../splunk-sdk.jar"/>
             </manifest>
         </jar>
+    </target>
 
-
+    <target name="dist-examples-loaded" depends="compile-examples-loaded">
+        <mkdir dir="${dir.dist.examples}"/>
         <jar 
          basedir="${dir.build.examples.loaded}"
          destfile="${dir.dist.examples}/loaded.jar"
@@ -260,6 +257,34 @@
                 <attribute 
                  name="Class-Path" 
                  value="../splunk.jar ../splunk-sdk.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist-examples-spurl" depends="compile-examples-spurl">
+        <mkdir dir="${dir.dist.examples}"/>
+        <jar 
+         basedir="${dir.build.examples.spurl}"
+         destfile="${dir.dist.examples}/spurl.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="../splunk.jar ../splunk-sdk.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist-examples-test" depends="compile-examples-test">
+        <mkdir dir="${dir.dist.examples}"/>
+        <jar 
+         basedir="${dir.build.examples.test}"
+         destfile="${dir.dist.examples}/test.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute name="Class-Path" value="../splunk.jar"/>
             </manifest>
         </jar>
     </target>

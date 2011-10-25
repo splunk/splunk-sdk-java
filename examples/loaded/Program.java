@@ -14,9 +14,9 @@
  * under the License.
  */
 
-import com.splunk.atom.*;
-import com.splunk.http.ResponseMessage;
+import com.splunk.*;
 
+import java.util.Date;
 import java.util.Map;
 
 public class Program extends com.splunk.sdk.Program {
@@ -69,48 +69,120 @@ public class Program extends com.splunk.sdk.Program {
             printEntity(entity);
     }
 
-    public void printJob(Job job) {
-        System.out.format("CursorTime = %s\n", job.getCursorTime().toString());
-        System.out.format("delegate = %s\n", job.getDelegate());
-        System.out.format("DiskUsage = %d\n", job.getDiskUsage());
-        System.out.format("DispatchState = %s\n", job.getDispatchState());
-        System.out.format("DoneProgress = %f\n", job.getDoneProgress());
-        System.out.format("DropCount = %d\n", job.getDropCount());
-        System.out.format("EarliestTime = %s\n", job.getEarliestTime().toString());
-        System.out.format("EventAvailableCount = %d\n", job.getEventAvailableCount());
-        System.out.format("EventCount = %d\n", job.getEventCount());
-        System.out.format("EventFieldCount = %d\n", job.getEventFieldCount());
-        System.out.format("EventIsStreaming = %b\n", job.getEventIsStreaming());
-        System.out.format("EventIsTruncated = %b\n", job.getEventIsTruncated());
-        System.out.format("EventSearch = %s\n", job.getEventSearch());
-        System.out.format("EventSorting = %s\n", job.getEventSorting());
-        System.out.format("Keywords = %s\n", job.getKeywords());
-        System.out.format("Label = %s\n", job.getLabel());
-        System.out.format("LatestTime = %s\n", job.getLatestTime().toString());
-        System.out.format("NumPreviews = %d\n", job.getNumPreviews());
-        System.out.format("Priority = %d\n", job.getPriority());
-        System.out.format("RemoteSearch = %s\n", job.getRemoteSearch());
-        System.out.format("ReportSearch = %s\n", job.getReportSearch());
-        System.out.format("ResultCount = %d\n", job.getResultCount());
-        System.out.format("ResultIsStreaming = %b\n", job.getResultIsStreaming());
-        System.out.format("ResultPreviewCount = %d\n", job.getResultPreviewCount());
-        System.out.format("RunDuration = %f\n", job.getRunDuration());
-        System.out.format("ScanCount = %d\n", job.getScanCount());
-        System.out.format("Search = %s\n", job.getSearch());
-        System.out.format("SearchEarliestTime = %s\n", job.getSearchEarliestTime());
-        System.out.format("SearchLatestTime = %s\n", job.getSearchLatestTime());
-        System.out.format("Sid = %s\n", job.getSid());
-        System.out.format("StatusBuckets = %d\n", job.getStatusBuckets());
-        System.out.format("Ttl = %d\n", job.getTtl());
-        System.out.format("IsDone = %b\n", job.isDone());
-        System.out.format("IsFailed = %b\n", job.isFailed());
-        System.out.format("IsPaused = %b\n", job.isPaused());
-        System.out.format("IsPreviewEnabled = %b\n", job.isPreviewEnabled());
-        System.out.format("IsRealTimeSearch = %b\n", job.isRealTimeSearch());
-        System.out.format("IsRemoteTimeline = %b\n", job.isRemoteTimeline());
-        System.out.format("IsSaved = %b\n", job.isSaved());
-        System.out.format("IsSavedSearch = %b\n", job.isSavedSearch());
-        System.out.format("IsZombie = %s\n", job.isZombie());
+    void printField(String field, boolean value) {
+        System.out.format("%s = %b\n", field, value);
+    }
+
+    void printField(String field, float value) {
+        System.out.format("%s = %f\n", field, value);
+    }
+
+    void printField(String field, Date value) {
+        System.out.format("%s = %s\n", 
+            field, value == null ? "null" : value.toString());
+    }
+
+    void printField(String field, int value) {
+        System.out.format("%s = %d\n", field, value);
+    }
+
+    void printField(String field, String value) {
+        System.out.format("%s = %s\n", field, value == null ? "null" : value);
+    }
+
+    void printIndex(Index index) {
+        System.out.format("## %s\n", index.getTitle());
+        printField("AssureUTF8", index.getAssureUTF8());
+        printField("BlockSignSize", index.getBlockSignSize());
+        printField("BlockSignatureDatabase", index.getBlockSignatureDatabase());
+        printField("ColdPath", index.getColdPath());
+        printField("ColdPathExpanded", index.getColdPathExpanded());
+        printField("ColdToFrozenDir", index.getColdToFrozenDir());
+        printField("ColdToFrozenScript", index.getColdToFrozenScript());
+        printField("CompressRawdata", index.getCompressRawdata());
+        printField("CurrentDBSizeMB", index.getCurrentDBSizeMB());
+        printField("DefaultDatabase", index.getDefaultDatabase());
+        printField("EnableRealtimeSearch", index.getEnableRealtimeSearch());
+        printField("FrozenTimePeriodInSecs", index.getFrozenTimePeriodInSecs());
+        printField("HomePath", index.getHomePath());
+        printField("HomePathExpanded", index.getHomePathExpanded());
+        printField("IndexThreads", index.getIndexThreads());
+        printField("LastInitTime", index.getLastInitTime());
+        printField("MaxConcurrentOptimizes", index.getMaxConcurrentOptimizes());
+        printField("MaxDataSize", index.getMaxDataSize());
+        printField("MaxHotBuckets", index.getMaxHotBuckets());
+        printField("MaxHotIdleSecs", index.getMaxHotIdleSecs());
+        printField("MaxHotSpanSecs", index.getMaxHotSpanSecs());
+        printField("MaxMemMB", index.getMaxMemMB());
+        printField("MaxMetaEntries", index.getMaxMetaEntries());
+        printField("MaxRunningProcessGroups", index.getMaxRunningProcessGroups());
+        printField("MaxTime", index.getMaxTime());
+        printField("MaxTotalDataSizeMB", index.getMaxTotalDataSizeMB());
+        printField("MaxWarmDBCount", index.getMaxWarmDBCount());
+        printField("MemPoolMB", index.getMemPoolMB());
+        printField("MinRawFileSyncSecs", index.getMinRawFileSyncSecs());
+        printField("MinTime", index.getMinTime());
+        printField("PartialServiceMetaPeriod", index.getPartialServiceMetaPeriod());
+        printField("QuarantineFutureSecs", index.getQuarantineFutureSecs());
+        printField("QuarantimePastSecs", index.getQuarantinePastSecs());
+        printField("RawChunkSizeBytes", index.getRawChunkSizeBytes());
+        printField("RotatePeriodInSecs", index.getRotatePeriodInSecs());
+        printField("ServiceMetaPeriod", index.getServiceMetaPeriod());
+        printField("SuppressBannerList", index.getSuppressBannerList());
+        printField("Sync", index.getSync());
+        printField("SyncMeta", index.getSyncMeta());
+        printField("ThawedPath", index.getThawedPath());
+        printField("ThawedPathExpanded", index.getThawedPathExpanded());
+        printField("ThrottleCheckPeriod", index.getThrottleCheckPeriod());
+        printField("TotalEventCount", index.getTotalEventCount());
+        printField("isDisabled", index.isDisabled());
+        printField("isInternal", index.isInternal());
+        System.out.println("");
+    }
+
+    void printJob(Job job) {
+        System.out.format("## %s\n", job.getTitle());
+        printField("CursorTime", job.getCursorTime().toString());
+        printField("delegate", job.getDelegate());
+        printField("DiskUsage", job.getDiskUsage());
+        printField("DispatchState", job.getDispatchState());
+        printField("DoneProgress", job.getDoneProgress());
+        printField("DropCount", job.getDropCount());
+        printField("EarliestTime", job.getEarliestTime().toString());
+        printField("EventAvailableCount", job.getEventAvailableCount());
+        printField("EventCount", job.getEventCount());
+        printField("EventFieldCount", job.getEventFieldCount());
+        printField("EventIsStreaming", job.getEventIsStreaming());
+        printField("EventIsTruncated", job.getEventIsTruncated());
+        printField("EventSearch", job.getEventSearch());
+        printField("EventSorting", job.getEventSorting());
+        printField("Keywords", job.getKeywords());
+        printField("Label", job.getLabel());
+        printField("LatestTime", job.getLatestTime().toString());
+        printField("NumPreviews", job.getNumPreviews());
+        printField("Priority", job.getPriority());
+        printField("RemoteSearch", job.getRemoteSearch());
+        printField("ReportSearch", job.getReportSearch());
+        printField("ResultCount", job.getResultCount());
+        printField("ResultIsStreaming", job.getResultIsStreaming());
+        printField("ResultPreviewCount", job.getResultPreviewCount());
+        printField("RunDuration", job.getRunDuration());
+        printField("ScanCount", job.getScanCount());
+        printField("Search", job.getSearch());
+        printField("SearchEarliestTime", job.getSearchEarliestTime());
+        printField("SearchLatestTime", job.getSearchLatestTime());
+        printField("Sid", job.getSid());
+        printField("StatusBuckets", job.getStatusBuckets());
+        printField("Ttl", job.getTtl());
+        printField("IsDone", job.isDone());
+        printField("IsFailed", job.isFailed());
+        printField("IsPaused", job.isPaused());
+        printField("IsPreviewEnabled", job.isPreviewEnabled());
+        printField("IsRealTimeSearch", job.isRealTimeSearch());
+        printField("IsRemoteTimeline", job.isRemoteTimeline());
+        printField("IsSaved", job.isSaved());
+        printField("IsSavedSearch", job.isSavedSearch());
+        printField("IsZombie", job.isZombie());
         System.out.println("");
     }
 
@@ -141,7 +213,8 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(service.getEventTypes());
 
         System.out.println("**** Indexes ****");
-        printEntities(service.getIndexes());
+        for (Entity index : service.getIndexes())
+            printIndex((Index)index);
 
         System.out.println("**** Jobs ****");
         for (Entity job : service.getJobs())

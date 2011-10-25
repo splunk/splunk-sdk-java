@@ -16,106 +16,181 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
-// UNDONE: testing. may need to perform a get after posts to return
-// same element (as opposed to parent element).
 public class Job extends Entity {
-
-    public Job(Service service, String name) {
-        super(service, "/services/search/jobs/" + name);
+    public Job(Service service, String path) {
+        super(service, path);
     }
 
-    public Job cancel() throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "cancel");
-        super.post("control", args);
-        return this;
+    public Date getCursorTime() {
+        return getDate("cursorTime");
     }
 
-    public Job disable_preview() throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "disablepreview");
-        super.post("control", args);
-        return this;
+    public String getDelegate() {
+        return getString("delegate");
     }
 
-    public Job enable_preview() throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "enablepreview");
-        super.post("control", args);
-        return this;
+    public int getDiskUsage() {
+        return getInteger("diskUsage");
     }
 
-    public Job finalise() throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "finalize");
-        super.post("control", args);
-        return this;
+    public String getDispatchState() {
+        return getString("dispatchState");
     }
 
-    public Job pause() throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "pause");
-        super.post("control", args);
-        return this;
+    public float getDoneProgress() {
+        return getFloat("doneProgress");
     }
 
-    public Job unpause() throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "unpause");
-        super.post("control", args);
-        return this;
+    public int getDropCount() {
+        return getInteger("dropCount");
     }
 
-    public Job setpriority(int priority ) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "setpriority");
-        args.put("priority", Integer.toString(priority));
-        super.post("control", args);
-        return this;
+    public Date getEarliestTime() {
+        return getDate("earliestTime");
     }
 
-    public Job touch() throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "touch");
-        super.post("control", args);
-        return this;
+    public int getEventAvailableCount() {
+        return getInteger("eventAvailableCount");
     }
 
-    public Job setttl(int ttl ) throws Exception {
-        Map<String,String> args = new HashMap<String, String>();
-        args.put("action", "setttl");
-        args.put("ttl", Integer.toString(ttl));
-        super.post("control", args);
-        return this;
+    public int getEventCount() {
+        return getInteger("eventCount");
     }
 
-    /*  UNDONE:
+    public int getEventFieldCount() {
+        return getInteger("eventFieldCount");
+    }
 
-    def events(self, **kwargs):
-        return self.get("events", **kwargs).body
+    public boolean getEventIsStreaming() {
+        return getBoolean("eventIsStreaming");
+    }
 
-    def preview(self, **kwargs):
-        return self.get("results_preview", **kwargs).body
+    public boolean getEventIsTruncated() {
+        return getBoolean("eventIsTruncated");
+    }
 
-    def read(self, *args):
-        response = self.get()
-        content = load(response).entry.content
-        return _filter_content(content, *args)
+    public String getEventSearch() {
+        return getString("eventSearch");
+    }
 
-    def results(self, **kwargs):
-        return self.get("results", **kwargs).body
+    public String getEventSorting() {
+        return getString("eventSorting");
+    }
 
-    def searchlog(self, **kwargs):
-        return self.get("search.log", **kwargs).body
+    public String getKeywords() {
+        return getString("keywords");
+    }
 
-    def summary(self, **kwargs):
-        return self.get("summary", **kwargs).body
+    public String getLabel() {
+        return getString("label");
+    }
 
-    def timeline(self, **kwargs):
-        return self.get("timeline", **kwargs).body
+    public Date getLatestTime() {
+        return getDate("latestTime");
+    }
 
-     */
+    public int getNumPreviews() {
+        return getInteger("numPreviews");
+    }
+
+    public int getPriority() {
+        return getInteger("priority");
+    }
+
+    public String getRemoteSearch() {
+        return getString("remoteSearch");
+    }
+
+    public String getReportSearch() {
+        return getString("reportSearch");
+    }
+
+    public int getResultCount() {
+        return getInteger("resultCount");
+    }
+
+    public boolean getResultIsStreaming() {
+        return getBoolean("resultIsStreaming");
+    }
+
+    public int getResultPreviewCount() {
+        return getInteger("resultPreviewCount");
+    }
+
+    public float getRunDuration() {
+        return getFloat("runDuration");
+    }
+
+    public int getScanCount() {
+        return getInteger("scanCount");
+    }
+
+    public String getSearch() {
+        return getTitle();
+    }
+
+    public String getSearchEarliestTime() {
+        return getString("searchEarliestTime");
+    }
+
+    public String getSearchLatestTime() {
+        return getString("searchLatestTime");
+    }
+
+    public String getSid() {
+        return getString("sid");
+    }
+
+    public int getStatusBuckets() {
+        return getInteger("statusBuckets");
+    }
+
+    public int getTtl() {
+        return getInteger("ttl");
+    }
+
+    public boolean isDone() {
+        return getBoolean("isDone");
+    }
+
+    public boolean isFailed() {
+        return getBoolean("isFailed");
+    }
+
+    public boolean isFinalized() {
+        return getBoolean("isFinalized");
+    }
+
+    public boolean isPaused() {
+        return getBoolean("isPaused");
+    }
+
+    public boolean isPreviewEnabled() {
+        return getBoolean("isPreviewEnabled");
+    }
+
+    public boolean isRealTimeSearch() {
+        return getBoolean("isRealTimeSearch");
+    }
+
+    public boolean isRemoteTimeline() {
+        return getBoolean("isRemoteTimeline");
+    }
+
+    public boolean isSaved() {
+        return getBoolean("isSaved");
+    }
+
+    public boolean isSavedSearch() {
+        return getBoolean("isSavedSearch");
+    }
+
+    public boolean isZombie() {
+        return getBoolean("isZombie");
+    }
+
+    // UNDONE: performance
 }
+

@@ -16,82 +16,215 @@
 
 package com.splunk;
 
-import com.splunk.http.RequestMessage;
+import com.splunk.http.ResponseMessage;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStream;
+import java.util.Date;
 
 public class Index extends Entity {
-
-    private String localname = null;
-    Object cn = null;
-
-    public Index(Service service, String relpath) {
-        super(service, "/services/data/indexes/" + relpath);
-        localname = relpath;
+    public Index(Service service, String path) {
+        super(service, path);
     }
 
-    public void attach() throws IOException {
-        RequestMessage request = new RequestMessage("POST",
-                        "/services/receivers/stream?index=" + localname);
-        request.getHeader().put("Accept-Encoding","identity");
-        request.getHeader().put("X-Splunk-Input-Mode", "Streaming");
-        cn = service.streamConnect(request);
+    public InputStream attach() {
+        return null; // UNDONE
     }
 
-    public Index clean () throws Exception {
-        List<String> list = new ArrayList<String>();
-        list.add("maxTotalDataSizeMB");
-        list.add("frozenTimePeriodInSecs");
-        Map<String,String> saved = super.read(list);
-
-        Map<String,String> reset = new HashMap<String, String>();
-        reset.put("maxTotalDataSizeMB", "1");
-        reset.put("frozenTimePeriodInSecs", "1");
-        super.update(reset);
-        super.post("/roll-hot-buckets");
-
-        List<String> count = new ArrayList<String>();
-        count.add("totalEventCount");
-        Map<String,String> result = new HashMap<String, String>();
-        while (true) {
-            Thread.sleep(1000); // 1000ms (1 second sleep)
-            result = super.read(count);
-            String value = result.get("totalEventCount");
-            if (value.equals("0")) {
-                break;
-            }
-        }
-        super.update(saved);
-        return this;
+    public void clean() {
+        return; // UNDONE
     }
 
-    public void detach() {
-        if (cn != null) {
-            service.streamDisconnect(cn);
-            cn = null;
-        }
+    public boolean getAssureUTF8() {
+        return getBoolean("assureUTF8");
     }
 
-    public void submit(String data) throws Exception {
-        RequestMessage request = new RequestMessage(
-            "POST","/services/receivers/simple?index=" + localname);
-        request.setContent(data);
-        service.send(request);
+    public int getBlockSignSize() {
+        return getInteger("blockSignSize");
     }
 
-    public void stream(String data) throws Exception {
-        service.stream(cn, data);
+    public String getBlockSignatureDatabase() {
+        return getString("blockSignatureDatabase");
     }
 
-    public Index upload(String filename,
-                          Map<String, String> args) throws Exception {
-        args.put("name", filename);
-        args.put("index", localname);
-        service.post("/services/data/inputs/oneshot", args).getContent();
-        return this;
+    public String getColdPath() {
+        return getString("coldPath", null);
+    }
+
+    public String getColdPathExpanded() {
+        return getString("coldPath_expanded", null);
+    }
+
+    public String getColdToFrozenDir() {
+        return getString("coldToFrozenDir", null);
+    }
+
+    public String getColdToFrozenScript() {
+        return getString("coldToFrozenScript", null);
+    }
+
+    public boolean getCompressRawdata() {
+        return getBoolean("compressRawdata");
+    }
+
+    public int getCurrentDBSizeMB() {
+        return getInteger("currentDBSizeMB");
+    }
+
+    public String getDefaultDatabase() {
+        return getString("defaultDatabase");
+    }
+
+    public boolean getEnableRealtimeSearch() {
+        return getBoolean("enableRealtimeSearch");
+    }
+
+    public int getFrozenTimePeriodInSecs() {
+        return getInteger("frozenTimePeriodInSecs");
+    }
+
+    public String getHomePath() {
+        return getString("homePath", null);
+    }
+
+    public String getHomePathExpanded() {
+        return getString("homePath_expanded", null);
+    }
+
+    public String getIndexThreads() {
+        return getString("indexThreads");
+    }
+
+    public String getLastInitTime() {
+        return getString("lastInitTime", null);
+    }
+
+    public int getMaxConcurrentOptimizes() {
+        return getInteger("maxConcurrentOptimizes");
+    }
+
+    public String getMaxDataSize() {
+        return getString("maxDataSize");
+    }
+
+    public int getMaxHotBuckets() {
+        return getInteger("maxHotBuckets");
+    }
+
+    public int getMaxHotIdleSecs() {
+        return getInteger("maxHotIdleSecs");
+    }
+
+    public int getMaxHotSpanSecs() {
+        return getInteger("maxHotSpanSecs");
+    }
+
+    public int getMaxMemMB() {
+        return getInteger("maxMemMB");
+    }
+
+    public int getMaxMetaEntries() {
+        return getInteger("maxMetaEntries");
+    }
+
+    public int getMaxRunningProcessGroups() {
+        return getInteger("maxRunningProcessGroups");
+    }
+
+    public Date getMaxTime() {
+        return getDate("maxTime", null);
+    }
+
+    public int getMaxTotalDataSizeMB() {
+        return getInteger("maxTotalDataSizeMB");
+    }
+
+    public int getMaxWarmDBCount() {
+        return getInteger("maxWarmDBCount");
+    }
+
+    public String getMemPoolMB() {
+        return getString("memPoolMB");
+    }
+
+    public String getMinRawFileSyncSecs() {
+        return getString("minRawFileSyncSecs");
+    }
+
+    public Date getMinTime() {
+        return getDate("minTime", null);
+    }
+
+    public int getPartialServiceMetaPeriod() {
+        return getInteger("partialServiceMetaPeriod");
+    }
+
+    public int getQuarantineFutureSecs() {
+        return getInteger("quarantineFutureSecs");
+    }
+
+    public int getQuarantinePastSecs() {
+        return getInteger("quarantinePastSecs");
+    }
+
+    public int getRawChunkSizeBytes() {
+        return getInteger("rawChunkSizeBytes");
+    }
+
+    public int getRotatePeriodInSecs() {
+        return getInteger("rotatePeriodInSecs");
+    }
+
+    public int getServiceMetaPeriod() {
+        return getInteger("serviceMetaPeriod");
+    }
+
+    public String getSuppressBannerList() {
+        return getString("suppressBannerList", "");
+    }
+
+    public boolean getSync() {
+        return getBoolean("sync");
+    }
+
+    public boolean getSyncMeta() {
+        return getBoolean("syncMeta");
+    }
+
+    public String getThawedPath() {
+        return getString("thawedPath", null);
+    }
+
+    public String getThawedPathExpanded() {
+        return getString("thawedPath_expanded", null);
+    }
+
+    public int getThrottleCheckPeriod() {
+        return getInteger("throttleCheckPeriod");
+    }
+
+    public int getTotalEventCount() {
+        return getInteger("totalEventCount");
+    }
+
+    public boolean isDisabled() {
+        return getBoolean("disabled");
+    }
+
+    public boolean isInternal() {
+        return getBoolean("isInternal");
+    }
+
+    public void rollHotBuckets() {
+        ResponseMessage response = service.post(path + "/roll-hot-buckets");
+        assert(response.getStatus() == 200); // UNDONE
+    }
+
+    public void submit() {
+        return; // UNDONE
+    }
+
+    public void upload() {
+        return; // UNDONE
     }
 }
+

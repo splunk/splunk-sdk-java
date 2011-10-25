@@ -14,9 +14,9 @@
  * under the License.
  */
 
+package com.splunk;
+
 import com.splunk.atom.AtomObject;
-import com.splunk.http.ResponseMessage;
-import com.splunk.Args;
 
 import java.util.Map;
 

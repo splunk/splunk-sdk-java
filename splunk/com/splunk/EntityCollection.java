@@ -14,8 +14,7 @@
  * under the License.
  */
 
-// UNDONE: Implement get/post/delete args
-// UNDONE: Standrad entity methods
+package com.splunk;
 
 import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
