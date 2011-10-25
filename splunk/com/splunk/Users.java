@@ -18,7 +18,7 @@ package com.splunk;
 
 public class Users extends Collection {
 
-    public Users(Service service) {
+    public Users(Service service) throws Exception {
         super(service, "/services/authentication/users/");
     }
 }

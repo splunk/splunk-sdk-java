@@ -17,6 +17,7 @@
 package com.splunk.sdk.tests.com.splunk;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.splunk.Service;
@@ -85,32 +86,32 @@ public class ClientTest extends TestCase {
         Service service = connect();
 
         DeploymentClients dclients =  new DeploymentClients(service);
-        for (String name: dclients.list()) {
+        for (String name: dclients.get().list()) {
             DeploymentClient dclient = new DeploymentClient(service, name);
             dclient.get(); // force a read and do nothing with the data
         }
 
         DeploymentServers dservers =  new DeploymentServers(service);
-        for (String name: dservers.list()) {
+        for (String name: dservers.get().list()) {
             DeploymentServer dserver = new DeploymentServer(service, name);
             dserver.get(); // force a read and do nothing with the data
         }
 
         DeploymentServerclasses dsclasses = new DeploymentServerclasses(service);
-        for (String name: dsclasses.list()) {
+        for (String name: dsclasses.get().list()) {
             DeploymentServerclass dsclass = new DeploymentServerclass(service,
                                                                       name);
             dsclass.get(); // force a read and do nothing with the data
         }
 
         DeploymentTenants dtenants =  new DeploymentTenants(service);
-        for (String name: dtenants.list()) {
+        for (String name: dtenants.get().list()) {
             DeploymentTenant dtenant = new DeploymentTenant(service, name);
             dtenant.get(); // force a read and do nothing with the data
         }
 
         DistributedPeers dpeers =  new DistributedPeers(service);
-        for (String name: dpeers.list()) {
+        for (String name: dpeers.get().list()) {
             DistributedPeer dpeer = new DistributedPeer(service, name);
             dpeer.get(); // force a read and do nothing with the data
         }
@@ -156,33 +157,58 @@ public class ClientTest extends TestCase {
         Service service = connect();
 
         Confs confs = new Confs(service);
-        for (String name: confs.list()) {
+        for (String name: confs.get().list()) {
             Conf conf = new Conf(service, name);
-            conf.get(); // force a read and do nothing with the data
+            conf.get(); // force a read
         }
 
         Assert.assertTrue(confs.contains("props"));
         Conf props = new Conf(service, "props");
+        if (props.get().contains("sdk-tests")) {
+            props.delete("sdk-tests");
+        }
         props.create("sdk-tests");
-        Assert.assertTrue(props.contains("sdk-tests"));
+        Assert.assertTrue(props.get().contains("sdk-tests"));
 
-        /*
-        Map<String,String> map;
         List<String> getme = new ArrayList<String>();
         getme.add("name");
         getme.add("maxDist");
-        props.get("sdk-tests").read(getme);
-        //Assert.assertTrue(props.element.entry.concontainsKey("maxDist"));
+        Assert.assertTrue(
+            props.get("sdk-tests").read(getme).containsKey("maxDist"));
 
-        int value = Integer.parseInt(map.get("maxDist"));
-        map.put("maxDist", Integer.toString(value+1));
-        stanza = props.update("sdk-tests", map);
-        map = stanza.read(getme);
-        int value2 = Integer.parseInt(map.get("maxDist"));
+        // extract maxDist and update it to +1, then compare.
+        int value = Integer.parseInt(
+            props.get("sdk-tests").read(getme).get("maxDist"));
+
+        Map<String,String> updateme = new HashMap<String, String>();
+        updateme.put("maxDist", Integer.toString(value + 1));
+        props.update("sdk-tests", updateme);
+        int value2 = Integer.parseInt(
+            props.get("sdk-tests").read(getme).get("maxDist"));
         Assert.assertEquals(value+1, value2);
-          */
+
         props.delete("sdk-tests");
-        Assert.assertFalse(props.contains("sdk-tests"));
+        Assert.assertFalse(props.get().contains("sdk-tests"));
+    }
+
+    private void wait_event_count(Index index, String value, int seconds) {
+
+        List<String> getme = new ArrayList<String>();
+        getme.add("totalEventCount");
+        while (seconds > 0) {
+            try {
+                Thread.sleep(1000); // 1000ms (1 second sleep)
+                seconds = seconds -1;
+                if (index.get().element.read(getme).get("totalEventCount") ==
+                    value) {
+                    return;
+                }
+            } catch (InterruptedException e) {
+                return;
+            } catch (Exception e) {
+                return;
+            }
+        }
     }
 
     @Test public void testIndexes() throws Exception {
@@ -193,7 +219,7 @@ public class ClientTest extends TestCase {
 
         Indexes indexes = new Indexes(service);
 
-        for (String name: indexes.list()) {
+        for (String name: indexes.get().list()) {
             Index idx = new Index(service, name);
             idx.get(); // force a read and do nothing with the data
         }
@@ -219,7 +245,7 @@ public class ClientTest extends TestCase {
             "rotatePeriodInSecs", "sync", "suppressBannerList",
             "rawChunkSizeBytes", "coldPath", "maxTotalDataSizeMB");
 
-        for (String name: indexes.list()) {
+        for (String name: indexes.get().list()) {
             Index idx = new Index(service, name);
             Map<String,String> map = idx.get().element.read(attrs);
             for (String attr: attrs) {
@@ -229,44 +255,58 @@ public class ClientTest extends TestCase {
 
         Map<String,String> map;
         Index index = new Index(service, "sdk-tests");
-        Element element;
+        // clean
+        index.clean();
+
         List<String> getme = new ArrayList<String>();
         getme.add("disabled");
         getme.add("totalEventCount");
 
-        Assert.assertEquals(index
-                .disable()
-                .get()
-                .element
-                .read(getme)
-                .get("disabled"), "1");
+        Assert.assertEquals(
+            index.disable().get().element.read(getme).get("disabled"),"1");
 
-        Assert.assertEquals(index
-                .enable()
-                .get()
-                .element
-                .read(getme)
-                .get("disabled"), "0");
+        Assert.assertEquals(
+            index.enable().get().element.read(getme).get("disabled"),"0");
 
-        Assert.assertEquals(index
-                .clean()
-                .get()
-                .element
-                .read(getme)
-                .get("totalEventCount"), "0");
+        Assert.assertEquals(
+            index.clean().get().element.read(getme).get("totalEventCount"),"0");
+        // submit events to index
+        index.submit("Hello World.");
+        index.submit("Goodbye world.");
+        wait_event_count(index, "2", 30);
 
+        // clean
+        index.clean();
+        Assert.assertEquals(
+            index.get().element.read(getme).get("totalEventCount"),
+            "0");
+
+        // stream events to index
+        index.attach();
+        index.stream("Hello World.");
+        index.detach();
+
+        wait_event_count(index, "1", 30);
+        Assert.assertEquals(
+            index.get().element.read(getme).get("totalEventCount"),
+            "1");
+
+        index.attach();
+        index.stream("Goodbye World.");
+        index.detach();
+
+        wait_event_count(index, "2", 30);
+        Assert.assertEquals(
+            index.get().element.read(getme).get("totalEventCount"),
+            "2");
+
+        // clean
+        index.clean();
+        Assert.assertEquals(
+            index.get().element.read(getme).get("totalEventCount"),
+            "0");
 /*
-        UNDONE: attach and submit
-
-        cn = index.attach()
-        cn.write("Hello World!")
-        cn.close()
-        wait_event_count(index, '1', 30)
-        self.assertEqual(index['totalEventCount'], '1')
-
-        index.submit("Hello again!!")
-        wait_event_count(index, '2', 30)
-        self.assertEqual(index['totalEventCount'], '2')
+        UNDONE: upload
 
         # test must run on machine where splunkd runs,
         # otherwise an failure is expected
@@ -274,9 +314,6 @@ public class ClientTest extends TestCase {
         index.upload(path.join(testpath, "testfile.txt"))
         wait_event_count(index, '3', 30)
         self.assertEqual(index['totalEventCount'], '3')
-
-        index.clean()
-        self.assertEqual(index['totalEventCount'], '0')
  */
 
     }
@@ -296,7 +333,7 @@ public class ClientTest extends TestCase {
         Map<String,String> map = indexes.get().read(getme);
         Assert.assertTrue(map.size() > 0);
 
-        for (String name: indexes.list()) {
+        for (String name: indexes.get().list()) {
             Entity ent = new Index(service, name);
             map = ent.readmeta();
             Assert.assertTrue(map.size() > 0);
@@ -335,7 +372,7 @@ public class ClientTest extends TestCase {
         getme.add("disabled");
         getme.add("index");
 
-        for (String name: allInputs.list()) {
+        for (String name: allInputs.get().list()) {
             Input input = new Input(service, name);
             for (Entry entry: input.get().element.entry) {
                 if (entry.content.size() > 0) {
@@ -402,7 +439,7 @@ public class ClientTest extends TestCase {
         List<String> getme = new ArrayList<String>();
         getme.add("level");
 
-        for (String name: loggers.list()) {
+        for (String name: loggers.get().list()) {
             Logger logger = new Logger(service, name);
             Map<String,String> levels = logger.get().element.read(getme);
             Assert.assertTrue(expected.contains(levels.get("level")));
@@ -423,10 +460,9 @@ public class ClientTest extends TestCase {
         }
 
         logger.update(saved);
-        Assert.assertEquals(saved.get("level"), logger
-                                        .get()
-                                        .read(getme)
-                                        .get("level"));
+        Assert.assertEquals(
+            saved.get("level"),
+            logger.get().read(getme).get("level"));
     }
 
 
@@ -438,7 +474,7 @@ public class ClientTest extends TestCase {
 
         Messages messages = new Messages(service);
 
-        if (messages.list().contains("sdk-test-message1")) {
+        if (messages.get().list().contains("sdk-test-message1")) {
             messages.delete("sdk-test-message1");
         }
 
@@ -446,7 +482,7 @@ public class ClientTest extends TestCase {
             messages.delete("sdk-test-message2");
         }
 
-        Assert.assertFalse(messages.list().contains("sdk-test-message1"));
+        Assert.assertFalse(messages.get().list().contains("sdk-test-message1"));
         Assert.assertFalse(messages.list().contains("sdk-test-message2"));
 
         //UNDONE: message should be placed into "value" put appears to be placed
@@ -454,7 +490,7 @@ public class ClientTest extends TestCase {
         Map<String,String> args1 = new HashMap<String, String>();
         args1.put("value", "hello.");
         messages.create("sdk-test-message1", args1);
-        Assert.assertTrue(messages.list().contains("sdk-test-message1"));
+        Assert.assertTrue(messages.get().list().contains("sdk-test-message1"));
         Message message1 = new Message(service, "sdk-test-message1");
 
         //UNDONE: message should be placed into "value" put appears to be placed
@@ -462,12 +498,12 @@ public class ClientTest extends TestCase {
         Map<String,String> args2 = new HashMap<String, String>();
         args2.put("value", "world.");
         messages.create("sdk-test-message2", args2);
-        Assert.assertTrue(messages.list().contains("sdk-test-message2"));
+        Assert.assertTrue(messages.get().list().contains("sdk-test-message2"));
         Message message2 = new Message(service, "sdk-test-message2");
 
         messages.delete("sdk-test-message1");
         messages.delete("sdk-test-message2");
-        Assert.assertFalse(messages.list().contains("sdk-test-message1"));
+        Assert.assertFalse(messages.get().list().contains("sdk-test-message1"));
         Assert.assertFalse(messages.list().contains("sdk-test-message2"));
     }
 }

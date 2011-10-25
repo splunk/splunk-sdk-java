@@ -34,9 +34,6 @@ public class Collection extends Endpoint {
 
     public Map<String,String> read(List<String> items) throws Exception {
         Map<String,String> response = new HashMap<String, String>();
-        Map<String,String> count = new HashMap<String, String>();
-        count.put("count", "-1");
-        super.get(count);
         for (String item: items) {
             for (Entry entry: element.entry) {
                 for (String key: entry.content.keySet()) {
@@ -56,13 +53,9 @@ public class Collection extends Endpoint {
 
     public List<String> list() throws Exception {
         List<String> retList = new ArrayList<String>();
-        Map<String,String> count = new HashMap<String, String>();
-        count.put("count", "-1");
-        super.get(count);
-
-         for (Entry entry: element.entry) {
-             retList.add(entry.title);
-         }
+        for (Entry entry: element.entry) {
+            retList.add(entry.title);
+        }
         return retList;
     }
 
@@ -71,10 +64,6 @@ public class Collection extends Endpoint {
         List<String> items = new ArrayList<String>();
         items.add("eai:acl");
         items.add("eai:attributes");
-        Map<String,String> count = new HashMap<String, String>();
-        count.put("count", "-1");
-        super.get(count);
-
         for (String item: items) {
             for (Entry entry: element.entry) {
                 for (String key: entry.content.keySet()) {
@@ -91,14 +80,11 @@ public class Collection extends Endpoint {
     // relative path that has at least one character.
     public Collection delete(String relpath,
                           Map<String,String> args) throws Exception {
-        if (relpath.length() == 0) {
-            throw new Exception("Must supply relative path");
-        }
         Convert converter = new Convert();
         // sanitize: remove double "//" and add when none exist
         if (path.endsWith("/") && relpath.startsWith("/")) {
            relpath = relpath.replaceFirst("/", "");
-        } else if (!path.endsWith("/") && !relpath.endsWith("/")) {
+        } else if (!path.endsWith("/") && !relpath.startsWith("/")) {
             relpath = "/" + relpath;
         }
         service.delete(path + relpath, args).getContent();
@@ -130,5 +116,10 @@ public class Collection extends Endpoint {
     public Collection create(String name) throws Exception {
         Map<String,String> args = new HashMap<String, String>();
         return create(name, args);
+    }
+
+    public Collection get() throws Exception {
+        super.get();
+        return this;
     }
 }

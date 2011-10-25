@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import sun.jvm.hotspot.runtime.ArgumentSizeComputer;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -31,21 +33,37 @@ public class Endpoint {
     }
 
     public Endpoint(Service serv, String pth) {
-        service = serv;
-        path = pth;
+        this.service = serv;
+        this.path = pth;
+    }
+
+    private String sanePath(String relpath) {
+        // sanity
+        if (path.endsWith("/") && relpath.startsWith("/")) {
+           relpath = relpath.replaceFirst("/", "");
+        } else if (!path.endsWith("/") && !relpath.startsWith("/")) {
+            relpath = "/" + relpath;
+        }
+        return  path + relpath;
     }
 
     public Endpoint get(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        element = converter.convertXMLData(service
-                                            .get(path,args)
+        if (!args.containsKey("count")) {
+            args.put("count", "-1");
+        }
+        this.element = converter.convertXMLData(service
+                                            .get(path, args)
                                             .getContent());
         return this;
     }
 
     public Endpoint get(String relpath) throws Exception {
         Convert converter = new Convert();
-        element = converter.convertXMLData(service
+        Map<String,String> args = new HashMap<String, String>();
+        args.put("count", "-1");
+
+        this.element = converter.convertXMLData(service
                                             .get(path + relpath)
                                             .getContent());
         return this;
@@ -53,7 +71,10 @@ public class Endpoint {
 
     public Endpoint get() throws Exception {
         Convert converter = new Convert();
-        element = converter.convertXMLData(service.get(path).getContent());
+        Map<String,String> args = new HashMap<String, String>();
+        args.put("count", "-1");
+        this.element = converter.convertXMLData(service.get(path, args)
+                                                  .getContent());
         return this;
     }
 
@@ -62,8 +83,9 @@ public class Endpoint {
     public Endpoint post(String relpath,
                         Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        element = converter.convertXMLData(service
-                                            .post(path + relpath, args)
+        String fullpath = sanePath(relpath);
+        this.element = converter.convertXMLData(service
+                                            .post(fullpath, args)
                                             .getContent());
         return this;
     }
@@ -71,7 +93,13 @@ public class Endpoint {
     public Endpoint post(String relpath) throws Exception {
         Map<String,String> args = new HashMap<String,String>();
         Convert converter = new Convert();
-        element = converter.convertXMLData(service
+        // sanity
+        if (path.endsWith("/") && relpath.startsWith("/")) {
+           relpath = relpath.replaceFirst("/", "");
+        } else if (!path.endsWith("/") && !relpath.startsWith("/")) {
+            relpath = "/" + relpath;
+        }
+        this.element = converter.convertXMLData(service
                                             .post(path + relpath, args)
                                             .getContent());
         return this;
@@ -79,7 +107,7 @@ public class Endpoint {
 
     public Endpoint post(Map<String,String> args) throws Exception {
         Convert converter = new Convert();
-        element = converter.convertXMLData(service
+        this.element = converter.convertXMLData(service
                                             .post(path, args)
                                             .getContent());
         return this;
@@ -88,7 +116,7 @@ public class Endpoint {
     public Endpoint post() throws Exception {
         Map<String,String> args = new HashMap<String,String>();
         Convert converter = new Convert();
-        element = converter.convertXMLData(service
+        this.element = converter.convertXMLData(service
                                             .post(path, args)
                                             .getContent());
         return this;

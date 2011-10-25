@@ -89,5 +89,6 @@ public class Entity extends Endpoint {
         super.get();
         return this;
     }
+
 }
 

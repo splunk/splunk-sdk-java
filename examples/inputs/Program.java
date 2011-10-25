@@ -46,9 +46,7 @@ public class Program extends com.splunk.sdk.Program {
 
                 System.out.println();
                 try {
-                    Input subInput = new Input(service,
-                                                entry.title,
-                                                base.title);
+                    Input subInput = new Input(service,entry.title,base.title);
                     for (Entry sub: subInput.get().element.entry) {
                         System.out.println("    :"
                                 + sub.title + " --> " + sub.content);

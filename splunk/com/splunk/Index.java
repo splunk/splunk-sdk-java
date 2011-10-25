@@ -19,8 +19,6 @@ package com.splunk;
 import com.splunk.http.RequestMessage;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +27,7 @@ import java.util.Map;
 public class Index extends Entity {
 
     private String localname = null;
-    HttpURLConnection cn = null;
+    Object cn = null;
 
     public Index(Service service, String relpath) {
         super(service, "/services/data/indexes/" + relpath);
@@ -39,8 +37,9 @@ public class Index extends Entity {
     public void attach() throws IOException {
         RequestMessage request = new RequestMessage("POST",
                         "/services/receivers/stream?index=" + localname);
+        request.getHeader().put("Accept-Encoding","identity");
         request.getHeader().put("X-Splunk-Input-Mode", "Streaming");
-        cn = service.streamingConnection(request, service.token);
+        cn = service.streamConnect(request);
     }
 
     public Index clean () throws Exception {
@@ -70,22 +69,28 @@ public class Index extends Entity {
         return this;
     }
 
-    public void submit(String data) throws Exception {
-
-        if (cn == null) {
-            throw new Exception("Connection not established");
+    public void detach() {
+        if (cn != null) {
+            service.streamDisconnect(cn);
+            cn = null;
         }
+    }
 
+    public void submit(String data) throws Exception {
+        RequestMessage request = new RequestMessage(
+            "POST","/services/receivers/simple?index=" + localname);
+        request.setContent(data);
+        service.send(request);
+    }
+
+    public void stream(String data) throws Exception {
         service.stream(cn, data);
     }
 
     public Index upload(String filename,
                           Map<String, String> args) throws Exception {
         args.put("name", filename);
-        args.put("index", localname); // established at class instantiation
-        // not a base-relative path
-        // need to reach into the endpoints class to post
-        Convert converter = new Convert();
+        args.put("index", localname);
         service.post("/services/data/inputs/oneshot", args).getContent();
         return this;
     }

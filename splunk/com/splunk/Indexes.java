@@ -21,9 +21,4 @@ public class Indexes extends Collection {
     public Indexes(Service service) {
         super(service, "/services/data/indexes/");
     }
-
-    public Indexes get() throws Exception {
-        super.get();
-        return this;
-    }
 }

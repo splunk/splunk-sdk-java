@@ -229,9 +229,8 @@ public class Service {
         return response;
     }
 
-    public HttpURLConnection streamingConnection(RequestMessage request,
-                                                 String token)
-                                                        throws IOException {
+    public Object streamConnect(RequestMessage request)
+                                                 throws IOException {
         String prefix = String.format("%s://%s:%d",
             this.scheme, this.host, this.port);
         URL url = new URL(prefix + request.getPath());
@@ -240,12 +239,10 @@ public class Service {
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
         cn.setDoOutput(true);
+        cn.setChunkedStreamingMode(0);
 
-        // Set the reqeust method
+        // Set the request method
         cn.setRequestMethod(request.getMethod());
-
-        // set our authorization token
-        request.getHeader().put("Authorization", token);
 
         // Add headers from request message
         Map<String, String> header = request.getHeader();
@@ -258,6 +255,7 @@ public class Service {
             String key = entry.getKey();
             if (header.containsKey(key)) continue;
             cn.setRequestProperty(key, entry.getValue());
+
         }
 
         // Write out request content, if any
@@ -269,25 +267,21 @@ public class Service {
             writer.close();
         }
 
-        // perform
+        // perform connection
         cn.connect();
 
         return cn;
     }
 
-    public void stream(HttpURLConnection cn, String content)
-                                                        throws IOException {
+    public void streamDisconnect(Object cn) {
+        ((HttpURLConnection) cn).disconnect();
+    }
 
-        if (content != null && content.length() > 0) {
-            System.out.println("writing ... " + content);
-            OutputStream stream = cn.getOutputStream();
-            OutputStreamWriter writer = new OutputStreamWriter(stream);
-            writer.write(content);
-            writer.close();
-
-            // perform
-            cn.connect();
-        }
+    public void stream(Object cn, String data) throws IOException {
+        OutputStream stream = ((HttpURLConnection) cn).getOutputStream();
+        OutputStreamWriter writer = new OutputStreamWriter(stream);
+        writer.write(data);
+        writer.close();
     }
 }
 

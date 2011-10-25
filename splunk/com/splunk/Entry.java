@@ -33,7 +33,7 @@ public class Entry {
     public Map<String,String> author = new HashMap<String, String>();
     public Map<String,String> content = new HashMap<String, String>();
 
-    // UNDONE (add more) -- access routines for extracting content information.
+    // UNDONE -- access routines for extracting content information.
 
     public Map<String,String> read(List<String> items) {
         Map<String,String> response = new HashMap<String, String>();

@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+
 public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
         Program program = new Program();
@@ -39,12 +43,9 @@ public class Program extends com.splunk.sdk.Program {
         service.login(this.username, this.password);
 
         Indexes indexes =  new Indexes(service);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-        // optional information to dump out
-        // indexes.get().dumpElement();
-        //System.out.println("Index list: " + indexes.list() + "\n");
-
-        for (String index: indexes.list()) {
+        for (String index: indexes.get().list()) {
             Index idx = new Index(service, index);
             List<String> item = new ArrayList<String>();
             item.add("totalEventCount");
@@ -53,13 +54,13 @@ public class Program extends com.splunk.sdk.Program {
         }
 
         Index idx = new Index(service, "sdk-tests");
-        idx.clean();
+        String date = sdf.format(new Date());
 
+        // stream method
         idx.attach();
-        idx.submit("ONE");
-        idx.submit("TWO");
-        idx.submit("THREE");
-
-        System.out.println("fofofofo");
+        idx.stream(date + " ONE");
+        idx.stream(date + " TWO");
+        idx.stream(date + " THREE");
+        idx.detach();
     }
 }

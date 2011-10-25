@@ -44,8 +44,11 @@ public class Conf extends Collection  {
         return this;
     }
 
-    public Conf get(String relpath) throws Exception {
-        super.get(relpath);
+    public Conf get(String stanza) throws Exception {
+        if (!stanza.startsWith("/")) {
+            stanza = "/" + stanza;
+        }
+        super.get(stanza);
         return this;
     }
 }

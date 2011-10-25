@@ -82,5 +82,10 @@ public class Service extends com.splunk.http.Service {
         request.getHeader().put("Authorization", token);
         return super.send(request);
     }
+
+    public Object streamConnect(RequestMessage request) throws IOException {
+        request.getHeader().put("Authorization", token);
+        return (Object)super.streamConnect(request);
+    }
 }
 
