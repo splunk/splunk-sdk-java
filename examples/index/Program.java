@@ -14,13 +14,15 @@
  * under the License.
  */
 
+import com.splunk.EntityCollection;
 import com.splunk.Service;
-import com.splunk.Indexes;
 import com.splunk.Index;
+import com.splunk.Entity;
 
-import java.util.List;
+import java.io.DataOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.Map;
-import java.util.ArrayList;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -42,25 +44,34 @@ public class Program extends com.splunk.sdk.Program {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        Indexes indexes =  new Indexes(service);
+        EntityCollection indexes = service.getIndexes();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-        for (String index: indexes.get().list()) {
-            Index idx = new Index(service, index);
-            List<String> item = new ArrayList<String>();
-            item.add("totalEventCount");
-            Map<String,String> data = idx.read(item);
-            System.out.println(index+" ("+data.get("totalEventCount")+")");
+        Map<String, Entity> all = indexes.getEntities();
+        for (String name: all.keySet()) {
+            Entity entity = all.get(name);
+            System.out.println(
+                entity.getTitle() +
+                " (" + entity.getContent().get("totalEventCount") + ")");
         }
 
         Index idx = new Index(service, "sdk-tests");
         String date = sdf.format(new Date());
 
+        // submit method
+
+        idx.submit(date + " 1");
+        idx.submit(date + " 2");
+        idx.submit(date + " 3");
+
         // stream method
-        idx.attach();
-        idx.stream(date + " ONE");
-        idx.stream(date + " TWO");
-        idx.stream(date + " THREE");
-        idx.detach();
+        Socket sock = idx.attach();
+        OutputStream ostream = sock.getOutputStream();
+        DataOutputStream ds = new DataOutputStream(ostream);
+
+        ds.writeBytes(date + " ONE\r\n");
+        ds.writeBytes(date + " TWO\r\n");
+        ds.writeBytes(date + " THREE\r\n");
+        sock.close();
     }
 }

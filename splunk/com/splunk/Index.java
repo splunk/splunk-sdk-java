@@ -17,17 +17,36 @@
 package com.splunk;
 
 import com.splunk.http.ResponseMessage;
+import com.splunk.http.RequestMessage;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.DataOutputStream;
 import java.util.Date;
+import java.net.Socket;
+
 
 public class Index extends Entity {
     public Index(Service service, String path) {
         super(service, path);
     }
 
-    public InputStream attach() {
-        return null; // UNDONE
+    public Socket attach() throws IOException {
+        Socket sock = service.streamConnect();
+        OutputStream ostream = sock.getOutputStream();
+        DataOutputStream ds = new DataOutputStream(ostream);
+
+        ds.writeBytes(String.format(
+            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n", path));
+        ds.writeBytes(String.format(
+            "Host: %s:%d\r\n", service.getHost(), service.getPort()));
+        ds.writeBytes("Accept-Encoding: identity\r\n");
+        ds.writeBytes(String.format(
+             "Authorization: %s\r\n", service.token));
+        ds.writeBytes("X-Splunk-Input-Mode: Streaming\r\n");
+        ds.writeBytes("\r\n");
+
+        return sock;
     }
 
     public void clean() {
@@ -219,8 +238,11 @@ public class Index extends Entity {
         assert(response.getStatus() == 200); // UNDONE
     }
 
-    public void submit() {
-        return; // UNDONE
+    public void submit(String data) {
+        RequestMessage request = new RequestMessage(
+            "POST","/services/receivers/simple?index=" + path);
+        request.setContent(data);
+        service.send(request);
     }
 
     public void upload() {

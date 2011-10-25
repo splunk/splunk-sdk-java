@@ -20,7 +20,6 @@
 
 package com.splunk.http;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,7 +42,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.SSLSocket;
 
 public class Service {
     protected String scheme = "https";
@@ -279,29 +277,10 @@ public class Service {
         return response;
     }
 
-    public Object streamConnect(RequestMessage request) throws IOException {
-        // https
-        SSLSocketFactory sslsocketfactory;
-        SSLSocket sslsocket;
-
-        // http
-        Socket socket;
-        OutputStream ostream;
-        DataOutputStream ds;
-
-        Object retsocket;
-        Object content = request.getContent();
-
-
-        String postString = String.format("POST %s HTTP/1.1\r\n",
-            request.getPath());
-        String hostString = String.format("Host: %s:%d\r\n",
-                this.host, this.port);
-        String authString = String.format("Authorization: %s\r\n",
-                request.getHeader().get("Authorization"));
-
+    public Socket streamConnect() throws IOException {
 
         if (this.scheme.equals("https")) {
+            SSLSocketFactory sslsocketfactory;
             try {
                 SSLContext context = SSLContext.getInstance("SSL");
                 context.init(null, trustAll, new java.security.SecureRandom());
@@ -312,48 +291,10 @@ public class Service {
                 throw new RuntimeException("Error installing trust manager.");
             }
 
-            sslsocket = (SSLSocket)sslsocketfactory.createSocket(
-                    this.host, this.port);
-            ostream = sslsocket.getOutputStream();
-            retsocket = sslsocket;
+            return sslsocketfactory.createSocket(this.host, this.port);
         } else {
-            socket = new Socket(this.host, this.port);
-            ostream = socket.getOutputStream();
-            retsocket = socket;
+            return new Socket(this.host, this.port);
         }
-
-        ds = new DataOutputStream(ostream);
-        ds.writeBytes(postString);
-        ds.writeBytes(hostString);
-        ds.writeBytes("Accept-Encoding: identity\r\n");
-        ds.writeBytes(authString);
-        ds.writeBytes("X-Splunk-Input-Mode: Streaming\r\n");
-        ds.writeBytes("\r\n");
-        if (content != null) {
-            ds.writeBytes(content.toString());
-            ds.writeBytes("\r\n");
-        }
-
-        return retsocket;
     }
-
-    public void streamDisconnect(Object cn) throws IOException {
-
-        Socket socket = (Socket)cn;
-        OutputStream sockOutput = socket.getOutputStream();
-        sockOutput.flush();
-        sockOutput.close();
-        socket.close();
-    }
-
-    public void stream(Object cn, String data) throws IOException {
-        Socket socket = (Socket)cn;
-        OutputStream ostream = socket.getOutputStream();
-
-        DataOutputStream ds = new DataOutputStream(ostream);
-        ds.writeBytes(data);
-        ds.writeBytes("\r\n");
-    }
-
 }
 
