@@ -25,18 +25,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class EntityCollection extends Resource implements Map<String, Entity> {
-    private Map<String, Entity> entities;
-
-    Class entityClass = Entity.class;
+public class EntityCollection<T extends Entity> extends Resource implements Map<String, T> {
+    private Map<String, T> entities;
+    private Class<? extends Entity> entityClass;
 
     public EntityCollection(Service service, String path) {
         super(service, path);
+        entityClass = Entity.class;
     }
-
-    public EntityCollection(Service service, String path, Class entityClass) {
+    
+    public EntityCollection(Service service, String path, Class<T> cls) {
         super(service, path);
-        this.entityClass = entityClass;
+        entityClass = cls;
     }
 
     public void clear() {
@@ -57,7 +57,7 @@ public class EntityCollection extends Resource implements Map<String, Entity> {
         return null; // UNDONE
     }
 
-    public Set<Map.Entry<String, Entity>> entrySet() {
+    public Set<Map.Entry<String, T>> entrySet() {
         validate();
         return entities.entrySet();
     }
@@ -67,7 +67,7 @@ public class EntityCollection extends Resource implements Map<String, Entity> {
         return entities.equals(o);
     }
 
-    public Entity get(Object key) {
+    public T get(Object key) {
         validate();
         return entities.get(key);
     }
@@ -94,10 +94,10 @@ public class EntityCollection extends Resource implements Map<String, Entity> {
                 new Class[] { Service.class, String.class });
             Object[] args = new Object[2];
             args[0] = service;
-            this.entities = new HashMap<String, Entity>();
+            this.entities = new HashMap<String, T>();
             for (AtomEntry entry : value.entries) {
                 args[1] = entry.id;
-                Entity entity = (Entity)ctor.newInstance(args);
+                T entity = (T)ctor.newInstance(args);
                 entity.load(entry);
                 this.entities.put(entry.id, entity);
             }
@@ -105,14 +105,15 @@ public class EntityCollection extends Resource implements Map<String, Entity> {
         catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }    
+    
+    public T put(String key, T value) {
+    	throw new UnsupportedOperationException();
     }
-
-    public Entity put(String key, Entity value) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void putAll(Map<? extends String, ? extends Entity> map) {
-        throw new UnsupportedOperationException();
+    	  	
+    		  	
+    public void putAll(Map<? extends String, ? extends T> map) {
+    	throw new UnsupportedOperationException();
     }
 
     public void refresh() {
@@ -122,9 +123,9 @@ public class EntityCollection extends Resource implements Map<String, Entity> {
         load(feed);
     }
 
-    public Entity remove(Object key) {
+    public T remove(Object key) {
         validate();
-        Entity entity = entities.get(key);
+        T entity = entities.get(key);
         entity.remove();
         entities.remove(key);
         invalidate();
@@ -136,9 +137,8 @@ public class EntityCollection extends Resource implements Map<String, Entity> {
         return entities.size();
     }
 
-    public Collection<Entity> values() {
+    public Collection<T> values() {
         validate();
         return entities.values();
     }
 }
-
