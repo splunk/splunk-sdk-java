@@ -23,7 +23,6 @@ import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Collection;
-import java.util.Iterator;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -49,7 +48,6 @@ public class Program extends com.splunk.sdk.Program {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
         Collection<Entity> all = indexes.values();
-        Iterator<Entity> itr = all.iterator();
 
         for (Entity entity: indexes.values()) {
             System.out.println(
