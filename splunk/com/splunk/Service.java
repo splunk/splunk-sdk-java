@@ -14,7 +14,6 @@
  * under the License.
  */
 
-// UNDONE: storage/passwords
 // UNDONE: getAlerts
 // UNDONE: getOutputs
 // UNDONE: public Object parse(String query) {}
@@ -150,13 +149,13 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection<Entity>(this, "server/logger");
     }
 
-    public EntityCollection getMessages() {
-        return new EntityCollection(this, "messages", Message.class);
+    public EntityCollection<Message> getMessages() {
+        return new EntityCollection<Message>(this, "messages", Message.class);
     }
 
     public EntityCollection getPasswords() {
-        // UNDONE: Figure out which version of the product this showed up in
-        return new EntityCollection(this, "storage/passwords");
+        // Starting with 4.3 this is available at "storage/passwords"
+        return new EntityCollection(this, "admin/passwords");
     }
 
     public EntityCollection<Entity> getRoles() {

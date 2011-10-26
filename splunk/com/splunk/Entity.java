@@ -30,10 +30,6 @@ public class Entity extends Resource {
         super(service, path);
     }
 
-    public ResponseMessage get() {
-        return service.get(path);
-    }
-
     public void disable() {
         service.post(actionPath("disable"));
         invalidate();
@@ -42,6 +38,10 @@ public class Entity extends Resource {
     public void enable() {
         service.post(actionPath("disable"));
         invalidate();
+    }
+
+    public ResponseMessage get() {
+        return service.get(path);
     }
 
     public Map<String, Object> getContent() {
@@ -93,6 +93,13 @@ public class Entity extends Resource {
         Map<String, Object> map = getContent();
         if (!map.containsKey(key)) return defaultValue;
         return map.get(key);
+    }
+
+    // The name is also the entities "key" within its container collection
+    // and is usually the same as its title, although in eg: the case of 
+    // search jobs it is the sid.
+    public String getName() {
+        return getTitle();
     }
 
     public String getTitle() {
