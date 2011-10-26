@@ -150,8 +150,13 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection(this, "server/logger");
     }
 
-    public Object getMessages() {
-        return null; // UNDONE
+    public EntityCollection getMessages() {
+        return new EntityCollection(this, "messages", Message.class);
+    }
+
+    public EntityCollection getPasswords() {
+        // UNDONE: Figure out which version of the product this showed up in
+        return new EntityCollection(this, "storage/passwords");
     }
 
     public EntityCollection getRoles() {

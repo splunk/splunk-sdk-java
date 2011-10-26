@@ -45,12 +45,13 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public void printEntity(Entity entity) {
+        System.out.println("");
         if (entity == null) {
-            System.out.println("null\n");
+            System.out.println("null");
             return;
         }
-        System.out.format("## %s\n", entity.getPath());
-        System.out.format("title = %s\n", entity.getTitle());
+        System.out.format("## %s\n", entity.getTitle());
+        System.out.format("path = %s\n", entity.getPath());
         printActions(entity.getActions());
         Map<String, Object> content = entity.getContent();
         if (content != null) {
@@ -59,11 +60,10 @@ public class Program extends com.splunk.sdk.Program {
                     entry.getKey(), entry.getValue().toString());
             }
         }
-        System.out.println("");
     }
 
     public void printEntities(EntityCollection entities) {
-        System.out.format("# %s\n", entities.getPath());
+        System.out.format("\n# %s\n", entities.getPath());
         printActions(entities.getActions());
         for (Entity entity : entities.values()) 
             printEntity(entity);
@@ -91,7 +91,7 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     void printIndex(Index index) {
-        System.out.format("## %s\n", index.getTitle());
+        printEntity(index);
         printField("AssureUTF8", index.getAssureUTF8());
         printField("BlockSignSize", index.getBlockSignSize());
         printField("BlockSignatureDatabase", index.getBlockSignatureDatabase());
@@ -137,11 +137,10 @@ public class Program extends com.splunk.sdk.Program {
         printField("TotalEventCount", index.getTotalEventCount());
         printField("isDisabled", index.isDisabled());
         printField("isInternal", index.isInternal());
-        System.out.println("");
     }
 
     void printJob(Job job) {
-        System.out.format("## %s\n", job.getTitle());
+        printEntity(job);
         printField("CursorTime", job.getCursorTime().toString());
         printField("delegate", job.getDelegate());
         printField("DiskUsage", job.getDiskUsage());
@@ -183,74 +182,89 @@ public class Program extends com.splunk.sdk.Program {
         printField("IsSaved", job.isSaved());
         printField("IsSavedSearch", job.isSavedSearch());
         printField("IsZombie", job.isZombie());
-        System.out.println("");
+    }
+
+    void printMessage(Message message) {
+        printEntity(message);
+        printField("Key", message.getKey());
+        printField("Value", message.getValue());
     }
 
     public void run() throws Exception {
         Service service = connect();
 
-        System.out.println("**** Applications ****");
+        System.out.print("\n**** Applications ****");
         printEntities(service.getApplications());
 
-        System.out.println("**** Capabilities ****");
+        System.out.print("\n**** Capabilities ****\n");
         for (String capability : service.getCapabilities())
             System.out.println(capability);
-        System.out.println("");
 
-        System.out.println("**** DeploymentClient ****");
+        System.out.print("\n**** DeploymentClient ****");
         printEntity(service.getDeploymentClient());
 
-        System.out.println("**** DeploymentServers ****");
+        System.out.print("\n**** DeploymentServers ****");
         printEntities(service.getDeploymentServers());
 
-        System.out.println("**** DeploymentServerClasses ****");
+        System.out.print("\n**** DeploymentServerClasses ****");
         printEntities(service.getDeploymentServerClasses());
 
-        System.out.println("**** DeploymentTenants ****");
+        System.out.print("\n**** DeploymentTenants ****");
         printEntities(service.getDeploymentTenants());
 
-        System.out.println("**** EventTypes ****");
+        System.out.print("\n**** EventTypes ****");
         printEntities(service.getEventTypes());
 
-        System.out.println("**** Indexes ****");
+        System.out.print("\n**** Indexes ****");
         for (Entity index : service.getIndexes().values())
             printIndex((Index)index);
 
-        System.out.println("**** Jobs ****");
+        System.out.print("\n**** Info ****");
+        printEntity(service.getInfo());
+
+        System.out.print("\n**** Jobs ****");
         for (Entity job : service.getJobs().values())
             printJob((Job)job);
 
-        System.out.println("**** LicenseGroups ****");
+        System.out.print("\n**** LicenseGroups ****");
         printEntities(service.getLicenseGroups());
 
-        System.out.println("**** LicenseMessages ****");
+        System.out.print("\n**** LicenseMessages ****");
         printEntities(service.getLicenseMessages());
 
-        System.out.println("**** LicensePools ****");
+        System.out.print("\n**** LicensePools ****");
         printEntities(service.getLicensePools());
 
-        System.out.println("**** LicenseSlaves ****");
+        System.out.print("\n**** LicenseSlaves ****");
         printEntities(service.getLicenseSlaves());
 
-        System.out.println("**** LicenseStacks ****");
+        System.out.print("\n**** LicenseStacks ****");
         printEntities(service.getLicenseStacks());
 
-        System.out.println("**** Licenses ****");
+        System.out.print("\n**** Licenses ****");
         printEntities(service.getLicenses());
 
-        System.out.println("**** Loggers ****");
+        System.out.print("\n**** Loggers ****");
         printEntities(service.getLoggers());
 
-        System.out.println("**** Info ****");
-        printEntity(service.getInfo());
+        System.out.print("\n**** Messages ****");
+        for (Entity message : service.getMessages().values())
+            printMessage((Message)message);
 
-        System.out.println("**** Roles ****");
+        /* UNDONE: Figure out which version this showed up in ..
+        if (service.getInfo().getVersion() > ...) {
+            System.out.print("*\n*** Passwords ****");
+            printEntities(service.getPasswords());
+        }
+        */
+
+        System.out.print("\n**** Roles ****");
         printEntities(service.getRoles());
 
-        System.out.println("**** Searches ****");
+        System.out.print("\n**** Searches ****");
         printEntities(service.getSearches());
 
-        System.out.println("**** Users ****");
+        System.out.print("\n**** Users ****");
         printEntities(service.getUsers());
     }
 }
