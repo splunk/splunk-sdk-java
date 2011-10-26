@@ -104,7 +104,7 @@ public class Job extends Entity {
     }
 
     public String getReportSearch() {
-        return getString("reportSearch");
+        return getString("reportSearch", null);
     }
 
     public int getResultCount() {
@@ -132,11 +132,11 @@ public class Job extends Entity {
     }
 
     public String getSearchEarliestTime() {
-        return getString("searchEarliestTime");
+        return getString("searchEarliestTime", null);
     }
 
     public String getSearchLatestTime() {
-        return getString("searchLatestTime");
+        return getString("searchLatestTime", null);
     }
 
     public String getSid() {
