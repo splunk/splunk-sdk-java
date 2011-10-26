@@ -39,7 +39,7 @@ public class Program extends com.splunk.sdk.Program {
 
     public void printActions(Map<String, String> actions) {
         for (Map.Entry entry : actions.entrySet()) {
-            System.out.format("* %s => %s\n", 
+            System.out.format("action %s => %s\n", 
                 entry.getKey(), entry.getValue());
         }
     }
@@ -50,7 +50,8 @@ public class Program extends com.splunk.sdk.Program {
             System.out.println("null");
             return;
         }
-        System.out.format("## %s\n", entity.getTitle());
+        System.out.format("## %s\n", entity.getName());
+        System.out.format("title = %s\n", entity.getTitle());
         System.out.format("path = %s\n", entity.getPath());
         printActions(entity.getActions());
         Map<String, Object> content = entity.getContent();
@@ -65,6 +66,7 @@ public class Program extends com.splunk.sdk.Program {
     public void printEntities(EntityCollection entities) {
         System.out.format("\n# %s\n", entities.getPath());
         printActions(entities.getActions());
+        System.out.format("keys = %s\n", entities.keySet().toString());
         for (Entity entity : entities.values()) 
             printEntity(entity);
     }
@@ -251,12 +253,8 @@ public class Program extends com.splunk.sdk.Program {
         for (Entity message : service.getMessages().values())
             printMessage((Message)message);
 
-        /* UNDONE: Figure out which version this showed up in ..
-        if (service.getInfo().getVersion() > ...) {
-            System.out.print("*\n*** Passwords ****");
-            printEntities(service.getPasswords());
-        }
-        */
+        System.out.print("\n**** Passwords ****");
+        printEntities(service.getPasswords());
 
         System.out.print("\n**** Roles ****");
         printEntities(service.getRoles());

@@ -91,6 +91,10 @@ public class Job extends Entity {
         return getDate("latestTime");
     }
 
+    @Override public String getName() {
+        return getSid();
+    }
+
     public int getNumPreviews() {
         return getInteger("numPreviews");
     }

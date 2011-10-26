@@ -96,10 +96,10 @@ public class EntityCollection extends Resource implements Map<String, Entity> {
             args[0] = service;
             this.entities = new HashMap<String, Entity>();
             for (AtomEntry entry : value.entries) {
-                args[1] = entry.id;
+                args[1] = entry.id; // Entity path
                 Entity entity = (Entity)ctor.newInstance(args);
                 entity.load(entry);
-                this.entities.put(entry.id, entity);
+                this.entities.put(entity.getName(), entity);
             }
         }
         catch (Exception e) {
