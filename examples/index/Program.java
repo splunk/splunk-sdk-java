@@ -22,11 +22,9 @@ import com.splunk.Entity;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Map;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-
 
 public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
@@ -47,9 +45,7 @@ public class Program extends com.splunk.sdk.Program {
         EntityCollection indexes = service.getIndexes();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-        Map<String, Entity> all = indexes.getEntities();
-        for (String name: all.keySet()) {
-            Entity entity = all.get(name);
+        for (Entity entity: indexes.values()) {
             System.out.println(
                 entity.getTitle() +
                 " (" + entity.getContent().get("totalEventCount") + ")");
@@ -59,7 +55,6 @@ public class Program extends com.splunk.sdk.Program {
         String date = sdf.format(new Date());
 
         // submit method
-
         idx.submit(date + " 1");
         idx.submit(date + " 2");
         idx.submit(date + " 3");

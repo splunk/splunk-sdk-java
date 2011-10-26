@@ -63,11 +63,11 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public void printEntities(EntityCollection entities) {
-        System.out.format("\n# %s\n", entities.getPath());
+    public <T extends Entity> void printEntities(EntityCollection<T> entities) {
+    	System.out.format("\n# %s\n", entities.getPath());
         printActions(entities.getActions());
         System.out.format("keys = %s\n", entities.keySet().toString());
-        for (Entity entity : entities.values()) 
+        for (T entity : entities.values()) 
             printEntity(entity);
     }
 
@@ -250,8 +250,8 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(service.getLoggers());
 
         System.out.print("\n**** Messages ****");
-        for (Entity message : service.getMessages().values())
-            printMessage((Message)message);
+        for (Message message : service.getMessages().values())
+            printMessage(message);
 
         System.out.print("\n**** Passwords ****");
         printEntities(service.getPasswords());

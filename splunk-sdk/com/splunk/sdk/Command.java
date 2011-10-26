@@ -88,7 +88,7 @@ public class Command {
             if (line == null) break;
             if (line.startsWith("#")) continue;
             if (!line.startsWith("-"))
-                line = "--" + line;
+                line = "--" + line.trim();
             argList.add(line);
         }
         parse(argList.toArray(new String[argList.size()]));
