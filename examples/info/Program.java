@@ -34,20 +34,16 @@ public class Program extends com.splunk.sdk.Program {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        Info info =  new Info(service);
-        Map<String,String> content = info.get()
-                                        .element
-                                        .locatePartial("server-info")
-                                        .content;
+        Entity info = service.getInfo();
+        Map<String,Object> content = info.getContent();
 
-        System.out.println("Content Keys:");
+        System.out.println("Info:");
         for (String key: content.keySet()) {
             System.out.println("    " + key + ": " + content.get(key));
         }
 
-        Settings settings = new Settings(service);
-        content = settings.get().element.locatePartial("settings").content;
-
+        Entity settings = service.getSettings();
+        content = settings.getContent();
         System.out.println("\nSettings:");
         for (String key: content.keySet()) {
             System.out.println("    " + key + ": " + content.get(key));

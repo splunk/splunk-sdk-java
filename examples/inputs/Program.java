@@ -34,7 +34,10 @@ public class Program extends com.splunk.sdk.Program {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        Inputs allInputs = new Inputs(service);
+        EntityCollection all = service.getInputs();
+
+
+
 
         for (Entry entry: allInputs.get().element.entry) {
             Input baseInput = new Input(service, entry.title);
