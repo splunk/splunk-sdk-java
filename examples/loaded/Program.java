@@ -65,7 +65,7 @@ public class Program extends com.splunk.sdk.Program {
     public void printEntities(EntityCollection entities) {
         System.out.format("# %s\n", entities.getPath());
         printActions(entities.getActions());
-        for (Entity entity : entities) 
+        for (Entity entity : entities.values()) 
             printEntity(entity);
     }
 
@@ -213,11 +213,11 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(service.getEventTypes());
 
         System.out.println("**** Indexes ****");
-        for (Entity index : service.getIndexes())
+        for (Entity index : service.getIndexes().values())
             printIndex((Index)index);
 
         System.out.println("**** Jobs ****");
-        for (Entity job : service.getJobs())
+        for (Entity job : service.getJobs().values())
             printJob((Job)job);
 
         System.out.println("**** LicenseGroups ****");

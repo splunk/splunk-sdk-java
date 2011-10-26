@@ -20,11 +20,12 @@ import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-public class EntityCollection extends Resource implements Iterable<Entity> {
+public class EntityCollection extends Resource implements Map<String, Entity> {
     private Map<String, Entity> entities;
 
     Class entityClass = Entity.class;
@@ -38,18 +39,52 @@ public class EntityCollection extends Resource implements Iterable<Entity> {
         this.entityClass = entityClass;
     }
 
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean containsKey(Object key) {
+        validate();
+        return entities.containsKey(key);
+    }
+
+    public boolean containsValue(Object value) {
+        validate();
+        return entities.containsValue(value);
+    }
+
     public Entity create(String name) {
         return null; // UNDONE
     }
 
-    public Map<String, Entity> getEntities() {
+    public Set<Map.Entry<String, Entity>> entrySet() {
         validate();
-        return this.entities;
+        return entities.entrySet();
     }
 
-    public Iterator<Entity> iterator() {
+    public boolean equals(Object o) {
         validate();
-        return this.entities.values().iterator();
+        return entities.equals(o);
+    }
+
+    public Entity get(Object key) {
+        validate();
+        return entities.get(key);
+    }
+
+    public int hashCode() {
+        validate();
+        return entities.hashCode();
+    }
+
+    public boolean isEmpty() {
+        validate();
+        return entities.isEmpty();
+    }
+
+    public Set<String> keySet() {
+        validate();
+        return entities.keySet();
     }
 
     void load(AtomFeed value) {
@@ -72,11 +107,38 @@ public class EntityCollection extends Resource implements Iterable<Entity> {
         }
     }
 
+    public Entity put(String key, Entity value) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void putAll(Map<? extends String, ? extends Entity> map) {
+        throw new UnsupportedOperationException();
+    }
+
     public void refresh() {
         ResponseMessage response = get();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.create(response.getContent());
         load(feed);
+    }
+
+    public Entity remove(Object key) {
+        validate();
+        Entity entity = entities.get(key);
+        entity.remove();
+        entities.remove(key);
+        invalidate();
+        return entity;
+    }
+
+    public int size() {
+        validate();
+        return entities.size();
+    }
+
+    public Collection<Entity> values() {
+        validate();
+        return entities.values();
     }
 }
 
