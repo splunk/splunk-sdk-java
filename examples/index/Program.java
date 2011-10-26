@@ -22,11 +22,9 @@ import com.splunk.Entity;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Collection;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-
 
 public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
@@ -46,8 +44,6 @@ public class Program extends com.splunk.sdk.Program {
 
         EntityCollection indexes = service.getIndexes();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-
-        Collection<Entity> all = indexes.values();
 
         for (Entity entity: indexes.values()) {
             System.out.println(
