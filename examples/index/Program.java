@@ -17,7 +17,6 @@
 import com.splunk.EntityCollection;
 import com.splunk.Service;
 import com.splunk.Index;
-import com.splunk.Entity;
 
 import java.io.DataOutputStream;
 import java.io.OutputStream;
@@ -42,10 +41,10 @@ public class Program extends com.splunk.sdk.Program {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        EntityCollection indexes = service.getIndexes();
+        EntityCollection<Index> indexes = service.getIndexes();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-        for (Entity entity: indexes.values()) {
+        for (Index entity: indexes.values()) {
             System.out.println(
                 entity.getTitle() +
                 " (" + entity.getContent().get("totalEventCount") + ")");
