@@ -48,6 +48,8 @@ public class Service {
     protected String host = "localhost";
     protected int port = 8089;
 
+    private String prefix = null;
+
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
         put("User-Agent", "splunk-sdk-java/0.1");
         put("Accept", "*/*");
@@ -57,9 +59,9 @@ public class Service {
         new X509TrustManager() {
             public X509Certificate[] getAcceptedIssuers() { return null; }
             public void checkClientTrusted(
-                        X509Certificate[] certs, String authType) { }
+                X509Certificate[] certs, String authType) { }
             public void checkServerTrusted(
-                        X509Certificate[] certs, String authType) { }
+                X509Certificate[] certs, String authType) { }
         }
     };
 
@@ -83,6 +85,12 @@ public class Service {
         this.port = port;
         this.scheme = scheme;
         setTrustPolicy();
+    }
+
+    // Returns the count of args in the given map
+    private static int count(Map<String, String> args) {
+        if (args == null) return 0;
+        return args.size();
     }
 
     public String encode(String value) {
@@ -111,52 +119,30 @@ public class Service {
         return this.host; 
     }
 
-    public void setHost(String value) {
-        this.host = value;
-    }
-
     public int getPort() {
         return this.port;
     }
 
-    // Set trust policy to be used by this instance.
-    void setTrustPolicy() {
-        try {
-            SSLContext context = SSLContext.getInstance("SSL");
-            context.init(null, trustAll, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                context.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(
-                new HostnameVerifier() {
-                    public boolean verify(
-                        String urlHostName, SSLSession session) { return true; }
-                });
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Error installing trust manager.");
-        }
-    }
-
-    public void setPort(int value) {
-        this.port = value; 
+    // Returns the URL prefix for this service.
+    public String getPrefix() {
+        if (this.prefix == null)
+            this.prefix = String.format("%s://%s:%s",
+                this.scheme, this.host, this.port);
+        return this.prefix;
     }
 
     public String getScheme() {
         return this.scheme;
     }
 
-    public void setScheme(String value) {
-        this.scheme = value;
-    }
-
     public ResponseMessage get(String path) {
-        return send(new RequestMessage("GET", path));
+        return send(path, new RequestMessage("GET"));
     }
 
     public ResponseMessage get(String path, Map<String, String> args) {
-        if (args != null && args.size() > 0) path = path + "?" + encode(args);
-        RequestMessage request = new RequestMessage("GET", path);
-        return send(request);
+        if (count(args) > 0) path = path + "?" + encode(args);
+        RequestMessage request = new RequestMessage("GET");
+        return send(path, request);
     }
 
     public ResponseMessage post(String path) {
@@ -164,32 +150,29 @@ public class Service {
     }
 
     public ResponseMessage post(String path, Map<String, String> args) {
-        RequestMessage request = new RequestMessage("POST", path);
+        RequestMessage request = new RequestMessage("POST");
         request.getHeader().put(
             "Content-Type", "application/x-www-form-urlencoded");
         if (args != null && args.size() > 0) request.setContent(encode(args));
-        return send(request);
+        return send(path, request);
     }
 
     public ResponseMessage delete(String path) {
-        RequestMessage request = new RequestMessage("DELETE", path);
-        return send(request);
+        RequestMessage request = new RequestMessage("DELETE");
+        return send(path, request);
     }
 
     public ResponseMessage delete(String path, Map<String, String> args) {
-        if (args != null && args.size() > 0) path = path + "?" + encode(args);
-        RequestMessage request = new RequestMessage("DELETE", path);
-        return send(request);
+        if (count(args) > 0) path = path + "?" + encode(args);
+        RequestMessage request = new RequestMessage("DELETE");
+        return send(path, request);
     }
 
-    public ResponseMessage send(RequestMessage request) {
-        String prefix = String.format("%s://%s:%d",
-            this.scheme, this.host, this.port);
-
+    public ResponseMessage send(String path, RequestMessage request) {
         // Construct a full URL to the resource
         URL url;
         try {
-            url = new URL(prefix + request.getPath());
+            url = new URL(getPrefix() + path);
         }
         catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage());
@@ -278,22 +261,36 @@ public class Service {
     }
 
     public Socket streamConnect() throws IOException {
-
         if (this.scheme.equals("https")) {
             SSLSocketFactory sslsocketfactory;
             try {
                 SSLContext context = SSLContext.getInstance("SSL");
                 context.init(null, trustAll, new java.security.SecureRandom());
-
                 sslsocketfactory = context.getSocketFactory();
             }
             catch (Exception e) {
                 throw new RuntimeException("Error installing trust manager.");
             }
-
             return sslsocketfactory.createSocket(this.host, this.port);
-        } else {
-            return new Socket(this.host, this.port);
+        } 
+        return new Socket(this.host, this.port);
+    }
+
+    // Set trust policy to be used by this instance.
+    void setTrustPolicy() {
+        try {
+            SSLContext context = SSLContext.getInstance("SSL");
+            context.init(null, trustAll, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(
+                context.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier(
+                new HostnameVerifier() {
+                    public boolean verify(
+                        String urlHostName, SSLSession session) { return true; }
+                });
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error installing trust manager.");
         }
     }
 }

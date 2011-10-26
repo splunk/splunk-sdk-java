@@ -32,8 +32,8 @@ public class Program {
 
     static void run() throws Exception {
         Service service = new Service();
-        RequestMessage request = new RequestMessage("GET", "/");
-        ResponseMessage response = service.send(request);
+        RequestMessage request = new RequestMessage("GET");
+        ResponseMessage response = service.send("/", request);
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(response.getContent()));
         while (true) {

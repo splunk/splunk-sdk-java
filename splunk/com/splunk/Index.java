@@ -239,10 +239,9 @@ public class Index extends Entity {
     }
 
     public void submit(String data) {
-        RequestMessage request = new RequestMessage(
-            "POST","/services/receivers/simple?index=" + path);
+        RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
-        service.send(request);
+        service.send("receivers/simple?index=" + path, request);
     }
 
     public void upload() {

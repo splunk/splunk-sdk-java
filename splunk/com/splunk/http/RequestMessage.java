@@ -22,7 +22,6 @@ import java.util.Map;
 
 public class RequestMessage {
     String method = "GET";  // "GET" | "PUT" | "POST" | "DELETE"
-    String path = null;
     Map<String, String> header = null;
     Object content = null;
 
@@ -30,11 +29,6 @@ public class RequestMessage {
 
     public RequestMessage(String method) {
         this.method = method;
-    }
-
-    public RequestMessage(String method, String path) {
-        this.method = method;
-        this.path = path;
     }
 
     boolean checkMethod(String value) {
@@ -47,7 +41,8 @@ public class RequestMessage {
 
     public Map<String, String> getHeader() {
         if (this.header == null)
-            this.header = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+            this.header = new TreeMap<String, String>(
+                String.CASE_INSENSITIVE_ORDER);
         return this.header;
     }
 
@@ -62,14 +57,6 @@ public class RequestMessage {
         this.method = value;
     }
 
-    public String getPath() {
-        return this.path;
-    }
-
-    public void setPath(String value) {
-        this.path = value;
-    }
-    
     public Object getContent() {
         return this.content;
     }

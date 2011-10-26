@@ -39,8 +39,7 @@ public class Program extends com.splunk.sdk.Program {
         service.login(this.username, this.password);
 
         String path = this.args.length > 0 ? this.args[0] : "/";
-        ResponseMessage response = 
-            service.send(new RequestMessage("GET", path));
+        ResponseMessage response = service.get(path);
 
         int status = response.getStatus();
         System.out.println(String.format("=> %d", status));

@@ -68,8 +68,8 @@ public class ServiceTest extends TestCase {
     @Test public void testSend() throws IOException {
         Service service = new Service(
             program.host, program.port, program.scheme);
-        RequestMessage request = new RequestMessage("GET", "/");
-        ResponseMessage response = service.send(request);
+        RequestMessage request = new RequestMessage("GET");
+        ResponseMessage response = service.send("/", request);
         assertEquals(200, response.getStatus());
     }
 }

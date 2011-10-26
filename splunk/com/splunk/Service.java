@@ -16,6 +16,7 @@
 
 // UNDONE: storage/passwords
 // UNDONE: getAlerts
+// UNDONE: getOutputs
 // UNDONE: public Object parse(String query) {}
 // UNDONE: public void restart() {}
 
@@ -62,6 +63,8 @@ public class Service extends com.splunk.http.Service {
         this.namespace = info.namespace;
     }
 
+    // Ensures that the given path is fully qualified, prepending a
+    // path prefix as necessarry.
     protected String fullpath(String path) {
         if (path.startsWith("/")) 
             return path;
@@ -71,8 +74,7 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection getApplications() {
-        return new EntityCollection(
-            this, "/services/apps/local", Application.class);
+        return new EntityCollection(this, "apps/local", Application.class);
     }
 
     public EntityCollection getConfigurations() {
@@ -80,36 +82,36 @@ public class Service extends com.splunk.http.Service {
     }
 
     public List<String> getCapabilities() {
-        Entity caps = Entity.read(this, "/services/authorization/capabilities");
+        Entity caps = Entity.read(this, "authorization/capabilities");
         return (List<String>)caps.getValue("capabilities");
     }
 
     public Entity getDeploymentClient() {
-        return Entity.read(this, "/services/deployment/client");
+        return Entity.read(this, "deployment/client");
     }
 
     public EntityCollection getDeploymentServers() {
-        return new EntityCollection(this, "/services/deployment/server");
+        return new EntityCollection(this, "deployment/server");
     }
 
     public EntityCollection getDeploymentServerClasses() {
-        return new EntityCollection(this, "/services/deployment/serverclass");
+        return new EntityCollection(this, "deployment/serverclass");
     }
 
     public EntityCollection getDeploymentTenants() {
-        return new EntityCollection(this, "/services/deployment/tenants");
+        return new EntityCollection(this, "deployment/tenants");
     }
 
     public EntityCollection getEventTypes() {
-        return new EntityCollection(this, "/services/saved/eventtypes");
+        return new EntityCollection(this, "saved/eventtypes");
     }
 
     public EntityCollection getIndexes() {
-        return new EntityCollection(this, "/services/data/indexes", Index.class);
+        return new EntityCollection(this, "data/indexes", Index.class);
     }
 
     public Entity getInfo() {
-        return Entity.read(this, "/services/server/info");
+        return Entity.read(this, "server/info");
     }
 
     public EntityCollection getInputs() {
@@ -117,49 +119,47 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection getJobs() {
-        return new EntityCollection(this, "/services/search/jobs", Job.class);
+        return new EntityCollection(this, "search/jobs", Job.class);
     }
 
     public EntityCollection getLicenseGroups() {
-        return new EntityCollection(this, "/services/licenser/groups");
+        return new EntityCollection(this, "licenser/groups");
     }
 
     public EntityCollection getLicenseMessages() {
-        return new EntityCollection(this, "/services/licenser/messages");
+        return new EntityCollection(this, "licenser/messages");
     }
 
     public EntityCollection getLicensePools() {
-        return new EntityCollection(this, "/services/licenser/pools");
+        return new EntityCollection(this, "licenser/pools");
     }
 
     public EntityCollection getLicenseSlaves() {
-        return new EntityCollection(this, "/services/licenser/slaves");
+        return new EntityCollection(this, "licenser/slaves");
     }
 
     public EntityCollection getLicenseStacks() {
-        return new EntityCollection(this, "/services/licenser/stacks");
+        return new EntityCollection(this, "licenser/stacks");
     }
 
     public EntityCollection getLicenses() {
-        return new EntityCollection(this, "/services/licenser/licenses");
+        return new EntityCollection(this, "licenser/licenses");
     }
 
     public EntityCollection getLoggers() {
-        return new EntityCollection(this, "/services/server/logger");
+        return new EntityCollection(this, "server/logger");
     }
 
     public Object getMessages() {
         return null; // UNDONE
     }
 
-    // UNDONE: getOutputs
-
     public EntityCollection getRoles() {
-        return new EntityCollection(this, "/services/authentication/roles");
+        return new EntityCollection(this, "authentication/roles");
     }
 
     public EntityCollection getSearches() {
-        return new EntityCollection(this, "/services/saved/searches");
+        return new EntityCollection(this, "saved/searches");
     }
 
     public Object getSettings() {
@@ -167,7 +167,7 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection getUsers() {
-        return new EntityCollection(this, "/services/authentication/users");
+        return new EntityCollection(this, "authentication/users");
     }
 
     public Service login(String username, String password) {
@@ -209,9 +209,9 @@ public class Service extends com.splunk.http.Service {
         }
     }
 
-    public ResponseMessage send(RequestMessage request) {
+    public ResponseMessage send(String path, RequestMessage request) {
         request.getHeader().put("Authorization", token);
-        return super.send(request);
+        return super.send(fullpath(path), request);
     }
 }
 
