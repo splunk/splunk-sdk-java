@@ -73,11 +73,11 @@ public class Service extends com.splunk.http.Service {
         return String.format("/servicesNS/%s/%s", namespace, path);
     }
 
-    public EntityCollection getApplications() {
-        return new EntityCollection(this, "apps/local", Application.class);
+    public EntityCollection<Application> getApplications() {
+        return new EntityCollection<Application>(this, "apps/local", Application.class);
     }
 
-    public EntityCollection getConfigurations() {
+    public EntityCollection<Entity> getConfigurations() {
         return null; // UNDONE
     }
 
@@ -90,64 +90,64 @@ public class Service extends com.splunk.http.Service {
         return Entity.read(this, "deployment/client");
     }
 
-    public EntityCollection getDeploymentServers() {
-        return new EntityCollection(this, "deployment/server");
+    public EntityCollection<Entity> getDeploymentServers() {
+        return new EntityCollection<Entity>(this, "deployment/server");
     }
 
-    public EntityCollection getDeploymentServerClasses() {
-        return new EntityCollection(this, "deployment/serverclass");
+    public EntityCollection<Entity> getDeploymentServerClasses() {
+        return new EntityCollection<Entity>(this, "deployment/serverclass");
     }
 
-    public EntityCollection getDeploymentTenants() {
-        return new EntityCollection(this, "deployment/tenants");
+    public EntityCollection<Entity> getDeploymentTenants() {
+        return new EntityCollection<Entity>(this, "deployment/tenants");
     }
 
-    public EntityCollection getEventTypes() {
-        return new EntityCollection(this, "saved/eventtypes");
+    public EntityCollection<Entity> getEventTypes() {
+        return new EntityCollection<Entity>(this, "saved/eventtypes");
     }
 
-    public EntityCollection getIndexes() {
-        return new EntityCollection(this, "data/indexes", Index.class);
+    public EntityCollection<Index> getIndexes() {
+        return new EntityCollection<Index>(this, "data/indexes", Index.class);
     }
 
     public Entity getInfo() {
         return Entity.read(this, "server/info");
     }
 
-    public EntityCollection getInputs() {
+    public EntityCollection<Entity> getInputs() {
         return null; //  UNDONE: flatten?
     }
 
-    public EntityCollection getJobs() {
-        return new EntityCollection(this, "search/jobs", Job.class);
+    public EntityCollection<Job> getJobs() {
+        return new EntityCollection<Job>(this, "search/jobs", Job.class);
     }
 
-    public EntityCollection getLicenseGroups() {
-        return new EntityCollection(this, "licenser/groups");
+    public EntityCollection<Entity> getLicenseGroups() {
+        return new EntityCollection<Entity>(this, "licenser/groups");
     }
 
-    public EntityCollection getLicenseMessages() {
-        return new EntityCollection(this, "licenser/messages");
+    public EntityCollection<Entity> getLicenseMessages() {
+        return new EntityCollection<Entity>(this, "licenser/messages");
     }
 
-    public EntityCollection getLicensePools() {
-        return new EntityCollection(this, "licenser/pools");
+    public EntityCollection<Entity> getLicensePools() {
+        return new EntityCollection<Entity>(this, "licenser/pools");
     }
 
-    public EntityCollection getLicenseSlaves() {
-        return new EntityCollection(this, "licenser/slaves");
+    public EntityCollection<Entity> getLicenseSlaves() {
+        return new EntityCollection<Entity>(this, "licenser/slaves");
     }
 
-    public EntityCollection getLicenseStacks() {
-        return new EntityCollection(this, "licenser/stacks");
+    public EntityCollection<Entity> getLicenseStacks() {
+        return new EntityCollection<Entity>(this, "licenser/stacks");
     }
 
-    public EntityCollection getLicenses() {
-        return new EntityCollection(this, "licenser/licenses");
+    public EntityCollection<Entity> getLicenses() {
+        return new EntityCollection<Entity>(this, "licenser/licenses");
     }
 
-    public EntityCollection getLoggers() {
-        return new EntityCollection(this, "server/logger");
+    public EntityCollection<Entity> getLoggers() {
+        return new EntityCollection<Entity>(this, "server/logger");
     }
 
     public EntityCollection getMessages() {
@@ -159,27 +159,27 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection(this, "storage/passwords");
     }
 
-    public EntityCollection getRoles() {
-        return new EntityCollection(this, "authentication/roles");
+    public EntityCollection<Entity> getRoles() {
+        return new EntityCollection<Entity>(this, "authentication/roles");
     }
 
-    public EntityCollection getSearches() {
-        return new EntityCollection(this, "saved/searches");
+    public EntityCollection<Entity> getSearches() {
+        return new EntityCollection<Entity>(this, "saved/searches");
     }
 
     public Object getSettings() {
         return null; // UNDONE
     }
 
-    public EntityCollection getUsers() {
-        return new EntityCollection(this, "authentication/users");
+    public EntityCollection<Entity> getUsers() {
+        return new EntityCollection<Entity>(this, "authentication/users");
     }
 
     public Service login(String username, String password) {
         HashMap<String, String> args = new HashMap<String, String>();
         args.put("username", username);
         args.put("password", password);
-        ResponseMessage response = super.post("/services/auth/login/", args);
+        ResponseMessage response = super.post("/services/auth/login", args);
         // UNDONE: Check status
         String sessionKey = parseXml(response)
             .getElementsByTagName("sessionKey")

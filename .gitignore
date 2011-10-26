@@ -5,3 +5,7 @@ build
 build.log
 dist
 out
+bin/*
+.project
+.classpath
+*.class

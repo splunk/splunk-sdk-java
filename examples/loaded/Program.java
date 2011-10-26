@@ -62,10 +62,10 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public void printEntities(EntityCollection entities) {
-        System.out.format("\n# %s\n", entities.getPath());
+    public <T extends Entity> void printEntities(EntityCollection<T> entities) {
+    	System.out.format("\n# %s\n", entities.getPath());
         printActions(entities.getActions());
-        for (Entity entity : entities.values()) 
+        for (T entity : entities.values()) 
             printEntity(entity);
     }
 
