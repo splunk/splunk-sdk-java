@@ -115,6 +115,16 @@ public class Service {
         return builder.toString();
     }
 
+    public ResponseMessage get(String path) {
+        return send(path, new RequestMessage("GET"));
+    }
+
+    public ResponseMessage get(String path, Map<String, String> args) {
+        if (count(args) > 0) path = path + "?" + encode(args);
+        RequestMessage request = new RequestMessage("GET");
+        return send(path, request);
+    }
+
     public String getHost() { 
         return this.host; 
     }
@@ -135,14 +145,13 @@ public class Service {
         return this.scheme;
     }
 
-    public ResponseMessage get(String path) {
-        return send(path, new RequestMessage("GET"));
-    }
-
-    public ResponseMessage get(String path, Map<String, String> args) {
-        if (count(args) > 0) path = path + "?" + encode(args);
-        RequestMessage request = new RequestMessage("GET");
-        return send(path, request);
+    public URL getUrl(String path) {
+        try {
+            return new URL(getPrefix() + path);
+        }
+        catch (MalformedURLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public ResponseMessage post(String path) {
@@ -170,13 +179,7 @@ public class Service {
 
     public ResponseMessage send(String path, RequestMessage request) {
         // Construct a full URL to the resource
-        URL url;
-        try {
-            url = new URL(getPrefix() + path);
-        }
-        catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        URL url = getUrl(path);
 
         // Create and initialize the connection object
         HttpURLConnection cn;
