@@ -50,7 +50,7 @@ public class Program extends com.splunk.sdk.Program {
                 " (" + entity.getContent().get("totalEventCount") + ")");
         }
 
-        Index idx = new Index(service, "sdk-tests");
+        Index idx = indexes.get("sdk-tests");
         String date = sdf.format(new Date());
 
         // submit method

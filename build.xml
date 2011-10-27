@@ -190,13 +190,11 @@
         </jar>
     </target>
 
-    <!--
+    <target name="dist-examples"
+     depends="
         dist-examples-index,
         dist-examples-info,
         dist-examples-inputs,
-    -->
-    <target name="dist-examples"
-     depends="
         dist-examples-loaded,
         dist-examples-spurl,
         dist-examples-test"/>

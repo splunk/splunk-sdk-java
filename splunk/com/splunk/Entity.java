@@ -36,7 +36,7 @@ public class Entity extends Resource {
     }
 
     public void enable() {
-        service.post(actionPath("disable"));
+        service.post(actionPath("enable"));
         invalidate();
     }
 

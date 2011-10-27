@@ -31,13 +31,19 @@ public class Index extends Entity {
         super(service, path);
     }
 
+    private String getIndexName(String path) {
+        String [] parts = path.split("/");
+        return parts[parts.length-1];
+    }
+
     public Socket attach() throws IOException {
         Socket sock = service.streamConnect();
         OutputStream ostream = sock.getOutputStream();
         DataOutputStream ds = new DataOutputStream(ostream);
 
         ds.writeBytes(String.format(
-            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n", path));
+            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n",
+            getIndexName(path)));
         ds.writeBytes(String.format(
             "Host: %s:%d\r\n", service.getHost(), service.getPort()));
         ds.writeBytes("Accept-Encoding: identity\r\n");
@@ -50,7 +56,32 @@ public class Index extends Entity {
     }
 
     public void clean() {
-        return; // UNDONE
+        Args saved = new Args();
+        saved.put("maxTotalDataSizeMB",
+                  Integer.toString(this.getMaxTotalDataSizeMB()));
+        saved.put("frozenTimePeriodInSecs",
+                  Integer.toString(this.getFrozenTimePeriodInSecs()));
+
+        Args reset = new Args();
+        reset.put("maxTotalDataSizeMB", "1");
+        reset.put("frozenTimePeriodInSecs", "1");
+        super.update(reset);
+        this.rollHotBuckets();
+
+         while (true) {
+             try {
+                 Thread.sleep(1000); // 1000ms (1 second sleep)
+             } catch (InterruptedException e) {
+                 return; // eat
+             }
+             if (this.getTotalEventCount() == 0) {
+                 break;
+             }
+             refresh();
+         }
+         super.update(saved);
+
+         return; // UNDONE -- return this?
     }
 
     public boolean getAssureUTF8() {
@@ -241,7 +272,7 @@ public class Index extends Entity {
     public void submit(String data) {
         RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
-        service.send("receivers/simple?index=" + path, request);
+        service.send("receivers/simple?index=" + getIndexName(path), request);
     }
 
     public void upload() {
