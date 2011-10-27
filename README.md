@@ -26,3 +26,16 @@ You can also type `ant {target} -find` from anywhere in the repository and ant
 will automatically find the root build file.
 
 ### Running units
+
+
+### Using IDEs with the Java SDK
+
+The Splunk Java SDK comes with pre-built definitions for Eclipse and IntelliJ.
+
+#### Eclipse
+
+*UNDONE*
+
+#### IntelliJ
+
+*UNDONE*
