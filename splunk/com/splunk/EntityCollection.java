@@ -20,6 +20,7 @@ import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
 
 import java.lang.reflect.Constructor;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,7 +106,11 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
             args[0] = service;
             this.entities = new HashMap<String, T>();
             for (AtomEntry entry : value.entries) {
-                args[1] = entry.id; // Entity path
+                // UNDONE: Unfortunate to have to instantiate an URL object
+                // just to retrieve the path. Should probably also assert that
+                // the scheme://host:port match the service.
+                URL url = new URL(entry.id);
+                args[1] = url.getPath();
                 T entity = (T)ctor.newInstance(args);
                 entity.load(entry);
                 this.entities.put(entity.getName(), entity);
