@@ -34,10 +34,9 @@ public class Program extends com.splunk.sdk.Program {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        EntityCollection all = service.getInputs();
-
-
-
+        // UNDONE -- need Inputs class
+        /*
+        Inputs allInputs = new Inputs(service);
 
         for (Entry entry: allInputs.get().element.entry) {
             Input baseInput = new Input(service, entry.title);
@@ -59,5 +58,6 @@ public class Program extends com.splunk.sdk.Program {
                 }
             }
         }
+        */
     }
 }
