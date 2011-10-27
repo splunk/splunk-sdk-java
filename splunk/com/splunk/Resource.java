@@ -20,13 +20,15 @@ import com.splunk.atom.AtomObject;
 
 import java.util.Map;
 
-public abstract class Resource extends Endpoint {
-    Map<String, String> actions;
-    String id;
-    boolean maybe = false;
+public abstract class Resource {
+    protected Map<String, String> actions;
+    protected String path;
+    protected Service service;
+    private boolean valid = false;
 
     public Resource(Service service, String path) {
-        super(service, path);
+        this.path = path;
+        this.service = service;
     }
 
     // Returns the path corresponding to the given action.
@@ -36,28 +38,30 @@ public abstract class Resource extends Endpoint {
 
     public Map<String, String> getActions() {
         validate();
-        return this.actions;
+        return actions;
     }
 
-    public String getId() {
-        validate();
-        return this.id;
+    public String getPath() {
+        return path;
+    }
+
+    public Service getService() {
+        return service;
     }
 
     public void invalidate() {
-        maybe = false;
+        valid = false;
     }
 
     void load(AtomObject value) {
         this.actions = value.links;
-        this.id = value.id;
-        this.maybe = true; // Maybe up to date :) ..
+        this.valid = true;
     }
 
     public abstract void refresh();
 
     public void validate() {
-        if (maybe == false) refresh();
+        if (valid == false) refresh();
     }
 }
 

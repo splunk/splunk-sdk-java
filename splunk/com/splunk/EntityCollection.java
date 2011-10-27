@@ -53,8 +53,17 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
         return entities.containsValue(value);
     }
 
-    public Entity create(String name) {
-        return null; // UNDONE
+    public T create(String name) {
+        return create(name, null);
+    }
+
+    public T create(String name, Args extra) {
+        Args args = new Args();
+        args.put("name", name);
+        if (extra != null) args.putAll(extra);
+        service.post(path, args);
+        invalidate();
+        return get(name);
     }
 
     public Set<Map.Entry<String, T>> entrySet() {
@@ -117,7 +126,7 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
     }
 
     public void refresh() {
-        ResponseMessage response = get();
+        ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.create(response.getContent());
         load(feed);
