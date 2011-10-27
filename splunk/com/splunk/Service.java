@@ -74,7 +74,8 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection<Application> getApplications() {
-        return new EntityCollection<Application>(this, "apps/local", Application.class);
+        return new EntityCollection<Application>(this, 
+            "apps/local", Application.class);
     }
 
     public EntityCollection<Entity> getConfigurations() {
@@ -154,7 +155,7 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection<Message>(this, "messages", Message.class);
     }
 
-    public EntityCollection getPasswords() {
+    public EntityCollection<Entity> getPasswords() {
         // Starting with 4.3 this is available at "storage/passwords"
         return new EntityCollection(this, "admin/passwords");
     }
@@ -171,8 +172,8 @@ public class Service extends com.splunk.http.Service {
         return Entity.read(this, "server/settings");
     }
 
-    public EntityCollection<Entity> getUsers() {
-        return new EntityCollection<Entity>(this, "authentication/users");
+    public UserCollection getUsers() {
+        return new UserCollection(this, "authentication/users");
     }
 
     public Service login(String username, String password) {

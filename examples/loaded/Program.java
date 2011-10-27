@@ -141,6 +141,17 @@ public class Program extends com.splunk.sdk.Program {
         printField("isInternal", index.isInternal());
     }
 
+    void printUser(User user) {
+        printEntity(user);
+        printField("DefaultApp", user.getDefaultApp());
+        printField("DefaultAppIsUserOverride", user.getDefaultAppIsUserOverride());
+        printField("DefaultAppSourceRole", user.getDefaultAppSourceRole());
+        printField("Email", user.getEmail());
+        printField("Password", user.getPassword());
+        printField("RealName", user.getRealName());
+        printField("Roles", user.getRoles().toString());
+    }
+
     void printJob(Job job) {
         printEntity(job);
         printField("CursorTime", job.getCursorTime().toString());
@@ -263,7 +274,8 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(service.getSearches());
 
         System.out.print("\n**** Users ****");
-        printEntities(service.getUsers());
+        for (User user : service.getUsers().values())
+            printUser(user);
     }
 }
 

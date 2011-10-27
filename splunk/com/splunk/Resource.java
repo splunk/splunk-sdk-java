@@ -24,7 +24,7 @@ public abstract class Resource {
     protected Map<String, String> actions;
     protected String path;
     protected Service service;
-    private boolean valid = false;
+    boolean maybeValid = false;
 
     public Resource(Service service, String path) {
         this.path = path;
@@ -38,30 +38,30 @@ public abstract class Resource {
 
     public Map<String, String> getActions() {
         validate();
-        return actions;
+        return this.actions;
     }
 
     public String getPath() {
-        return path;
+        return this.path;
     }
 
     public Service getService() {
-        return service;
+        return this.service;
     }
 
     public void invalidate() {
-        valid = false;
+        this.maybeValid = false;
     }
 
     void load(AtomObject value) {
         this.actions = value.links;
-        this.valid = true;
+        this.maybeValid = true;
     }
 
     public abstract void refresh();
 
     public void validate() {
-        if (valid == false) refresh();
+        if (this.maybeValid == false) refresh();
     }
 }
 

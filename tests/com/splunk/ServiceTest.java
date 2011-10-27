@@ -100,22 +100,32 @@ public class ServiceTest extends TestCase {
     @Test public void testUsers() {
         Service service = connect();
 
-        EntityCollection users = service.getUsers();
+        String username = "sdk-user";
 
-        assertFalse(users.containsKey("sdk-user"));
+        UserCollection users = service.getUsers();
+        assertFalse(users.containsKey(username));
+
+        User user;
+
+        user = users.create(username, "changeme", "power");
+
+        assertTrue(users.containsKey(username));
+        assertEquals(user.getName(), username);
+
+        users.remove(username);
+        assertFalse(users.containsKey(username));
 
         Args args = new Args();
         args.put("password", "changeme");
         args.put("roles", "power");
-        Entity user = users.create("sdk-user", args);
+        user = users.create(username, args);
 
-        assertTrue(users.containsKey("sdk-user"));
+        assertTrue(users.containsKey(username));
+        assertEquals(user.getName(), username);
 
-        // UNDONE: Check user properties
+        users.remove(username);
+        assertFalse(users.containsKey(username));
 
-        users.remove("sdk-user");
-
-        assertFalse(users.containsKey("sdk-user"));
     }
 }
 
