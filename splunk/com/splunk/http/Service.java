@@ -260,6 +260,9 @@ public class Service {
 
         // System.out.format("%d\n", status);
 
+        if (status >= 400)
+            throw HTTPException.create(response);
+
         return response;
     }
 

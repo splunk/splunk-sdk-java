@@ -30,6 +30,7 @@ import static org.junit.Assert.*;
 
 import com.splunk.*;
 import com.splunk.atom.*;
+import com.splunk.http.HTTPException;
 import com.splunk.http.ResponseMessage;
 import com.splunk.sdk.Program;
 
@@ -70,8 +71,13 @@ public class ServiceTest extends TestCase {
             checkResponse(service.get(path));
 
         // And make sure we get the expected 404
-        ResponseMessage response = service.get("/zippy");
-        assertEquals(response.getStatus(), 404);
+        try {
+            ResponseMessage response = service.get("/zippy");
+            fail("Expected HTTPException");
+        }
+        catch (HTTPException e) {
+            assertEquals(e.getStatus(), 404);
+        }
     }
 
     @Test public void testLogin() {
@@ -83,8 +89,13 @@ public class ServiceTest extends TestCase {
             program.scheme);
 
         // Not logged in, should fail with 401
-        response = service.get("/services/authentication/users");
-        assertEquals(response.getStatus(), 401);
+        try {
+            response = service.get("/services/authentication/users");
+            fail("Expected HTTPException");
+        }
+        catch (HTTPException e) {
+            assertEquals(e.getStatus(), 401);
+        }
 
         // Logged in, request should succeed
         service.login(program.username, program.password);
@@ -93,8 +104,13 @@ public class ServiceTest extends TestCase {
 
         // Logout, the request should fail with a 401
         service.logout();
-        response = service.get("/services/authentication/users");
-        assertEquals(response.getStatus(), 401);
+        try {
+            response = service.get("/services/authentication/users");
+            fail("Expected HTTPException");
+        }
+        catch (HTTPException e) {
+            assertEquals(e.getStatus(), 401);
+        }
     }
 
     @Test public void testUsers() {
