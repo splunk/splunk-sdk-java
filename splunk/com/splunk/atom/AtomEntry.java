@@ -31,7 +31,7 @@ public class AtomEntry extends AtomObject {
         return new AtomEntry();
     }
 
-    static AtomEntry create(Element element) {
+    static AtomEntry parse(Element element) {
         AtomEntry entry = AtomEntry.create();
         entry.load(element);
         return entry;

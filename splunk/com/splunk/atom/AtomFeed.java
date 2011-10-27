@@ -17,13 +17,8 @@
 package com.splunk.atom;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 public class AtomFeed extends AtomObject {
     public ArrayList<AtomEntry> entries = new ArrayList<AtomEntry>();
@@ -35,28 +30,27 @@ public class AtomFeed extends AtomObject {
         return new AtomFeed();
     }
 
-    public static AtomFeed create(InputStream input) {
-        Element root = parseXml(input).getDocumentElement();
-
+    public static AtomFeed parse(InputStream input) {
+        Element root = Xml.parse(input).getDocumentElement();
         String rname = root.getTagName();
         String xmlns = root.getAttribute("xmlns");
         if (!rname.equals("feed") ||
             !xmlns.equals("http://www.w3.org/2005/Atom"))
             throw new RuntimeException("Unrecognized format");
-
-        return AtomFeed.create(root);
+        return AtomFeed.parse(root);
     }
 
-    static AtomFeed create(Element element) {
+    static AtomFeed parse(Element element) {
         AtomFeed feed = AtomFeed.create();
         feed.load(element);
         return feed;
     }
 
+    // UNDONE: Create dispatch table for property lookups
     @Override void init(Element element) {
         String name = element.getTagName();
         if (name.equals("entry")) {
-            AtomEntry entry = AtomEntry.create(element);
+            AtomEntry entry = AtomEntry.parse(element);
             this.entries.add(entry);
         }
         else if (name.equals("s:messages")) {
@@ -78,22 +72,5 @@ public class AtomFeed extends AtomObject {
             super.init(element);
         }
     }
-
-    // Returns the given input stream as an XML DOM.
-    static Document parseXml(InputStream input) {
-        try {
-            DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
-            // We are glossing namespaces for now as we can currently 
-            // disambiguate everything in the Splunk REST API via local name.
-            factory.setNamespaceAware(false);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            InputSource inputSource = new InputSource();
-            inputSource.setCharacterStream(new InputStreamReader(input));
-            return builder.parse(inputSource);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
 }
+

@@ -128,7 +128,7 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
     public void refresh() {
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200); // UNDONE
-        AtomFeed feed = AtomFeed.create(response.getContent());
+        AtomFeed feed = AtomFeed.parse(response.getContent());
         load(feed);
     }
 

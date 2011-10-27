@@ -21,6 +21,7 @@
 
 package com.splunk;
 
+import com.splunk.atom.Xml;
 import com.splunk.http.*;
 
 import java.io.InputStream;
@@ -178,9 +179,9 @@ public class Service extends com.splunk.http.Service {
         HashMap<String, String> args = new HashMap<String, String>();
         args.put("username", username);
         args.put("password", password);
-        ResponseMessage response = super.post("/services/auth/login", args);
+        ResponseMessage response = post("/services/auth/login", args);
         // UNDONE: Check status
-        String sessionKey = parseXml(response)
+        String sessionKey = Xml.parse(response.getContent())
             .getElementsByTagName("sessionKey")
             .item(0)
             .getTextContent();
@@ -192,25 +193,6 @@ public class Service extends com.splunk.http.Service {
     public Service logout() {
         this.token = null;
         return this;
-    }
-
-    // Returns the response content as an XML DOM.
-    // UNDONE: The following helper is only used by the login method, should
-    // find a way to combine this with a similar helper in com.splunk.atom.
-    public Document parseXml(ResponseMessage response) {
-        try {
-            InputStream content = response.getContent();
-            DocumentBuilderFactory factory = 
-                DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            InputSource inputSource = new InputSource();
-            inputSource.setCharacterStream(new InputStreamReader(content));
-            return builder.parse(inputSource);
-        }
-        catch (Exception e) {
-            // UNDONE: SplunkException
-            throw new RuntimeException(e.getMessage());
-        }
     }
 
     public ResponseMessage send(String path, RequestMessage request) {

@@ -143,7 +143,7 @@ public class Entity extends Resource {
     static Entity read(Service service, String path) {
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200); // UNDONE
-        AtomFeed feed = AtomFeed.create(response.getContent());
+        AtomFeed feed = AtomFeed.parse(response.getContent());
         int count = feed.entries.size();
         if (count == 0) return null;
         assert(count == 1);
@@ -157,7 +157,7 @@ public class Entity extends Resource {
     public void refresh() {
         ResponseMessage response = get();
         assert(response.getStatus() == 200); // UNDONE
-        AtomFeed feed = AtomFeed.create(response.getContent());
+        AtomFeed feed = AtomFeed.parse(response.getContent());
         assert(feed.entries.size() == 1);
         AtomEntry entry = feed.entries.get(0);
         load(entry);
