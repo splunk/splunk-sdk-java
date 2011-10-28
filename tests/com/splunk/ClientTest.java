@@ -16,11 +16,11 @@
 
 package com.splunk.sdk.tests.com.splunk;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.splunk.Service;
@@ -196,7 +196,9 @@ public class ClientTest extends TestCase {
     }
     */
 
-
+ /* during development this can be commented out because this test can eat up
+    tons of execution time.
+  */
     private void wait_event_count(Index index, int value, int seconds) {
 
         while (seconds > 0) {
@@ -218,6 +220,7 @@ public class ClientTest extends TestCase {
     @Test public void testIndexes() throws Exception {
 
         System.out.println("Testing Indexes");
+
 
         Service service = connect();
 
@@ -252,13 +255,13 @@ public class ClientTest extends TestCase {
         Assert.assertEquals(index.getTotalEventCount(), 0);
 
         // stream events to index
-        Socket sock = index.attach();
-        OutputStream ostream = sock.getOutputStream();
-        DataOutputStream ds = new DataOutputStream(ostream);
+        Socket socket = index.attach();
+        OutputStream ostream = socket.getOutputStream();
+        Writer out = new OutputStreamWriter(ostream, "UTF8");
 
-        ds.writeBytes("Hello World again.\r\n");
-        ds.writeBytes("Goodbye World again.\r\n");
-        sock.close();
+        out.write("Hello World again.\r\n");
+        out.write("Goodbye World again.\r\n");
+        out.close();
 
         wait_event_count(index, 2, 30);
         Assert.assertEquals(index.getTotalEventCount(), 2);
@@ -276,28 +279,6 @@ public class ClientTest extends TestCase {
 //        wait_event_count(index, '3', 30)
 //        self.assertEqual(index['totalEventCount'], '3')
 //
-
-    }
-/*
-    @Test public void testIndexMetadata() throws Exception {
-
-        System.out.println("Testing Index metadata");
-
-        Service service = connect();
-
-        Indexes indexes = new Indexes(service);
-
-        List<String> getme = new ArrayList<String>();
-        getme.add("eai:acl");
-        getme.add("eai:attributes");
-        Map<String,String> map = indexes.get().read(getme);
-        Assert.assertTrue(map.size() > 0);
-
-        for (String name: indexes.get().list()) {
-            Entity ent = new Index(service, name);
-            map = ent.readmeta();
-            Assert.assertTrue(map.size() > 0);
-        }
     }
 
     @Test public void testInfo() throws Exception {
@@ -311,13 +292,13 @@ public class ClientTest extends TestCase {
             "licenseSignature", "licenseState", "master_guid", "mode",
             "os_build", "os_name", "os_version", "serverName", "version");
 
-        Info info = new Info(service);
-        Map<String,String> map = info.read(expected);
+        Entity info = service.getInfo();
+        Map<String,Object> content = info.getContent();
         for (String name: expected) {
-            Assert.assertTrue(map.get(name).length() > 0);
+            Assert.assertTrue(content.containsKey(name));
         }
     }
-
+/*
     @Test public void testInputs() throws Exception {
 
         System.out.println("Testing Inputs");
@@ -383,6 +364,7 @@ public class ClientTest extends TestCase {
 //                self.assertEqual(input.kind, kind)
 //
     }
+*/
 
     @Test public void testLoggers() throws Exception {
 
@@ -393,34 +375,28 @@ public class ClientTest extends TestCase {
         List <String> expected = Arrays.asList(
                 "INFO", "WARN", "ERROR", "DEBUG", "CRIT");
 
-        Loggers loggers = new Loggers(service);
-        List<String> getme = new ArrayList<String>();
-        getme.add("level");
+        EntityCollection loggers = service.getLoggers();
 
-        for (String name: loggers.get().list()) {
-            Logger logger = new Logger(service, name);
-            Map<String,String> levels = logger.get().element.read(getme);
-            Assert.assertTrue(expected.contains(levels.get("level")));
+        for (Entity ent: (Collection<Entity>)loggers.values()) {
+            Assert.assertTrue(expected.contains(ent.getContent().get("level")));
         }
 
-        Assert.assertTrue(loggers.list().contains("AuditLogger"));
-        Logger logger = new Logger(service, "AuditLogger");
-
-        Map<String,String> saved = logger.get().read(getme);
+        Entity logger = loggers.get("AuditLogger");
+        logger.get();
+        String saved = (String)logger.getContent().get("level");
+        Args update = new Args();
 
         for (String level: expected) {
-            Map<String,String> update = new HashMap<String,String>();
             update.clear();
             update.put("level", level);
             logger.update(update);
-            Map<String,String> updated = logger.get().read(getme);
-            Assert.assertEquals(level, updated.get("level"));
+            Assert.assertEquals(level, logger.getContent().get("level"));
         }
 
-        logger.update(saved);
-        Assert.assertEquals(
-            saved.get("level"),
-            logger.get().read(getme).get("level"));
+        update.clear();
+        update.put("level", saved);
+        logger.update(update);
+        Assert.assertEquals(saved, logger.getContent().get("level"));
     }
 
 
@@ -430,39 +406,39 @@ public class ClientTest extends TestCase {
 
         Service service = connect();
 
-        Messages messages = new Messages(service);
+        EntityCollection messages = service.getMessages();
 
-        if (messages.get().list().contains("sdk-test-message1")) {
-            messages.delete("sdk-test-message1");
+        if (messages.containsKey("sdk-test-message1")) {
+            messages.remove("sdk-test-message1");
         }
+        Assert.assertFalse(messages.containsKey("sdk-test-message1"));
 
-        if (messages.list().contains("sdk-test-message2")) {
-            messages.delete("sdk-test-message2");
+        if (messages.containsKey("sdk-test-message2")) {
+            messages.remove("sdk-test-message2");
         }
+        Assert.assertFalse(messages.containsKey("sdk-test-message2"));
 
-        Assert.assertFalse(messages.get().list().contains("sdk-test-message1"));
-        Assert.assertFalse(messages.list().contains("sdk-test-message2"));
-
-        //UNDONE: message should be placed into "value" put appears to be placed
-        // into key-name 'sdk-test-message1'
-        Map<String,String> args1 = new HashMap<String, String>();
+        Args args1 = new Args();
         args1.put("value", "hello.");
         messages.create("sdk-test-message1", args1);
-        Assert.assertTrue(messages.get().list().contains("sdk-test-message1"));
-        Message message1 = new Message(service, "sdk-test-message1");
 
-        //UNDONE: message should be placed into "value" put appears to be placed
-        // into key-name 'sdk-test-message2'
-        Map<String,String> args2 = new HashMap<String, String>();
+        Assert.assertTrue(messages.containsKey("sdk-test-message1"));
+        Message message = (Message)messages.get("sdk-test-message1");
+        Assert.assertTrue(message.getKey().equals("sdk-test-message1"));
+        Assert.assertTrue(message.getValue().equals("hello."));
+
+        Args args2 = new Args();
         args2.put("value", "world.");
         messages.create("sdk-test-message2", args2);
-        Assert.assertTrue(messages.get().list().contains("sdk-test-message2"));
-        Message message2 = new Message(service, "sdk-test-message2");
 
-        messages.delete("sdk-test-message1");
-        messages.delete("sdk-test-message2");
-        Assert.assertFalse(messages.get().list().contains("sdk-test-message1"));
-        Assert.assertFalse(messages.list().contains("sdk-test-message2"));
+        Assert.assertTrue(messages.containsKey("sdk-test-message2"));
+        message = (Message)messages.get("sdk-test-message2");
+        Assert.assertTrue(message.getKey().equals("sdk-test-message2"));
+        Assert.assertTrue(message.getValue().equals("world."));
+
+        messages.remove("sdk-test-message1");
+        messages.remove("sdk-test-message2");
+        Assert.assertFalse(messages.containsKey("sdk-test-message1"));
+        Assert.assertFalse(messages.containsKey("sdk-test-message2"));
     }
-*/
 }
