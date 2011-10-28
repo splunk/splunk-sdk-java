@@ -123,8 +123,8 @@ public class Service extends com.splunk.http.Service {
         return null; //  UNDONE: flatten?
     }
 
-    public EntityCollection<Job> getJobs() {
-        return new EntityCollection<Job>(this, "search/jobs", Job.class);
+    public JobCollection getJobs() {
+        return new JobCollection(this, "search/jobs");
     }
 
     public EntityCollection<Entity> getLicenseGroups() {

@@ -26,7 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class EntityCollection<T extends Entity> extends Resource implements Map<String, T> {
+public class EntityCollection<T extends Entity> extends Resource implements Map<String, T> 
+{
     private Map<String, T> entities;
     private Class<? extends Entity> entityClass;
 
@@ -97,6 +98,10 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
         return entities.keySet();
     }
 
+    public ResponseMessage list() {
+        return service.get(path + "?count=-1");
+    }
+
     void load(AtomFeed value) {
         try {
             super.load(value);
@@ -131,7 +136,7 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
     }
 
     public void refresh() {
-        ResponseMessage response = service.get(path);
+        ResponseMessage response = list();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.parse(response.getContent());
         load(feed);

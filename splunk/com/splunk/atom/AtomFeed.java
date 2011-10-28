@@ -22,9 +22,9 @@ import org.w3c.dom.Element;
 
 public class AtomFeed extends AtomObject {
     public ArrayList<AtomEntry> entries = new ArrayList<AtomEntry>();
-    public int itemsPerPage = 0;
-    public int startIndex = 0;
-    public int totalResults = 0;
+    public long itemsPerPage = 0;
+    public long startIndex = 0;
+    public long totalResults = 0;
 
     static AtomFeed create() {
         return new AtomFeed();
@@ -58,15 +58,15 @@ public class AtomFeed extends AtomObject {
         }
         else if (name.equals("opensearch:totalResults")) {
             String value = element.getTextContent().trim();
-            this.totalResults = Integer.parseInt(value);
+            this.totalResults = Long.parseLong(value);
         }
         else if (name.equals("opensearch:itemsPerPage")) {
             String value = element.getTextContent().trim();
-            this.itemsPerPage = Integer.parseInt(value);
+            this.itemsPerPage = Long.parseLong(value);
         }
         else if (name.equals("opensearch:startIndex")) {
             String value = element.getTextContent().trim();
-            this.startIndex = Integer.parseInt(value);
+            this.startIndex = Long.parseLong(value);
         }
         else {
             super.init(element);
