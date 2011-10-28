@@ -44,7 +44,7 @@ public class Index extends Entity {
             service.getHost(), service.getPort(),
             service.token);
         out.write(header);
-        out.close();
+        out.flush();
         return socket;
     }
 
