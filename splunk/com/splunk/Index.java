@@ -31,28 +31,20 @@ public class Index extends Entity {
         super(service, path);
     }
 
-    private String getIndexName(String path) {
-        String [] parts = path.split("/");
-        return parts[parts.length-1];
-    }
-
     public Socket attach() throws IOException {
-        Socket sock = service.streamConnect();
-        OutputStream ostream = sock.getOutputStream();
-        DataOutputStream ds = new DataOutputStream(ostream);
-
-        ds.writeBytes(String.format(
-            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n",
-            getIndexName(path)));
-        ds.writeBytes(String.format(
-            "Host: %s:%d\r\n", service.getHost(), service.getPort()));
-        ds.writeBytes("Accept-Encoding: identity\r\n");
-        ds.writeBytes(String.format(
-             "Authorization: %s\r\n", service.token));
-        ds.writeBytes("X-Splunk-Input-Mode: Streaming\r\n");
-        ds.writeBytes("\r\n");
-
-        return sock;
+        Socket socket = service.streamConnect();
+        DataOutputStream ds = new DataOutputStream(socket.getOutputStream());
+        String header = String.format(
+            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n" +
+            "Host: %s:%d\r\n" +
+            "Accept-Encoding: identity\r\n" +
+            "Authorization: %s\r\n" +
+            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
+            getName(),
+            service.getHost(), service.getPort(),
+            service.token);
+        ds.writeBytes(header);
+        return socket;
     }
 
     public void clean() {
@@ -272,7 +264,7 @@ public class Index extends Entity {
     public void submit(String data) {
         RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
-        service.send("receivers/simple?index=" + getIndexName(path), request);
+        service.send("receivers/simple?index=" + getName(), request);
     }
 
     public void upload() {
