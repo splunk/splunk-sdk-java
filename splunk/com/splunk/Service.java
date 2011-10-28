@@ -199,6 +199,10 @@ public class Service extends com.splunk.http.Service {
         return this;
     }
 
+    public ResponseMessage restart() {
+        return this.get("server/control/restart");
+    }
+
     public ResponseMessage send(String path, RequestMessage request) {
         request.getHeader().put("Authorization", token);
         return super.send(fullpath(path), request);

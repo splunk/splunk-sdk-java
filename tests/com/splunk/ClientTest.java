@@ -16,21 +16,26 @@
 
 package com.splunk.sdk.tests.com.splunk;
 
+import com.splunk.*;
+import com.splunk.http.ResponseMessage;
+import com.splunk.sdk.Program;
+import com.splunk.Service;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.splunk.Service;
-import junit.framework.TestCase;
-import org.junit.*;
 
+import junit.framework.TestCase;
 import junit.framework.Assert;
 
-import com.splunk.*;
-import com.splunk.sdk.Program;
+import org.junit.*;
+
+
 
 public class ClientTest extends TestCase {
     Program program = new Program();
@@ -221,8 +226,9 @@ public class ClientTest extends TestCase {
 
         System.out.println("Testing Indexes");
 
-
         Service service = connect();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        String date = sdf.format(new Date());
 
         EntityCollection<Index> indexes = service.getIndexes();
 
@@ -245,8 +251,8 @@ public class ClientTest extends TestCase {
         Assert.assertFalse(index.isDisabled());
 
         // submit events to index
-        index.submit("Hello World.");
-        index.submit("Goodbye world.");
+        index.submit(date + "Hello World.");
+        index.submit(date + "Goodbye world.");
         wait_event_count(index, 2, 30);
         Assert.assertEquals(index.getTotalEventCount(), 2);
 
@@ -259,9 +265,10 @@ public class ClientTest extends TestCase {
         OutputStream ostream = socket.getOutputStream();
         Writer out = new OutputStreamWriter(ostream, "UTF8");
 
-        out.write("Hello World again.\r\n");
-        out.write("Goodbye World again.\r\n");
-        out.close();
+        out.write(date + "Hello World again.\r\n");
+        out.write(date + "Goodbye World again.\r\n");
+        out.flush();
+        socket.close();
 
         wait_event_count(index, 2, 30);
         Assert.assertEquals(index.getTotalEventCount(), 2);
@@ -440,5 +447,31 @@ public class ClientTest extends TestCase {
         messages.remove("sdk-test-message2");
         Assert.assertFalse(messages.containsKey("sdk-test-message1"));
         Assert.assertFalse(messages.containsKey("sdk-test-message2"));
+    }
+
+    @Test public void testRestart() throws Exception {
+
+        int retry = 10;
+        boolean restarted = false;
+
+        Service service = connect();
+
+        ResponseMessage response = service.restart();
+        Assert.assertEquals(200, response.getStatus());
+
+        Thread.sleep(5000); // 5 seconds
+
+        while (retry > 0) {
+            retry = retry-1;
+            try {
+                service = connect();
+                restarted = true;
+                break;
+            } catch (Exception e) {
+                Thread.sleep(5000);
+            }
+        }
+
+        Assert.assertTrue(restarted);
     }
 }
