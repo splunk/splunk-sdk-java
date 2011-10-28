@@ -17,7 +17,6 @@
 //
 // UNDONE:
 //   * POST, DELETE
-//   * Response schema
 //   * Namespaces
 //       - Path fragments
 //
@@ -148,11 +147,12 @@ public class ServiceTest extends TestCase {
         assertFalse(users.containsKey(username));
 
         user = users.create(
-            username, password, new String[] { "power" });
+            username, password, new String[] { "power", "user" });
         assertTrue(users.containsKey(username));
         assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().size() == 1);
+        assertTrue(user.getRoles().size() == 2);
         assertTrue(user.getRoles().contains("power"));
+        assertTrue(user.getRoles().contains("user"));
 
         users.remove(username);
         assertFalse(users.containsKey(username));
