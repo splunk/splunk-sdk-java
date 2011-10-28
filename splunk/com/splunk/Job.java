@@ -14,6 +14,8 @@
  * under the License.
  */
 
+// UNDONE: performance property
+
 package com.splunk;
 
 import java.util.Date;
@@ -23,12 +25,44 @@ public class Job extends Entity {
         super(service, path);
     }
 
+    public Job control(String action) {
+        return control(action, null);
+    }
+
+    public Job control(String action, Args extra) {
+        Args args = new Args("action", action);
+        if (extra != null) args.putAll(extra);
+        service.post(actionPath("control"), args);
+        invalidate();
+        return this;
+    }
+
+    public Job cancel() {
+        return control("cancel");
+    }
+
+    public Job disablePreview() {
+        return control("disablepreview");
+    }
+
+    public Job enablePreview() {
+        return control("enablepreview");
+    }
+
+    public Job finish() {
+        return control("finalize");
+    }
+
+    public Job pause() {
+        return control("pause");
+    }
+
     public Date getCursorTime() {
         return getDate("cursorTime");
     }
 
     public String getDelegate() {
-        return getString("delegate");
+        return getString("delegate", null);
     }
 
     public int getDiskUsage() {
@@ -72,7 +106,7 @@ public class Job extends Entity {
     }
 
     public String getEventSearch() {
-        return getString("eventSearch");
+        return getString("eventSearch", null);
     }
 
     public String getEventSorting() {
@@ -80,11 +114,11 @@ public class Job extends Entity {
     }
 
     public String getKeywords() {
-        return getString("keywords");
+        return getString("keywords", null);
     }
 
     public String getLabel() {
-        return getString("label");
+        return getString("label", null);
     }
 
     public Date getLatestTime() {
@@ -103,8 +137,12 @@ public class Job extends Entity {
         return getInteger("priority");
     }
 
+    public void setPriority(int value) {
+        control("setpriority", new Args("priority", value));
+    }
+
     public String getRemoteSearch() {
-        return getString("remoteSearch");
+        return getString("remoteSearch", null);
     }
 
     public String getReportSearch() {
@@ -195,6 +233,8 @@ public class Job extends Entity {
         return getBoolean("isZombie");
     }
 
-    // UNDONE: performance
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }
 

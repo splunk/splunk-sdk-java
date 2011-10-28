@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import com.splunk.atom.AtomFeed;
+import com.splunk.atom.Xml;
 import com.splunk.http.ResponseMessage;
 
 public class JobCollection extends EntityCollection<Job> {
@@ -39,8 +39,8 @@ public class JobCollection extends EntityCollection<Job> {
         ResponseMessage response = service.post(path, args);
         assert(response.getStatus() == 201);
         invalidate();
-        AtomFeed feed = AtomFeed.parse(response.getContent());
-        String sid = (String)feed.entries.get(0).content.get("sid");
+        String sid = Xml.parse(response.getContent())
+            .getElementsByTagName("sid").item(0).getTextContent();
         return get(sid);
     }
 
