@@ -18,8 +18,9 @@ import com.splunk.EntityCollection;
 import com.splunk.Service;
 import com.splunk.Index;
 
-import java.io.DataOutputStream;
 import java.io.OutputStream;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import java.util.Date;
@@ -53,19 +54,20 @@ public class Program extends com.splunk.sdk.Program {
         Index idx = indexes.get("sdk-tests");
         String date = sdf.format(new Date());
 
-        // submit method
-        idx.submit(date + " 1");
-        idx.submit(date + " 2");
-        idx.submit(date + " 3");
+        // submit method -- expect unicode O with Umlaut
+        idx.submit(date + " 1 \u0150 \u0150");
+        idx.submit(date + " 2 \u0150 \u0150");
+        idx.submit(date + " 3 \u0150 \u0150");
 
-        // stream method
+        // stream method -- expect unicode O with Umlaut
         Socket sock = idx.attach();
         OutputStream ostream = sock.getOutputStream();
-        DataOutputStream ds = new DataOutputStream(ostream);
+        Writer out = new OutputStreamWriter(ostream, "UTF8");
 
-        ds.writeBytes(date + " ONE\r\n");
-        ds.writeBytes(date + " TWO\r\n");
-        ds.writeBytes(date + " THREE\r\n");
-        sock.close();
+        out.write(date + " ONE \u0150 \u0150\r\n");
+        out.write(date + " TWO \u0150 \u0150\r\n");
+        out.write(date + " THREE \u0150 \u0150\r\n");
+
+        out.close();
     }
 }

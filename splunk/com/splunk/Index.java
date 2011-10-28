@@ -19,9 +19,7 @@ package com.splunk;
 import com.splunk.http.ResponseMessage;
 import com.splunk.http.RequestMessage;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.util.Date;
 import java.net.Socket;
 
@@ -33,7 +31,9 @@ public class Index extends Entity {
 
     public Socket attach() throws IOException {
         Socket socket = service.streamConnect();
-        DataOutputStream ds = new DataOutputStream(socket.getOutputStream());
+        OutputStream ostream = socket.getOutputStream();
+        Writer out = new OutputStreamWriter(ostream, "UTF8");
+
         String header = String.format(
             "POST /services/receivers/stream?index=%s HTTP/1.1\r\n" +
             "Host: %s:%d\r\n" +
@@ -43,7 +43,8 @@ public class Index extends Entity {
             getName(),
             service.getHost(), service.getPort(),
             service.token);
-        ds.writeBytes(header);
+        out.write(header);
+        out.close();
         return socket;
     }
 
@@ -267,8 +268,12 @@ public class Index extends Entity {
         service.send("receivers/simple?index=" + getName(), request);
     }
 
-    public void upload() {
-        return; // UNDONE
+    public void upload(String filename) {
+        //UNDONE: untested
+        Args args = new Args();
+        args.put("name", filename);
+        args.put("index", getName());
+        service.post("/services/data/inputs/oneshot", args);
     }
 }
 
