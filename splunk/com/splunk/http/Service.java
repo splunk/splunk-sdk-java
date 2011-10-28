@@ -14,17 +14,12 @@
  * under the License.
  */
 
-// UNDONE: Support for Splunk namespaces
-// UNDONE: Support for pluggable trust managers.
-// UNDONE: Timeouts, connection & request.
-
 package com.splunk.http;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,39 +83,18 @@ public class Service {
     }
 
     // Returns the count of args in the given map
-    private static int count(Map<String, String> args) {
+    private static int count(Map<String, Object> args) {
         if (args == null) return 0;
         return args.size();
-    }
-
-    public String encode(String value) {
-        if (value == null) return "";
-        String result = null;
-        try {
-            result = URLEncoder.encode(value, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) { assert false; }
-        return result;
-    }
-
-    public String encode(Map<String, String> args) {
-        StringBuilder builder = new StringBuilder();
-        for (Entry<String, String> entry : args.entrySet()) {
-            if (builder.length() > 0)
-                builder.append('&');
-            builder.append(encode(entry.getKey()));
-            builder.append('=');
-            builder.append(encode(entry.getValue()));
-        }
-        return builder.toString();
     }
 
     public ResponseMessage get(String path) {
         return send(path, new RequestMessage("GET"));
     }
 
-    public ResponseMessage get(String path, Map<String, String> args) {
-        if (count(args) > 0) path = path + "?" + encode(args);
+    public ResponseMessage get(String path, Map<String, Object> args) {
+        if (count(args) > 0)
+            path = path + "?" + Args.encode(args);
         RequestMessage request = new RequestMessage("GET");
         return send(path, request);
     }
@@ -158,11 +132,12 @@ public class Service {
         return post(path, null);
     }
 
-    public ResponseMessage post(String path, Map<String, String> args) {
+    public ResponseMessage post(String path, Map<String, Object> args) {
         RequestMessage request = new RequestMessage("POST");
         request.getHeader().put(
             "Content-Type", "application/x-www-form-urlencoded");
-        if (args != null && args.size() > 0) request.setContent(encode(args));
+        if (count(args) > 0) 
+            request.setContent(Args.encode(args));
         return send(path, request);
     }
 
@@ -171,8 +146,9 @@ public class Service {
         return send(path, request);
     }
 
-    public ResponseMessage delete(String path, Map<String, String> args) {
-        if (count(args) > 0) path = path + "?" + encode(args);
+    public ResponseMessage delete(String path, Map<String, Object> args) {
+        if (count(args) > 0) 
+            path = path + "?" + Args.encode(args);
         RequestMessage request = new RequestMessage("DELETE");
         return send(path, request);
     }

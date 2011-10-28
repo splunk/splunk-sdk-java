@@ -114,34 +114,48 @@ public class ServiceTest extends TestCase {
     }
 
     @Test public void testUsers() {
+        User user;
+
         Service service = connect();
 
         String username = "sdk-user";
+        String password = "changeme";
 
         UserCollection users = service.getUsers();
-        assertFalse(users.containsKey(username));
 
-        User user;
-
-        user = users.create(username, "changeme", "power");
-
-        assertTrue(users.containsKey(username));
-        assertEquals(user.getName(), username);
-
-        users.remove(username);
+        users.remove(username); // cleanup
         assertFalse(users.containsKey(username));
 
         Args args = new Args();
-        args.put("password", "changeme");
+        args.put("password", password);
         args.put("roles", "power");
         user = users.create(username, args);
-
         assertTrue(users.containsKey(username));
         assertEquals(user.getName(), username);
+        assertTrue(user.getRoles().size() == 1);
+        assertTrue(user.getRoles().contains("power"));
 
         users.remove(username);
         assertFalse(users.containsKey(username));
 
+        user = users.create(username, password, "power");
+        assertTrue(users.containsKey(username));
+        assertEquals(user.getName(), username);
+        assertTrue(user.getRoles().size() == 1);
+        assertTrue(user.getRoles().contains("power"));
+
+        users.remove(username);
+        assertFalse(users.containsKey(username));
+
+        user = users.create(
+            username, password, new String[] { "power" });
+        assertTrue(users.containsKey(username));
+        assertEquals(user.getName(), username);
+        assertTrue(user.getRoles().size() == 1);
+        assertTrue(user.getRoles().contains("power"));
+
+        users.remove(username);
+        assertFalse(users.containsKey(username));
     }
 }
 

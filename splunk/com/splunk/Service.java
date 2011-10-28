@@ -181,11 +181,10 @@ public class Service extends com.splunk.http.Service {
     }
 
     public Service login(String username, String password) {
-        HashMap<String, String> args = new HashMap<String, String>();
+        Args args = new Args();
         args.put("username", username);
         args.put("password", password);
         ResponseMessage response = post("/services/auth/login", args);
-        // UNDONE: Check status
         String sessionKey = Xml.parse(response.getContent())
             .getElementsByTagName("sessionKey")
             .item(0)

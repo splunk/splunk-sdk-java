@@ -35,18 +35,16 @@ public class UserCollection extends EntityCollection<User> {
         return create(name, args);
     }
 
-/* UNDONE: Args doesnt support list values yet
-    public User create(String name, String password, List<String> roles) {
+    public User create(String name, String password, String[] roles) {
         return create(name, password, roles, null);
     }
 
     public User 
-    create(String name, String password, List<String> roles, Args extra) {
+    create(String name, String password, String[] roles, Args extra) {
         Args args = new Args();
         args.put("password", password);
-        args.put("role", roles);
+        args.put("roles", roles);
         if (extra != null) args.putAll(extra);
         return create(name, args);
     }
-*/
 }

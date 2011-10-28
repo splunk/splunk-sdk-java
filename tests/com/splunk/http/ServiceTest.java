@@ -53,7 +53,7 @@ public class ServiceTest extends TestCase {
     @Test public void testPost() throws IOException {
         Service service = new Service(
             program.host, program.port, program.scheme);
-        HashMap<String, String> args = new HashMap<String, String>();
+        HashMap<String, Object> args = new HashMap<String, Object>();
         args.put("foo", "bar");
         ResponseMessage response = service.post("/", args);
         // We are taking advantage of the fact that a post to the root of

@@ -139,6 +139,7 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
 
     public T remove(Object key) {
         validate();
+        if (!containsKey(key)) return null;
         T entity = entities.get(key);
         entity.remove();
         entities.remove(key);

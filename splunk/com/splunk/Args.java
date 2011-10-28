@@ -18,4 +18,5 @@ package com.splunk;
 
 import java.util.HashMap;
 
-public class Args extends HashMap<String, String> {}
+// Value may be String or String[]
+public class Args extends HashMap<String, Object> {}
