@@ -230,6 +230,7 @@
                  value="
                     ../splunk.jar 
                     ../splunk-sdk.jar 
+                    ../../lib/org-openide-actions.jar 
                     ../../lib/org-openide-awt.jar 
                     ../../lib/org-openide-dialogs.jar 
                     ../../lib/org-openide-explorer.jar 

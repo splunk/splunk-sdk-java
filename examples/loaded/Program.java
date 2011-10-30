@@ -203,8 +203,29 @@ public class Program extends com.splunk.sdk.Program {
         printField("Value", message.getValue());
     }
 
+    void printServiceInfo(ServiceInfo info) {
+        printEntity(info);
+        printField("Build", info.getBuild());
+        printField("CpuArch", info.getCpuArch());
+        printField("Guid", info.getGuid());
+        printField("isFree", info.isFree());
+        printField("isTrial", info.isTrial());
+        printField("LicenseKeys", info.getLicenseKeys().toString());
+        printField("LicenseSignature", info.getLicenseSignature());
+        printField("LicenseState", info.getLicenseState());
+        printField("MasterGuid", info.getMasterGuid());
+        printField("Mode", info.getMode());
+        printField("OsBuild", info.getOsBuild());
+        printField("OsVersion", info.getOsVersion());
+        printField("ServerName", info.getServerName());
+        printField("Version", info.getVersion());
+    }
+
     public void run() throws Exception {
         Service service = connect();
+
+        System.out.print("\n**** Info ****");
+        printServiceInfo(service.getInfo());
 
         System.out.print("\n**** Applications ****");
         printEntities(service.getApplications());

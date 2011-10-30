@@ -115,8 +115,9 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection<Index>(this, "data/indexes", Index.class);
     }
 
-    public Entity getInfo() {
-        return Entity.read(this, "server/info");
+    public ServiceInfo getInfo() {
+        // UNDONE: Align the following with singleton protocol (reaad)
+        return new ServiceInfo(this);
     }
 
     public EntityCollection<Entity> getInputs() {
