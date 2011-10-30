@@ -27,8 +27,6 @@
   UNDONE: Example targets are hightly repetitive, seems like we should be
   able to do something better, eg: macroize?
 
-  UNDONE: Should we factor properties into a separate build.properties file?
-
   UNDONE: Do we need debug & retail builds?
 
   UNDONE: Should we add "run" targets (for tests & examples) to the build file?
@@ -46,6 +44,15 @@
     <path id="classpath.examples">
         <pathelement location="${dist.splunk}"/>
         <pathelement location="${dist.splunk-sdk}"/>
+    </path>
+
+    <path id="classpath.examples-gui">
+        <pathelement location="${dist.splunk}"/>
+        <pathelement location="${dist.splunk-sdk}"/>
+        <pathelement location="${lib.org-openide-explorer}"/>
+        <pathelement location="${lib.org-openide-nodes}"/>
+        <pathelement location="${lib.org-openide-util}"/>
+        <pathelement location="${lib.org-openide-util-lookup}"/>
     </path>
 
     <!-- Classpaath for building tests -->
@@ -91,6 +98,7 @@
 
     <target name="compile-examples" 
      depends="
+        compile-examples-explorer,
         compile-examples-index,
         compile-examples-info,
         compile-examples-inputs,
@@ -98,21 +106,12 @@
         compile-examples-spurl,
         compile-examples-test"/>
 
-    <target name="compile-examples-spurl" depends="dist-libs">
-        <mkdir dir="${dir.build.examples.spurl}"/>
+    <target name="compile-examples-explorer" depends="compile-libs">
+        <mkdir dir="${dir.build.examples.explorer}"/>
         <javac includeantruntime="false"
-         srcdir="${dir.examples.spurl}"
-         destdir="${dir.build.examples.spurl}">
-            <classpath refid="classpath.examples"/>
-        </javac>
-    </target>
-
-    <target name="compile-examples-test" depends="dist-libs">
-        <mkdir dir="${dir.build.examples.test}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.test}"
-         destdir="${dir.build.examples.test}">
-            <classpath refid="classpath.examples"/>
+         srcdir="${dir.examples.explorer}"
+         destdir="${dir.build.examples.explorer}">
+            <classpath refid="classpath.examples-gui"/>
         </javac>
     </target>
 
@@ -148,6 +147,24 @@
         <javac includeantruntime="false"
          srcdir="${dir.examples.loaded}"
          destdir="${dir.build.examples.loaded}">
+            <classpath refid="classpath.examples"/>
+        </javac>
+    </target>
+
+    <target name="compile-examples-spurl" depends="dist-libs">
+        <mkdir dir="${dir.build.examples.spurl}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.examples.spurl}"
+         destdir="${dir.build.examples.spurl}">
+            <classpath refid="classpath.examples"/>
+        </javac>
+    </target>
+
+    <target name="compile-examples-test" depends="dist-libs">
+        <mkdir dir="${dir.build.examples.test}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.examples.test}"
+         destdir="${dir.build.examples.test}">
             <classpath refid="classpath.examples"/>
         </javac>
     </target>
@@ -192,12 +209,36 @@
 
     <target name="dist-examples"
      depends="
+        dist-examples-explorer,
         dist-examples-index,
         dist-examples-info,
         dist-examples-inputs,
         dist-examples-loaded,
         dist-examples-spurl,
         dist-examples-test"/>
+
+    <target name="dist-examples-explorer" depends="compile-examples-explorer">
+        <mkdir dir="${dir.dist.examples}"/>
+        <jar 
+         basedir="${dir.build.examples.explorer}"
+         destfile="${dir.dist.examples}/explorer.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="
+                    ../splunk.jar 
+                    ../splunk-sdk.jar 
+                    ../../lib/org-openide-awt.jar 
+                    ../../lib/org-openide-dialogs.jar 
+                    ../../lib/org-openide-explorer.jar 
+                    ../../lib/org-openide-nodes.jar 
+                    ../../lib/org-openide-util.jar 
+                    ../../lib/org-openide-util-lookup.jar"/>
+            </manifest>
+        </jar>
+    </target>
 
     <target name="dist-examples-index" depends="compile-examples-index">
         <mkdir dir="${dir.dist.examples}"/>

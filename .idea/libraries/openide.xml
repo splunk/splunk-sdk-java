@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="openide">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/org-openide-explorer.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org-openide-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org-openide-nodes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org-openide-util-lookup.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org-openide-awt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org-openide-dialogs.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
