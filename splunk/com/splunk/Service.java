@@ -55,12 +55,12 @@ public class Service extends com.splunk.http.Service {
         super(host, port, scheme);
     }
 
-    public Service(ServiceInfo info) {
+    public Service(ServiceArgs args) {
         super();
-        this.host = info.host == null ? DEFAULT_HOST : info.host;
-        this.port = info.port == null ? DEFAULT_PORT : info.port;
-        this.scheme = info.scheme == null ? DEFAULT_SCHEME : info.scheme;
-        this.namespace = info.namespace;
+        this.host = args.host == null ? DEFAULT_HOST : args.host;
+        this.port = args.port == null ? DEFAULT_PORT : args.port;
+        this.scheme = args.scheme == null ? DEFAULT_SCHEME : args.scheme;
+        this.namespace = args.namespace;
     }
 
     // Ensures that the given path is fully qualified, prepending a
