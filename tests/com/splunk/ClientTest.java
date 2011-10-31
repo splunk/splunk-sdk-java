@@ -51,10 +51,10 @@ public class ClientTest extends TestCase {
     @Before public void setUp() {
         this.program.init(); // Pick up .splunkrc settings
     }
-
+/*
     // Nota Bene: deleting an app, then creating one requires a splunk reboot in between.
     @Test public void testApps() throws Exception {
-/*
+
         System.out.println("Testing Applications");
 
         Service service = connect();
@@ -62,32 +62,24 @@ public class ClientTest extends TestCase {
         EntityCollection<Application> apps = service.getApplications();
 
         if (apps.containsKey("sdk-tests")) {
-            apps.get("sdk-tests").remove();
+            apps.remove("sdk-tests");
         }
 
         Assert.assertEquals(false, apps.containsKey("sdk-tests"));
 
         apps.create("sdk-tests");
-        apps.refresh();
         Assert.assertEquals(true, apps.containsKey("sdk-tests"));
 
-        Entity app = apps.get("sdk-tests");
-
         // UNDONE: are we exposing 'author' in AtomObjects
-
+        //Entity app = apps.get("sdk-tests");
         //Assert.assertFalse(app.getContent().get("author").equals("Splunk"));
-
         //Args map = new Args();
         //map.put("author", "Splunk");
         //app.update(map);
-        //apps.refresh();
-
         //Assert.assertTrue(app.getContent().get("author").equals("Splunk"));
 
-        app.remove();
-        apps.refresh();
+        apps.remove("sdk-tests");
         Assert.assertEquals(false, apps.containsKey("sdk-tests"));
-        */
     }
 
     @Test public void testDeployments() throws Exception {
@@ -149,7 +141,6 @@ public class ClientTest extends TestCase {
             Assert.assertTrue(caps.contains(name));
         }
     }
-/*
 
         // UNDONE:
         //
@@ -163,12 +154,14 @@ public class ClientTest extends TestCase {
         Service service = connect();
 
         EntityCollection confs = service.getConfigurations();
-        for (Entity entity: (Collection<Entity>) confs.values()) {
-            entity.get(); // just read and ignore return data
-        }
+        //for (Entity entity: (Collection<Entity>) confs.values()) {
+        //    entity.get(); // just read and ignore return data
+        //}
 
         Assert.assertTrue(confs.containsKey("props"));
         Entity conf = confs.get("props");
+
+        System.out.println(conf.getContent());
 
         //
         //
@@ -178,32 +171,29 @@ public class ClientTest extends TestCase {
         //
         //Assert.assertFalse(confs.containsKey("sdk-tests"));
 
-        confs.create("props/sdk-tests");
-        confs.refresh();
+        //confs.create("props/sdk-tests");
         //Assert.assertTrue(confs.containsKey("sdk-tests"));
 
-        conf = confs.get("props/sdk-tests");
-        List<String> getme = new ArrayList<String>();
-        Assert.assertTrue(conf.getContent().containsKey("maxDist"));
+        //conf = confs.get("props/sdk-tests");
+        //List<String> getme = new ArrayList<String>();
+        //Assert.assertTrue(conf.getContent().containsKey("maxDist"));
 
         // extract maxDist and update it to +1, then compare.
-        int value = Integer.parseInt((String)conf.getContent().get("maxDist"));
+        //int value = Integer.parseInt((String)conf.getContent().get("maxDist"));
 
-        Args updateme = new Args();
-        updateme.put("maxDist", Integer.toString(value + 1));
-        conf.update(updateme);
-        conf.refresh();
-        int value2 = Integer.parseInt((String)conf.getContent().get("maxDist"));
-        Assert.assertEquals(value+1, value2);
+        //Args updateme = new Args();
+        //updateme.put("maxDist", Integer.toString(value + 1));
+        //conf.update(updateme);
+        //int value2 = Integer.parseInt((String)conf.getContent().get("maxDist"));
+        //Assert.assertEquals(value+1, value2);
 
         // conf.remove();
         //Assert.assertFalse(conf.getContent().containsValue("sdk-tests"));
     }
-    */
 
- /* during development this can be commented out because this test can eat up
-    tons of execution time.
-  */
+
+ // during development this can be commented out because this test can eat up
+ //   tons of execution time.
     private void wait_event_count(Index index, int value, int seconds) {
 
         while (seconds > 0) {
@@ -251,8 +241,8 @@ public class ClientTest extends TestCase {
         Assert.assertFalse(index.isDisabled());
 
         // submit events to index
-        index.submit(date + "Hello World.");
-        index.submit(date + "Goodbye world.");
+        index.submit(date + "Hello World. \u0150");
+        index.submit(date + "Goodbye world. \u0150");
         wait_event_count(index, 2, 30);
         Assert.assertEquals(index.getTotalEventCount(), 2);
 
@@ -265,8 +255,8 @@ public class ClientTest extends TestCase {
         OutputStream ostream = socket.getOutputStream();
         Writer out = new OutputStreamWriter(ostream, "UTF8");
 
-        out.write(date + "Hello World again.\r\n");
-        out.write(date + "Goodbye World again.\r\n");
+        out.write(date + "Hello World again. \u0150\r\n");
+        out.write(date + "Goodbye World again.\u0150\r\n");
         out.flush();
         socket.close();
 
@@ -371,7 +361,7 @@ public class ClientTest extends TestCase {
 //                self.assertEqual(input.kind, kind)
 //
     }
-*/
+
 
     @Test public void testLoggers() throws Exception {
 
@@ -459,19 +449,51 @@ public class ClientTest extends TestCase {
         ResponseMessage response = service.restart();
         Assert.assertEquals(200, response.getStatus());
 
-        Thread.sleep(5000); // 5 seconds
-
         while (retry > 0) {
+            Thread.sleep(5000); // 5 seconds
             retry = retry-1;
             try {
                 service = connect();
                 restarted = true;
                 break;
             } catch (Exception e) {
-                Thread.sleep(5000);
+            }
+        }
+        Assert.assertTrue(restarted);
+    }
+    */
+
+    @Test public void testRoles() throws Exception {
+
+        Service service = connect();
+
+        EntityCollection roles = service.getRoles();
+        List<String> allCapabilities = service.getCapabilities();
+
+
+        if (roles.containsKey("sdk-tester")) {
+            roles.remove("sdk-tester");
+        }
+        Assert.assertFalse(roles.containsKey("sdk-tester"));
+
+
+        for (Entity role: (Collection<Entity>)roles.values()) {
+            List<String> myCapabilities = (List<String>)role.getContent().get("capabilities");
+            for (String cap: myCapabilities) {
+                Assert.assertTrue(allCapabilities.contains(cap));
             }
         }
 
-        Assert.assertTrue(restarted);
+        Assert.assertFalse(roles.containsKey("sdk-tester"));
+        Entity role = roles.create("sdk-tester");
+        Assert.assertTrue(roles.containsKey("sdk-tester"));
+
+        Entity foo = roles.get("sdk-tester");
+
+        System.out.println("role capabilities ... " + role.getContent());
+        //Assert.assertTrue(role.getContent().containsKey("capabilities"));
+
+        roles.remove("sdk-tester");
+        Assert.assertFalse(roles.containsKey("capabilities"));
     }
 }

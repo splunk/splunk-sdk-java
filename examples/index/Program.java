@@ -18,15 +18,18 @@ import com.splunk.EntityCollection;
 import com.splunk.Service;
 import com.splunk.Index;
 
-import java.io.OutputStream;
-import java.io.Writer;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.util.Collection;
 
 public class Program extends com.splunk.sdk.Program {
+    private void listAllIndexes(Service service) {
+        EntityCollection<Index> indexes = service.getIndexes();
+        for (Index entity: indexes.values()) {
+            System.out.println(
+                entity.getTitle() +
+                " (" + entity.getContent().get("totalEventCount") + ")");
+        }
+    }
+
     public static void main(String[] args) {
         Program program = new Program();
         try {
@@ -42,32 +45,51 @@ public class Program extends com.splunk.sdk.Program {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
-        EntityCollection<Index> indexes = service.getIndexes();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        // This example takes optional arguments:
+        // [action index-name]
+        //
+        // without cli arguments, all indexes and their totalEventCount
+        // is displayed
 
-        for (Index entity: indexes.values()) {
-            System.out.println(
-                entity.getTitle() +
-                " (" + entity.getContent().get("totalEventCount") + ")");
+        if (this.args.length == 0) {
+            listAllIndexes(service);
+            return;
+        } else {
+            if (this.args.length != 2) {
+                System.out.println("You must provide action and index name");
+            }
         }
 
-        Index idx = indexes.get("sdk-tests");
-        String date = sdf.format(new Date());
+        String action = this.args[0];
+        String name = this.args[1];
+        EntityCollection indexes = service.getIndexes();
 
-        // submit method -- expect unicode O with Umlaut
-        idx.submit(date + " 1 \u0150 \u0150");
-        idx.submit(date + " 2 \u0150 \u0150");
-        idx.submit(date + " 3 \u0150 \u0150");
-
-        // stream method -- expect unicode O with Umlaut
-        Socket sock = idx.attach();
-        OutputStream ostream = sock.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
-
-        out.write(date + " ONE \u0150 \u0150\r\n");
-        out.write(date + " TWO \u0150 \u0150\r\n");
-        out.write(date + " THREE \u0150 \u0150\r\n");
-
-        out.close();
+        if (this.args[0].equals("clean")) {
+            if (!indexes.containsKey(name)) {
+                System.out.println("Index " + name + " does not exists");
+                return;
+            }
+            service.getIndexes().get(name).clean();
+        } else if (action.equals("create")) {
+            if (indexes.containsKey(name)) {
+                System.out.println("Index " + name + " already exists");
+                return;
+            }
+            service.getIndexes().create(name);
+        } else if (action.equals("disable")) {
+            if (!indexes.containsKey(name)) {
+                System.out.println("Index " + name + " does not exists");
+                return;
+            }
+            service.getIndexes().get(name).disable();
+        } else if (action.equals("enable")) {
+            if (!indexes.containsKey(name)) {
+                System.out.println("Index " + name + " does not exists");
+                return;
+            }
+            service.getIndexes().get(name).disable();
+        } else {
+            System.out.println("Unknown action: " + action);
+        }
     }
 }
