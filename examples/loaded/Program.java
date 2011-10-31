@@ -231,11 +231,29 @@ public class Program extends com.splunk.sdk.Program {
         printField("Version", info.getVersion());
     }
 
+    void printSettings(Settings settings) {
+        printEntity(settings);
+        printField("SplunkDB", settings.getSplunkDB());
+        printField("SplunkHome", settings.getSplunkHome());
+        printField("EnableSplunkWebSSL", settings.getEnableSplunkWebSSL());
+        printField("Host", settings.getHost());
+        printField("HttpPort", settings.getHttpPort());
+        printField("MgmtPort", settings.getMgmtPort());
+        printField("Pass4SymmKey", settings.getPass4SymmKey());
+        printField("ServerName", settings.getServerName());
+        printField("SessionTimeout", settings.getSessionTimeout());
+        printField("StartWebServer", settings.getStartWebServer());
+        printField("TrustedIP", settings.getTrustedIP());
+    }
+
     public void run() throws Exception {
         Service service = connect();
 
         System.out.print("\n**** Info ****");
         printServiceInfo(service.getInfo());
+
+        System.out.print("\n**** Settings ****");
+        printSettings(service.getSettings());
 
         System.out.print("\n**** Applications ****");
         for (Entity app : service.getApplications().values())
