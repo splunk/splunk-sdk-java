@@ -46,9 +46,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
     Explorer(Service service) {
         this.roots = new RootKids(service);
-        this.manager = new ExplorerManager();
         Node root = new AbstractNode(roots);
         root.setDisplayName("Root"); // Not visible
+        this.manager = new ExplorerManager();
         this.manager.setRootContext(root);
         initialize();
     }
@@ -182,6 +182,87 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
         @Override protected Node[] createNodes(Application app) {
             return new Node[] { new AppNode(app) };
+        }
+    }
+
+    class IndexNode extends ExplorerNode {
+        IndexNode(Index index) {
+            super(index, new NoKids());
+            setDisplayName(index.getName());
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(boolean.class, "getAssureUTF8");
+                add(int.class, "getBlockSignSize");
+                add(String.class, "getBlockSignatureDatabase");
+                add(String.class, "getColdPath");
+                add(String.class, "getColdPathExpanded");
+                add(String.class, "getColdToFrozenDir");
+                add(String.class, "getColdToFrozenScript");
+                add(boolean.class, "getCompressRawdata");
+                add(int.class, "getCurrentDBSizeMB");
+                add(String.class, "getDefaultDatabase");
+                add(boolean.class, "getEnableRealtimeSearch");
+                add(int.class, "getFrozenTimePeriodInSecs");
+                add(String.class, "getHomePath");
+                add(String.class, "getHomePathExpanded");
+                add(String.class, "getIndexThreads");
+                add(String.class, "getLastInitTime");
+                add(int.class, "getMaxConcurrentOptimizes");
+                add(String.class, "getMaxDataSize");
+                add(int.class, "getMaxHotBuckets");
+                add(int.class, "getMaxHotIdleSecs");
+                add(int.class, "getMaxHotIdleSecs");
+                add(int.class, "getMaxHotSpanSecs");
+                add(int.class, "getMaxMemMB");
+                add(int.class, "getMaxMetaEntries");
+                add(int.class, "getMaxRunningProcessGroups");
+                add(Date.class, "getMaxTime");
+                add(int.class, "getMaxTotalDataSizeMB");
+                add(int.class, "getMaxWarmDBCount");
+                add(int.class, "getMemPoolMB");
+                add(String.class, "getMinRawFileSyncSecs");
+                add(Date.class, "getMinTime");
+                add(int.class, "getPartialServiceMetaPeriod");
+                add(int.class, "getQuarantineFutureSecs");
+                add(int.class, "getQuarantinePastSecs");
+                add(int.class, "getRawChunkSizeBytes");
+                add(int.class, "getRotatePeriodInSecs");
+                add(int.class, "getServiceMetaPeriod");
+                add(String.class, "getSuppressBannerList");
+                add(boolean.class, "getSync");
+                add(boolean.class, "getSyncMeta");
+                add(String.class, "getThawedPath");
+                add(String.class, "getThawedPathExpanded");
+                add(int.class, "getThrottleCheckPeriod");
+                add(int.class, "getTotalEventCount");
+                add(boolean.class, "isDisabled");
+                add(boolean.class, "isInternal");
+            }};
+        }
+    }
+
+    class IndexesNode extends AbstractNode {
+        IndexesNode(EntityCollection<Index> indexes) {
+            super(new IndexesKids(indexes));
+            setDisplayName("Indexes");
+        }
+    }
+
+    class IndexesKids extends Children.Keys<Index> {
+        EntityCollection<Index> indexes;
+
+        IndexesKids(EntityCollection<Index> indexes) {
+            this.indexes = indexes; 
+        }
+
+        @Override protected void addNotify() { 
+            setKeys(indexes.values());
+        }
+
+        @Override protected Node[] createNodes(Index index) { 
+            return new Node[] { new IndexNode(index) };
         }
     }
 
@@ -322,18 +403,94 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
         @Override protected void addNotify() {
             String[] kinds = new String[] {
+                "settings",
                 "apps",
-                "jobs"
+                "indexes",
+                "jobs",
+                "users"
             };
             setKeys(kinds);
         }
 
         @Override protected Node[] createNodes(String kind) {
+            if (kind.equals("settings"))
+                return new Node[] { new SettingsNode(service.getSettings()) };
             if (kind.equals("apps"))
                 return new Node[] { new AppsNode(service.getApplications()) };
+            if (kind.equals("indexes"))
+                return new Node[] { new IndexesNode(service.getIndexes()) };
             if (kind.equals("jobs"))
                 return new Node[] { new JobsNode(service.getJobs()) };
+            if (kind.equals("users"))
+                return new Node[] { new UsersNode(service.getUsers()) };
             return null;
+        }
+    }
+
+    class SettingsNode extends ExplorerNode {
+        SettingsNode(Settings settings) {
+            super(settings, new NoKids());
+            setDisplayName("Settings");
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(String.class, "getSplunkDB");
+                add(String.class, "getSplunkHome");
+                add(boolean.class, "getEnableSplunkWebSSL");
+                add(String.class, "getHost");
+                add(int.class, "getHttpPort");
+                add(int.class, "getMgmtPort");
+                add(int.class, "getMinFreeSpace");
+                add(String.class, "getPass4SymmKey");
+                add(String.class, "getServerName");
+                add(String.class, "getSessionTimeout");
+                add(boolean.class, "getStartWebServer");
+                add(String.class, "getTrustedIP");
+            }};
+        }
+    }
+
+    class UserNode extends ExplorerNode {
+        UserNode(User user) {
+            super(user, new NoKids());
+            setDisplayName(user.getName());
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(String.class, "getDefaultApp");
+                add(boolean.class, "getDefaultAppIsUserOverride");
+                add(String.class, "getDefaultAppSourceRole");
+                add(String.class, "getEmail");
+                add(String.class, "getPassword"); // UNDONE: Really?
+                add(String.class, "getRealName");
+                // UNDONE: Figure out how to handle property of List<String>
+                // add(List<String>.class, "getRoles")
+            }};
+        }
+    }
+
+    class UsersNode extends AbstractNode {
+        UsersNode(UserCollection users) {
+            super(new UsersKids(users));
+            setDisplayName("Users");
+        }
+    }
+
+    class UsersKids extends Children.Keys<User> {
+        UserCollection users;
+
+        UsersKids(UserCollection users) {
+            this.users = users; 
+        }
+
+        @Override protected void addNotify() { 
+            setKeys(users.values());
+        }
+
+        @Override protected Node[] createNodes(User user) { 
+            return new Node[] { new UserNode(user) };
         }
     }
 }
