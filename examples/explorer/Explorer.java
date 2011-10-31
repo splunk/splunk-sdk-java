@@ -14,7 +14,7 @@
  * under the License.
  */
 
-// UNDONE: Boolean properties appear to all be false
+// UNDONE: Date values give "no editor" message in property view.
 // UNDONE: Support for multiple service roots
 
 //
@@ -26,6 +26,9 @@
 import com.splunk.*;
 
 import java.awt.Dimension;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.*;
 
 import org.openide.explorer.ExplorerManager;
@@ -80,32 +83,55 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         setSize(500, 400);
     }
 
-    public class AppNode extends AbstractNode {
-        Application app;
-
+    public class AppNode extends ExplorerNode<Application> {
         AppNode(Application app) {
-            super(new NoKids());
-            this.app = app;
+            super(app, new NoKids());
             setDisplayName(app.getName());
         }
 
-        @Override
-        protected Sheet createSheet() {
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(boolean.class, "getCheckForUpdates");
+                add(String.class, "getLabel");
+                add(String.class, "getVersion");
+                add(boolean.class, "isConfigured");
+                add(boolean.class, "isManageable");
+                add(boolean.class, "isVisible");
+            }};
+        }
+    }
+
+    public class PropertyInfo {
+        public Class datatype;
+        public String getter;
+        public String setter;
+
+        public PropertyInfo() {}
+
+        public PropertyInfo(Class datatype, String getter, String setter) {
+            this.datatype = datatype;
+            this.getter = getter;
+            this.setter = setter;
+        }
+    }
+
+    public class PropertyList extends ArrayList<PropertyInfo> {
+        public void add(Class datatype, String getter) {
+            add(datatype, getter, null);
+        }
+
+        public void add(Class datatype, String getter, String setter) {
+            add(new PropertyInfo(datatype, getter, setter));
+        }
+
+        public Sheet createSheet(Object object) {
             Sheet sheet = Sheet.createDefault();
             Sheet.Set props = Sheet.createPropertiesSet();
             try {
-                props.put(new PropertySupport.Reflection(
-                    app, Boolean.class, "getCheckForUpdates", null));
-                props.put(new PropertySupport.Reflection(
-                    app, String.class, "getLabel", null));
-                props.put(new PropertySupport.Reflection(
-                    app, String.class, "getVersion", null));
-                props.put(new PropertySupport.Reflection(
-                    app, Boolean.class, "isConfigured", null));
-                props.put(new PropertySupport.Reflection(
-                    app, Boolean.class, "isManageable", null));
-                props.put(new PropertySupport.Reflection(
-                    app, Boolean.class, "isVisible", null));
+                for (PropertyInfo info : this) {
+                    props.put(new PropertySupport.Reflection(
+                        object, info.datatype, info.getter, info.setter));
+                }
             }
             catch (NoSuchMethodException e) {
                 throw new RuntimeException(e.getMessage());
@@ -115,32 +141,31 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    public class AppsNode extends AbstractNode {
-        EntityCollection<Application> apps;
+    public abstract class ExplorerNode<T> extends AbstractNode {
+        T value;
 
+        ExplorerNode(T value, Children kids) {
+            super(kids);
+            this.value = value;
+        }
+
+        abstract PropertyList getMetadata();
+
+        @Override protected Sheet createSheet() {
+            return getMetadata().createSheet(value);
+        }
+    }
+
+    public class AppsNode extends ExplorerNode<EntityCollection<Application>> {
         AppsNode(EntityCollection<Application> apps) {
-            super(new AppsKids(apps));
-            this.apps = apps;
+            super(apps, new AppsKids(apps));
             setDisplayName("Apps");
         }
 
-        @Override
-        protected Sheet createSheet() {
-            Sheet sheet = Sheet.createDefault();
-            Sheet.Set props = Sheet.createPropertiesSet();
-            try {
-                props.put(new PropertySupport.Reflection(
-                    this, String.class, "getSize", null));
-            }
-            catch (NoSuchMethodException e) {}
-            sheet.put(props);
-            return sheet;
-        }
-
-        // UNDONE: For some reason NetBeans displays a "<No editors>" message
-        // for int properties .. so wrap here for the time being.
-        public String getSize() {
-            return Integer.toString(apps.size());
+        @Override PropertyList getMetadata() {
+             return new PropertyList() {{
+                add(int.class, "size");
+            }};
         }
     }
 
@@ -160,24 +185,78 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
+    class JobNode extends ExplorerNode<Job> {
+        JobNode(Job job) {
+            super(job, new NoKids());
+            setDisplayName(job.getName());
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(Date.class, "getCursorTime");
+                add(String.class, "getDelegate");
+                add(int.class, "getDiskUsage");
+                add(String.class, "getDispatchState");
+                add(float.class, "getDoneProgress");
+                add(int.class, "getDropCount");
+                add(Date.class, "getEarliestTime");
+                add(int.class, "getEventAvailableCount");
+                add(int.class, "getEventCount");
+                add(int.class, "getEventFieldCount");
+                add(boolean.class, "getEventIsStreaming");
+                add(boolean.class, "getEventIsTruncated");
+                add(String.class, "getEventSearch");
+                add(String.class, "getEventSorting");
+                add(String.class, "getKeywords");
+                add(String.class, "getLabel");
+                add(Date.class, "getLatestTime");
+                add(int.class, "getNumPreviews");
+                add(int.class, "getPriority");
+                add(String.class, "getRemoteSearch");
+                add(String.class, "getReportSearch");
+                add(int.class, "getResultCount");
+                add(boolean.class, "getResultIsStreaming");
+                add(int.class, "getResultPreviewCount");
+                add(float.class, "getRunDuration");
+                add(int.class, "getScanCount");
+                add(String.class, "getSearch");
+                add(String.class, "getSearchLatestTime");
+                add(String.class, "getSid");
+                add(int.class, "getStatusBuckets");
+                add(int.class, "getTtl");
+                add(boolean.class, "isDone");
+                add(boolean.class, "isFailed");
+                add(boolean.class, "isFinalized");
+                add(boolean.class, "isPaused");
+                add(boolean.class, "isPreviewEnabled");
+                add(boolean.class, "isRemoteTimeline");
+                add(boolean.class, "isSaved");
+                add(boolean.class, "isSavedSearch");
+                add(boolean.class, "isZombie");
+            }};
+        }
+    }
+
     class JobsNode extends AbstractNode {
-        JobsNode(Service service) {
-            super(new JobsKids(service));
+        JobsNode(JobCollection jobs) {
+            super(new JobsKids(jobs));
             setDisplayName("Jobs");
         }
     }
 
-    class JobsKids extends Children.Keys<Service> {
-        Service service;
+    class JobsKids extends Children.Keys<Job> {
+        JobCollection jobs;
 
-        JobsKids(Service service) { 
-            this.service = service; 
+        JobsKids(JobCollection jobs) {
+            this.jobs = jobs; 
         }
 
-        @Override protected void addNotify() { }
+        @Override protected void addNotify() { 
+            setKeys(jobs.values());
+        }
 
-        @Override protected Node[] createNodes(Service service) { 
-            return null;
+        @Override protected Node[] createNodes(Job job) { 
+            return new Node[] { new JobNode(job) };
         }
     }
 
@@ -208,56 +287,29 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class ServiceNode extends AbstractNode {
-        Service service;
-        ServiceInfo info = null;
-
+    class ServiceNode extends ExplorerNode<ServiceInfo> {
         ServiceNode(Service service) {
-            super(new ServiceKids(service));
-            this.service = service;
-            this.info = service.getInfo(); // UNDONE: async
-            setDisplayName(info.getServerName());
+            super(service.getInfo(), new ServiceKids(service));
+            setDisplayName(value.getServerName());
         }
 
-        @Override
-        protected Sheet createSheet() {
-            Sheet sheet = Sheet.createDefault();
-            Sheet.Set props = Sheet.createPropertiesSet();
-            try {
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getBuild", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getCpuArch", null));
-                /* UNDONE: Figure out how to get class for following
-                props.put(new PropertySupport.Reflection(
-                    info, List<String>.class, "getLicenseKeys", null));
-                */
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getLicenseSignature", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getLicenseState", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getMasterGuid", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getMode", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getOsBuild", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getOsVersion", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getServerName", null));
-                props.put(new PropertySupport.Reflection(
-                    info, String.class, "getVersion", null));
-                props.put(new PropertySupport.Reflection(
-                    info, Boolean.class, "isFree", null));
-                props.put(new PropertySupport.Reflection(
-                    info, Boolean.class, "isTrial", null));
-            }
-            catch (NoSuchMethodException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-            sheet.put(props);
-            return sheet;
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(int.class, "getBuild");
+                add(String.class, "getCpuArch");
+                // UNDONE: Figure out how to get class for following
+                // add(List<String>.class, "getLicenseKeys");
+                add(String.class, "getLicenseSignature");
+                add(String.class, "getLicenseState");
+                add(String.class, "getMasterGuid");
+                add(String.class, "getMode");
+                add(String.class, "getOsBuild");
+                add(String.class, "getOsVersion");
+                add(String.class, "getServerName");
+                add(String.class, "getVersion");
+                add(boolean.class, "isFree");
+                add(boolean.class, "isTrial");
+            }};
         }
     }
 
@@ -280,7 +332,7 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             if (kind.equals("apps"))
                 return new Node[] { new AppsNode(service.getApplications()) };
             if (kind.equals("jobs"))
-                return new Node[] { new JobsNode(service) };
+                return new Node[] { new JobsNode(service.getJobs()) };
             return null;
         }
     }

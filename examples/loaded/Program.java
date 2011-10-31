@@ -44,6 +44,16 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
+    public void printApplication(Application app) {
+        printEntity(app);
+        printField("CheckForUpdates", app.getCheckForUpdates());
+        printField("Label", app.getLabel());
+        printField("Version", app.getVersion());
+        printField("Configured", app.isConfigured());
+        printField("Manageable", app.isManageable());
+        printField("Visible", app.isVisible());
+    }
+
     public void printEntity(Entity entity) {
         System.out.println("");
         if (entity == null) {
@@ -228,7 +238,8 @@ public class Program extends com.splunk.sdk.Program {
         printServiceInfo(service.getInfo());
 
         System.out.print("\n**** Applications ****");
-        printEntities(service.getApplications());
+        for (Entity app : service.getApplications().values())
+            printApplication((Application)app);
 
         System.out.print("\n**** Capabilities ****\n");
         for (String capability : service.getCapabilities())
