@@ -173,8 +173,8 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection<Entity>(this, "saved/searches");
     }
 
-    public Entity getSettings() {
-        return Entity.read(this, "server/settings");
+    public Settings getSettings() {
+        return new Settings(this);
     }
 
     public UserCollection getUsers() {
