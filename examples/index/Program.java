@@ -42,8 +42,7 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public void run() throws Exception {
-        Service service = new Service(this.host, this.port, this.scheme,
-                                      this.proxyhost, this.proxyport);
+        Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
 
         // This example takes optional arguments:
