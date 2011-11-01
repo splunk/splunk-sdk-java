@@ -55,11 +55,6 @@ public class Service extends com.splunk.http.Service {
         super(host, port, scheme);
     }
 
-    public Service(String host, int port, String scheme,
-                   String proxyhost, int proxyport) {
-        super(host, port, scheme, proxyhost, proxyport);
-    }
-
     public Service(ServiceArgs args) {
         super();
         this.host = args.host == null ? DEFAULT_HOST : args.host;

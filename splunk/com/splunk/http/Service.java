@@ -38,14 +38,10 @@ import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
-import java.net.Proxy;
-
 public class Service {
     protected String scheme = "https";
     protected String host = "localhost";
     protected int port = 8089;
-    protected String proxyhost = "";
-    protected int proxyport = -1;
 
     private String prefix = null;
 
@@ -83,16 +79,6 @@ public class Service {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
-        setTrustPolicy();
-    }
-
-    public Service(String host, int port, String scheme,
-                   String proxyhost, int proxyport) {
-        this.host = host;
-        this.port = port;
-        this.scheme = scheme;
-        this.proxyhost = proxyhost;
-        this.proxyport = proxyport;
         setTrustPolicy();
     }
 
@@ -135,12 +121,7 @@ public class Service {
 
     public URL getUrl(String path) {
         try {
-            if (this.proxyhost.length() > 0) {
-                return new URL(
-                   "http", this.proxyhost, this.proxyport, getPrefix() + path);
-            } else {
-                return new URL(getPrefix() + path);
-            }
+            return new URL(getPrefix() + path);
         }
         catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage());

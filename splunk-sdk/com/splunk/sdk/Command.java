@@ -50,8 +50,6 @@ public class Command {
     public String username = null;
     public String password = null;
     public String namespace = null;
-    public String proxyhost = "";
-    public int proxyport = -1;
 
     public Command() {
         rules.addOption("h",  "help", false, "Display this help message");
@@ -65,13 +63,6 @@ public class Command {
         rules.addOption(null, "username", true, "Username to login with");
         rules.addOption(null, "password", true, "Password to login with");
         rules.addOption(null, "namespace", true, null);
-        rules.addOption(null, "proxyhost", true, "Proxy host name");
-        rules.addOption(OptionBuilder
-            .withLongOpt("proxyport")
-            .hasArg(true)
-            .withType(Integer.class)
-            .create());
-
     }
 
     public Options getRules() {
