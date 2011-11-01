@@ -15,10 +15,8 @@
  */
 
 import com.splunk.EntityCollection;
-import com.splunk.Service;
 import com.splunk.Index;
-
-import java.util.Properties;
+import com.splunk.Service;
 
 public class Program extends com.splunk.sdk.Program {
     private void listAllIndexes(Service service) {
@@ -31,11 +29,6 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public static void main(String[] args) {
-        System.setProperty("http.proxyHost", "192.168.242.213");
-        System.setProperty("http.proxyPort", "8888");
-        System.setProperty("https.proxyHost", "192.168.242.213");
-        System.setProperty("https.proxyPort", "8888");
-
         Program program = new Program();
         try {
             program.init(args).run();
