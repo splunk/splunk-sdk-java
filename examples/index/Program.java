@@ -55,6 +55,7 @@ public class Program extends com.splunk.sdk.Program {
         } else {
             if (this.args.length != 2) {
                 System.out.println("You must provide action and index name");
+                return;
             }
         }
 
