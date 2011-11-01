@@ -18,7 +18,7 @@ import com.splunk.EntityCollection;
 import com.splunk.Service;
 import com.splunk.Index;
 
-import java.util.Collection;
+import java.util.Properties;
 
 public class Program extends com.splunk.sdk.Program {
     private void listAllIndexes(Service service) {
@@ -42,7 +42,8 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public void run() throws Exception {
-        Service service = new Service(this.host, this.port, this.scheme);
+        Service service = new Service(this.host, this.port, this.scheme,
+                                      this.proxyhost, this.proxyport);
         service.login(this.username, this.password);
 
         // This example takes optional arguments:
