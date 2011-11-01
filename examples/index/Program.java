@@ -31,6 +31,11 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public static void main(String[] args) {
+        System.setProperty("http.proxyHost", "192.168.242.213");
+        System.setProperty("http.proxyPort", "8888");
+        System.setProperty("https.proxyHost", "192.168.242.213");
+        System.setProperty("https.proxyPort", "8888");
+
         Program program = new Program();
         try {
             program.init(args).run();
@@ -64,32 +69,26 @@ public class Program extends com.splunk.sdk.Program {
         String name = this.args[1];
         EntityCollection indexes = service.getIndexes();
 
-        if (this.args[0].equals("clean")) {
-            if (!indexes.containsKey(name)) {
-                System.out.println("Index " + name + " does not exists");
-                return;
-            }
-            service.getIndexes().get(name).clean();
-        } else if (action.equals("create")) {
+        if (action.equals("create")) {
             if (indexes.containsKey(name)) {
                 System.out.println("Index " + name + " already exists");
                 return;
             }
             service.getIndexes().create(name);
-        } else if (action.equals("disable")) {
-            if (!indexes.containsKey(name)) {
-                System.out.println("Index " + name + " does not exists");
-                return;
-            }
-            service.getIndexes().get(name).disable();
-        } else if (action.equals("enable")) {
-            if (!indexes.containsKey(name)) {
-                System.out.println("Index " + name + " does not exists");
-                return;
-            }
-            service.getIndexes().get(name).disable();
         } else {
-            System.out.println("Unknown action: " + action);
+            if (!indexes.containsKey(name)) {
+                System.out.println("Index " + name + " does not exists");
+                return;
+            }
+            if (action.equals("clean")) {
+                service.getIndexes().get(name).clean();
+            } else if (action.equals("disable")) {
+                service.getIndexes().get(name).disable();
+            } else if (action.equals("enable")) {
+                service.getIndexes().get(name).disable();
+            } else {
+                System.out.println("Unknown action: " + action);
+            }
         }
     }
 }
