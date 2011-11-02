@@ -52,37 +52,33 @@ public class Program extends com.splunk.sdk.Program {
         if (this.args.length == 0) {
             listAllIndexes(service);
             return;
-        } else {
-            if (this.args.length != 2) {
-                System.out.println("You must provide action and index name");
-                return;
-            }
         }
+
+        if (this.args.length != 2)
+            throw new Error("Action and index-name required");
 
         String action = this.args[0];
         String name = this.args[1];
-        EntityCollection indexes = service.getIndexes();
 
+        EntityCollection indexes = service.getIndexes();
         if (action.equals("create")) {
-            if (indexes.containsKey(name)) {
-                System.out.println("Index " + name + " already exists");
-                return;
-            }
-            service.getIndexes().create(name);
-        } else {
-            if (!indexes.containsKey(name)) {
-                System.out.println("Index " + name + " does not exists");
-                return;
-            }
-            if (action.equals("clean")) {
-                service.getIndexes().get(name).clean();
-            } else if (action.equals("disable")) {
-                service.getIndexes().get(name).disable();
-            } else if (action.equals("enable")) {
-                service.getIndexes().get(name).disable();
-            } else {
-                System.out.println("Unknown action: " + action);
-            }
+            if (indexes.containsKey(name))
+                throw new Error("Index " + name + " already exists");
+            indexes.create(name);
+            return;
         }
+
+        Index index = (Index)indexes.get(name);
+        if (index == null)
+            throw new Error("Index '" + name + "' does not exists");
+
+        if (action.equals("clean"))
+            index.clean();
+        else if (action.equals("disable"))
+            index.disable();
+        else if (action.equals("enable"))
+            index.enable();
+        else
+            throw new Error("Unknown action '" + action + "'");
     }
 }
