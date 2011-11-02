@@ -24,7 +24,7 @@ public abstract class Resource {
     protected Map<String, String> actions;
     protected String path;
     protected Service service;
-    boolean maybeValid = false;
+    private boolean maybeValid = false;
 
     public Resource(Service service, String path) {
         this.path = path;

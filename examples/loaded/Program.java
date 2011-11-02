@@ -213,6 +213,53 @@ public class Program extends com.splunk.sdk.Program {
         printField("Value", message.getValue());
     }
 
+    void printSavedSearch(SavedSearch search) {
+        printEntity(search);
+        printField("ActionEmailSendResults", search.getActionEmailSendResults());
+        printField("ActionEmailTo", search.getActionEmailTo());
+        printField("AlertExpires", search.getAlertExpires());
+        printField("AlertSevertiy", search.getAlertSeverity());
+        printField("AlertSuppresss", search.getAlertSuppress());
+        printField("AlertSuppressPriod", search.getAlertSuppressPeriod());
+        printField("AlertTrack", search.getAlertTrack());
+        printField("AlertComparator", search.getAlertComparator());
+        printField("AlertCondition", search.getAlertCondition());
+        printField("AlertThreshold", search.getAlertThreshold());
+        printField("AlertType", search.getAlertType());
+        printField("CronSchedule", search.getCronSchedule());
+        printField("Description", search.getDescription());
+        printField("DispatchBuckets", search.getDispatchBuckets());
+        printField("DispatchEarliestTime", search.getDispatchEarliestTime());
+        printField("DispatchLatestTime", search.getDispatchLatestTime());
+        printField("DispatchLookups", search.getDispatchLookups());
+        printField("DispatchMaxCount", search.getDispatchMaxCount());
+        printField("DispatchMaxTime", search.getDispatchMaxTime());
+        printField("DispatchReduceFreq", search.getDispatchReduceFreq());
+        printField("DispatchSpawnProcess", search.getDispatchSpawnProcess());
+        printField("DispatchTimeFormat", search.getDispatchTimeFormat());
+        printField("DispatchTtl", search.getDispatchTtl());
+        printField("DisplayView", search.getDisplayView());
+        printField("MaxConcurrent", search.getMaxConcurrent());
+        printField("NextScheduledTime", search.getNextScheduledTime());
+        printField("QualifiedSearch", search.getQualifiedSearch());
+        printField("RealtimeSchedule", search.getRealtimeSchedule());
+        printField("RequestUiDispatchApp", search.getRequestUiDispatchApp());
+        printField("RequestUiDispatchView", search.getRequestUiDispatchView());
+        printField("RestartOnSearchPeerAdd", search.getRestartOnSearchPeerAdd());
+        printField("RunOnStartup", search.getRunOnStartup());
+        printField("Search", search.getSearch());
+        printField("Vsid", search.getVsid());
+        printField("isActionEmail", search.isActionEmail());
+        printField("isActionPopulateLookup", search.isActionPopulateLookup());
+        printField("isActionRss", search.isActionRss());
+        printField("isActionScript", search.isActioncScript());
+        printField("isActionSummaryIndex", search.isActionSummaryIndex());
+        printField("isDigestMode", search.isDigestMode());
+        printField("isDisabled", search.isDisabled());
+        printField("isScheduled", search.isScheduled());
+        printField("isVisible", search.isVisible());
+    }
+
     void printServiceInfo(ServiceInfo info) {
         printEntity(info);
         printField("Build", info.getBuild());
@@ -321,7 +368,8 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(service.getRoles());
 
         System.out.print("\n**** Searches ****");
-        printEntities(service.getSearches());
+        for (Entity search : service.getSearches().values())
+            printSavedSearch((SavedSearch)search);
 
         System.out.print("\n**** Users ****");
         for (User user : service.getUsers().values())

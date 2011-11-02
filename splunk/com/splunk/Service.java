@@ -22,17 +22,10 @@
 package com.splunk;
 
 import com.splunk.atom.Xml;
-import com.splunk.http.*;
+import com.splunk.http.ResponseMessage;
+import com.splunk.http.RequestMessage;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 public class Service extends com.splunk.http.Service {
     protected String token = null;
@@ -169,8 +162,9 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection<Entity>(this, "authentication/roles");
     }
 
-    public EntityCollection<Entity> getSearches() {
-        return new EntityCollection<Entity>(this, "saved/searches");
+    public EntityCollection<SavedSearch> getSearches() {
+        return new EntityCollection<SavedSearch>(
+            this, "saved/searches", SavedSearch.class);
     }
 
     public Settings getSettings() {

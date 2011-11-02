@@ -269,7 +269,6 @@ public class Index extends Entity {
     }
 
     public void upload(String filename) {
-        //UNDONE: untested
         Args args = new Args();
         args.put("name", filename);
         args.put("index", getName());
