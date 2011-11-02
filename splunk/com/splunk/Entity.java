@@ -44,6 +44,10 @@ public class Entity extends Resource {
         return service.get(path);
     }
 
+    public ResponseMessage get(String relpath) {
+        return service.get(path + "/" + relpath);
+    }
+
     public Map<String, Object> getContent() {
         validate();
         return this.content;

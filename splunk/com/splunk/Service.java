@@ -22,10 +22,17 @@
 package com.splunk;
 
 import com.splunk.atom.Xml;
-import com.splunk.http.ResponseMessage;
-import com.splunk.http.RequestMessage;
+import com.splunk.http.*;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 public class Service extends com.splunk.http.Service {
     protected String token = null;
@@ -59,7 +66,7 @@ public class Service extends com.splunk.http.Service {
     // Ensures that the given path is fully qualified, prepending a
     // path prefix as necessarry.
     protected String fullpath(String path) {
-        if (path.startsWith("/")) 
+        if (path.startsWith("/"))
             return path;
         if (namespace == null)
             return "/services/" + path;
@@ -67,7 +74,7 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection<Application> getApplications() {
-        return new EntityCollection<Application>(this, 
+        return new EntityCollection<Application>(this,
             "apps/local", Application.class);
     }
 
@@ -80,8 +87,8 @@ public class Service extends com.splunk.http.Service {
         return (List<String>)caps.getValue("capabilities");
     }
 
-    public Entity getDeploymentClient() {
-        return Entity.read(this, "deployment/client");
+    public DeploymentClient getDeploymentClient() {
+        return DeploymentClient.read(this, "deployment/client");
     }
 
     public EntityCollection<Entity> getDeploymentServers() {
@@ -162,9 +169,8 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection<Entity>(this, "authentication/roles");
     }
 
-    public EntityCollection<SavedSearch> getSearches() {
-        return new EntityCollection<SavedSearch>(
-            this, "saved/searches", SavedSearch.class);
+    public EntityCollection<Entity> getSearches() {
+        return new EntityCollection<Entity>(this, "saved/searches");
     }
 
     public Settings getSettings() {
