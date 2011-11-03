@@ -34,6 +34,10 @@ public class DeploymentClient extends Entity {
         invalidate();
     }
 
+    // although deployment client is a config file, it makes sense
+    // to treat it as its own class.
+    // UNDONE: wrap create() here and pass to properties endpoint.
+
     // this really shouldn't be here -- unsure if there is a better way
     static DeploymentClient read(Service service, String path) {
         ResponseMessage response = service.get(path);

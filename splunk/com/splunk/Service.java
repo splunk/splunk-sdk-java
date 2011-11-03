@@ -83,24 +83,28 @@ public class Service extends com.splunk.http.Service {
         return DeploymentClient.read(this, "deployment/client");
     }
 
-    public EntityCollection<Entity> getDeploymentServers() {
-        return new EntityCollection<Entity>(this, "deployment/server");
+    public EntityCollection<DeploymentServer> getDeploymentServers() {
+        return new EntityCollection<DeploymentServer>(this,
+                "deployment/server", DeploymentServer.class);
     }
 
-    public EntityCollection<Entity> getDeploymentServerClasses() {
-        return new EntityCollection<Entity>(this, "deployment/serverclass");
+    public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(){
+        return new EntityCollection<DeploymentServerClass>(this,
+                "deployment/serverclass", DeploymentServerClass.class);
     }
 
-    public EntityCollection<Entity> getDeploymentTenants() {
-        return new EntityCollection<Entity>(this, "deployment/tenants");
+    public EntityCollection<DeploymentTenant> getDeploymentTenants() {
+        return new EntityCollection<DeploymentTenant>(this,
+                "deployment/tenants", DeploymentTenant.class);
     }
 
     public EntityCollection<Entity> getDistributedPeers() {
         return new EntityCollection<Entity>(this, "search/distributed/peers");
     }
 
-    public EntityCollection<Entity> getEventTypes() {
-        return new EntityCollection<Entity>(this, "saved/eventtypes");
+    public EntityCollection<EventType> getEventTypes() {
+        return new EntityCollection<EventType>(this,
+                "saved/eventtypes", EventType.class);
     }
 
     public EntityCollection<Index> getIndexes() {
