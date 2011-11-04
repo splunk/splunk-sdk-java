@@ -217,7 +217,6 @@ public class ClientTest extends TestCase {
     @Test public void testIndexes() throws Exception {
 
         System.out.println("Testing Indexes");
- /*
         Service service = connect();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         String date = sdf.format(new Date());
@@ -287,7 +286,6 @@ public class ClientTest extends TestCase {
         catch (Exception e) {
             System.out.println(e.toString());
         }
-        */
     }
 
     @Test public void testInfo() throws Exception {
