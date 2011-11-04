@@ -16,6 +16,7 @@
 
 import com.splunk.*;
 
+import java.util.Date;
 import java.util.Map;
 
 public class Program extends com.splunk.sdk.Program {
@@ -59,92 +60,7 @@ public class Program extends com.splunk.sdk.Program {
     public void run() throws Exception {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
-/*
-        DeploymentClient dp = service.getDeploymentClient();
-        printEntity(dp);
-        if (dp != null) {
-            System.out.println(dp.getTargetUri());
-            dp.reload();
-        }
 
-        EntityCollection<DeploymentServer> ds = service.getDeploymentServers();
-        for (DeploymentServer entity: ds.values()) {
-            printEntity(entity);
-            System.out.println("wl0: " + entity.getWhiteList0());
-            System.out.println("disabled: " + entity.isDisabled());
-            System.out.println("check-new: " + entity.getCheckNew());
-        }
-
-        EntityCollection<DeploymentServerClass> dsc =
-                service.getDeploymentServerClasses();
-
-        for (DeploymentServerClass entity: dsc.values()) {
-            printEntity(entity);
-            System.out.println("wl: " + entity.getWhiteList());
-            System.out.println("bl: " + entity.getBlackList());
-            System.out.println("disabled: " + entity.isDisabled());
-        }
-
-        EntityCollection<DeploymentTenant> dt = service.getDeploymentTenants();
-        for (DeploymentTenant entity: dt.values()) {
-            printEntity(entity);
-            System.out.println("disabled: " + entity.isDisabled());
-            System.out.println("check-new: " + entity.getCheckNew());
-        }
-
-
-        EntityCollection<EventType> et = service.getEventTypes();
-        for (EventType entity: et.values()) {
-            printEntity(entity);
-            System.out.println("disabled: " + entity.isDisabled());
-            System.out.println("description: " + entity.getDescription());
-            System.out.println("priority: " + entity.getPriority());
-            System.out.println("search: " + entity.getSearch());
-        }
-
-        EntityCollection<LicenseGroup> lg = service.getLicenseGroups();
-        for (LicenseGroup entity: lg.values()) {
-            printEntity(entity);
-            System.out.println("disabled: " + entity.isDisabled());
-            System.out.println("isActive: " + entity.isActive());
-            System.out.println("stack ids: " + entity.getStackIds());
-        }
-        EntityCollection<LicenseSlave> lg = service.getLicenseSlaves();
-        for (LicenseSlave entity: lg.values()) {
-            printEntity(entity);
-            System.out.println("disabled: " + entity.isDisabled());
-            System.out.println("stack id: " + entity.getStackIds());
-        }
-
-
-        EntityCollection<LicenseStack> lg = service.getLicenseStacks();
-        for (LicenseStack entity: lg.values()) {
-            printEntity(entity);
-            System.out.println("disabled: " + entity.isDisabled());
-            System.out.println("stack id: " + entity.getStackIds());
-            System.out.println("pool id: " + entity.getPoolIds());
-            System.out.println("quota: " + entity.getQuota());
-        }
-        */
-
-        EntityCollection<License> lic = service.getLicenses();
-        for (License entity: lic.values()) {
-            printEntity(entity);
-            System.out.println("disabled: " + entity.isDisabled());
-            System.out.println("creation: " + entity.getCreationTime());
-            System.out.println("expiration: " + entity.getExpirationTime());
-            System.out.println("features: " + entity.getFeatures());
-            System.out.println("group id: " + entity.getGroupId());
-            System.out.println("label: " + entity.getLabel());
-            System.out.println("license Hash: " + entity.getLicenseHash());
-            System.out.println("max violations: " + entity.getMaxViolations());
-            System.out.println("quota: " + entity.getQuota());
-            System.out.println("sourcetypes: " + entity.getSourceTypes());
-            System.out.println("stackid: " + entity.getStackId());
-            System.out.println("status: " + entity.getStatus());
-            System.out.println("type: " + entity.getType());
-            System.out.println("window period: " + entity.getWindowPeriod());
-        }
         /*
 
         // UNDONE -- need Inputs class
