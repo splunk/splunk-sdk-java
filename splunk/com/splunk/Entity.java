@@ -69,6 +69,14 @@ public class Entity extends Resource {
         return Value.getDate(getContent(), key, defaultValue);
     }
 
+    Date getDateFromEpoch(String key) {
+        return Value.getDateFromEpoch(getContent(), key);
+    }
+
+    Date getDateFromEpoch(String key, Date defaultValue) {
+        return Value.getDateFromEpoch(getContent(), key, defaultValue);
+    }
+
     float getFloat(String key) {
         return Value.getFloat(getContent(), key);
     }
@@ -79,6 +87,14 @@ public class Entity extends Resource {
 
     int getInteger(String key, int defaultValue) {
         return Value.getInteger(getContent(), key, defaultValue);
+    }
+
+    long getLong(String key) {
+        return Value.getLong(getContent(), key);
+    }
+
+    long getLong(String key, int defaultValue) {
+        return Value.getLong(getContent(), key, defaultValue);
     }
 
     String getString(String key) {

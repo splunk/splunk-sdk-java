@@ -124,8 +124,9 @@ public class Service extends com.splunk.http.Service {
         return new JobCollection(this, "search/jobs");
     }
 
-    public EntityCollection<Entity> getLicenseGroups() {
-        return new EntityCollection<Entity>(this, "licenser/groups");
+    public EntityCollection<LicenseGroup> getLicenseGroups() {
+        return new EntityCollection<LicenseGroup>(this,
+                "licenser/groups", LicenseGroup.class);
     }
 
     public EntityCollection<Entity> getLicenseMessages() {
@@ -136,16 +137,19 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection<Entity>(this, "licenser/pools");
     }
 
-    public EntityCollection<Entity> getLicenseSlaves() {
-        return new EntityCollection<Entity>(this, "licenser/slaves");
+    public EntityCollection<LicenseSlave> getLicenseSlaves() {
+        return new EntityCollection<LicenseSlave>(this,
+                "licenser/slaves", LicenseSlave.class);
     }
 
-    public EntityCollection<Entity> getLicenseStacks() {
-        return new EntityCollection<Entity>(this, "licenser/stacks");
+    public EntityCollection<LicenseStack> getLicenseStacks() {
+        return new EntityCollection<LicenseStack>(this,
+                "licenser/stacks", LicenseStack.class);
     }
 
-    public EntityCollection<Entity> getLicenses() {
-        return new EntityCollection<Entity>(this, "licenser/licenses");
+    public EntityCollection<License> getLicenses() {
+        return new EntityCollection<License>(this,
+                "licenser/licenses", License.class);
     }
 
     public EntityCollection<Entity> getLoggers() {

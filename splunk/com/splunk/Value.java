@@ -45,6 +45,17 @@ public class Value {
         return toDate(map.get(key).toString());
     }
 
+    public static Date getDateFromEpoch(Map<String, Object> map, String key) {
+        return toDateFromEpoch(map.get(key).toString());
+    }
+
+    public static
+    Date getDateFromEpoch(
+            Map<String, Object> map, String key, Date defaultValue) {
+        if (!map.containsKey(key)) return defaultValue;
+        return toDateFromEpoch(map.get(key).toString());
+    }
+
     public static float getFloat(Map<String, Object> map, String key) {
         return toFloat(map.get(key).toString());
     }
@@ -57,6 +68,16 @@ public class Value {
     getInteger(Map<String, Object> map, String key, int defaultValue) {
         if (!map.containsKey(key)) return defaultValue;
         return toInteger(map.get(key).toString());
+    }
+
+    public static long getLong(Map<String, Object> map, String key) {
+        return toLong(map.get(key).toString());
+    }
+
+    public static long
+    getLong(Map<String, Object> map, String key, int defaultValue) {
+        if (!map.containsKey(key)) return defaultValue;
+        return toLong(map.get(key).toString());
     }
 
     public static String 
@@ -106,12 +127,20 @@ public class Value {
         return result;
     }
 
+    public static Date toDateFromEpoch(String value) {
+        return new Date(Long.parseLong(value)*1000);
+    }
+
     public static float toFloat(String value) {
         return Float.parseFloat(value);
     }
 
     public static int toInteger(String value) {
         return Integer.parseInt(value);
+    }
+
+    public static long toLong(String value) {
+        return Long.parseLong(value);
     }
 }
 
