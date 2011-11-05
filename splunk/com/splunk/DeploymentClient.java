@@ -29,11 +29,6 @@ public class DeploymentClient extends Entity {
         return getString("targetUri");
     }
 
-    public void reload() {
-        super.get("deployment-client/reload");
-        invalidate();
-    }
-
     // although deployment client is a config file, it makes sense
     // to treat it as its own class.
     // UNDONE: wrap create() here and pass to properties endpoint.

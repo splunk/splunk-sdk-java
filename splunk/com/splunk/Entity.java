@@ -40,6 +40,11 @@ public class Entity extends Resource {
         invalidate();
     }
 
+    public void reload() {
+        service.get(actionPath("Reload"));
+        invalidate();
+    }
+
     public ResponseMessage get() {
         return service.get(path);
     }
