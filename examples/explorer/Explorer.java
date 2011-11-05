@@ -14,15 +14,17 @@
  * under the License.
  */
 
-// UNDONE: Date values give "no editor" message in property view.
-// UNDONE: Support for multiple service roots
-// UNDONE: Add all Entity base properties: getName, getPath, isDisabled
-
 //
 // The NetBeans tutorial on which this sample is based:
 //
 //   http://blogs.oracle.com/geertjan/entry/netbeans_apis_outside_of_the
 //
+
+// UNDONE: Date values give "no editor" message in property view.
+// UNDONE: Add support for String[] properties
+// UNDONE: Support for multiple service roots
+// UNDONE: Add all Entity base properties: getName, getPath, isDisabled
+// UNDONE: Figure out how to convey leaf node so that it shows up without arrow
 
 import com.splunk.*;
 
@@ -483,6 +485,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         @Override protected void addNotify() {
             String[] kinds = new String[] {
                 "settings",
+                "licenses",
+                // "licenseGroups",
+                // "licenseSlaves",
+                // "licenseStacks",
                 "apps",
                 "indexes",
                 "jobs",
@@ -492,20 +498,26 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             setKeys(kinds);
         }
 
-        @Override protected Node[] createNodes(String kind) {
-            if (kind.equals("settings"))
-                return new Node[] { new SettingsNode(service.getSettings()) };
+        private Node createNode(String kind) {
             if (kind.equals("apps"))
-                return new Node[] { new AppsNode(service.getApplications()) };
+                return new AppsNode(service.getApplications());
             if (kind.equals("indexes"))
-                return new Node[] { new IndexesNode(service.getIndexes()) };
+                return new IndexesNode(service.getIndexes());
             if (kind.equals("jobs"))
-                return new Node[] { new JobsNode(service.getJobs()) };
+                return new JobsNode(service.getJobs());
+            if (kind.equals("licenses"))
+                return new LicensesNode(service.getLicenses());
             if (kind.equals("searches"))
-                return new Node[] { new SavedSearchesNode(service.getSearches()) };
+                return new SavedSearchesNode(service.getSearches());
+            if (kind.equals("settings"))
+                return new SettingsNode(service.getSettings());
             if (kind.equals("users"))
-                return new Node[] { new UsersNode(service.getUsers()) };
+                return new UsersNode(service.getUsers());
             return null;
+        }
+
+        @Override protected Node[] createNodes(String kind) {
+            return new Node[] { createNode(kind) };
         }
     }
 
@@ -573,6 +585,58 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
         @Override protected Node[] createNodes(User user) { 
             return new Node[] { new UserNode(user) };
+        }
+    }
+
+    class LicenseNode extends ExplorerNode {
+        LicenseNode(License license) {
+            super(license, new NoKids());
+            String display = license.getLabel();
+            if (display == null) display = license.getName();
+            setDisplayName(display);
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(Date.class, "getCreationTime");
+                add(Date.class, "getExpirationTime");
+                // UNDONE: List<String>
+                // add(String[].class, "getFeatures");
+                add(String.class, "getGroupId");
+                add(String.class, "getLabel");
+                add(String.class, "getLicenseHash");
+                add(int.class, "getMaxViolations");
+                add(long.class, "getQuota");
+                // UNDONE
+                // add(String[].class, "getSourceTypes");
+                add(String.class, "getStackId");
+                add(String.class, "getStatus");
+                add(String.class, "getType");
+                add(int.class, "getWindowPeriod");
+            }};
+        }
+    }
+
+    class LicensesNode extends AbstractNode {
+        LicensesNode(EntityCollection<License> licenses) {
+            super(new LicensesKids(licenses));
+            setDisplayName("Licenses");
+        }
+    }
+
+    class LicensesKids extends Children.Keys<License> {
+        EntityCollection<License> licenses;
+
+        LicensesKids(EntityCollection<License> licenses) {
+            this.licenses = licenses; 
+        }
+
+        @Override protected void addNotify() { 
+            setKeys(licenses.values());
+        }
+
+        @Override protected Node[] createNodes(License license) { 
+            return new Node[] { new LicenseNode(license) };
         }
     }
 }
