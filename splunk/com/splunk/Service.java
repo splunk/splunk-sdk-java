@@ -80,22 +80,22 @@ public class Service extends com.splunk.http.Service {
     }
 
     public DeploymentClient getDeploymentClient() {
-        return DeploymentClient.read(this, "deployment/client");
+        return new DeploymentClient(this);
     }
 
     public EntityCollection<DeploymentServer> getDeploymentServers() {
-        return new EntityCollection<DeploymentServer>(this,
-                "deployment/server", DeploymentServer.class);
+        return new EntityCollection<DeploymentServer>(
+            this, "deployment/server", DeploymentServer.class);
     }
 
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(){
-        return new EntityCollection<DeploymentServerClass>(this,
-                "deployment/serverclass", DeploymentServerClass.class);
+        return new EntityCollection<DeploymentServerClass>(
+            this, "deployment/serverclass", DeploymentServerClass.class);
     }
 
     public EntityCollection<DeploymentTenant> getDeploymentTenants() {
-        return new EntityCollection<DeploymentTenant>(this,
-                "deployment/tenants", DeploymentTenant.class);
+        return new EntityCollection<DeploymentTenant>(
+            this, "deployment/tenants", DeploymentTenant.class);
     }
 
     public EntityCollection<Entity> getDistributedPeers() {
@@ -103,8 +103,8 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection<EventType> getEventTypes() {
-        return new EntityCollection<EventType>(this,
-                "saved/eventtypes", EventType.class);
+        return new EntityCollection<EventType>(
+            this, "saved/eventtypes", EventType.class);
     }
 
     public EntityCollection<Index> getIndexes() {
@@ -125,8 +125,8 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection<LicenseGroup> getLicenseGroups() {
-        return new EntityCollection<LicenseGroup>(this,
-                "licenser/groups", LicenseGroup.class);
+        return new EntityCollection<LicenseGroup>(
+            this, "licenser/groups", LicenseGroup.class);
     }
 
     public EntityCollection<Entity> getLicenseMessages() {

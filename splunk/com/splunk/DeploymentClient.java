@@ -21,35 +21,26 @@ import com.splunk.atom.AtomFeed;
 import com.splunk.http.ResponseMessage;
 
 public class DeploymentClient extends Entity {
-    public DeploymentClient(Service service, String path) {
-        super(service, path);
+    public DeploymentClient(Service service) {
+        super(service, "deployment/client");
     }
 
     public String getTargetUri() {
         return getString("targetUri");
     }
 
-    public void reload() {
-        super.get("deployment-client/reload");
-        invalidate();
+    void load(AtomEntry entry) {
+        super.load(entry);
+        if (entry == null)
+            setTitle("deploymentclient");
     }
 
-    // although deployment client is a config file, it makes sense
-    // to treat it as its own class.
-    // UNDONE: wrap create() here and pass to properties endpoint.
+    // UNDONE: According to the REST API reference there is also
+    // a serverClasses property.
 
-    // this really shouldn't be here -- unsure if there is a better way
-    static DeploymentClient read(Service service, String path) {
-        ResponseMessage response = service.get(path);
-        assert(response.getStatus() == 200); // UNDONE
-        AtomFeed feed = AtomFeed.parse(response.getContent());
-        int count = feed.entries.size();
-        if (count == 0) return null;
-        assert(count == 1);
-        AtomEntry entry = feed.entries.get(0);
-        DeploymentClient result = new DeploymentClient(service, path);
-        result.load(entry);
-        return result;
+    public void reload() {
+        get("deployment-client/reload");
+        invalidate();
     }
 }
 

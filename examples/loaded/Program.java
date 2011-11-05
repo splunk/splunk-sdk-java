@@ -38,6 +38,7 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public void printActions(Map<String, String> actions) {
+        if (actions == null) return;
         for (Map.Entry entry : actions.entrySet()) {
             System.out.format("action %s => %s\n", 
                 entry.getKey(), entry.getValue());

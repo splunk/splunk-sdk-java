@@ -33,7 +33,9 @@ public abstract class Resource {
 
     // Returns the path corresponding to the given action.
     public String actionPath(String action) {
-        return getActions().get(action);
+        Map<String, String> actions = getActions();
+        if (actions == null) return null;
+        return actions.get(action);
     }
 
     public Map<String, String> getActions() {
@@ -54,7 +56,8 @@ public abstract class Resource {
     }
 
     void load(AtomObject value) {
-        this.actions = value.links;
+        if (value != null)
+            this.actions = value.links;
         this.maybeValid = true;
     }
 

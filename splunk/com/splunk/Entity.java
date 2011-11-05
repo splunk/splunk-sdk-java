@@ -16,10 +16,12 @@
 
 package com.splunk;
 
-import com.splunk.atom.*;
+import com.splunk.atom.AtomEntry;
+import com.splunk.atom.AtomFeed;
 import com.splunk.http.ResponseMessage;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Entity extends Resource {
@@ -97,12 +99,28 @@ public class Entity extends Resource {
         return Value.getLong(getContent(), key, defaultValue);
     }
 
+    // The name is also the entities "key" within its container collection
+    // and is usually the same as its title, although in eg: the case of 
+    // search jobs it is the sid.
+    public String getName() {
+        return getTitle();
+    }
+
     String getString(String key) {
         return getContent().get(key).toString();
     }
 
     String getString(String key, String defaultValue) {
         return Value.getString(getContent(), key, defaultValue);
+    }
+
+    public String getTitle() {
+        validate();
+        return this.title;
+    }
+
+    void setTitle(String value) {
+        this.title = value;
     }
 
     Object getValue(String key) {
@@ -115,26 +133,19 @@ public class Entity extends Resource {
         return map.get(key);
     }
 
-    // The name is also the entities "key" within its container collection
-    // and is usually the same as its title, although in eg: the case of 
-    // search jobs it is the sid.
-    public String getName() {
-        return getTitle();
-    }
-
-    public String getTitle() {
-        validate();
-        return this.title;
-    }
-
     public boolean isDisabled() {
-        return Value.getBoolean(getContent(), "disabled", false);
+        return getBoolean("disabled", false);
     }
 
     void load(AtomEntry entry) {
         super.load(entry);
-        this.content = entry.content;
+        if (entry == null) {
+            this.title = "title";
+            this.content = new HashMap<String, Object>();
+            return;
+        }
         this.title = entry.title;
+        this.content = entry.content;
     }
 
     public void update(Args args) {
@@ -178,8 +189,9 @@ public class Entity extends Resource {
         ResponseMessage response = get();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.parse(response.getContent());
-        assert(feed.entries.size() == 1);
-        AtomEntry entry = feed.entries.get(0);
+        int count = feed.entries.size();
+        assert(count == 0 || count == 1);
+        AtomEntry entry = count == 0 ? null : feed.entries.get(0);
         load(entry);
     }
 
