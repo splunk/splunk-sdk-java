@@ -138,18 +138,18 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
-        return new EntityCollection<LicenseSlave>(this,
-                "licenser/slaves", LicenseSlave.class);
+        return new EntityCollection<LicenseSlave>(
+            this, "licenser/slaves", LicenseSlave.class);
     }
 
     public EntityCollection<LicenseStack> getLicenseStacks() {
-        return new EntityCollection<LicenseStack>(this,
-                "licenser/stacks", LicenseStack.class);
+        return new EntityCollection<LicenseStack>(
+            this, "licenser/stacks", LicenseStack.class);
     }
 
     public EntityCollection<License> getLicenses() {
-        return new EntityCollection<License>(this,
-                "licenser/licenses", License.class);
+        return new EntityCollection<License>(
+            this, "licenser/licenses", License.class);
     }
 
     public EntityCollection<Entity> getLoggers() {
