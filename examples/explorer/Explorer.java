@@ -89,6 +89,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
     class AppNode extends EntityNode<Application> {
         AppNode(Application app) {
             super(app);
+            String displayName = app.getLabel();
+            if (displayName == null) displayName = app.getName();
+            setDisplayName(displayName);
         }
         
         @Override protected PropertyList getMetadata() {
@@ -345,6 +348,115 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
+    class LicenseGroupNode extends EntityNode<LicenseGroup> {
+        LicenseGroupNode(LicenseGroup licenseGroup) {
+            super(licenseGroup);
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                // UNDONE: add(String[].class, "getStackIds");
+                add(boolean.class, "isActive");
+            }};
+        }
+    }
+
+    class LicenseGroupsNode extends EntityCollectionNode<LicenseGroup> {
+        LicenseGroupsNode(EntityCollection<LicenseGroup> licenseGroups) {
+            super("License Groups", licenseGroups);
+        }
+
+        @Override Node createKid(LicenseGroup licenseGroup) {
+            return new LicenseGroupNode(licenseGroup);
+        }
+    }
+
+    class LicenseSlaveNode extends EntityNode<LicenseSlave> {
+        LicenseSlaveNode(LicenseSlave licenseSlave) {
+            super(licenseSlave);
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(String.class, "getLabel");
+                // UNDONE: add(String[].class, "getPoolIds");
+                // UNDONE: add(String[].class, "getStackIds");
+            }};
+        }
+    }
+
+    class LicenseSlavesNode extends EntityCollectionNode<LicenseSlave> {
+        LicenseSlavesNode(EntityCollection<LicenseSlave> licenseSlaves) {
+            super("License Slaves", licenseSlaves);
+        }
+
+        @Override Node createKid(LicenseSlave licenseSlave) {
+            return new LicenseSlaveNode(licenseSlave);
+        }
+    }
+
+    class LicenseStackNode extends EntityNode<LicenseStack> {
+        LicenseStackNode(LicenseStack licenseStack) {
+            super(licenseStack);
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(String.class, "getLabel");
+                // UNDONE: add(String[].class, "getPoolIds");
+                add(long.class, "getQuota");
+                // UNDONE: add(String[].class, "getStackIds");
+            }};
+        }
+    }
+
+    class LicenseStacksNode extends EntityCollectionNode<LicenseStack> {
+        LicenseStacksNode(EntityCollection<LicenseStack> licenseStacks) {
+            super("License Stacks", licenseStacks);
+        }
+
+        @Override Node createKid(LicenseStack licenseStack) {
+            return new LicenseStackNode(licenseStack);
+        }
+    }
+
+    class LicenseNode extends ExplorerNode<License> {
+        LicenseNode(License license) {
+            super(license);
+            String displayName = license.getLabel();
+            if (displayName == null) displayName = license.getName();
+            setDisplayName(displayName);
+        }
+
+        @Override protected PropertyList getMetadata() {
+            return new PropertyList() {{
+                add(Date.class, "getCreationTime");
+                add(Date.class, "getExpirationTime");
+                // UNDONE: add(String[].class, "getFeatures");
+                add(String.class, "getGroupId");
+                add(String.class, "getLabel");
+                add(String.class, "getLicenseHash");
+                add(int.class, "getMaxViolations");
+                add(long.class, "getQuota");
+                // UNDONE: add(String[].class, "getSourceTypes");
+                add(String.class, "getStackId");
+                add(String.class, "getStatus");
+                add(String.class, "getType");
+                add(int.class, "getWindowPeriod");
+            }};
+        }
+    }
+
+    class LicensesNode extends EntityCollectionNode<License> {
+        LicensesNode(EntityCollection<License> licenses) {
+            super("Licenses", licenses);
+        }
+
+        @Override Node createKid(License license) {
+            return new LicenseNode(license);
+        }
+    }
+
     // UNDONE: Figure out a better way to create leaf nodes.
     class NoKids extends Children.Keys<Object> {
         NoKids() {}
@@ -446,8 +558,7 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             return new PropertyList() {{
                 add(int.class, "getBuild");
                 add(String.class, "getCpuArch");
-                // UNDONE: Figure out how to get class for following
-                // add(List<String>.class, "getLicenseKeys");
+                // UNDONE: add(String[].class, "getLicenseKeys");
                 add(String.class, "getLicenseSignature");
                 add(String.class, "getLicenseState");
                 add(String.class, "getMasterGuid");
@@ -473,9 +584,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             String[] kinds = new String[] {
                 "settings",
                 "licenses",
-                // "licenseGroups",
-                // "licenseSlaves",
-                // "licenseStacks",
+                "licenseGroups",
+                "licenseSlaves",
+                "licenseStacks",
                 "apps",
                 "indexes",
                 "jobs",
@@ -494,6 +605,12 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 return new JobsNode(service.getJobs());
             if (kind.equals("licenses"))
                 return new LicensesNode(service.getLicenses());
+            if (kind.equals("licenseGroups"))
+                return new LicenseGroupsNode(service.getLicenseGroups());
+            if (kind.equals("licenseSlaves"))
+                return new LicenseSlavesNode(service.getLicenseSlaves());
+            if (kind.equals("licenseStacks"))
+                return new LicenseStacksNode(service.getLicenseStacks());
             if (kind.equals("searches"))
                 return new SavedSearchesNode(service.getSearches());
             if (kind.equals("settings"))
@@ -543,10 +660,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 add(boolean.class, "getDefaultAppIsUserOverride");
                 add(String.class, "getDefaultAppSourceRole");
                 add(String.class, "getEmail");
-                add(String.class, "getPassword"); // UNDONE: Really?
+                add(String.class, "getPassword");
                 add(String.class, "getRealName");
-                // UNDONE: Figure out how to handle property of List<String>
-                // add(List<String>.class, "getRoles")
+                // UNDONE: add(String[].class, "getRoles")
             }};
         }
     }
@@ -558,45 +674,6 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
         @Override Node createKid(User user) {
             return new UserNode(user);
-        }
-    }
-
-    class LicenseNode extends ExplorerNode<License> {
-        LicenseNode(License license) {
-            super(license);
-            String displayName = license.getLabel();
-            if (displayName == null) displayName = license.getName();
-            setDisplayName(displayName);
-        }
-
-        @Override protected PropertyList getMetadata() {
-            return new PropertyList() {{
-                add(Date.class, "getCreationTime");
-                add(Date.class, "getExpirationTime");
-                // UNDONE: List<String>
-                // add(String[].class, "getFeatures");
-                add(String.class, "getGroupId");
-                add(String.class, "getLabel");
-                add(String.class, "getLicenseHash");
-                add(int.class, "getMaxViolations");
-                add(long.class, "getQuota");
-                // UNDONE
-                // add(String[].class, "getSourceTypes");
-                add(String.class, "getStackId");
-                add(String.class, "getStatus");
-                add(String.class, "getType");
-                add(int.class, "getWindowPeriod");
-            }};
-        }
-    }
-
-    class LicensesNode extends EntityCollectionNode<License> {
-        LicensesNode(EntityCollection<License> licenses) {
-            super("Licenses", licenses);
-        }
-
-        @Override Node createKid(License license) {
-            return new LicenseNode(license);
         }
     }
 }
