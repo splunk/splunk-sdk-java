@@ -34,7 +34,7 @@ public class Settings extends Entity {
     }
 
     public String getHost() {
-        return getString("host");
+        return getString("host", null);
     }
 
     public int getHttpPort() {
