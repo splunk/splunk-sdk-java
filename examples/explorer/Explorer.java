@@ -86,12 +86,11 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         setSize(500, 400);
     }
 
-    public class AppNode extends ExplorerNode<Application> {
+    class AppNode extends EntityNode<Application> {
         AppNode(Application app) {
-            super(app, new NoKids());
-            setDisplayName(app.getName());
+            super(app);
         }
-
+        
         @Override protected PropertyList getMetadata() {
             return new PropertyList() {{
                 add(boolean.class, "getCheckForUpdates");
@@ -101,6 +100,16 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 add(boolean.class, "isManageable");
                 add(boolean.class, "isVisible");
             }};
+        }
+    }
+
+    class AppsNode extends EntityCollectionNode<Application> {
+        AppsNode(EntityCollection<Application> apps) {
+            super("Apps", apps);
+        }
+
+        @Override Node createKid(Application app) {
+            return new AppNode(app);
         }
     }
 
@@ -144,8 +153,14 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    public abstract class ExplorerNode<T> extends AbstractNode {
+    // Abstract node that simplifies the creation of node metadata.
+    abstract class ExplorerNode<T> extends AbstractNode {
         T value;
+
+        ExplorerNode(T value) {
+            super(new NoKids());
+            this.value = value;
+        }
 
         ExplorerNode(T value, Children kids) {
             super(kids);
@@ -159,39 +174,51 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    public class AppsNode extends ExplorerNode<EntityCollection<Application>> {
-        AppsNode(EntityCollection<Application> apps) {
-            super(apps, new AppsKids(apps));
-            setDisplayName("Apps");
+    abstract class EntityNode<T extends Entity> extends ExplorerNode<T> {
+        EntityNode(T entity) {
+            super(entity);
+            setDisplayName(entity.getName());
         }
+    }
+
+    // Abstract class that generalizes an explorer node for any EntityCollection
+    abstract class EntityCollectionNode<TEntity extends Entity>
+        extends ExplorerNode<EntityCollection> 
+    {
+        EntityCollectionNode(String title, EntityCollection collection) {
+            super(collection);
+            setDisplayName(String.format("%s (%d)", title, collection.size()));
+            setChildren(new EntityCollectionKids(this));
+        }
+
+        abstract Node createKid(TEntity entity);
 
         @Override PropertyList getMetadata() {
              return new PropertyList() {{
                 add(int.class, "size");
             }};
         }
+
+        class EntityCollectionKids extends Children.Keys<TEntity> {
+            EntityCollectionNode<TEntity> parent;
+
+            EntityCollectionKids(EntityCollectionNode<TEntity> parent) {
+                this.parent = parent;
+            }
+
+            @Override protected void addNotify() {
+                setKeys(this.parent.value.values());
+            }
+
+            @Override protected Node[] createNodes(TEntity entity) {
+                return new Node[] { parent.createKid(entity) };
+            }
+        }
     }
 
-    class AppsKids extends Children.Keys<Application> {
-        EntityCollection<Application> apps;
-
-        AppsKids(EntityCollection<Application> apps) {
-            this.apps = apps;
-        }
-
-        @Override protected void addNotify() { 
-            setKeys(apps.values());
-        }
-
-        @Override protected Node[] createNodes(Application app) {
-            return new Node[] { new AppNode(app) };
-        }
-    }
-
-    class IndexNode extends ExplorerNode {
+    class IndexNode extends EntityNode<Index> {
         IndexNode(Index index) {
-            super(index, new NoKids());
-            setDisplayName(index.getName());
+            super(index);
         }
 
         @Override protected PropertyList getMetadata() {
@@ -246,33 +273,20 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class IndexesNode extends AbstractNode {
+    class IndexesNode extends EntityCollectionNode<Index> {
         IndexesNode(EntityCollection<Index> indexes) {
-            super(new IndexesKids(indexes));
-            setDisplayName("Indexes");
+            super("Indexes", indexes);
+        }
+
+        @Override Node createKid(Index index) {
+            return new IndexNode(index);
         }
     }
 
-    class IndexesKids extends Children.Keys<Index> {
-        EntityCollection<Index> indexes;
-
-        IndexesKids(EntityCollection<Index> indexes) {
-            this.indexes = indexes; 
-        }
-
-        @Override protected void addNotify() { 
-            setKeys(indexes.values());
-        }
-
-        @Override protected Node[] createNodes(Index index) { 
-            return new Node[] { new IndexNode(index) };
-        }
-    }
-
-    class JobNode extends ExplorerNode<Job> {
+    class JobNode extends EntityNode<Job> {
         JobNode(Job job) {
-            super(job, new NoKids());
-            setDisplayName(job.getName());
+            super(job);
+            setDisplayName(job.getTitle());
         }
 
         @Override protected PropertyList getMetadata() {
@@ -321,26 +335,13 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class JobsNode extends AbstractNode {
-        JobsNode(JobCollection jobs) {
-            super(new JobsKids(jobs));
-            setDisplayName("Jobs");
-        }
-    }
-
-    class JobsKids extends Children.Keys<Job> {
-        JobCollection jobs;
-
-        JobsKids(JobCollection jobs) {
-            this.jobs = jobs; 
+    class JobsNode extends EntityCollectionNode<Job> {
+        JobsNode(EntityCollection<Job> jobs) {
+            super("Jobs", jobs);
         }
 
-        @Override protected void addNotify() { 
-            setKeys(jobs.values());
-        }
-
-        @Override protected Node[] createNodes(Job job) { 
-            return new Node[] { new JobNode(job) };
+        @Override Node createKid(Job job) {
+            return new JobNode(job);
         }
     }
 
@@ -371,10 +372,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class SavedSearchNode extends ExplorerNode {
-        SavedSearchNode(SavedSearch search) {
-            super(search, new NoKids());
-            setDisplayName(search.getName());
+    class SavedSearchNode extends EntityNode<SavedSearch> {
+        SavedSearchNode(SavedSearch savedSearch) {
+            super(savedSearch);
         }
 
         @Override protected PropertyList getMetadata() {
@@ -426,26 +426,13 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class SavedSearchesNode extends AbstractNode {
-        SavedSearchesNode(EntityCollection<SavedSearch> searches) {
-            super(new SavedSearchesKids(searches));
-            setDisplayName("Saved Searches");
-        }
-    }
-
-    class SavedSearchesKids extends Children.Keys<SavedSearch> {
-        EntityCollection<SavedSearch> searches;
-
-        SavedSearchesKids(EntityCollection<SavedSearch> searches) {
-            this.searches = searches; 
+    class SavedSearchesNode extends EntityCollectionNode<SavedSearch> {
+        SavedSearchesNode(EntityCollection<SavedSearch> savedSearches) {
+            super("Saved Searches", savedSearches);
         }
 
-        @Override protected void addNotify() { 
-            setKeys(searches.values());
-        }
-
-        @Override protected Node[] createNodes(SavedSearch search) { 
-            return new Node[] { new SavedSearchNode(search) };
+        @Override Node createKid(SavedSearch savedSearch) {
+            return new SavedSearchNode(savedSearch);
         }
     }
 
@@ -521,9 +508,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class SettingsNode extends ExplorerNode {
+    class SettingsNode extends EntityNode<Settings> {
         SettingsNode(Settings settings) {
-            super(settings, new NoKids());
+            super(settings);
             setDisplayName("Settings");
         }
 
@@ -545,10 +532,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class UserNode extends ExplorerNode {
+    class UserNode extends EntityNode<User> {
         UserNode(User user) {
-            super(user, new NoKids());
-            setDisplayName(user.getName());
+            super(user);
         }
 
         @Override protected PropertyList getMetadata() {
@@ -565,35 +551,22 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class UsersNode extends AbstractNode {
-        UsersNode(UserCollection users) {
-            super(new UsersKids(users));
-            setDisplayName("Users");
+    class UsersNode extends EntityCollectionNode<User> {
+        UsersNode(EntityCollection<User> users) {
+            super("Users", users);
+        }
+
+        @Override Node createKid(User user) {
+            return new UserNode(user);
         }
     }
 
-    class UsersKids extends Children.Keys<User> {
-        UserCollection users;
-
-        UsersKids(UserCollection users) {
-            this.users = users; 
-        }
-
-        @Override protected void addNotify() { 
-            setKeys(users.values());
-        }
-
-        @Override protected Node[] createNodes(User user) { 
-            return new Node[] { new UserNode(user) };
-        }
-    }
-
-    class LicenseNode extends ExplorerNode {
+    class LicenseNode extends ExplorerNode<License> {
         LicenseNode(License license) {
-            super(license, new NoKids());
-            String display = license.getLabel();
-            if (display == null) display = license.getName();
-            setDisplayName(display);
+            super(license);
+            String displayName = license.getLabel();
+            if (displayName == null) displayName = license.getName();
+            setDisplayName(displayName);
         }
 
         @Override protected PropertyList getMetadata() {
@@ -617,26 +590,13 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         }
     }
 
-    class LicensesNode extends AbstractNode {
+    class LicensesNode extends EntityCollectionNode<License> {
         LicensesNode(EntityCollection<License> licenses) {
-            super(new LicensesKids(licenses));
-            setDisplayName("Licenses");
-        }
-    }
-
-    class LicensesKids extends Children.Keys<License> {
-        EntityCollection<License> licenses;
-
-        LicensesKids(EntityCollection<License> licenses) {
-            this.licenses = licenses; 
+            super("Licenses", licenses);
         }
 
-        @Override protected void addNotify() { 
-            setKeys(licenses.values());
-        }
-
-        @Override protected Node[] createNodes(License license) { 
-            return new Node[] { new LicenseNode(license) };
+        @Override Node createKid(License license) {
+            return new LicenseNode(license);
         }
     }
 }
