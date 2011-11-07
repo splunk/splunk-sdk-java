@@ -23,15 +23,19 @@
 
 package com.splunk;
 
-import junit.framework.TestCase;
+import junit.framework.*;
+import junit.framework.Assert;
 import org.junit.*;
-import static org.junit.Assert.*;
 
-import com.splunk.*;
 import com.splunk.atom.*;
 import com.splunk.http.HTTPException;
 import com.splunk.http.ResponseMessage;
 import com.splunk.sdk.Program;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class ServiceTest extends TestCase {
     Program program = new Program();
@@ -106,6 +110,31 @@ public class ServiceTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
+    @Test public void testCapabilities() throws Exception {
+        Service service = connect();
+
+        List<String> expected = Arrays.asList(
+                "admin_all_objects", "change_authentication",
+                "change_own_password", "delete_by_keyword",
+                "edit_deployment_client", "edit_deployment_server",
+                "edit_dist_peer", "edit_forwarders", "edit_httpauths",
+                "edit_input_defaults", "edit_monitor", "edit_roles",
+                "edit_scripted", "edit_search_server", "edit_server",
+                "edit_splunktcp", "edit_splunktcp_ssl", "edit_tcp", "edit_udp",
+                "edit_user", "edit_web_settings", "get_metadata",
+                "get_typeahead", "indexes_edit", "license_edit", "license_tab",
+                "list_deployment_client", "list_forwarders", "list_httpauths",
+                "list_inputs", "request_remote_tok", "rest_apps_management",
+                "rest_apps_view", "rest_properties_get", "rest_properties_set",
+                "restart_splunkd", "rtsearch", "schedule_search", "search",
+                "use_file_operator");
+
+        List<String> caps = service.getCapabilities();
+        for (String name: expected) {
+            junit.framework.Assert.assertTrue(caps.contains(name));
+        }
+    }
+
     // Make a few simple requests and make sure the results look ok.
     @Test public void testGet() {
         Service service = connect();
@@ -129,6 +158,24 @@ public class ServiceTest extends TestCase {
         }
         catch (HTTPException e) {
             assertEquals(e.getStatus(), 404);
+        }
+    }
+
+    @Test public void testInfo() throws Exception {
+
+        System.out.println("Testing System Information");
+
+        Service service = connect();
+
+        List <String> expected = Arrays.asList(
+            "build", "cpu_arch", "guid", "isFree", "isTrial", "licenseKeys",
+            "licenseSignature", "licenseState", "master_guid", "mode",
+            "os_build", "os_name", "os_version", "serverName", "version");
+
+        Entity info = service.getInfo();
+        Map<String,Object> content = info.getContent();
+        for (String name: expected) {
+            junit.framework.Assert.assertTrue(content.containsKey(name));
         }
     }
 
@@ -163,6 +210,31 @@ public class ServiceTest extends TestCase {
         catch (HTTPException e) {
             assertEquals(e.getStatus(), 401);
         }
+    }
+
+    @Test public void testRestart() throws Exception {
+
+        int retry = 10;
+        boolean restarted = false;
+
+        Service service = connect();
+
+        ResponseMessage response = service.restart();
+        Assert.assertEquals(200, response.getStatus());
+
+        while (retry > 0) {
+            Thread.sleep(5000); // 5 seconds
+            retry = retry-1;
+            try {
+                service = connect();
+                restarted = true;
+                break;
+            }
+            catch (Exception e) {
+                // server not back yet
+            }
+        }
+        Assert.assertTrue(restarted);
     }
 
     @Test public void testJobs() {
