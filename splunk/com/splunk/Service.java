@@ -129,8 +129,9 @@ public class Service extends com.splunk.http.Service {
             this, "licenser/groups", LicenseGroup.class);
     }
 
-    public EntityCollection<Entity> getLicenseMessages() {
-        return new EntityCollection<Entity>(this, "licenser/messages");
+    public EntityCollection<LicenseMessage> getLicenseMessages() {
+        return new EntityCollection<LicenseMessage>(
+            this, "licenser/messages", LicenseMessage.class);
     }
 
     public EntityCollection<Entity> getLicensePools() {
