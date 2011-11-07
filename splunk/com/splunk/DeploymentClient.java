@@ -26,7 +26,7 @@ public class DeploymentClient extends Entity {
     }
 
     public String getTargetUri() {
-        return getString("targetUri");
+        return getString("targetUri", null);
     }
 
     void load(AtomEntry entry) {
