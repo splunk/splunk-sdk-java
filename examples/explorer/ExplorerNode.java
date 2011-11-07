@@ -23,7 +23,7 @@ abstract class ExplorerNode extends AbstractNode {
     Object value;
 
     ExplorerNode(Object value) {
-        super(new NoKids());
+        super(Children.LEAF);
         this.value = value;
     }
 

@@ -16,10 +16,14 @@
 
 import com.splunk.Entity;
 
+import org.openide.nodes.Children;
+
 abstract class EntityNode extends ExplorerNode {
     EntityNode(Entity entity) {
         super(entity);
-        setDisplayName(entity.getName());
+        String name = entity.getName();
+        setName(name);
+        setDisplayName(name);
     }
 }
 

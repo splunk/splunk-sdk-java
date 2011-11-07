@@ -28,7 +28,7 @@ class EntityCollectionNode extends ExplorerNode {
 
     EntityCollectionNode(String title, EntityCollection value, Class itemClass) 
     {
-        super(value);
+        super(value, new NoKids());
         this.itemClass = itemClass;
         setDisplayName(String.format("%s (%d)", title, value.size()));
         setChildren(new EntityCollectionKids(this));

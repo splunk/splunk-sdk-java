@@ -34,7 +34,7 @@ import javax.swing.JSplitPane;
 
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.propertysheet.PropertySheetView;
-import org.openide.explorer.view.ContextTreeView;
+import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -61,8 +61,8 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
     }
 
     void initialize() {
-        ContextTreeView left;
-        left = new ContextTreeView();
+        BeanTreeView left;
+        left = new BeanTreeView();
         left.setRootVisible(false);
 
         PropertySheetView right;
