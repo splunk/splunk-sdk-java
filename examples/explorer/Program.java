@@ -14,9 +14,9 @@
  * under the License.
  */
 
-import com.splunk.*;
+import com.splunk.Service;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class Program extends com.splunk.sdk.Program {
     public static void main(String[] args) {
