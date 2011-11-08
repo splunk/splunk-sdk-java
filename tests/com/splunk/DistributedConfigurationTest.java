@@ -23,14 +23,13 @@ import com.splunk.Service;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import junit.framework.Assert;
 
 import org.junit.*;
 
-public class DeploymentTenantTest extends TestCase {
+public class DistributedConfigurationTest extends TestCase {
     Program program = new Program();
 
-    public DeploymentTenantTest() {}
+    public DistributedConfigurationTest() {}
 
     Service connect() throws IOException {
         return new Service(
@@ -42,20 +41,24 @@ public class DeploymentTenantTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDeploymentTenant() throws Exception {
+    @Test public void testDistributedConfiguration() throws Exception {
         Service service = connect();
 
-        EntityCollection<DeploymentTenant> ds = service.getDeploymentTenants();
-        if (ds.values().size() == 0) {
-            System.out.println("WARNING: Deployment Tenant not configured");
-            return;
-        }
-        
-        for (DeploymentTenant entity: ds.values()) {
-            entity.get(); // force a read
-            Assert.assertTrue(entity.getWhiteList0().length() > 0);
-            entity.getCheckNew();
-            //UNDONE: more?
-        }
+        DistributedConfiguration dc = service.getDistributedConfiguration();
+        dc.getAutoAddServers();
+        dc.getBlacklistNames();
+        dc.getBlacklistUrls();
+        dc.getCheckTimedOutServersFrequency();
+        dc.isDisabled();
+        dc.getHeartbeatFrequency();
+        dc.getHeartbeatMcastAddress();
+        dc.getHeartbeatPort();
+        dc.getRemovedTimedOutServers();
+        dc.getServerTimeout();
+        dc.getServers();
+        dc.getShareBundles();
+        dc.getSkipOurselves();
+        dc.getStatusTimeout();
+        dc.getTtl();
     }
 }

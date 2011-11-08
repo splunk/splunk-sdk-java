@@ -162,9 +162,6 @@ public class ServiceTest extends TestCase {
     }
 
     @Test public void testInfo() throws Exception {
-
-        System.out.println("Testing System Information");
-
         Service service = connect();
 
         List <String> expected = Arrays.asList(

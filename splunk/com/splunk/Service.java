@@ -99,6 +99,10 @@ public class Service extends com.splunk.http.Service {
             this, "deployment/tenants", DeploymentTenant.class);
     }
 
+    public DistributedConfiguration getDistributedConfiguration() {
+        return new DistributedConfiguration(this);
+    }
+
     public EntityCollection<DistributedPeer> getDistributedPeers() {
         return new EntityCollection<DistributedPeer>(
             this, "search/distributed/peers", DistributedPeer.class);
