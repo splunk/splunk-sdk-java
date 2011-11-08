@@ -342,6 +342,9 @@ public class Program extends com.splunk.sdk.Program {
         System.out.print("\n# DeploymentTenants");
         printEntities(service.getDeploymentTenants());
 
+        System.out.print("\n# DistributedConfiguration");
+        printEntity(service.getDistributedConfiguration());
+
         System.out.print("\n# EventTypes");
         printEntities(service.getEventTypes());
 
