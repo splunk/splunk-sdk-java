@@ -154,8 +154,9 @@ public class Service extends com.splunk.http.Service {
             this, "licenser/licenses", License.class);
     }
 
-    public EntityCollection<Entity> getLoggers() {
-        return new EntityCollection<Entity>(this, "server/logger");
+    public EntityCollection<Logger> getLoggers() {
+        return new EntityCollection<Logger>(
+            this, "server/logger", Logger.class);
     }
 
     public EntityCollection<Message> getMessages() {

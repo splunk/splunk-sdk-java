@@ -172,11 +172,26 @@ public class ServiceTest extends TestCase {
             "licenseSignature", "licenseState", "master_guid", "mode",
             "os_build", "os_name", "os_version", "serverName", "version");
 
-        Entity info = service.getInfo();
+        ServiceInfo info = service.getInfo();
         Map<String,Object> content = info.getContent();
         for (String name: expected) {
             junit.framework.Assert.assertTrue(content.containsKey(name));
         }
+
+        info.getBuild();
+        info.getCpuArch();
+        info.getGuid();
+        info.getLicenseKeys();
+        info.getLicenseSignature();
+        info.getLicenseState();
+        info.getMasterGuid();
+        info.getMode();
+        info.getOsBuild();
+        info.getOsVersion();
+        info.getServerName();
+        info.getVersion();
+        info.isFree();
+        info.isTrial();
     }
 
     @Test public void testLogin() {
