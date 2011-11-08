@@ -27,10 +27,10 @@ import junit.framework.Assert;
 
 import org.junit.*;
 
-public class DeploymentServerTest extends TestCase {
+public class SettingsTest extends TestCase {
     Program program = new Program();
 
-    public DeploymentServerTest() {}
+    public SettingsTest() {}
 
     Service connect() throws IOException {
         return new Service(
@@ -42,20 +42,21 @@ public class DeploymentServerTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDeploymentServer() throws Exception {
+    @Test public void testSettings() throws Exception {
         Service service = connect();
 
-        EntityCollection<DeploymentServer> ds = service.getDeploymentServers();
-        if (ds.values().size() == 0) {
-            System.out.println("WARNING: deploymentServer not configured");
-            Assert.assertFalse(true);
-        }
-
-        for (DeploymentServer entity: ds.values()) {
-            entity.get(); // force a read
-            Assert.assertTrue(entity.getWhiteList0().length() > 0);
-            entity.getCheckNew();
-            //UNDONE: more?
-        }
+        Settings settings = service.getSettings();
+        settings.getSplunkDB();
+        settings.getSplunkHome();
+        settings.getEnableSplunkWebSSL();
+        settings.getHost();
+        settings.getHttpPort();
+        settings.getMgmtPort();
+        settings.getMinFreeSpace();
+        settings.getPass4SymmKey();
+        settings.getServerName();
+        settings.getSessionTimeout();
+        settings.getStartWebServer();
+        settings.getTrustedIP();
     }
 }

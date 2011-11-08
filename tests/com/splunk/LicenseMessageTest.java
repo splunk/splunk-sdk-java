@@ -57,13 +57,13 @@ public class LicenseMessageTest extends TestCase {
             entity.get(); // force a read
 
             Assert.assertTrue(entity.getCreationTime().after(new Date(0)));
-            //System.out.println(entity.getCategory());
-            //System.out.println(entity.getDescription());
-            //System.out.println(entity.getPoolId());
-            //System.out.println(entity.getSeverity());
-            //System.out.println(entity.getSlaveId());
-            //System.out.println(entity.getStackId());
-            //UNDONE: what in particular should we be looking for
+            entity.getCategory();
+            entity.getDescription();
+            entity.getPoolId();
+            entity.getSeverity();
+            entity.getSlaveId();
+            entity.getStackId();
+            //UNDONE: more?
         }
     }
 }

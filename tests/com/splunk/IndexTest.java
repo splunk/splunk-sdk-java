@@ -80,9 +80,55 @@ public class IndexTest extends TestCase {
         Assert.assertTrue(indexes.containsKey("sdk-tests"));
 
         Index index = indexes.get("sdk-tests");
+
+        index.getAssureUTF8();
+        index.getBlockSignatureDatabase();
+        index.getBlockSignSize();
+        index.getColdPath();
+        index.getColdPathExpanded();
+        index.getColdToFrozenDir();
+        index.getColdToFrozenScript();
+        index.getCompressRawdata();
+        index.getCurrentDBSizeMB();
+        index.getDefaultDatabase();
+        index.getEnableRealtimeSearch();
+        index.getFrozenTimePeriodInSecs();
+        index.getHomePath();
+        index.getHomePathExpanded();
+        index.getIndexThreads();
+        index.getLastInitTime();
+        index.getMaxConcurrentOptimizes();
+        index.getMaxDataSize();
+        index.getMaxHotBuckets();
+        index.getMaxHotIdleSecs();
+        index.getMaxHotSpanSecs();
+        index.getMaxMemMB();
+        index.getMaxMetaEntries();
+        index.getMaxRunningProcessGroups();
+        index.getMaxTime();
+        index.getMaxTotalDataSizeMB();
+        index.getMaxWarmDBCount();
+        index.getMemPoolMB();
+        index.getMinRawFileSyncSecs();
+        index.getMinTime();
+        index.getPartialServiceMetaPeriod();
+        index.getQuarantineFutureSecs();
+        index.getQuarantinePastSecs();
+        index.getRawChunkSizeBytes();
+        index.getRotatePeriodInSecs();
+        index.getServiceMetaPeriod();
+        index.getSuppressBannerList();
+        index.getSync();
+        index.getSyncMeta();
+        index.getThawedPath();
+        index.getThawedPathExpanded();
+        index.getThrottleCheckPeriod();
+        index.getTotalEventCount();
+        index.isDisabled();
+        index.isInternal();
+
         index.clean();
         Assert.assertEquals(index.getTotalEventCount(), 0);
-
 
         index.disable();
         Assert.assertTrue(index.isDisabled());

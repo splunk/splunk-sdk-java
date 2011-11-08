@@ -53,22 +53,20 @@ public class DistributedPeerTest extends TestCase {
         }
 
         for (DistributedPeer dp: dps.values()) {
-            System.out.println(dp.getTitle());
-            System.out.println(dp.getBuild());
-            System.out.println(dp.getBundleVersions());
-            System.out.println(dp.getGuid());
-            System.out.println(dp.getLicenseSignature());
-            System.out.println(dp.getPassword());
-            System.out.println(dp.getPeerName());
-            System.out.println(dp.getPeerType());
-            System.out.println(dp.getReplicationStatus());
-            System.out.println(dp.getStatus());
-            System.out.println(dp.getUsername());
-            System.out.println(dp.getVersion());
-            System.out.println(dp.isDisabled());
-            System.out.println(dp.isHttps());
-
-
+            dp.getTitle();
+            dp.getBuild();
+            dp.getBundleVersions();
+            dp.getGuid();
+            dp.getLicenseSignature();
+            dp.getPassword();
+            dp.getPeerName();
+            dp.getPeerType();
+            dp.getReplicationStatus();
+            dp.getStatus();
+            dp.getUsername();
+            dp.getVersion();
+            dp.isDisabled();
+            dp.isHttps();
         }
     }
 }

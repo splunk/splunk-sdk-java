@@ -56,8 +56,16 @@ public class ApplicationTest extends TestCase {
 
         apps.create("sdk-tests");
         Assert.assertEquals(true, apps.containsKey("sdk-tests"));
+        Application app = apps.get("sdk-tests");
 
-        // UNDONE: are we exposing 'author' in AtomObjects
+        app.getCheckForUpdates();
+        app.getLabel();
+        app.getVersion();
+        app.isConfigured();
+        app.isManageable();
+        app.isVisible();
+
+        // UNDONE: (llike python tests) are we exposing 'author' in AtomObjects
         //Entity app = apps.get("sdk-tests");
         //Assert.assertFalse(app.getContent().get("author").equals("Splunk"));
         //Args map = new Args();

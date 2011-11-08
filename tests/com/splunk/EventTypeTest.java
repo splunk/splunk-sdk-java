@@ -51,8 +51,7 @@ public class EventTypeTest extends TestCase {
             entity.get(); // force a read
             Assert.assertTrue(entity.getPriority() != -1);
             Assert.assertTrue(entity.getSearch() != null);
-            //description is optional
-            //Assert.assertTrue(entity.getDescription() != null);
+            entity.getDescription();
             //UNDONE: more?
         }
     }

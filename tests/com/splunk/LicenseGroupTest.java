@@ -57,7 +57,7 @@ public class LicenseGroupTest extends TestCase {
             for (String id: entity.getStackIds()) {
                 Assert.assertTrue(stacks.contains(id));
             }
-            // System.out.println(entity.isActive());
+            entity.isActive();
         }
     }
 }
