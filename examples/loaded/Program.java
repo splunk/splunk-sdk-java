@@ -55,15 +55,19 @@ public class Program extends com.splunk.sdk.Program {
         printField("Visible", app.isVisible());
     }
 
+    public void printResource(Resource resource) {
+        System.out.format("## %s\n", resource.getName());
+        System.out.format("title = %s\n", resource.getTitle());
+        System.out.format("path = %s\n", resource.getPath());
+    }
+
     public void printEntity(Entity entity) {
         System.out.println("");
         if (entity == null) {
             System.out.println("null");
             return;
         }
-        System.out.format("## %s\n", entity.getName());
-        System.out.format("title = %s\n", entity.getTitle());
-        System.out.format("path = %s\n", entity.getPath());
+        printResource(entity);
         printActions(entity.getActions());
         Map<String, Object> content = entity.getContent();
         if (content != null) {
@@ -74,8 +78,20 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public <T extends Entity> void printEntities(EntityCollection<T> entities) {
+    public <T extends Resource> void 
+    printResources(ResourceCollection<T> resources) {
+    	System.out.format("\n# %s\n", resources.getPath());
+        System.out.format("path = %s\n", resources.getPath());
+        printActions(resources.getActions());
+        System.out.format("keys = %s\n", resources.keySet().toString());
+        for (T resource : resources.values()) 
+            printResource(resource);
+    }
+
+    public <T extends Entity> void 
+    printEntities(EntityCollection<T> entities) {
     	System.out.format("\n# %s\n", entities.getPath());
+        System.out.format("path = %s\n", entities.getPath());
         printActions(entities.getActions());
         System.out.format("keys = %s\n", entities.keySet().toString());
         for (T entity : entities.values()) 
@@ -297,82 +313,82 @@ public class Program extends com.splunk.sdk.Program {
     public void run() throws Exception {
         Service service = connect();
 
-        System.out.print("\n**** Info ****");
+        System.out.print("\n# Info");
         printServiceInfo(service.getInfo());
 
-        System.out.print("\n**** Settings ****");
+        System.out.print("\n# Settings");
         printSettings(service.getSettings());
 
-        System.out.print("\n**** Applications ****");
+        System.out.print("\n# Applications");
         for (Entity app : service.getApplications().values())
             printApplication((Application)app);
 
-        System.out.print("\n**** Capabilities ****\n");
+        System.out.print("\n# Configs");
+        printResources(service.getConfigs());
+
+        System.out.print("\n# Capabilities\n");
         for (String capability : service.getCapabilities())
             System.out.println(capability);
 
-        System.out.print("\n**** DeploymentClient ****");
+        System.out.print("\n# DeploymentClient");
         printEntity(service.getDeploymentClient());
 
-        System.out.print("\n**** DeploymentServers ****");
+        System.out.print("\n# DeploymentServers");
         printEntities(service.getDeploymentServers());
 
-        System.out.print("\n**** DeploymentServerClasses ****");
+        System.out.print("\n# DeploymentServerClasses");
         printEntities(service.getDeploymentServerClasses());
 
-        System.out.print("\n**** DeploymentTenants ****");
+        System.out.print("\n# DeploymentTenants");
         printEntities(service.getDeploymentTenants());
 
-        System.out.print("\n**** EventTypes ****");
+        System.out.print("\n# EventTypes");
         printEntities(service.getEventTypes());
 
-        System.out.print("\n**** Indexes ****");
+        System.out.print("\n# Indexes");
         for (Entity index : service.getIndexes().values())
             printIndex((Index)index);
 
-        System.out.print("\n**** Info ****");
-        printEntity(service.getInfo());
-
-        System.out.print("\n**** Jobs ****");
+        System.out.print("\n# Jobs");
         for (Entity job : service.getJobs().values())
             printJob((Job)job);
 
-        System.out.print("\n**** LicenseGroups ****");
+        System.out.print("\n# LicenseGroups");
         printEntities(service.getLicenseGroups());
 
-        System.out.print("\n**** LicenseMessages ****");
+        System.out.print("\n# LicenseMessages");
         printEntities(service.getLicenseMessages());
 
-        System.out.print("\n**** LicensePools ****");
+        System.out.print("\n# LicensePools");
         printEntities(service.getLicensePools());
 
-        System.out.print("\n**** LicenseSlaves ****");
+        System.out.print("\n# LicenseSlaves");
         printEntities(service.getLicenseSlaves());
 
-        System.out.print("\n**** LicenseStacks ****");
+        System.out.print("\n# LicenseStacks");
         printEntities(service.getLicenseStacks());
 
-        System.out.print("\n**** Licenses ****");
+        System.out.print("\n# Licenses");
         printEntities(service.getLicenses());
 
-        System.out.print("\n**** Loggers ****");
+        System.out.print("\n# Loggers");
         printEntities(service.getLoggers());
 
-        System.out.print("\n**** Messages ****");
+        System.out.print("\n# Messages");
         for (Message message : service.getMessages().values())
             printMessage(message);
 
-        System.out.print("\n**** Passwords ****");
+        System.out.print("\n# Passwords");
         printEntities(service.getPasswords());
 
-        System.out.print("\n**** Roles ****");
+        System.out.print("\n# Roles");
         printEntities(service.getRoles());
 
-        System.out.print("\n**** Searches ****");
+        System.out.print("\n# Saved Searches");
         for (Entity search : service.getSearches().values())
             printSavedSearch((SavedSearch)search);
 
-        System.out.print("\n**** Users ****");
+        System.out.print("\n# Users");
         for (User user : service.getUsers().values())
             printUser(user);
     }

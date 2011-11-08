@@ -26,33 +26,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class EntityCollection<T extends Entity> extends Resource implements Map<String, T> 
-{
-    private Map<String, T> entities;
-    private Class<? extends Entity> entityClass;
-
-    public EntityCollection(Service service, String path) {
-        super(service, path);
-        entityClass = Entity.class;
+public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
+    EntityCollection(Service service, String path) {
+        super(service, path, Entity.class);
     }
     
-    public EntityCollection(Service service, String path, Class<T> cls) {
-        super(service, path);
-        entityClass = cls;
-    }
-
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean containsKey(Object key) {
-        validate();
-        return entities.containsKey(key);
-    }
-
-    public boolean containsValue(Object value) {
-        validate();
-        return entities.containsValue(value);
+    public EntityCollection(Service service, String path, Class itemClass) {
+        super(service, path, itemClass);
     }
 
     public T create(String name) {
@@ -68,97 +48,13 @@ public class EntityCollection<T extends Entity> extends Resource implements Map<
         return get(name);
     }
 
-    public Set<Map.Entry<String, T>> entrySet() {
-        validate();
-        return entities.entrySet();
-    }
-
-    public boolean equals(Object o) {
-        validate();
-        return entities.equals(o);
-    }
-
-    public T get(Object key) {
-        validate();
-        return entities.get(key);
-    }
-
-    public int hashCode() {
-        validate();
-        return entities.hashCode();
-    }
-
-    public boolean isEmpty() {
-        validate();
-        return entities.isEmpty();
-    }
-
-    public Set<String> keySet() {
-        validate();
-        return entities.keySet();
-    }
-
-    public ResponseMessage list() {
-        return service.get(path + "?count=-1");
-    }
-
-    void load(AtomFeed value) {
-        try {
-            super.load(value);
-            Constructor ctor = entityClass.getConstructor(
-                new Class[] { Service.class, String.class });
-            Object[] args = new Object[2];
-            args[0] = service;
-            this.entities = new HashMap<String, T>();
-            for (AtomEntry entry : value.entries) {
-                // UNDONE: Unfortunate to have to instantiate an URL object
-                // just to retrieve the path. Should probably also assert that
-                // the scheme://host:port match the service.
-                URL url = new URL(entry.id);
-                args[1] = url.getPath();
-                T entity = (T)ctor.newInstance(args);
-                entity.load(entry);
-                this.entities.put(entity.getName(), entity);
-            }
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }    
-    
-    public T put(String key, T value) {
-    	throw new UnsupportedOperationException();
-    }
-    	  	
-    		  	
-    public void putAll(Map<? extends String, ? extends T> map) {
-    	throw new UnsupportedOperationException();
-    }
-
-    public void refresh() {
-        ResponseMessage response = list();
-        assert(response.getStatus() == 200); // UNDONE
-        AtomFeed feed = AtomFeed.parse(response.getContent());
-        load(feed);
-    }
-
     public T remove(Object key) {
         validate();
         if (!containsKey(key)) return null;
-        T entity = entities.get(key);
+        T entity = items.get(key);
         entity.remove();
-        entities.remove(key);
+        items.remove(key);
         invalidate();
         return entity;
-    }
-
-    public int size() {
-        validate();
-        return entities.size();
-    }
-
-    public Collection<T> values() {
-        validate();
-        return entities.values();
     }
 }

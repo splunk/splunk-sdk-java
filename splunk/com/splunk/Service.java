@@ -66,12 +66,13 @@ public class Service extends com.splunk.http.Service {
     }
 
     public EntityCollection<Application> getApplications() {
-        return new EntityCollection<Application>(this,
-            "apps/local", Application.class);
+        return new EntityCollection<Application>(
+            this, "apps/local", Application.class);
     }
 
-    public EntityCollection<Entity> getConfigurations() {
-        return null; // UNDONE
+    public ResourceCollection<EntityCollection> getConfigs() {
+        return new ResourceCollection<EntityCollection>(
+            this, "properties", EntityCollection.class);
     }
 
     public List<String> getCapabilities() {
@@ -112,7 +113,6 @@ public class Service extends com.splunk.http.Service {
     }
 
     public ServiceInfo getInfo() {
-        // UNDONE: Align the following with singleton protocol (reaad)
         return new ServiceInfo(this);
     }
 

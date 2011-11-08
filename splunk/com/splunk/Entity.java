@@ -18,6 +18,7 @@ package com.splunk;
 
 import com.splunk.atom.AtomEntry;
 import com.splunk.atom.AtomFeed;
+import com.splunk.atom.AtomObject;
 import com.splunk.http.ResponseMessage;
 
 import java.util.Date;
@@ -26,7 +27,6 @@ import java.util.Map;
 
 public class Entity extends Resource {
     private Map<String, Object> content;
-    private String title;
 
     public Entity(Service service, String path) {
         super(service, path);
@@ -104,28 +104,12 @@ public class Entity extends Resource {
         return Value.getLong(getContent(), key, defaultValue);
     }
 
-    // The name is also the entities "key" within its container collection
-    // and is usually the same as its title, although in eg: the case of 
-    // search jobs it is the sid.
-    public String getName() {
-        return getTitle();
-    }
-
     String getString(String key) {
         return getContent().get(key).toString();
     }
 
     String getString(String key, String defaultValue) {
         return Value.getString(getContent(), key, defaultValue);
-    }
-
-    public String getTitle() {
-        validate();
-        return this.title;
-    }
-
-    void setTitle(String value) {
-        this.title = value;
     }
 
     Object getValue(String key) {
@@ -142,15 +126,15 @@ public class Entity extends Resource {
         return getBoolean("disabled", false);
     }
 
-    void load(AtomEntry entry) {
-        super.load(entry);
+    @Override void load(AtomObject value) {
+        super.load(value);
+        AtomEntry entry = (AtomEntry)value;
         if (entry == null) {
-            this.title = "title";
             this.content = new HashMap<String, Object>();
-            return;
         }
-        this.title = entry.title;
-        this.content = entry.content;
+        else {
+            this.content = entry.content;
+        }
     }
 
     public void update(Args args) {

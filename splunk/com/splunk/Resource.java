@@ -24,9 +24,10 @@ public abstract class Resource {
     protected Map<String, String> actions;
     protected String path;
     protected Service service;
+    protected String title;
     private boolean maybeValid = false;
 
-    public Resource(Service service, String path) {
+    Resource(Service service, String path) {
         this.path = path;
         this.service = service;
     }
@@ -43,6 +44,14 @@ public abstract class Resource {
         return this.actions;
     }
 
+    // Every resource has a name, which by default is its title. That name
+    // may also be used as the key for the resources if it belongs to a 
+    // container resource, as in the case of an entity that belongs to an 
+    // entity collection.
+    public String getName() {
+        return getTitle();
+    }
+
     public String getPath() {
         return this.path;
     }
@@ -51,13 +60,27 @@ public abstract class Resource {
         return this.service;
     }
 
+    public String getTitle() {
+        validate();
+        return this.title;
+    }
+
+    void setTitle(String value) {
+        this.title = value;
+    }
+
     public void invalidate() {
         this.maybeValid = false;
     }
 
     void load(AtomObject value) {
-        if (value != null)
+        if (value == null) {
+            this.title = "title";
+        }
+        else {
             this.actions = value.links;
+            this.title = value.title;
+        }
         this.maybeValid = true;
     }
 

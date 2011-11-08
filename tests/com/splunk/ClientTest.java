@@ -385,7 +385,7 @@ public class ClientTest extends TestCase {
         List <String> expected = Arrays.asList(
                 "INFO", "WARN", "ERROR", "DEBUG", "CRIT");
 
-        EntityCollection loggers = service.getLoggers();
+        EntityCollection<Entity> loggers = service.getLoggers();
 
         for (Entity ent: (Collection<Entity>)loggers.values()) {
             Assert.assertTrue(expected.contains(ent.getContent().get("level")));
@@ -481,7 +481,7 @@ public class ClientTest extends TestCase {
 
         Service service = connect();
 
-        EntityCollection roles = service.getRoles();
+        EntityCollection<Entity> roles = service.getRoles();
         List<String> allCapabilities = service.getCapabilities();
 
 
