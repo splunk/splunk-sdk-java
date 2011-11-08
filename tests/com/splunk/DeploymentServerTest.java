@@ -47,8 +47,8 @@ public class DeploymentServerTest extends TestCase {
 
         EntityCollection<DeploymentServer> ds = service.getDeploymentServers();
         if (ds.values().size() == 0) {
-            System.out.println("WARNING: deploymentServer not configured");
-            Assert.assertFalse(true);
+            System.out.println("WARNING: Deployment Server not configured");
+            return;
         }
 
         for (DeploymentServer entity: ds.values()) {
