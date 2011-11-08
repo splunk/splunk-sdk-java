@@ -47,7 +47,6 @@ public class DeploymentClientTest extends TestCase {
 
         DeploymentClient dc = service.getDeploymentClient();
         String uri = dc.getTargetUri();
-        int secs = dc.getPhoneHomeIntervalInSecs();
         System.out.println(secs);
         if (uri != null) {
             dc.reload();
