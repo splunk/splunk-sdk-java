@@ -43,8 +43,6 @@ public class MessageTest extends TestCase {
     }
 
     @Test public void testMessage() throws Exception {
-        System.out.println("Testing Messages");
-
         Service service = connect();
 
         EntityCollection messages = service.getMessages();
