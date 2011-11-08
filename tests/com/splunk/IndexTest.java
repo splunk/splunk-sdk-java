@@ -179,7 +179,8 @@ public class IndexTest extends TestCase {
             index.upload(path);
         }
         catch (Exception e) {
-            System.out.println("WARNING: testIndex upload:" + e.toString());
+            System.out.println("WARNING: testIndex upload failed (is splunkd " +
+            "running on this machine? error is:" + e.toString());
         }
     }
 }
