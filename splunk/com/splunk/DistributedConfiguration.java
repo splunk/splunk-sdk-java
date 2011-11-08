@@ -60,7 +60,7 @@ public class DistributedConfiguration extends Entity {
     }
 
     public String getServers() {
-        return getString("servers");
+        return getString("servers", null);
     }
 
     public boolean getShareBundles() {
