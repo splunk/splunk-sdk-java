@@ -16,8 +16,10 @@
 
 package com.splunk;
 
-public class EventType extends Entity {
-    public EventType(Service service, String path) {
+import java.util.List;
+
+public class LicensePool extends Entity {
+    public LicensePool(Service service, String path) {
         super(service, path);
     }
 
@@ -25,12 +27,27 @@ public class EventType extends Entity {
         return getString("description", null);
     }
 
-    public int getPriority() {
-        return getInteger("priority", -1);
+    public long getQuota() {
+        String option = getString("quota");
+        if (option.equals("MAX")) {
+            return Long.MAX_VALUE; //UNDONE: correct interpretation?
+        }
+        return getLong("quota");
     }
 
-    public String getSearch() {
-        return getString("search", null);
+    public List<String> getSlaves() {
+        return (List<String>)getContent().get("slaves");
+    }
+
+    public long getSlavesUsageBytes() {
+        return getLong("salves_usage_bytes", 0);
+    }
+
+    public String getStackId() {
+        return getString("stack_id", null);
+    }
+
+    public long getUsedBytes() {
+        return getLong("used_bytes", 0);
     }
 }
-

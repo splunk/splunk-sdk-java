@@ -99,8 +99,9 @@ public class Service extends com.splunk.http.Service {
             this, "deployment/tenants", DeploymentTenant.class);
     }
 
-    public EntityCollection<Entity> getDistributedPeers() {
-        return new EntityCollection<Entity>(this, "search/distributed/peers");
+    public EntityCollection<DistributedPeer> getDistributedPeers() {
+        return new EntityCollection<DistributedPeer>(
+            this, "search/distributed/peers", DistributedPeer.class);
     }
 
     public EntityCollection<EventType> getEventTypes() {
@@ -129,12 +130,14 @@ public class Service extends com.splunk.http.Service {
             this, "licenser/groups", LicenseGroup.class);
     }
 
-    public EntityCollection<Entity> getLicenseMessages() {
-        return new EntityCollection<Entity>(this, "licenser/messages");
+    public EntityCollection<LicenseMessage> getLicenseMessages() {
+        return new EntityCollection<LicenseMessage>(
+            this, "licenser/messages", LicenseMessage.class);
     }
 
-    public EntityCollection<Entity> getLicensePools() {
-        return new EntityCollection<Entity>(this, "licenser/pools");
+    public EntityCollection<LicensePool> getLicensePools() {
+        return new EntityCollection<LicensePool>(
+            this, "licenser/pools", LicensePool.class);
     }
 
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
@@ -152,8 +155,9 @@ public class Service extends com.splunk.http.Service {
             this, "licenser/licenses", License.class);
     }
 
-    public EntityCollection<Entity> getLoggers() {
-        return new EntityCollection<Entity>(this, "server/logger");
+    public EntityCollection<Logger> getLoggers() {
+        return new EntityCollection<Logger>(
+            this, "server/logger", Logger.class);
     }
 
     public EntityCollection<Message> getMessages() {

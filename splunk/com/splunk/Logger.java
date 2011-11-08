@@ -16,21 +16,15 @@
 
 package com.splunk;
 
-public class EventType extends Entity {
-    public EventType(Service service, String path) {
+import java.util.List;
+
+public class Logger extends Entity {
+    public Logger(Service service, String path) {
         super(service, path);
     }
 
-    public String getDescription() {
-        return getString("description", null);
-    }
-
-    public int getPriority() {
-        return getInteger("priority", -1);
-    }
-
-    public String getSearch() {
-        return getString("search", null);
+    public String getLevel() {
+        return getString("level");
     }
 }
 

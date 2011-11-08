@@ -16,21 +16,39 @@
 
 package com.splunk;
 
-public class EventType extends Entity {
-    public EventType(Service service, String path) {
+import java.util.Date;
+
+public class LicenseMessage extends Entity {
+    public LicenseMessage(Service service, String path) {
         super(service, path);
+    }
+
+    public String getCategory() {
+        return getString("category");
+    }
+
+    public Date getCreationTime() {
+        return getDateFromEpoch("create_time");
     }
 
     public String getDescription() {
         return getString("description", null);
     }
 
-    public int getPriority() {
-        return getInteger("priority", -1);
+    public String getPoolId() {
+        return getString("pool_id", null);
     }
 
-    public String getSearch() {
-        return getString("search", null);
+    public String getSeverity() {
+        return getString("severity", null);
+    }
+
+    public String getSlaveId() {
+        return getString("slave_id", null);
+    }
+
+    public String getStackId() {
+        return getString("stack_id", null);
     }
 }
 

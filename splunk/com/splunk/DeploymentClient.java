@@ -39,7 +39,7 @@ public class DeploymentClient extends Entity {
     // a serverClasses property.
 
     public void reload() {
-        get("deployment-client/reload");
+        get("deployment-client/Reload");
         invalidate();
     }
 }

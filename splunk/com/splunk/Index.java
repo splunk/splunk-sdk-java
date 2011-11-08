@@ -81,12 +81,12 @@ public class Index extends Entity {
         return getBoolean("assureUTF8");
     }
 
-    public int getBlockSignSize() {
-        return getInteger("blockSignSize");
-    }
-
     public String getBlockSignatureDatabase() {
         return getString("blockSignatureDatabase");
+    }
+
+    public int getBlockSignSize() {
+        return getInteger("blockSignSize");
     }
 
     public String getColdPath() {
