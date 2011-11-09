@@ -143,7 +143,8 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 "indexes",
                 "jobs",
                 "searches",
-                "users"
+                "users",
+                "roles"
             };
             setKeys(kinds);
         }
@@ -195,6 +196,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
             if (kind.equals("settings"))
                 return new SettingsNode(service.getSettings());
+
+            if (kind.equals("roles"))
+                return new EntityCollectionNode(
+                    "Roles", service.getRoles(), RoleNode.class);
 
             if (kind.equals("users"))
                 return new EntityCollectionNode(
