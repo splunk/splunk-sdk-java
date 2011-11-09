@@ -135,6 +135,7 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             String[] kinds = new String[] {
                 "settings",
                 "loggers",
+                "messages",
                 "distributedconfig",
                 "licenses",
                 "licenseGroups",
@@ -197,6 +198,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             if (kind.equals("loggers"))
                 return new EntityCollectionNode(
                     "Loggers", service.getLoggers(), LoggerNode.class);
+
+            if (kind.equals("messages"))
+                return new EntityCollectionNode(
+                    "Messages", service.getMessages(), MessageNode.class);
 
             if (kind.equals("searches"))
                 return new EntityCollectionNode(
