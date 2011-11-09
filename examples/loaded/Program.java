@@ -83,6 +83,13 @@ public class Program extends com.splunk.sdk.Program {
             printEntity(entity);
     }
 
+    void printEventType(EventType eventType) {
+        printEntity(eventType);
+        printField("Description", eventType.getDescription());
+        printField("Priority", eventType.getPriority());
+        printField("Search", eventType.getSearch());
+    }
+
     void printField(String field, boolean value) {
         System.out.format("%s = %b\n", field, value);
     }
@@ -372,7 +379,8 @@ public class Program extends com.splunk.sdk.Program {
         printEntity(service.getDistributedConfiguration());
 
         System.out.print("\n# EventTypes");
-        printEntities(service.getEventTypes());
+        for (Entity eventType : service.getEventTypes().values())
+            printEventType((EventType)eventType);
 
         System.out.print("\n# Indexes");
         for (Entity index : service.getIndexes().values())

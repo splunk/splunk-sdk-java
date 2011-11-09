@@ -140,12 +140,13 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 "licenseGroups",
                 "licenseSlaves",
                 "licenseStacks",
+                "users",
+                "roles",
                 "apps",
                 "indexes",
-                "jobs",
                 "searches",
-                "users",
-                "roles"
+                "eventtypes",
+                "jobs",
             };
             setKeys(kinds);
         }
@@ -158,6 +159,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             if (kind.equals("distributedconfig"))
                 return new DistributedConfigurationNode(
                     service.getDistributedConfiguration());
+
+            if (kind.equals("eventtypes"))
+                return new EntityCollectionNode(
+                    "EventTypes", service.getEventTypes(), EventTypeNode.class);
 
             if (kind.equals("indexes"))
                 return new EntityCollectionNode(
