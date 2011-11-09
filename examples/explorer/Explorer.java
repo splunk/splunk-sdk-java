@@ -137,6 +137,7 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 "loggers",
                 "messages",
                 "distributedconfig",
+                "distributedpeers",
                 "licenses",
                 "licenseGroups",
                 "licenseSlaves",
@@ -160,6 +161,12 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             if (kind.equals("distributedconfig"))
                 return new DistributedConfigurationNode(
                     service.getDistributedConfiguration());
+
+            if (kind.equals("distributedpeers"))
+                return new EntityCollectionNode(
+                    "Distributed Peers", 
+                    service.getDistributedPeers(), 
+                    DistributedPeerNode.class);
 
             if (kind.equals("eventtypes"))
                 return new EntityCollectionNode(

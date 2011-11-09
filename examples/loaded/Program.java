@@ -56,6 +56,22 @@ public class Program extends com.splunk.sdk.Program {
         printField("Visible", app.isVisible());
     }
 
+    public void printDistributedPeer(DistributedPeer peer) {
+        printEntity(peer);
+        printField("BundleVersions", peer.getBundleVersions());
+        printField("Guid", peer.getGuid());
+        printField("LicenseSignature", peer.getLicenseSignature());
+        printField("PeerName", peer.getPeerName());
+        printField("PeerType", peer.getPeerType());
+        printField("RemotePassword", peer.getRemotePassword());
+        printField("RemoteUsername", peer.getRemoteUsername());
+        printField("ReplicationStatus", peer.getReplicationStatus());
+        printField("Status", peer.getStatus());
+        printField("Version", peer.getVersion());
+        printField("isDisabled", peer.isDisabled());
+        printField("isHttps", peer.isHttps());
+    }
+
     public void printEntity(Entity entity) {
         System.out.println("");
         if (entity == null) {
@@ -377,6 +393,10 @@ public class Program extends com.splunk.sdk.Program {
 
         System.out.print("\n# DistributedConfiguration");
         printEntity(service.getDistributedConfiguration());
+
+        System.out.print("\n# DistributedPeers");
+        for (Entity peer : service.getDistributedPeers().values())
+            printDistributedPeer((DistributedPeer)peer);
 
         System.out.print("\n# EventTypes");
         for (Entity eventType : service.getEventTypes().values())
