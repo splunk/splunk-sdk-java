@@ -39,10 +39,6 @@ public class DistributedPeer extends Entity {
         return getString("licenseSignature");
     }
 
-    public String getPassword() {
-        return getString("remotePassword", null);
-    }
-
     public String getPeerName() {
         return getString("peerName");
     }
@@ -51,16 +47,20 @@ public class DistributedPeer extends Entity {
         return getString("peerType");
     }
 
+    public String getRemotePassword() {
+        return getString("remotePassword", null);
+    }
+
+    public String getRemoteUsername() {
+        return getString("remoteUsername", null);
+    }
+
     public String getReplicationStatus() {
         return getString("replicationStatus");
     }
 
     public String getStatus() {
         return getString("status");
-    }
-
-    public String getUsername() {
-        return getString("remoteUsername", null);
     }
 
     public String getVersion() {
