@@ -134,6 +134,7 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         @Override protected void addNotify() {
             String[] kinds = new String[] {
                 "settings",
+                "loggers",
                 "distributedconfig",
                 "licenses",
                 "licenseGroups",
@@ -187,6 +188,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                     "License Stacks", 
                     service.getLicenseStacks(), 
                     LicenseStackNode.class);
+
+            if (kind.equals("loggers"))
+                return new EntityCollectionNode(
+                    "Loggers", service.getLoggers(), LoggerNode.class);
 
             if (kind.equals("searches"))
                 return new EntityCollectionNode(
