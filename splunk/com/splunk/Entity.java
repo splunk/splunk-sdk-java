@@ -68,6 +68,14 @@ public class Entity extends Resource {
         return Value.getBoolean(getContent(), key, defaultValue);
     }
 
+    long getByteCount(String key) {
+        return Value.getByteCount(getContent(), key);
+    }
+
+    long getByteCount(String key, long defaultValue) {
+        return Value.getByteCount(getContent(), key, defaultValue);
+    }
+
     Date getDate(String key) {
         return Value.getDate(getContent(), key);
     }
