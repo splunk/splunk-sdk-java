@@ -44,5 +44,17 @@ public class Application extends Entity {
     public boolean isVisible() {
         return getBoolean("visible");
     }
+
+    public ApplicationArchive archive() {
+        return new ApplicationArchive(service, path + "/package");
+    }
+
+    public ApplicationSetup setup() {
+        return new ApplicationSetup(service, path + "/setup");
+    }
+
+    public ApplicationUpdate update() {
+        return new ApplicationUpdate(service, path + "/update");
+    }
 }
 
