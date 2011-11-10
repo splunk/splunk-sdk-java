@@ -138,6 +138,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 "messages",
                 "distributedconfig",
                 "distributedpeers",
+                "deploymentclient",
+                "deploymentservers",
+                "deploymentserverclasses",
+                "deploymenttenants",
                 "licenses",
                 "licenseGroups",
                 "licenseSlaves",
@@ -167,6 +171,27 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                     "Distributed Peers", 
                     service.getDistributedPeers(), 
                     DistributedPeerNode.class);
+
+            if (kind.equals("deploymentclient"))
+                return new DeploymentClientNode(service.getDeploymentClient());
+
+            if (kind.equals("deploymentservers"))
+                return new EntityCollectionNode(
+                    "Deployment Servers",
+                    service.getDeploymentServers(),
+                    DeploymentServerNode.class);
+
+            if (kind.equals("deploymentserverclasses"))
+                return new EntityCollectionNode(
+                    "Deployment Server Classes",
+                    service.getDeploymentServerClasses(),
+                    DeploymentServerClassNode.class);
+
+            if (kind.equals("deploymenttenants"))
+                return new EntityCollectionNode(
+                    "Deployment Tenants",
+                    service.getDeploymentTenants(),
+                    DeploymentTenantNode.class);
 
             if (kind.equals("eventtypes"))
                 return new EntityCollectionNode(
