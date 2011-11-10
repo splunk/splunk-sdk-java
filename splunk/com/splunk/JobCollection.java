@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import com.splunk.atom.AtomEntry;
 import com.splunk.atom.Xml;
 import com.splunk.http.ResponseMessage;
 
@@ -46,5 +47,10 @@ public class JobCollection extends EntityCollection<Job> {
 
     public ResponseMessage list() {
         return service.get(path + "?count=0");
+    }
+
+    // Search jobs use the sid value as the key.
+    @Override protected String itemKey(AtomEntry entry) {
+        return (String)entry.content.get("sid");
     }
 }
