@@ -35,6 +35,16 @@ public class Value {
         return toBoolean(map.get(key).toString());
     }
 
+    public static long getByteCount(Map<String, Object>map, String key) {
+        return toByteCount(map.get(key).toString());
+    }
+
+    public static long
+    getByteCount(Map<String, Object>map, String key, long defaultValue) {
+        if (!map.containsKey(key)) return defaultValue;
+        return toByteCount(map.get(key).toString());
+    }
+
     public static Date getDate(Map<String, Object> map, String key) {
         return toDate(map.get(key).toString());
     }
@@ -99,6 +109,24 @@ public class Value {
             return true;
         String message = String.format("Value error: '%s'", value);
         throw new RuntimeException(message); // UNDONE
+    }
+
+    public static long toByteCount(String value) {
+        long multiplier = 1;
+        if (value.endsWith("B")) {
+            if (value.endsWith("KB"))
+                multiplier = 1024;
+            else if (value.endsWith("MB"))
+                multiplier = 1024*1024;
+            else if (value.endsWith("GB"))
+                multiplier = 1024*1024*1024;
+            else {
+                String message = String.format("Value error: '%s'", value);
+                throw new RuntimeException(message); // UNDONE
+            }
+            value = value.substring(0, value.length()-2);
+        }
+        return Long.parseLong(value) * multiplier;
     }
 
     private static SimpleDateFormat dateFormat = null;
