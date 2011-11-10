@@ -14,17 +14,19 @@
  * under the License.
  */
 
-package com.splunk;
+import com.splunk.Entity;
 
-public class Input extends Entity {
-
-    // Both constructors require the kind of Input -- in the form of an
-    // already mapped name (i.e. tcp->tcp/raw).
-    public Input(Service service, String kindmapped) {
-        super(service, "/services/data/inputs/" + kindmapped);
+class EventTypeNode extends EntityNode {
+    EventTypeNode(Entity entity) {
+        super(entity);
     }
 
-    public Input(Service service, String kindmapped, String name) {
-        super(service, "/services/data/inputs/" + kindmapped + "/" + name);
+    @Override protected PropertyList getMetadata() {
+        return new PropertyList() {{
+            add(String.class, "getDescription");
+            add(int.class, "getPriority");
+            add(String.class, "getSearch");
+        }};
     }
 }
+

@@ -58,12 +58,12 @@ public class DistributedPeerTest extends TestCase {
             dp.getBundleVersions();
             dp.getGuid();
             dp.getLicenseSignature();
-            dp.getPassword();
             dp.getPeerName();
             dp.getPeerType();
+            dp.getRemotePassword();
+            dp.getRemoteUsername();
             dp.getReplicationStatus();
             dp.getStatus();
-            dp.getUsername();
             dp.getVersion();
             dp.isDisabled();
             dp.isHttps();

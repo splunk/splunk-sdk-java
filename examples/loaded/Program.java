@@ -17,6 +17,7 @@
 import com.splunk.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class Program extends com.splunk.sdk.Program {
@@ -55,10 +56,20 @@ public class Program extends com.splunk.sdk.Program {
         printField("Visible", app.isVisible());
     }
 
-    public void printResource(Resource resource) {
-        System.out.format("## %s\n", resource.getName());
-        System.out.format("title = %s\n", resource.getTitle());
-        System.out.format("path = %s\n", resource.getPath());
+    public void printDistributedPeer(DistributedPeer peer) {
+        printEntity(peer);
+        printField("BundleVersions", peer.getBundleVersions());
+        printField("Guid", peer.getGuid());
+        printField("LicenseSignature", peer.getLicenseSignature());
+        printField("PeerName", peer.getPeerName());
+        printField("PeerType", peer.getPeerType());
+        printField("RemotePassword", peer.getRemotePassword());
+        printField("RemoteUsername", peer.getRemoteUsername());
+        printField("ReplicationStatus", peer.getReplicationStatus());
+        printField("Status", peer.getStatus());
+        printField("Version", peer.getVersion());
+        printField("isDisabled", peer.isDisabled());
+        printField("isHttps", peer.isHttps());
     }
 
     public void printEntity(Entity entity) {
@@ -78,16 +89,6 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public <T extends Resource> void 
-    printResources(ResourceCollection<T> resources) {
-    	System.out.format("\n# %s\n", resources.getPath());
-        System.out.format("path = %s\n", resources.getPath());
-        printActions(resources.getActions());
-        System.out.format("keys = %s\n", resources.keySet().toString());
-        for (T resource : resources.values()) 
-            printResource(resource);
-    }
-
     public <T extends Entity> void 
     printEntities(EntityCollection<T> entities) {
     	System.out.format("\n# %s\n", entities.getPath());
@@ -96,6 +97,13 @@ public class Program extends com.splunk.sdk.Program {
         System.out.format("keys = %s\n", entities.keySet().toString());
         for (T entity : entities.values()) 
             printEntity(entity);
+    }
+
+    void printEventType(EventType eventType) {
+        printEntity(eventType);
+        printField("Description", eventType.getDescription());
+        printField("Priority", eventType.getPriority());
+        printField("Search", eventType.getSearch());
     }
 
     void printField(String field, boolean value) {
@@ -117,6 +125,10 @@ public class Program extends com.splunk.sdk.Program {
 
     void printField(String field, String value) {
         System.out.format("%s = %s\n", field, value == null ? "null" : value);
+    }
+
+    void printField(String field, List<String> value) {
+        printField(field, value == null ? (String)null : value.toString());
     }
 
     void printIndex(Index index) {
@@ -176,18 +188,18 @@ public class Program extends com.splunk.sdk.Program {
         printField("Email", user.getEmail());
         printField("Password", user.getPassword());
         printField("RealName", user.getRealName());
-        printField("Roles", user.getRoles().toString());
+        printField("Roles", user.getRoles());
     }
 
     void printJob(Job job) {
         printEntity(job);
-        printField("CursorTime", job.getCursorTime().toString());
+        printField("CursorTime", job.getCursorTime());
         printField("delegate", job.getDelegate());
         printField("DiskUsage", job.getDiskUsage());
         printField("DispatchState", job.getDispatchState());
         printField("DoneProgress", job.getDoneProgress());
         printField("DropCount", job.getDropCount());
-        printField("EarliestTime", job.getEarliestTime().toString());
+        printField("EarliestTime", job.getEarliestTime());
         printField("EventAvailableCount", job.getEventAvailableCount());
         printField("EventCount", job.getEventCount());
         printField("EventFieldCount", job.getEventFieldCount());
@@ -197,7 +209,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("EventSorting", job.getEventSorting());
         printField("Keywords", job.getKeywords());
         printField("Label", job.getLabel());
-        printField("LatestTime", job.getLatestTime().toString());
+        printField("LatestTime", job.getLatestTime());
         printField("NumPreviews", job.getNumPreviews());
         printField("Priority", job.getPriority());
         printField("RemoteSearch", job.getRemoteSearch());
@@ -228,6 +240,43 @@ public class Program extends com.splunk.sdk.Program {
         printEntity(message);
         printField("Key", message.getKey());
         printField("Value", message.getValue());
+    }
+
+    public void printResource(Resource resource) {
+        System.out.format("## %s\n", resource.getName());
+        System.out.format("title = %s\n", resource.getTitle());
+        System.out.format("path = %s\n", resource.getPath());
+    }
+
+    public <T extends Resource> void 
+    printResources(ResourceCollection<T> resources) {
+    	System.out.format("\n# %s\n", resources.getPath());
+        System.out.format("path = %s\n", resources.getPath());
+        printActions(resources.getActions());
+        System.out.format("keys = %s\n", resources.keySet());
+        for (T resource : resources.values()) 
+            printResource(resource);
+    }
+
+    void printRole(Role role) {
+        printEntity(role);
+        printField("getCapabilities", role.getCapabilities());
+        printField("getDefaultApp", role.getDefaultApp());
+        printField("getImportedCapabilities", role.getImportedCapabilities());
+        printField("getImportedRoles", role.getImportedRoles());
+        printField("getImportedRtSearchJobsQuota", role.getImportedRtSearchJobsQuota());
+        printField("getImportedSearchDiskQuota", role.getImportedSearchDiskQuota());
+        printField("getImportedSearchFilter", role.getImportedSearchFilter());
+        printField("getImportedIndexesAllowed", role.getImportedIndexesAllowed());
+        printField("getImportedIndexesDefault", role.getImportedIndexesDefault());
+        printField("getImportedSearchJobsQuota", role.getImportedSearchJobsQuota());
+        printField("getRtSearchJobsQuota", role.getRtSearchJobsQuota());
+        printField("getSearchDiskQuota", role.getSearchDiskQuota());
+        printField("getSearchFilter", role.getSearchFilter());
+        printField("getSearchIndexesAllowed", role.getSearchIndexesAllowed());
+        printField("getSearchIndexesDefault", role.getSearchIndexesDefault());
+        printField("getSearchJobsQuota", role.getSearchJobsQuota());
+        printField("getSearchTimeWin", role.getSearchTimeWin());
     }
 
     void printSavedSearch(SavedSearch search) {
@@ -284,7 +333,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("Guid", info.getGuid());
         printField("isFree", info.isFree());
         printField("isTrial", info.isTrial());
-        printField("LicenseKeys", info.getLicenseKeys().toString());
+        printField("LicenseKeys", info.getLicenseKeys());
         printField("LicenseSignature", info.getLicenseSignature());
         printField("LicenseState", info.getLicenseState());
         printField("MasterGuid", info.getMasterGuid());
@@ -342,8 +391,16 @@ public class Program extends com.splunk.sdk.Program {
         System.out.print("\n# DeploymentTenants");
         printEntities(service.getDeploymentTenants());
 
+        System.out.print("\n# DistributedConfiguration");
+        printEntity(service.getDistributedConfiguration());
+
+        System.out.print("\n# DistributedPeers");
+        for (Entity peer : service.getDistributedPeers().values())
+            printDistributedPeer((DistributedPeer)peer);
+
         System.out.print("\n# EventTypes");
-        printEntities(service.getEventTypes());
+        for (Entity eventType : service.getEventTypes().values())
+            printEventType((EventType)eventType);
 
         System.out.print("\n# Indexes");
         for (Entity index : service.getIndexes().values())
@@ -382,7 +439,8 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(service.getPasswords());
 
         System.out.print("\n# Roles");
-        printEntities(service.getRoles());
+        for (Entity role : service.getRoles().values())
+            printRole((Role)role);
 
         System.out.print("\n# Saved Searches");
         for (Entity search : service.getSearches().values())

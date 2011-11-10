@@ -134,15 +134,25 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         @Override protected void addNotify() {
             String[] kinds = new String[] {
                 "settings",
+                "loggers",
+                "messages",
+                "distributedconfig",
+                "distributedpeers",
+                "deploymentclient",
+                "deploymentservers",
+                "deploymentserverclasses",
+                "deploymenttenants",
                 "licenses",
                 "licenseGroups",
                 "licenseSlaves",
                 "licenseStacks",
+                "users",
+                "roles",
                 "apps",
                 "indexes",
-                "jobs",
                 "searches",
-                "users"
+                "eventtypes",
+                "jobs",
             };
             setKeys(kinds);
         }
@@ -151,6 +161,41 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             if (kind.equals("apps"))
                 return new EntityCollectionNode(
                     "Apps", service.getApplications(), AppNode.class);
+
+            if (kind.equals("distributedconfig"))
+                return new DistributedConfigurationNode(
+                    service.getDistributedConfiguration());
+
+            if (kind.equals("distributedpeers"))
+                return new EntityCollectionNode(
+                    "Distributed Peers", 
+                    service.getDistributedPeers(), 
+                    DistributedPeerNode.class);
+
+            if (kind.equals("deploymentclient"))
+                return new DeploymentClientNode(service.getDeploymentClient());
+
+            if (kind.equals("deploymentservers"))
+                return new EntityCollectionNode(
+                    "Deployment Servers",
+                    service.getDeploymentServers(),
+                    DeploymentServerNode.class);
+
+            if (kind.equals("deploymentserverclasses"))
+                return new EntityCollectionNode(
+                    "Deployment Server Classes",
+                    service.getDeploymentServerClasses(),
+                    DeploymentServerClassNode.class);
+
+            if (kind.equals("deploymenttenants"))
+                return new EntityCollectionNode(
+                    "Deployment Tenants",
+                    service.getDeploymentTenants(),
+                    DeploymentTenantNode.class);
+
+            if (kind.equals("eventtypes"))
+                return new EntityCollectionNode(
+                    "EventTypes", service.getEventTypes(), EventTypeNode.class);
 
             if (kind.equals("indexes"))
                 return new EntityCollectionNode(
@@ -182,6 +227,14 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                     service.getLicenseStacks(), 
                     LicenseStackNode.class);
 
+            if (kind.equals("loggers"))
+                return new EntityCollectionNode(
+                    "Loggers", service.getLoggers(), LoggerNode.class);
+
+            if (kind.equals("messages"))
+                return new EntityCollectionNode(
+                    "Messages", service.getMessages(), MessageNode.class);
+
             if (kind.equals("searches"))
                 return new EntityCollectionNode(
                     "Saved Searches", 
@@ -190,6 +243,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
             if (kind.equals("settings"))
                 return new SettingsNode(service.getSettings());
+
+            if (kind.equals("roles"))
+                return new EntityCollectionNode(
+                    "Roles", service.getRoles(), RoleNode.class);
 
             if (kind.equals("users"))
                 return new EntityCollectionNode(

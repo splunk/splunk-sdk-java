@@ -173,8 +173,9 @@ public class Service extends com.splunk.http.Service {
         return new EntityCollection(this, "admin/passwords");
     }
 
-    public EntityCollection<Entity> getRoles() {
-        return new EntityCollection<Entity>(this, "authentication/roles");
+    public EntityCollection<Role> getRoles() {
+        return new EntityCollection<Role>(
+            this, "authentication/roles", Role.class);
     }
 
     public EntityCollection<SavedSearch> getSearches() {

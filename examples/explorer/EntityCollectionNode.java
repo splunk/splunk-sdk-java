@@ -18,6 +18,10 @@ import com.splunk.Entity;
 import com.splunk.EntityCollection;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 
@@ -25,6 +29,8 @@ import org.openide.nodes.Node;
 class EntityCollectionNode extends ExplorerNode {
     Class itemClass;
     Constructor itemCtor = null;
+
+    static EntityComparator comparator = new EntityComparator();
 
     EntityCollectionNode(String title, EntityCollection value, Class itemClass) 
     {
@@ -63,7 +69,10 @@ class EntityCollectionNode extends ExplorerNode {
         }
 
         @Override protected void addNotify() {
-            setKeys(parent.getCollection().values());
+            Collection<Entity> values = parent.getCollection().values();
+            List list = new ArrayList(values);
+            Collections.sort(list, comparator);
+            setKeys(list);
         }
 
         @Override protected Node[] createNodes(Entity entity) {
