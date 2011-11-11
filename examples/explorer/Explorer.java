@@ -164,7 +164,7 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                     "Apps", service.getApplications(), AppNode.class);
 
             if (kind.equals("confs"))
-                return new ConfCollectionNode(service.getConfigs());
+                return new ConfCollectionNode(service.getConfs());
 
             if (kind.equals("distributedconfig"))
                 return new DistributedConfigurationNode(

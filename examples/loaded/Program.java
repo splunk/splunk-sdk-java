@@ -379,7 +379,7 @@ public class Program extends com.splunk.sdk.Program {
             printApplication((Application)app);
 
         System.out.print("\n# Configs");
-        for (EntityCollection<Entity> config : service.getConfigs().values())
+        for (EntityCollection<Entity> config : service.getConfs().values())
             printConfig(config);
 
         System.out.print("\n# Capabilities\n");

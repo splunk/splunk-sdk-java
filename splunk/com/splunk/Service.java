@@ -15,9 +15,7 @@
  */
 
 // UNDONE: getAlerts
-// UNDONE: getOutputs
 // UNDONE: public Object parse(String query) {}
-// UNDONE: public void restart() {}
 
 package com.splunk;
 
@@ -70,7 +68,7 @@ public class Service extends com.splunk.http.Service {
             this, "apps/local", Application.class);
     }
 
-    public ConfCollection getConfigs() {
+    public ConfCollection getConfs() {
         return new ConfCollection(this);
     }
 
