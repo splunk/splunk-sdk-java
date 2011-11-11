@@ -23,14 +23,13 @@ import com.splunk.Service;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import junit.framework.Assert;
 
 import org.junit.*;
 
-public class DataOutputGroupTest extends TestCase {
+public class OutputGroupTest extends TestCase {
     Program program = new Program();
 
-    public DataOutputGroupTest() {}
+    public OutputGroupTest() {}
 
     Service connect() throws IOException {
         return new Service(
@@ -45,14 +44,14 @@ public class DataOutputGroupTest extends TestCase {
     @Test public void testDataOutputGroup() throws Exception {
         Service service = connect();
 
-        EntityCollection<DataOutputGroup> dog = service.getDataOutputsGroup();
+        EntityCollection<OutputGroup> dog = service.getDataOutputsGroup();
 
         if (dog.values().size() == 0) {
             System.out.println("WARNING: DataOutputGroup not configured");
             return;
         }
 
-        for (DataOutputGroup entity: dog.values()) {
+        for (OutputGroup entity: dog.values()) {
             entity.getMethod();
             entity.getServers();
             entity.isDisabled();

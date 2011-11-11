@@ -20,8 +20,8 @@ import sun.net.idn.StringPrep;
 
 import java.util.*;
 
-public class DataOutputDefault extends Entity {
-    public DataOutputDefault(Service service) {
+public class OutputDefault extends Entity {
+    public OutputDefault(Service service) {
         super(service, "data/outputs/tcp/default");
     }
 

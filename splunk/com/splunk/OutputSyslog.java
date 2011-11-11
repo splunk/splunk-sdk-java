@@ -16,28 +16,17 @@
 
 package com.splunk;
 
-public class DataOutputServerAllConnections extends Entity {
-    public DataOutputServerAllConnections(Service service, String path) {
+public class OutputSyslog extends Entity {
+    public OutputSyslog(Service service, String path) {
         super(service, path);
     }
 
-    public String getDestHost() {
-        return getString("destHost");
+    public String getServer() {
+        return getString("server");
     }
 
-    public String getDestIp() {
-        return getString("destIp");
-    }
-
-    public int getDestPort() {
-        return getInteger("destPort");
-    }
-
-    public int getSourcePort() {
-        return getInteger("sourcePort");
-    }
-
-    public String getStatus() {
-        return getString("status");
+    public String getType() {
+        return getString("type");
     }
 }
+

@@ -16,13 +16,13 @@
 
 package com.splunk;
 
-public class DataOutputServer extends Entity {
-    public DataOutputServer(Service service, String path) {
+public class OutputServer extends Entity {
+    public OutputServer(Service service, String path) {
         super(service, path);
     }
 
-    public DataOutputServerAllConnections allConnections() {
-        return new DataOutputServerAllConnections(
+    public OutputServerAllConnections allConnections() {
+        return new OutputServerAllConnections(
                 service, path + "/allconnections");
     }
 }

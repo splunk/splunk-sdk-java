@@ -23,14 +23,13 @@ import com.splunk.Service;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import junit.framework.Assert;
 
 import org.junit.*;
 
-public class DataOutputSyslogTest extends TestCase {
+public class OutputDefaultTest extends TestCase {
     Program program = new Program();
 
-    public DataOutputSyslogTest() {}
+    public OutputDefaultTest() {}
 
     Service connect() throws IOException {
         return new Service(
@@ -42,19 +41,35 @@ public class DataOutputSyslogTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDataOutputSyslog() throws Exception {
+    @Test public void testDataOutputDefault() throws Exception {
         Service service = connect();
 
-        EntityCollection<DataOutputSyslog> dos = service.getDataOutputsSyslog();
+        OutputDefault dof = service.getDataOutputsDefault();
 
-        if (dos.values().size() == 0) {
-            System.out.println("WARNING: DataOutputSyslog not configured");
-            return;
-        }
-
-        for (DataOutputSyslog entity: dos.values()) {
-            entity.getServer();
-            entity.getType();
-        }
+        dof.autoLb();
+        dof.blockOnCloning();
+        dof.blockOnQueueFull();
+        dof.getAutoLbFrequency();
+        dof.getConnectionTimeout();
+        dof.getDefaultGroup();
+        dof.getDropClonedEventsOnQueueFull();
+        dof.getDropEventsOnQueueFull();
+        dof.getForwardedIndex0Whitelist();
+        dof.getForwardedIndex1Blacklist();
+        dof.getForwardedIndex2Whitelist();
+        dof.getHeartbeatFrequency();
+        dof.getMaxConnectionsPerIndexer();
+        dof.getMaxFailuresPerInterval();
+        dof.getMaxQueueSize();
+        dof.getReadTimeout();
+        dof.getSecsInFailureInterval();
+        dof.getWriteTimeout();
+        dof.indexAndForward();
+        dof.isCompressed();
+        dof.isDisabled();
+        dof.isForwardedIndexFilterDisable();
+        dof.isIndexAndForward();
+        dof.sendCookedData();
+        dof.useAck();
     }
 }

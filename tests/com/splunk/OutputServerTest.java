@@ -23,14 +23,13 @@ import com.splunk.Service;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import junit.framework.Assert;
 
 import org.junit.*;
 
-public class DataOutputDefaultTest extends TestCase {
+public class OutputServerTest extends TestCase {
     Program program = new Program();
 
-    public DataOutputDefaultTest() {}
+    public OutputServerTest() {}
 
     Service connect() throws IOException {
         return new Service(
@@ -42,35 +41,17 @@ public class DataOutputDefaultTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDataOutputDefault() throws Exception {
+    @Test public void testDataOutputServer() throws Exception {
         Service service = connect();
 
-        DataOutputDefault dof = service.getDataOutputsDefault();
+        EntityCollection<OutputServer> dos = service.getDataOutputsServer();
 
-        dof.autoLb();
-        dof.blockOnCloning();
-        dof.blockOnQueueFull();
-        dof.getAutoLbFrequency();
-        dof.getConnectionTimeout();
-        dof.getDefaultGroup();
-        dof.getDropClonedEventsOnQueueFull();
-        dof.getDropEventsOnQueueFull();
-        dof.getForwardedIndex0Whitelist();
-        dof.getForwardedIndex1Blacklist();
-        dof.getForwardedIndex2Whitelist();
-        dof.getHeartbeatFrequency();
-        dof.getMaxConnectionsPerIndexer();
-        dof.getMaxFailuresPerInterval();
-        dof.getMaxQueueSize();
-        dof.getReadTimeout();
-        dof.getSecsInFailureInterval();
-        dof.getWriteTimeout();
-        dof.indexAndForward();
-        dof.isCompressed();
-        dof.isDisabled();
-        dof.isForwardedIndexFilterDisable();
-        dof.isIndexAndForward();
-        dof.sendCookedData();
-        dof.useAck();
+        if (dos.values().size() == 0) {
+            System.out.println("WARNING: DataOutputServer not configured");
+            return;
+        }
+
+        for (OutputServer entity: dos.values()) {
+        }
     }
 }

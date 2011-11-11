@@ -80,23 +80,23 @@ public class Service extends com.splunk.http.Service {
         return (List<String>)caps.getValue("capabilities");
     }
 
-    public DataOutputDefault getDataOutputsDefault() {
-        return new DataOutputDefault(this);
+    public OutputDefault getDataOutputsDefault() {
+        return new OutputDefault(this);
     }
 
-    public EntityCollection<DataOutputServer> getDataOutputsServer() {
-        return new EntityCollection<DataOutputServer>(
-            this, "data/outputs/tcp/server", DataOutputServer.class);
+    public EntityCollection<OutputServer> getDataOutputsServer() {
+        return new EntityCollection<OutputServer>(
+            this, "data/outputs/tcp/server", OutputServer.class);
     }
 
-    public EntityCollection<DataOutputGroup> getDataOutputsGroup() {
-        return new EntityCollection<DataOutputGroup>(
-            this, "data/outputs/tcp/group", DataOutputGroup.class);
+    public EntityCollection<OutputGroup> getDataOutputsGroup() {
+        return new EntityCollection<OutputGroup>(
+            this, "data/outputs/tcp/group", OutputGroup.class);
     }
 
-    public EntityCollection<DataOutputSyslog> getDataOutputsSyslog() {
-        return new EntityCollection<DataOutputSyslog>(
-            this, "data/outputs/tcp/syslog", DataOutputSyslog.class);
+    public EntityCollection<OutputSyslog> getDataOutputsSyslog() {
+        return new EntityCollection<OutputSyslog>(
+            this, "data/outputs/tcp/syslog", OutputSyslog.class);
     }
 
     public DeploymentClient getDeploymentClient() {

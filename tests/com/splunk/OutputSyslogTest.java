@@ -23,14 +23,13 @@ import com.splunk.Service;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import junit.framework.Assert;
 
 import org.junit.*;
 
-public class DataOutputServerTest extends TestCase {
+public class OutputSyslogTest extends TestCase {
     Program program = new Program();
 
-    public DataOutputServerTest() {}
+    public OutputSyslogTest() {}
 
     Service connect() throws IOException {
         return new Service(
@@ -42,17 +41,19 @@ public class DataOutputServerTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDataOutputServer() throws Exception {
+    @Test public void testDataOutputSyslog() throws Exception {
         Service service = connect();
 
-        EntityCollection<DataOutputServer> dos = service.getDataOutputsServer();
+        EntityCollection<OutputSyslog> dos = service.getDataOutputsSyslog();
 
         if (dos.values().size() == 0) {
-            System.out.println("WARNING: DataOutputServer not configured");
+            System.out.println("WARNING: DataOutputSyslog not configured");
             return;
         }
 
-        for (DataOutputServer entity: dos.values()) {
+        for (OutputSyslog entity: dos.values()) {
+            entity.getServer();
+            entity.getType();
         }
     }
 }
