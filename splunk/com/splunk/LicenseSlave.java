@@ -28,11 +28,11 @@ public class LicenseSlave extends Entity {
     }
 
     public List<String> getPoolIds() {
-        return (List<String>)getContent().get("pool_ids");
+        return (List<String>)getValue("pool_ids");
     }
 
     public List<String> getStackIds() {
-        return (List<String>)getContent().get("stack_ids");
+        return (List<String>)getValue("stack_ids");
     }
 }
 

@@ -28,11 +28,11 @@ public class DistributedConfiguration extends Entity {
     }
 
     public List<String> getBlacklistNames() {
-        return (List<String>)getContent().get("blacklistNames");
+        return (List<String>)getValue("blacklistNames");
     }
 
     public List<String> getBlacklistUrls() {
-        return (List<String>)getContent().get("blacklistURLs");
+        return (List<String>)getValue("blacklistURLs");
     }
 
     public int getCheckTimedOutServersFrequency() {

@@ -33,7 +33,7 @@ public class License extends Entity {
     }
 
     public List<String> getFeatures() {
-        return (List<String>)getContent().get("features");
+        return (List<String>)getValue("features");
     }
 
     public String getGroupId() {
@@ -57,7 +57,7 @@ public class License extends Entity {
     }
 
     public List<String> getSourceTypes() {
-        return (List<String>)getContent().get("sourcetypes");
+        return (List<String>)getValue("sourcetypes");
     }
 
     public String getStackId() {

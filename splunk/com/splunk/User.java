@@ -50,7 +50,7 @@ public class User extends Entity {
     public List<String> getRoles() {
         // UNDONE: The following is an "unsafe" cast .. can we make it safe
         // without copying?
-        return (List<String>)getContent().get("roles");
+        return (List<String>)getValue("roles");
     }
 }
 

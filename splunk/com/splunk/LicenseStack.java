@@ -28,7 +28,7 @@ public class LicenseStack extends Entity {
     }
 
     public List<String> getPoolIds() {
-        return (List<String>)getContent().get("pool_ids");
+        return (List<String>)getValue("pool_ids");
     }
 
     public long getQuota() {
@@ -36,7 +36,7 @@ public class LicenseStack extends Entity {
     }
 
     public List<String> getStackIds() {
-        return (List<String>)getContent().get("stack_ids");
+        return (List<String>)getValue("stack_ids");
     }
 }
 

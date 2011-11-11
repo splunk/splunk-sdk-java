@@ -24,7 +24,7 @@ public class LicenseGroup extends Entity {
     }
 
     public List<String> getStackIds() {
-        return (List<String>)getContent().get("stack_ids");
+        return (List<String>)getValue("stack_ids");
     }
 
     public boolean isActive() {

@@ -36,7 +36,7 @@ public class LicensePool extends Entity {
     }
 
     public List<String> getSlaves() {
-        return (List<String>)getContent().get("slaves");
+        return (List<String>)getValue("slaves");
     }
 
     public long getSlavesUsageBytes() {
