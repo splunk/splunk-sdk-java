@@ -76,6 +76,14 @@ public class ResourceCollection<T extends Resource>
         return items.isEmpty();
     }
 
+    protected String itemKey(AtomEntry entry) {
+        return entry.title;
+    }
+
+    protected String itemPath(AtomEntry entry) {
+        return entry.links.get("alternate");
+    }
+
     public Set<String> keySet() {
         validate();
         return items.keySet();
@@ -90,25 +98,19 @@ public class ResourceCollection<T extends Resource>
             super.load(value);
             Constructor ctor = itemClass.getDeclaredConstructor(
                 new Class[] { Service.class, String.class });
-            Object[] args = new Object[2];
-            args[0] = service;
             this.items = new HashMap<String, T>();
             for (AtomEntry entry : value.entries) {
-                // UNDONE: Unfortunate to have to instantiate an URL object
-                // just to retrieve the path. Should probably also assert that
-                // the scheme://host:port match the service.
-                URL url = new URL(entry.id);
-                args[1] = url.getPath();
-                T item = (T)ctor.newInstance(args);
-                item.load(entry);
-                this.items.put(item.getName(), item);
+                String key = itemKey(entry);
+                String path = itemPath(entry);
+                T item = (T)ctor.newInstance(service, path);
+                this.items.put(key, item);
             }
         }
         catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-    }    
-    
+    }
+
     public T put(String key, T value) {
     	throw new UnsupportedOperationException();
     }

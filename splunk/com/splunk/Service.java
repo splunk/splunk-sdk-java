@@ -70,13 +70,12 @@ public class Service extends com.splunk.http.Service {
             this, "apps/local", Application.class);
     }
 
-    public ResourceCollection<EntityCollection> getConfigs() {
-        return new ResourceCollection<EntityCollection>(
-            this, "properties", EntityCollection.class);
+    public ConfCollection getConfigs() {
+        return new ConfCollection(this);
     }
 
     public List<String> getCapabilities() {
-        Entity caps = Entity.read(this, "authorization/capabilities");
+        Entity caps = new Entity(this, "authorization/capabilities");
         return (List<String>)caps.getValue("capabilities");
     }
 

@@ -32,13 +32,13 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public Service connect() {
+    Service connect() {
         Service service = new Service(this.host, this.port, this.scheme);
         service.login(this.username, this.password);
         return service;
     }
 
-    public void printActions(Map<String, String> actions) {
+    void printActions(Map<String, String> actions) {
         if (actions == null) return;
         for (Map.Entry entry : actions.entrySet()) {
             System.out.format("action %s => %s\n", 
@@ -46,7 +46,13 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public void printApplication(Application app) {
+    void printConfig(EntityCollection<Entity> config) {
+        System.out.format("\n## %s", config.getTitle());
+        for (Entity stanza : config.values())
+            printEntity(stanza);
+    }
+
+    void printApplication(Application app) {
         printEntity(app);
         printField("CheckForUpdates", app.getCheckForUpdates());
         printField("Label", app.getLabel());
@@ -56,7 +62,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("Visible", app.isVisible());
     }
 
-    public void printDistributedPeer(DistributedPeer peer) {
+    void printDistributedPeer(DistributedPeer peer) {
         printEntity(peer);
         printField("BundleVersions", peer.getBundleVersions());
         printField("Guid", peer.getGuid());
@@ -72,7 +78,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("isHttps", peer.isHttps());
     }
 
-    public void printEntity(Entity entity) {
+    void printEntity(Entity entity) {
         System.out.println("");
         if (entity == null) {
             System.out.println("null");
@@ -89,7 +95,7 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public <T extends Entity> void 
+    <T extends Entity> void 
     printEntities(EntityCollection<T> entities) {
     	System.out.format("\n# %s\n", entities.getPath());
         System.out.format("path = %s\n", entities.getPath());
@@ -242,13 +248,13 @@ public class Program extends com.splunk.sdk.Program {
         printField("Value", message.getValue());
     }
 
-    public void printResource(Resource resource) {
+    void printResource(Resource resource) {
         System.out.format("## %s\n", resource.getName());
         System.out.format("title = %s\n", resource.getTitle());
         System.out.format("path = %s\n", resource.getPath());
     }
 
-    public <T extends Resource> void 
+    <T extends Resource> void 
     printResources(ResourceCollection<T> resources) {
     	System.out.format("\n# %s\n", resources.getPath());
         System.out.format("path = %s\n", resources.getPath());
@@ -373,7 +379,8 @@ public class Program extends com.splunk.sdk.Program {
             printApplication((Application)app);
 
         System.out.print("\n# Configs");
-        printResources(service.getConfigs());
+        for (EntityCollection<Entity> config : service.getConfigs().values())
+            printConfig(config);
 
         System.out.print("\n# Capabilities\n");
         for (String capability : service.getCapabilities())

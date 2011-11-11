@@ -18,6 +18,9 @@
 
 package com.splunk;
 
+import com.splunk.atom.AtomEntry;
+import com.splunk.http.ResponseMessage;
+
 import java.util.Date;
 
 public class Job extends Entity {
@@ -231,6 +234,14 @@ public class Job extends Entity {
 
     public boolean isZombie() {
         return getBoolean("isZombie");
+    }
+
+    // Job "entities" dont return an AtomFeed, only an AtomEntry.
+    @Override public void refresh() {
+        ResponseMessage response = get();
+        assert(response.getStatus() == 200); // UNDONE
+        AtomEntry entry = AtomEntry.parse(response.getContent());
+        load(entry);
     }
 
     public void remove() {

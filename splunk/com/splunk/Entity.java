@@ -150,39 +150,8 @@ public class Entity extends Resource {
         invalidate();
     }
 
-    //
-    // Read and construct a singleton Entity instance. Returns null if no
-    // entity exists at this resource (indicated by a valid Atom response
-    // that does not contain an entry element).
-    //
-    // Note that singleton Entity "reads" are immediate not deferred like
-    // collections because we need to figure out up front if they actually 
-    // exist or not and return null if they do not exist, as can be the case
-    // in eg: deployment/client
-    //
-    // CONSIDER:
-    //   It's possible we could hoist the existence check into a separate 
-    //   code path and only use in the cases (few) where its possible for 
-    //   the entity to not exist and allow the other cases to be deferred.
-    //
-    // UNDONE: How should this singleton factory method interact with typed
-    // entity objects?
-    //
-    static Entity read(Service service, String path) {
-        ResponseMessage response = service.get(path);
-        assert(response.getStatus() == 200); // UNDONE
-        AtomFeed feed = AtomFeed.parse(response.getContent());
-        int count = feed.entries.size();
-        if (count == 0) return null;
-        assert(count == 1);
-        AtomEntry entry = feed.entries.get(0);
-        Entity result = new Entity(service, path);
-        result.load(entry);
-        return result;
-    }
-
     // Refresh the current (singleton) entity instance.
-    public void refresh() {
+    @Override public void refresh() {
         ResponseMessage response = get();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.parse(response.getContent());

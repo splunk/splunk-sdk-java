@@ -16,6 +16,7 @@
 
 package com.splunk.atom;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,18 @@ public class AtomEntry extends AtomObject {
 
     static AtomEntry create() {
         return new AtomEntry();
+    }
+
+    // We have a few endpoints (eg: search/jobs/{sid}) that return an AtomEntry
+    // as the root element of the response.
+    public static AtomEntry parse(InputStream input) {
+        Element root = Xml.parse(input).getDocumentElement();
+        String rname = root.getTagName();
+        String xmlns = root.getAttribute("xmlns");
+        if (!rname.equals("entry") ||
+            !xmlns.equals("http://www.w3.org/2005/Atom"))
+            throw new RuntimeException("Unrecognized format");
+        return AtomEntry.parse(root);
     }
 
     static AtomEntry parse(Element element) {
