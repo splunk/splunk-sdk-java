@@ -22,9 +22,9 @@ class LoggerNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getLevel");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getLevel");
+        return list;
     }
 }
 

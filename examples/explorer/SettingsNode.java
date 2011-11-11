@@ -23,19 +23,19 @@ class SettingsNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getSplunkDB");
-            add(String.class, "getSplunkHome");
-            add(boolean.class, "getEnableSplunkWebSSL");
-            add(String.class, "getHost");
-            add(int.class, "getHttpPort");
-            add(int.class, "getMgmtPort");
-            add(int.class, "getMinFreeSpace");
-            add(String.class, "getPass4SymmKey");
-            add(String.class, "getServerName");
-            add(String.class, "getSessionTimeout");
-            add(boolean.class, "getStartWebServer");
-            add(String.class, "getTrustedIP");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getSplunkDB");
+        list.add(String.class, "getSplunkHome");
+        list.add(boolean.class, "getEnableSplunkWebSSL");
+        list.add(String.class, "getHost");
+        list.add(int.class, "getHttpPort");
+        list.add(int.class, "getMgmtPort");
+        list.add(int.class, "getMinFreeSpace");
+        list.add(String.class, "getPass4SymmKey");
+        list.add(String.class, "getServerName");
+        list.add(String.class, "getSessionTimeout");
+        list.add(boolean.class, "getStartWebServer");
+        list.add(String.class, "getTrustedIP");
+        return list;
     }
 }

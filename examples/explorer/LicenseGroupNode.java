@@ -22,9 +22,9 @@ class LicenseGroupNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            // UNDONE: add(String[].class, "getStackIds");
-            add(boolean.class, "isActive");
-        }};
+        PropertyList list = super.getMetadata();
+        // UNDONE: list.add(String[].class, "getStackIds");
+        list.add(boolean.class, "isActive");
+        return list;
     }
 }

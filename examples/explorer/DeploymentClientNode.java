@@ -23,8 +23,8 @@ class DeploymentClientNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getTargetUri");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getTargetUri");
+        return list;
     }
 }

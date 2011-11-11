@@ -27,13 +27,13 @@ class AppNode extends EntityNode {
     }
     
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(boolean.class, "getCheckForUpdates");
-            add(String.class, "getLabel");
-            add(String.class, "getVersion");
-            add(boolean.class, "isConfigured");
-            add(boolean.class, "isManageable");
-            add(boolean.class, "isVisible");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(boolean.class, "getCheckForUpdates");
+        list.add(String.class, "getLabel");
+        list.add(String.class, "getVersion");
+        list.add(boolean.class, "isConfigured");
+        list.add(boolean.class, "isManageable");
+        list.add(boolean.class, "isVisible");
+        return list;
     }
 }

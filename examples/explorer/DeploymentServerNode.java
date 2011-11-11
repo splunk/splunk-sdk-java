@@ -22,9 +22,9 @@ class DeploymentServerNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(boolean.class, "getCheckNew");
-            add(String.class, "getWhiteList0");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(boolean.class, "getCheckNew");
+        list.add(String.class, "getWhiteList0");
+        return list;
     }
 }

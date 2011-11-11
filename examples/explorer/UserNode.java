@@ -22,15 +22,15 @@ class UserNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getDefaultApp");
-            add(boolean.class, "getDefaultAppIsUserOverride");
-            add(String.class, "getDefaultAppSourceRole");
-            add(String.class, "getEmail");
-            add(String.class, "getPassword");
-            add(String.class, "getRealName");
-            // UNDONE: add(String[].class, "getRoles")
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getDefaultApp");
+        list.add(boolean.class, "getDefaultAppIsUserOverride");
+        list.add(String.class, "getDefaultAppSourceRole");
+        list.add(String.class, "getEmail");
+        list.add(String.class, "getPassword");
+        list.add(String.class, "getRealName");
+        // UNDONE: list.add(String[].class, "getRoles")
+        return list;
     }
 }
 

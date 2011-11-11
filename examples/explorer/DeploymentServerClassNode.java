@@ -22,38 +22,38 @@ class DeploymentServerClassNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getBlackList");
-            add(String.class, "getBlackListDot");
-            add(String.class, "getBlackList0");
-            add(String.class, "getBlackList1");
-            add(String.class, "getBlackList2");
-            add(String.class, "getBlackList3");
-            add(String.class, "getBlackList4");
-            add(String.class, "getBlackList5");
-            add(String.class, "getBlackList6");
-            add(String.class, "getBlackList7");
-            add(String.class, "getBlackList8");
-            add(String.class, "getBlackList9");
-            add(boolean.class, "getContinueMatching");
-            add(String.class, "getEndpoint");
-            add(String.class, "getFilterType");
-            add(String.class, "getRepositoryLocation");
-            add(String.class, "getTargetRepositoryLocation");
-            add(String.class, "getTmpFolder");
-            add(String.class, "getWhiteList");
-            add(String.class, "getWhiteListDot");
-            add(String.class, "getWhiteList0");
-            add(String.class, "getWhiteList1");
-            add(String.class, "getWhiteList2");
-            add(String.class, "getWhiteList3");
-            add(String.class, "getWhiteList4");
-            add(String.class, "getWhiteList5");
-            add(String.class, "getWhiteList6");
-            add(String.class, "getWhiteList7");
-            add(String.class, "getWhiteList8");
-            add(String.class, "getWhiteList9");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getBlackList");
+        list.add(String.class, "getBlackListDot");
+        list.add(String.class, "getBlackList0");
+        list.add(String.class, "getBlackList1");
+        list.add(String.class, "getBlackList2");
+        list.add(String.class, "getBlackList3");
+        list.add(String.class, "getBlackList4");
+        list.add(String.class, "getBlackList5");
+        list.add(String.class, "getBlackList6");
+        list.add(String.class, "getBlackList7");
+        list.add(String.class, "getBlackList8");
+        list.add(String.class, "getBlackList9");
+        list.add(boolean.class, "getContinueMatching");
+        list.add(String.class, "getEndpoint");
+        list.add(String.class, "getFilterType");
+        list.add(String.class, "getRepositoryLocation");
+        list.add(String.class, "getTargetRepositoryLocation");
+        list.add(String.class, "getTmpFolder");
+        list.add(String.class, "getWhiteList");
+        list.add(String.class, "getWhiteListDot");
+        list.add(String.class, "getWhiteList0");
+        list.add(String.class, "getWhiteList1");
+        list.add(String.class, "getWhiteList2");
+        list.add(String.class, "getWhiteList3");
+        list.add(String.class, "getWhiteList4");
+        list.add(String.class, "getWhiteList5");
+        list.add(String.class, "getWhiteList6");
+        list.add(String.class, "getWhiteList7");
+        list.add(String.class, "getWhiteList8");
+        list.add(String.class, "getWhiteList9");
+        return list;
     }
 }
 

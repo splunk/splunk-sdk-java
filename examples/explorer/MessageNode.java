@@ -22,10 +22,10 @@ class MessageNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getKey");
-            add(String.class, "getValue");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getKey");
+        list.add(String.class, "getValue");
+        return list;
     }
 }
 

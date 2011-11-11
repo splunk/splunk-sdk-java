@@ -149,9 +149,10 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
                 "users",
                 "roles",
                 "apps",
-                "indexes",
+                "confs",
                 "searches",
                 "eventtypes",
+                "indexes",
                 "jobs",
             };
             setKeys(kinds);
@@ -161,6 +162,9 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             if (kind.equals("apps"))
                 return new EntityCollectionNode(
                     "Apps", service.getApplications(), AppNode.class);
+
+            if (kind.equals("confs"))
+                return new ConfCollectionNode(service.getConfigs());
 
             if (kind.equals("distributedconfig"))
                 return new DistributedConfigurationNode(

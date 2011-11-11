@@ -25,22 +25,22 @@ class DistributedConfigurationNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(boolean.class, "getAutoAddServers");
-            // UNDONE: add(String[].class, "getBlacklistNames");
-            // UNDONE: add(String[].class, "getBlacklistUrls");
-            add(int.class, "getCheckTimedOutServersFrequency");
-            add(int.class, "getHeartbeatFrequency");
-            add(String.class, "getHeartbeatMcastAddress");
-            add(int.class, "getHeartbeatPort");
-            add(boolean.class, "getRemovedTimedOutServers");
-            add(int.class, "getServerTimeout");
-            add(String.class, "getServers");
-            add(boolean.class, "getShareBundles");
-            add(boolean.class, "getSkipOurselves");
-            add(int.class, "getStatusTimeout");
-            add(int.class, "getTtl");
-            add(boolean.class, "isDisabled");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(boolean.class, "getAutoAddServers");
+        // UNDONE: list.add(String[].class, "getBlacklistNames");
+        // UNDONE: list.add(String[].class, "getBlacklistUrls");
+        list.add(int.class, "getCheckTimedOutServersFrequency");
+        list.add(int.class, "getHeartbeatFrequency");
+        list.add(String.class, "getHeartbeatMcastAddress");
+        list.add(int.class, "getHeartbeatPort");
+        list.add(boolean.class, "getRemovedTimedOutServers");
+        list.add(int.class, "getServerTimeout");
+        list.add(String.class, "getServers");
+        list.add(boolean.class, "getShareBundles");
+        list.add(boolean.class, "getSkipOurselves");
+        list.add(int.class, "getStatusTimeout");
+        list.add(int.class, "getTtl");
+        list.add(boolean.class, "isDisabled");
+        return list;
     }
 }

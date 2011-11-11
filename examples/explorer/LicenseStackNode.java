@@ -22,11 +22,11 @@ class LicenseStackNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getLabel");
-            // UNDONE: add(String[].class, "getPoolIds");
-            add(long.class, "getQuota");
-            // UNDONE: add(String[].class, "getStackIds");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getLabel");
+        // UNDONE: list.add(String[].class, "getPoolIds");
+        list.add(long.class, "getQuota");
+        // UNDONE: list.add(String[].class, "getStackIds");
+        return list;
     }
 }

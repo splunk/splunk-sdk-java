@@ -18,12 +18,18 @@ import com.splunk.Entity;
 
 import org.openide.nodes.Children;
 
-abstract class EntityNode extends ExplorerNode {
+class EntityNode extends ExplorerNode {
     EntityNode(Entity entity) {
         super(entity);
         String name = entity.getName();
         setName(name);
         setDisplayName(name);
+    }
+
+    protected PropertyList getMetadata() {
+        return new PropertyList() {{
+            add(String.class, "getTitle");
+        }};
     }
 }
 

@@ -22,10 +22,10 @@ class LicenseSlaveNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getLabel");
-            // UNDONE: add(String[].class, "getPoolIds");
-            // UNDONE: add(String[].class, "getStackIds");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getLabel");
+        // UNDONE: list.add(String[].class, "getPoolIds");
+        // UNDONE: list.add(String[].class, "getStackIds");
+        return list;
     }
 }

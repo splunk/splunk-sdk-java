@@ -22,25 +22,25 @@ class RoleNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            // UNDONE: add(List<String>.class, "getCapabilities");
-            add(String.class, "getDefaultApp");
-            // UNDONE: add(List<String>.class, "getImportedCapabilities");
-            // UNDONE: add(List<String>.class, "getImportedRoles");
-            add(int.class, "getImportedRtSearchJobsQuota");
-            add(int.class, "getImportedSearchDiskQuota");
-            add(String.class, "getImportedSearchFilter");
-            // UNDONE: add(List<String>.class, "getImportedIndexesAllowed");
-            // UNDONE: add(List<String>.class, "getImportedIndexesDefault");
-            add(int.class, "getImportedSearchJobsQuota");
-            add(int.class, "getRtSearchJobsQuota");
-            add(int.class, "getSearchDiskQuota");
-            add(String.class, "getSearchFilter");
-            // UNDONE: add(List<String>.class, "getSearchIndexesAllowed");
-            // UNDONE: add(List<String>.class, "getSearchIndexesDefault");
-            add(int.class, "getSearchJobsQuota");
-            add(int.class, "getSearchTimeWin");
-        }};
+        PropertyList list = super.getMetadata();
+        // UNDONE: list.add(List<String>.class, "getCapabilities");
+        list.add(String.class, "getDefaultApp");
+        // UNDONE: list.add(List<String>.class, "getImportedCapabilities");
+        // UNDONE: list.add(List<String>.class, "getImportedRoles");
+        list.add(int.class, "getImportedRtSearchJobsQuota");
+        list.add(int.class, "getImportedSearchDiskQuota");
+        list.add(String.class, "getImportedSearchFilter");
+        // UNDONE: list.add(List<String>.class, "getImportedIndexesAllowed");
+        // UNDONE: list.add(List<String>.class, "getImportedIndexesDefault");
+        list.add(int.class, "getImportedSearchJobsQuota");
+        list.add(int.class, "getRtSearchJobsQuota");
+        list.add(int.class, "getSearchDiskQuota");
+        list.add(String.class, "getSearchFilter");
+        // UNDONE: list.add(List<String>.class, "getSearchIndexesAllowed");
+        // UNDONE: list.add(List<String>.class, "getSearchIndexesDefault");
+        list.add(int.class, "getSearchJobsQuota");
+        list.add(int.class, "getSearchTimeWin");
+        return list;
     }
 }
 

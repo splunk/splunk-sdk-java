@@ -24,20 +24,20 @@ class DistributedPeerNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            // UNDONE: add(String[].class, "getBundleVersions");
-            add(String.class, "getGuid");
-            add(String.class, "getLicenseSignature");
-            add(String.class, "getPeerName");
-            add(String.class, "getPeerType");
-            add(String.class, "getRemotePassword");
-            add(String.class, "getRemoteUsername");
-            add(String.class, "getReplicationStatus");
-            add(String.class, "getStatus");
-            add(String.class, "getVersion");
-            add(boolean.class, "isDisabled");
-            add(boolean.class, "isHttps");
-        }};
+        PropertyList list = super.getMetadata();
+        // UNDONE: list.add(String[].class, "getBundleVersions");
+        list.add(String.class, "getGuid");
+        list.add(String.class, "getLicenseSignature");
+        list.add(String.class, "getPeerName");
+        list.add(String.class, "getPeerType");
+        list.add(String.class, "getRemotePassword");
+        list.add(String.class, "getRemoteUsername");
+        list.add(String.class, "getReplicationStatus");
+        list.add(String.class, "getStatus");
+        list.add(String.class, "getVersion");
+        list.add(boolean.class, "isDisabled");
+        list.add(boolean.class, "isHttps");
+        return list;
     }
 }
 

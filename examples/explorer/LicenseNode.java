@@ -19,7 +19,7 @@ import com.splunk.License;
 
 import java.util.Date;
 
-class LicenseNode extends ExplorerNode {
+class LicenseNode extends EntityNode {
     LicenseNode(Entity entity) {
         super(entity);
         License license = (License)entity;
@@ -29,20 +29,20 @@ class LicenseNode extends ExplorerNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(Date.class, "getCreationTime");
-            add(Date.class, "getExpirationTime");
-            // UNDONE: add(String[].class, "getFeatures");
-            add(String.class, "getGroupId");
-            add(String.class, "getLabel");
-            add(String.class, "getLicenseHash");
-            add(int.class, "getMaxViolations");
-            add(long.class, "getQuota");
-            // UNDONE: add(String[].class, "getSourceTypes");
-            add(String.class, "getStackId");
-            add(String.class, "getStatus");
-            add(String.class, "getType");
-            add(int.class, "getWindowPeriod");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(Date.class, "getCreationTime");
+        list.add(Date.class, "getExpirationTime");
+        // UNDONE: list.add(String[].class, "getFeatures");
+        list.add(String.class, "getGroupId");
+        list.add(String.class, "getLabel");
+        list.add(String.class, "getLicenseHash");
+        list.add(int.class, "getMaxViolations");
+        list.add(long.class, "getQuota");
+        // UNDONE: list.add(String[].class, "getSourceTypes");
+        list.add(String.class, "getStackId");
+        list.add(String.class, "getStatus");
+        list.add(String.class, "getType");
+        list.add(int.class, "getWindowPeriod");
+        return list;
     }
 }

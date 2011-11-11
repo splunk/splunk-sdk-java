@@ -22,11 +22,11 @@ class EventTypeNode extends EntityNode {
     }
 
     @Override protected PropertyList getMetadata() {
-        return new PropertyList() {{
-            add(String.class, "getDescription");
-            add(int.class, "getPriority");
-            add(String.class, "getSearch");
-        }};
+        PropertyList list = super.getMetadata();
+        list.add(String.class, "getDescription");
+        list.add(int.class, "getPriority");
+        list.add(String.class, "getSearch");
+        return list;
     }
 }
 
