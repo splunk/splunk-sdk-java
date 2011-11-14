@@ -26,7 +26,7 @@ public class DistributedPeer extends Entity {
     }
 
     public String[] getBundleVersions() {
-        return getStringArray("bundle_versions");
+        return getStringArray("bundle_versions", null);
     }
 
     public String getGuid() {
