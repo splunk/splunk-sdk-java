@@ -28,15 +28,15 @@ import org.openide.nodes.Node;
 // UNDONE: Some duplication of EntityConnectionNode below, eg: title count
 // and size property - could probably be refactored into a shared 
 // CollectionNode base class.
-class ConfCollectionNode extends ExplorerNode {
+class ConfCollectionNode extends ResourceNode {
     ConfCollectionNode(ConfCollection value) {
         super(value, new ConfCollectionKids(value));
         setDisplayName(String.format("Confs (%d)", value.size()));
     }
 
-    @Override PropertyList getMetadata() {
-         return new PropertyList() {{
-            add(int.class, "size");
-        }};
+    @Override protected PropertyList getMetadata() {
+        PropertyList list = super.getMetadata();
+        list.add(int.class, "size");
+        return list;
     }
 }
