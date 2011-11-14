@@ -104,8 +104,8 @@ public class ApplicationTest extends TestCase {
         try {
             Assert.assertTrue(appSetup.getSetupXML().length() > 0);
         } catch (Exception e) {
-            System.out.println("EXPECTED 500 error if setup file not present");
-            System.out.println(e);
+            // silent exception, we expect a 500 error because the
+            // setup.xml file will be missing
         }
 
         ApplicationUpdate appUpdate = app.update();

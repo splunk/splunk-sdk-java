@@ -20,16 +20,19 @@ import com.splunk.*;
 import com.splunk.sdk.Program;
 import com.splunk.Service;
 
-import junit.framework.Assert;
+import java.io.IOException;
+
 import junit.framework.TestCase;
+import junit.framework.Assert;
+
 import org.junit.*;
 
-public class DeploymentClientTest extends TestCase {
+public class FiredAlertTest extends TestCase {
     Program program = new Program();
 
-    public DeploymentClientTest() {}
+    public FiredAlertTest() {}
 
-    Service connect() {
+    Service connect() throws IOException {
         return new Service(
             program.host, program.port, program.scheme)
                 .login(program.username, program.password);
@@ -39,25 +42,23 @@ public class DeploymentClientTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDeploymentClient() throws Exception {
+    @Test public void testFiredAlerts() throws Exception {
         Service service = connect();
+        EntityCollection<FiredAlert> alerts = service.getFiredAlerts();
 
-        DeploymentClient dc = service.getDeploymentClient();
-        String uri = dc.getTargetUri();
-        if (uri != null) {
-            if (dc.isDisabled()) {
-                dc.enable();
-            }
-            Assert.assertFalse(dc.isDisabled());
-            dc.disable();
-            Assert.assertTrue(dc.isDisabled());
-            dc.enable();
-            Assert.assertFalse(dc.isDisabled());
-            dc.getServerClasses();
-            dc.reload();
+        if (alerts.values().size() == 0) {
+            System.out.println("WARNING: no fired elerts detected");
+            return;
         }
-        else {
-            System.out.println("WARNING: deploymenClient not configured");
+
+        for (FiredAlert entity: alerts.values()) {
+            entity.getAction();
+            entity.getAlertType();
+            entity.getExpirationTime();
+            entity.getSavedSearchName();
+            entity.getSeverity();
+            entity.getSid();
+            entity.getTriggerTime();
         }
     }
 }

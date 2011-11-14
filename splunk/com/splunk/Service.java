@@ -109,6 +109,11 @@ public class Service extends com.splunk.http.Service {
             this, "saved/eventtypes", EventType.class);
     }
 
+    public EntityCollection<FiredAlert> getFiredAlerts() {
+        return new EntityCollection<FiredAlert>(
+            this, "alerts/fired_alerts", FiredAlert.class);
+    }
+
     public EntityCollection<Index> getIndexes() {
         return new EntityCollection<Index>(this, "data/indexes", Index.class);
     }
