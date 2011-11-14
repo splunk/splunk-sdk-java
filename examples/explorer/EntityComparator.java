@@ -19,7 +19,7 @@ import com.splunk.Entity;
 import java.util.Comparator;
 
 class EntityComparator implements Comparator<Entity> {
-    @Override public int compare(Entity entity1, Entity entity2) {
+    public int compare(Entity entity1, Entity entity2) {
         return entity1.getName().compareTo(entity2.getName());
     }
 }

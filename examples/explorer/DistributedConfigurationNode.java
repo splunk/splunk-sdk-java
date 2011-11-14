@@ -16,8 +16,6 @@
 
 import com.splunk.Resource;
 
-import java.util.Date;
-
 class DistributedConfigurationNode extends ResourceNode {
     DistributedConfigurationNode(Resource value) { 
         super(value); 

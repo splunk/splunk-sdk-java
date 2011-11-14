@@ -15,15 +15,6 @@
  */
 
 import com.splunk.ConfCollection;
-import com.splunk.Entity;
-import com.splunk.EntityCollection;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
 
 // UNDONE: Some duplication of EntityConnectionNode below, eg: title count
 // and size property - could probably be refactored into a shared 

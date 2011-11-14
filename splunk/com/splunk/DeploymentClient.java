@@ -17,8 +17,6 @@
 package com.splunk;
 
 import com.splunk.atom.AtomEntry;
-import com.splunk.atom.AtomFeed;
-import com.splunk.http.ResponseMessage;
 
 public class DeploymentClient extends Entity {
     public DeploymentClient(Service service) {

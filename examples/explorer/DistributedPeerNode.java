@@ -16,8 +16,6 @@
 
 import com.splunk.Resource;
 
-import java.util.Date;
-
 class DistributedPeerNode extends ResourceNode {
     DistributedPeerNode(Resource value) { 
         super(value); 

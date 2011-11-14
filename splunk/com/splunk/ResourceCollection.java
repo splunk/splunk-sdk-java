@@ -20,7 +20,6 @@ import com.splunk.atom.*;
 import com.splunk.http.ResponseMessage;
 
 import java.lang.reflect.Constructor;
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
