@@ -48,6 +48,15 @@ public class DeploymentClientTest extends TestCase {
         DeploymentClient dc = service.getDeploymentClient();
         String uri = dc.getTargetUri();
         if (uri != null) {
+            if (dc.isDisabled()) {
+                dc.enable();
+            }
+            Assert.assertFalse(dc.isDisabled());
+            dc.disable();
+            Assert.assertTrue(dc.isDisabled());
+            dc.enable();
+            Assert.assertFalse(dc.isDisabled());
+            dc.getServerClasses();
             dc.reload();
         }
         else {

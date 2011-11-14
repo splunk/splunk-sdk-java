@@ -25,6 +25,26 @@ public class DeploymentClient extends Entity {
         super(service, "deployment/client");
     }
 
+    public void disable() {
+        // disable is not handled through the standard enable/disable action
+        // paths; rather it is an edit (i.e. update) action path.
+        Args args = new Args();
+        args.put("disabled", "true");
+        super.update(args);
+    }
+
+    public void enable() {
+        // enable is not handled through the standard enable/disable action
+        // path; rather it is an edit (i.e. update) action path.
+        Args args = new Args();
+        args.put("disabled", "false");
+        super.update(args);
+    }
+
+    public String [] getServerClasses() {
+        return getStringArray("serverClasses", null);
+    }
+
     public String getTargetUri() {
         return getString("targetUri", null);
     }
@@ -34,9 +54,6 @@ public class DeploymentClient extends Entity {
         if (entry == null)
             setTitle("deploymentclient");
     }
-
-    // UNDONE: According to the REST API reference there is also
-    // a serverClasses property.
 
     public void reload() {
         get("deployment-client/Reload");
