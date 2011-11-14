@@ -20,15 +20,10 @@
 //   http://blogs.oracle.com/geertjan/entry/netbeans_apis_outside_of_the
 //
 
-// UNDONE: Date values give "no editor" message in property view.
-// UNDONE: Add support for String[] properties
-// UNDONE: Support for multiple service roots
-// UNDONE: Add all Entity base properties: getName, getPath, isDisabled
-// UNDONE: Figure out how to convey leaf node so that it shows up without arrow
-
 import com.splunk.*;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
@@ -72,16 +67,19 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         JSplitPane splitPane;
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, right);
         splitPane.setResizeWeight(0.4);
-        splitPane.setPreferredSize(new Dimension(400, 200));
         splitPane.setDividerSize(3);
-        splitPane.setDividerLocation(150);
 
         setTitle("Splunk Explorer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().add(splitPane);
-        setSize(500, 400);
-    }
 
+        // Place the window in a convenient position
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = screenSize.width / 2;
+        int height = screenSize.height / 2;
+        setSize(width, height);
+        setLocation(width / 2, height / 2);
+    }
 
     class RootKids extends Children.Keys<Service> {
         Service service;
@@ -96,171 +94,6 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
 
         @Override protected Node[] createNodes(Service service) {
             return new Node[] { new ServiceNode(service) };
-        }
-    }
-
-    class ServiceNode extends ExplorerNode {
-        ServiceNode(Service service) {
-            super(service.getInfo(), new ServiceKids(service));
-            setDisplayName(service.getInfo().getServerName());
-        }
-
-        @Override protected PropertyList getMetadata() {
-            return new PropertyList() {{
-                add(int.class, "getBuild");
-                add(String.class, "getCpuArch");
-                // UNDONE: add(String[].class, "getLicenseKeys");
-                add(String.class, "getLicenseSignature");
-                add(String.class, "getLicenseState");
-                add(String.class, "getMasterGuid");
-                add(String.class, "getMode");
-                add(String.class, "getOsBuild");
-                add(String.class, "getOsVersion");
-                add(String.class, "getServerName");
-                add(String.class, "getVersion");
-                add(boolean.class, "isFree");
-                add(boolean.class, "isTrial");
-            }};
-        }
-    }
-
-    class ServiceKids extends Children.Keys<String> {
-        Service service;
-
-        ServiceKids(Service service) {
-            this.service = service;
-        }
-
-        @Override protected void addNotify() {
-            String[] kinds = new String[] {
-                "settings",
-                "loggers",
-                "messages",
-                "distributedconfig",
-                "distributedpeers",
-                "deploymentclient",
-                "deploymentservers",
-                "deploymentserverclasses",
-                "deploymenttenants",
-                "licenses",
-                "licenseGroups",
-                "licenseSlaves",
-                "licenseStacks",
-                "users",
-                "roles",
-                "apps",
-                "confs",
-                "searches",
-                "eventtypes",
-                "indexes",
-                "jobs",
-            };
-            setKeys(kinds);
-        }
-
-        private Node createNode(String kind) {
-            if (kind.equals("apps"))
-                return new EntityCollectionNode(
-                    "Apps", service.getApplications(), AppNode.class);
-
-            if (kind.equals("confs"))
-                return new ConfCollectionNode(service.getConfs());
-
-            if (kind.equals("distributedconfig"))
-                return new DistributedConfigurationNode(
-                    service.getDistributedConfiguration());
-
-            if (kind.equals("distributedpeers"))
-                return new EntityCollectionNode(
-                    "Distributed Peers", 
-                    service.getDistributedPeers(), 
-                    DistributedPeerNode.class);
-
-            if (kind.equals("deploymentclient"))
-                return new DeploymentClientNode(service.getDeploymentClient());
-
-            if (kind.equals("deploymentservers"))
-                return new EntityCollectionNode(
-                    "Deployment Servers",
-                    service.getDeploymentServers(),
-                    DeploymentServerNode.class);
-
-            if (kind.equals("deploymentserverclasses"))
-                return new EntityCollectionNode(
-                    "Deployment Server Classes",
-                    service.getDeploymentServerClasses(),
-                    DeploymentServerClassNode.class);
-
-            if (kind.equals("deploymenttenants"))
-                return new EntityCollectionNode(
-                    "Deployment Tenants",
-                    service.getDeploymentTenants(),
-                    DeploymentTenantNode.class);
-
-            if (kind.equals("eventtypes"))
-                return new EntityCollectionNode(
-                    "EventTypes", service.getEventTypes(), EventTypeNode.class);
-
-            if (kind.equals("indexes"))
-                return new EntityCollectionNode(
-                    "Indexes", service.getIndexes(), IndexNode.class);
-
-            if (kind.equals("jobs"))
-                return new EntityCollectionNode(
-                    "Jobs", service.getJobs(), JobNode.class);
-
-            if (kind.equals("licenses"))
-                return new EntityCollectionNode(
-                    "Licenses", service.getLicenses(), LicenseNode.class);
-
-            if (kind.equals("licenseGroups"))
-                return new EntityCollectionNode(
-                    "License Groups", 
-                    service.getLicenseGroups(), 
-                    LicenseGroupNode.class);
-
-            if (kind.equals("licenseSlaves"))
-                return new EntityCollectionNode(
-                    "License Slaves",
-                    service.getLicenseSlaves(),
-                    LicenseSlaveNode.class);
-
-            if (kind.equals("licenseStacks"))
-                return new EntityCollectionNode(
-                    "License Stacks", 
-                    service.getLicenseStacks(), 
-                    LicenseStackNode.class);
-
-            if (kind.equals("loggers"))
-                return new EntityCollectionNode(
-                    "Loggers", service.getLoggers(), LoggerNode.class);
-
-            if (kind.equals("messages"))
-                return new EntityCollectionNode(
-                    "Messages", service.getMessages(), MessageNode.class);
-
-            if (kind.equals("searches"))
-                return new EntityCollectionNode(
-                    "Saved Searches", 
-                    service.getSearches(), 
-                    SavedSearchNode.class);
-
-            if (kind.equals("settings"))
-                return new SettingsNode(service.getSettings());
-
-            if (kind.equals("roles"))
-                return new EntityCollectionNode(
-                    "Roles", service.getRoles(), RoleNode.class);
-
-            if (kind.equals("users"))
-                return new EntityCollectionNode(
-                    "Users", service.getUsers(), UserNode.class);
-
-            return null;
-        }
-
-        @Override protected Node[] createNodes(String kind) {
-            return new Node[] { createNode(kind) };
         }
     }
 }
