@@ -17,6 +17,7 @@
 package com.splunk.sdk.tests.com.splunk;
 
 import com.splunk.*;
+import com.splunk.http.HTTPException;
 import com.splunk.sdk.Program;
 import com.splunk.Service;
 
@@ -178,9 +179,11 @@ public class IndexTest extends TestCase {
         try {
             index.upload(path);
         }
-        catch (Exception e) {
-            System.out.println("WARNING: testIndex upload failed (is splunkd " +
-            "running on this machine? error is:" + e.toString());
+        catch (HTTPException e) {
+            if (e.getStatus() == 400) {
+                System.out.println("WARNING: index upload failed (is splunkd "
+                + "running on this machine?)");
+            }
         }
     }
 }
