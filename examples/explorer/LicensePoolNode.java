@@ -16,21 +16,19 @@
 
 import com.splunk.Resource;
 
-class UserNode extends ResourceNode {
-    UserNode(Resource value) {
+class LicensePoolNode extends ResourceNode {
+    LicensePoolNode(Resource value) {
         super(value);
     }
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        list.add(String.class, "getDefaultApp");
-        list.add(boolean.class, "getDefaultAppIsUserOverride");
-        list.add(String.class, "getDefaultAppSourceRole");
-        list.add(String.class, "getEmail");
-        list.add(String.class, "getPassword");
-        list.add(String.class, "getRealName");
-        list.add(String[].class, "getRoles");
+        list.add(String.class, "getDescription");
+        list.add(long.class, "getQuota");
+        list.add(String[].class, "getSlaves");
+        list.add(long.class, "getSlavesUsageBytes");
+        list.add(String.class, "getStackId");
+        list.add(long.class, "getUsedBytes");
         return list;
     }
 }
-

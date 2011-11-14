@@ -23,21 +23,21 @@ class RoleNode extends ResourceNode {
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        // UNDONE: list.add(List<String>.class, "getCapabilities");
+        list.add(String[].class, "getCapabilities");
         list.add(String.class, "getDefaultApp");
-        // UNDONE: list.add(List<String>.class, "getImportedCapabilities");
-        // UNDONE: list.add(List<String>.class, "getImportedRoles");
+        list.add(String[].class, "getImportedCapabilities");
+        list.add(String[].class, "getImportedRoles");
         list.add(int.class, "getImportedRtSearchJobsQuota");
         list.add(int.class, "getImportedSearchDiskQuota");
         list.add(String.class, "getImportedSearchFilter");
-        // UNDONE: list.add(List<String>.class, "getImportedIndexesAllowed");
-        // UNDONE: list.add(List<String>.class, "getImportedIndexesDefault");
+        list.add(String[].class, "getImportedIndexesAllowed");
+        list.add(String[].class, "getImportedIndexesDefault");
         list.add(int.class, "getImportedSearchJobsQuota");
         list.add(int.class, "getRtSearchJobsQuota");
         list.add(int.class, "getSearchDiskQuota");
         list.add(String.class, "getSearchFilter");
-        // UNDONE: list.add(List<String>.class, "getSearchIndexesAllowed");
-        // UNDONE: list.add(List<String>.class, "getSearchIndexesDefault");
+        list.add(String[].class, "getSearchIndexesAllowed");
+        list.add(String[].class, "getSearchIndexesDefault");
         list.add(int.class, "getSearchJobsQuota");
         list.add(int.class, "getSearchTimeWin");
         return list;

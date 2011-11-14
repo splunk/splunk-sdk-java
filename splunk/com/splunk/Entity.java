@@ -23,6 +23,7 @@ import com.splunk.http.ResponseMessage;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Entity extends Resource {
@@ -113,11 +114,19 @@ public class Entity extends Resource {
     }
 
     String getString(String key) {
-        return getContent().get(key).toString();
+        return Value.getString(getContent(), key);
     }
 
     String getString(String key, String defaultValue) {
         return Value.getString(getContent(), key, defaultValue);
+    }
+
+    String[] getStringArray(String key) {
+        return Value.getStringArray(getContent(), key);
+    }
+
+    String[] getStringArray(String key, String[] defaultValue) {
+        return Value.getStringArray(getContent(), key, defaultValue);
     }
 
     Object getValue(String key) {

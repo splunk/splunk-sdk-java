@@ -27,8 +27,8 @@ class DistributedConfigurationNode extends ResourceNode {
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
         list.add(boolean.class, "getAutoAddServers");
-        // UNDONE: list.add(String[].class, "getBlacklistNames");
-        // UNDONE: list.add(String[].class, "getBlacklistUrls");
+        list.add(String[].class, "getBlacklistNames");
+        list.add(String[].class, "getBlacklistUrls");
         list.add(int.class, "getCheckTimedOutServersFrequency");
         list.add(int.class, "getHeartbeatFrequency");
         list.add(String.class, "getHeartbeatMcastAddress");

@@ -24,8 +24,8 @@ class LicenseSlaveNode extends ResourceNode {
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
         list.add(String.class, "getLabel");
-        // UNDONE: list.add(String[].class, "getPoolIds");
-        // UNDONE: list.add(String[].class, "getStackIds");
+        list.add(String[].class, "getPoolIds");
+        list.add(String[].class, "getStackIds");
         return list;
     }
 }

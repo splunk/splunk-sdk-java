@@ -23,8 +23,8 @@ public class LicenseGroup extends Entity {
         super(service, path);
     }
 
-    public List<String> getStackIds() {
-        return (List<String>)getValue("stack_ids");
+    public String[] getStackIds() {
+        return getStringArray("stack_ids");
     }
 
     public boolean isActive() {

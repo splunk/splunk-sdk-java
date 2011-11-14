@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class LicensePool extends Entity {
     public LicensePool(Service service, String path) {
         super(service, path);
@@ -29,14 +27,13 @@ public class LicensePool extends Entity {
 
     public long getQuota() {
         String option = getString("quota");
-        if (option.equals("MAX")) {
+        if (option.equals("MAX"))
             return Long.MAX_VALUE; //UNDONE: correct interpretation?
-        }
         return getLong("quota");
     }
 
-    public List<String> getSlaves() {
-        return (List<String>)getValue("slaves");
+    public String[] getSlaves() {
+        return getStringArray("slaves");
     }
 
     public long getSlavesUsageBytes() {

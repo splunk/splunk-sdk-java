@@ -37,7 +37,7 @@ class ServiceNode extends ExplorerNode {
         return new PropertyList() {{
             add(int.class, "getBuild");
             add(String.class, "getCpuArch");
-            // UNDONE: add(String[].class, "getLicenseKeys");
+            add(String[].class, "getLicenseKeys");
             add(String.class, "getLicenseSignature");
             add(String.class, "getLicenseState");
             add(String.class, "getMasterGuid");

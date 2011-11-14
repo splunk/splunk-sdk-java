@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class LicenseStack extends Entity {
     public LicenseStack(Service service, String path) {
         super(service, path);
@@ -27,16 +25,12 @@ public class LicenseStack extends Entity {
         return getString("label", null);
     }
 
-    public List<String> getPoolIds() {
-        return (List<String>)getValue("pool_ids");
-    }
-
     public long getQuota() {
         return getLong("quota", 0);
     }
 
-    public List<String> getStackIds() {
-        return (List<String>)getValue("stack_ids");
+    public String getType() {
+        return getString("type");
     }
 }
 

@@ -20,9 +20,8 @@
 package com.splunk;
 
 import com.splunk.atom.Xml;
-import com.splunk.http.*;
-
-import java.util.List;
+import com.splunk.http.ResponseMessage;
+import com.splunk.http.RequestMessage;
 
 public class Service extends com.splunk.http.Service {
     protected String token = null;
@@ -72,28 +71,9 @@ public class Service extends com.splunk.http.Service {
         return new ConfCollection(this);
     }
 
-    public List<String> getCapabilities() {
+    public String[] getCapabilities() {
         Entity caps = new Entity(this, "authorization/capabilities");
-        return (List<String>)caps.getValue("capabilities");
-    }
-
-    public OutputDefault getDataOutputsDefault() {
-        return new OutputDefault(this);
-    }
-
-    public EntityCollection<OutputServer> getDataOutputsServer() {
-        return new EntityCollection<OutputServer>(
-            this, "data/outputs/tcp/server", OutputServer.class);
-    }
-
-    public EntityCollection<OutputGroup> getDataOutputsGroup() {
-        return new EntityCollection<OutputGroup>(
-            this, "data/outputs/tcp/group", OutputGroup.class);
-    }
-
-    public EntityCollection<OutputSyslog> getDataOutputsSyslog() {
-        return new EntityCollection<OutputSyslog>(
-            this, "data/outputs/tcp/syslog", OutputSyslog.class);
+        return caps.getStringArray("capabilities");
     }
 
     public DeploymentClient getDeploymentClient() {
@@ -182,6 +162,25 @@ public class Service extends com.splunk.http.Service {
 
     public EntityCollection<Message> getMessages() {
         return new EntityCollection<Message>(this, "messages", Message.class);
+    }
+
+    public OutputDefault getOutputDefault() {
+        return new OutputDefault(this);
+    }
+
+    public EntityCollection<OutputGroup> getOutputGroups() {
+        return new EntityCollection<OutputGroup>(
+            this, "data/outputs/tcp/group", OutputGroup.class);
+    }
+
+    public EntityCollection<OutputServer> getOutputServers() {
+        return new EntityCollection<OutputServer>(
+            this, "data/outputs/tcp/server", OutputServer.class);
+    }
+
+    public EntityCollection<OutputSyslog> getOutputSyslogs() {
+        return new EntityCollection<OutputSyslog>(
+            this, "data/outputs/tcp/syslog", OutputSyslog.class);
     }
 
     public EntityCollection<Entity> getPasswords() {

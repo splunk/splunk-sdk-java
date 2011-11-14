@@ -23,7 +23,7 @@ class LicenseGroupNode extends ResourceNode {
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        // UNDONE: list.add(String[].class, "getStackIds");
+        list.add(String[].class, "getStackIds");
         list.add(boolean.class, "isActive");
         return list;
     }

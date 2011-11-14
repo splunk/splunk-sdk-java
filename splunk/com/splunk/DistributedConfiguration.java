@@ -27,12 +27,12 @@ public class DistributedConfiguration extends Entity {
         return getBoolean("autoAddServers");
     }
 
-    public List<String> getBlacklistNames() {
-        return (List<String>)getValue("blacklistNames");
+    public String[] getBlacklistNames() {
+        return getStringArray("blacklistNames", null);
     }
 
-    public List<String> getBlacklistUrls() {
-        return (List<String>)getValue("blacklistURLs");
+    public String[] getBlacklistUrls() {
+        return getStringArray("blacklistURLs", null);
     }
 
     public int getCheckTimedOutServersFrequency() {

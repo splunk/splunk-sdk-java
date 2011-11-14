@@ -30,19 +30,19 @@ public class OutputDefault extends Entity {
     }
 
     public boolean blockOnCloning() {
-        return getBoolean("blockOnCloning");
+        return getBoolean("blockOnCloning", true); // UNDONE: default?
     }
 
     public boolean blockOnQueueFull() {
-        return getBoolean("blockOnQueueFull");
+        return getBoolean("blockOnQueueFull", true); // UNDONE: default?
     }
 
     public int getAutoLbFrequency() {
-        return getInteger("autoLBFrequency");
+        return getInteger("autoLBFrequency", 0); // UNDONE: default?
     }
 
     public int getConnectionTimeout() {
-        return getInteger("connectionTimeout");
+        return getInteger("connectionTimeout", 0); // UNDONE: default?
     }
 
     public String getDefaultGroup() {
@@ -50,11 +50,11 @@ public class OutputDefault extends Entity {
     }
 
     public int getDropClonedEventsOnQueueFull() {
-        return getInteger("dropClonedEventsOnQueueFull");
+        return getInteger("dropClonedEventsOnQueueFull", 0); // UNDONE: default?
     }
 
     public int getDropEventsOnQueueFull() {
-        return getInteger("dropEventsOnQueueFull");
+        return getInteger("dropEventsOnQueueFull", 0); //  UNDONE: default?
     }
 
     public String getForwardedIndex0Whitelist() {
@@ -70,15 +70,15 @@ public class OutputDefault extends Entity {
     }
 
     public int getHeartbeatFrequency() {
-        return getInteger("heartbeatFrequency");
+        return getInteger("heartbeatFrequency", 0); // UNDONE: default?
     }
 
     public int getMaxConnectionsPerIndexer() {
-        return getInteger("maxConnectionsPerIndexer");
+        return getInteger("maxConnectionsPerIndexer", 0); // UNDONE: default?
     }
 
     public int getMaxFailuresPerInterval() {
-        return getInteger("maxFailuresPerInterval");
+        return getInteger("maxFailuresPerInterval", 0); // UNDONE: default?
     }
 
     public long getMaxQueueSize() {
@@ -86,15 +86,15 @@ public class OutputDefault extends Entity {
     }
 
     public int getReadTimeout() {
-        return getInteger("readTimeout");
+        return getInteger("readTimeout", 0); // UNDONE: default?
     }
 
     public int getSecsInFailureInterval() {
-        return getInteger("secsInFailureInterval");
+        return getInteger("secsInFailureInterval", 0); // UNDONE: default?
     }
 
     public int getWriteTimeout() {
-       return getInteger("writeTimeout");
+       return getInteger("writeTimeout", 0); // UNDONE: default?
     }
 
     public boolean indexAndForward() {
@@ -102,7 +102,7 @@ public class OutputDefault extends Entity {
     }
 
     public boolean isCompressed() {
-        return getBoolean("compressed");
+        return getBoolean("compressed", false); // UNDONE: default?
     }
 
     public boolean isDisabled() {
@@ -118,11 +118,11 @@ public class OutputDefault extends Entity {
     }
 
     public boolean sendCookedData() {
-        return getBoolean("sendCookedData");
+        return getBoolean("sendCookedData", false); // UNDONE: default?
     }
 
     public boolean useAck() {
-        return getBoolean("useACK");
+        return getBoolean("useACK", false); // UNDONE: default?
     }
 }
 

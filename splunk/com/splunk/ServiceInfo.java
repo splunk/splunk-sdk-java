@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class ServiceInfo extends Entity {
     public ServiceInfo(Service service) {
         super(service, "server/info");
@@ -35,8 +33,8 @@ public class ServiceInfo extends Entity {
         return getString("guid");
     }
 
-    public List<String> getLicenseKeys() {
-        return (List<String>)getValue("licenseKeys");
+    public String[] getLicenseKeys() {
+        return getStringArray("licenseKeys");
     }
 
     public String getLicenseSignature() {

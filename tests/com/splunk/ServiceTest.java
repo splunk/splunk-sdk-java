@@ -99,6 +99,12 @@ public class ServiceTest extends TestCase {
         }
     }
 
+    boolean contains(String[] array, String value) {
+        for (int i = 0; i < array.length; ++i)
+            if (array[i].equals(value)) return true;
+        return false;
+    }
+
     Service connect() {
         Service service  = new Service(
             program.host, program.port, program.scheme);
@@ -114,25 +120,24 @@ public class ServiceTest extends TestCase {
         Service service = connect();
 
         List<String> expected = Arrays.asList(
-                "admin_all_objects", "change_authentication",
-                "change_own_password", "delete_by_keyword",
-                "edit_deployment_client", "edit_deployment_server",
-                "edit_dist_peer", "edit_forwarders", "edit_httpauths",
-                "edit_input_defaults", "edit_monitor", "edit_roles",
-                "edit_scripted", "edit_search_server", "edit_server",
-                "edit_splunktcp", "edit_splunktcp_ssl", "edit_tcp", "edit_udp",
-                "edit_user", "edit_web_settings", "get_metadata",
-                "get_typeahead", "indexes_edit", "license_edit", "license_tab",
-                "list_deployment_client", "list_forwarders", "list_httpauths",
-                "list_inputs", "request_remote_tok", "rest_apps_management",
-                "rest_apps_view", "rest_properties_get", "rest_properties_set",
-                "restart_splunkd", "rtsearch", "schedule_search", "search",
-                "use_file_operator");
+            "admin_all_objects", "change_authentication",
+            "change_own_password", "delete_by_keyword",
+            "edit_deployment_client", "edit_deployment_server",
+            "edit_dist_peer", "edit_forwarders", "edit_httpauths",
+            "edit_input_defaults", "edit_monitor", "edit_roles",
+            "edit_scripted", "edit_search_server", "edit_server",
+            "edit_splunktcp", "edit_splunktcp_ssl", "edit_tcp", "edit_udp",
+            "edit_user", "edit_web_settings", "get_metadata",
+            "get_typeahead", "indexes_edit", "license_edit", "license_tab",
+            "list_deployment_client", "list_forwarders", "list_httpauths",
+            "list_inputs", "request_remote_tok", "rest_apps_management",
+            "rest_apps_view", "rest_properties_get", "rest_properties_set",
+            "restart_splunkd", "rtsearch", "schedule_search", "search",
+            "use_file_operator");
 
-        List<String> caps = service.getCapabilities();
-        for (String name: expected) {
-            junit.framework.Assert.assertTrue(caps.contains(name));
-        }
+        String[] caps = service.getCapabilities();
+        for (String name : expected)
+            assertTrue(contains(caps, name));
     }
 
     // Make a few simple requests and make sure the results look ok.
@@ -172,7 +177,7 @@ public class ServiceTest extends TestCase {
         ServiceInfo info = service.getInfo();
         Map<String,Object> content = info.getContent();
         for (String name: expected) {
-            junit.framework.Assert.assertTrue(content.containsKey(name));
+            assertTrue(content.containsKey(name));
         }
 
         info.getBuild();
@@ -232,7 +237,7 @@ public class ServiceTest extends TestCase {
         Service service = connect();
 
         ResponseMessage response = service.restart();
-        Assert.assertEquals(200, response.getStatus());
+        assertEquals(200, response.getStatus());
 
         while (retry > 0) {
             Thread.sleep(5000); // 5 seconds
@@ -246,7 +251,7 @@ public class ServiceTest extends TestCase {
                 // server not back yet
             }
         }
-        Assert.assertTrue(restarted);
+        assertTrue(restarted);
     }
 
     @Test public void testJobs() {
@@ -285,8 +290,8 @@ public class ServiceTest extends TestCase {
         user = users.create(username, args);
         assertTrue(users.containsKey(username));
         assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().size() == 1);
-        assertTrue(user.getRoles().contains("power"));
+        assertTrue(user.getRoles().length == 1);
+        assertTrue(contains(user.getRoles(), "power"));
 
         users.remove(username);
         assertFalse(users.containsKey(username));
@@ -295,8 +300,8 @@ public class ServiceTest extends TestCase {
         user = users.create(username, password, "power");
         assertTrue(users.containsKey(username));
         assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().size() == 1);
-        assertTrue(user.getRoles().contains("power"));
+        assertTrue(user.getRoles().length == 1);
+        assertTrue(contains(user.getRoles(), "power"));
 
         users.remove(username);
         assertFalse(users.containsKey(username));
@@ -306,9 +311,9 @@ public class ServiceTest extends TestCase {
             username, password, new String[] { "power", "user" });
         assertTrue(users.containsKey(username));
         assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().size() == 2);
-        assertTrue(user.getRoles().contains("power"));
-        assertTrue(user.getRoles().contains("user"));
+        assertTrue(user.getRoles().length == 2);
+        assertTrue(contains(user.getRoles(), "power"));
+        assertTrue(contains(user.getRoles(), "user"));
 
         users.remove(username);
         assertFalse(users.containsKey(username));
@@ -322,9 +327,9 @@ public class ServiceTest extends TestCase {
             username, password, new String[] { "power", "user" }, args);
         assertTrue(users.containsKey(username));
         assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().size() == 2);
-        assertTrue(user.getRoles().contains("power"));
-        assertTrue(user.getRoles().contains("user"));
+        assertTrue(user.getRoles().length == 2);
+        assertTrue(contains(user.getRoles(), "power"));
+        assertTrue(contains(user.getRoles(), "user"));
         assertEquals(user.getRealName(), "Renzo");
         assertEquals(user.getEmail(), "email.me@now.com");
         assertEquals(user.getDefaultApp(), "search");

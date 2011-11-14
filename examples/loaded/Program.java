@@ -16,6 +16,7 @@
 
 import com.splunk.*;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,25 @@ public class Program extends com.splunk.sdk.Program {
         printField("Configured", app.isConfigured());
         printField("Manageable", app.isManageable());
         printField("Visible", app.isVisible());
+    }
+
+    void printDistributedConfiguration(DistributedConfiguration config) {
+        printEntity(config);
+        printField("AutoAddServers", config.getAutoAddServers());
+        printField("BlacklistNames", config.getBlacklistNames());
+        printField("BlacklistUrls", config.getBlacklistUrls());
+        printField("CheckTimedOutServersFrequency", config.getCheckTimedOutServersFrequency());
+        printField("HeartbeatFrequency", config.getHeartbeatFrequency());
+        printField("HeartbeatMcastAddress", config.getHeartbeatMcastAddress());
+        printField("HeartbeatPort", config.getHeartbeatPort());
+        printField("RemovedTimedOutServers", config.getRemovedTimedOutServers());
+        printField("ServerTimeout", config.getServerTimeout());
+        printField("Servers", config.getServers());
+        printField("ShareBundles", config.getShareBundles());
+        printField("SkipOurselves", config.getSkipOurselves());
+        printField("StatusTimeout", config.getStatusTimeout());
+        printField("Ttl", config.getTtl());
+        printField("isDisabled", config.isDisabled());
     }
 
     void printDistributedPeer(DistributedPeer peer) {
@@ -133,6 +153,11 @@ public class Program extends com.splunk.sdk.Program {
         System.out.format("%s = %s\n", field, value == null ? "null" : value);
     }
 
+    void printField(String field, String[] value) {
+        printField(field, value == null 
+            ? (String)null : Arrays.toString(value));
+    }
+
     void printField(String field, List<String> value) {
         printField(field, value == null ? (String)null : value.toString());
     }
@@ -184,6 +209,53 @@ public class Program extends com.splunk.sdk.Program {
         printField("TotalEventCount", index.getTotalEventCount());
         printField("isDisabled", index.isDisabled());
         printField("isInternal", index.isInternal());
+    }
+
+    void printLicense(License license) {
+        printEntity(license);
+        printField("CreationTime", license.getCreationTime());
+        printField("ExpirationTime", license.getExpirationTime());
+        printField("Features", license.getFeatures());
+        printField("GroupId", license.getGroupId());
+        printField("Label", license.getLabel());
+        printField("LicenseHash", license.getLicenseHash());
+        printField("MaxViolations", license.getMaxViolations());
+        printField("Quota", license.getQuota());
+        printField("SourceTypes", license.getSourceTypes());
+        printField("StackId", license.getStackId());
+        printField("Status", license.getStatus());
+        printField("Type", license.getType());
+        printField("WindowPeriod", license.getWindowPeriod());
+    }
+
+    void printLicenseGroup(LicenseGroup licenseGroup) {
+        printEntity(licenseGroup);
+        printField("StackIds", licenseGroup.getStackIds());
+        printField("isActive", licenseGroup.isActive());
+    } 
+
+    void printLicensePool(LicensePool licensePool) {
+        printEntity(licensePool);
+        printField("Description", licensePool.getDescription());
+        printField("Quota", licensePool.getQuota());
+        printField("Slaves", licensePool.getSlaves());
+        printField("SlavesUsageBytes", licensePool.getSlavesUsageBytes());
+        printField("StackId", licensePool.getStackId());
+        printField("UsedBytes", licensePool.getUsedBytes());
+    }
+
+    void printLicenseSlave(LicenseSlave licenseSlave) {
+        printEntity(licenseSlave);
+        printField("Label", licenseSlave.getLabel());
+        printField("PoolIds", licenseSlave.getPoolIds());
+        printField("StackIds", licenseSlave.getStackIds());
+    }
+
+    void printLicenseStack(LicenseStack licenseStack) {
+        printEntity(licenseStack);
+        printField("Label", licenseStack.getLabel());
+        printField("Quota", licenseStack.getQuota());
+        printField("Type", licenseStack.getType());
     }
 
     void printUser(User user) {
@@ -248,6 +320,50 @@ public class Program extends com.splunk.sdk.Program {
         printField("Value", message.getValue());
     }
 
+    void printOutputDefault(OutputDefault outputDefault) {
+        printEntity(outputDefault);
+        printField("autoLb", outputDefault.autoLb());
+        printField("blockOnCloning", outputDefault.blockOnCloning());
+        printField("blockOnQueueFull", outputDefault.blockOnQueueFull());
+        printField("getAutoLbFrequency", outputDefault.getAutoLbFrequency());
+        printField("getConnectionTimeout", outputDefault.getConnectionTimeout());
+        printField("getDefaultGroup", outputDefault.getDefaultGroup());
+        printField("getDropClonedEventsOnQueueFull", outputDefault.getDropClonedEventsOnQueueFull());
+        printField("getDropEventsOnQueueFull", outputDefault.getDropEventsOnQueueFull());
+        printField("getForwardedIndex0Whitelist", outputDefault.getForwardedIndex0Whitelist());
+        printField("getForwardedIndex1Blacklist", outputDefault.getForwardedIndex1Blacklist());
+        printField("getForwardedIndex2Whitelist", outputDefault.getForwardedIndex2Whitelist());
+        printField("getHeartbeatFrequency", outputDefault.getHeartbeatFrequency());
+        printField("getMaxConnectionsPerIndexer", outputDefault.getMaxConnectionsPerIndexer());
+        printField("getMaxFailuresPerInterval", outputDefault.getMaxFailuresPerInterval());
+        printField("getMaxQueueSize", outputDefault.getMaxQueueSize());
+        printField("getReadTimeout", outputDefault.getReadTimeout());
+        printField("getSecsInFailureInterval", outputDefault.getSecsInFailureInterval());
+        printField("getWriteTimeout", outputDefault.getWriteTimeout());
+        printField("indexAndForward", outputDefault.indexAndForward());
+        printField("isCompressed", outputDefault.isCompressed());
+        printField("isDisabled", outputDefault.isDisabled());
+        printField("isForwardedIndexFilterDisable", outputDefault.isForwardedIndexFilterDisable());
+        printField("isIndexAndForward", outputDefault.isIndexAndForward());
+        printField("sendCookedData", outputDefault.sendCookedData());
+        printField("useAck", outputDefault.useAck());
+    }
+
+    void printOutputGroup(OutputGroup outputGroup) {
+        printEntity(outputGroup);
+        printField("Method", outputGroup.getMethod());
+        printField("Servers", outputGroup.getServers());
+        printField("isDisabled", outputGroup.isDisabled());
+    }
+
+    void printOutputServer(OutputServer outputServer) {
+        printEntity(outputServer);
+    }
+
+    void printOutputSyslog(OutputSyslog outputSyslog) {
+        printEntity(outputSyslog);
+    }
+
     void printResource(Resource resource) {
         System.out.format("## %s\n", resource.getName());
         System.out.format("title = %s\n", resource.getTitle());
@@ -266,23 +382,23 @@ public class Program extends com.splunk.sdk.Program {
 
     void printRole(Role role) {
         printEntity(role);
-        printField("getCapabilities", role.getCapabilities());
-        printField("getDefaultApp", role.getDefaultApp());
-        printField("getImportedCapabilities", role.getImportedCapabilities());
-        printField("getImportedRoles", role.getImportedRoles());
-        printField("getImportedRtSearchJobsQuota", role.getImportedRtSearchJobsQuota());
-        printField("getImportedSearchDiskQuota", role.getImportedSearchDiskQuota());
-        printField("getImportedSearchFilter", role.getImportedSearchFilter());
-        printField("getImportedIndexesAllowed", role.getImportedIndexesAllowed());
-        printField("getImportedIndexesDefault", role.getImportedIndexesDefault());
-        printField("getImportedSearchJobsQuota", role.getImportedSearchJobsQuota());
-        printField("getRtSearchJobsQuota", role.getRtSearchJobsQuota());
-        printField("getSearchDiskQuota", role.getSearchDiskQuota());
-        printField("getSearchFilter", role.getSearchFilter());
-        printField("getSearchIndexesAllowed", role.getSearchIndexesAllowed());
-        printField("getSearchIndexesDefault", role.getSearchIndexesDefault());
-        printField("getSearchJobsQuota", role.getSearchJobsQuota());
-        printField("getSearchTimeWin", role.getSearchTimeWin());
+        printField("Capabilities", role.getCapabilities());
+        printField("DefaultApp", role.getDefaultApp());
+        printField("ImportedCapabilities", role.getImportedCapabilities());
+        printField("ImportedRoles", role.getImportedRoles());
+        printField("ImportedRtSearchJobsQuota", role.getImportedRtSearchJobsQuota());
+        printField("ImportedSearchDiskQuota", role.getImportedSearchDiskQuota());
+        printField("ImportedSearchFilter", role.getImportedSearchFilter());
+        printField("ImportedIndexesAllowed", role.getImportedIndexesAllowed());
+        printField("ImportedIndexesDefault", role.getImportedIndexesDefault());
+        printField("ImportedSearchJobsQuota", role.getImportedSearchJobsQuota());
+        printField("RtSearchJobsQuota", role.getRtSearchJobsQuota());
+        printField("SearchDiskQuota", role.getSearchDiskQuota());
+        printField("SearchFilter", role.getSearchFilter());
+        printField("SearchIndexesAllowed", role.getSearchIndexesAllowed());
+        printField("SearchIndexesDefault", role.getSearchIndexesDefault());
+        printField("SearchJobsQuota", role.getSearchJobsQuota());
+        printField("SearchTimeWin", role.getSearchTimeWin());
     }
 
     void printSavedSearch(SavedSearch search) {
@@ -375,8 +491,8 @@ public class Program extends com.splunk.sdk.Program {
         printSettings(service.getSettings());
 
         System.out.print("\n# Applications");
-        for (Entity app : service.getApplications().values())
-            printApplication((Application)app);
+        for (Application app : service.getApplications().values())
+            printApplication(app);
 
         System.out.print("\n# Configs");
         for (EntityCollection<Entity> config : service.getConfs().values())
@@ -399,41 +515,46 @@ public class Program extends com.splunk.sdk.Program {
         printEntities(service.getDeploymentTenants());
 
         System.out.print("\n# DistributedConfiguration");
-        printEntity(service.getDistributedConfiguration());
+        printDistributedConfiguration(service.getDistributedConfiguration());
 
         System.out.print("\n# DistributedPeers");
-        for (Entity peer : service.getDistributedPeers().values())
-            printDistributedPeer((DistributedPeer)peer);
+        for (DistributedPeer peer : service.getDistributedPeers().values())
+            printDistributedPeer(peer);
 
         System.out.print("\n# EventTypes");
-        for (Entity eventType : service.getEventTypes().values())
-            printEventType((EventType)eventType);
+        for (EventType eventType : service.getEventTypes().values())
+            printEventType(eventType);
 
         System.out.print("\n# Indexes");
-        for (Entity index : service.getIndexes().values())
-            printIndex((Index)index);
+        for (Index index : service.getIndexes().values())
+            printIndex(index);
 
         System.out.print("\n# Jobs");
-        for (Entity job : service.getJobs().values())
-            printJob((Job)job);
+        for (Job job : service.getJobs().values())
+            printJob(job);
 
         System.out.print("\n# LicenseGroups");
-        printEntities(service.getLicenseGroups());
+        for (LicenseGroup licenseGroup : service.getLicenseGroups().values())
+            printLicenseGroup(licenseGroup);
 
         System.out.print("\n# LicenseMessages");
         printEntities(service.getLicenseMessages());
 
         System.out.print("\n# LicensePools");
-        printEntities(service.getLicensePools());
+        for (LicensePool licensePool : service.getLicensePools().values())
+            printLicensePool(licensePool);
 
         System.out.print("\n# LicenseSlaves");
-        printEntities(service.getLicenseSlaves());
+        for (LicenseSlave licenseSlave : service.getLicenseSlaves().values())
+            printLicenseSlave(licenseSlave);
 
         System.out.print("\n# LicenseStacks");
-        printEntities(service.getLicenseStacks());
+        for (LicenseStack licenseStack : service.getLicenseStacks().values())
+            printLicenseStack(licenseStack);
 
         System.out.print("\n# Licenses");
-        printEntities(service.getLicenses());
+        for (License license : service.getLicenses().values())
+            printLicense(license);
 
         System.out.print("\n# Loggers");
         printEntities(service.getLoggers());
@@ -442,16 +563,31 @@ public class Program extends com.splunk.sdk.Program {
         for (Message message : service.getMessages().values())
             printMessage(message);
 
+        System.out.print("\n# OutputDefault");
+        printOutputDefault(service.getOutputDefault());
+
+        System.out.print("\n# OutputGroups");
+        for (OutputGroup outputGroup : service.getOutputGroups().values())
+            printOutputGroup(outputGroup);
+
+        System.out.print("\n# OutputServers");
+        for (OutputServer outputServer : service.getOutputServers().values())
+            printOutputServer(outputServer);
+
+        System.out.print("\n# OutputSyslogs");
+        for (OutputSyslog outputSyslog : service.getOutputSyslogs().values())
+            printOutputSyslog(outputSyslog);
+
         System.out.print("\n# Passwords");
         printEntities(service.getPasswords());
 
         System.out.print("\n# Roles");
-        for (Entity role : service.getRoles().values())
-            printRole((Role)role);
+        for (Role role : service.getRoles().values())
+            printRole(role);
 
         System.out.print("\n# Saved Searches");
-        for (Entity search : service.getSearches().values())
-            printSavedSearch((SavedSearch)search);
+        for (SavedSearch search : service.getSearches().values())
+            printSavedSearch(search);
 
         System.out.print("\n# Users");
         for (User user : service.getUsers().values())

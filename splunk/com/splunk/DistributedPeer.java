@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class DistributedPeer extends Entity {
     public DistributedPeer(Service service, String path) {
         super(service, path);
@@ -27,8 +25,8 @@ public class DistributedPeer extends Entity {
         return getString("build");
     }
 
-    public List<String> getBundleVersions() {
-        return (List<String>)getValue("bundle_versions");
+    public String[] getBundleVersions() {
+        return getStringArray("bundle_versions");
     }
 
     public String getGuid() {

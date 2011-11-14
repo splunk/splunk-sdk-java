@@ -32,13 +32,13 @@ class LicenseNode extends ResourceNode {
         PropertyList list = super.getMetadata();
         list.add(Date.class, "getCreationTime");
         list.add(Date.class, "getExpirationTime");
-        // UNDONE: list.add(String[].class, "getFeatures");
+        list.add(String[].class, "getFeatures");
         list.add(String.class, "getGroupId");
         list.add(String.class, "getLabel");
         list.add(String.class, "getLicenseHash");
         list.add(int.class, "getMaxViolations");
         list.add(long.class, "getQuota");
-        // UNDONE: list.add(String[].class, "getSourceTypes");
+        list.add(String[].class, "getSourceTypes");
         list.add(String.class, "getStackId");
         list.add(String.class, "getStatus");
         list.add(String.class, "getType");

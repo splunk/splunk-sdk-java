@@ -16,27 +16,25 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class Role extends Entity {
     public Role(Service service, String path) {
         super(service, path);
     }
 
-    public List<String> getCapabilities() {
-        return (List<String>)getValue("capabilities");
+    public String[] getCapabilities() {
+        return getStringArray("capabilities");
     }
 
     public String getDefaultApp() {
         return getString("defaultApp", null);
     }
 
-    public List<String> getImportedCapabilities() {
-        return (List<String>)getValue("imported_capabilities", null);
+    public String[] getImportedCapabilities() {
+        return getStringArray("imported_capabilities", null);
     }
 
-    public List<String> getImportedRoles() {
-        return (List<String>)getValue("imported_roles", null);
+    public String[] getImportedRoles() {
+        return getStringArray("imported_roles", null);
     }
 
     public int getImportedRtSearchJobsQuota() {
@@ -51,12 +49,12 @@ public class Role extends Entity {
         return getString("imported_srchFilter", null);
     }
 
-    public List<String> getImportedIndexesAllowed() {
-        return (List<String>)getValue("imported_srchIndexesAllowed");
+    public String[] getImportedIndexesAllowed() {
+        return getStringArray("imported_srchIndexesAllowed", null);
     }
 
-    public List<String> getImportedIndexesDefault() {
-        return (List<String>)getValue("imported_srchIndexesDefault");
+    public String[] getImportedIndexesDefault() {
+        return getStringArray("imported_srchIndexesDefault", null);
     }
 
     public int getImportedSearchJobsQuota() {
@@ -75,12 +73,12 @@ public class Role extends Entity {
         return getString("srchFilter", null);
     }
 
-    public List<String> getSearchIndexesAllowed() {
-        return (List<String>)getValue("srchIndexesAllowed");
+    public String[] getSearchIndexesAllowed() {
+        return getStringArray("srchIndexesAllowed", null);
     }
 
-    public List<String> getSearchIndexesDefault() {
-        return (List<String>)getValue("srchIndexesDefault");
+    public String[] getSearchIndexesDefault() {
+        return getStringArray("srchIndexesDefault", null);
     }
 
     public int getSearchJobsQuota() {

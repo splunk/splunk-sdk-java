@@ -25,7 +25,7 @@ class DistributedPeerNode extends ResourceNode {
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        // UNDONE: list.add(String[].class, "getBundleVersions");
+        list.add(String[].class, "getBundleVersions");
         list.add(String.class, "getGuid");
         list.add(String.class, "getLicenseSignature");
         list.add(String.class, "getPeerName");

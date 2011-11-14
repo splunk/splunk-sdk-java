@@ -24,9 +24,8 @@ class LicenseStackNode extends ResourceNode {
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
         list.add(String.class, "getLabel");
-        // UNDONE: list.add(String[].class, "getPoolIds");
         list.add(long.class, "getQuota");
-        // UNDONE: list.add(String[].class, "getStackIds");
+        list.add(String.class, "getType");
         return list;
     }
 }

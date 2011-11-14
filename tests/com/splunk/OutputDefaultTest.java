@@ -41,10 +41,10 @@ public class OutputDefaultTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDataOutputDefault() throws Exception {
+    @Test public void testOutputDefault() throws Exception {
         Service service = connect();
 
-        OutputDefault dof = service.getDataOutputsDefault();
+        OutputDefault dof = service.getOutputDefault();
 
         dof.autoLb();
         dof.blockOnCloning();

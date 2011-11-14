@@ -41,13 +41,13 @@ public class OutputServerTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDataOutputServer() throws Exception {
+    @Test public void testOutputServer() throws Exception {
         Service service = connect();
 
-        EntityCollection<OutputServer> dos = service.getDataOutputsServer();
+        EntityCollection<OutputServer> dos = service.getOutputServers();
 
         if (dos.values().size() == 0) {
-            System.out.println("WARNING: DataOutputServer not configured");
+            System.out.println("WARNING: OutputServer not configured");
             return;
         }
 

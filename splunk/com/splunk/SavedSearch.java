@@ -21,6 +21,23 @@ public class SavedSearch extends Entity {
         super(service, path);
     }
 
+    public void acknowledge() {
+        service.post(actionPath("control"));
+        invalidate();
+    }
+
+    public Job dispatch(Args args) {
+        service.post(actionPath("dispatch"), args);
+        invalidate();
+        return null; // UNDONE
+    }
+
+    public Job[] history() {
+        service.post(actionPath("history"));
+        invalidate();
+        return null; // UNDONE
+    }
+
     public String getActionEmailSendResults() {
         return getString("action.email.sendresults", null);
     }

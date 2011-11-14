@@ -41,13 +41,13 @@ public class OutputSyslogTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDataOutputSyslog() throws Exception {
+    @Test public void testOutputSyslog() throws Exception {
         Service service = connect();
 
-        EntityCollection<OutputSyslog> dos = service.getDataOutputsSyslog();
+        EntityCollection<OutputSyslog> dos = service.getOutputSyslogs();
 
         if (dos.values().size() == 0) {
-            System.out.println("WARNING: DataOutputSyslog not configured");
+            System.out.println("WARNING: OutputSyslog not configured");
             return;
         }
 

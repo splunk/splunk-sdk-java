@@ -27,8 +27,8 @@ public class OutputGroup extends Entity {
         return getString("method", null);
     }
 
-    public List<String> getServers() {
-        return (List<String>)getValue("servers");
+    public String[] getServers() {
+        return getStringArray("servers");
     }
 
     public boolean isDisabled() {

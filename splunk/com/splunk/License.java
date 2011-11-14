@@ -32,8 +32,8 @@ public class License extends Entity {
         return getDateFromEpoch("expiration_time");
     }
 
-    public List<String> getFeatures() {
-        return (List<String>)getValue("features");
+    public String[] getFeatures() {
+        return getStringArray("features");
     }
 
     public String getGroupId() {
@@ -56,8 +56,8 @@ public class License extends Entity {
         return getLong("quota");
     }
 
-    public List<String> getSourceTypes() {
-        return (List<String>)getValue("sourcetypes");
+    public String[] getSourceTypes() {
+        return getStringArray("sourcetypes", null);
     }
 
     public String getStackId() {

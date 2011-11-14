@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class User extends Entity {
     public User(Service service, String path) {
         super(service, path);
@@ -47,10 +45,8 @@ public class User extends Entity {
         return getString("realname");
     }
 
-    public List<String> getRoles() {
-        // UNDONE: The following is an "unsafe" cast .. can we make it safe
-        // without copying?
-        return (List<String>)getValue("roles");
+    public String[] getRoles() {
+        return getStringArray("roles");
     }
 }
 

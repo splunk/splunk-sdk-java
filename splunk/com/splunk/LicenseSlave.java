@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class LicenseSlave extends Entity {
     public LicenseSlave(Service service, String path) {
         super(service, path);
@@ -27,12 +25,12 @@ public class LicenseSlave extends Entity {
         return getString("label", null);
     }
 
-    public List<String> getPoolIds() {
-        return (List<String>)getValue("pool_ids");
+    public String[] getPoolIds() {
+        return getStringArray("pool_ids");
     }
 
-    public List<String> getStackIds() {
-        return (List<String>)getValue("stack_ids");
+    public String[] getStackIds() {
+        return getStringArray("stack_ids");
     }
 }
 

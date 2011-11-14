@@ -41,13 +41,13 @@ public class OutputGroupTest extends TestCase {
         this.program.init(); // Pick up .splunkrc settings
     }
 
-    @Test public void testDataOutputGroup() throws Exception {
+    @Test public void testOutputGroup() throws Exception {
         Service service = connect();
 
-        EntityCollection<OutputGroup> dog = service.getDataOutputsGroup();
+        EntityCollection<OutputGroup> dog = service.getOutputGroups();
 
         if (dog.values().size() == 0) {
-            System.out.println("WARNING: DataOutputGroup not configured");
+            System.out.println("WARNING: OutputGroup not configured");
             return;
         }
 
