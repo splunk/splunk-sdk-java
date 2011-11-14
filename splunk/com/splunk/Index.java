@@ -19,10 +19,12 @@ package com.splunk;
 import com.splunk.http.ResponseMessage;
 import com.splunk.http.RequestMessage;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Date;
 import java.net.Socket;
-
 
 public class Index extends Entity {
     public Index(Service service, String path) {
@@ -48,7 +50,7 @@ public class Index extends Entity {
         return socket;
     }
 
-    public void clean() {
+    public Index clean() {
         Args saved = new Args();
         saved.put("maxTotalDataSizeMB",
                   Integer.toString(this.getMaxTotalDataSizeMB()));
@@ -58,23 +60,22 @@ public class Index extends Entity {
         Args reset = new Args();
         reset.put("maxTotalDataSizeMB", "1");
         reset.put("frozenTimePeriodInSecs", "1");
-        super.update(reset);
-        this.rollHotBuckets();
+        update(reset);
+        rollHotBuckets();
 
-         while (true) {
-             try {
-                 Thread.sleep(1000); // 1000ms (1 second sleep)
-             } catch (InterruptedException e) {
-                 return; // eat
-             }
-             if (this.getTotalEventCount() == 0) {
-                 break;
-             }
-             refresh();
-         }
-         super.update(saved);
-
-         return; // UNDONE -- return this?
+        while (true) {
+            try {
+                Thread.sleep(1000); // 1000ms (1 second sleep)
+            }
+            catch (InterruptedException e) {
+                return this; // eat
+            }
+            if (this.getTotalEventCount() == 0)
+                break;
+            refresh();
+        }
+        update(saved);
+        return this;
     }
 
     public boolean getAssureUTF8() {

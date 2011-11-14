@@ -14,28 +14,19 @@
  * under the License.
  */
 
-//
-// UNDONE:
-//   * POST, DELETE
-//   * Namespaces
-//       - Path fragments
-//
-
 package com.splunk;
-
-import junit.framework.*;
-import junit.framework.Assert;
-import org.junit.*;
 
 import com.splunk.atom.*;
 import com.splunk.http.HTTPException;
 import com.splunk.http.ResponseMessage;
 import com.splunk.sdk.Program;
-import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.junit.*;
 
 public class ServiceTest extends TestCase {
     Program program = new Program();

@@ -29,13 +29,13 @@ public class SavedSearch extends Entity {
     public Job dispatch(Args args) {
         service.post(actionPath("dispatch"), args);
         invalidate();
-        return null; // UNDONE
+        return null; // UNDONE: Return Job
     }
 
     public Job[] history() {
         service.post(actionPath("history"));
         invalidate();
-        return null; // UNDONE
+        return null; // UNDONE: Return Job[]
     }
 
     public String getActionEmailSendResults() {

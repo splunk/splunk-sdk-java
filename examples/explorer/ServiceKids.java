@@ -14,16 +14,8 @@
  * under the License.
  */
 
-import com.splunk.*;
+import com.splunk.Service;
 
-import java.awt.Dimension;
-import javax.swing.JFrame;
-import javax.swing.JSplitPane;
-
-import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.propertysheet.PropertySheetView;
-import org.openide.explorer.view.BeanTreeView;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 

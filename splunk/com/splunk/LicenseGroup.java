@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class LicenseGroup extends Entity {
     public LicenseGroup(Service service, String path) {
         super(service, path);

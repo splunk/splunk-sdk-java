@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.List;
-
 public class UserCollection extends EntityCollection<User> {
     public UserCollection(Service service, String path) {
         super(service, path, User.class);

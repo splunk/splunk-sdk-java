@@ -20,12 +20,9 @@ import com.splunk.*;
 import com.splunk.sdk.Program;
 import com.splunk.Service;
 
-import java.io.IOException;
 import java.util.Date;
-
-import junit.framework.TestCase;
 import junit.framework.Assert;
-
+import junit.framework.TestCase;
 import org.junit.*;
 
 public class LicenseMessageTest extends TestCase {
@@ -33,7 +30,7 @@ public class LicenseMessageTest extends TestCase {
 
     public LicenseMessageTest() {}
 
-    Service connect() throws IOException {
+    Service connect() {
         return new Service(
             program.host, program.port, program.scheme)
                 .login(program.username, program.password);

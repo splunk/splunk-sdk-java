@@ -24,10 +24,8 @@ import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import junit.framework.TestCase;
 import junit.framework.Assert;
-
+import junit.framework.TestCase;
 import org.junit.*;
 
 public class IndexTest extends TestCase {
@@ -35,7 +33,7 @@ public class IndexTest extends TestCase {
 
     public IndexTest() {}
 
-    Service connect() throws IOException {
+    Service connect() {
         return new Service(
             program.host, program.port, program.scheme)
                 .login(program.username, program.password);

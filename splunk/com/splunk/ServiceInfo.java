@@ -34,7 +34,7 @@ public class ServiceInfo extends Entity {
     }
 
     public String[] getLicenseKeys() {
-        return getStringArray("licenseKeys");
+        return getStringArray("licenseKeys", null);
     }
 
     public String getLicenseSignature() {

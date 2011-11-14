@@ -16,10 +16,6 @@
 
 package com.splunk;
 
-import sun.net.idn.StringPrep;
-
-import java.util.*;
-
 public class OutputDefault extends Entity {
     public OutputDefault(Service service) {
         super(service, "data/outputs/tcp/default");
