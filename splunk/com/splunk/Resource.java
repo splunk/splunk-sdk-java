@@ -28,7 +28,7 @@ public abstract class Resource {
     private boolean maybeValid = false;
 
     Resource(Service service, String path) {
-        this.path = path;
+        this.path = service.fullpath(path);
         this.service = service;
     }
 

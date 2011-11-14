@@ -55,7 +55,7 @@ public class Service extends com.splunk.http.Service {
 
     // Ensures that the given path is fully qualified, prepending a
     // path prefix as necessarry.
-    protected String fullpath(String path) {
+    String fullpath(String path) {
         if (path.startsWith("/"))
             return path;
         if (namespace == null)
