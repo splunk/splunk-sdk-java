@@ -38,26 +38,6 @@ public class FiredAlertTest extends TestCase {
                 .login(program.username, program.password);
     }
 
-    private Service waitForSplunk() throws Exception {
-        // there is still a race condition here: if the restart takes more
-        // than 5 seconds to percolate through splunk, apps will not be
-        // reset
-        int retry = 10;
-        while (retry > 0) {
-            Thread.sleep(5000); // 5 seconds
-            retry = retry-1;
-            try {
-                return connect();
-            }
-            catch (Exception e) {
-                // server not back yet
-            }
-        }
-        Assert.fail("Splunk service did not restart");
-        return null;
-    }
-
-
     @Before public void setUp() {
         this.program.init(); // Pick up .splunkrc settings
     }
