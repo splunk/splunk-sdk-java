@@ -15,12 +15,12 @@
  */
 
 import com.splunk.Application;
-import com.splunk.Entity;
+import com.splunk.Resource;
 
-class AppNode extends EntityNode {
-    public AppNode(Entity entity) {
-        super(entity);
-        Application app = (Application)entity;
+class AppNode extends ResourceNode {
+    public AppNode(Resource value) {
+        super(value);
+        Application app = (Application)value;
         String displayName = app.getLabel();
         if (displayName == null) displayName = app.getName();
         setDisplayName(displayName);

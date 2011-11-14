@@ -39,7 +39,7 @@ class ConfCollectionKids extends Children.Keys<EntityCollection> {
 
     @Override protected Node[] createNodes(EntityCollection conf) {
         return new Node[] { 
-            new EntityCollectionNode(conf.getTitle(), conf, EntityNode.class)
+            new EntityCollectionNode(conf.getTitle(), conf, ResourceNode.class)
         };
     }
 }

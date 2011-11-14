@@ -14,11 +14,11 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
-class LicenseGroupNode extends EntityNode {
-    LicenseGroupNode(Entity entity) {
-        super(entity);
+class LicenseGroupNode extends ResourceNode {
+    LicenseGroupNode(Resource value) {
+        super(value);
     }
 
     @Override protected PropertyList getMetadata() {

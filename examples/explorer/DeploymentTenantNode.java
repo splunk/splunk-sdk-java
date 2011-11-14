@@ -14,11 +14,11 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
-class DeploymentTenantNode extends EntityNode {
-    DeploymentTenantNode(Entity entity) {
-        super(entity);
+class DeploymentTenantNode extends ResourceNode {
+    DeploymentTenantNode(Resource value) {
+        super(value);
     }
 
     @Override protected PropertyList getMetadata() {

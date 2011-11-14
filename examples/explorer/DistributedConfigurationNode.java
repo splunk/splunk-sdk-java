@@ -14,13 +14,13 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
 import java.util.Date;
 
-class DistributedConfigurationNode extends EntityNode {
-    DistributedConfigurationNode(Entity entity) { 
-        super(entity); 
+class DistributedConfigurationNode extends ResourceNode {
+    DistributedConfigurationNode(Resource value) { 
+        super(value); 
         setDisplayName("Distributed Configuration");
     }
 

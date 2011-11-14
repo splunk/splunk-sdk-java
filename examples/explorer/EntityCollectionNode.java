@@ -16,6 +16,7 @@
 
 import com.splunk.Entity;
 import com.splunk.EntityCollection;
+import com.splunk.Resource;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 
 // Abstract class that generalizes an explorer node for any EntityCollection
-class EntityCollectionNode extends ExplorerNode {
+class EntityCollectionNode extends ResourceNode {
     Class itemClass;
     Constructor itemCtor = null;
 
@@ -43,7 +44,7 @@ class EntityCollectionNode extends ExplorerNode {
     Node createKid(Entity entity) {
         try {
             if (itemCtor == null)
-                itemCtor = itemClass.getDeclaredConstructor(Entity.class);
+                itemCtor = itemClass.getDeclaredConstructor(Resource.class);
             return (Node)itemCtor.newInstance(entity);
         }
         catch (Exception e) {
@@ -55,10 +56,10 @@ class EntityCollectionNode extends ExplorerNode {
         return (EntityCollection)this.value;
     }
 
-    @Override PropertyList getMetadata() {
-         return new PropertyList() {{
-            add(int.class, "size");
-        }};
+    @Override protected PropertyList getMetadata() {
+        PropertyList list = super.getMetadata();
+        list.add(int.class, "size");
+        return list;
     }
 
     class EntityCollectionKids extends Children.Keys<Entity> {

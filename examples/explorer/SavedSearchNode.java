@@ -14,11 +14,11 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
-class SavedSearchNode extends EntityNode {
-    SavedSearchNode(Entity entity) {
-        super(entity);
+class SavedSearchNode extends ResourceNode {
+    SavedSearchNode(Resource value) {
+        super(value);
     }
 
     @Override protected PropertyList getMetadata() {

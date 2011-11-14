@@ -14,11 +14,11 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
-class MessageNode extends EntityNode {
-    MessageNode(Entity entity) {
-        super(entity);
+class MessageNode extends ResourceNode {
+    MessageNode(Resource value) {
+        super(value);
     }
 
     @Override protected PropertyList getMetadata() {

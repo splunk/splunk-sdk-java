@@ -14,11 +14,11 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
-class RoleNode extends EntityNode {
-    RoleNode(Entity entity) {
-        super(entity);
+class RoleNode extends ResourceNode {
+    RoleNode(Resource value) {
+        super(value);
     }
 
     @Override protected PropertyList getMetadata() {

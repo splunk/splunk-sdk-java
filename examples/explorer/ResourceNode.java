@@ -14,17 +14,22 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
 import org.openide.nodes.Children;
 
-class EntityNode extends ExplorerNode {
-    EntityNode(Entity entity) {
-        super(entity);
-        setDisplayName(entity.getName());
+class ResourceNode extends ExplorerNode {
+    ResourceNode(Resource value) {
+        super(value);
+        setDisplayName(value.getName());
     }
 
-    protected PropertyList getMetadata() {
+    ResourceNode(Resource value, Children kids) {
+        super(value, kids);
+        setDisplayName(value.getName());
+    }
+
+    @Override protected PropertyList getMetadata() {
         return new PropertyList() {{
             add(String.class, "getPath");
             add(String.class, "getTitle");

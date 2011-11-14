@@ -14,13 +14,13 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.Resource;
 
 import java.util.Date;
 
-class DistributedPeerNode extends EntityNode {
-    DistributedPeerNode(Entity entity) { 
-        super(entity); 
+class DistributedPeerNode extends ResourceNode {
+    DistributedPeerNode(Resource value) { 
+        super(value); 
     }
 
     @Override protected PropertyList getMetadata() {
