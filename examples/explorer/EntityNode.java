@@ -21,13 +21,12 @@ import org.openide.nodes.Children;
 class EntityNode extends ExplorerNode {
     EntityNode(Entity entity) {
         super(entity);
-        String name = entity.getName();
-        setName(name);
-        setDisplayName(name);
+        setDisplayName(entity.getName());
     }
 
     protected PropertyList getMetadata() {
         return new PropertyList() {{
+            add(String.class, "getPath");
             add(String.class, "getTitle");
         }};
     }
