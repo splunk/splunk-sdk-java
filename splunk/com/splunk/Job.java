@@ -21,6 +21,7 @@ package com.splunk;
 import com.splunk.atom.AtomEntry;
 import com.splunk.http.ResponseMessage;
 
+import java.io.InputStream;
 import java.util.Date;
 
 public class Job extends Entity {
@@ -108,6 +109,15 @@ public class Job extends Entity {
         return getBoolean("eventIsTruncated");
     }
 
+    public InputStream getEvents() {
+        return getEvents(null);
+    }
+
+    public InputStream getEvents(Args args) {
+        ResponseMessage response = get("events", args);
+        return response.getContent();
+    }
+
     public String getEventSearch() {
         return getString("eventSearch", null);
     }
@@ -164,6 +174,24 @@ public class Job extends Entity {
         return getInteger("resultPreviewCount");
     }
 
+    public InputStream getResults() {
+        return getResults(null);
+    }
+
+    public InputStream getResults(Args args) {
+        ResponseMessage response = get("results", args);
+        return response.getContent();
+    }
+
+    public InputStream getResultsPreview() {
+        return getResultsPreview(null);
+    }
+
+    public InputStream getResultsPreview(Args args) {
+        ResponseMessage response = get("results_preview", args);
+        return response.getContent();
+    }
+
     public float getRunDuration() {
         return getFloat("runDuration");
     }
@@ -184,12 +212,39 @@ public class Job extends Entity {
         return getString("searchLatestTime", null);
     }
 
+    public InputStream getSearchLog() {
+        return getSearchLog(null);
+    }
+
+    public InputStream getSearchLog(Args args) {
+        ResponseMessage response = get("search.log", args);
+        return response.getContent();
+    }
+
     public String getSid() {
         return getString("sid");
     }
 
+    public InputStream getSummary() {
+        return getSummary(null);
+    }
+
+    public InputStream getSummary(Args args) {
+        ResponseMessage response = get("summary", args);
+        return response.getContent();
+    }
+
     public int getStatusBuckets() {
         return getInteger("statusBuckets");
+    }
+
+    public InputStream getTimeline() {
+        return getTimeline(null);
+    }
+
+    public InputStream getTimeline(Args args) {
+        ResponseMessage response = get("timeline", args);
+        return response.getContent();
     }
 
     public int getTtl() {
@@ -239,7 +294,6 @@ public class Job extends Entity {
     // Job "entities" dont return an AtomFeed, only an AtomEntry.
     @Override public void refresh() {
         ResponseMessage response = get();
-        assert(response.getStatus() == 200); // UNDONE
         AtomEntry entry = AtomEntry.parse(response.getContent());
         load(entry);
     }

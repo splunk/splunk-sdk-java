@@ -45,7 +45,7 @@ public class JobCollection extends EntityCollection<Job> {
         return get(sid);
     }
 
-    public ResponseMessage list() {
+    @Override public ResponseMessage list() {
         return service.get(path + "?count=0");
     }
 

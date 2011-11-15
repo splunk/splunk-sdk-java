@@ -14,9 +14,6 @@
  * under the License.
  */
 
-// UNDONE: getAlerts
-// UNDONE: public Object parse(String query) {}
-
 package com.splunk;
 
 import com.splunk.atom.Xml;

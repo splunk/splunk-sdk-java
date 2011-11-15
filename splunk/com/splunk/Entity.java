@@ -51,8 +51,16 @@ public class Entity extends Resource {
         return service.get(path);
     }
 
+    public ResponseMessage get(Args args) {
+        return service.get(path, args);
+    }
+
     public ResponseMessage get(String relpath) {
-        return service.get(path + "/" + relpath);
+        return service.get(relpath, null);
+    }
+
+    public ResponseMessage get(String relpath, Args args) {
+        return service.get(path + "/" + relpath, args);
     }
 
     public Map<String, Object> getContent() {
