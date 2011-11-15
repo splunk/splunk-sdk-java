@@ -31,8 +31,8 @@ public class FiredAlert extends Entity {
         return getString("alert_type", null);
     }
 
-    public Date getExpirationTime() {
-        return getDateFromEpoch("expiration_time", new Date(0));
+    public String getExpirationTime() {
+        return getString("expiration_time_rendered", null);
     }
 
     public String getSavedSearchName() {
@@ -47,8 +47,20 @@ public class FiredAlert extends Entity {
         return getString("sid", null);
     }
 
+    public int getTriggeredAlertCount() {
+        return getInteger("triggered_alerts", -1);
+    }
+
     public Date getTriggerTime() {
         return getDateFromEpoch("trigger_time", new Date(0));
+    }
+
+    public String getTriggerTimeRendered() {
+        return getString("trigger_time_rendered", null);
+    }
+
+    public boolean isDigestMode() {
+        return getBoolean("digest_mode");
     }
 }
 
