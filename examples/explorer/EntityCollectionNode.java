@@ -35,7 +35,7 @@ class EntityCollectionNode extends ResourceNode {
 
     EntityCollectionNode(String title, EntityCollection value, Class itemClass) 
     {
-        super(value, new NoKids());
+        super(value, Children.LEAF);
         this.itemClass = itemClass;
         setDisplayName(String.format("%s (%d)", title, value.size()));
         setChildren(new EntityCollectionKids(this));

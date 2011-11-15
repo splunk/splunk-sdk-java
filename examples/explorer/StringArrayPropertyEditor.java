@@ -14,16 +14,18 @@
  * under the License.
  */
 
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
+import java.beans.PropertyEditorSupport;
+import java.util.Arrays;
 
-// UNDONE: Figure out a better way to create leaf nodes.
-class NoKids extends Children.Keys<Object> {
-    NoKids() {}
+public class StringArrayPropertyEditor extends PropertyEditorSupport {
+    @Override public String getAsText() {
+        String[] value = (String[])getValue();
+        if (value == null) return "null";
+        return Arrays.toString(value);
+    }
 
-    @Override protected void addNotify() {}
-
-    @Override protected Node[] createNodes(Object key) {
-        return null;
+    @Override public void setAsText(String value) {
+        throw new UnsupportedOperationException();
     }
 }
+

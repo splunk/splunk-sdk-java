@@ -24,9 +24,10 @@ import com.splunk.*;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.beans.PropertyEditorManager;
+import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
-
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.propertysheet.PropertySheetView;
 import org.openide.explorer.view.BeanTreeView;
@@ -37,6 +38,14 @@ import org.openide.nodes.Node;
 public class Explorer extends JFrame implements ExplorerManager.Provider { 
     private ExplorerManager manager;
     private RootKids roots;
+
+    static {
+        // Register property editors for types that dont have a default editor.
+        PropertyEditorManager.registerEditor(
+            Date.class, DatePropertyEditor.class);
+        PropertyEditorManager.registerEditor(
+            String[].class, StringArrayPropertyEditor.class);
+    }
 
     Explorer(Service service) {
         this.roots = new RootKids(service);
