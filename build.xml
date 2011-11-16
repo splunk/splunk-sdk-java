@@ -99,6 +99,7 @@
     <target name="compile-examples" 
      depends="
         compile-examples-explorer,
+        compile-examples-export,
         compile-examples-index,
         compile-examples-info,
         compile-examples-inputs,
@@ -114,6 +115,16 @@
             <classpath refid="classpath.examples-gui"/>
         </javac>
     </target>
+
+    <target name="compile-examples-export" depends="compile-libs">
+        <mkdir dir="${dir.build.examples.export}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.examples.export}"
+         destdir="${dir.build.examples.export}">
+            <classpath refid="classpath.examples-gui"/>
+        </javac>
+    </target>
+
 
     <target name="compile-examples-index" depends="compile-libs">
         <mkdir dir="${dir.build.examples.index}"/>
@@ -210,6 +221,7 @@
     <target name="dist-examples"
      depends="
         dist-examples-explorer,
+        dist-examples-export,
         dist-examples-index,
         dist-examples-info,
         dist-examples-inputs,
@@ -237,6 +249,21 @@
                     ../../lib/org-openide-nodes.jar 
                     ../../lib/org-openide-util.jar 
                     ../../lib/org-openide-util-lookup.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist-examples-export" depends="compile-examples-export">
+        <mkdir dir="${dir.dist.examples}"/>
+        <jar 
+         basedir="${dir.build.examples.export}"
+         destfile="${dir.dist.examples}/export.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="../splunk.jar ../splunk-sdk.jar"/>
             </manifest>
         </jar>
     </target>
