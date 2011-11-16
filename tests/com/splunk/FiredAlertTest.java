@@ -54,7 +54,10 @@ public class FiredAlertTest extends TestCase {
             entity.getSavedSearchName();
             entity.getSeverity();
             entity.getSid();
+            entity.getTriggeredAlertCount();
             entity.getTriggerTime();
+            entity.getTriggerTimeRendered();
+            entity.isDigestMode();
         }
     }
 }
