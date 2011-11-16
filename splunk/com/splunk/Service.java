@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 import com.splunk.atom.Xml;
 import com.splunk.http.ResponseMessage;
 import com.splunk.http.RequestMessage;
@@ -47,6 +49,24 @@ public class Service extends com.splunk.http.Service {
         this.port = args.port == null ? DEFAULT_PORT : args.port;
         this.scheme = args.scheme == null ? DEFAULT_SCHEME : args.scheme;
         this.namespace = args.namespace;
+    }
+
+    public Service(Map<String, Object> args) {
+        super();
+        this.host = Args.<String>get(args, "host", DEFAULT_HOST);
+        this.port = Args.<Integer>get(args, "port", DEFAULT_PORT);
+        this.scheme = Args.<String>get(args, "scheme", DEFAULT_SCHEME);
+        this.namespace = Args.<String>get(args, "namespace", null);
+    }
+
+    public static Service connect(Map<String, Object> args) {
+        Service service = new Service(args);
+        if (args.containsKey("username")) {
+            String username = Args.get(args, "username", null);
+            String password = Args.get(args, "password", null);
+            service.login(username, password);
+        }
+        return service;
     }
 
     // Ensures that the given path is fully qualified, prepending a

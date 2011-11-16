@@ -18,7 +18,7 @@ package com.splunk.sdk.tests.com.splunk;
 
 import com.splunk.*;
 import com.splunk.http.HTTPException;
-import com.splunk.sdk.Program;
+import com.splunk.sdk.Command;
 import com.splunk.Service;
 
 import java.io.*;
@@ -30,22 +30,19 @@ import junit.framework.TestCase;
 import org.junit.*;
 
 public class IndexTest extends TestCase {
-    Program program = new Program();
+    Command command;
 
     public IndexTest() {}
 
     Service connect() {
-        return new Service(
-            program.host, program.port, program.scheme)
-                .login(program.username, program.password);
+        return Service.connect(command.opts);
     }
 
     @Before public void setUp() {
-        this.program.init(); // Pick up .splunkrc settings
+        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     private void wait_event_count(Index index, int value, int seconds) {
-
         while (seconds > 0) {
             try {
                 Thread.sleep(1000); // 1000ms (1 second sleep)

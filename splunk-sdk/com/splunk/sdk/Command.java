@@ -14,12 +14,12 @@
  * under the License.
  */
 
-// UNDONE: Support for other builtin types?
-// UNDONE: Automatically build rules by reflecting over option fields.
+// UNDONE: Support for additional builtin types?
 
 package com.splunk.sdk;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,9 +37,13 @@ import org.apache.commons.cli.PosixParser;
 
 // Processes and capture command options and arguments
 public class Command {
-    Options rules = new Options();
+    private String appName;
+    private Options rules = new Options();
 
+    // The parsed command line arguments
     public String[] args = new String[0];
+
+    // The parsed command line options (flags)
     public HashMap<String, Object> opts = new HashMap<String, Object>();
 
     // Option fields
@@ -51,7 +55,29 @@ public class Command {
     public String password = null;
     public String namespace = null;
 
-    public Command() {
+    Command(String appName) { 
+        this.appName = appName;
+    }
+
+    public static Command create() {
+        return create(null);
+    }
+
+    public static Command create(String appName) {
+        return new Command(appName);
+    }
+
+    public static void error(String message, Object... args) {
+        System.err.format("Error: %s\n", message, args);
+        System.exit(2);
+    }
+
+    public Options getRules() {
+        return this.rules;
+    }
+
+    // Initialize with default Splunk command options.
+    public Command init() {
         rules.addOption("h",  "help", false, "Display this help message");
         rules.addOption(null, "host", true, "Host name (default localhost)");
         rules.addOption(OptionBuilder
@@ -63,19 +89,16 @@ public class Command {
         rules.addOption(null, "username", true, "Username to login with");
         rules.addOption(null, "password", true, "Password to login with");
         rules.addOption(null, "namespace", true, null);
-    }
-
-    public Options getRules() {
-        return this.rules;
+        return this;
     }
 
     // Load a file of options and arguments
-    public void load(String path) throws ParseException {
+    public Command load(String path) {
         FileReader fileReader;
         try {
            fileReader = new FileReader(path);
         }
-        catch (FileNotFoundException e) { return; }
+        catch (FileNotFoundException e) { return this; }
 
         ArrayList<String> argList = new ArrayList<String>(4);
         BufferedReader reader = new BufferedReader(fileReader);
@@ -84,21 +107,30 @@ public class Command {
             try {
                 line = reader.readLine();
             }
-            catch (IOException e) { return; }
+            catch (IOException e) { return this; }
             if (line == null) break;
             if (line.startsWith("#")) continue;
+            line = line.trim();
+            if (line.length() == 0) continue;
             if (!line.startsWith("-"))
-                line = "--" + line.trim();
+                line = "--" + line;
             argList.add(line);
         }
         parse(argList.toArray(new String[argList.size()]));
+        return this;
     }
 
     // Parse the given argument vector
-    public void parse(String[] argv) throws ParseException {
+    public Command parse(String[] argv) {
         CommandLineParser parser = new PosixParser();
 
-        CommandLine cmdline = parser.parse(this.rules, argv);
+        CommandLine cmdline = null;
+        try {
+            cmdline = parser.parse(this.rules, argv);
+        }
+        catch (ParseException e) {
+            error(e.getMessage());
+        }
 
         // Unpack the cmdline into a simple Map of options and optionally
         // assign values to any corresponding fields found in the Command class.
@@ -116,7 +148,8 @@ public class Command {
                 Class type = (Class)option.getType();
                 if (type == null) {
                     // Null implies String, no conversion necessary
-                } else if (type == Integer.class) {
+                } 
+                else if (type == Integer.class) {
                     value = Integer.parseInt((String)value);
                 }
                 else {
@@ -145,11 +178,36 @@ public class Command {
         this.args = new String[orig.length + more.length];
         System.arraycopy(orig, 0, this.args, 0, orig.length);
         System.arraycopy(more, 0, this.args, orig.length, more.length);
+
+        if (this.help) {
+            printHelp();
+            System.exit(0);
+        }
+
+        return this;
     }
 
-    public void printHelp(String app) {
+    public void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(app, this.rules);
+        String appName = this.appName == null ? "App" : this.appName;
+        formatter.printHelp(appName, this.rules);
+    }
+
+    public static Command splunk() {
+        return splunk(null);
+    }
+
+    // Creates a command instance, initializes with the default Splunk
+    // command line rules and attempts to load the default options file.
+    public static Command splunk(String appName) {
+        return Command.create(appName).init().splunkrc();
+    }
+
+    // Load the default options file (.splunkrc) if it exists
+    public Command splunkrc() {
+        String home = System.getProperty("user.home");
+        load(home + File.separator + ".splunkrc");
+        return this;
     }
 }
 

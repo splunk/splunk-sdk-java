@@ -15,31 +15,15 @@
  */
 
 import com.splunk.*;
+import com.splunk.sdk.Command;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class Program extends com.splunk.sdk.Program {
-    public static void main(String[] args) {
-        Program program = new Program();
-        try {
-            program.init(args).run();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    Service connect() {
-        Service service = new Service(this.host, this.port, this.scheme);
-        service.login(this.username, this.password);
-        return service;
-    }
-
-    void printActions(Map<String, String> actions) {
+public class Program {
+    static void printActions(Map<String, String> actions) {
         if (actions == null) return;
         for (Map.Entry entry : actions.entrySet()) {
             System.out.format("action %s => %s\n", 
@@ -47,13 +31,13 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    void printConfig(EntityCollection<Entity> config) {
+    static void printConfig(EntityCollection<Entity> config) {
         System.out.format("\n## %s", config.getTitle());
         for (Entity stanza : config.values())
             printEntity(stanza);
     }
 
-    void printApplication(Application app) {
+    static void printApplication(Application app) {
         printEntity(app);
         printField("CheckForUpdates", app.getCheckForUpdates());
         printField("Label", app.getLabel());
@@ -63,7 +47,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("Visible", app.isVisible());
     }
 
-    void printDistributedConfiguration(DistributedConfiguration config) {
+    static void printDistributedConfiguration(DistributedConfiguration config) {
         printEntity(config);
         printField("AutoAddServers", config.getAutoAddServers());
         printField("BlacklistNames", config.getBlacklistNames());
@@ -82,7 +66,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("isDisabled", config.isDisabled());
     }
 
-    void printDistributedPeer(DistributedPeer peer) {
+    static void printDistributedPeer(DistributedPeer peer) {
         printEntity(peer);
         printField("BundleVersions", peer.getBundleVersions());
         printField("Guid", peer.getGuid());
@@ -98,7 +82,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("isHttps", peer.isHttps());
     }
 
-    void printEntity(Entity entity) {
+    static void printEntity(Entity entity) {
         System.out.println("");
         if (entity == null) {
             System.out.println("null");
@@ -115,7 +99,7 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    <T extends Entity> void 
+    static <T extends Entity> void 
     printEntities(EntityCollection<T> entities) {
     	System.out.format("\n# %s\n", entities.getPath());
         System.out.format("path = %s\n", entities.getPath());
@@ -125,44 +109,44 @@ public class Program extends com.splunk.sdk.Program {
             printEntity(entity);
     }
 
-    void printEventType(EventType eventType) {
+    static void printEventType(EventType eventType) {
         printEntity(eventType);
         printField("Description", eventType.getDescription());
         printField("Priority", eventType.getPriority());
         printField("Search", eventType.getSearch());
     }
 
-    void printField(String field, boolean value) {
+    static void printField(String field, boolean value) {
         System.out.format("%s = %b\n", field, value);
     }
 
-    void printField(String field, float value) {
+    static void printField(String field, float value) {
         System.out.format("%s = %f\n", field, value);
     }
 
-    void printField(String field, Date value) {
+    static void printField(String field, Date value) {
         System.out.format("%s = %s\n", 
             field, value == null ? "null" : value.toString());
     }
 
-    void printField(String field, int value) {
+    static void printField(String field, int value) {
         System.out.format("%s = %d\n", field, value);
     }
 
-    void printField(String field, String value) {
+    static void printField(String field, String value) {
         System.out.format("%s = %s\n", field, value == null ? "null" : value);
     }
 
-    void printField(String field, String[] value) {
+    static void printField(String field, String[] value) {
         printField(field, value == null 
             ? (String)null : Arrays.toString(value));
     }
 
-    void printField(String field, List<String> value) {
+    static void printField(String field, List<String> value) {
         printField(field, value == null ? (String)null : value.toString());
     }
 
-    void printIndex(Index index) {
+    static void printIndex(Index index) {
         printEntity(index);
         printField("AssureUTF8", index.getAssureUTF8());
         printField("BlockSignSize", index.getBlockSignSize());
@@ -211,7 +195,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("isInternal", index.isInternal());
     }
 
-    void printLicense(License license) {
+    static void printLicense(License license) {
         printEntity(license);
         printField("CreationTime", license.getCreationTime());
         printField("ExpirationTime", license.getExpirationTime());
@@ -228,13 +212,13 @@ public class Program extends com.splunk.sdk.Program {
         printField("WindowPeriod", license.getWindowPeriod());
     }
 
-    void printLicenseGroup(LicenseGroup licenseGroup) {
+    static void printLicenseGroup(LicenseGroup licenseGroup) {
         printEntity(licenseGroup);
         printField("StackIds", licenseGroup.getStackIds());
         printField("isActive", licenseGroup.isActive());
     } 
 
-    void printLicensePool(LicensePool licensePool) {
+    static void printLicensePool(LicensePool licensePool) {
         printEntity(licensePool);
         printField("Description", licensePool.getDescription());
         printField("Quota", licensePool.getQuota());
@@ -244,21 +228,21 @@ public class Program extends com.splunk.sdk.Program {
         printField("UsedBytes", licensePool.getUsedBytes());
     }
 
-    void printLicenseSlave(LicenseSlave licenseSlave) {
+    static void printLicenseSlave(LicenseSlave licenseSlave) {
         printEntity(licenseSlave);
         printField("Label", licenseSlave.getLabel());
         printField("PoolIds", licenseSlave.getPoolIds());
         printField("StackIds", licenseSlave.getStackIds());
     }
 
-    void printLicenseStack(LicenseStack licenseStack) {
+    static void printLicenseStack(LicenseStack licenseStack) {
         printEntity(licenseStack);
         printField("Label", licenseStack.getLabel());
         printField("Quota", licenseStack.getQuota());
         printField("Type", licenseStack.getType());
     }
 
-    void printUser(User user) {
+    static void printUser(User user) {
         printEntity(user);
         printField("DefaultApp", user.getDefaultApp());
         printField("DefaultAppIsUserOverride", user.getDefaultAppIsUserOverride());
@@ -269,7 +253,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("Roles", user.getRoles());
     }
 
-    void printJob(Job job) {
+    static void printJob(Job job) {
         printEntity(job);
         printField("CursorTime", job.getCursorTime());
         printField("delegate", job.getDelegate());
@@ -314,13 +298,13 @@ public class Program extends com.splunk.sdk.Program {
         printField("IsZombie", job.isZombie());
     }
 
-    void printMessage(Message message) {
+    static void printMessage(Message message) {
         printEntity(message);
         printField("Key", message.getKey());
         printField("Value", message.getValue());
     }
 
-    void printOutputDefault(OutputDefault outputDefault) {
+    static void printOutputDefault(OutputDefault outputDefault) {
         printEntity(outputDefault);
         printField("autoLb", outputDefault.autoLb());
         printField("blockOnCloning", outputDefault.blockOnCloning());
@@ -349,28 +333,28 @@ public class Program extends com.splunk.sdk.Program {
         printField("useAck", outputDefault.useAck());
     }
 
-    void printOutputGroup(OutputGroup outputGroup) {
+    static void printOutputGroup(OutputGroup outputGroup) {
         printEntity(outputGroup);
         printField("Method", outputGroup.getMethod());
         printField("Servers", outputGroup.getServers());
         printField("isDisabled", outputGroup.isDisabled());
     }
 
-    void printOutputServer(OutputServer outputServer) {
+    static void printOutputServer(OutputServer outputServer) {
         printEntity(outputServer);
     }
 
-    void printOutputSyslog(OutputSyslog outputSyslog) {
+    static void printOutputSyslog(OutputSyslog outputSyslog) {
         printEntity(outputSyslog);
     }
 
-    void printResource(Resource resource) {
+    static void printResource(Resource resource) {
         System.out.format("## %s\n", resource.getName());
         System.out.format("title = %s\n", resource.getTitle());
         System.out.format("path = %s\n", resource.getPath());
     }
 
-    <T extends Resource> void 
+    static <T extends Resource> void 
     printResources(ResourceCollection<T> resources) {
     	System.out.format("\n# %s\n", resources.getPath());
         System.out.format("path = %s\n", resources.getPath());
@@ -380,7 +364,7 @@ public class Program extends com.splunk.sdk.Program {
             printResource(resource);
     }
 
-    void printRole(Role role) {
+    static void printRole(Role role) {
         printEntity(role);
         printField("Capabilities", role.getCapabilities());
         printField("DefaultApp", role.getDefaultApp());
@@ -401,7 +385,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("SearchTimeWin", role.getSearchTimeWin());
     }
 
-    void printSavedSearch(SavedSearch search) {
+    static void printSavedSearch(SavedSearch search) {
         printEntity(search);
         printField("ActionEmailSendResults", search.getActionEmailSendResults());
         printField("ActionEmailTo", search.getActionEmailTo());
@@ -448,7 +432,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("isVisible", search.isVisible());
     }
 
-    void printServiceInfo(ServiceInfo info) {
+    static void printServiceInfo(ServiceInfo info) {
         printEntity(info);
         printField("Build", info.getBuild());
         printField("CpuArch", info.getCpuArch());
@@ -466,7 +450,7 @@ public class Program extends com.splunk.sdk.Program {
         printField("Version", info.getVersion());
     }
 
-    void printSettings(Settings settings) {
+    static void printSettings(Settings settings) {
         printEntity(settings);
         printField("SplunkDB", settings.getSplunkDB());
         printField("SplunkHome", settings.getSplunkHome());
@@ -481,8 +465,9 @@ public class Program extends com.splunk.sdk.Program {
         printField("TrustedIP", settings.getTrustedIP());
     }
 
-    public void run() throws Exception {
-        Service service = connect();
+    public static void main(String[] args) {
+        Command command = Command.splunk("loaded").parse(args);
+        Service service = Service.connect(command.opts);
 
         System.out.print("\n# Info");
         printServiceInfo(service.getInfo());

@@ -17,7 +17,7 @@
 package com.splunk.sdk.tests.com.splunk;
 
 import com.splunk.*;
-import com.splunk.sdk.Program;
+import com.splunk.sdk.Command;
 import com.splunk.Service;
 
 import java.util.Arrays;
@@ -27,18 +27,16 @@ import junit.framework.TestCase;
 import org.junit.*;
 
 public class LoggerTest extends TestCase {
-    Program program = new Program();
+    Command command;
 
     public LoggerTest() {}
 
     Service connect() {
-        return new Service(
-            program.host, program.port, program.scheme)
-                .login(program.username, program.password);
+        return Service.connect(command.opts);
     }
 
     @Before public void setUp() {
-        this.program.init(); // Pick up .splunkrc settings
+        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     @Test public void testLogger() throws Exception {

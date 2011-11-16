@@ -14,15 +14,19 @@
  * under the License.
  */
 
-import com.splunk.http.*;
+import com.splunk.Service;
+import com.splunk.http.RequestMessage;
+import com.splunk.http.ResponseMessage;
+import com.splunk.sdk.Command;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class Program {
     public static void main(String[] args) {
         try {
-            run();
+            run(args);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -30,8 +34,9 @@ public class Program {
         }
     }
 
-    static void run() throws Exception {
-        Service service = new Service();
+    static void run(String[] args) throws IOException {
+        Command command = Command.splunk("test").parse(args);
+        Service service = Service.connect(command.opts);
         RequestMessage request = new RequestMessage("GET");
         ResponseMessage response = service.send("/", request);
         BufferedReader reader = new BufferedReader(

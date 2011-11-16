@@ -19,7 +19,7 @@ package com.splunk;
 import com.splunk.atom.*;
 import com.splunk.http.HTTPException;
 import com.splunk.http.ResponseMessage;
-import com.splunk.sdk.Program;
+import com.splunk.sdk.Command;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 import org.junit.*;
 
 public class ServiceTest extends TestCase {
-    Program program = new Program();
+    Command command;
 
     public ServiceTest() {}
 
@@ -97,14 +97,11 @@ public class ServiceTest extends TestCase {
     }
 
     Service connect() {
-        Service service  = new Service(
-            program.host, program.port, program.scheme);
-        service.login(program.username, program.password);
-        return service;
+        return Service.connect(command.opts);
     }
 
     @Before public void setUp() {
-        this.program.init(); // Pick up .splunkrc settings
+        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     @Test public void testCapabilities() throws Exception {
@@ -191,9 +188,9 @@ public class ServiceTest extends TestCase {
         ResponseMessage response;
 
         Service service = new Service(
-            program.host, 
-            program.port, 
-            program.scheme);
+            command.host, 
+            command.port, 
+            command.scheme);
 
         // Not logged in, should fail with 401
         try {
@@ -205,7 +202,7 @@ public class ServiceTest extends TestCase {
         }
 
         // Logged in, request should succeed
-        service.login(program.username, program.password);
+        service.login(command.username, command.password);
         response = service.get("/services/authentication/users");
         checkResponse(response);
 

@@ -15,31 +15,16 @@
  */
 
 import com.splunk.Service;
+import com.splunk.sdk.Command;
 
 import javax.swing.SwingUtilities;
 
-public class Program extends com.splunk.sdk.Program {
-    public static void main(String[] args) {
-        Program program = new Program();
-        try {
-            program.init(args).run();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    Service connect() {
-        Service service = new Service(this.host, this.port, this.scheme);
-        service.login(this.username, this.password);
-        return service;
-    }
-
-    public void run() throws Exception {
+public class Program {
+    public static void main(final String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Service service = connect();
+                Command command = Command.splunk("explorer").parse(args);
+                Service service = Service.connect(command.opts);
                 Explorer.create(service).setVisible(true);
             }
         });

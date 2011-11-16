@@ -17,9 +17,10 @@
 import com.splunk.EntityCollection;
 import com.splunk.Index;
 import com.splunk.Service;
+import com.splunk.sdk.Command;
 
-public class Program extends com.splunk.sdk.Program {
-    private void listAllIndexes(Service service) {
+public class Program {
+    private static void list(Service service) {
         EntityCollection<Index> indexes = service.getIndexes();
         for (Index entity: indexes.values()) {
             System.out.println(
@@ -29,19 +30,8 @@ public class Program extends com.splunk.sdk.Program {
     }
 
     public static void main(String[] args) {
-        Program program = new Program();
-        try {
-            program.init(args).run();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    public void run() throws Exception {
-        Service service = new Service(this.host, this.port, this.scheme);
-        service.login(this.username, this.password);
+        Command command = Command.splunk("index").parse(args);
+        Service service = Service.connect(command.opts);
 
         // This example takes optional arguments:
         // [action index-name]
@@ -49,28 +39,28 @@ public class Program extends com.splunk.sdk.Program {
         // without cli arguments, all indexes and their totalEventCount
         // is displayed
 
-        if (this.args.length == 0) {
-            listAllIndexes(service);
+        if (command.args.length == 0) {
+            list(service);
             return;
         }
 
-        if (this.args.length != 2)
-            throw new Error("Action and index-name required");
+        if (command.args.length != 2)
+            Command.error("Action and index-name required");
 
-        String action = this.args[0];
-        String name = this.args[1];
+        String action = command.args[0];
+        String name = command.args[1];
 
         EntityCollection indexes = service.getIndexes();
         if (action.equals("create")) {
             if (indexes.containsKey(name))
-                throw new Error("Index " + name + " already exists");
+                Command.error("Index " + name + " already exists");
             indexes.create(name);
             return;
         }
 
         Index index = (Index)indexes.get(name);
         if (index == null)
-            throw new Error("Index '" + name + "' does not exists");
+            Command.error("Index '" + name + "' does not exists");
 
         if (action.equals("clean"))
             index.clean();
@@ -79,6 +69,6 @@ public class Program extends com.splunk.sdk.Program {
         else if (action.equals("enable"))
             index.enable();
         else
-            throw new Error("Unknown action '" + action + "'");
+            Command.error("Unknown action '" + action + "'");
     }
 }

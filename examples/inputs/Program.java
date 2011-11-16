@@ -15,20 +15,22 @@
  */
 
 import com.splunk.*;
+import com.splunk.sdk.Command;
 
 import java.util.Date;
 import java.util.Map;
 
-public class Program extends com.splunk.sdk.Program {
+public class Program {
     public static void main(String[] args) {
-        Program program = new Program();
-        try {
-            program.init(args).run();
+        Command command = Command.splunk("inputs").parse(args);
+        Service service = Service.connect(command.opts);
+
+        /* UNDONE -- need Inputs class
+        EntityCollection inputs = service.getInputs();
+        for (Entity entity: ((EntityCollection<Entity>)inputs).values()) {
+            System.out.println(entity.getTitle());
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        */
     }
 
     public void printActions(Map<String, String> actions) {
@@ -55,19 +57,5 @@ public class Program extends com.splunk.sdk.Program {
                     entry.getKey(), entry.getValue().toString());
             }
         }
-    }
-
-    public void run() throws Exception {
-        Service service = new Service(this.host, this.port, this.scheme);
-        service.login(this.username, this.password);
-
-        /*
-
-        // UNDONE -- need Inputs class
-        EntityCollection inputs = service.getInputs();
-        for (Entity entity: ((EntityCollection<Entity>)inputs).values()) {
-            System.out.println(entity.getTitle());
-        }
-        */
     }
 }

@@ -32,27 +32,27 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import com.splunk.http.*;
-import com.splunk.sdk.Program;
+import com.splunk.sdk.Command;
 
 public class ServiceTest extends TestCase {
-    Program program = new Program();
+    Command command;
 
     public ServiceTest() {}
 
     @Before public void setUp() {
-        this.program.init(); // Pick up .splunkrc settings
+        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     @Test public void testGet() throws IOException {
         Service service = new Service(
-            program.host, program.port, program.scheme);
+            command.host, command.port, command.scheme);
         ResponseMessage response = service.get("/");
         assertEquals(200, response.getStatus());
     }
 
     @Test public void testPost() throws IOException {
         Service service = new Service(
-            program.host, program.port, program.scheme);
+            command.host, command.port, command.scheme);
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put("foo", "bar");
         ResponseMessage response = service.post("/", args);
@@ -67,7 +67,7 @@ public class ServiceTest extends TestCase {
 
     @Test public void testSend() throws IOException {
         Service service = new Service(
-            program.host, program.port, program.scheme);
+            command.host, command.port, command.scheme);
         RequestMessage request = new RequestMessage("GET");
         ResponseMessage response = service.send("/", request);
         assertEquals(200, response.getStatus());

@@ -17,15 +17,16 @@
 import com.splunk.Service;
 import com.splunk.http.RequestMessage;
 import com.splunk.http.ResponseMessage;
+import com.splunk.sdk.Command;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
 
-public class Program extends com.splunk.sdk.Program {
+public class Program {
     public static void main(String[] args) {
-        Program program = new Program();
         try {
-            program.init(args).run();
+            run(args);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -33,12 +34,11 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public void run() throws Exception {
-        Service service = new Service(this.host, this.port, this.scheme);
+    static void run(String[] args) throws IOException {
+        Command command = Command.splunk("test").parse(args);
+        Service service = Service.connect(command.opts);
 
-        service.login(this.username, this.password);
-
-        String path = this.args.length > 0 ? this.args[0] : "/";
+        String path = command.args.length > 0 ? command.args[0] : "/";
         ResponseMessage response = service.get(path);
 
         int status = response.getStatus();

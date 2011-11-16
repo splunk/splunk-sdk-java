@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.util.HashMap;
+import java.util.Map;
 
 // Value may be String or String[]
 public class Args extends HashMap<String, Object> {
@@ -25,5 +26,11 @@ public class Args extends HashMap<String, Object> {
     public Args(String key, Object value) {
         super();
         put(key, value);
+    }
+
+    public static <T> T 
+    get(Map<String, Object> args, String key, T defaultValue) {
+        if (!args.containsKey(key)) return defaultValue;
+        return (T)args.get(key);
     }
 }

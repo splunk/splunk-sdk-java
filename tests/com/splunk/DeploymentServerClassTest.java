@@ -17,7 +17,7 @@
 package com.splunk.sdk.tests.com.splunk;
 
 import com.splunk.*;
-import com.splunk.sdk.Program;
+import com.splunk.sdk.Command;
 import com.splunk.Service;
 
 import junit.framework.Assert;
@@ -25,25 +25,23 @@ import junit.framework.TestCase;
 import org.junit.*;
 
 public class DeploymentServerClassTest extends TestCase {
-    Program program = new Program();
+    Command command;
 
     public DeploymentServerClassTest() {}
 
     Service connect() {
-        return new Service(
-            program.host, program.port, program.scheme)
-                .login(program.username, program.password);
+        return Service.connect(command.opts);
     }
 
     @Before public void setUp() {
-        this.program.init(); // Pick up .splunkrc settings
+        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     @Test public void testDeploymentServerClass() throws Exception {
         Service service = connect();
 
         EntityCollection<DeploymentServerClass> dsc =
-                service.getDeploymentServerClasses();
+            service.getDeploymentServerClasses();
 
         if (dsc.values().size() == 0) {
             System.out.println("WARNING: DeploymentServerClass not configured");

@@ -17,29 +17,25 @@
 package com.splunk.sdk.tests.com.splunk;
 
 import com.splunk.*;
-import com.splunk.sdk.Program;
+import com.splunk.sdk.Command;
 import com.splunk.Service;
 
 import java.io.IOException;
-
 import junit.framework.TestCase;
 import junit.framework.Assert;
-
 import org.junit.*;
 
 public class FiredAlertTest extends TestCase {
-    Program program = new Program();
+    Command command;
 
     public FiredAlertTest() {}
 
     Service connect() throws IOException {
-        return new Service(
-            program.host, program.port, program.scheme)
-                .login(program.username, program.password);
+        return Service.connect(command.opts);
     }
 
     @Before public void setUp() {
-        this.program.init(); // Pick up .splunkrc settings
+        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     @Test public void testFiredAlerts() throws Exception {

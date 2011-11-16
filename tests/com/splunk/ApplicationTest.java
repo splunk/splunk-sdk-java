@@ -17,7 +17,7 @@
 package com.splunk.sdk.tests.com.splunk;
 
 import com.splunk.*;
-import com.splunk.sdk.Program;
+import com.splunk.sdk.Command;
 import com.splunk.Service;
 
 import junit.framework.Assert;
@@ -25,14 +25,12 @@ import junit.framework.TestCase;
 import org.junit.*;
 
 public class ApplicationTest extends TestCase {
-    Program program = new Program();
+    Command command;
 
     public ApplicationTest() {}
 
     Service connect() {
-        return new Service(
-            program.host, program.port, program.scheme)
-                .login(program.username, program.password);
+        return Service.connect(command.opts);
     }
 
     private Service waitForSplunk() throws Exception {
@@ -63,7 +61,7 @@ public class ApplicationTest extends TestCase {
     }
 
     @Before public void setUp() {
-        this.program.init(); // Pick up .splunkrc settings
+        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     // Nota Bene: Splunk needs to be restarted whenever an app is deleted
@@ -74,6 +72,7 @@ public class ApplicationTest extends TestCase {
     // splunk application state.
     @Test public void testApps() throws Exception {
         Service service = connect();
+
         EntityCollection<Application> apps = service.getApplications();
 
         if (apps.containsKey("sdk-tests")) {

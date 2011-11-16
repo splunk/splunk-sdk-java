@@ -15,26 +15,16 @@
  */
 
 import com.splunk.*;
+import com.splunk.sdk.Command;
 
 import java.util.Map;
 
-public class Program extends com.splunk.sdk.Program {
+public class Program {
     public static void main(String[] args) {
-        Program program = new Program();
-        try {
-            program.init(args).run();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
+        Command command = Command.splunk("info").parse(args);
+        Service service = Service.connect(command.opts);
 
-    public void run() throws Exception {
-        Service service = new Service(this.host, this.port, this.scheme);
-        service.login(this.username, this.password);
-
-        Entity info = service.getInfo();
+        ServiceInfo info = service.getInfo();
         Map<String,Object> content = info.getContent();
 
         System.out.println("Info:");
