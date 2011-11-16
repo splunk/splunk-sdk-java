@@ -16,6 +16,7 @@
 
 import com.splunk.*;
 import com.splunk.http.ResponseMessage;
+import com.splunk.sdk.Command;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,11 +25,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-public class Program extends com.splunk.sdk.Program {
+public class Program {
     public static void main(String[] args) {
-        Program program = new Program();
         try {
-            program.init(args).run();
+            run(args);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -36,9 +36,9 @@ public class Program extends com.splunk.sdk.Program {
         }
     }
 
-    public void run() throws Exception {
-        Service service = new Service(this.host, this.port, this.scheme);
-        service.login(this.username, this.password);
+    static void run(String[] argv) throws Exception {
+        Command command = Command.splunk("export").parse(argv);
+        Service service = Service.connect(command.opts);
 
         final String outFilename = "export.out";
         Args args = new Args();
@@ -48,15 +48,15 @@ public class Program extends com.splunk.sdk.Program {
         //
         // index-name [recover]
 
-        if (this.args.length == 0)
+        if (command.args.length == 0)
             throw new Error("Index-name required");
 
-        if (this.args.length > 1) {
-            for (int index=1; index < this.args.length; index++) {
-                if (this.args[index].equals("recover"))
+        if (command.args.length > 1) {
+            for (int index=1; index < command.args.length; index++) {
+                if (command.args[index].equals("recover"))
                     recover = true;
                 else
-                    throw new Error("Unknown option: " + this.args[index]);
+                    throw new Error("Unknown option: " + command.args[index]);
             }
         }
 
@@ -77,7 +77,7 @@ public class Program extends com.splunk.sdk.Program {
         }
 
         // search args
-        args.put("search", String.format("search index=%s *", this.args[0]));
+        args.put("search", String.format("search index=%s *", command.args[0]));
         args.put("earliest_time", "0"); // all the way to the beginning
         args.put("timeout", "60");      // don't keep search around
 

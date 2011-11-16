@@ -60,7 +60,7 @@ public class FiredAlert extends Entity {
     }
 
     public boolean isDigestMode() {
-        return getBoolean("digest_mode");
+        return getBoolean("digest_mode", false); // UNDONE: Correct default?
     }
 }
 
