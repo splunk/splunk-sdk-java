@@ -41,20 +41,113 @@ public class DistributedConfigurationTest extends TestCase {
         Service service = connect();
 
         DistributedConfiguration dc = service.getDistributedConfiguration();
-        dc.getAutoAddServers();
-        dc.getBlacklistNames();
-        dc.getBlacklistUrls();
-        dc.getCheckTimedOutServersFrequency();
-        dc.isDisabled();
-        dc.getHeartbeatFrequency();
-        dc.getHeartbeatMcastAddress();
-        dc.getHeartbeatPort();
-        dc.getRemovedTimedOutServers();
-        dc.getServerTimeout();
-        dc.getServers();
-        dc.getShareBundles();
-        dc.getSkipOurselves();
-        dc.getStatusTimeout();
-        dc.getTtl();
+
+        Args savedSetup = new Args();
+        savedSetup.put("autoAddServers", dc.getAutoAddServers());
+        savedSetup.put("blacklistNames", dc.getBlacklistNames());
+        savedSetup.put("blacklistURLs", dc.getBlacklistUrls());
+        savedSetup.put("checkTimedOutServersFrequency",
+                        dc.getCheckTimedOutServersFrequency());
+        savedSetup.put("disabled", dc.isDisabled());
+        savedSetup.put("heartbeatFrequency", dc.getHeartbeatFrequency());
+        savedSetup.put("heartbeatMcastAddr", dc.getHeartbeatMcastAddress());
+        savedSetup.put("heartbeatPort", dc.getHeartbeatPort());
+        savedSetup.put("removedTimedOutServers", dc.getRemovedTimedOutServers());
+        savedSetup.put("serverTimeout", dc.getServerTimeout());
+        savedSetup.put("servers", dc.getServers());
+        savedSetup.put("shareBundles", dc.getShareBundles());
+        savedSetup.put("skipOurselves", dc.getSkipOurselves());
+        savedSetup.put("statusTimeout", dc.getStatusTimeout());
+        savedSetup.put("ttl", dc.getTtl());
+
+        Args updateArgs = new Args();
+
+        updateArgs.put("autoAddServers", false);
+        updateArgs.put("blacklistNames", "black1,black2,black3");
+        updateArgs.put("blacklistURLs", "black1.splunk.com:8089");
+        updateArgs.put("checkTimedOutServersFrequency", 120);
+        updateArgs.put("disabled", true);
+        updateArgs.put("heartbeatFrequency", 120);
+        updateArgs.put("heartbeatMcastAddr", "224.0.1.37");
+        updateArgs.put("heartbeatPort", 8889);
+        updateArgs.put("removedTimedOutServers", false);
+        updateArgs.put("serverTimeout", 180);
+        updateArgs.put("servers", "good1.splunk.com,good2.splunk.com");
+        updateArgs.put("shareBundles", false);
+        updateArgs.put("skipOurselves", true);
+        updateArgs.put("statusTimeout", 100);
+        updateArgs.put("ttl", 5);
+
+        dc.update(updateArgs);
+        Assert.assertEquals(
+            dc.getAutoAddServers(), updateArgs.get("autoAddServers"));
+        Assert.assertEquals(
+            dc.getBlacklistNames(), updateArgs.get("blacklistNames"));
+        Assert.assertEquals(
+            dc.getBlacklistUrls(), updateArgs.get("blacklistURLs"));
+        Assert.assertEquals(
+            dc.getCheckTimedOutServersFrequency(),
+            updateArgs.get("checkTimedOutServersFrequency"));
+        Assert.assertEquals(dc.isDisabled(), updateArgs.get("disabled"));
+        Assert.assertEquals(
+            dc.getHeartbeatFrequency(), updateArgs.get("heartbeatFrequency"));
+        Assert.assertEquals(
+            dc.getHeartbeatMcastAddress(),
+            updateArgs.get("heartbeatMcastAddr"));
+        Assert.assertEquals(
+            dc.getHeartbeatPort(), updateArgs.get("heartbeatPort"));
+        Assert.assertEquals(
+            dc.getRemovedTimedOutServers(),
+            updateArgs.get("removedTimedOutServers"));
+        Assert.assertEquals(
+            dc.getServerTimeout(),updateArgs.get("serverTimeout"));
+        Assert.assertEquals(dc.getServers(), updateArgs.get("servers"));
+        Assert.assertEquals(
+            dc.getShareBundles(), updateArgs.get("shareBundles"));
+        Assert.assertEquals(
+            dc.getSkipOurselves(), updateArgs.get("skipOurselves"));
+        Assert.assertEquals(
+            dc.getStatusTimeout(), updateArgs.get("statusTimeout"));
+        Assert.assertEquals(dc.getTtl(), updateArgs.get("ttl"));
+
+        // handle nulls specially
+        if (savedSetup.get("blacklistNames") == null)
+            savedSetup.put("blacklistNames", "");
+        if (savedSetup.get("blacklistURLs") == null)
+            savedSetup.put("blacklistURLs", "");
+
+        dc.update(savedSetup);
+        Assert.assertEquals(
+            dc.getAutoAddServers(), savedSetup.get("autoAddServers"));
+        Assert.assertEquals(
+            dc.getBlacklistNames() == null ? "" : dc.getBlacklistNames(),
+            savedSetup.get("blacklistNames") );
+        Assert.assertEquals(
+            dc.getBlacklistUrls() == null ? "" : dc.getBlacklistUrls(),
+            savedSetup.get("blacklistURLs"));
+        Assert.assertEquals(
+            dc.getCheckTimedOutServersFrequency(),
+            savedSetup.get("checkTimedOutServersFrequency"));
+        Assert.assertEquals(dc.isDisabled(), savedSetup.get("disabled"));
+        Assert.assertEquals(
+            dc.getHeartbeatFrequency(), savedSetup.get("heartbeatFrequency"));
+        Assert.assertEquals(
+            dc.getHeartbeatMcastAddress(),
+            savedSetup.get("heartbeatMcastAddr"));
+        Assert.assertEquals(
+            dc.getHeartbeatPort(), savedSetup.get("heartbeatPort"));
+        Assert.assertEquals(
+            dc.getRemovedTimedOutServers(),
+            savedSetup.get("removedTimedOutServers"));
+        Assert.assertEquals(
+            dc.getServerTimeout(),savedSetup.get("serverTimeout"));
+        Assert.assertEquals(dc.getServers(), savedSetup.get("servers"));
+        Assert.assertEquals(
+            dc.getShareBundles(), savedSetup.get("shareBundles"));
+        Assert.assertEquals(
+            dc.getSkipOurselves(), savedSetup.get("skipOurselves"));
+        Assert.assertEquals(
+            dc.getStatusTimeout(), savedSetup.get("statusTimeout"));
+        Assert.assertEquals(dc.getTtl(), savedSetup.get("ttl"));
     }
 }
