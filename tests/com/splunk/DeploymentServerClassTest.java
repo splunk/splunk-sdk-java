@@ -40,18 +40,70 @@ public class DeploymentServerClassTest extends TestCase {
     @Test public void testDeploymentServerClass() throws Exception {
         Service service = connect();
 
-        EntityCollection<DeploymentServerClass> dsc =
+        EntityCollection<DeploymentServerClass> dscs =
             service.getDeploymentServerClasses();
+        DeploymentServerClass dsc;
 
-        if (dsc.values().size() == 0) {
-            System.out.println("WARNING: DeploymentServerClass not configured");
-            return;
+        Args args = new Args();
+        args.put("blacklist.0", "bad0.splunk.com");
+        args.put("blacklist.1", "bad1.splunk.com");
+        args.put("blacklist.2", "bad2.splunk.com");
+        args.put("blacklist.3", "bad3.splunk.com");
+        args.put("blacklist.4", "bad4.splunk.com");
+        args.put("blacklist.5", "bad5.splunk.com");
+        args.put("blacklist.6", "bad6.splunk.com");
+        args.put("blacklist.7", "bad7.splunk.com");
+        args.put("blacklist.8", "bad8.splunk.com");
+        args.put("blacklist.9", "bad9.splunk.com");
+        args.put("continueMatching", false);
+        args.put("filterType","whitelist");
+        args.put("whitelist.0", "good0.splunk.com");
+        args.put("whitelist.1", "good1.splunk.com");
+        args.put("whitelist.2", "good2.splunk.com");
+        args.put("whitelist.3", "good3.splunk.com");
+        args.put("whitelist.4", "good4.splunk.com");
+        args.put("whitelist.5", "good5.splunk.com");
+        args.put("whitelist.6", "good6.splunk.com");
+        args.put("whitelist.7", "good7.splunk.com");
+        args.put("whitelist.8", "good8.splunk.com");
+        args.put("whitelist.9", "good9.splunk.com");
+
+        if (!dscs.containsKey("sdk-tests")) {
+            dsc = dscs.create("sdk-tests", args);
+        } else {
+            dsc = dscs.get("sdk-tests");
+            dsc.update(args);
         }
-        
-        for (DeploymentServerClass entity: dsc.values()) {
+
+        Assert.assertEquals(dsc.getBlackList0(), args.get("blacklist.0"));
+        Assert.assertEquals(dsc.getBlackList1(), args.get("blacklist.1"));
+        Assert.assertEquals(dsc.getBlackList2(), args.get("blacklist.2"));
+        Assert.assertEquals(dsc.getBlackList3(), args.get("blacklist.3"));
+        Assert.assertEquals(dsc.getBlackList4(), args.get("blacklist.4"));
+        Assert.assertEquals(dsc.getBlackList5(), args.get("blacklist.5"));
+        Assert.assertEquals(dsc.getBlackList6(), args.get("blacklist.6"));
+        Assert.assertEquals(dsc.getBlackList7(), args.get("blacklist.7"));
+        Assert.assertEquals(dsc.getBlackList8(), args.get("blacklist.8"));
+        Assert.assertEquals(dsc.getBlackList9(), args.get("blacklist.9"));
+        Assert.assertEquals(
+            dsc.getContinueMatching(), args.get("continueMatching"));
+        Assert.assertEquals(dsc.getFilterType(), args.get("filterType"));
+        Assert.assertEquals(dsc.getWhiteList0(), args.get("whitelist.0"));
+        Assert.assertEquals(dsc.getWhiteList1(), args.get("whitelist.1"));
+        Assert.assertEquals(dsc.getWhiteList2(), args.get("whitelist.2"));
+        Assert.assertEquals(dsc.getWhiteList3(), args.get("whitelist.3"));
+        Assert.assertEquals(dsc.getWhiteList4(), args.get("whitelist.4"));
+        Assert.assertEquals(dsc.getWhiteList5(), args.get("whitelist.5"));
+        Assert.assertEquals(dsc.getWhiteList6(), args.get("whitelist.6"));
+        Assert.assertEquals(dsc.getWhiteList7(), args.get("whitelist.7"));
+        Assert.assertEquals(dsc.getWhiteList8(), args.get("whitelist.8"));
+        Assert.assertEquals(dsc.getWhiteList9(), args.get("whitelist.9"));
+
+        for (DeploymentServerClass entity: dscs.values()) {
             entity.get(); // force a read
             Assert.assertTrue(entity.getRepositoryLocation().length() > 0);
-            //UNDONE: more?
         }
+
+        // N.B. No REST endpoint to delete a deployment server class.
     }
 }
