@@ -79,8 +79,8 @@ public class Program {
 
         int count = -1;
         int start = 0;
-        int lastTime = 0;
-        int [] times = new int[128];
+        String lastTime = "";
+        String [] times = new String[128];
         int [] offsets = new int[128];
         String opattern = "<field k='_indextime'>";
         String ipattern = "<value><text>";
@@ -91,7 +91,7 @@ public class Program {
                 ipattern, index + opattern.length()) + ipattern.length();
             int vend = str.indexOf("<", vstart);
             if ((vstart == -1) || (vend == -1)) break;
-            times[++count] = Integer.parseInt(str.substring(vstart, vend));
+            times[++count] = str.substring(vstart, vend);
             offsets[count] = vstart;
             lastTime = times[count];
             start = vend;
