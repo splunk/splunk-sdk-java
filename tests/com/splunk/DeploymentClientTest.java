@@ -51,6 +51,13 @@ public class DeploymentClientTest extends TestCase {
             Assert.assertTrue(dc.isDisabled());
             dc.enable();
             Assert.assertFalse(dc.isDisabled());
+            Args args = new Args();
+            args.put("targetUri", "1.2.3.4:8080");
+            dc.update(args);
+            Assert.assertEquals(dc.getTargetUri(), "1.2.3.4:8080");
+            args.put("targetUri", uri);
+            dc.update(args);
+            Assert.assertEquals(dc.getTargetUri(), uri);
             dc.getServerClasses();
             dc.reload();
         }

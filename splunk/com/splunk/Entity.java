@@ -56,7 +56,7 @@ public class Entity extends Resource {
     }
 
     public ResponseMessage get(String relpath) {
-        return service.get(relpath, null);
+        return service.get(path + "/" + relpath, null);
     }
 
     public ResponseMessage get(String relpath, Args args) {
