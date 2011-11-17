@@ -104,6 +104,7 @@
         compile-examples-info,
         compile-examples-inputs,
         compile-examples-loaded,
+        compile-examples-search,
         compile-examples-spurl,
         compile-examples-test"/>
 
@@ -158,6 +159,15 @@
         <javac includeantruntime="false"
          srcdir="${dir.examples.loaded}"
          destdir="${dir.build.examples.loaded}">
+            <classpath refid="classpath.examples"/>
+        </javac>
+    </target>
+
+    <target name="compile-examples-search" depends="dist-libs">
+        <mkdir dir="${dir.build.examples.search}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.examples.search}"
+         destdir="${dir.build.examples.search}">
             <classpath refid="classpath.examples"/>
         </javac>
     </target>
@@ -226,6 +236,7 @@
         dist-examples-info,
         dist-examples-inputs,
         dist-examples-loaded,
+        dist-examples-search,
         dist-examples-spurl,
         dist-examples-test"/>
 
@@ -328,6 +339,21 @@
         </jar>
     </target>
 
+    <target name="dist-examples-search" depends="compile-examples-search">
+        <mkdir dir="${dir.dist.examples}"/>
+        <jar 
+         basedir="${dir.build.examples.search}"
+         destfile="${dir.dist.examples}/search.jar"
+         includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="Program"/>
+                <attribute 
+                 name="Class-Path" 
+                 value="../splunk.jar ../splunk-sdk.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
     <target name="dist-examples-spurl" depends="compile-examples-spurl">
         <mkdir dir="${dir.dist.examples}"/>
         <jar 
@@ -351,7 +377,8 @@
          includes="**/*.class">
             <manifest>
                 <attribute name="Main-Class" value="Program"/>
-                <attribute name="Class-Path" value="../splunk.jar"/>
+                <attribute name="Class-Path"
+                 value="../splunk.jar ../splunk-sdk.jar"/>
             </manifest>
         </jar>
     </target>

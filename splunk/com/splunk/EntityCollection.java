@@ -30,8 +30,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     }
 
     public T create(String name, Args extra) {
-        Args args = new Args();
-        args.put("name", name);
+        Args args = new Args("name", name);
         if (extra != null) args.putAll(extra);
         service.post(path, args);
         invalidate();

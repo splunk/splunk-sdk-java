@@ -247,8 +247,18 @@ public class Service extends com.splunk.http.Service {
         return this;
     }
 
+    public ResponseMessage parse(String query) {
+        return parse(query, null);
+    }
+
+    public ResponseMessage parse(String query, Args extra) {
+        Args args = new Args("q", query);
+        if (extra != null) args.putAll(extra);
+        return get("search/parser", args);
+    }
+
     public ResponseMessage restart() {
-        return this.get("server/control/restart");
+        return get("server/control/restart");
     }
 
     public ResponseMessage send(String path, RequestMessage request) {

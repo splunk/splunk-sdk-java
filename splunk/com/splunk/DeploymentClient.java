@@ -26,16 +26,14 @@ public class DeploymentClient extends Entity {
     public void disable() {
         // disable is not handled through the standard enable/disable action
         // paths; rather it is an edit (i.e. update) action path.
-        Args args = new Args();
-        args.put("disabled", "true");
+        Args args = new Args("disabled", "true");
         super.update(args);
     }
 
     public void enable() {
         // enable is not handled through the standard enable/disable action
         // path; rather it is an edit (i.e. update) action path.
-        Args args = new Args();
-        args.put("disabled", "false");
+        Args args = new Args("disabled", "false");
         super.update(args);
     }
 
