@@ -82,16 +82,29 @@ public class ApplicationTest extends TestCase {
         apps = service.getApplications();
         Assert.assertEquals(false, apps.containsKey("sdk-tests"));
 
-        apps.create("sdk-tests");
+        Args createArgs = new Args();
+        createArgs.put("author", "me");
+        createArgs.put("configured", "false");
+        createArgs.put("description", "this is a description");
+        createArgs.put("label", "SDKTEST");
+        createArgs.put("manageable", "false");
+        createArgs.put("template", "barebones");
+        createArgs.put("visible", "false");
+        apps.create("sdk-tests", createArgs);
         Assert.assertEquals(true, apps.containsKey("sdk-tests"));
         Application app = apps.get("sdk-tests");
 
         app.getCheckForUpdates();
-        app.getLabel();
-        app.getVersion();
-        app.isConfigured();
-        app.isManageable();
-        app.isVisible();
+        Assert.assertEquals(app.getLabel(), "SDKTEST");
+        Assert.assertEquals(app.getAuthor(), "me");
+        Assert.assertFalse(app.isConfigured());
+        Assert.assertFalse(app.isManageable());
+        Assert.assertFalse(app.isVisible());
+
+        Args updateArgs = new Args();
+        updateArgs.put("version", "5.0.0");
+        app.update(updateArgs);
+        Assert.assertEquals(app.getVersion(), "5.0.0");
 
         // archive (package) the application
         ApplicationArchive appArchive = app.archive();

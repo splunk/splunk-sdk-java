@@ -21,6 +21,10 @@ public class Application extends Entity {
         super(service, path);
     }
 
+    public String getAuthor() {
+        return getString("author", null);
+    }
+
     public boolean getCheckForUpdates() {
         return getBoolean("check_for_updates");
     }
