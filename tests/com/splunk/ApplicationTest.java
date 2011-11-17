@@ -123,14 +123,6 @@ public class ApplicationTest extends TestCase {
         ApplicationUpdate appUpdate = app.update();
         Assert.assertTrue(appUpdate.getContent().containsKey("eai:acl"));
 
-        // UNDONE: (like python tests) are we exposing 'author' in AtomObjects
-        //Entity app = apps.get("sdk-tests");
-        //Assert.assertFalse(app.getContent().get("author").equals("Splunk"));
-        //Args map = new Args();
-        //map.put("author", "Splunk");
-        //app.update(map);
-        //Assert.assertTrue(app.getContent().get("author").equals("Splunk"));
-
         service = cleanApp("sdk-tests", service);
         apps = service.getApplications();
         Assert.assertEquals(false, apps.containsKey("sdk-tests"));
