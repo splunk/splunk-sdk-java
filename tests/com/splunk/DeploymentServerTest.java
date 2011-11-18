@@ -47,10 +47,8 @@ public class DeploymentServerTest extends TestCase {
         }
 
         for (DeploymentServer entity: ds.values()) {
-            entity.get(); // force a read
             Assert.assertTrue(entity.getWhiteList0().length() > 0);
             entity.getCheckNew();
-            //UNDONE: more?
         }
     }
 }
