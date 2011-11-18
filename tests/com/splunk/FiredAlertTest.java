@@ -43,10 +43,11 @@ public class FiredAlertTest extends TestCase {
         EntityCollection<FiredAlert> alerts = service.getFiredAlerts();
 
         if (alerts.values().size() == 0) {
-            System.out.println("WARNING: no fired elerts detected");
+            System.out.println("WARNING: no fired alerts detected");
             return;
         }
 
+        // N.B. cant create or modify, only read & delete. skipping delete.
         for (FiredAlert entity: alerts.values()) {
             entity.getAction();
             entity.getAlertType();
