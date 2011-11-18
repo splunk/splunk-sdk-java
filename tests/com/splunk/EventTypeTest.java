@@ -40,14 +40,46 @@ public class EventTypeTest extends TestCase {
     @Test public void testEventType() throws Exception {
         Service service = connect();
 
-        EntityCollection<EventType> ds = service.getEventTypes();
+        EntityCollection<EventType> ets = service.getEventTypes();
+        if (ets.containsKey("sdk-test")) {
+            ets.remove("sdk-test");
+        }
 
-        for (EventType entity: ds.values()) {
+        Assert.assertFalse(ets.containsKey("sdk-test"));
+        Args args = new Args();
+        args.put("search","index=_internal *");
+        args.put("description", "Dummy description");
+        args.put("disabled", true);
+        args.put("priority", 2);
+        EventType et = ets.create("sdk-test", args);
+
+        for (EventType entity: ets.values()) {
             entity.get(); // force a read
             Assert.assertTrue(entity.getPriority() != -1);
             Assert.assertTrue(entity.getSearch() != null);
             entity.getDescription();
-            //UNDONE: more?
         }
+
+        Assert.assertEquals(et.getDescription(), args.get("description"));
+        Assert.assertEquals(et.getSearch(), args.get("search"));
+        Assert.assertEquals(et.getPriority(), args.get("priority"));
+        Assert.assertEquals(et.getName(), "sdk-test");
+        Assert.assertTrue(et.isDisabled());
+
+        args.clear();
+        args.put("search", "index=_audit *");
+        args.put("description", "Dummy description a second time");
+        args.put("priority", 3);
+        et.update(args);
+        et.enable();
+
+        Assert.assertEquals(et.getDescription(), args.get("description"));
+        Assert.assertEquals(et.getSearch(), args.get("search"));
+        Assert.assertEquals(et.getPriority(), args.get("priority"));
+        Assert.assertEquals(et.getName(), "sdk-test");
+        Assert.assertFalse(et.isDisabled());
+
+        ets.remove("sdk-test");
+        Assert.assertFalse(ets.containsKey("sdk-test"));
     }
 }
