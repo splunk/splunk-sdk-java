@@ -58,7 +58,6 @@ public class LicenseMessageTest extends TestCase {
             entity.getSeverity();
             entity.getSlaveId();
             entity.getStackId();
-            //UNDONE: more?
         }
     }
 }

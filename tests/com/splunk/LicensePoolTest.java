@@ -41,10 +41,6 @@ public class LicensePoolTest extends TestCase {
         Service service = connect();
 
         EntityCollection<LicensePool> lps= service.getLicensePools();
-        if (lps.values().size() == 0) {
-            System.out.println("WARNING: no license pools found");
-            return;
-        }
 
         // test for sane data in licenses
         for (LicensePool entity: lps.values()) {
@@ -55,7 +51,6 @@ public class LicensePoolTest extends TestCase {
             entity.getSlavesUsageBytes();
             entity.getStackId();
             entity.getUsedBytes();
-            //UNDONE: more?
         }
     }
 }
