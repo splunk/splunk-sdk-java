@@ -42,10 +42,28 @@ public class DistributedPeerTest extends TestCase {
 
         EntityCollection<DistributedPeer> dps = service.getDistributedPeers();
 
-        if (dps.values().size() == 0) {
-            System.out.println("WARNING: distributedPeer not configured");
-            return;
+        String name = command.host + ":" + command.port;
+
+        if (dps.containsKey(name)) {
+            dps.remove(name);
         }
+
+        Assert.assertFalse(dps.containsKey(name));
+        Args args = new Args();
+        args.put("remotePassword", command.password);
+        args.put("remoteUsername", command.username);
+        DistributedPeer newdp = dps.create(name, args);
+        Assert.assertTrue(dps.containsKey(name));
+
+        // created as enabled
+        newdp.disable();
+        Assert.assertTrue(newdp.isDisabled());
+        newdp.enable();
+        Assert.assertFalse(newdp.isDisabled());
+        // N.B. these are write only... so can't check if they take
+        args.put("remotePassword", command.password + "xx");
+        args.put("remoteUsername", command.username + "xx");
+        newdp.update(args);
 
         for (DistributedPeer dp: dps.values()) {
             dp.getTitle();
@@ -55,13 +73,15 @@ public class DistributedPeerTest extends TestCase {
             dp.getLicenseSignature();
             dp.getPeerName();
             dp.getPeerType();
-            dp.getRemotePassword();
-            dp.getRemoteUsername();
             dp.getReplicationStatus();
             dp.getStatus();
             dp.getVersion();
             dp.isDisabled();
             dp.isHttps();
         }
+
+        newdp.remove();
+        dps.refresh();
+        Assert.assertFalse(dps.containsKey(name));
     }
 }

@@ -45,14 +45,6 @@ public class DistributedPeer extends Entity {
         return getString("peerType");
     }
 
-    public String getRemotePassword() {
-        return getString("remotePassword", null);
-    }
-
-    public String getRemoteUsername() {
-        return getString("remoteUsername", null);
-    }
-
     public String getReplicationStatus() {
         return getString("replicationStatus");
     }
