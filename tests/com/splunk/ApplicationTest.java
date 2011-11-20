@@ -68,7 +68,7 @@ public class ApplicationTest extends TestCase {
     // (more precisely, needs to be restarted after an app is deleted, AND
     // you want to manipulate, or create a new one in its place).
     // This test assumes the worst case, and will restart splunk
-    // before an after an application deletion -- to correct for invalid
+    // before and after an application deletion -- to correct for invalid
     // splunk application state.
     @Test public void testApps() throws Exception {
         Service service = connect();

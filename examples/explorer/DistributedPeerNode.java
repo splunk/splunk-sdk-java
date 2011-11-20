@@ -28,8 +28,6 @@ class DistributedPeerNode extends ResourceNode {
         list.add(String.class, "getLicenseSignature");
         list.add(String.class, "getPeerName");
         list.add(String.class, "getPeerType");
-        list.add(String.class, "getRemotePassword");
-        list.add(String.class, "getRemoteUsername");
         list.add(String.class, "getReplicationStatus");
         list.add(String.class, "getStatus");
         list.add(String.class, "getVersion");

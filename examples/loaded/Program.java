@@ -73,8 +73,6 @@ public class Program {
         printField("LicenseSignature", peer.getLicenseSignature());
         printField("PeerName", peer.getPeerName());
         printField("PeerType", peer.getPeerType());
-        printField("RemotePassword", peer.getRemotePassword());
-        printField("RemoteUsername", peer.getRemoteUsername());
         printField("ReplicationStatus", peer.getReplicationStatus());
         printField("Status", peer.getStatus());
         printField("Version", peer.getVersion());

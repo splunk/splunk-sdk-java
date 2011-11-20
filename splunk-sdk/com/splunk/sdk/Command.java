@@ -68,7 +68,7 @@ public class Command {
     }
 
     public static void error(String message, Object... args) {
-        System.err.format("Error: %s\n", message, args);
+        System.err.format("Error: %s\n", String.format(message, args));
         System.exit(2);
     }
 
@@ -89,6 +89,22 @@ public class Command {
         rules.addOption(null, "username", true, "Username to login with");
         rules.addOption(null, "password", true, "Password to login with");
         rules.addOption(null, "namespace", true, null);
+        return this;
+    }
+
+    public Command addRule(String name, String description) {
+        rules.addOption(null, name, false, description);
+        return this;
+    }
+
+    public Command addRule(String name, Class argType, String description) {
+        rules.addOption(
+            OptionBuilder
+                .withLongOpt(name)
+                .hasArg(true)
+                .withType(argType)
+                .withDescription(description)
+                .create());
         return this;
     }
 
