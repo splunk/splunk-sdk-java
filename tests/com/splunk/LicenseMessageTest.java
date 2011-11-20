@@ -14,14 +14,11 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import java.util.Date;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -51,7 +48,7 @@ public class LicenseMessageTest extends TestCase {
         for (LicenseMessage entity: lm.values()) {
             entity.get(); // force a read
 
-            Assert.assertTrue(entity.getCreationTime().after(new Date(0)));
+            assertTrue(entity.getCreationTime().after(new Date(0)));
             entity.getCategory();
             entity.getDescription();
             entity.getPoolId();

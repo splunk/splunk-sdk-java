@@ -49,7 +49,7 @@ public class SearchTest extends TestCase {
 
         Service service = connect();
 
-        String query = "search index=sdk-test * | head 1";
+        String query = "search index=sdk-tests * | head 1";
 
         // Check simple parse.
         response = service.parse(query);

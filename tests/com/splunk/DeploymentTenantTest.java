@@ -14,13 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -47,7 +44,7 @@ public class DeploymentTenantTest extends TestCase {
         }
         
         for (DeploymentTenant entity: ds.values()) {
-            Assert.assertTrue(entity.getWhiteList0().length() > 0);
+            assertTrue(entity.getWhiteList0().length() > 0);
             entity.getCheckNew();
         }
     }

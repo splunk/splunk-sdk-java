@@ -14,18 +14,15 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.http.HTTPException;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -73,7 +70,7 @@ public class IndexTest extends TestCase {
             indexes.refresh();
         }
 
-        Assert.assertTrue(indexes.containsKey("sdk-tests"));
+        assertTrue(indexes.containsKey("sdk-tests"));
 
         Index index = indexes.get("sdk-tests");
 
@@ -124,23 +121,23 @@ public class IndexTest extends TestCase {
         index.isInternal();
 
         index.clean();
-        Assert.assertEquals(index.getTotalEventCount(), 0);
+        assertEquals(index.getTotalEventCount(), 0);
 
         index.disable();
-        Assert.assertTrue(index.isDisabled());
+        assertTrue(index.isDisabled());
 
         index.enable();
-        Assert.assertFalse(index.isDisabled());
+        assertFalse(index.isDisabled());
 
         // submit events to index
         index.submit(date + "Hello World. \u0150");
         index.submit(date + "Goodbye world. \u0150");
         wait_event_count(index, 2, 30);
-        Assert.assertEquals(index.getTotalEventCount(), 2);
+        assertEquals(index.getTotalEventCount(), 2);
 
         // clean
         index.clean();
-        Assert.assertEquals(index.getTotalEventCount(), 0);
+        assertEquals(index.getTotalEventCount(), 0);
 
         // stream events to index
         Socket socket = index.attach();
@@ -153,11 +150,11 @@ public class IndexTest extends TestCase {
         socket.close();
 
         wait_event_count(index, 2, 30);
-        Assert.assertEquals(index.getTotalEventCount(), 2);
+        assertEquals(index.getTotalEventCount(), 2);
 
         // clean
         index.clean();
-        Assert.assertEquals(index.getTotalEventCount(), 0);
+        assertEquals(index.getTotalEventCount(), 0);
 
         // test must run on machine where splunkd runs,
         // otherwise an failure is expected and printed as a WARNING

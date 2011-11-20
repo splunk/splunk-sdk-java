@@ -14,13 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -48,18 +45,18 @@ public class DistributedPeerTest extends TestCase {
             dps.remove(name);
         }
 
-        Assert.assertFalse(dps.containsKey(name));
+        assertFalse(dps.containsKey(name));
         Args args = new Args();
         args.put("remotePassword", command.password);
         args.put("remoteUsername", command.username);
         DistributedPeer newdp = dps.create(name, args);
-        Assert.assertTrue(dps.containsKey(name));
+        assertTrue(dps.containsKey(name));
 
         // created as enabled
         newdp.disable();
-        Assert.assertTrue(newdp.isDisabled());
+        assertTrue(newdp.isDisabled());
         newdp.enable();
-        Assert.assertFalse(newdp.isDisabled());
+        assertFalse(newdp.isDisabled());
         // N.B. these are write only... so can't check if they take
         args.put("remotePassword", command.password + "xx");
         args.put("remoteUsername", command.username + "xx");
@@ -82,6 +79,6 @@ public class DistributedPeerTest extends TestCase {
 
         newdp.remove();
         dps.refresh();
-        Assert.assertFalse(dps.containsKey(name));
+        assertFalse(dps.containsKey(name));
     }
 }

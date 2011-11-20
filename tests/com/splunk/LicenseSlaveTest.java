@@ -14,15 +14,12 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -54,17 +51,17 @@ public class LicenseSlaveTest extends TestCase {
 
         for (LicenseSlave entity: ds.values()) {
             entity.get(); // force a read
-            Assert.assertTrue(entity.getLabel().length() > 0);
+            assertTrue(entity.getLabel().length() > 0);
             for (String pool: entity.getPoolIds()) {
                 // special-case, fixed sourcetype has a hash at the end; so
                 // no fixed value will match. Thus only check versus known
                 // fixed values from list.
                 if (!pool.startsWith("auto_generated_pool_fixed-sourcetype_")) {
-                    Assert.assertTrue(pools.contains(pool));
+                    assertTrue(pools.contains(pool));
                 }
             }
             for (String stack: entity.getStackIds()) {
-                Assert.assertTrue(stacks.contains(stack));
+                assertTrue(stacks.contains(stack));
             }
         }
     }

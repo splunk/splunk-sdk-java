@@ -14,14 +14,11 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import junit.framework.TestCase;
-import junit.framework.Assert;
 import org.junit.*;
 
 public class OutputGroupTest extends TestCase {

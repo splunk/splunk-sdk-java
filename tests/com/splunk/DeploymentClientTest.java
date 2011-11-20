@@ -14,13 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -46,18 +43,18 @@ public class DeploymentClientTest extends TestCase {
             if (dc.isDisabled()) {
                 dc.enable();
             }
-            Assert.assertFalse(dc.isDisabled());
+            assertFalse(dc.isDisabled());
             dc.disable();
-            Assert.assertTrue(dc.isDisabled());
+            assertTrue(dc.isDisabled());
             dc.enable();
-            Assert.assertFalse(dc.isDisabled());
+            assertFalse(dc.isDisabled());
             Args args = new Args();
             args.put("targetUri", "1.2.3.4:8080");
             dc.update(args);
-            Assert.assertEquals(dc.getTargetUri(), "1.2.3.4:8080");
+            assertEquals(dc.getTargetUri(), "1.2.3.4:8080");
             args.put("targetUri", uri);
             dc.update(args);
-            Assert.assertEquals(dc.getTargetUri(), uri);
+            assertEquals(dc.getTargetUri(), uri);
             dc.getServerClasses();
             dc.reload();
         }

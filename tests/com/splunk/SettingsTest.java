@@ -14,13 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -37,7 +34,7 @@ public class SettingsTest extends TestCase {
         command = Command.splunk(); // Pick up .splunkrc settings
     }
 
-    @Test public void testSettings() throws Exception {
+    @Test public void testSettings() {
         Service service = connect();
 
         Settings settings = service.getSettings();

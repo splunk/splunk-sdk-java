@@ -14,15 +14,12 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -47,7 +44,7 @@ public class LoggerTest extends TestCase {
 
         EntityCollection<Logger> loggers = service.getLoggers();
         for (Logger ent: loggers.values()) {
-            Assert.assertTrue(expected.contains(ent.getLevel()));
+            assertTrue(expected.contains(ent.getLevel()));
         }
 
         Logger logger = loggers.get("AuditLogger");
@@ -58,12 +55,12 @@ public class LoggerTest extends TestCase {
             update.clear();
             update.put("level", level);
             logger.update(update);
-            Assert.assertEquals(level, logger.getLevel());
+            assertEquals(level, logger.getLevel());
         }
 
         update.clear();
         update.put("level", saved);
         logger.update(update);
-        Assert.assertEquals(saved, logger.getLevel());
+        assertEquals(saved, logger.getLevel());
     }
 }

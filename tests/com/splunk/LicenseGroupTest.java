@@ -14,15 +14,12 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -50,7 +47,7 @@ public class LicenseGroupTest extends TestCase {
             // enterprise, forwarder, free
             entity.get(); // force a read
             for (String id: entity.getStackIds()) {
-                Assert.assertTrue(stacks.contains(id));
+                assertTrue(stacks.contains(id));
             }
             entity.isActive();
         }

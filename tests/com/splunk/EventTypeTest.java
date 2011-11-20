@@ -14,13 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -45,7 +42,7 @@ public class EventTypeTest extends TestCase {
             ets.remove("sdk-test");
         }
 
-        Assert.assertFalse(ets.containsKey("sdk-test"));
+        assertFalse(ets.containsKey("sdk-test"));
         Args args = new Args();
         args.put("search","index=_internal *");
         args.put("description", "Dummy description");
@@ -55,16 +52,16 @@ public class EventTypeTest extends TestCase {
 
         for (EventType entity: ets.values()) {
             entity.get(); // force a read
-            Assert.assertTrue(entity.getPriority() != -1);
-            Assert.assertTrue(entity.getSearch() != null);
+            assertTrue(entity.getPriority() != -1);
+            assertTrue(entity.getSearch() != null);
             entity.getDescription();
         }
 
-        Assert.assertEquals(et.getDescription(), args.get("description"));
-        Assert.assertEquals(et.getSearch(), args.get("search"));
-        Assert.assertEquals(et.getPriority(), args.get("priority"));
-        Assert.assertEquals(et.getName(), "sdk-test");
-        Assert.assertTrue(et.isDisabled());
+        assertEquals(et.getDescription(), args.get("description"));
+        assertEquals(et.getSearch(), args.get("search"));
+        assertEquals(et.getPriority(), args.get("priority"));
+        assertEquals(et.getName(), "sdk-test");
+        assertTrue(et.isDisabled());
 
         args.clear();
         args.put("search", "index=_audit *");
@@ -73,13 +70,13 @@ public class EventTypeTest extends TestCase {
         et.update(args);
         et.enable();
 
-        Assert.assertEquals(et.getDescription(), args.get("description"));
-        Assert.assertEquals(et.getSearch(), args.get("search"));
-        Assert.assertEquals(et.getPriority(), args.get("priority"));
-        Assert.assertEquals(et.getName(), "sdk-test");
-        Assert.assertFalse(et.isDisabled());
+        assertEquals(et.getDescription(), args.get("description"));
+        assertEquals(et.getSearch(), args.get("search"));
+        assertEquals(et.getPriority(), args.get("priority"));
+        assertEquals(et.getName(), "sdk-test");
+        assertFalse(et.isDisabled());
 
         ets.remove("sdk-test");
-        Assert.assertFalse(ets.containsKey("sdk-test"));
+        assertFalse(ets.containsKey("sdk-test"));
     }
 }

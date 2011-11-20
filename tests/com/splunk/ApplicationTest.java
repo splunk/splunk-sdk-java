@@ -14,13 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -48,7 +45,7 @@ public class ApplicationTest extends TestCase {
                 // server not back yet
             }
         }
-        Assert.fail("Splunk service did not restart");
+        fail("Splunk service did not restart");
         return null;
     }
 
@@ -80,51 +77,53 @@ public class ApplicationTest extends TestCase {
         }
 
         apps = service.getApplications();
-        Assert.assertEquals(false, apps.containsKey("sdk-tests"));
+        assertEquals(false, apps.containsKey("sdk-tests"));
 
         Args createArgs = new Args();
         createArgs.put("author", "me");
-        createArgs.put("configured", "false");
+        // UNDONE: Need to figure out why the following gives a 400 on 4.2.2
+        // running on OSX.
+        // createArgs.put("configured", "false");
         createArgs.put("description", "this is a description");
         createArgs.put("label", "SDKTEST");
         createArgs.put("manageable", "false");
         createArgs.put("template", "barebones");
         createArgs.put("visible", "false");
         apps.create("sdk-tests", createArgs);
-        Assert.assertEquals(true, apps.containsKey("sdk-tests"));
+        assertEquals(true, apps.containsKey("sdk-tests"));
         Application app = apps.get("sdk-tests");
 
         app.getCheckForUpdates();
-        Assert.assertEquals(app.getLabel(), "SDKTEST");
-        Assert.assertEquals(app.getAuthor(), "me");
-        Assert.assertFalse(app.isConfigured());
-        Assert.assertFalse(app.isManageable());
-        Assert.assertFalse(app.isVisible());
+        assertEquals(app.getLabel(), "SDKTEST");
+        assertEquals(app.getAuthor(), "me");
+        assertFalse(app.isConfigured());
+        assertFalse(app.isManageable());
+        assertFalse(app.isVisible());
 
         Args updateArgs = new Args();
         updateArgs.put("version", "5.0.0");
         app.update(updateArgs);
-        Assert.assertEquals(app.getVersion(), "5.0.0");
+        assertEquals(app.getVersion(), "5.0.0");
 
         // archive (package) the application
         ApplicationArchive appArchive = app.archive();
-        Assert.assertTrue(appArchive.getAppName().length() > 0);
-        Assert.assertTrue(appArchive.getFilePath().length() > 0);
-        Assert.assertTrue(appArchive.getUrl().length() > 0);
+        assertTrue(appArchive.getAppName().length() > 0);
+        assertTrue(appArchive.getFilePath().length() > 0);
+        assertTrue(appArchive.getUrl().length() > 0);
 
         ApplicationSetup appSetup = app.setup();
         try {
-            Assert.assertTrue(appSetup.getSetupXML().length() > 0);
+            assertTrue(appSetup.getSetupXML().length() > 0);
         } catch (Exception e) {
             // silent exception, we expect a 500 error because the
             // setup.xml file will be missing
         }
 
         ApplicationUpdate appUpdate = app.update();
-        Assert.assertTrue(appUpdate.getContent().containsKey("eai:acl"));
+        assertTrue(appUpdate.getContent().containsKey("eai:acl"));
 
         service = cleanApp("sdk-tests", service);
         apps = service.getApplications();
-        Assert.assertEquals(false, apps.containsKey("sdk-tests"));
+        assertEquals(false, apps.containsKey("sdk-tests"));
     }
 }

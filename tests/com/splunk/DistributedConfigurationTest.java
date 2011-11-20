@@ -14,13 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.*;
 
@@ -79,36 +76,36 @@ public class DistributedConfigurationTest extends TestCase {
         updateArgs.put("ttl", 5);
 
         dc.update(updateArgs);
-        Assert.assertEquals(
+        assertEquals(
             dc.getAutoAddServers(), updateArgs.get("autoAddServers"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getBlacklistNames(), updateArgs.get("blacklistNames"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getBlacklistUrls(), updateArgs.get("blacklistURLs"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getCheckTimedOutServersFrequency(),
             updateArgs.get("checkTimedOutServersFrequency"));
-        Assert.assertEquals(dc.isDisabled(), updateArgs.get("disabled"));
-        Assert.assertEquals(
+        assertEquals(dc.isDisabled(), updateArgs.get("disabled"));
+        assertEquals(
             dc.getHeartbeatFrequency(), updateArgs.get("heartbeatFrequency"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getHeartbeatMcastAddress(),
             updateArgs.get("heartbeatMcastAddr"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getHeartbeatPort(), updateArgs.get("heartbeatPort"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getRemovedTimedOutServers(),
             updateArgs.get("removedTimedOutServers"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getServerTimeout(),updateArgs.get("serverTimeout"));
-        Assert.assertEquals(dc.getServers(), updateArgs.get("servers"));
-        Assert.assertEquals(
+        assertEquals(dc.getServers(), updateArgs.get("servers"));
+        assertEquals(
             dc.getShareBundles(), updateArgs.get("shareBundles"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getSkipOurselves(), updateArgs.get("skipOurselves"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getStatusTimeout(), updateArgs.get("statusTimeout"));
-        Assert.assertEquals(dc.getTtl(), updateArgs.get("ttl"));
+        assertEquals(dc.getTtl(), updateArgs.get("ttl"));
 
         // handle nulls specially
         if (savedSetup.get("blacklistNames") == null)
@@ -117,37 +114,37 @@ public class DistributedConfigurationTest extends TestCase {
             savedSetup.put("blacklistURLs", "");
 
         dc.update(savedSetup);
-        Assert.assertEquals(
+        assertEquals(
             dc.getAutoAddServers(), savedSetup.get("autoAddServers"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getBlacklistNames() == null ? "" : dc.getBlacklistNames(),
             savedSetup.get("blacklistNames") );
-        Assert.assertEquals(
+        assertEquals(
             dc.getBlacklistUrls() == null ? "" : dc.getBlacklistUrls(),
             savedSetup.get("blacklistURLs"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getCheckTimedOutServersFrequency(),
             savedSetup.get("checkTimedOutServersFrequency"));
-        Assert.assertEquals(dc.isDisabled(), savedSetup.get("disabled"));
-        Assert.assertEquals(
+        assertEquals(dc.isDisabled(), savedSetup.get("disabled"));
+        assertEquals(
             dc.getHeartbeatFrequency(), savedSetup.get("heartbeatFrequency"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getHeartbeatMcastAddress(),
             savedSetup.get("heartbeatMcastAddr"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getHeartbeatPort(), savedSetup.get("heartbeatPort"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getRemovedTimedOutServers(),
             savedSetup.get("removedTimedOutServers"));
-        Assert.assertEquals(
-            dc.getServerTimeout(),savedSetup.get("serverTimeout"));
-        Assert.assertEquals(dc.getServers(), savedSetup.get("servers"));
-        Assert.assertEquals(
+        assertEquals(
+            dc.getServerTimeout(), savedSetup.get("serverTimeout"));
+        assertEquals(dc.getServers(), savedSetup.get("servers"));
+        assertEquals(
             dc.getShareBundles(), savedSetup.get("shareBundles"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getSkipOurselves(), savedSetup.get("skipOurselves"));
-        Assert.assertEquals(
+        assertEquals(
             dc.getStatusTimeout(), savedSetup.get("statusTimeout"));
-        Assert.assertEquals(dc.getTtl(), savedSetup.get("ttl"));
+        assertEquals(dc.getTtl(), savedSetup.get("ttl"));
     }
 }

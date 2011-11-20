@@ -14,15 +14,11 @@
  * under the License.
  */
 
-package com.splunk.sdk.tests.com.splunk;
+package com.splunk;
 
-import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
-import java.io.IOException;
 import junit.framework.TestCase;
-import junit.framework.Assert;
 import org.junit.*;
 
 public class FiredAlertTest extends TestCase {
@@ -30,7 +26,7 @@ public class FiredAlertTest extends TestCase {
 
     public FiredAlertTest() {}
 
-    Service connect() throws IOException {
+    Service connect() {
         return Service.connect(command.opts);
     }
 
