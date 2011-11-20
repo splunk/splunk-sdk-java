@@ -23,17 +23,19 @@ import org.w3c.dom.NodeList;
 
 public class HTTPException extends RuntimeException {
     private int status;
+    private String detail; // Error message detail
 
-    HTTPException(int status, String message) {
+    HTTPException(int status, String message, String detail) {
         super(message);
         this.status = status;
+        this.detail = detail;
     }
 
     static HTTPException create(ResponseMessage response) {
         int status = response.getStatus();
 
         // Attempt to read the error detail from the error response content.
-        String detail = null;
+        String detail = "";
         try {
             Document document = Xml.parse(response.getContent());
             NodeList msgs = document.getElementsByTagName("msg");
@@ -47,11 +49,15 @@ public class HTTPException extends RuntimeException {
         if (detail != null)
             message = message + " -- " + detail;
 
-        return new HTTPException(status, message);
+        return new HTTPException(status, message, detail);
+    }
+
+    public String getDetail() {
+        return detail;
     }
 
     public int getStatus() {
-        return this.status;
+        return status;
     }
 }
 
