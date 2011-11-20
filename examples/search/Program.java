@@ -33,11 +33,18 @@ public class Program {
     static String[] outputChoices = new String[] {
         "events", "results", "preview", "searchlog", "summary", "timeline"
     };
-    static String outputDescription = 
+
+    static String fieldListText = 
+        "A comma-separated list of the fields to return";
+
+    static String outputText = 
         "Which search results to output {events, results, preview, searchlog, summary, timeline} (default: results)";
 
-    static String outputModeDescription = 
+    static String outputModeText = 
         "Search output format {csv, raw, json, xml} (default: xml)";
+
+    static String statusBucketsText = 
+        "Number of status buckets to use for search (default: 0)";
 
     public static void main(String[] args) {
         try {
@@ -51,14 +58,20 @@ public class Program {
 
     static void run(String[] args) throws IOException {
         Command command = Command.splunk("search");
-        command.addRule("output", String.class, outputDescription);
-        command.addRule("output_mode", String.class, outputModeDescription);
+        command.addRule("field_list", String.class, fieldListText);
+        command.addRule("output", String.class, outputText);
+        command.addRule("output_mode", String.class, outputModeText);
+        command.addRule("status_buckets", Integer.class, statusBucketsText);
         command.addRule("verbose", "Display search progress");
         command.parse(args);
 
         if (command.args.length != 1)
             Command.error("Search expression required");
         String query = command.args[0];
+
+        String fieldList = null;
+        if (command.opts.containsKey("field_list"))
+            fieldList = (String)command.opts.get("field_list");
 
         String output = "results";
         if (command.opts.containsKey("output")) {
@@ -70,6 +83,10 @@ public class Program {
         String outputMode = "xml";
         if (command.opts.containsKey("output_mode"))
             outputMode = (String)command.opts.get("output_mode");
+
+        int statusBuckets = 0;
+        if (command.opts.containsKey("status_buckets"))
+            statusBuckets = (Integer)command.opts.get("status_buckets");
 
         boolean verbose = command.opts.containsKey("verbose");
 
@@ -87,6 +104,10 @@ public class Program {
 
         // Create a search job for the given query & query arguments.
         Args queryArgs = new Args();
+        if (fieldList != null)
+            queryArgs.put("field_list", fieldList);
+        if (statusBuckets > 0)
+            queryArgs.put("status_buckets", statusBuckets);
         Job job = service.getJobs().create(query, queryArgs);
 
         // Wait until results are available.
