@@ -16,10 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.AtomEntry;
-import com.splunk.atom.Xml;
-import com.splunk.http.ResponseMessage;
-
 public class JobCollection extends EntityCollection<Job> {
     public JobCollection(Service service, String path) {
         super(service, path, Job.class);

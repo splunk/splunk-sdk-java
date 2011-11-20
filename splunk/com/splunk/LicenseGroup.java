@@ -29,4 +29,3 @@ public class LicenseGroup extends Entity {
         return getBoolean("is_active");
     }
 }
-

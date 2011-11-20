@@ -15,7 +15,6 @@
  */
 
 import com.splunk.*;
-import com.splunk.http.ResponseMessage;
 import com.splunk.sdk.Command;
 
 import java.nio.channels.FileChannel;

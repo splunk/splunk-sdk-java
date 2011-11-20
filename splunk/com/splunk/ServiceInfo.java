@@ -77,4 +77,3 @@ public class ServiceInfo extends Entity {
         return getBoolean("isTrial");
     }
 }
-

@@ -29,4 +29,3 @@ public class OutputSyslog extends Entity {
         return getString("type");
     }
 }
-

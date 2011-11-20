@@ -18,9 +18,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.AtomEntry;
-import com.splunk.http.ResponseMessage;
-
 import java.io.InputStream;
 import java.util.Date;
 

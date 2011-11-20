@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.http;
+package com.splunk;
 
 import java.io.OutputStream;
 import java.util.TreeMap;

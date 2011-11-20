@@ -29,4 +29,3 @@ public class Message extends Entity {
         return getString(getKey());
     }
 }
-

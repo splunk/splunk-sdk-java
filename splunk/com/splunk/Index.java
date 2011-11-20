@@ -16,9 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.http.ResponseMessage;
-import com.splunk.http.RequestMessage;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

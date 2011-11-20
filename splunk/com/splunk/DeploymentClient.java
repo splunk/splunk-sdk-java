@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.AtomEntry;
-
 public class DeploymentClient extends Entity {
     public DeploymentClient(Service service) {
         super(service, "deployment/client");

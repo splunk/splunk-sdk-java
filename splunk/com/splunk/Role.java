@@ -89,4 +89,3 @@ public class Role extends Entity {
         return getInteger("srchTimeWin");
     }
 }
-

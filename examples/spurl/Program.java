@@ -15,8 +15,8 @@
  */
 
 import com.splunk.Service;
-import com.splunk.http.RequestMessage;
-import com.splunk.http.ResponseMessage;
+import com.splunk.RequestMessage;
+import com.splunk.ResponseMessage;
 import com.splunk.sdk.Command;
 
 import java.io.BufferedReader;

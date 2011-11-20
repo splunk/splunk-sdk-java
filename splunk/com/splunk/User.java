@@ -49,4 +49,3 @@ public class User extends Entity {
         return getStringArray("roles");
     }
 }
-

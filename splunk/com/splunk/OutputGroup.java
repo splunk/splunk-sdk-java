@@ -33,4 +33,3 @@ public class OutputGroup extends Entity {
         return getBoolean("disabled", false);
     }
 }
-

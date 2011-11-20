@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.atom;
+package com.splunk;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

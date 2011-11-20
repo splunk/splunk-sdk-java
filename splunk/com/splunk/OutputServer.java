@@ -26,4 +26,3 @@ public class OutputServer extends Entity {
                 service, path + "/allconnections");
     }
 }
-

@@ -85,6 +85,5 @@ public class DistributedConfiguration extends Entity {
     //connectionTimeout (int)  *
     //receiveTimeout (int)     *
     //sendTimeout (int)        *
-
 }
 

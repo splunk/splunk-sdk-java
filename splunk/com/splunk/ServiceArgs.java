@@ -23,4 +23,3 @@ public class ServiceArgs {
     public String scheme = null;
     public String namespace = null;
 }
-

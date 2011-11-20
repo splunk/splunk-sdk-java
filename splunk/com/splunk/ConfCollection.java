@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.AtomEntry;
-
 public class ConfCollection 
     extends ResourceCollection<EntityCollection<Entity>> 
 {

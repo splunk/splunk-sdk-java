@@ -18,11 +18,7 @@ package com.splunk;
 
 import java.util.Map;
 
-import com.splunk.atom.Xml;
-import com.splunk.http.ResponseMessage;
-import com.splunk.http.RequestMessage;
-
-public class Service extends com.splunk.http.Service {
+public class Service extends HttpService {
     protected String token = null;
     protected String namespace = null;
     private String prefix = null;
@@ -266,4 +262,3 @@ public class Service extends com.splunk.http.Service {
         return super.send(fullpath(path), request);
     }
 }
-

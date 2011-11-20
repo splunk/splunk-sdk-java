@@ -23,8 +23,6 @@
 
 package com.splunk;
 
-import com.splunk.http.HTTPException;
-import com.splunk.http.ResponseMessage;
 import com.splunk.sdk.Command;
 
 import junit.framework.TestCase;
@@ -80,7 +78,7 @@ public class SearchTest extends TestCase {
             service.parse(query);
             fail("Expected a parse error");
         }
-        catch (HTTPException e) { 
+        catch (HttpException e) { 
             assertEquals(e.getStatus(), 400);
         }
 
@@ -94,7 +92,7 @@ public class SearchTest extends TestCase {
             service.parse(query, parseArgs); 
             fail("Expected a parse error");
         }
-        catch (HTTPException e) {
+        catch (HttpException e) {
             assertEquals(e.getStatus(), 400);
         }
 
@@ -103,7 +101,7 @@ public class SearchTest extends TestCase {
             Args parseArgs = new Args("babble", 42);
             service.parse(query, parseArgs);
         }
-        catch (HTTPException e) {
+        catch (HttpException e) {
             assertEquals(e.getStatus(), 400);
         }
     }

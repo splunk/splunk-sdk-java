@@ -23,35 +23,32 @@
 //   * Proxy tunneling
 //
 
-package com.splunk.http;
+package com.splunk;
 
-import java.io.IOException;
+import com.splunk.sdk.Command;
+
 import java.util.HashMap;
 import junit.framework.TestCase;
 import org.junit.*;
-import static org.junit.Assert.*;
 
-import com.splunk.http.*;
-import com.splunk.sdk.Command;
-
-public class ServiceTest extends TestCase {
+public class HttpServiceTest extends TestCase {
     Command command;
 
-    public ServiceTest() {}
+    public HttpServiceTest() {}
 
     @Before public void setUp() {
         command = Command.splunk(); // Pick up .splunkrc settings
     }
 
-    @Test public void testGet() throws IOException {
-        Service service = new Service(
+    @Test public void testGet() {
+        HttpService service = new HttpService(
             command.host, command.port, command.scheme);
         ResponseMessage response = service.get("/");
         assertEquals(200, response.getStatus());
     }
 
-    @Test public void testPost() throws IOException {
-        Service service = new Service(
+    @Test public void testPost() {
+        HttpService service = new HttpService(
             command.host, command.port, command.scheme);
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put("foo", "bar");
@@ -65,8 +62,8 @@ public class ServiceTest extends TestCase {
         assertEquals(200, response.getStatus());
     }
 
-    @Test public void testSend() throws IOException {
-        Service service = new Service(
+    @Test public void testSend() {
+        HttpService service = new HttpService(
             command.host, command.port, command.scheme);
         RequestMessage request = new RequestMessage("GET");
         ResponseMessage response = service.send("/", request);

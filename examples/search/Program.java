@@ -18,8 +18,8 @@
 // UNDONE: Add additional output args (offset, count, field_list, f)
 
 import com.splunk.Args;
+import com.splunk.HttpException;
 import com.splunk.Job;
-import com.splunk.http.HTTPException;
 import com.splunk.sdk.Command;
 import com.splunk.Service;
 
@@ -80,7 +80,7 @@ public class Program {
             Args parseArgs = new Args("parse_only", true);
             service.parse(query, parseArgs);
         }
-        catch (HTTPException e) {
+        catch (HttpException e) {
             String detail = e.getDetail();
             Command.error("query '%s' is invalid: %s", query, detail);
         }

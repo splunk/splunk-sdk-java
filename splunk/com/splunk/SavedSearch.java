@@ -211,4 +211,3 @@ public class SavedSearch extends Entity {
     }
 
 }
-

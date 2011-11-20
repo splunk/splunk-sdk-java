@@ -69,4 +69,3 @@ public class Settings extends Entity {
         return getString("trustedIP", null);
     }
 }
-

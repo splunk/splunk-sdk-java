@@ -121,4 +121,3 @@ public class OutputDefault extends Entity {
         return getBoolean("useACK", false); // UNDONE: default?
     }
 }
-

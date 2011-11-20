@@ -14,24 +14,22 @@
  * under the License.
  */
 
-package com.splunk.http;
-
-import com.splunk.atom.Xml; // UNODNE: Ugly cross package reference
+package com.splunk;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-public class HTTPException extends RuntimeException {
+public class HttpException extends RuntimeException {
     private int status;
     private String detail; // Error message detail
 
-    HTTPException(int status, String message, String detail) {
+    HttpException(int status, String message, String detail) {
         super(message);
         this.status = status;
         this.detail = detail;
     }
 
-    static HTTPException create(ResponseMessage response) {
+    static HttpException create(ResponseMessage response) {
         int status = response.getStatus();
 
         // Attempt to read the error detail from the error response content.
@@ -49,7 +47,7 @@ public class HTTPException extends RuntimeException {
         if (detail != null)
             message = message + " -- " + detail;
 
-        return new HTTPException(status, message, detail);
+        return new HttpException(status, message, detail);
     }
 
     public String getDetail() {

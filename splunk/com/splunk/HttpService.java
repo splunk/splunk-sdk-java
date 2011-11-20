@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.http;
+package com.splunk;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +38,7 @@ import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
-public class Service {
+public class HttpService {
     protected String scheme = "https";
     protected String host = "localhost";
     protected int port = 8089;
@@ -60,22 +60,22 @@ public class Service {
         }
     };
 
-    public Service() {
+    public HttpService() {
         setTrustPolicy();
     }
 
-    public Service(String host) {
+    public HttpService(String host) {
         this.host = host;
         setTrustPolicy();
     }
 
-    public Service(String host, int port) {
+    public HttpService(String host, int port) {
         this.host = host;
         this.port = port;
         setTrustPolicy();
     }
 
-    public Service(String host, int port, String scheme) {
+    public HttpService(String host, int port, String scheme) {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
@@ -237,7 +237,7 @@ public class Service {
         // System.out.format("%d\n", status);
 
         if (status >= 400)
-            throw HTTPException.create(response);
+            throw HttpException.create(response);
 
         return response;
     }

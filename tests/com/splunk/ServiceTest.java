@@ -16,9 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.*;
-import com.splunk.http.HTTPException;
-import com.splunk.http.ResponseMessage;
 import com.splunk.sdk.Command;
 
 import java.util.Arrays;
@@ -146,9 +143,9 @@ public class ServiceTest extends TestCase {
         // And make sure we get the expected 404
         try {
             ResponseMessage response = service.get("/zippy");
-            fail("Expected HTTPException");
+            fail("Expected HttpException");
         }
-        catch (HTTPException e) {
+        catch (HttpException e) {
             assertEquals(e.getStatus(), 404);
         }
     }
@@ -194,9 +191,9 @@ public class ServiceTest extends TestCase {
         // Not logged in, should fail with 401
         try {
             response = service.get("/services/authentication/users");
-            fail("Expected HTTPException");
+            fail("Expected HttpException");
         }
-        catch (HTTPException e) {
+        catch (HttpException e) {
             assertEquals(e.getStatus(), 401);
         }
 
@@ -209,9 +206,9 @@ public class ServiceTest extends TestCase {
         service.logout();
         try {
             response = service.get("/services/authentication/users");
-            fail("Expected HTTPException");
+            fail("Expected HttpException");
         }
-        catch (HTTPException e) {
+        catch (HttpException e) {
             assertEquals(e.getStatus(), 401);
         }
     }

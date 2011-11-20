@@ -16,9 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.*;
-import com.splunk.http.ResponseMessage;
-
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;

@@ -16,11 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.AtomEntry;
-import com.splunk.atom.AtomFeed;
-import com.splunk.atom.AtomObject;
-import com.splunk.http.ResponseMessage;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

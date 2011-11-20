@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.atom.AtomObject;
-
 import java.util.Map;
 
 public abstract class Resource {
@@ -90,4 +88,3 @@ public abstract class Resource {
         if (this.maybeValid == false) refresh();
     }
 }
-
