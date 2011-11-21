@@ -81,9 +81,8 @@ public class ApplicationTest extends TestCase {
 
         Args createArgs = new Args();
         createArgs.put("author", "me");
-        // UNDONE: Need to figure out why the following gives a 400 on 4.2.2
-        // running on OSX.
-        createArgs.put("configured", false);
+        // 4.2.4 only
+        //createArgs.put("configured", false);
         createArgs.put("description", "this is a description");
         createArgs.put("label", "SDKTEST");
         createArgs.put("manageable", false);
