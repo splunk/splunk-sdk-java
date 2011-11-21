@@ -83,12 +83,12 @@ public class ApplicationTest extends TestCase {
         createArgs.put("author", "me");
         // UNDONE: Need to figure out why the following gives a 400 on 4.2.2
         // running on OSX.
-        // createArgs.put("configured", "false");
+        createArgs.put("configured", false);
         createArgs.put("description", "this is a description");
         createArgs.put("label", "SDKTEST");
-        createArgs.put("manageable", "false");
+        createArgs.put("manageable", false);
         createArgs.put("template", "barebones");
-        createArgs.put("visible", "false");
+        createArgs.put("visible", false);
         apps.create("sdk-tests", createArgs);
         assertEquals(true, apps.containsKey("sdk-tests"));
         Application app = apps.get("sdk-tests");
