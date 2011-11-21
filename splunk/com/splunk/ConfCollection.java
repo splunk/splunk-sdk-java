@@ -22,6 +22,18 @@ public class ConfCollection
     public ConfCollection(Service service) {
         super(service, "properties", EntityCollection.class);
     }
+
+    public EntityCollection<Entity> create(String name) {
+        return create(name, null);
+    }
+
+    public EntityCollection<Entity> create(String name, Args extra) {
+        Args args = new Args("__conf", name);
+        if (extra != null) args.putAll(extra);
+        service.post(path, args);
+        invalidate();
+        return get(name);
+    }
     
     // Search jobs use the sid value as the key.
     @Override protected String itemPath(AtomEntry entry) {
