@@ -162,7 +162,9 @@ public class IndexTest extends TestCase {
         FileReader fileReader;
         String path;
         try {
-            file = new File("tests/com/splunk/testfile.txt");
+            file = new File(
+                "tests" + File.separator + "com" + File.separator +
+                "splunk" + File.separator + "testfile.txt");
             path = file.getAbsolutePath();
             fileReader = new FileReader(path);
         }

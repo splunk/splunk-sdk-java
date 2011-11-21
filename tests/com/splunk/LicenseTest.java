@@ -18,6 +18,10 @@ package com.splunk;
 
 import com.splunk.sdk.Command;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -79,5 +83,30 @@ public class LicenseTest extends TestCase {
             assertTrue(types.contains(entity.getType()));
             //System.out.println(entity.getWindowPeriod());
         }
+
+        // create
+        FileReader fileReader;
+        char [] buffer = new char[2048];
+        try {
+            File file = new File(
+                "tests" + File.separator + "com" + File.separator +
+                "splunk" + File.separator + "splunk.license");
+            fileReader = new FileReader(file.getAbsolutePath());
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("WARNING: can't find test splunk.license file");
+            return;
+        }
+
+        BufferedReader reader = new BufferedReader(fileReader);
+        reader.read(buffer);
+        Args args = new Args("payload", new String(buffer));
+        License lic = ds.create("sdk-test", args);
+        assertTrue(ds.containsKey(
+           "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
+        ds.remove(
+           "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101");
+        assertFalse(ds.containsKey(
+           "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
     }
 }
