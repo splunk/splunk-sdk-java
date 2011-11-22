@@ -22,7 +22,7 @@ public class DistributedPeer extends Entity {
     }
 
     public String getBuild() {
-        return getString("build");
+        return getString("build", null);
     }
 
     public String[] getBundleVersions() {
@@ -30,39 +30,39 @@ public class DistributedPeer extends Entity {
     }
 
     public String getGuid() {
-        return getString("guid");
+        return getString("guid", null);
     }
 
     public String getLicenseSignature() {
-        return getString("licenseSignature");
+        return getString("licenseSignature", null);
     }
 
     public String getPeerName() {
-        return getString("peerName");
+        return getString("peerName", null);
     }
 
     public String getPeerType() {
-        return getString("peerType");
+        return getString("peerType", null);
     }
 
     public String getReplicationStatus() {
-        return getString("replicationStatus");
+        return getString("replicationStatus", null);
     }
 
     public String getStatus() {
-        return getString("status");
+        return getString("status", null);
     }
 
     public String getVersion() {
-        return getString("version");
+        return getString("version", null);
     }
 
     public boolean isDisabled() {
-        return getBoolean("disabled");
+        return getBoolean("disabled", true);
     }
 
     public boolean isHttps() {
-        return getBoolean("is_https");
+        return getBoolean("is_https", true);
     }
 }
 
