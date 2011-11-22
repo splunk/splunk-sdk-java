@@ -32,8 +32,8 @@ public class LicensePool extends Entity {
         return getLong("quota");
     }
 
-    public String[] getSlaves() {
-        return getStringArray("slaves");
+    public String getSlaves() {
+        return getString("slaves");
     }
 
     public long getSlavesUsageBytes() {

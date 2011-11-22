@@ -49,5 +49,28 @@ public class LicensePoolTest extends TestCase {
             entity.getStackId();
             entity.getUsedBytes();
         }
+
+        // use well known auto pool
+        LicensePool pe = lps.get("auto_generated_pool_enterprise");
+        if (pe != null) {
+            Args saved = new Args();
+            saved.put("description", pe.getDescription());
+
+            Args update = new Args();
+            update.put("description", "sdk-test description");
+            update.put("quota", 1024*1024);
+            update.put("slaves", pe.getSlaves());
+            update.put("append_slaves", true);
+
+            pe.update(update);
+            assertEquals(pe.getDescription(), update.get("description"));
+            assertEquals(pe.getQuota(), 1024*1024);
+
+            saved.put("quota", "MAX");
+            saved.put("append_slaves", false);
+            saved.put("slaves", "*");
+            pe.update(saved);
+            assertEquals(pe.getDescription(), saved.get("description"));
+        }
     }
 }
