@@ -56,6 +56,10 @@ public class DistributedConfigurationTest extends TestCase {
         savedSetup.put("skipOurselves", dc.getSkipOurselves());
         savedSetup.put("statusTimeout", dc.getStatusTimeout());
         savedSetup.put("ttl", dc.getTtl());
+        for (String key: savedSetup.keySet()) {
+            if (savedSetup.get(key) == null)
+                savedSetup.put(key, "");
+        }
 
         Args updateArgs = new Args();
 
@@ -114,6 +118,7 @@ public class DistributedConfigurationTest extends TestCase {
             savedSetup.put("blacklistURLs", "");
 
         dc.update(savedSetup);
+
         assertEquals(
             dc.getAutoAddServers(), savedSetup.get("autoAddServers"));
         assertEquals(
@@ -138,7 +143,9 @@ public class DistributedConfigurationTest extends TestCase {
             savedSetup.get("removedTimedOutServers"));
         assertEquals(
             dc.getServerTimeout(), savedSetup.get("serverTimeout"));
-        assertEquals(dc.getServers(), savedSetup.get("servers"));
+        assertEquals(
+            dc.getServers() == null ? "" : dc.getServers(),
+            savedSetup.get("servers"));
         assertEquals(
             dc.getShareBundles(), savedSetup.get("shareBundles"));
         assertEquals(
