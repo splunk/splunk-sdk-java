@@ -49,6 +49,7 @@ class ServiceKids extends Children.Keys<String> {
             "searches",
             "eventtypes",
             "indexes",
+            "inputs",
             "outputDefault",
             "outputGroups",
             "outputServers",
@@ -111,6 +112,12 @@ class ServiceKids extends Children.Keys<String> {
                 "Indexes", 
                 service.getIndexes(), 
                 IndexNode.class);
+
+        if (kind.equals("inputs"))
+            return new EntityCollectionNode(
+                "Inputs", 
+                service.getInputs(), 
+                InputNode.class);
 
         if (kind.equals("jobs"))
             return new EntityCollectionNode(

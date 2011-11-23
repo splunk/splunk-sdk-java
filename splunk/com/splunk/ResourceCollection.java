@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.Set;
 public class ResourceCollection<T extends Resource> 
     extends Resource implements Map<String, T> 
 {
-    protected Map<String, T> items;
+    protected Map<String, T> items = new HashMap<String, T>();
     protected Class itemClass;
 
     ResourceCollection(Service service, String path, Class itemClass) {
@@ -45,6 +46,42 @@ public class ResourceCollection<T extends Resource>
     public boolean containsValue(Object value) {
         validate();
         return items.containsValue(value);
+    }
+
+    static Class[] itemSig = new Class[] { Service.class, String.class };
+    protected T createItem(Class itemClass, String path) {
+        Constructor ctor;
+        try {
+            ctor = itemClass.getDeclaredConstructor(itemSig);
+        }
+        catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+
+        T item;
+        try {
+            item = (T)ctor.newInstance(service, path);
+        }
+        catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
+
+        return item;
+    }
+
+    // Instantiate a collection item corresponding to the given AtomEntry.
+    // This base implementation uses the class object passed in when the 
+    // generic ResourceCollection was created. Subclasses may override this
+    // method to provide alternative means of instantiating a collection items.
+    protected T createItem(AtomEntry entry) {
+        String path = itemPath(entry);
+        return createItem(itemClass, itemPath(entry));
     }
 
     public Set<Map.Entry<String, T>> entrySet() {
@@ -71,11 +108,17 @@ public class ResourceCollection<T extends Resource>
         validate();
         return items.isEmpty();
     }
-
+    
+    // Returns the value to use as the item key from the given AtomEntry.
+    // Subclasses may override this for collections that use something other
+    // than title as the default.
     protected String itemKey(AtomEntry entry) {
         return entry.title;
     }
 
+    // Retrieve the value to use as the item path from the given AtomEntry.
+    // Subclasses may override this to support alternative methods of 
+    // determining the item's path.
     protected String itemPath(AtomEntry entry) {
         return entry.links.get("alternate");
     }
@@ -90,20 +133,11 @@ public class ResourceCollection<T extends Resource>
     }
 
     void load(AtomFeed value) {
-        try {
-            super.load(value);
-            Constructor ctor = itemClass.getDeclaredConstructor(
-                new Class[] { Service.class, String.class });
-            this.items = new HashMap<String, T>();
-            for (AtomEntry entry : value.entries) {
-                String key = itemKey(entry);
-                String path = itemPath(entry);
-                T item = (T)ctor.newInstance(service, path);
-                this.items.put(key, item);
-            }
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        super.load(value);
+        for (AtomEntry entry : value.entries) {
+            String key = itemKey(entry);
+            T item = createItem(entry);
+            items.put(key, item);
         }
     }
 
@@ -116,6 +150,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     public void refresh() {
+        items.clear();
         ResponseMessage response = list();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.parse(response.getContent());

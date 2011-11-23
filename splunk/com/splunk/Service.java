@@ -135,12 +135,12 @@ public class Service extends HttpService {
         return new ServiceInfo(this);
     }
 
-    public EntityCollection<Entity> getInputs() {
-        return null; //  UNDONE: flatten?
+    public InputCollection getInputs() {
+        return new InputCollection(this);
     }
 
     public JobCollection getJobs() {
-        return new JobCollection(this, "search/jobs");
+        return new JobCollection(this);
     }
 
     public EntityCollection<LicenseGroup> getLicenseGroups() {
@@ -221,7 +221,7 @@ public class Service extends HttpService {
     }
 
     public UserCollection getUsers() {
-        return new UserCollection(this, "authentication/users");
+        return new UserCollection(this);
     }
 
     public Service login(String username, String password) {

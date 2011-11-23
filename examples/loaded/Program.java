@@ -193,6 +193,11 @@ public class Program {
         printField("isInternal", index.isInternal());
     }
 
+    static void printInput(Input input) {
+        printEntity(input);
+        printField("Kind", input.getKind().toString());
+    }
+
     static void printLicense(License license) {
         printEntity(license);
         printField("CreationTime", license.getCreationTime());
@@ -511,6 +516,10 @@ public class Program {
         System.out.print("\n# Indexes");
         for (Index index : service.getIndexes().values())
             printIndex(index);
+
+        System.out.print("\n# Inputs");
+        for (Input input : service.getInputs().values())
+            printInput(input);
 
         System.out.print("\n# Jobs");
         for (Job job : service.getJobs().values())

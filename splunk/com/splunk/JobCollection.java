@@ -17,8 +17,8 @@
 package com.splunk;
 
 public class JobCollection extends EntityCollection<Job> {
-    public JobCollection(Service service, String path) {
-        super(service, path, Job.class);
+    public JobCollection(Service service) {
+        super(service, "search/jobs", Job.class);
     }
     
     public Job create(String query) {

@@ -44,6 +44,8 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         PropertyEditorManager.registerEditor(
             Date.class, DatePropertyEditor.class);
         PropertyEditorManager.registerEditor(
+            InputKind.class, InputKindPropertyEditor.class);
+        PropertyEditorManager.registerEditor(
             String[].class, StringArrayPropertyEditor.class);
     }
 
