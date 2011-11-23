@@ -54,6 +54,7 @@ public class ApplicationTest extends TestCase {
         service = waitForSplunk();
         EntityCollection<Application> apps = service.getApplications();
         apps.remove(appName);
+        service.restart();
         return waitForSplunk();
     }
 
