@@ -578,7 +578,7 @@ public class Program {
             printRole(role);
 
         System.out.print("\n# Saved Searches");
-        for (SavedSearch search : service.getSearches().values())
+        for (SavedSearch search : service.getSavedSearches().values())
             printSavedSearch(search);
 
         System.out.print("\n# Users");

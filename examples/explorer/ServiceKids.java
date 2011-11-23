@@ -192,7 +192,7 @@ class ServiceKids extends Children.Keys<String> {
         if (kind.equals("searches"))
             return new EntityCollectionNode(
                 "Saved Searches", 
-                service.getSearches(), 
+                service.getSavedSearches(), 
                 SavedSearchNode.class);
 
         if (kind.equals("settings"))
