@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Date;
 
 public class FiredAlert extends Entity {
-    public FiredAlert(Service service, String path) {
+    FiredAlert(Service service, String path) {
         super(service, path);
     }
 

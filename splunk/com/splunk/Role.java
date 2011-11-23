@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class Role extends Entity {
-    public Role(Service service, String path) {
+    Role(Service service, String path) {
         super(service, path);
     }
 

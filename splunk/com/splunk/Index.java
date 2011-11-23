@@ -24,7 +24,7 @@ import java.util.Date;
 import java.net.Socket;
 
 public class Index extends Entity {
-    public Index(Service service, String path) {
+    Index(Service service, String path) {
         super(service, path);
     }
 

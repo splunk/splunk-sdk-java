@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 public class Job extends Entity {
-    public Job(Service service, String path) {
+    Job(Service service, String path) {
         super(service, path);
     }
 

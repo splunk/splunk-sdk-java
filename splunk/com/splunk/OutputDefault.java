@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class OutputDefault extends Entity {
-    public OutputDefault(Service service) {
+    OutputDefault(Service service) {
         super(service, "data/outputs/tcp/default");
     }
 

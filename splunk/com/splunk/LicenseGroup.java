@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class LicenseGroup extends Entity {
-    public LicenseGroup(Service service, String path) {
+    LicenseGroup(Service service, String path) {
         super(service, path);
     }
 

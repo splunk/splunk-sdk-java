@@ -19,7 +19,7 @@ package com.splunk;
 public class ConfCollection 
     extends ResourceCollection<EntityCollection<Entity>> 
 {
-    public ConfCollection(Service service) {
+    ConfCollection(Service service) {
         super(service, "properties", EntityCollection.class);
     }
 

@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class SavedSearch extends Entity {
-    public SavedSearch(Service service, String path) {
+    SavedSearch(Service service, String path) {
         super(service, path);
     }
 

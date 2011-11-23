@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class LicenseSlave extends Entity {
-    public LicenseSlave(Service service, String path) {
+    LicenseSlave(Service service, String path) {
         super(service, path);
     }
 

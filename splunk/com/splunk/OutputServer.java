@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class OutputServer extends Entity {
-    public OutputServer(Service service, String path) {
+    OutputServer(Service service, String path) {
         super(service, path);
     }
 

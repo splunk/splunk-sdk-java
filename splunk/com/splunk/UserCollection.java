@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class UserCollection extends EntityCollection<User> {
-    public UserCollection(Service service) {
+    UserCollection(Service service) {
         super(service, "authentication/users", User.class);
     }
     

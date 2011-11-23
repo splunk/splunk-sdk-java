@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class Settings extends Entity {
-    public Settings(Service service) {
+    Settings(Service service) {
         super(service, "server/settings");
     }
 

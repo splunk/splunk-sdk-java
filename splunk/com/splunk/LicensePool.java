@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class LicensePool extends Entity {
-    public LicensePool(Service service, String path) {
+    LicensePool(Service service, String path) {
         super(service, path);
     }
 

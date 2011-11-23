@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class Logger extends Entity {
-    public Logger(Service service, String path) {
+    Logger(Service service, String path) {
         super(service, path);
     }
 

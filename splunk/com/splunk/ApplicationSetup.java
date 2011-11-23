@@ -17,11 +17,11 @@
 package com.splunk;
 
 public class ApplicationSetup extends Entity {
-    public ApplicationSetup(Service service, String path) {
+    ApplicationSetup(Service service, String path) {
         super(service, path);
     }
 
-    public String getSetupXML() {
+    public String getSetupXml() {
         return getString("eai:setup");
     }
 

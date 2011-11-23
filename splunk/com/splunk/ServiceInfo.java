@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class ServiceInfo extends Entity {
-    public ServiceInfo(Service service) {
+    ServiceInfo(Service service) {
         super(service, "server/info");
     }
 

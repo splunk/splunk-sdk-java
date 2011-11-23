@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class DistributedPeer extends Entity {
-    public DistributedPeer(Service service, String path) {
+    DistributedPeer(Service service, String path) {
         super(service, path);
     }
 

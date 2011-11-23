@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class LicenseStack extends Entity {
-    public LicenseStack(Service service, String path) {
+    LicenseStack(Service service, String path) {
         super(service, path);
     }
 

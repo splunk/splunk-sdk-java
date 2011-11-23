@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class EventType extends Entity {
-    public EventType(Service service, String path) {
+    EventType(Service service, String path) {
         super(service, path);
     }
 

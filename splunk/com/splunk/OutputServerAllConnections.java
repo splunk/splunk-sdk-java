@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class OutputServerAllConnections extends Entity {
-    public OutputServerAllConnections(Service service, String path) {
+    OutputServerAllConnections(Service service, String path) {
         super(service, path);
     }
 

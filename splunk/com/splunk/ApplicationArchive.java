@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class ApplicationArchive extends Entity {
-    public ApplicationArchive(Service service, String path) {
+    ApplicationArchive(Service service, String path) {
         super(service, path);
     }
 

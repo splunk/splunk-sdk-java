@@ -23,7 +23,7 @@ import java.util.Map;
 public class Entity extends Resource {
     private Map<String, Object> content;
 
-    public Entity(Service service, String path) {
+    Entity(Service service, String path) {
         super(service, path);
     }
 

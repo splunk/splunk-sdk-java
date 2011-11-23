@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class OutputSyslog extends Entity {
-    public OutputSyslog(Service service, String path) {
+    OutputSyslog(Service service, String path) {
         super(service, path);
     }
 

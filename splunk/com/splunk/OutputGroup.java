@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class OutputGroup extends Entity {
-    public OutputGroup(Service service, String path) {
+    OutputGroup(Service service, String path) {
         super(service, path);
     }
 

@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Date;
 
 public class License extends Entity {
-    public License(Service service, String path) {
+    License(Service service, String path) {
         super(service, path);
     }
 

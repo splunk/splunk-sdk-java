@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class Message extends Entity {
-    public Message(Service service, String path) {
+    Message(Service service, String path) {
         super(service, path);
     }
 

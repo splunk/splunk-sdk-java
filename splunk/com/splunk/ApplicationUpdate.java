@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class ApplicationUpdate extends Entity {
-    public ApplicationUpdate(Service service, String path) {
+    ApplicationUpdate(Service service, String path) {
         super(service, path);
     }
 

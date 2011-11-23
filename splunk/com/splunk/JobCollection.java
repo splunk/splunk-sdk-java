@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class JobCollection extends EntityCollection<Job> {
-    public JobCollection(Service service) {
+    JobCollection(Service service) {
         super(service, "search/jobs", Job.class);
     }
     

@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class DistributedConfiguration extends Entity {
-    public DistributedConfiguration(Service service) {
+    DistributedConfiguration(Service service) {
         super(service, "search/distributed/config");
     }
 

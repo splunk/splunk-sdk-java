@@ -113,7 +113,7 @@ public class ApplicationTest extends TestCase {
 
         ApplicationSetup appSetup = app.setup();
         try {
-            assertTrue(appSetup.getSetupXML().length() > 0);
+            assertTrue(appSetup.getSetupXml().length() > 0);
         } catch (Exception e) {
             // silent exception, we expect a 500 error because the
             // setup.xml file will be missing

@@ -17,7 +17,7 @@
 package com.splunk;
 
 public class User extends Entity {
-    public User(Service service, String path) {
+    User(Service service, String path) {
         super(service, path);
     }
 
