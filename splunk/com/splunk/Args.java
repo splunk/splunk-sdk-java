@@ -34,14 +34,11 @@ public class Args extends HashMap<String, Object> {
     }
 
     public Args(Map<String, Object> values) {
-        super();
-        putAll(values);
+        super(values);
     }
 
-    public static <T> T 
-    get(Map<String, Object> args, String key, T defaultValue) {
-        if (!args.containsKey(key)) return defaultValue;
-        return (T)args.get(key);
+    public Args clone() {
+        return new Args(this);
     }
 
     public static Args create(Map<String, Object> values) {
@@ -91,6 +88,12 @@ public class Args extends HashMap<String, Object> {
             }
         }
         return builder.toString();
+    }
+
+    public static <T> T 
+    get(Map<String, Object> args, String key, T defaultValue) {
+        if (!args.containsKey(key)) return defaultValue;
+        return (T)args.get(key);
     }
 }
 

@@ -26,10 +26,37 @@ public class SavedSearch extends Entity {
         invalidate();
     }
 
+    public Job dispatch() {
+        return dispatch(null);
+    }
+
+    // UNDONE: We should take an optional maxWait argument
+    // CONSIDER: Another alternative is to return a MaybeJob object that
+    // has an "exists" property, so the user can call maybeJob.refresh()
+    // until exists == true.
     public Job dispatch(Args args) {
-        service.post(actionPath("dispatch"), args);
+        ResponseMessage response = service.post(actionPath("dispatch"), args);
         invalidate();
-        return null; // UNDONE: Return Job
+        String sid = Job.getSid(response);
+
+        // The sad fact here is that the search job does not immediatly show 
+        // up once the saved search is dispatched, and we may therefore have 
+        // to wait a while in order to return the search job.
+
+        Job job = null;
+        JobCollection jobs = service.getJobs();
+        for (int retry = 5; retry > 0; --retry) {
+            jobs.refresh();
+            job = jobs.get(sid);
+            if (job != null) break;
+            try { Thread.sleep(1000); } 
+            catch (InterruptedException e) {}; 
+        }
+
+        // UNDONE: If job == null we should probably throw some kind of 
+        // exception indicating a failed dispatch.
+
+        return job;
     }
 
     public Job[] history() {
@@ -210,4 +237,14 @@ public class SavedSearch extends Entity {
         return getBoolean("is_visible");
     }
 
+    public void update(Args args) {
+        // Updates to a saved search *require* that the search string be 
+        // passed, so add the current search string here if the value wasn't
+        // passed in by the caller.
+        if (!args.containsKey("search")) {
+            args = args.clone();
+            args.put("search", getSearch());
+        }
+        super.update(args);
+    }
 }

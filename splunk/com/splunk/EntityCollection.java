@@ -25,6 +25,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
         super(service, path, itemClass);
     }
 
+    // UNDONE: The following isn't valid for all entity collections
     public T create(String name) {
         return create(name, null);
     }

@@ -99,4 +99,14 @@ public class SplunkTestCase extends TestCase {
         }
         catch (InterruptedException e) {}
     }
+
+    // Wait for the given job to complete
+    Job wait(Job job) {
+        while (!job.isDone()) {
+            try { Thread.sleep(2000); }
+            catch (InterruptedException e) {}
+            job.refresh();
+        }
+        return job;
+    }
 }

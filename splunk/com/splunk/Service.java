@@ -211,9 +211,8 @@ public class Service extends HttpService {
             this, "authentication/roles", Role.class);
     }
 
-    public EntityCollection<SavedSearch> getSavedSearches() {
-        return new EntityCollection<SavedSearch>(
-            this, "saved/searches", SavedSearch.class);
+    public SavedSearchCollection getSavedSearches() {
+        return new SavedSearchCollection(this);
     }
 
     public Settings getSettings() {

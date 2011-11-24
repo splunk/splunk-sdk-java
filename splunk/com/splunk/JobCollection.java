@@ -36,8 +36,7 @@ public class JobCollection extends EntityCollection<Job> {
         ResponseMessage response = service.post(path, args);
         assert(response.getStatus() == 201);
         invalidate();
-        String sid = Xml.parse(response.getContent())
-            .getElementsByTagName("sid").item(0).getTextContent();
+        String sid = Job.getSid(response);
         return get(sid);
     }
 

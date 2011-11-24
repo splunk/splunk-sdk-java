@@ -23,78 +23,65 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import java.io.IOException;
-import junit.framework.TestCase;
 import org.junit.*;
 
-public class SearchTest extends TestCase {
-    Command command;
-    Service service;
-
-    public SearchTest() {}
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-        service = Service.connect(command.opts);
-    }
+public class SearchTest extends SplunkTestCase {
+    public SearchTest() { super(); }
 
     // Run the given query.
-    Job run(String query) {
-        return run(query, null);
+    Job run(Service service, String query) {
+        return run(service, query, null);
     }
 
     // Run the given query with the given query args.
-    Job run(String query, Args args) {
+    Job run(Service service, String query, Args args) {
         return service.getJobs().create(query, args);
     }
 
     // Run the given query and wait for the job to complete.
-    Job runWait(String query) {
-        return runWait(query, null);
+    Job runWait(Service service, String query) {
+        return runWait(service, query, null);
     }
 
     // Run the given query with the given query args and wait for the job to
     // complete.
-    Job runWait(String query, Args args) {
+    Job runWait(Service service, String query, Args args) {
         Job job = service.getJobs().create(query, args);
-        while (!job.isDone()) {
-            try { Thread.sleep(2000); }
-            catch (InterruptedException e) {}
-            job.refresh();
-        }
-        return job;
+        return wait(job);
     }
 
     // Check retrieval of search job events.
     @Test public void testEvents() throws IOException {
-        Job job;
+        Service service = connect();
 
         String query = "search index=sdk-tests * earliest=-1m";
+
+        Job job;
         
-        job = runWait(query);
+        job = runWait(service, query);
         job.getEvents().close();
         job.cancel();
 
-        job = runWait(query);
+        job = runWait(service, query);
         job.getEvents(new Args("output_mode", "csv")).close();
         job.cancel();
 
-        job = runWait(query);
+        job = runWait(service, query);
         job.getEvents(new Args("output_mode", "json")).close();
         job.cancel();
     }
 
     @Test public void testParse() {
-        Args parseArgs;
-        ResponseMessage response;
+        Service service = connect();
 
         String query = "search index=sdk-tests * | head 1";
 
         // Check simple parse.
-        response = service.parse(query);
+        ResponseMessage response = service.parse(query);
         assertEquals(response.getStatus(), 200);
+
+        Args parseArgs;
 
         // Check parse with parse_only argument.
         parseArgs = new Args("parse_only", true);
@@ -113,6 +100,8 @@ public class SearchTest extends TestCase {
 
     @Test public void testParseFail() {
         String query = "syntax-error";
+
+        Service service = connect();
 
         // Check for parse error.
         try {
@@ -149,75 +138,79 @@ public class SearchTest extends TestCase {
 
     // Check retrieval of search job results.
     @Test public void testPreview() throws IOException {
-        Job job;
+        Service service = connect();
 
         String query = "search index=_internal * earliest=-1m";
 
         Args args = new Args();
         args.put("field_list", "source,host,sourcetype");
         args.put("status_buckets", 100);
+
+        Job job;
         
-        job = run(query, args);
+        job = run(service, query, args);
         job.getResultsPreview().close();
         job.cancel();
 
-        job = run(query, args);
+        job = run(service, query, args);
         job.getResultsPreview(new Args("output_mode", "csv")).close();
         job.cancel();
 
-        job = run(query, args);
+        job = run(service, query, args);
         job.getResultsPreview(new Args("output_mode", "json")).close();
         job.cancel();
     }
 
     // Check retrieval of search job results.
     @Test public void testResults() throws IOException {
-        Job job;
+        Service service = connect();
 
         String query = "search index=_internal * earliest=-1m | stats count";
+
+        Job job;
         
-        job = runWait(query);
+        job = runWait(service, query);
         job.getResults().close();
         job.cancel();
 
-        job = runWait(query);
+        job = runWait(service, query);
         job.getResults(new Args("output_mode", "csv")).close();
         job.cancel();
 
-        job = runWait(query);
+        job = runWait(service, query);
         job.getResults(new Args("output_mode", "json")).close();
         job.cancel();
     }
 
     // Check retrieval of search log.
     @Test public void testSearchLog() throws IOException {
-        Job job;
+        Service service = connect();
 
         String query = "search index=sdk-tests * | head 100";
-        
-        job = runWait(query);
+
+        Job job = runWait(service, query);
         job.getSearchLog().close();
         job.cancel();
     }
 
     // Check retrieval of search job summary.
     @Test public void testSummary() throws IOException {
-        Job job;
+        Service service = connect();
 
         String query = "search index=sdk-tests * earliest=-1m";
         
-        job = runWait(query, new Args("status_buckets", 100));
+        Job job = runWait(service, query, new Args("status_buckets", 100));
         job.getSummary().close();
         job.cancel();
     }
 
     // Check retrieval of search job timeline.
     @Test public void testTimeline() throws IOException {
-        Job job;
+        Service service = connect();
 
         String query = "search index=sdk-tests * earliest=-1m";
         
-        job = runWait(query, new Args("status_buckets", 100));
+        Job job = runWait(service, query, new Args("status_buckets", 100));
         job.getTimeline().close();
         job.cancel();
     }

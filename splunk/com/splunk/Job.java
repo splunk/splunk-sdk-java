@@ -222,6 +222,12 @@ public class Job extends Entity {
         return getString("sid");
     }
 
+    // Retrieve the sid from the given response message
+    static String getSid(ResponseMessage response) {
+        return Xml.parse(response.getContent())
+            .getElementsByTagName("sid").item(0).getTextContent();
+    }
+
     public InputStream getSummary() {
         return getSummary(null);
     }
