@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.*;
 
 public class SavedSearchTest extends SplunkTestCase {
@@ -133,11 +134,10 @@ public class SavedSearchTest extends SplunkTestCase {
             savedSearches.remove("sdk-test1");
         assertFalse(savedSearches.containsKey("sdk-test1"));
 
-        SavedSearch savedSearch;
         String search = "search index=sdk-tests * earliest=-1m";
 
         // Create a saved search
-        savedSearch = savedSearches.create("sdk-test1", search);
+        SavedSearch savedSearch = savedSearches.create("sdk-test1", search);
 
         Job job;
 
@@ -152,6 +152,66 @@ public class SavedSearchTest extends SplunkTestCase {
         wait(job);
         job.getTimeline().close();
         job.cancel();
+
+        // Delete the saved search
+        savedSearches.remove("sdk-test1");
+        assertFalse(savedSearches.containsKey("sdk-test1"));
+    }
+
+    boolean contains(Job[] history, String sid) {
+        for (int i = 0; i < history.length; ++i)
+            if (history[i].getSid().equals(sid))
+                return true;
+        return false;
+    }
+
+    @Test public void testHistory() {
+        Service service = connect();
+
+        SavedSearchCollection savedSearches = service.getSavedSearches();
+
+        // Ensure test starts in a known good state
+        if (savedSearches.containsKey("sdk-test1"))
+            savedSearches.remove("sdk-test1");
+        assertFalse(savedSearches.containsKey("sdk-test1"));
+
+        String search = "search index=sdk-tests * earliest=-1m";
+
+        // Create a saved search
+        SavedSearch savedSearch = savedSearches.create("sdk-test1", search);
+
+        // Clear the history - even though we have a newly create saved search
+        // its possible there was a previous saved search with the same name
+        // that had a matching history.
+        Job[] history = savedSearch.history();
+        for (Job job : history) job.cancel();
+
+        history = savedSearch.history();
+        assertEquals(history.length, 0);
+
+        Job job1 = savedSearch.dispatch();
+        history = savedSearch.history();
+        assertEquals(history.length, 1);
+        assertTrue(contains(history, job1.getSid()));
+
+        Job job2 = savedSearch.dispatch();
+        history = savedSearch.history();
+        assertEquals(history.length, 2);
+        assertTrue(contains(history, job1.getSid()));
+        assertTrue(contains(history, job2.getSid()));
+
+        job1.cancel();
+        history = savedSearch.history();
+        assertEquals(history.length, 1);
+        assertTrue(contains(history, job2.getSid()));
+
+        job2.cancel();
+        history = savedSearch.history();
+        assertEquals(history.length, 0);
+
+        // Delete the saved search
+        savedSearches.remove("sdk-test1");
+        assertFalse(savedSearches.containsKey("sdk-test1"));
     }
 }
 

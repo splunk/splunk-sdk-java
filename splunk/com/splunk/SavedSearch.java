@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.ArrayList;
+
 public class SavedSearch extends Entity {
     SavedSearch(Service service, String path) {
         super(service, path);
@@ -59,10 +61,17 @@ public class SavedSearch extends Entity {
         return job;
     }
 
+    // Returns a list of search jobs dispatched from this saved search.
     public Job[] history() {
-        service.post(actionPath("history"));
-        invalidate();
-        return null; // UNDONE: Return Job[]
+        ResponseMessage response = service.get(actionPath("history"));
+        AtomFeed feed = AtomFeed.parse(response.getContent());
+        int count = feed.entries.size();
+        Job[] result = new Job[count];
+        for (int i = 0; i < count; ++i) {
+            String sid = feed.entries.get(i).title;
+            result[i] = new Job(service, "search/jobs/" + sid);
+        }
+        return result;
     }
 
     public String getActionEmailSendResults() {
