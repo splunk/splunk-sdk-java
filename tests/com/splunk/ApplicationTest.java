@@ -16,20 +16,9 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-import org.junit.*;
-
-public class ApplicationTest extends TestCase {
-    Command command;
-
-    public ApplicationTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
+public class ApplicationTest extends SplunkTestCase {
     private Service waitForSplunk() throws Exception {
         // there is still a race condition here: if the restart takes more
         // than 5 seconds to percolate through splunk, apps will not be
@@ -56,10 +45,6 @@ public class ApplicationTest extends TestCase {
         apps.remove(appName);
         service.restart();
         return waitForSplunk();
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     // Nota Bene: Splunk needs to be restarted whenever an app is deleted

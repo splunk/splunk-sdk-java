@@ -16,26 +16,11 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.Test;
 
-public class LicenseSlaveTest extends TestCase {
-    Command command;
-
-    public LicenseSlaveTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class LicenseSlaveTest extends SplunkTestCase {
     @Test public void testLicenseSlave() throws Exception {
         Service service = connect();
 

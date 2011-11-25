@@ -16,24 +16,9 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-import org.junit.*;
-
-public class DeploymentClientTest extends TestCase {
-    Command command;
-
-    public DeploymentClientTest() {}
-
-    Service connect() {
-        return  Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class DeploymentClientTest extends SplunkTestCase {
     @Test public void testDeploymentClient() throws Exception {
         Service service = connect();
 

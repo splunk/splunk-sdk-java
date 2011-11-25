@@ -16,28 +16,14 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.Test;
 
-public class IndexTest extends TestCase {
-    Command command;
-
-    public IndexTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class IndexTest extends SplunkTestCase {
     private void wait_event_count(Index index, int value, int seconds) {
         while (seconds > 0) {
             try {

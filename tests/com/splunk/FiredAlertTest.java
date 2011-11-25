@@ -16,24 +16,9 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-import org.junit.*;
-
-public class FiredAlertTest extends TestCase {
-    Command command;
-
-    public FiredAlertTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class FiredAlertTest extends SplunkTestCase {
     @Test public void testFiredAlerts() throws Exception {
         Service service = connect();
         EntityCollection<FiredAlert> alerts = service.getFiredAlerts();

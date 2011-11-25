@@ -17,13 +17,11 @@
 package com.splunk;
 
 import java.util.Map;
-import org.junit.*;
+import org.junit.Test;
 
 public class ConfTest extends SplunkTestCase {
     final static String APP_NAME = "sdk-tests";
     final static String APP_NAMESPACE = "nobody/" + APP_NAME;
-
-    public ConfTest() { super(); }
 
     @Test public void testConfs() {
         Service service = connect();

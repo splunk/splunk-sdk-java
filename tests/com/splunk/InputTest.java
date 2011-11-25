@@ -20,8 +20,6 @@ import java.util.Map;
 import org.junit.*;
 
 public class InputTest extends SplunkTestCase {
-    public InputTest() { super(); }
-
     @Test public void testInputs() {
         Service service = connect();
 

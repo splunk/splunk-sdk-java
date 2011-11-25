@@ -16,24 +16,9 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-import org.junit.*;
-
-public class EventTypeTest extends TestCase {
-    Command command;
-
-    public EventTypeTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class EventTypeTest extends SplunkTestCase {
     @Test public void testEventType() throws Exception {
         Service service = connect();
 

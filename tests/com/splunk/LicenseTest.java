@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,22 +23,9 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.Test;
 
-public class LicenseTest extends TestCase {
-    Command command;
-
-    public LicenseTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class LicenseTest extends SplunkTestCase {
     @Test public void testLicense() throws Exception {
         Service service = connect();
 

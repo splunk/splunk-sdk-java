@@ -16,19 +16,12 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.Test;
 
-public class ServiceTest extends TestCase {
-    Command command;
-
-    public ServiceTest() {}
-
+public class ServiceTest extends SplunkTestCase {
     // Perform some non-intrusive inspection of the given Job object.
     void checkJob(Job job) {
         job.getCursorTime();
@@ -90,14 +83,6 @@ public class ServiceTest extends TestCase {
         for (int i = 0; i < array.length; ++i)
             if (array[i].equals(value)) return true;
         return false;
-    }
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
     }
 
     @Test public void testCapabilities() throws Exception {

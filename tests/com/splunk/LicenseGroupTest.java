@@ -16,26 +16,11 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.Test;
 
-public class LicenseGroupTest extends TestCase {
-    Command command;
-
-    public LicenseGroupTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class LicenseGroupTest extends SplunkTestCase {
     @Test public void testLicenseGroup() throws Exception {
         Service service = connect();
 

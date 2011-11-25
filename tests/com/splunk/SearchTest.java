@@ -14,21 +14,12 @@
  * under the License.
  */
 
-// parse
-// typeahead
-// timeparser
-// jobs.create
-//  - result kinds
-// 
-
 package com.splunk;
 
 import java.io.IOException;
-import org.junit.*;
+import org.junit.Test;
 
 public class SearchTest extends SplunkTestCase {
-    public SearchTest() { super(); }
-
     // Run the given query.
     Job run(Service service, String query) {
         return run(service, query, null);

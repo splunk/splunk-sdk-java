@@ -18,11 +18,9 @@ package com.splunk;
 
 import java.io.IOException;
 import java.util.Arrays;
-import org.junit.*;
+import org.junit.Test;
 
 public class SavedSearchTest extends SplunkTestCase {
-    public SavedSearchTest() { super(); }
-
     @Test public void testSavedSearches() {
         Service service = connect();
 

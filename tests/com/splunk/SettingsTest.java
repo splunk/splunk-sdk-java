@@ -16,27 +16,11 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-import org.junit.*;
-
-public class SettingsTest extends TestCase {
-    Command command;
-
-    public SettingsTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class SettingsTest extends SplunkTestCase {
     @Test public void testSettings() {
         Service service = connect();
-
         Settings settings = service.getSettings();
         settings.getSplunkDB();
         settings.getSplunkHome();

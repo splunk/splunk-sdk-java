@@ -25,21 +25,10 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import java.util.HashMap;
-import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.Test;
 
-public class HttpServiceTest extends TestCase {
-    Command command;
-
-    public HttpServiceTest() {}
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class HttpServiceTest extends SplunkTestCase {
     @Test public void testGet() {
         HttpService service = new HttpService(
             command.host, command.port, command.scheme);

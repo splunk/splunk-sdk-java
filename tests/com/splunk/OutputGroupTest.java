@@ -16,24 +16,9 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-import org.junit.*;
-
-public class OutputGroupTest extends TestCase {
-    Command command;
-
-    public OutputGroupTest() {}
-
-    Service connect() {
-        return Service.connect(command.opts);
-    }
-
-    @Before public void setUp() {
-        command = Command.splunk(); // Pick up .splunkrc settings
-    }
-
+public class OutputGroupTest extends SplunkTestCase {
     @Test public void testOutputGroup() throws Exception {
         Service service = connect();
 
