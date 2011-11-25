@@ -16,16 +16,8 @@
 
 import com.splunk.Entity;
 
-class LicenseStackNode extends EntityNode {
-    LicenseStackNode(Entity value) {
-        super(value);
-    }
-
-    @Override protected PropertyList getMetadata() {
-        PropertyList list = super.getMetadata();
-        list.add(String.class, "getLabel");
-        list.add(long.class, "getQuota");
-        list.add(String.class, "getType");
-        return list;
+class EntityNode extends ResourceNode {
+    EntityNode(Entity value) {
+        super(value, new EntityKids(value));
     }
 }

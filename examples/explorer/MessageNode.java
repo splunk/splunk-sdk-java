@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class MessageNode extends ResourceNode {
-    MessageNode(Resource value) {
+class MessageNode extends EntityNode {
+    MessageNode(Entity value) {
         super(value);
     }
 

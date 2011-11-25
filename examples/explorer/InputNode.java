@@ -14,11 +14,11 @@
  * under the License.
  */
 
+import com.splunk.Entity;
 import com.splunk.InputKind;
-import com.splunk.Resource;
 
-class InputNode extends ResourceNode {
-    InputNode(Resource value) { 
+class InputNode extends EntityNode {
+    InputNode(Entity value) { 
         super(value); 
     }
 

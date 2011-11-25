@@ -32,7 +32,9 @@ abstract class ExplorerNode extends AbstractNode {
         this.value = value;
     }
 
-    abstract PropertyList getMetadata();
+    protected PropertyList getMetadata() {
+        return new PropertyList();
+    }
 
     @Override protected Sheet createSheet() {
         return getMetadata().createSheet(value);

@@ -14,13 +14,13 @@
  * under the License.
  */
 
+import com.splunk.Entity;
 import com.splunk.License;
-import com.splunk.Resource;
 
 import java.util.Date;
 
-class LicenseNode extends ResourceNode {
-    LicenseNode(Resource value) {
+class LicenseNode extends EntityNode {
+    LicenseNode(Entity value) {
         super(value);
         License license = (License)value;
         String displayName = license.getLabel();

@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class DistributedConfigurationNode extends ResourceNode {
-    DistributedConfigurationNode(Resource value) { 
+class DistributedConfigurationNode extends EntityNode {
+    DistributedConfigurationNode(Entity value) { 
         super(value); 
         setDisplayName("Distributed Configuration");
     }

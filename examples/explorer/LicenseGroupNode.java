@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class LicenseGroupNode extends ResourceNode {
-    LicenseGroupNode(Resource value) {
+class LicenseGroupNode extends EntityNode {
+    LicenseGroupNode(Entity value) {
         super(value);
     }
 

@@ -19,8 +19,6 @@ public class PropertyInfo {
     public String getter;
     public String setter;
 
-    public PropertyInfo() {}
-
     public PropertyInfo(Class datatype, String getter, String setter) {
         this.datatype = datatype;
         this.getter = getter;

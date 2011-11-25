@@ -14,18 +14,12 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import java.beans.PropertyEditorSupport;
+import java.util.Map;
 
-class LicenseStackNode extends EntityNode {
-    LicenseStackNode(Entity value) {
-        super(value);
-    }
-
-    @Override protected PropertyList getMetadata() {
-        PropertyList list = super.getMetadata();
-        list.add(String.class, "getLabel");
-        list.add(long.class, "getQuota");
-        list.add(String.class, "getType");
-        return list;
+public class MapPropertyEditor extends PropertyEditorSupport {
+    @Override public String getAsText() {
+        Map value = (Map)getValue();
+        return value.toString();
     }
 }

@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class EventTypeNode extends ResourceNode {
-    EventTypeNode(Resource value) {
+class EventTypeNode extends EntityNode {
+    EventTypeNode(Entity value) {
         super(value);
     }
 

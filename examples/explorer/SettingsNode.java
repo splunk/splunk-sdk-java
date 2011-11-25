@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class SettingsNode extends ResourceNode {
-    SettingsNode(Resource value) {
+class SettingsNode extends EntityNode {
+    SettingsNode(Entity value) {
         super(value);
         setDisplayName("Settings");
     }

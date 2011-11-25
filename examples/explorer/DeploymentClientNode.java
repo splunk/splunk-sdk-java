@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class DeploymentClientNode extends ResourceNode {
-    DeploymentClientNode(Resource value) {
+class DeploymentClientNode extends EntityNode {
+    DeploymentClientNode(Entity value) {
         super(value);
         setDisplayName("Deployment Client");
     }

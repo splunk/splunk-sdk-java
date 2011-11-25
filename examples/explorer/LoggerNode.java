@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class LoggerNode extends ResourceNode {
-    LoggerNode(Resource value) {
+class LoggerNode extends EntityNode {
+    LoggerNode(Entity value) {
         super(value);
     }
 

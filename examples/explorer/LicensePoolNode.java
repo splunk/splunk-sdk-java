@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class LicensePoolNode extends ResourceNode {
-    LicensePoolNode(Resource value) {
+class LicensePoolNode extends EntityNode {
+    LicensePoolNode(Entity value) {
         super(value);
     }
 

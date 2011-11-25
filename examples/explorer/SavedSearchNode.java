@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class SavedSearchNode extends ResourceNode {
-    SavedSearchNode(Resource value) {
+class SavedSearchNode extends EntityNode {
+    SavedSearchNode(Entity value) {
         super(value);
     }
 

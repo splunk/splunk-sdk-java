@@ -14,12 +14,12 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
 import java.util.Date;
 
-class IndexNode extends ResourceNode {
-    IndexNode(Resource value) { 
+class IndexNode extends EntityNode {
+    IndexNode(Entity value) { 
         super(value); 
     }
 

@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class OutputGroupNode extends ResourceNode {
-    OutputGroupNode(Resource value) {
+class OutputGroupNode extends EntityNode {
+    OutputGroupNode(Entity value) {
         super(value);
     }
 

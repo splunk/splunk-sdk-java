@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class DistributedPeerNode extends ResourceNode {
-    DistributedPeerNode(Resource value) { 
+class DistributedPeerNode extends EntityNode {
+    DistributedPeerNode(Entity value) { 
         super(value); 
     }
 

@@ -14,13 +14,13 @@
  * under the License.
  */
 
+import com.splunk.Entity;
 import com.splunk.Job;
-import com.splunk.Resource;
 
 import java.util.Date;
 
-class JobNode extends ResourceNode {
-    JobNode(Resource value) {
+class JobNode extends EntityNode {
+    JobNode(Entity value) {
         super(value);
         Job job = (Job)value;
         setDisplayName(job.getTitle());

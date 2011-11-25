@@ -15,23 +15,20 @@
  */
 
 import com.splunk.Entity;
-import com.splunk.Resource;
 
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 
-class StanzaNode extends AbstractNode {
-    Entity entity;
-
-    StanzaNode(Resource value) {
-        super(Children.LEAF);
-        this.entity = (Entity)value;
+class StanzaNode extends EntityNode {
+    StanzaNode(Entity value) {
+        super(value);
         setDisplayName(value.getName());
     }
 
+    // Implement createSheet directly in order to dynamically construct
+    // based on the contents of the stanza.
     @Override protected Sheet createSheet() {
+        Entity entity = (Entity)value;
         Sheet.Set props = Sheet.createPropertiesSet();
         for (String key : entity.getContent().keySet()) {
             if (key.equals("eai:acl") || key.equals("eai:attributes"))
@@ -41,6 +38,11 @@ class StanzaNode extends AbstractNode {
         Sheet sheet = Sheet.createDefault();
         sheet.put(props);
         return sheet;
+    }
+
+    // This should never be called because we implement createSheet directly.
+    @Override protected PropertyList getMetadata() {
+        throw new UnsupportedOperationException();
     }
 
     class StanzaProperty extends PropertySupport.ReadOnly<String> {

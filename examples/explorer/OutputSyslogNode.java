@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class OutputSyslogNode extends ResourceNode {
-    OutputSyslogNode(Resource value) {
+class OutputSyslogNode extends EntityNode {
+    OutputSyslogNode(Entity value) {
         super(value);
     }
 

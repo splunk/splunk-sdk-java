@@ -17,8 +17,6 @@
 import com.splunk.InputKind;
 
 import java.beans.PropertyEditorSupport;
-import java.text.ParseException;
-import java.util.Date;
 
 public class InputKindPropertyEditor extends PropertyEditorSupport {
     @Override public String getAsText() {

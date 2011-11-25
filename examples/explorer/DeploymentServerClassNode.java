@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class DeploymentServerClassNode extends ResourceNode {
-    DeploymentServerClassNode(Resource value) {
+class DeploymentServerClassNode extends EntityNode {
+    DeploymentServerClassNode(Entity value) {
         super(value);
     }
 

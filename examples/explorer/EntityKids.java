@@ -15,17 +15,25 @@
  */
 
 import com.splunk.Entity;
+import com.splunk.EntityMetadata;
 
-class LicenseStackNode extends EntityNode {
-    LicenseStackNode(Entity value) {
-        super(value);
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+
+class EntityKids extends Children.Keys<EntityMetadata> {
+    Entity entity;
+
+    EntityKids(Entity entity) {
+        this.entity = entity;
     }
 
-    @Override protected PropertyList getMetadata() {
-        PropertyList list = super.getMetadata();
-        list.add(String.class, "getLabel");
-        list.add(long.class, "getQuota");
-        list.add(String.class, "getType");
-        return list;
+    @Override protected void addNotify() {
+        EntityMetadata metadata = entity.getMetadata();
+        if (metadata == null) return;
+        setKeys(new EntityMetadata[] { metadata });
+    }
+
+    @Override protected Node[] createNodes(EntityMetadata metadata) {
+        return new Node[] { new EntityMetadataNode(metadata) };
     }
 }

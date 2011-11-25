@@ -14,18 +14,29 @@
  * under the License.
  */
 
-import com.splunk.Entity;
+import com.splunk.EntityMetadata;
 
-class LicenseStackNode extends EntityNode {
-    LicenseStackNode(Entity value) {
+import java.util.Map;
+
+class EntityMetadataNode extends ExplorerNode {
+    EntityMetadataNode(EntityMetadata value) {
         super(value);
+        setDisplayName("Metadata");
     }
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        list.add(String.class, "getLabel");
-        list.add(long.class, "getQuota");
-        list.add(String.class, "getType");
+        list.add(boolean.class, "canChangePermissions");
+        list.add(boolean.class, "canShareApp");
+        list.add(boolean.class, "canShareGlobal");
+        list.add(boolean.class, "canShareUser");
+        list.add(boolean.class, "canWrite");
+        list.add(String.class, "getApp");
+        list.add(String.class, "getOwner");
+        list.add(Map.class, "getPermissions");
+        list.add(String.class, "getSharing");
+        list.add(boolean.class, "isModifiable");
         return list;
     }
 }
+

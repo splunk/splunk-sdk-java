@@ -16,7 +16,6 @@
 
 import com.splunk.Entity;
 import com.splunk.EntityCollection;
-import com.splunk.Resource;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ class EntityCollectionNode extends ResourceNode {
     Node createKid(Entity entity) {
         try {
             if (itemCtor == null)
-                itemCtor = itemClass.getDeclaredConstructor(Resource.class);
+                itemCtor = itemClass.getDeclaredConstructor(Entity.class);
             return (Node)itemCtor.newInstance(entity);
         }
         catch (Exception e) {

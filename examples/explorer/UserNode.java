@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class UserNode extends ResourceNode {
-    UserNode(Resource value) {
+class UserNode extends EntityNode {
+    UserNode(Entity value) {
         super(value);
     }
 

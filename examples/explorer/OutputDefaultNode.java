@@ -14,10 +14,10 @@
  * under the License.
  */
 
-import com.splunk.Resource;
+import com.splunk.Entity;
 
-class OutputDefaultNode extends ResourceNode {
-    OutputDefaultNode(Resource value) {
+class OutputDefaultNode extends EntityNode {
+    OutputDefaultNode(Entity value) {
         super(value);
         setDisplayName("Output Default");
     }

@@ -20,12 +20,14 @@
 //   http://blogs.oracle.com/geertjan/entry/netbeans_apis_outside_of_the
 //
 
-import com.splunk.*;
+import com.splunk.InputKind;
+import com.splunk.Service;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.beans.PropertyEditorManager;
 import java.util.Date;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import org.openide.explorer.ExplorerManager;
@@ -45,6 +47,8 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
             Date.class, DatePropertyEditor.class);
         PropertyEditorManager.registerEditor(
             InputKind.class, InputKindPropertyEditor.class);
+        PropertyEditorManager.registerEditor(
+            Map.class, MapPropertyEditor.class);
         PropertyEditorManager.registerEditor(
             String[].class, StringArrayPropertyEditor.class);
     }
