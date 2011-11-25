@@ -88,6 +88,7 @@ public class Program {
         }
         printResource(entity);
         printActions(entity.getActions());
+        printMetadata(entity.getMetadata());
         Map<String, Object> content = entity.getContent();
         if (content != null) {
             for (Map.Entry entry : content.entrySet()) {
@@ -140,7 +141,7 @@ public class Program {
             ? (String)null : Arrays.toString(value));
     }
 
-    static void printField(String field, List<String> value) {
+    static void printField(String field, Object value) {
         printField(field, value == null ? (String)null : value.toString());
     }
 
@@ -243,6 +244,23 @@ public class Program {
         printField("Label", licenseStack.getLabel());
         printField("Quota", licenseStack.getQuota());
         printField("Type", licenseStack.getType());
+    }
+
+    static void printMetadata(EntityMetadata metadata) {
+        if (metadata == null) {
+            System.out.println("metadata = null");
+            return;
+        }
+        printField("metadata::canChangePermissions", metadata.canChangePermissions());
+        printField("metadata::canShareApp", metadata.canShareApp());
+        printField("metadata::canShareGlobal", metadata.canShareGlobal());
+        printField("metadata::canShareUser", metadata.canShareUser());
+        printField("metadata::canWrite", metadata.canWrite());
+        printField("metadata::App", metadata.getApp());
+        printField("metadata::Owner", metadata.getOwner());
+        printField("metadata::Permissions", metadata.getPermissions());
+        printField("metadata::Sharing", metadata.getSharing());
+        printField("metadata::isModifiable", metadata.isModifiable());
     }
 
     static void printUser(User user) {

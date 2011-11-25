@@ -111,6 +111,15 @@ class Value {
         return getStringArray(map, key);
     }
 
+    static <T> T getValue(Map<String, Object> map, String key) {
+        return (T)map.get(key);
+    }
+
+    static <T> T getValue(Map<String, Object> map, String key, T defaultValue) {
+        if (!map.containsKey(key)) return defaultValue;
+        return (T)map.get(key);
+    }
+
     // Convert the given string to a boolean value.
     static boolean toBoolean(String value) {
         if (value == null) return false;

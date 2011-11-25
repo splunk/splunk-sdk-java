@@ -115,6 +115,15 @@ public class Entity extends Resource {
         return Value.getLong(getContent(), key, defaultValue);
     }
 
+    public EntityMetadata getMetadata() {
+        // CONSIDER: For entities that dont have an eai:acl field, which is
+        // uncommon, but does happen at least in the case of a DeploymentClient
+        // that is not enabled, we return null. A slightly friendlier option
+        // would be to return a metadata instance that defaults all values?
+        if (!getContent().containsKey("eai:acl")) return null;
+        return new EntityMetadata(this);
+    }
+
     String getString(String key) {
         return Value.getString(getContent(), key);
     }
