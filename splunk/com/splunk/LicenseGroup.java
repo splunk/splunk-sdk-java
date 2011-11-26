@@ -22,7 +22,7 @@ public class LicenseGroup extends Entity {
     }
 
     public String[] getStackIds() {
-        return getStringArray("stack_ids");
+        return getStringArray("stack_ids", null);
     }
 
     public boolean isActive() {
