@@ -165,9 +165,8 @@ public class Service extends HttpService {
             this, "licenser/messages", LicenseMessage.class);
     }
 
-    public EntityCollection<LicensePool> getLicensePools() {
-        return new EntityCollection<LicensePool>(
-            this, "licenser/pools", LicensePool.class);
+    public LicensePoolCollection getLicensePools() {
+        return new LicensePoolCollection(this);
     }
 
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
