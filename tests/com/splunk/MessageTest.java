@@ -22,24 +22,19 @@ public class MessageTest extends SplunkTestCase {
     @Test public void testMessage() throws Exception {
         Service service = connect();
 
-        EntityCollection messages = service.getMessages();
+        MessageCollection messages = service.getMessages();
 
-        if (messages.containsKey("sdk-test-message1")) {
+        if (messages.containsKey("sdk-test-message1"))
             messages.remove("sdk-test-message1");
-        }
         assertFalse(messages.containsKey("sdk-test-message1"));
 
-        if (messages.containsKey("sdk-test-message2")) {
+        if (messages.containsKey("sdk-test-message2"))
             messages.remove("sdk-test-message2");
-        }
         assertFalse(messages.containsKey("sdk-test-message2"));
 
-        Args args1 = new Args();
-        args1.put("value", "hello.");
-        messages.create("sdk-test-message1", args1);
-
+        messages.create("sdk-test-message1", "hello.");
         assertTrue(messages.containsKey("sdk-test-message1"));
-        Message message = (Message)messages.get("sdk-test-message1");
+        Message message = messages.get("sdk-test-message1");
         assertTrue(message.getKey().equals("sdk-test-message1"));
         assertTrue(message.getValue().equals("hello."));
 
@@ -48,13 +43,14 @@ public class MessageTest extends SplunkTestCase {
         messages.create("sdk-test-message2", args2);
 
         assertTrue(messages.containsKey("sdk-test-message2"));
-        message = (Message)messages.get("sdk-test-message2");
+        message = messages.get("sdk-test-message2");
         assertTrue(message.getKey().equals("sdk-test-message2"));
         assertTrue(message.getValue().equals("world."));
 
         messages.remove("sdk-test-message1");
-        messages.remove("sdk-test-message2");
         assertFalse(messages.containsKey("sdk-test-message1"));
+
+        messages.remove("sdk-test-message2");
         assertFalse(messages.containsKey("sdk-test-message2"));
     }
 }

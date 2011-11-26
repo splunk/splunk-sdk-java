@@ -189,8 +189,8 @@ public class Service extends HttpService {
             this, "server/logger", Logger.class);
     }
 
-    public EntityCollection<Message> getMessages() {
-        return new EntityCollection<Message>(this, "messages", Message.class);
+    public MessageCollection getMessages() {
+        return new MessageCollection(this);
     }
 
     public OutputDefault getOutputDefault() {
