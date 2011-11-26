@@ -30,9 +30,8 @@ public class Job extends Entity {
         return control(action, null);
     }
 
-    public Job control(String action, Args extra) {
-        Args args = new Args("action", action);
-        if (extra != null) args.putAll(extra);
+    public Job control(String action, Args args) {
+        args = Args.create(args).add("action", action);
         service.post(actionPath("control"), args);
         invalidate();
         return this;

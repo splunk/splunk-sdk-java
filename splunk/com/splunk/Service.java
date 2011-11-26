@@ -72,9 +72,8 @@ public class Service extends HttpService {
         return export(search, null);
     }
 
-    public InputStream export(String search, Args extra) {
-        Args args = new Args("search", search);
-        if (extra != null) args.putAll(extra);
+    public InputStream export(String search, Args args) {
+        args = Args.create(args).add("search", search);
         ResponseMessage response = get("search/jobs/export", args);
         return response.getContent();
     }
@@ -260,9 +259,8 @@ public class Service extends HttpService {
         return parse(query, null);
     }
 
-    public ResponseMessage parse(String query, Args extra) {
-        Args args = new Args("q", query);
-        if (extra != null) args.putAll(extra);
+    public ResponseMessage parse(String query, Args args) {
+        args = Args.create(args).add("q", query);
         return get("search/parser", args);
     }
 

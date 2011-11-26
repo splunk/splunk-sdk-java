@@ -22,7 +22,7 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
     }
 
     public SavedSearch create(String name) {
-        throw new UnsupportedOperationException(); // UNDONE
+        throw new UnsupportedOperationException();
     }
 
     public SavedSearch create(String name, String search) {
@@ -30,9 +30,8 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
         return create(name, args);
     }
 
-    public SavedSearch create(String name, String search, Args extra) {
-        Args args = new Args("search", search);
-        if (extra != null) args.putAll(extra);
+    public SavedSearch create(String name, String search, Args args) {
+        args = Args.create(args).add("search", search);
         return create(name, args);
     }
 }

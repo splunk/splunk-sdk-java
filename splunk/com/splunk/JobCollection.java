@@ -29,10 +29,8 @@ public class JobCollection extends EntityCollection<Job> {
     // returns the results directly in the response body and can not
     // be invoked via create - we will need to add a special oneshot(...)
     // method that returns search results instead of a Job entity.
-    public Job create(String query, Args extra) {
-        Args args = new Args();
-        args.put("search", query);
-        if (extra != null) args.putAll(extra);
+    public Job create(String query, Args args) {
+        args = Args.create(args).add("search", query);
         ResponseMessage response = service.post(path, args);
         assert(response.getStatus() == 201);
         invalidate();

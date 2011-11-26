@@ -250,10 +250,8 @@ public class SavedSearch extends Entity {
         // Updates to a saved search *require* that the search string be 
         // passed, so add the current search string here if the value wasn't
         // passed in by the caller.
-        if (!args.containsKey("search")) {
-            args = args.clone();
-            args.put("search", getSearch());
-        }
+        if (!args.containsKey("search"))
+            args = Args.create(args).add("search", getSearch());
         super.update(args);
     }
 }

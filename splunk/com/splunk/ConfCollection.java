@@ -27,9 +27,8 @@ public class ConfCollection
         return create(name, null);
     }
 
-    public EntityCollection<Entity> create(String name, Args extra) {
-        Args args = new Args("__conf", name);
-        if (extra != null) args.putAll(extra);
+    public EntityCollection<Entity> create(String name, Args args) {
+        args = Args.create(args).add("__conf", name);
         service.post(path, args);
         invalidate();
         return get(name);

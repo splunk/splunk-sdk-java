@@ -43,7 +43,7 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     // UNDONE: create(String name, InputKind kind)
-    // UNDONE: create(String name, InputKind kind, Args extra)
+    // UNDONE: create(String name, InputKind kind, Args args)
 
     @Override protected Input createItem(AtomEntry entry) {
         String path = itemPath(entry);

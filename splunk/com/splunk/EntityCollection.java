@@ -30,9 +30,8 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
         return create(name, null);
     }
 
-    public T create(String name, Args extra) {
-        Args args = new Args("name", name);
-        if (extra != null) args.putAll(extra);
+    public T create(String name, Args args) {
+        args = Args.create(args).add("name", name);
         service.post(path, args);
         invalidate();
         return get(name);

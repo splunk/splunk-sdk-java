@@ -25,24 +25,22 @@ public class UserCollection extends EntityCollection<User> {
         return create(name, password, role, null);
     }
 
-    public User create(String name, String password, String role, Args extra) {
-        Args args = new Args();
-        args.put("password", password);
-        args.put("roles", role);
-        if (extra != null) args.putAll(extra);
-        return create(name, args);
-    }
-
     public User create(String name, String password, String[] roles) {
         return create(name, password, roles, null);
     }
 
+    public User create(String name, String password, String role, Args args) {
+        args = Args.create(args);
+        args.put("password", password);
+        args.put("roles", role);
+        return create(name, args);
+    }
+
     public User 
-    create(String name, String password, String[] roles, Args extra) {
-        Args args = new Args();
+    create(String name, String password, String[] roles, Args args) {
+        args = Args.create(args);
         args.put("password", password);
         args.put("roles", roles);
-        if (extra != null) args.putAll(extra);
         return create(name, args);
     }
 }

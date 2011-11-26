@@ -37,12 +37,13 @@ public class Args extends HashMap<String, Object> {
         super(values);
     }
 
-    public Args clone() {
-        return new Args(this);
+    public Args add(String key, Object value) {
+        put(key, value);
+        return this;
     }
 
     public static Args create(Map<String, Object> values) {
-        return new Args(values);
+        return values == null ? new Args() : new Args(values);
     }
 
     // Encode a single string value.
