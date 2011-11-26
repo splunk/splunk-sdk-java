@@ -46,7 +46,7 @@ public class Entity extends Resource {
         return service.get(path);
     }
 
-    public ResponseMessage get(Args args) {
+    public ResponseMessage get(Map args) {
         return service.get(path, args);
     }
 
@@ -54,7 +54,7 @@ public class Entity extends Resource {
         return service.get(path + "/" + relpath, null);
     }
 
-    public ResponseMessage get(String relpath, Args args) {
+    public ResponseMessage get(String relpath, Map args) {
         return service.get(path + "/" + relpath, args);
     }
 
@@ -165,7 +165,7 @@ public class Entity extends Resource {
         }
     }
 
-    public void update(Args args) {
+    public void update(Map args) {
         service.post(actionPath("edit"), args);
         invalidate();
     }

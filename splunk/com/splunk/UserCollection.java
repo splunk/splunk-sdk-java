@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 public class UserCollection extends EntityCollection<User> {
     UserCollection(Service service) {
         super(service, "authentication/users", User.class);
@@ -29,7 +31,7 @@ public class UserCollection extends EntityCollection<User> {
         return create(name, password, roles, null);
     }
 
-    public User create(String name, String password, String role, Args args) {
+    public User create(String name, String password, String role, Map args) {
         args = Args.create(args);
         args.put("password", password);
         args.put("roles", role);
@@ -37,7 +39,7 @@ public class UserCollection extends EntityCollection<User> {
     }
 
     public User 
-    create(String name, String password, String[] roles, Args args) {
+    create(String name, String password, String[] roles, Map args) {
         args = Args.create(args);
         args.put("password", password);
         args.put("roles", roles);

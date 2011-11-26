@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 public class SavedSearchCollection extends EntityCollection<SavedSearch> {
     SavedSearchCollection(Service service) {
         super(service, "saved/searches", SavedSearch.class);
@@ -30,7 +32,7 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
         return create(name, args);
     }
 
-    public SavedSearch create(String name, String search, Args args) {
+    public SavedSearch create(String name, String search, Map args) {
         args = Args.create(args).add("search", search);
         return create(name, args);
     }

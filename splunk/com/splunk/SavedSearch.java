@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class SavedSearch extends Entity {
     SavedSearch(Service service, String path) {
@@ -36,7 +37,7 @@ public class SavedSearch extends Entity {
     // CONSIDER: Another alternative is to return a MaybeJob object that
     // has an "exists" property, so the user can call maybeJob.refresh()
     // until exists == true.
-    public Job dispatch(Args args) {
+    public Job dispatch(Map args) {
         ResponseMessage response = service.post(actionPath("dispatch"), args);
         invalidate();
         String sid = Job.getSid(response);
@@ -246,7 +247,7 @@ public class SavedSearch extends Entity {
         return getBoolean("is_visible");
     }
 
-    public void update(Args args) {
+    public void update(Map args) {
         // Updates to a saved search *require* that the search string be 
         // passed, so add the current search string here if the value wasn't
         // passed in by the caller.

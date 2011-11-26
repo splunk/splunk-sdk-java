@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     EntityCollection(Service service, String path) {
         super(service, path, Entity.class);
@@ -30,7 +32,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
         return create(name, null);
     }
 
-    public T create(String name, Args args) {
+    public T create(String name, Map args) {
         args = Args.create(args).add("name", name);
         service.post(path, args);
         invalidate();

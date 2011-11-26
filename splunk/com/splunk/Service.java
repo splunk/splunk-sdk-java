@@ -72,7 +72,7 @@ public class Service extends HttpService {
         return export(search, null);
     }
 
-    public InputStream export(String search, Args args) {
+    public InputStream export(String search, Map args) {
         args = Args.create(args).add("search", search);
         ResponseMessage response = get("search/jobs/export", args);
         return response.getContent();
@@ -259,7 +259,7 @@ public class Service extends HttpService {
         return parse(query, null);
     }
 
-    public ResponseMessage parse(String query, Args args) {
+    public ResponseMessage parse(String query, Map args) {
         args = Args.create(args).add("q", query);
         return get("search/parser", args);
     }

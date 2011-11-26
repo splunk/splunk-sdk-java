@@ -20,6 +20,7 @@ package com.splunk;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Map;
 
 public class Job extends Entity {
     Job(Service service, String path) {
@@ -30,7 +31,7 @@ public class Job extends Entity {
         return control(action, null);
     }
 
-    public Job control(String action, Args args) {
+    public Job control(String action, Map args) {
         args = Args.create(args).add("action", action);
         service.post(actionPath("control"), args);
         invalidate();
@@ -109,7 +110,7 @@ public class Job extends Entity {
         return getEvents(null);
     }
 
-    public InputStream getEvents(Args args) {
+    public InputStream getEvents(Map args) {
         ResponseMessage response = get("events", args);
         return response.getContent();
     }
@@ -174,7 +175,7 @@ public class Job extends Entity {
         return getResults(null);
     }
 
-    public InputStream getResults(Args args) {
+    public InputStream getResults(Map args) {
         ResponseMessage response = get("results", args);
         return response.getContent();
     }
@@ -183,7 +184,7 @@ public class Job extends Entity {
         return getResultsPreview(null);
     }
 
-    public InputStream getResultsPreview(Args args) {
+    public InputStream getResultsPreview(Map args) {
         ResponseMessage response = get("results_preview", args);
         return response.getContent();
     }
@@ -212,7 +213,7 @@ public class Job extends Entity {
         return getSearchLog(null);
     }
 
-    public InputStream getSearchLog(Args args) {
+    public InputStream getSearchLog(Map args) {
         ResponseMessage response = get("search.log", args);
         return response.getContent();
     }
@@ -231,7 +232,7 @@ public class Job extends Entity {
         return getSummary(null);
     }
 
-    public InputStream getSummary(Args args) {
+    public InputStream getSummary(Map args) {
         ResponseMessage response = get("summary", args);
         return response.getContent();
     }
@@ -244,7 +245,7 @@ public class Job extends Entity {
         return getTimeline(null);
     }
 
-    public InputStream getTimeline(Args args) {
+    public InputStream getTimeline(Map args) {
         ResponseMessage response = get("timeline", args);
         return response.getContent();
     }
