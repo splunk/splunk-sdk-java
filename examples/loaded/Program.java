@@ -263,6 +263,15 @@ public class Program {
         printField("metadata::isModifiable", metadata.isModifiable());
     }
 
+    static void printPassword(Password password) {
+        printEntity(password);
+        printField("ClearPassword", password.getClearPassword());
+        printField("EncryptedPassword", password.getEncryptedPassword());
+        printField("Password", password.getPassword());
+        printField("Realm", password.getRealm());
+        printField("Username", password.getUsername());
+    }
+
     static void printUser(User user) {
         printEntity(user);
         printField("DefaultApp", user.getDefaultApp());
@@ -330,21 +339,21 @@ public class Program {
         printField("autoLb", outputDefault.autoLb());
         printField("blockOnCloning", outputDefault.blockOnCloning());
         printField("blockOnQueueFull", outputDefault.blockOnQueueFull());
-        printField("getAutoLbFrequency", outputDefault.getAutoLbFrequency());
-        printField("getConnectionTimeout", outputDefault.getConnectionTimeout());
-        printField("getDefaultGroup", outputDefault.getDefaultGroup());
-        printField("getDropClonedEventsOnQueueFull", outputDefault.getDropClonedEventsOnQueueFull());
-        printField("getDropEventsOnQueueFull", outputDefault.getDropEventsOnQueueFull());
-        printField("getForwardedIndex0Whitelist", outputDefault.getForwardedIndex0Whitelist());
-        printField("getForwardedIndex1Blacklist", outputDefault.getForwardedIndex1Blacklist());
-        printField("getForwardedIndex2Whitelist", outputDefault.getForwardedIndex2Whitelist());
-        printField("getHeartbeatFrequency", outputDefault.getHeartbeatFrequency());
-        printField("getMaxConnectionsPerIndexer", outputDefault.getMaxConnectionsPerIndexer());
-        printField("getMaxFailuresPerInterval", outputDefault.getMaxFailuresPerInterval());
-        printField("getMaxQueueSize", outputDefault.getMaxQueueSize());
-        printField("getReadTimeout", outputDefault.getReadTimeout());
-        printField("getSecsInFailureInterval", outputDefault.getSecsInFailureInterval());
-        printField("getWriteTimeout", outputDefault.getWriteTimeout());
+        printField("AutoLbFrequency", outputDefault.getAutoLbFrequency());
+        printField("ConnectionTimeout", outputDefault.getConnectionTimeout());
+        printField("DefaultGroup", outputDefault.getDefaultGroup());
+        printField("DropClonedEventsOnQueueFull", outputDefault.getDropClonedEventsOnQueueFull());
+        printField("DropEventsOnQueueFull", outputDefault.getDropEventsOnQueueFull());
+        printField("ForwardedIndex0Whitelist", outputDefault.getForwardedIndex0Whitelist());
+        printField("ForwardedIndex1Blacklist", outputDefault.getForwardedIndex1Blacklist());
+        printField("ForwardedIndex2Whitelist", outputDefault.getForwardedIndex2Whitelist());
+        printField("HeartbeatFrequency", outputDefault.getHeartbeatFrequency());
+        printField("MaxConnectionsPerIndexer", outputDefault.getMaxConnectionsPerIndexer());
+        printField("MaxFailuresPerInterval", outputDefault.getMaxFailuresPerInterval());
+        printField("MaxQueueSize", outputDefault.getMaxQueueSize());
+        printField("ReadTimeout", outputDefault.getReadTimeout());
+        printField("SecsInFailureInterval", outputDefault.getSecsInFailureInterval());
+        printField("WriteTimeout", outputDefault.getWriteTimeout());
         printField("indexAndForward", outputDefault.indexAndForward());
         printField("isCompressed", outputDefault.isCompressed());
         printField("isDisabled", outputDefault.isDisabled());
@@ -371,16 +380,16 @@ public class Program {
 
     static void printResource(Resource resource) {
         System.out.format("## %s\n", resource.getName());
-        System.out.format("title = %s\n", resource.getTitle());
-        System.out.format("path = %s\n", resource.getPath());
+        System.out.format("Title = %s\n", resource.getTitle());
+        System.out.format("Path = %s\n", resource.getPath());
     }
 
     static <T extends Resource> void 
     printResources(ResourceCollection<T> resources) {
     	System.out.format("\n# %s\n", resources.getPath());
-        System.out.format("path = %s\n", resources.getPath());
+        System.out.format("Path = %s\n", resources.getPath());
         printActions(resources.getActions());
-        System.out.format("keys = %s\n", resources.keySet());
+        System.out.format("Keys = %s\n", resources.keySet());
         for (T resource : resources.values()) 
             printResource(resource);
     }
@@ -589,7 +598,8 @@ public class Program {
             printOutputSyslog(outputSyslog);
 
         System.out.print("\n# Passwords");
-        printEntities(service.getPasswords());
+        for (Password password : service.getPasswords().values())
+            printPassword(password);
 
         System.out.print("\n# Roles");
         for (Role role : service.getRoles().values())
@@ -604,4 +614,3 @@ public class Program {
             printUser(user);
     }
 }
-

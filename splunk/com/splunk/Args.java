@@ -42,6 +42,14 @@ public class Args extends HashMap<String, Object> {
         return this;
     }
 
+    public static Args create() {
+        return new Args();
+    }
+
+    public static Args create(String key, Object value) {
+        return new Args(key, value);
+    }
+
     public static Args create(Map<String, Object> values) {
         return values == null ? new Args() : new Args(values);
     }

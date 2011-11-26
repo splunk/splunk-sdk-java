@@ -212,9 +212,8 @@ public class Service extends HttpService {
             this, "data/outputs/tcp/syslog", OutputSyslog.class);
     }
 
-    public EntityCollection<Entity> getPasswords() {
-        // Starting with 4.3 this is available at "storage/passwords"
-        return new EntityCollection(this, "admin/passwords");
+    public PasswordCollection getPasswords() {
+        return new PasswordCollection(this);
     }
 
     public EntityCollection<Role> getRoles() {

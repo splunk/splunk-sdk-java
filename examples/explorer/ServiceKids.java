@@ -42,8 +42,9 @@ class ServiceKids extends Children.Keys<String> {
             "licensePools",
             "licenseSlaves",
             "licenseStacks",
-            "users",
             "roles",
+            "users",
+            "passwords",
             "apps",
             "confs",
             "searches",
@@ -188,6 +189,12 @@ class ServiceKids extends Children.Keys<String> {
                 "Output Syslogs", 
                 service.getOutputSyslogs(), 
                 OutputSyslogNode.class);
+
+        if (kind.equals("passwords"))
+            return new EntityCollectionNode(
+                "Passwords",
+                service.getPasswords(),
+                PasswordNode.class);
 
         if (kind.equals("searches"))
             return new EntityCollectionNode(
