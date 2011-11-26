@@ -130,9 +130,8 @@ public class Service extends HttpService {
             this, "search/distributed/peers", DistributedPeer.class);
     }
 
-    public EntityCollection<EventType> getEventTypes() {
-        return new EntityCollection<EventType>(
-            this, "saved/eventtypes", EventType.class);
+    public EventTypeCollection getEventTypes() {
+        return new EventTypeCollection(this);
     }
 
     public EntityCollection<FiredAlert> getFiredAlerts() {

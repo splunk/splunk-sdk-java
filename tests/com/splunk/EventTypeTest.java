@@ -19,49 +19,58 @@ package com.splunk;
 import org.junit.Test;
 
 public class EventTypeTest extends SplunkTestCase {
+
+    void checkEventType(EventType eventType) {
+        eventType.getDescription();
+        eventType.getPriority();
+        eventType.getSearch();
+    }
+
+    void checkEventTypes(EventTypeCollection collection) {
+        for (EventType eventType : collection.values())
+            checkEventType(eventType);
+    }
+
     @Test public void testEventType() throws Exception {
         Service service = connect();
 
-        EntityCollection<EventType> ets = service.getEventTypes();
-        if (ets.containsKey("sdk-test")) {
-            ets.remove("sdk-test");
-        }
+        EventTypeCollection eventTypes = service.getEventTypes();
+        if (eventTypes.containsKey("sdk-test"))
+            eventTypes.remove("sdk-test");
+        assertFalse(eventTypes.containsKey("sdk-test"));
 
-        assertFalse(ets.containsKey("sdk-test"));
+        checkEventTypes(eventTypes);
+
+        String search = "index=_internal *";
+
         Args args = new Args();
-        args.put("search","index=_internal *");
         args.put("description", "Dummy description");
         args.put("disabled", true);
         args.put("priority", 2);
-        EventType et = ets.create("sdk-test", args);
+        EventType eventType = eventTypes.create("sdk-test", search, args);
 
-        for (EventType entity: ets.values()) {
-            entity.get(); // force a read
-            assertTrue(entity.getPriority() != -1);
-            assertTrue(entity.getSearch() != null);
-            entity.getDescription();
-        }
+        assertTrue(eventTypes.containsKey("sdk-test"));
 
-        assertEquals(et.getDescription(), args.get("description"));
-        assertEquals(et.getSearch(), args.get("search"));
-        assertEquals(et.getPriority(), args.get("priority"));
-        assertEquals(et.getName(), "sdk-test");
-        assertTrue(et.isDisabled());
+        assertEquals(eventType.getName(), "sdk-test");
+        assertEquals(eventType.getDescription(), args.get("description"));
+        assertEquals(eventType.getPriority(), args.get("priority"));
+        assertEquals(eventType.getSearch(), search);
+        assertTrue(eventType.isDisabled());
 
-        args.clear();
+        args = new Args();
         args.put("search", "index=_audit *");
         args.put("description", "Dummy description a second time");
         args.put("priority", 3);
-        et.update(args);
-        et.enable();
+        eventType.update(args);
+        eventType.enable();
 
-        assertEquals(et.getDescription(), args.get("description"));
-        assertEquals(et.getSearch(), args.get("search"));
-        assertEquals(et.getPriority(), args.get("priority"));
-        assertEquals(et.getName(), "sdk-test");
-        assertFalse(et.isDisabled());
+        assertEquals(eventType.getName(), "sdk-test");
+        assertEquals(eventType.getDescription(), args.get("description"));
+        assertEquals(eventType.getPriority(), args.get("priority"));
+        assertEquals(eventType.getSearch(), args.get("search"));
+        assertFalse(eventType.isDisabled());
 
-        ets.remove("sdk-test");
-        assertFalse(ets.containsKey("sdk-test"));
+        eventTypes.remove("sdk-test");
+        assertFalse(eventTypes.containsKey("sdk-test"));
     }
 }
