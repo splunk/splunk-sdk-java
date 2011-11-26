@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.io.InputStream;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -61,6 +62,27 @@ public class SearchTest extends SplunkTestCase {
         job = runWait(service, query);
         job.getEvents(new Args("output_mode", "json")).close();
         job.cancel();
+    }
+
+    @Test public void testExport() throws IOException {
+        Service service = connect();
+
+        String query = "search index=sdk-tests * | head 1";
+
+        InputStream stream;
+        
+        stream = service.export(query);
+        stream.close();
+
+        Args args;
+
+        args = new Args("output_mode", "csv");
+        stream = service.export(query, args);
+        stream.close();
+
+        args = new Args("output_mode", "json");
+        stream = service.export(query, args);
+        stream.close();
     }
 
     @Test public void testParse() {

@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.io.InputStream;
 import java.util.Map;
 
 public class Service extends HttpService {
@@ -63,6 +64,19 @@ public class Service extends HttpService {
             service.login(username, password);
         }
         return service;
+    }
+
+    // Execute a search using the export endpoint, streaming results back
+    // in the response of the search request.
+    public InputStream export(String search) {
+        return export(search, null);
+    }
+
+    public InputStream export(String search, Args extra) {
+        Args args = new Args("search", search);
+        if (extra != null) args.putAll(extra);
+        ResponseMessage response = get("search/jobs/export", args);
+        return response.getContent();
     }
 
     // Ensures that the given path is fully qualified, prepending a
