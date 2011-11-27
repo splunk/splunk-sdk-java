@@ -50,12 +50,9 @@ public class Program {
         System.out.format("title = %s\n", entity.getTitle());
         System.out.format("path = %s\n", entity.getPath());
         printActions(entity.getActions());
-        Map<String, Object> content = entity.getContent();
-        if (content != null) {
-            for (Map.Entry entry : content.entrySet()) {
-                System.out.format("%s = %s\n",
-                    entry.getKey(), entry.getValue().toString());
-            }
+        for (Map.Entry entry : entity.entrySet()) {
+            System.out.format("%s = %s\n",
+                entry.getKey(), entry.getValue().toString());
         }
     }
 }

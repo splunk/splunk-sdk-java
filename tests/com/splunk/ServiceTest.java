@@ -144,10 +144,8 @@ public class ServiceTest extends SplunkTestCase {
             "os_build", "os_name", "os_version", "serverName", "version");
 
         ServiceInfo info = service.getInfo();
-        Map<String,Object> content = info.getContent();
-        for (String name: expected) {
-            assertTrue(content.containsKey(name));
-        }
+        for (String name : expected)
+            assertTrue(info.containsKey(name));
 
         info.getBuild();
         info.getCpuArch();

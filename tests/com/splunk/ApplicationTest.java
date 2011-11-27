@@ -105,7 +105,7 @@ public class ApplicationTest extends SplunkTestCase {
         }
 
         ApplicationUpdate appUpdate = app.update();
-        assertTrue(appUpdate.getContent().containsKey("eai:acl"));
+        assertTrue(appUpdate.containsKey("eai:acl"));
 
         service = cleanApp("sdk-tests", service);
         apps = service.getApplications();

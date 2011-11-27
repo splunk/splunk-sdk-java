@@ -46,7 +46,6 @@ public class ConfTest extends SplunkTestCase {
                 stanza.getName();
                 stanza.getTitle();
                 stanza.getPath();
-                stanza.getContent();
             }
         }
     }
@@ -88,12 +87,11 @@ public class ConfTest extends SplunkTestCase {
 
         // Grab the new stanza and check its content
         Entity stanza1 = stanzas.get("stanza1");
-        Map content = stanza1.getContent();
-        assertEquals(content.get("eai:userName"), "nobody");
-        assertEquals(content.get("eai:appName"), APP_NAME);
-        assertFalse(content.containsKey("key1"));
-        assertFalse(content.containsKey("key2"));
-        assertFalse(content.containsKey("key3"));
+        assertEquals(stanza1.get("eai:userName"), "nobody");
+        assertEquals(stanza1.get("eai:appName"), APP_NAME);
+        assertFalse(stanza1.containsKey("key1"));
+        assertFalse(stanza1.containsKey("key2"));
+        assertFalse(stanza1.containsKey("key3"));
 
         // Add a couple of properties
         args = new Args();
@@ -102,10 +100,9 @@ public class ConfTest extends SplunkTestCase {
         stanza1.update(args);
 
         // Make sure the properties showed up
-        content = stanza1.getContent();
-        assertEquals(content.get("key1"), "value1");
-        assertEquals(content.get("key2"), "42");
-        assertFalse(content.containsKey("key3"));
+        assertEquals(stanza1.get("key1"), "value1");
+        assertEquals(stanza1.get("key2"), "42");
+        assertFalse(stanza1.containsKey("key3"));
 
         // Update an existing property
         args = new Args();
@@ -113,10 +110,9 @@ public class ConfTest extends SplunkTestCase {
         stanza1.update(args);
 
         // Make sure the updated property shows up (and no other changes).
-        content = stanza1.getContent();
-        assertEquals(content.get("key1"), "value2");
-        assertEquals(content.get("key2"), "42");
-        assertFalse(content.containsKey("key3"));
+        assertEquals(stanza1.get("key1"), "value2");
+        assertEquals(stanza1.get("key2"), "42");
+        assertFalse(stanza1.containsKey("key3"));
 
         // Delete the stanzas
         stanzas.remove("stanza3");

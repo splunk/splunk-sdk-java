@@ -23,10 +23,10 @@ import com.splunk.Job;
 import com.splunk.sdk.Command;
 import com.splunk.Service;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 
 public class Program {
@@ -111,15 +111,9 @@ public class Program {
         Job job = service.getJobs().create(query, queryArgs);
 
         // Wait until results are available.
+        boolean status = false;
         while (true) {
-            // Determine if there are any outputs available.
-            if (output.equals("preview") || output.equals("searchlog"))
-                break;
-            if (output.equals("events") && job.getEventIsStreaming())
-                break;
-            if (output.equals("results") && job.getResultIsStreaming())
-                break;
-            if (job.isDone()) 
+            if (job.isDone())
                 break;
 
             // If no outputs are available, optionally print status and wait.
@@ -131,6 +125,7 @@ public class Program {
                 System.out.format(
                     "\r%03.1f%% done -- %d scanned -- %d matched -- %d results",
                     progress, scanned, matched, results);
+                status = true;
             }
 
             try { Thread.sleep(2000); }
@@ -138,7 +133,7 @@ public class Program {
 
             job.refresh();
         }
-        if (verbose) System.out.println("");
+        if (status) System.out.println("");
 
         InputStream stream = null;
 
@@ -160,16 +155,18 @@ public class Program {
         else assert(false);
 
         InputStreamReader reader = new InputStreamReader(stream);
+        OutputStreamWriter writer = new OutputStreamWriter(System.out);
 
-        // UNDONE: Not outputting "tail" of result stream
         int size = 1024;
         char[] buffer = new char[size];
         while (true) {
             int count = reader.read(buffer);
             if (count == -1) break;
-            System.out.println(buffer);
-            if (count < size) break;
+            writer.write(buffer, 0, count);
         }
+
+        writer.close();
+        reader.close();
 
         job.cancel();
     }

@@ -25,7 +25,7 @@ public class Program {
         for (Index entity: indexes.values()) {
             System.out.println(
                 entity.getTitle() +
-                " (" + entity.getContent().get("totalEventCount") + ")");
+                " (" + entity.get("totalEventCount") + ")");
         }
     }
 

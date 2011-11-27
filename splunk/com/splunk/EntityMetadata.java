@@ -58,7 +58,7 @@ public class EntityMetadata {
     }
 
     Map getEaiAcl() {
-        return (Map)entity.getContent().get("eai:acl");
+        return (Map)entity.validate().get("eai:acl");
     }
 
     // Returns the username of the owner of this resource.

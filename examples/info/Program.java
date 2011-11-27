@@ -25,18 +25,13 @@ public class Program {
         Service service = Service.connect(command.opts);
 
         ServiceInfo info = service.getInfo();
-        Map<String,Object> content = info.getContent();
-
         System.out.println("Info:");
-        for (String key: content.keySet()) {
-            System.out.println("    " + key + ": " + content.get(key));
-        }
+        for (String key : info.keySet())
+            System.out.println("    " + key + ": " + info.get(key));
 
         Entity settings = service.getSettings();
-        content = settings.getContent();
         System.out.println("\nSettings:");
-        for (String key: content.keySet()) {
-            System.out.println("    " + key + ": " + content.get(key));
-        }
+        for (String key : settings.keySet())
+            System.out.println("    " + key + ": " + settings.get(key));
     }
 }

@@ -30,7 +30,7 @@ class StanzaNode extends EntityNode {
     @Override protected Sheet createSheet() {
         Entity entity = (Entity)value;
         Sheet.Set props = Sheet.createPropertiesSet();
-        for (String key : entity.getContent().keySet()) {
+        for (String key : entity.keySet()) {
             if (key.equals("eai:acl") || key.equals("eai:attributes"))
                 continue;
             props.put(new StanzaProperty(entity, key));
@@ -56,7 +56,7 @@ class StanzaNode extends EntityNode {
         }
 
         @Override public String getValue() {
-            return (String)stanza.getContent().get(key);
+            return (String)stanza.get(key);
         }
     }
 }

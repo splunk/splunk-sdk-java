@@ -16,15 +16,29 @@
 
 package com.splunk;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-public class Entity extends Resource {
+public class Entity extends Resource implements Map<String, Object> {
     private Map<String, Object> content;
 
     Entity(Service service, String path) {
         super(service, path);
+    }
+
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean containsKey(Object key) {
+        return validate().content.containsKey(key);
+    }
+
+    public boolean containsValue(Object value) {
+        return validate().content.containsValue(value);
     }
 
     public void disable() {
@@ -37,12 +51,15 @@ public class Entity extends Resource {
         invalidate();
     }
 
-    public void reload() {
-        service.get(actionPath("reload"));
-        invalidate();
+    public Set<Map.Entry<String, Object>> entrySet() {
+        return validate().content.entrySet();
     }
 
-    public Map<String, Object> getContent() {
+    public Object get(Object key) {
+        return validate().content.get(key);
+    }
+
+    private Map<String, Object> getContent() {
         return validate().content;
     }
 
@@ -123,35 +140,47 @@ public class Entity extends Resource {
         return Value.getStringArray(getContent(), key, defaultValue);
     }
 
-    Object getValue(String key) {
-        return getContent().get(key);
+    // UNDONE: Type parameter?
+    public <T> T getValue(String key) {
+        return (T)validate().get(key);
     }
 
-    Object getValue(String key, Object defaultValue) {
-        Map<String, Object> map = getContent();
-        if (!map.containsKey(key)) return defaultValue;
-        return map.get(key);
+    public <T> T getValue(String key, T defaultValue) {
+        validate();
+        if (!containsKey(key)) return defaultValue;
+        return (T)get(key);
+    }
+
+    public boolean isEmpty() {
+        return validate().content.isEmpty();
     }
 
     public boolean isDisabled() {
         return getBoolean("disabled", false);
     }
 
+    public Set<String> keySet() {
+        return validate().content.keySet();
+    }
+
     @Override Entity load(AtomObject value) {
         super.load(value);
         AtomEntry entry = (AtomEntry)value;
         if (entry == null) {
-            this.content = new HashMap<String, Object>();
+            content = new HashMap<String, Object>();
         }
         else {
-            this.content = entry.content;
+            content = entry.content;
         }
         return this;
     }
 
-    public void update(Map args) {
-        service.post(actionPath("edit"), args);
-        invalidate();
+    public Object put(String key, Object value) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void putAll(Map<? extends String, ? extends Object> map) {
+        throw new UnsupportedOperationException();
     }
 
     // Refresh the current (singleton) entity instance.
@@ -166,6 +195,24 @@ public class Entity extends Resource {
         return this;
     }
 
+    public void reload() {
+        service.get(actionPath("reload"));
+        invalidate();
+    }
+
+    public Object remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
+
+    public int size() {
+        return validate().content.size();
+    }
+
+    public void update(Map args) {
+        service.post(actionPath("edit"), args);
+        invalidate();
+    }
+
     public void remove() {
         service.delete(actionPath("remove"));
     }
@@ -173,6 +220,10 @@ public class Entity extends Resource {
     @Override public Entity validate() { 
         super.validate(); 
         return this;
+    }
+
+    public Collection<Object> values() {
+        return validate().content.values();
     }
 }
 

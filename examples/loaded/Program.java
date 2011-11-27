@@ -89,12 +89,9 @@ public class Program {
         printResource(entity);
         printActions(entity.getActions());
         printMetadata(entity.getMetadata());
-        Map<String, Object> content = entity.getContent();
-        if (content != null) {
-            for (Map.Entry entry : content.entrySet()) {
-                System.out.format("%s = %s\n",
-                    entry.getKey(), entry.getValue().toString());
-            }
+        for (Map.Entry entry : entity.entrySet()) {
+            System.out.format("%s = %s\n",
+                entry.getKey(), entry.getValue().toString());
         }
     }
 
