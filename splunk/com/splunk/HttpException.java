@@ -44,7 +44,7 @@ public class HttpException extends RuntimeException {
 
         String message = String.format("HTTP %d", status);  
 
-        if (detail != null)
+        if (detail != null && detail.length() > 0)
             message = message + " -- " + detail;
 
         return new HttpException(status, message, detail);
