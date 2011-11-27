@@ -42,8 +42,26 @@ public class InputCollection extends EntityCollection<Input> {
         super(service, "data/inputs");
     }
 
-    // UNDONE: create(String name, InputKind kind)
-    // UNDONE: create(String name, InputKind kind, Args args)
+    @Override public Input create(String name) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override public Input create(String name, Map args) {
+        throw new UnsupportedOperationException();
+    }
+
+    public <T extends Input> T create(String name, InputKind kind) {
+        return create(name, kind, null);
+    }
+
+    public <T extends Input> T
+    create(String name, InputKind kind, Map<String, Object> args) {
+        args = Args.create(args).add("name", name);
+        String path = this.path + "/" + kind.relpath;
+        service.post(path, args);
+        invalidate();
+        return (T)get(name);
+    }
 
     @Override protected Input createItem(AtomEntry entry) {
         String path = itemPath(entry);

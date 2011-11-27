@@ -36,7 +36,33 @@ public class InputTest extends SplunkTestCase {
         }
     }
 
+    // UNDONE: Currently only do a rudimentary test on TcpInput, need to cover
+    // all other input kinds.
     @Test public void testInputCrud() {
-        // UNDONE
+        Service service = connect();
+
+        InputCollection inputs = service.getInputs();
+
+        // Tcp inputs require the name to be the input's port number.
+        String name = "9999"; // test port
+
+        if (inputs.containsKey(name))
+            fail("Input test port already exists: " + name);
+
+        assertFalse(inputs.containsKey(name));
+
+        inputs.create(name, InputKind.Tcp);
+        assertTrue(inputs.containsKey(name));
+
+        TcpInput tcpInput = (TcpInput)inputs.get(name);
+
+        Args args = new Args();
+        args.put("sourcetype", "sdk-tests");
+        tcpInput.update(args);
+        assertEquals(tcpInput.get("sourcetype"), "sdk-tests");
+
+        tcpInput.remove();
+        inputs.refresh();
+        assertFalse(inputs.containsKey(name));
     }
 }
