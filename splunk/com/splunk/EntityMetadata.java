@@ -29,57 +29,57 @@ public class EntityMetadata {
 
     // Answers if the corresponding entity's permissions can be changed.
     public boolean canChangePermissions() {
-        return Value.getBoolean(getEaiAcl(), "can_change_perms", false);
+        return getEaiAcl().getBoolean("can_change_perms", false);
     }
 
     // Indicates that the resource can be share via an app.
     public boolean canShareApp() {
-        return Value.getBoolean(getEaiAcl(), "can_share_app", false);
+        return getEaiAcl().getBoolean("can_share_app", false);
     }
 
     // Indicates that the resource can be shared globally.
     public boolean canShareGlobal() {
-        return Value.getBoolean(getEaiAcl(), "can_share_global", false);
+        return getEaiAcl().getBoolean("can_share_global", false);
     }
 
     // Indicates that the resource can be shared to a specific user.
     public boolean canShareUser() {
-        return Value.getBoolean(getEaiAcl(), "can_share_user", false);
+        return getEaiAcl().getBoolean("can_share_user", false);
     }
 
     // Answers if the corresponding entity can be modified.
     public boolean canWrite() {
-        return Value.getBoolean(getEaiAcl(), "can_write", false);
+        return getEaiAcl().getBoolean("can_write", false);
     }
 
     // Returns the app context of this resource.
     public String getApp() {
-        return Value.getString(getEaiAcl(), "app", "system");
+        return getEaiAcl().getString("app", "system");
     }
 
-    Map getEaiAcl() {
-        return (Map)entity.validate().get("eai:acl");
+    Record getEaiAcl() {
+        return (Record)entity.validate().get("eai:acl");
     }
 
     // Returns the username of the owner of this resource.
     public String getOwner() {
-        return Value.getString(getEaiAcl(), "owner");
+        return getEaiAcl().getString("owner");
     }
 
     // Returns the entity's permissions. The permissions are represented as
     // a Map that maps action to a list of roles that can perform the action.
-    public Map getPermissions() {
-        return Value.<Map>getValue(getEaiAcl(), "perms", null);
+    public Record getPermissions() {
+        return getEaiAcl().<Record>getValue("perms", null);
     }
 
     // Returns a value indicating how the resources is shared, legal values
     // are: app, global and user.
     public String getSharing() {
-        return Value.getString(getEaiAcl(), "sharing");
+        return getEaiAcl().getString("sharing");
     }
 
     // Answers if the metadata of this entity can be changed.
     public boolean isModifiable() {
-        return Value.getBoolean(getEaiAcl(), "modifiable", false);
+        return getEaiAcl().getBoolean("modifiable", false);
     }
 }

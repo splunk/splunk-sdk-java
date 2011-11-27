@@ -19,107 +19,11 @@ package com.splunk;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // Value conversion helpers
 class Value {
-    static boolean getBoolean(Map<String, Object> map, String key) {
-        return toBoolean(map.get(key).toString());
-    }
-
-    static boolean 
-    getBoolean(Map<String, Object> map, String key, boolean defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return toBoolean(map.get(key).toString());
-    }
-
-    static long getByteCount(Map<String, Object>map, String key) {
-        return toByteCount(map.get(key).toString());
-    }
-
-    static long
-    getByteCount(Map<String, Object>map, String key, long defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return toByteCount(map.get(key).toString());
-    }
-
-    static Date getDate(Map<String, Object> map, String key) {
-        return toDate(map.get(key).toString());
-    }
-
-    static Date 
-    getDate(Map<String, Object> map, String key, Date defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return toDate(map.get(key).toString());
-    }
-
-    static Date getDateFromEpoch(Map<String, Object> map, String key) {
-        return toDateFromEpoch(map.get(key).toString());
-    }
-
-    static Date 
-    getDateFromEpoch(Map<String, Object> map, String key, Date defaultValue) 
-    {
-        if (!map.containsKey(key)) return defaultValue;
-        return toDateFromEpoch(map.get(key).toString());
-    }
-
-    static float getFloat(Map<String, Object> map, String key) {
-        return toFloat(map.get(key).toString());
-    }
-
-    static int getInteger(Map<String, Object> map, String key) {
-        return toInteger(map.get(key).toString());
-    }
-
-    static int 
-    getInteger(Map<String, Object> map, String key, int defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return toInteger(map.get(key).toString());
-    }
-
-    static long getLong(Map<String, Object> map, String key) {
-        return toLong(map.get(key).toString());
-    }
-
-    static long getLong(Map<String, Object> map, String key, int defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return toLong(map.get(key).toString());
-    }
-
-    static String getString(Map<String, Object> map, String key) {
-        return map.get(key).toString();
-    }
-
-    static String 
-    getString(Map<String, Object> map, String key, String defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return map.get(key).toString();
-    }
-
-    static String[] getStringArray(Map<String, Object> map, String key) {
-        List<String> value = (List<String>)map.get(key);
-        return value.toArray(new String[value.size()]);
-    }
-
-    static String[]
-    getStringArray(Map<String, Object> map, String key, String[] defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return getStringArray(map, key);
-    }
-
-    static <T> T getValue(Map<String, Object> map, String key) {
-        return (T)map.get(key);
-    }
-
-    static <T> T getValue(Map<String, Object> map, String key, T defaultValue) {
-        if (!map.containsKey(key)) return defaultValue;
-        return (T)map.get(key);
-    }
-
     // Convert the given string to a boolean value.
     static boolean toBoolean(String value) {
         if (value == null) return false;

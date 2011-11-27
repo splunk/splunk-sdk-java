@@ -247,7 +247,7 @@ public class SavedSearch extends Entity {
         return getBoolean("is_visible");
     }
 
-    public void update(Map args) {
+    public void update(Map<String, Object> args) {
         // Updates to a saved search *require* that the search string be 
         // passed, so add the current search string here if the value wasn't
         // passed in by the caller.

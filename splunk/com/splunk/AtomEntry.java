@@ -18,15 +18,13 @@ package com.splunk;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class AtomEntry extends AtomObject {
     public String published;
-    public Map<String, Object> content;
+    public Record content;
 
     static AtomEntry create() {
         return new AtomEntry();
@@ -75,10 +73,10 @@ public class AtomEntry extends AtomObject {
     }
 
     // Parse the <content> element of an Atom entry.
-    Map<String, Object> parseContent(Element element) {
+    Record parseContent(Element element) {
         assert(element.getTagName().equals("content"));
 
-        Map<String, Object> content = null;
+        Record content = null;
 
         List<Element> children = getChildElements(element);
 
@@ -95,8 +93,8 @@ public class AtomEntry extends AtomObject {
         return content;
     }
 
-    // Parse a <dict> element and return a corresponding Map object.
-    Map<String, Object> parseDict(Element element) {
+    // Parse a <dict> element and return a corresponding Record object.
+    Record parseDict(Element element) {
         assert(element.getTagName().equals("s:dict"));
 
         if (!element.hasChildNodes()) return null;
@@ -106,7 +104,7 @@ public class AtomEntry extends AtomObject {
         int count = children.size();
         if (count == 0) return null;
 
-        HashMap<String, Object> result = new HashMap<String, Object>();
+        Record result = new Record();
         for (Element child : children) {
             assert(child.getTagName().equals("s:key"));
             String key = child.getAttribute("name");

@@ -18,12 +18,12 @@ package com.splunk;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class Entity extends Resource implements Map<String, Object> {
-    private Map<String, Object> content;
+    private Record content;
 
     Entity(Service service, String path) {
         super(service, path);
@@ -34,11 +34,11 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     public boolean containsKey(Object key) {
-        return validate().content.containsKey(key);
+        return getContent().containsKey(key);
     }
 
     public boolean containsValue(Object value) {
-        return validate().content.containsValue(value);
+        return getContent().containsValue(value);
     }
 
     public void disable() {
@@ -52,67 +52,67 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     public Set<Map.Entry<String, Object>> entrySet() {
-        return validate().content.entrySet();
+        return getContent().entrySet();
     }
 
     public Object get(Object key) {
-        return validate().content.get(key);
-    }
-
-    private Map<String, Object> getContent() {
-        return validate().content;
+        return getContent().get(key);
     }
 
     boolean getBoolean(String key) {
-        return Value.getBoolean(getContent(), key);
+        return getContent().getBoolean(key);
     }
 
     boolean getBoolean(String key, boolean defaultValue) {
-        return Value.getBoolean(getContent(), key, defaultValue);
+        return getContent().getBoolean(key, defaultValue);
     }
 
     long getByteCount(String key) {
-        return Value.getByteCount(getContent(), key);
+        return getContent().getByteCount(key);
     }
 
     long getByteCount(String key, long defaultValue) {
-        return Value.getByteCount(getContent(), key, defaultValue);
+        return getContent().getByteCount(key, defaultValue);
+    }
+
+    private Record getContent() {
+        return validate().content;
     }
 
     Date getDate(String key) {
-        return Value.getDate(getContent(), key);
+        return getContent().getDate(key);
     }
 
     Date getDate(String key, Date defaultValue) {
-        return Value.getDate(getContent(), key, defaultValue);
+        return getContent().getDate(key, defaultValue);
     }
 
     Date getDateFromEpoch(String key) {
-        return Value.getDateFromEpoch(getContent(), key);
+        return getContent().getDateFromEpoch(key);
     }
 
     Date getDateFromEpoch(String key, Date defaultValue) {
-        return Value.getDateFromEpoch(getContent(), key, defaultValue);
+        return getContent().getDateFromEpoch(key, defaultValue);
     }
 
     float getFloat(String key) {
-        return Value.getFloat(getContent(), key);
+        return getContent().getFloat(key);
     }
 
     int getInteger(String key) {
-        return Value.getInteger(getContent(), key);
+        return getContent().getInteger(key);
     }
 
     int getInteger(String key, int defaultValue) {
-        return Value.getInteger(getContent(), key, defaultValue);
+        return getContent().getInteger(key, defaultValue);
     }
 
     long getLong(String key) {
-        return Value.getLong(getContent(), key);
+        return getContent().getLong(key);
     }
 
     long getLong(String key, int defaultValue) {
-        return Value.getLong(getContent(), key, defaultValue);
+        return getContent().getLong(key, defaultValue);
     }
 
     public EntityMetadata getMetadata() {
@@ -120,39 +120,28 @@ public class Entity extends Resource implements Map<String, Object> {
         // uncommon, but does happen at least in the case of a DeploymentClient
         // that is not enabled, we return null. A slightly friendlier option
         // would be to return a metadata instance that defaults all values?
-        if (!getContent().containsKey("eai:acl")) return null;
+        if (!containsKey("eai:acl")) return null;
         return new EntityMetadata(this);
     }
 
     String getString(String key) {
-        return Value.getString(getContent(), key);
+        return getContent().getString(key);
     }
 
     String getString(String key, String defaultValue) {
-        return Value.getString(getContent(), key, defaultValue);
+        return getContent().getString(key, defaultValue);
     }
 
     String[] getStringArray(String key) {
-        return Value.getStringArray(getContent(), key);
+        return getContent().getStringArray(key);
     }
 
     String[] getStringArray(String key, String[] defaultValue) {
-        return Value.getStringArray(getContent(), key, defaultValue);
-    }
-
-    // UNDONE: Type parameter?
-    public <T> T getValue(String key) {
-        return (T)validate().get(key);
-    }
-
-    public <T> T getValue(String key, T defaultValue) {
-        validate();
-        if (!containsKey(key)) return defaultValue;
-        return (T)get(key);
+        return getContent().getStringArray(key, defaultValue);
     }
 
     public boolean isEmpty() {
-        return validate().content.isEmpty();
+        return getContent().isEmpty();
     }
 
     public boolean isDisabled() {
@@ -160,14 +149,14 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     public Set<String> keySet() {
-        return validate().content.keySet();
+        return getContent().keySet();
     }
 
     @Override Entity load(AtomObject value) {
         super.load(value);
         AtomEntry entry = (AtomEntry)value;
         if (entry == null) {
-            content = new HashMap<String, Object>();
+            content = new Record();
         }
         else {
             content = entry.content;
@@ -205,10 +194,10 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     public int size() {
-        return validate().content.size();
+        return getContent().size();
     }
 
-    public void update(Map args) {
+    public void update(Map<String, Object> args) {
         service.post(actionPath("edit"), args);
         invalidate();
     }
@@ -223,7 +212,7 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     public Collection<Object> values() {
-        return validate().content.values();
+        return getContent().values();
     }
 }
 
