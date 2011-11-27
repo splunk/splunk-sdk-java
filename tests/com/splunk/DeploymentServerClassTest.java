@@ -82,7 +82,6 @@ public class DeploymentServerClassTest extends SplunkTestCase {
         assertEquals(dsc.getWhiteList9(), args.get("whitelist.9"));
 
         for (DeploymentServerClass entity: dscs.values()) {
-            entity.get(); // force a read
             assertTrue(entity.getRepositoryLocation().length() > 0);
         }
 

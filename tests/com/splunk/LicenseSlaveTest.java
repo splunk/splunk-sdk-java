@@ -35,7 +35,6 @@ public class LicenseSlaveTest extends SplunkTestCase {
              "download-trial", "enterprise", "forwarder", "free");
 
         for (LicenseSlave entity: ds.values()) {
-            entity.get(); // force a read
             assertTrue(entity.getLabel().length() > 0);
             for (String pool: entity.getPoolIds()) {
                 // special-case, fixed sourcetype has a hash at the end; so

@@ -52,7 +52,6 @@ public class LicenseTest extends SplunkTestCase {
 
         // test for sane data in licenses
         for (License entity: ds.values()) {
-            entity.get(); // force a read
             assertTrue(entity.getCreationTime().after(new Date(0)));
             assertTrue(entity.getExpirationTime().after(new Date(0)));
             assertTrue(entity.getQuota() > 0);

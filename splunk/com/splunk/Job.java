@@ -111,7 +111,7 @@ public class Job extends Entity {
     }
 
     public InputStream getEvents(Map args) {
-        ResponseMessage response = get("events", args);
+        ResponseMessage response = service.get(path + "/events", args);
         return response.getContent();
     }
 
@@ -176,7 +176,7 @@ public class Job extends Entity {
     }
 
     public InputStream getResults(Map args) {
-        ResponseMessage response = get("results", args);
+        ResponseMessage response = service.get(path + "/results", args);
         return response.getContent();
     }
 
@@ -185,7 +185,7 @@ public class Job extends Entity {
     }
 
     public InputStream getResultsPreview(Map args) {
-        ResponseMessage response = get("results_preview", args);
+        ResponseMessage response = service.get(path + "/results_preview", args);
         return response.getContent();
     }
 
@@ -214,7 +214,7 @@ public class Job extends Entity {
     }
 
     public InputStream getSearchLog(Map args) {
-        ResponseMessage response = get("search.log", args);
+        ResponseMessage response = service.get(path + "/search.log", args);
         return response.getContent();
     }
 
@@ -233,7 +233,7 @@ public class Job extends Entity {
     }
 
     public InputStream getSummary(Map args) {
-        ResponseMessage response = get("summary", args);
+        ResponseMessage response = service.get(path + "/summary", args);
         return response.getContent();
     }
 
@@ -246,7 +246,7 @@ public class Job extends Entity {
     }
 
     public InputStream getTimeline(Map args) {
-        ResponseMessage response = get("timeline", args);
+        ResponseMessage response = service.get(path + "/timeline", args);
         return response.getContent();
     }
 
@@ -296,7 +296,7 @@ public class Job extends Entity {
 
     // Job "entities" dont return an AtomFeed, only an AtomEntry.
     @Override public Job refresh() {
-        ResponseMessage response = get();
+        ResponseMessage response = service.get(path);
         AtomEntry entry = AtomEntry.parse(response.getContent());
         load(entry);
         return this;

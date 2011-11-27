@@ -30,7 +30,6 @@ public class LicenseGroupTest extends SplunkTestCase {
         List<String> stacks = Arrays.asList("forwarder", "enterprise", "free");
         for (LicenseGroup entity: ds.values()) {
             // enterprise, forwarder, free
-            entity.get(); // force a read
             for (String id: entity.getStackIds()) {
                 assertTrue(stacks.contains(id));
             }

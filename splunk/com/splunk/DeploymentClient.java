@@ -50,7 +50,7 @@ public class DeploymentClient extends Entity {
     }
 
     public void reload() {
-        get("deployment-client/Reload");
+        service.get(path + "/deployment-client/Reload");
         invalidate();
     }
 }

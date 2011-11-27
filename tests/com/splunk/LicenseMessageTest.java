@@ -31,8 +31,6 @@ public class LicenseMessageTest extends SplunkTestCase {
 
         // test for sane data in licenses
         for (LicenseMessage entity: lm.values()) {
-            entity.get(); // force a read
-
             assertTrue(entity.getCreationTime().after(new Date(0)));
             entity.getCategory();
             entity.getDescription();

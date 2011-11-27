@@ -42,22 +42,6 @@ public class Entity extends Resource {
         invalidate();
     }
 
-    public ResponseMessage get() {
-        return service.get(path);
-    }
-
-    public ResponseMessage get(Map args) {
-        return service.get(path, args);
-    }
-
-    public ResponseMessage get(String relpath) {
-        return service.get(path + "/" + relpath, null);
-    }
-
-    public ResponseMessage get(String relpath, Map args) {
-        return service.get(path + "/" + relpath, args);
-    }
-
     public Map<String, Object> getContent() {
         return validate().content;
     }
@@ -172,7 +156,7 @@ public class Entity extends Resource {
 
     // Refresh the current (singleton) entity instance.
     @Override public Entity refresh() {
-        ResponseMessage response = get();
+        ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.parse(response.getContent());
         int count = feed.entries.size();
