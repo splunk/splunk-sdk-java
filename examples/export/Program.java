@@ -27,19 +27,16 @@ import java.io.RandomAccessFile;
 import java.io.Writer;
 
 /**
- * Export.java: export an splunk entire index in XML. The return data is in
- * strict descending time order.
+ * Export.java: export an splunk entire index in XML, CSV or JSON (4.3+). The
+ * return data is in strict descending time order.
  */
 
-// UNDONE: In recovery mode, we assume we can find a viable start time in the
-// last 'bufferSize' of the index export. Either make a larger buffer
-// (not perfect), or chunk through the data backwards until we find one, and
-// then read from there to the end of the file.
-//
-// also: in recover mode, we will duplicate messages and meta data; however,
+// in recover mode, we will duplicate messages and meta data; however,
 // this is not necessarily incorrect, just redundant information.
 
 public class Program {
+
+    static String lastTime;
 
     static public void main(String[] args) {
         try {
@@ -51,9 +48,8 @@ public class Program {
         }
     }
 
-    static int getLastEventOffset(int indexTimeOffset, byte [] buffer) {
-        String str = new String(buffer);
-        String pattern = "<result offset=";
+    static int getStartNextEvent(
+            int indexTimeOffset, String str, String pattern) {
         int curr = str.indexOf(pattern);
         int last = 0;
         while ((curr < indexTimeOffset) && curr > 0)  {
@@ -64,52 +60,118 @@ public class Program {
         return last;
     }
 
-    static int getLastKnownGoodEventTime(
-        File file, byte [] buffer) throws Exception {
-
-        final int bufferSize = (64*1024);
-        int bytesToRead = (int)Math.min(file.length(), bufferSize);
-        RandomAccessFile raf = new RandomAccessFile(file, "r");
-
-        // read end of file
-        raf.seek(Math.max(0, file.length() - bufferSize));
-        raf.read(buffer, 0, bytesToRead);
+    static int getTruncatePoint(
+        int indexTimeOffset, byte[] buffer, String format) {
         String str = new String(buffer);
 
-        int count = -1;
-        int start = 0;
-        String lastTime = "";
-        String [] times = new String[128];
-        int [] offsets = new int[128];
-        String opattern = "<field k='_indextime'>";
-        String ipattern = "<value><text>";
+        if (format.equals("csv"))
+            // UNDONE: does this work with line breaks?
+            return getStartNextEvent(indexTimeOffset, str, "\n") + 1;
+        else if (format.equals("xml"))
+            return getStartNextEvent(indexTimeOffset, str, "<result offset=");
+        else
+            return getStartNextEvent(indexTimeOffset, str, "{\"_cd\":");
+    }
 
-        int index = str.indexOf(opattern, start);
+    static int getCsvEventTimeOffset(String str) {
+        String [] times = new String[1024];
+        int [] offsets = new int[1024];
+        int count = -1;
+        int index = str.indexOf("\n");
+
         while (index > 0) {
-            int vstart = str.indexOf(
-                ipattern, index + opattern.length()) + ipattern.length();
-            int vend = str.indexOf("<", vstart);
-            if ((vstart == -1) || (vend == -1)) break;
-            times[++count] = str.substring(vstart, vend);
-            offsets[count] = vstart;
-            lastTime = times[count];
-            start = vend;
-            index = str.indexOf(opattern, start);
+            int next =  str.indexOf("\n", index + 1);
+            if (next > 0) {
+                String timePart = str.substring(index, next).split(",")[1];
+                times[++count] = timePart.substring(1, timePart.length()-1);
+                offsets[count] = str.indexOf(timePart, index);
+                lastTime = times[count];
+            }
+            index = next + 1;
         }
 
         for (;count > 0; count--) {
-            if (times[count] != lastTime) {
+            if (!times[count].equals(lastTime)) {
+                lastTime = times[count];
                 return offsets[count+1];
             }
         }
-
-        throw new Error("failed to find adequate recovery time");
+        return -1;
     }
 
-    static String getStartTime(int startTimeBufferOffset, byte [] buffer) {
+    static int getXmlEventTimeOffset(String str) {
+        int count = -1;
+        int start = 0;
+        String [] times = new String[1024];
+        int [] offsets = new int[1024];
+        String timePattern = "<field k='_time'>";
+        String timeStartPattern = "<value><text>";
+        String timeEndPattern = "<";
+
+        int index = str.indexOf(timePattern, start);
+        while (index > 0) {
+            int timeStart = str.indexOf(
+                timeStartPattern, index + timePattern.length())
+                + timeStartPattern.length();
+            int timeEnd = str.indexOf(timeEndPattern, timeStart);
+            if ((timeStart == -1) || (timeEnd == -1)) break;
+            times[++count] = str.substring(timeStart, timeEnd);
+            offsets[count] = timeStart;
+            lastTime = times[count];
+            start = timeEnd;
+            index = str.indexOf(timePattern, start);
+        }
+
+        for (;count > 0; count--) {
+            if (!times[count].equals(lastTime)) {
+                lastTime = times[count];
+                return offsets[count+1];
+            }
+        }
+        return -1;
+    }
+
+    static int getJsonEventTimeOffset(String str) {
+        int count = -1;
+        int start = 0;
+        String [] times = new String[1024];
+        int [] offsets = new int[1024];
+        String timePattern = "\"_time\":\"";
+        String timeStartPattern = "\":\"";
+        String timeEndPattern = "\",";
+
+        int index = str.indexOf(timePattern, start);
+        while (index > 0) {
+            int timeStart = str.indexOf(timeStartPattern, index)
+                            + timeStartPattern.length();
+            int timeEnd = str.indexOf(timeEndPattern, timeStart);
+            if ((timeStart == -1) || (timeEnd == -1)) break;
+            times[++count] = str.substring(timeStart, timeEnd);
+            offsets[count] = timeStart;
+            lastTime = times[count];
+            start = timeEnd;
+            index = str.indexOf(timePattern, start);
+        }
+
+        for (;count > 0; count--) {
+            if (!times[count].equals(lastTime)) {
+                lastTime = times[count];
+                return offsets[count+1];
+            }
+        }
+        return -1;
+    }
+
+    static int getLastGoodEventOffset(byte[] buffer, String format)
+        throws Exception {
+
         String str = new String(buffer);
-        return str.substring(
-            startTimeBufferOffset, str.indexOf("<", startTimeBufferOffset));
+        if (format.equals("csv"))
+            return getCsvEventTimeOffset(str);
+        else if (format.equals("xml"))
+            return getXmlEventTimeOffset(str);
+        else
+            return getJsonEventTimeOffset(str);
     }
 
     static void run(String[] argv) throws Exception {
@@ -119,12 +181,13 @@ public class Program {
         Args args = new Args();
         final String outFilename = "export.out";
         boolean recover = false;
-        final int bufferSize = (64*1024);
-        byte [] buffer = new byte[bufferSize];
+        String format = "csv"; // default to csv
 
         // This example takes optional arguments:
         //
-        // index-name [recover]
+        // index-name [recover] [csv|xml|json]
+        //
+        // N.B. json output only valid with 4.3+
 
         if (command.args.length == 0)
             throw new Error("Index-name required");
@@ -133,6 +196,12 @@ public class Program {
             for (int index=1; index < command.args.length; index++) {
                 if (command.args[index].equals("recover"))
                     recover = true;
+                else if (command.args[index].equals("csv"))
+                    format = "csv";
+                else if (command.args[index].equals("xml"))
+                    format = "xml";
+                else if (command.args[index].equals("json"))
+                    format = "json";
                 else
                     throw new Error("Unknown option: " + command.args[index]);
             }
@@ -143,27 +212,49 @@ public class Program {
             throw new Error("Export file exists, and no recover option");
 
         if (recover && file.exists() && file.isFile()) {
-            // get last known good event time, truncate file at end of event
-            int startTimeBufOffset = getLastKnownGoodEventTime(file, buffer);
+            // chunk backwards through the file until we find valid
+            // start time. If we can't find one just start over.
+            final int bufferSize = (64*1024);
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            long fptr = Math.max(file.length() - bufferSize, 0);
+            long fptrEof = 0;
+
+            while (fptr > 0) {
+                byte [] buffer = new byte[bufferSize];
+                raf.seek(fptr);
+                raf.read(buffer, 0, bufferSize);
+                int eventTimeOffset = getLastGoodEventOffset(buffer, format);
+                if (eventTimeOffset != -1) {
+                    // UNDONE: if we had to crawl back more than one buffer,
+                    // AND the end of event is not in this buffer, we
+                    // need to walk forward until found.
+                    fptrEof = getTruncatePoint(eventTimeOffset, buffer, format)
+                        + fptr;
+                    break;
+                }
+                fptr = fptr - bufferSize;
+            }
+
+            if (fptr < 0)
+                fptrEof = 0; // didn't find a valid event, so start over.
+            else
+                args.put("latest_time", lastTime);
+
             FileChannel fc = raf.getChannel();
-            long eof = Math.max(0, file.length() - bufferSize)
-                       + getLastEventOffset(startTimeBufOffset, buffer);
-            fc.truncate(eof);
-            args.put("latest_time", getStartTime(startTimeBufOffset, buffer));
-        } else {
+            fc.truncate(fptrEof);
+        } else
             if (!file.createNewFile())
                 throw new Error("Failed to create output file");
-        }
 
         // search args
-        args.put("search", String.format("search index=%s *", command.args[0]));
-        args.put("earliest_time", "0"); // all the way to the beginning
-        args.put("timeout", "60");      // don't keep search around
+        args.put("timeout", "60");          // don't keep search around
+        args.put("output_mode", format);    // output in specific format
+        args.put("ealiest_time", "0.000");  // always to beginning of index
+        args.put("time_format", "%s.%Q");   // epoch time plus fraction
+        String search = String.format("search index=%s *", command.args[0]);
 
-        ResponseMessage resp =
-            service.get("/servicesNS/admin/search/search/jobs/export", args);
-        InputStream is = resp.getContent();
+        //System.out.println("search: " + search + ", args: " + args);
+        InputStream is = service.export(search, args);
 
         // use UTF8 sensitive reader/writers
         InputStreamReader isr = new InputStreamReader(is, "UTF8");
