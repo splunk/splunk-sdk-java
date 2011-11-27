@@ -27,6 +27,12 @@ public class Job extends Entity {
         super(service, path);
     }
 
+    @Override protected String actionPath(String action) {
+        if (action.equals("control"))
+            return path + "/control";
+        return super.actionPath(action);
+    }
+
     public Job control(String action) {
         return control(action, null);
     }

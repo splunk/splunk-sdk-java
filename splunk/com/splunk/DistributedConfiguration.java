@@ -21,6 +21,12 @@ public class DistributedConfiguration extends Entity {
         super(service, "search/distributed/config");
     }
 
+    @Override protected String actionPath(String action) {
+        if (action.equals("edit"))
+            return path + "/distributedSearch";
+        return super.actionPath(action);
+    }
+
     public boolean getAutoAddServers() {
         return getBoolean("autoAddServers");
     }
@@ -81,9 +87,8 @@ public class DistributedConfiguration extends Entity {
         return getBoolean("disabled");
     }
 
-    //UNDONE: docs can post these, example does not return them in Atom.
-    //connectionTimeout (int)  *
-    //receiveTimeout (int)     *
-    //sendTimeout (int)        *
+    // UNDONE: docs can post these, example does not return them in Atom.
+    // connectionTimeout (int)  *
+    // receiveTimeout (int)     *
+    // sendTimeout (int)        *
 }
-

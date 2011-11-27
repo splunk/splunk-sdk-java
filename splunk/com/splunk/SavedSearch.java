@@ -25,8 +25,18 @@ public class SavedSearch extends Entity {
     }
 
     public void acknowledge() {
-        service.post(actionPath("control"));
+        service.post(actionPath("acknowledge"));
         invalidate();
+    }
+
+    @Override protected String actionPath(String action) {
+        if (action.equals("acknowledge"))
+            return path + "/acknowledge";
+        if (action.equals("dispatch"))
+            return path + "/dispatch";
+        if (action.equals("history"))
+            return path + "/history";
+        return super.actionPath(action);
     }
 
     public Job dispatch() {

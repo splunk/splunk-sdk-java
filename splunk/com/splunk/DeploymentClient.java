@@ -21,18 +21,24 @@ public class DeploymentClient extends Entity {
         super(service, "deployment/client");
     }
 
-    public void disable() {
-        // disable is not handled through the standard enable/disable action
-        // paths; rather it is an edit (i.e. update) action path.
-        Args args = new Args("disabled", "true");
-        super.update(args);
+    @Override protected String actionPath(String action) {
+        if (action.equals("edit"))
+            return path + "/deployment-client";
+        return super.actionPath(action);
     }
 
-    public void enable() {
+    @Override public void disable() {
+        // disable is not handled through the standard enable/disable action
+        // paths; rather it is an edit (i.e. update) action path.
+        Args args = new Args("disabled", true);
+        update(args);
+    }
+
+    @Override public void enable() {
         // enable is not handled through the standard enable/disable action
         // path; rather it is an edit (i.e. update) action path.
-        Args args = new Args("disabled", "false");
-        super.update(args);
+        Args args = new Args("disabled", false);
+        update(args);
     }
 
     public String [] getServerClasses() {

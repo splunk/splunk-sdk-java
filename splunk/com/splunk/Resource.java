@@ -30,13 +30,6 @@ public abstract class Resource {
         this.service = service;
     }
 
-    // Returns the path corresponding to the given action.
-    public String actionPath(String action) {
-        Map<String, String> actions = getActions();
-        if (actions == null) return null;
-        return actions.get(action);
-    }
-
     public Map<String, String> getActions() {
         return validate().actions;
     }

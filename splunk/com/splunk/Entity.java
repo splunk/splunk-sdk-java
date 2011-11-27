@@ -29,6 +29,21 @@ public class Entity extends Resource implements Map<String, Object> {
         super(service, path);
     }
 
+    // Returns the path corresponding to the given action.
+    protected String actionPath(String action) {
+        if (action.equals("disable"))
+            return path + "/disable";
+        if (action.equals("edit"))
+            return path;
+        if (action.equals("enable"))
+            return path + "/enable";
+        if (action.equals("reload"))
+            return path + "/_reload";
+        if (action.equals("remove"))
+            return path;
+        throw new IllegalArgumentException("Invalid action: " + action);
+    }
+
     public void clear() {
         throw new UnsupportedOperationException();
     }
