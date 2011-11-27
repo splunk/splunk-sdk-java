@@ -38,8 +38,7 @@ public abstract class Resource {
     }
 
     public Map<String, String> getActions() {
-        validate();
-        return this.actions;
+        return validate().actions;
     }
 
     // Every resource has a name, which by default is its title. That name
@@ -59,19 +58,19 @@ public abstract class Resource {
     }
 
     public String getTitle() {
-        validate();
-        return this.title;
+        return validate().title;
     }
 
     void setTitle(String value) {
         this.title = value;
     }
 
-    public void invalidate() {
+    public Resource invalidate() {
         this.maybeValid = false;
+        return this;
     }
 
-    void load(AtomObject value) {
+    Resource load(AtomObject value) {
         if (value == null) {
             this.title = "title";
         }
@@ -80,11 +79,13 @@ public abstract class Resource {
             this.title = value.title;
         }
         this.maybeValid = true;
+        return this;
     }
 
-    public abstract void refresh();
+    public abstract Resource refresh();
 
-    public void validate() {
+    public Resource validate() {
         if (this.maybeValid == false) refresh();
+        return this;
     }
 }

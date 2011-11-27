@@ -63,7 +63,7 @@ public class InputCollection extends EntityCollection<Input> {
         return InputKind.Unknown; // Didn't recognize the input kind
     }
 
-    @Override public void refresh() {
+    @Override public InputCollection refresh() {
         items.clear();
 
         // Iterate over all input kinds and collect all instances.
@@ -84,6 +84,8 @@ public class InputCollection extends EntityCollection<Input> {
             AtomFeed feed = AtomFeed.parse(response.getContent());
             load(feed);
         }
+
+        return this;
     }
 }
 

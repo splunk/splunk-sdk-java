@@ -59,8 +59,7 @@ public class Entity extends Resource {
     }
 
     public Map<String, Object> getContent() {
-        validate();
-        return this.content;
+        return validate().content;
     }
 
     boolean getBoolean(String key) {
@@ -154,7 +153,7 @@ public class Entity extends Resource {
         return getBoolean("disabled", false);
     }
 
-    @Override void load(AtomObject value) {
+    @Override Entity load(AtomObject value) {
         super.load(value);
         AtomEntry entry = (AtomEntry)value;
         if (entry == null) {
@@ -163,6 +162,7 @@ public class Entity extends Resource {
         else {
             this.content = entry.content;
         }
+        return this;
     }
 
     public void update(Map args) {
@@ -171,7 +171,7 @@ public class Entity extends Resource {
     }
 
     // Refresh the current (singleton) entity instance.
-    @Override public void refresh() {
+    @Override public Entity refresh() {
         ResponseMessage response = get();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -179,10 +179,16 @@ public class Entity extends Resource {
         assert(count == 0 || count == 1);
         AtomEntry entry = count == 0 ? null : feed.entries.get(0);
         load(entry);
+        return this;
     }
 
     public void remove() {
         service.delete(actionPath("remove"));
+    }
+
+    @Override public Entity validate() { 
+        super.validate(); 
+        return this;
     }
 }
 

@@ -39,13 +39,11 @@ public class ResourceCollection<T extends Resource>
     }
 
     public boolean containsKey(Object key) {
-        validate();
-        return items.containsKey(key);
+        return validate().items.containsKey(key);
     }
 
     public boolean containsValue(Object value) {
-        validate();
-        return items.containsValue(value);
+        return validate().items.containsValue(value);
     }
 
     static Class[] itemSig = new Class[] { Service.class, String.class };
@@ -85,28 +83,23 @@ public class ResourceCollection<T extends Resource>
     }
 
     public Set<Map.Entry<String, T>> entrySet() {
-        validate();
-        return items.entrySet();
+        return validate().items.entrySet();
     }
 
     public boolean equals(Object o) {
-        validate();
-        return items.equals(o);
+        return validate().items.equals(o);
     }
 
     public T get(Object key) {
-        validate();
-        return items.get(key);
+        return validate().items.get(key);
     }
 
     public int hashCode() {
-        validate();
-        return items.hashCode();
+        return validate().items.hashCode();
     }
 
     public boolean isEmpty() {
-        validate();
-        return items.isEmpty();
+        return validate().items.isEmpty();
     }
     
     // Returns the value to use as the item key from the given AtomEntry.
@@ -124,21 +117,21 @@ public class ResourceCollection<T extends Resource>
     }
 
     public Set<String> keySet() {
-        validate();
-        return items.keySet();
+        return validate().items.keySet();
     }
 
     public ResponseMessage list() {
         return service.get(path + "?count=-1");
     }
 
-    void load(AtomFeed value) {
+    ResourceCollection<T> load(AtomFeed value) {
         super.load(value);
         for (AtomEntry entry : value.entries) {
             String key = itemKey(entry);
             T item = createItem(entry);
             items.put(key, item);
         }
+        return this;
     }
 
     public T put(String key, T value) {
@@ -149,12 +142,13 @@ public class ResourceCollection<T extends Resource>
     	throw new UnsupportedOperationException();
     }
 
-    public void refresh() {
+    @Override public ResourceCollection refresh() {
         items.clear();
         ResponseMessage response = list();
         assert(response.getStatus() == 200); // UNDONE
         AtomFeed feed = AtomFeed.parse(response.getContent());
         load(feed);
+        return this;
     }
 
     public T remove(Object key) {
@@ -162,12 +156,15 @@ public class ResourceCollection<T extends Resource>
     }
 
     public int size() {
-        validate();
-        return items.size();
+        return validate().items.size();
+    }
+
+    @Override public ResourceCollection<T> validate() {
+        super.validate();
+        return this;
     }
 
     public Collection<T> values() {
-        validate();
-        return items.values();
+        return validate().items.values();
     }
 }

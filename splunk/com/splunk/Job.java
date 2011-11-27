@@ -295,10 +295,11 @@ public class Job extends Entity {
     }
 
     // Job "entities" dont return an AtomFeed, only an AtomEntry.
-    @Override public void refresh() {
+    @Override public Job refresh() {
         ResponseMessage response = get();
         AtomEntry entry = AtomEntry.parse(response.getContent());
         load(entry);
+        return this;
     }
 
     public void remove() {
