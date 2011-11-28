@@ -25,8 +25,8 @@ public class Program {
         Command command = Command.splunk("inputs").parse(args);
         Service service = Service.connect(command.opts);
 
-        EntityCollection inputs = service.getInputs();
-        for (Entity entity: ((EntityCollection<Entity>)inputs).values()) {
+        InputCollection inputs = service.getInputs();
+        for (Entity entity: (inputs.values())) {
             printEntity(entity);
         }
     }
