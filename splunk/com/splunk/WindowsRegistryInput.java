@@ -21,7 +21,31 @@ public class WindowsRegistryInput extends Input {
         super(service, path);
     }
 
+    public boolean getBaseline() {
+        return getBoolean("baseline");
+    }
+
+    public String getProc() {
+        return getString("proc");
+    }
+
+    public String getHive() {
+        return getString("hive");
+    }
+
+    public String getIndex() {
+        return getString("index");
+    }
+
     public InputKind getKind() {
         return InputKind.WindowsRegistry;
+    }
+
+    public String getMonitorSubnodes() {
+        return getString("monitorSubnodes", null);
+    }
+
+    public String getType() {
+        return getString("type", null);
     }
 }

@@ -21,7 +21,15 @@ public class WindowsActiveDirectoryInput extends Input {
         super(service, path);
     }
 
+    public String getIndex() {
+        return getString("index");
+    }
+
     public InputKind getKind() {
         return InputKind.WindowsActiveDirectory;
+    }
+
+    public boolean getMonitorSubtree() {
+        return getBoolean("monitorSubtree");
     }
 }

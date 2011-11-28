@@ -21,7 +21,23 @@ public class MonitorInput extends Input {
         super(service, path);
     }
 
+    public int getFilecount() {
+        return getInteger("filecount", -1);
+    }
+
+    public String getHost() {
+        return getString("host", null);
+    }
+
+    public String getIndex() {
+        return getString("index");
+    }
+
     public InputKind getKind() {
         return InputKind.Monitor;
+    }
+
+    public int getRcvBuf() {
+        return getInteger("_rcvbuf");
     }
 }

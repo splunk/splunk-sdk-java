@@ -20,6 +20,90 @@ import java.util.Map;
 import org.junit.*;
 
 public class InputTest extends SplunkTestCase {
+
+    private void touchSpecificInput(Input input) {
+        InputKind kind = input.getKind();
+
+        if (kind.equals(InputKind.Monitor)) {
+            MonitorInput mi = (MonitorInput) input;
+            mi.getFilecount();
+            mi.getHost();
+            mi.getIndex();
+            mi.getRcvBuf();
+        }
+        else if (kind.equals(InputKind.Script)) {
+            ScriptInput si = (ScriptInput) input;
+            si.getGroup();
+            si.getHost();
+            si.getIndex();
+            si.getInteval();
+            si.getRcvBuf();
+        }
+        else if (kind.equals(InputKind.Tcp)) {
+            TcpInput ti = (TcpInput) input;
+            ti.getGroup();
+            ti.getIndex();
+            ti.getRcvBuf();
+            ti.getRestrictToHost();
+        }
+        else if (kind.equals(InputKind.TcpSplunk)) {
+            TcpSplunkInput tsi = (TcpSplunkInput) input;
+            tsi.getGroup();
+            tsi.getHost();
+            tsi.getIndex();
+            tsi.getRcvBuf();
+        }
+        else if (kind.equals(InputKind.Udp)) {
+            UdpInput ui = (UdpInput) input;
+            ui.getGroup();
+            ui.getHost();
+            ui.getIndex();
+            ui.getRcvBuf();
+        }
+        else if (kind.equals(InputKind.WindowsActiveDirectory)) {
+            WindowsActiveDirectoryInput wadi =
+                    (WindowsActiveDirectoryInput) input;
+            wadi.getIndex();
+            wadi.getMonitorSubtree();
+        }
+        else if (kind.equals(InputKind.WindowsEventLog)) {
+            WindowsEventLogInput weli = (WindowsEventLogInput) input;
+            weli.getHosts();
+            weli.getIndex();
+            weli.getLocalName();
+            weli.getLogs();
+            weli.getLookupHost();
+        }
+        else if (kind.equals(InputKind.WindowsPerfmon)) {
+            WindowsPerfmonInput wpi = (WindowsPerfmonInput) input;
+            wpi.getIndex();
+            wpi.getInstances();
+            wpi.getInterval();
+            wpi.getObject();
+        }
+        else if (kind.equals(InputKind.WindowsRegistry)) {
+            WindowsRegistryInput wri = (WindowsRegistryInput) input;
+            wri.getBaseline();
+            wri.getHive();
+            wri.getIndex();
+            wri.getMonitorSubnodes();
+            wri.getProc();
+            wri.getType();
+        }
+        else if (kind.equals(InputKind.WindowsWmi)) {
+            WindowsWmiInput wwi = (WindowsWmiInput) input;
+            wwi.getClasses();
+            wwi.getFields();
+            wwi.getIndex();
+            wwi.getInstances();
+            wwi.getInterval();
+            wwi.getLocalName();
+            wwi.getLookupHost();
+            wwi.getServer();
+            wwi.getWq1();
+        }
+    }
+
     @Test public void testInputs() {
         Service service = connect();
 
@@ -31,13 +115,10 @@ public class InputTest extends SplunkTestCase {
             input.getTitle();
             input.getPath();
             input.getKind();
-
-            // UNDONE: Read properties from all input kinds
+            touchSpecificInput(input);
         }
     }
 
-    // UNDONE: Currently only do a rudimentary test on TcpInput, need to cover
-    // all other input kinds.
     @Test public void testInputCrud() {
         Service service = connect();
 

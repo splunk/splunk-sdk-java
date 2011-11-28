@@ -21,7 +21,23 @@ public class WindowsPerfmonInput extends Input {
         super(service, path);
     }
 
+    public String getIndex() {
+        return getString("index");
+    }
+
+    public String [] getInstances() {
+        return getStringArray("index", new String[0]);
+    }
+
+    public int getInterval() {
+        return getInteger("interval");
+    }
+
     public InputKind getKind() {
         return InputKind.WindowsPerfmon;
+    }
+
+    public String getObject() {
+        return getString("object");
     }
 }

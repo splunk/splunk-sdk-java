@@ -26,8 +26,8 @@ public class Program {
         Service service = Service.connect(command.opts);
 
         InputCollection inputs = service.getInputs();
-        for (Entity entity: inputs.values()) {
-            printEntity(entity);
+        for (Input input: inputs.values()) {
+            printInput(input);
         }
     }
 
@@ -38,17 +38,18 @@ public class Program {
         }
     }
 
-    public static void printEntity(Entity entity) {
+    public static void printInput(Input input) {
         System.out.println("");
-        if (entity == null) {
+        if (input == null) {
             System.out.println("null");
             return;
         }
-        System.out.format("## %s\n", entity.getName());
-        System.out.format("title = %s\n", entity.getTitle());
-        System.out.format("path = %s\n", entity.getPath());
-        printActions(entity.getActions());
-        for (Map.Entry entry : entity.entrySet()) {
+        System.out.format("## %s\n", input.getName());
+        System.out.format("title = %s\n", input.getTitle());
+        System.out.format("path = %s\n", input.getPath());
+        System.out.format("kind = %s\n", input.getKind().toString());
+        printActions(input.getActions());
+        for (Map.Entry entry : input.entrySet()) {
             System.out.format("%s = %s\n",
                 entry.getKey(), entry.getValue().toString());
         }

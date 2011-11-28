@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
 // InputCollection is a heterogenous collection where each item contains a

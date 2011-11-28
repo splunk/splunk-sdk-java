@@ -21,7 +21,27 @@ public class WindowsEventLogInput extends Input {
         super(service, path);
     }
 
+    public String getHosts() {
+        return getString("hosts", null);
+    }
+
+    public String getIndex() {
+        return getString("index");
+    }
+
     public InputKind getKind() {
         return InputKind.WindowsEventLog;
+    }
+
+    public String [] getLogs() {
+        return getStringArray("logs", null);
+    }
+
+    public String getLocalName() {
+        return getString("name");
+    }
+
+    public String getLookupHost() {
+        return getString("lookup_host");
     }
 }

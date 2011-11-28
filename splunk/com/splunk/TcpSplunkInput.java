@@ -21,7 +21,23 @@ public class TcpSplunkInput extends Input {
         super(service, path);
     }
 
+    public String getGroup() {
+        return getString("group");
+    }
+
+    public String getHost() {
+        return getString("host");
+    }
+
+    public String getIndex() {
+        return getString("index");
+    }
+
     public InputKind getKind() {
         return InputKind.TcpSplunk;
+    }
+
+    public int getRcvBuf() {
+        return getInteger("_rcvbuf");
     }
 }

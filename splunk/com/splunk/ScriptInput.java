@@ -21,7 +21,27 @@ public class ScriptInput extends Input {
         super(service, path);
     }
 
+    public String getGroup() {
+        return getString("group", null);
+    }
+
+    public String getHost() {
+        return getString("host", null);
+    }
+
+    public String getIndex() {
+        return getString("index");
+    }
+
+    public int getInteval() {
+        return getInteger("interval");
+    }
+
     public InputKind getKind() {
         return InputKind.Script;
+    }
+
+    public int getRcvBuf() {
+        return getInteger("_rcvbuf");
     }
 }

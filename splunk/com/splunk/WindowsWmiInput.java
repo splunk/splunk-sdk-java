@@ -21,7 +21,43 @@ public class WindowsWmiInput extends Input {
         super(service, path);
     }
 
+    public String getClasses() {
+        return getString("classes");
+    }
+
+    public String [] getFields() {
+        return getStringArray("fields", new String[0]);
+    }
+
+    public String getIndex() {
+        return getString("index");
+    }
+
+    public String [] getInstances() {
+        return getStringArray("instances", new String[0]);
+    }
+
+    public int getInterval() {
+        return getInteger("interval");
+    }
+
     public InputKind getKind() {
         return InputKind.WindowsWmi;
+    }
+
+    public String getLookupHost() {
+        return getString("lookup_host");
+    }
+
+    public String getLocalName() {
+        return getString("name");
+    }
+
+    public String getServer() {
+        return getString("server", null);
+    }
+
+    public String getWq1() {
+        return getString("wq1");
     }
 }
