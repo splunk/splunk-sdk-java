@@ -25,22 +25,20 @@ public class Program {
         Command command = Command.splunk("inputs").parse(args);
         Service service = Service.connect(command.opts);
 
-        /* UNDONE -- need Inputs class
         EntityCollection inputs = service.getInputs();
         for (Entity entity: ((EntityCollection<Entity>)inputs).values()) {
-            System.out.println(entity.getTitle());
+            printEntity(entity);
         }
-        */
     }
 
-    public void printActions(Map<String, String> actions) {
+    public static void printActions(Map<String, String> actions) {
         for (Map.Entry entry : actions.entrySet()) {
             System.out.format("action %s => %s\n",
                 entry.getKey(), entry.getValue());
         }
     }
 
-    public void printEntity(Entity entity) {
+    public static void printEntity(Entity entity) {
         System.out.println("");
         if (entity == null) {
             System.out.println("null");
