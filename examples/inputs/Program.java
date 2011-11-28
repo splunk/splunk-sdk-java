@@ -26,7 +26,7 @@ public class Program {
         Service service = Service.connect(command.opts);
 
         InputCollection inputs = service.getInputs();
-        for (Entity entity: (inputs.values())) {
+        for (Entity entity: inputs.values()) {
             printEntity(entity);
         }
     }
