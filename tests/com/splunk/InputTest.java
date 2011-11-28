@@ -119,6 +119,8 @@ public class InputTest extends SplunkTestCase {
         }
     }
 
+    // UNDONE: Currently only do a rudimentary test on TcpInput, need to cover
+    // all other input kinds.
     @Test public void testInputCrud() {
         Service service = connect();
 
