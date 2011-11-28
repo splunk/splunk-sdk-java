@@ -47,13 +47,14 @@ public class Command {
     public HashMap<String, Object> opts = new HashMap<String, Object>();
 
     // Option fields
+    public String app = null;
     public Boolean help = false;
     public String host = "localhost";
+    public String owner = null;
     public int port = 8089;
+    public String password = null;
     public String scheme = "https";
     public String username = null;
-    public String password = null;
-    public String namespace = null;
 
     Command(String appName) { 
         this.appName = appName;
@@ -88,7 +89,8 @@ public class Command {
         rules.addOption(null, "scheme", true, "Scheme (default https)");
         rules.addOption(null, "username", true, "Username to login with");
         rules.addOption(null, "password", true, "Password to login with");
-        rules.addOption(null, "namespace", true, null);
+        rules.addOption(null, "app", true, "App/namespace context");
+        rules.addOption(null, "owner", true, "Owner/user context");
         return this;
     }
 

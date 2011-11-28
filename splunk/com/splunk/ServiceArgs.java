@@ -18,8 +18,10 @@ package com.splunk;
 
 // Record used to initialize Splunk service instances.
 public class ServiceArgs {
+    public String app = null;
     public String host = null;
+    public String owner = null;
     public Integer port = null;
-    public String scheme = null;
-    public String namespace = null;
+    public String scheme = null;    
+    public String token = null;
 }

@@ -20,9 +20,9 @@ import java.io.InputStream;
 import java.util.Map;
 
 public class Service extends HttpService {
+    protected String app = null;
     protected String token = null;
-    protected String namespace = null;
-    private String prefix = null;
+    protected String owner = null;
 
     public static String DEFAULT_HOST = "localhost";
     public static int DEFAULT_PORT = 8089;
@@ -42,28 +42,36 @@ public class Service extends HttpService {
 
     public Service(ServiceArgs args) {
         super();
+        this.app = args.app;
         this.host = args.host == null ? DEFAULT_HOST : args.host;
+        this.owner = args.owner;
         this.port = args.port == null ? DEFAULT_PORT : args.port;
         this.scheme = args.scheme == null ? DEFAULT_SCHEME : args.scheme;
-        this.namespace = args.namespace;
+        this.token = args.token;
     }
 
     public Service(Map<String, Object> args) {
         super();
+        this.app = Args.<String>get(args, "app", null);
         this.host = Args.<String>get(args, "host", DEFAULT_HOST);
+        this.owner = Args.<String>get(args, "owner", null);
         this.port = Args.<Integer>get(args, "port", DEFAULT_PORT);
         this.scheme = Args.<String>get(args, "scheme", DEFAULT_SCHEME);
-        this.namespace = Args.<String>get(args, "namespace", null);
+        this.token = Args.<String>get(args, "token", null);
     }
 
     public static Service connect(Map<String, Object> args) {
-        Service service = new Service(args);
+        Service service = Service.create(args);
         if (args.containsKey("username")) {
             String username = Args.get(args, "username", null);
             String password = Args.get(args, "password", null);
             service.login(username, password);
         }
         return service;
+    }
+
+    public static Service create(Map<String, Object> args) {
+        return new Service(args);
     }
 
     // Execute a search using the export endpoint, streaming results back
@@ -83,9 +91,15 @@ public class Service extends HttpService {
     String fullpath(String path) {
         if (path.startsWith("/"))
             return path;
-        if (namespace == null)
+        if (owner == null && app == null)
             return "/services/" + path;
-        return String.format("/servicesNS/%s/%s", namespace, path);
+        return String.format("/servicesNS/%s/%s/%s", 
+            owner == null ? "-" : owner, app == null ? "-" : app, path);
+    }
+    
+    // Return the app name used to scope this service instance.
+    public String getApp() {
+        return this.app;
     }
 
     public EntityCollection<Application> getApplications() {
@@ -165,6 +179,11 @@ public class Service extends HttpService {
             this, "licenser/messages", LicenseMessage.class);
     }
 
+    // Return the user name used to scope this service instance.
+    public String getOwner() {
+        return this.owner;
+    }
+
     public LicensePoolCollection getLicensePools() {
         return new LicensePoolCollection(this);
     }
@@ -229,6 +248,11 @@ public class Service extends HttpService {
         return new Settings(this);
     }
 
+    // Returns the current session's auth token.
+    public String getToken() {
+        return this.token;
+    }
+
     public UserCollection getUsers() {
         return new UserCollection(this);
     }
@@ -268,5 +292,10 @@ public class Service extends HttpService {
     public ResponseMessage send(String path, RequestMessage request) {
         request.getHeader().put("Authorization", token);
         return super.send(fullpath(path), request);
+    }
+
+    // Provides a session token for use by this service instance.
+    public void setToken(String value) {
+        this.token = value;
     }
 }
