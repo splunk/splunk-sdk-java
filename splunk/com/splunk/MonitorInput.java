@@ -21,7 +21,7 @@ public class MonitorInput extends Input {
         super(service, path);
     }
 
-    public int getFilecount() {
+    public int getFileCount() {
         return getInteger("filecount", -1);
     }
 

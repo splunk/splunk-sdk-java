@@ -38,10 +38,10 @@ class ServiceKids extends Children.Keys<String> {
             "deploymentserverclasses",
             "deploymenttenants",
             "licenses",
-            "licenseGroups",
-            "licensePools",
-            "licenseSlaves",
-            "licenseStacks",
+            "licensegroups",
+            "licensepools",
+            "licenseslaves",
+            "licensestacks",
             "roles",
             "users",
             "passwords",
@@ -51,10 +51,10 @@ class ServiceKids extends Children.Keys<String> {
             "eventtypes",
             "indexes",
             "inputs",
-            "outputDefault",
-            "outputGroups",
-            "outputServers",
-            "outputSyslogs",
+            "outputdefault",
+            "outputgroups",
+            "outputservers",
+            "outputsyslogs",
             "jobs",
         };
         setKeys(kinds);
@@ -132,25 +132,25 @@ class ServiceKids extends Children.Keys<String> {
                 service.getLicenses(), 
                 LicenseNode.class);
 
-        if (kind.equals("licensePools"))
+        if (kind.equals("licensepools"))
             return new EntityCollectionNode(
                 "License Pools", 
                 service.getLicensePools(), 
                 LicensePoolNode.class);
 
-        if (kind.equals("licenseGroups"))
+        if (kind.equals("licensegroups"))
             return new EntityCollectionNode(
                 "License Groups", 
                 service.getLicenseGroups(), 
                 LicenseGroupNode.class);
 
-        if (kind.equals("licenseSlaves"))
+        if (kind.equals("licenseslaves"))
             return new EntityCollectionNode(
                 "License Slaves",
                 service.getLicenseSlaves(),
                 LicenseSlaveNode.class);
 
-        if (kind.equals("licenseStacks"))
+        if (kind.equals("licensestacks"))
             return new EntityCollectionNode(
                 "License Stacks", 
                 service.getLicenseStacks(), 
@@ -168,23 +168,23 @@ class ServiceKids extends Children.Keys<String> {
                 service.getMessages(), 
                 MessageNode.class);
 
-        if (kind.equals("outputDefault"))
+        if (kind.equals("outputdefault"))
             return new  OutputDefaultNode(
                 service.getOutputDefault());
 
-        if (kind.equals("outputGroups"))
+        if (kind.equals("outputgroups"))
             return new EntityCollectionNode(
                 "Output Groups", 
                 service.getOutputGroups(), 
                 OutputGroupNode.class);
 
-        if (kind.equals("outputServers"))
+        if (kind.equals("outputservers"))
             return new EntityCollectionNode(
                 "Output Servers", 
                 service.getOutputServers(), 
                 OutputServerNode.class);
 
-        if (kind.equals("outputSyslogs"))
+        if (kind.equals("outputsyslogs"))
             return new EntityCollectionNode(
                 "Output Syslogs", 
                 service.getOutputSyslogs(), 

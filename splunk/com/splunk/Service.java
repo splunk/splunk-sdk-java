@@ -61,17 +61,13 @@ public class Service extends HttpService {
     }
 
     public static Service connect(Map<String, Object> args) {
-        Service service = Service.create(args);
+        Service service = new Service(args);
         if (args.containsKey("username")) {
             String username = Args.get(args, "username", null);
             String password = Args.get(args, "password", null);
             service.login(username, password);
         }
         return service;
-    }
-
-    public static Service create(Map<String, Object> args) {
-        return new Service(args);
     }
 
     // Execute a search using the export endpoint, streaming results back

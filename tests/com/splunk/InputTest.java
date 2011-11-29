@@ -26,7 +26,7 @@ public class InputTest extends SplunkTestCase {
 
         if (kind.equals(InputKind.Monitor)) {
             MonitorInput mi = (MonitorInput) input;
-            mi.getFilecount();
+            mi.getFileCount();
             mi.getHost();
             mi.getIndex();
             mi.getRcvBuf();
