@@ -24,83 +24,86 @@ public class InputTest extends SplunkTestCase {
     private void touchSpecificInput(Input input) {
         InputKind kind = input.getKind();
 
-        if (kind.equals(InputKind.Monitor)) {
-            MonitorInput mi = (MonitorInput) input;
-            mi.getFileCount();
-            mi.getHost();
-            mi.getIndex();
-            mi.getRcvBuf();
-        }
-        else if (kind.equals(InputKind.Script)) {
-            ScriptInput si = (ScriptInput) input;
-            si.getGroup();
-            si.getHost();
-            si.getIndex();
-            si.getInteval();
-            si.getRcvBuf();
-        }
-        else if (kind.equals(InputKind.Tcp)) {
-            TcpInput ti = (TcpInput) input;
-            ti.getGroup();
-            ti.getIndex();
-            ti.getRcvBuf();
-            ti.getRestrictToHost();
-        }
-        else if (kind.equals(InputKind.TcpSplunk)) {
-            TcpSplunkInput tsi = (TcpSplunkInput) input;
-            tsi.getGroup();
-            tsi.getHost();
-            tsi.getIndex();
-            tsi.getRcvBuf();
-        }
-        else if (kind.equals(InputKind.Udp)) {
-            UdpInput ui = (UdpInput) input;
-            ui.getGroup();
-            ui.getHost();
-            ui.getIndex();
-            ui.getRcvBuf();
-        }
-        else if (kind.equals(InputKind.WindowsActiveDirectory)) {
-            WindowsActiveDirectoryInput wadi =
-                    (WindowsActiveDirectoryInput) input;
-            wadi.getIndex();
-            wadi.getMonitorSubtree();
-        }
-        else if (kind.equals(InputKind.WindowsEventLog)) {
-            WindowsEventLogInput weli = (WindowsEventLogInput) input;
-            weli.getHosts();
-            weli.getIndex();
-            weli.getLocalName();
-            weli.getLogs();
-            weli.getLookupHost();
-        }
-        else if (kind.equals(InputKind.WindowsPerfmon)) {
-            WindowsPerfmonInput wpi = (WindowsPerfmonInput) input;
-            wpi.getIndex();
-            wpi.getInstances();
-            wpi.getInterval();
-            wpi.getObject();
-        }
-        else if (kind.equals(InputKind.WindowsRegistry)) {
-            WindowsRegistryInput wri = (WindowsRegistryInput) input;
-            wri.getBaseline();
-            wri.getHive();
-            wri.getIndex();
-            wri.getMonitorSubnodes();
-            wri.getProc();
-            wri.getType();
-        }
-        else if (kind.equals(InputKind.WindowsWmi)) {
-            WindowsWmiInput wwi = (WindowsWmiInput) input;
-            wwi.getClasses();
-            wwi.getFields();
-            wwi.getIndex();
-            wwi.getInstances();
-            wwi.getInterval();
-            wwi.getLocalName();
-            wwi.getLookupHost();
-            wwi.getServer();
-            wwi.getWq1();
+        switch (kind) {
+            case Monitor:
+                MonitorInput monitorInput = (MonitorInput) input;
+                monitorInput.getFileCount();
+                monitorInput.getHost();
+                monitorInput.getIndex();
+                monitorInput.getRcvBuf();
+                break;
+            case Script:
+                ScriptInput scriptInput = (ScriptInput) input;
+                scriptInput.getGroup();
+                scriptInput.getHost();
+                scriptInput.getIndex();
+                scriptInput.getInteval();
+                scriptInput.getRcvBuf();
+                break;
+            case Tcp:
+                TcpInput tcpInput = (TcpInput) input;
+                tcpInput.getGroup();
+                tcpInput.getHost();
+                tcpInput.getIndex();
+                tcpInput.getRcvBuf();
+                tcpInput.getRestrictToHost();
+                break;
+            case TcpSplunk:
+                TcpSplunkInput tcpSplunkInput = (TcpSplunkInput) input;
+                tcpSplunkInput.getGroup();
+                tcpSplunkInput.getHost();
+                tcpSplunkInput.getIndex();
+                tcpSplunkInput.getRcvBuf();
+            case Udp:
+                UdpInput udpInput = (UdpInput) input;
+                udpInput.getGroup();
+                udpInput.getHost();
+                udpInput.getIndex();
+                udpInput.getRcvBuf();
+            case WindowsActiveDirectory:
+                WindowsActiveDirectoryInput windowsActiveDirectoryInput =
+                        (WindowsActiveDirectoryInput) input;
+                windowsActiveDirectoryInput.getIndex();
+                windowsActiveDirectoryInput.getMonitorSubtree();
+                break;
+            case WindowsEventLog:
+                WindowsEventLogInput windowsEventLogInput =
+                        (WindowsEventLogInput) input;
+                windowsEventLogInput.getHosts();
+                windowsEventLogInput.getIndex();
+                windowsEventLogInput.getLocalName();
+                windowsEventLogInput.getLogs();
+                windowsEventLogInput.getLookupHost();
+                break;
+            case WindowsPerfmon:
+                WindowsPerfmonInput windowsPerfmonInput =
+                        (WindowsPerfmonInput) input;
+                windowsPerfmonInput.getIndex();
+                windowsPerfmonInput.getInstances();
+                windowsPerfmonInput.getInterval();
+                windowsPerfmonInput.getObject();
+                break;
+            case WindowsRegistry:
+                WindowsRegistryInput windowsRegistryInput =
+                        (WindowsRegistryInput) input;
+                windowsRegistryInput.getBaseline();
+                windowsRegistryInput.getHive();
+                windowsRegistryInput.getIndex();
+                windowsRegistryInput.getMonitorSubnodes();
+                windowsRegistryInput.getProc();
+                windowsRegistryInput.getType();
+                break;
+            case WindowsWmi:
+                WindowsWmiInput windowsWmiInput = (WindowsWmiInput) input;
+                windowsWmiInput.getClasses();
+                windowsWmiInput.getFields();
+                windowsWmiInput.getIndex();
+                windowsWmiInput.getInstances();
+                windowsWmiInput.getInterval();
+                windowsWmiInput.getLocalName();
+                windowsWmiInput.getLookupHost();
+                windowsWmiInput.getServer();
+                windowsWmiInput.getWq1();
         }
     }
 
