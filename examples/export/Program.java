@@ -17,7 +17,6 @@
 import com.splunk.*;
 import com.splunk.sdk.Command;
 
-import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.io.File;
 import java.io.FileOutputStream;
