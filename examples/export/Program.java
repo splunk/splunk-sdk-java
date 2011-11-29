@@ -17,6 +17,7 @@
 import com.splunk.*;
 import com.splunk.sdk.Command;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,6 +38,7 @@ import java.io.Writer;
 public class Program {
 
     static String lastTime;
+    static int nextEventOffset;
 
     static public void main(String[] args) {
         try {
@@ -60,110 +62,131 @@ public class Program {
         return last;
     }
 
-    static int getTruncatePoint(
-        int indexTimeOffset, byte[] buffer, String format) {
-        String str = new String(buffer);
-
-        if (format.equals("csv"))
-            // UNDONE: does this work with line breaks?
-            return getStartNextEvent(indexTimeOffset, str, "\n") + 1;
-        else if (format.equals("xml"))
-            return getStartNextEvent(indexTimeOffset, str, "<result offset=");
-        else
-            return getStartNextEvent(indexTimeOffset, str, "{\"_cd\":");
-    }
-
     static int getCsvEventTimeOffset(String str) {
-        String [] times = new String[1024];
-        int [] offsets = new int[1024];
-        int count = -1;
-        int index = str.indexOf("\n");
 
-        while (index > 0) {
-            int next =  str.indexOf("\n", index + 1);
-            if (next > 0) {
-                String timePart = str.substring(index, next).split(",")[1];
-                times[++count] = timePart.substring(1, timePart.length()-1);
-                offsets[count] = str.indexOf(timePart, index);
-                lastTime = times[count];
+        // UNDONE: does this work with line-break events?
+
+        // get first event in this buffer
+        int eventStart = str.indexOf("\n");
+        int eventEnd = str.indexOf("\n", eventStart + 1);
+        if (eventEnd < 0)
+            return -1;
+
+        lastTime = str.substring(eventStart).split(",")[1].replace("\"","");
+        nextEventOffset = eventEnd;
+
+        // walk through events until time changes
+        eventStart = eventEnd;
+        while (eventEnd > 0) {
+            eventEnd = str.indexOf("\n", eventStart + 1);
+            if (eventEnd < 0)
+                return -1;
+            String time = str.substring(eventStart, eventEnd)
+                    .split(",")[1]
+                    .replace("\"", "");
+            if (!time.equals(lastTime)) {
+                return eventStart;
             }
-            index = next + 1;
+            nextEventOffset = eventEnd;
+            eventStart = eventEnd;
         }
 
-        for (;count > 0; count--) {
-            if (!times[count].equals(lastTime)) {
-                lastTime = times[count];
-                return offsets[count+1];
-            }
-        }
         return -1;
     }
 
     static int getXmlEventTimeOffset(String str) {
-        int count = -1;
-        int start = 0;
-        String [] times = new String[1024];
-        int [] offsets = new int[1024];
-        String timePattern = "<field k='_time'>";
+        String timeKeyPattern = "<field k='_time'>";
         String timeStartPattern = "<value><text>";
         String timeEndPattern = "<";
+        String eventEndPattern = "</result>";
 
-        int index = str.indexOf(timePattern, start);
-        while (index > 0) {
-            int timeStart = str.indexOf(
-                timeStartPattern, index + timePattern.length())
+        // get first event in this buffer. If no event end kick back
+        int eventStart = str.indexOf("<result offset='");
+        int eventEnd = str.indexOf("eventEndPattern", eventStart)
+                + eventEndPattern.length();
+        if (eventEnd < 0)
+            return -1;
+        int timeKeyStart = str.indexOf(timeKeyPattern, eventStart);
+        int timeStart = str.indexOf(timeStartPattern, timeKeyStart)
                 + timeStartPattern.length();
-            int timeEnd = str.indexOf(timeEndPattern, timeStart);
-            if ((timeStart == -1) || (timeEnd == -1)) break;
-            times[++count] = str.substring(timeStart, timeEnd);
-            offsets[count] = timeStart;
-            lastTime = times[count];
-            start = timeEnd;
-            index = str.indexOf(timePattern, start);
+        int timeEnd = str.indexOf(timeEndPattern, timeStart+1);
+
+        lastTime = str.substring(timeStart, timeEnd);
+        nextEventOffset = eventEnd;
+
+        // walk through events until time changes
+        eventStart = eventEnd;
+        while (eventEnd > 0) {
+            eventStart = str.indexOf("<result offset='", eventStart+1);
+            eventEnd = str.indexOf("</result>", eventStart)
+                    + eventEndPattern.length();
+            if (eventEnd < 0)
+                return -1;
+            timeKeyStart = str.indexOf(timeKeyPattern, eventStart);
+            timeStart = str.indexOf(timeStartPattern, timeKeyStart);
+            timeEnd = str.indexOf(timeEndPattern, timeStart);
+            String time = str.substring(timeStart, timeEnd);
+            if (!time.equals(lastTime)) {
+                return eventStart;
+            }
+            nextEventOffset = eventEnd;
+            eventStart = eventEnd;
         }
 
-        for (;count > 0; count--) {
-            if (!times[count].equals(lastTime)) {
-                lastTime = times[count];
-                return offsets[count+1];
-            }
-        }
         return -1;
     }
 
     static int getJsonEventTimeOffset(String str) {
-        int count = -1;
-        int start = 0;
-        String [] times = new String[1024];
-        int [] offsets = new int[1024];
-        String timePattern = "\"_time\":\"";
-        String timeStartPattern = "\":\"";
-        String timeEndPattern = "\",";
 
-        int index = str.indexOf(timePattern, start);
-        while (index > 0) {
-            int timeStart = str.indexOf(timeStartPattern, index)
-                            + timeStartPattern.length();
-            int timeEnd = str.indexOf(timeEndPattern, timeStart);
-            if ((timeStart == -1) || (timeEnd == -1)) break;
-            times[++count] = str.substring(timeStart, timeEnd);
-            offsets[count] = timeStart;
-            lastTime = times[count];
-            start = timeEnd;
-            index = str.indexOf(timePattern, start);
-        }
+        String timeKeyPattern = "\"_time\":\"";
+        String timeEndPattern = "\"";
+        String eventEndPattern = "\"},\n";
+        String eventEndPattern2 = "\"}[]";
 
-        for (;count > 0; count--) {
-            if (!times[count].equals(lastTime)) {
-                lastTime = times[count];
-                return offsets[count+1];
+        // get first event in this buffer. If no event end kick back
+        int eventStart = str.indexOf("{\"_cd\":\"");
+        int eventEnd = str.indexOf(eventEndPattern, eventStart)
+                + eventEndPattern.length();
+        if (eventEnd < 0)
+            eventEnd = str.indexOf(eventEndPattern2, eventStart)
+                    + eventEndPattern2.length();
+        if (eventEnd < 0)
+            return -1;
+
+        int timeStart = str.indexOf(timeKeyPattern, eventStart)
+                + timeKeyPattern.length();
+        int timeEnd = str.indexOf(timeEndPattern, timeStart+1);
+        lastTime = str.substring(timeStart, timeEnd);
+        nextEventOffset = eventEnd;
+
+        // walk through events until time changes
+        eventStart = eventEnd;
+        while (eventEnd > 0) {
+            eventStart = str.indexOf("{\"_cd\":\"", eventStart+1);
+            eventEnd = str.indexOf(eventEndPattern, eventStart)
+                    + eventEndPattern.length();
+            if (eventEnd < 0)
+                eventEnd = str.indexOf(eventEndPattern2, eventStart)
+                        + eventEndPattern2.length();
+            if (eventEnd < 0)
+                return -1;
+
+            timeStart = str.indexOf(timeKeyPattern, eventStart)
+                    + timeKeyPattern.length();
+            timeEnd = str.indexOf(timeEndPattern, timeStart+1);
+            String time = str.substring(timeStart, timeEnd);
+            if (!time.equals(lastTime)) {
+                return eventStart;
             }
+            nextEventOffset = eventEnd-2;
+            eventStart = eventEnd;
         }
+
         return -1;
     }
 
     static int getLastGoodEventOffset(byte[] buffer, String format)
-        throws Exception {
+            throws Exception {
 
         String str = new String(buffer);
         if (format.equals("csv"))
@@ -174,6 +197,15 @@ public class Program {
             return getJsonEventTimeOffset(str);
     }
 
+    static void cleanupTail(Writer out, String format) throws Exception {
+        if (format.equals("csv"))
+            out.write("\n");
+        else if (format.equals("xml"))
+            out.write("\n</results>\n");
+        else
+            out.write("[]\n");
+    }
+
     static void run(String[] argv) throws Exception {
         Command command = Command.splunk("export").parse(argv);
         Service service = Service.connect(command.opts);
@@ -181,6 +213,7 @@ public class Program {
         Args args = new Args();
         final String outFilename = "export.out";
         boolean recover = false;
+        boolean addEndOfLine = false;
         String format = "csv"; // default to csv
 
         // This example takes optional arguments:
@@ -225,11 +258,7 @@ public class Program {
                 raf.read(buffer, 0, bufferSize);
                 int eventTimeOffset = getLastGoodEventOffset(buffer, format);
                 if (eventTimeOffset != -1) {
-                    // UNDONE: if we had to crawl back more than one buffer,
-                    // AND the end of event is not in this buffer, we
-                    // need to walk forward until found.
-                    fptrEof = getTruncatePoint(eventTimeOffset, buffer, format)
-                        + fptr;
+                    fptrEof = nextEventOffset + fptr;
                     break;
                 }
                 fptr = fptr - bufferSize;
@@ -239,12 +268,13 @@ public class Program {
                 fptrEof = 0; // didn't find a valid event, so start over.
             else
                 args.put("latest_time", lastTime);
+                addEndOfLine = true;
 
             FileChannel fc = raf.getChannel();
             fc.truncate(fptrEof);
         } else
-            if (!file.createNewFile())
-                throw new Error("Failed to create output file");
+        if (!file.createNewFile())
+            throw new Error("Failed to create output file");
 
         // search args
         args.put("timeout", "60");          // don't keep search around
@@ -263,8 +293,16 @@ public class Program {
 
         // read/write 8k at a time if possible
         char [] xferBuffer = new char[8192];
+        boolean once = true;
 
+        // if superfluous meta-data is not needed, or specifically
+        // wants to be removed, one would clean up the first read
+        // buffer on a format by format basis,
         while (true) {
+            if (addEndOfLine && once) {
+                cleanupTail(out, format);
+                once = false;
+            }
             int bytesRead = isr.read(xferBuffer);
             if (bytesRead == -1) break;
             out.write(xferBuffer, 0, bytesRead);
