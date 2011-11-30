@@ -25,6 +25,10 @@ public class TcpInput extends Input {
         return getString("group");
     }
 
+    public String getHost() {
+        return getString("host", null);
+    }
+
     public String getIndex() {
         return getString("index");
     }
