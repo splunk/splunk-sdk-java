@@ -41,8 +41,8 @@ public class WindowsRegistryInput extends Input {
         return InputKind.WindowsRegistry;
     }
 
-    public String getMonitorSubnodes() {
-        return getString("monitorSubnodes", null);
+    public boolean getMonitorSubnodes() {
+        return getBoolean("monitorSubnodes", false);
     }
 
     public String getType() {

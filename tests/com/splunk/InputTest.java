@@ -37,7 +37,7 @@ public class InputTest extends SplunkTestCase {
                 scriptInput.getGroup();
                 scriptInput.getHost();
                 scriptInput.getIndex();
-                scriptInput.getInteval();
+                scriptInput.getInterval();
                 scriptInput.getRcvBuf();
                 break;
             case Tcp:
