@@ -69,6 +69,18 @@ control of the build process.
 You can also type `ant {target} -find` from anywhere in the repository and 
 ant will automatically find the root build file.
 
+### Setup for Windows
+
+If not already installed, install both Java JDK from Oracle and Ant from
+Apache. 
+
+* http://www.oracle.com/technetwork/java/javase/downloads/index.html
+* http://ant.apache.org/ respectively.
+
+Set the environment variables ANT_HOME to the location you unzipped the ant
+installation. Set the environment variable JAVA_HOME to the directory
+you installed the Java JDK.
+
 ### Running the examples and unit tests
 
 The SDK examples and unit tests require a common set of command line arguments
