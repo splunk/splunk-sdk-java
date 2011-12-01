@@ -270,9 +270,49 @@ variations are explored in various other SDK examples.
 
 _TODO_
 
-## Repository layout
+## Repository
 
-_TODO_
+<table>
+<tr>
+<td><em>build</em><td>
+<td>This directory is created by the build and contains intermediate build ouputs</td>
+</tr>
+
+<tr>
+<td><em>dist</em><td>
+<td>This directory is created by the build and contains final build outputs</td>
+</tr>
+
+<tr>
+<td><em>docs</em><td>
+<td>Documentation</td>
+</tr>
+
+<tr>
+<td><em>examples</em><td>
+<td>Examples demonstrating various SDK features</td>
+</tr>
+
+<tr>
+<td><em>lib</em><td>
+<td>3rd party libraries used by examples and unit tests</td>
+</tr>
+
+<tr>
+<td><em>splunk</em><td>
+<td>Source for <code>com.splunk</code></td>
+</tr>
+
+<tr>
+<td><em>splunk-sdk</em><td>
+<td>Source for <code>com.splunk.sdk</code>, utilities shared by examples and units</td>
+</tr>
+
+<tr>
+<td><em>tests</em><td>
+<td>Source for unit tests</td>
+</tr>
+</table>
 
 ### Changelog
 
@@ -305,16 +345,25 @@ For an introduction to the Splunk product and some of its capabilities:
 
 ## Community
 
-* Email: Stay connected with other developers building on Splunk at
-  devinfo@splunk.com
+Email: Stay connected with other developers building on Splunk
 
-* Issues: https://github.com/splunk/splunk-sdk-java/issues
+* devinfo@splunk.com
 
-* Answers: Check out the Java tag on Splunk answers at http://splunk-base.splunk.com/tags/java/
+Issues: 
 
-* Blog: http://blogs.splunk.com/dev/
+* https://github.com/splunk/splunk-sdk-java/issues
 
-* Twitter: [@splunkdev](http://twitter.com)
+Answers: Check out the Java tag on Splunk answers
+
+* http://splunk-base.splunk.com/tags/java/
+
+Blog: 
+
+* http://blogs.splunk.com/dev/
+
+Twitter: 
+
+* [@splunkdev](http://twitter.com)
 
 ### How to contribute
 
