@@ -33,7 +33,7 @@ public class ScriptInput extends Input {
         return getString("index");
     }
 
-    public int getInteval() {
+    public int getInterval() {
         return getInteger("interval");
     }
 

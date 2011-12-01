@@ -50,7 +50,7 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     public <T extends Input> T create(String name, InputKind kind) {
-        return create(name, kind, null);
+        return (T)create(name, kind, null);
     }
 
     public <T extends Input> T
