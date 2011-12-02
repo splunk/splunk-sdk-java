@@ -43,6 +43,7 @@ class InputNode extends EntityNode {
             break;
         case Tcp:
             list.add(String.class, "getGroup");
+            list.add(String.class, "getHost");
             list.add(String.class, "getIndex");
             list.add(int.class, "getRcvBuf");
             list.add(String.class, "getRestrictToHost");
@@ -76,7 +77,7 @@ class InputNode extends EntityNode {
             list.add(String.class, "getProc");
             list.add(String.class, "getHive");
             list.add(String.class, "getIndex");
-            list.add(String.class, "getMonitorSubnoes");
+            list.add(boolean.class, "getMonitorSubnoes");
             list.add(String.class, "getType");
             break;
         case WindowsWmi:

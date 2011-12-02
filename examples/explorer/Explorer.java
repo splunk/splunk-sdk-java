@@ -39,7 +39,7 @@ import org.openide.nodes.Node;
 
 public class Explorer extends JFrame implements ExplorerManager.Provider { 
     private ExplorerManager manager;
-    private RootKids roots;
+    private Children.Array roots;
 
     static {
         // Register property editors for types that dont have a default editor.
@@ -54,7 +54,8 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
     }
 
     Explorer(Service service) {
-        this.roots = new RootKids(service);
+        this.roots = new Children.Array();
+        roots.add(new Node[] { new ServiceNode(service) });
         Node root = new AbstractNode(roots);
         root.setDisplayName("Root"); // Not visible
         this.manager = new ExplorerManager();
@@ -94,21 +95,5 @@ public class Explorer extends JFrame implements ExplorerManager.Provider {
         int height = screenSize.height / 2;
         setSize(width, height);
         setLocation(width / 2, height / 2);
-    }
-
-    class RootKids extends Children.Keys<Service> {
-        Service service;
-
-        RootKids(Service service) {
-            this.service = service;
-        }
-
-        @Override protected void addNotify() {
-            setKeys(new Service[] { service });
-        }
-
-        @Override protected Node[] createNodes(Service service) {
-            return new Node[] { new ServiceNode(service) };
-        }
     }
 }
