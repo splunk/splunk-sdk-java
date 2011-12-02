@@ -20,8 +20,8 @@ import java.util.Map;
 import org.junit.Test;
 
 public class ConfTest extends SplunkTestCase {
-    final static String APP_NAME = "sdk-tests";
-    final static String APP_NAMESPACE = "nobody/" + APP_NAME;
+    final static String APP = "sdk-tests";
+    final static String OWNER = "nobody";
 
     @Test public void testConfs() {
         Service service = connect();
@@ -60,13 +60,14 @@ public class ConfTest extends SplunkTestCase {
         // created so we make sure to create in the context of this test app
         // and then we delete the app when we are done to make everything go
         // away.
-        createApp(APP_NAME);
+        createApp(APP);
         service = connect();
-        assertTrue(service.getApplications().containsKey(APP_NAME));
+        assertTrue(service.getApplications().containsKey(APP));
 
         // Create an app specific service instance
         Args args = new Args(command.opts);
-        args.put("namespace", APP_NAMESPACE);
+        args.put("app", APP);
+        args.put("owner", OWNER);
         service = Service.connect(args);
 
         ConfCollection confs = service.getConfs();
@@ -88,7 +89,7 @@ public class ConfTest extends SplunkTestCase {
         // Grab the new stanza and check its content
         Entity stanza1 = stanzas.get("stanza1");
         assertEquals(stanza1.get("eai:userName"), "nobody");
-        assertEquals(stanza1.get("eai:appName"), APP_NAME);
+        assertEquals(stanza1.get("eai:appName"), APP);
         assertFalse(stanza1.containsKey("key1"));
         assertFalse(stanza1.containsKey("key2"));
         assertFalse(stanza1.containsKey("key3"));
@@ -134,6 +135,6 @@ public class ConfTest extends SplunkTestCase {
         assertFalse(stanzas.containsKey("stanza3"));
 
         // Cleanup after ourselves
-        removeApp(APP_NAME);
+        removeApp(APP);
     }
 }
