@@ -22,26 +22,26 @@ public class DeploymentClientTest extends SplunkTestCase {
     @Test public void testDeploymentClient() throws Exception {
         Service service = connect();
 
-        DeploymentClient dc = service.getDeploymentClient();
-        String uri = dc.getTargetUri();
+        DeploymentClient deploymentClient = service.getDeploymentClient();
+        String uri = deploymentClient.getTargetUri();
         if (uri != null) {
-            if (dc.isDisabled()) {
-                dc.enable();
+            if (deploymentClient.isDisabled()) {
+                deploymentClient.enable();
             }
-            assertFalse(dc.isDisabled());
-            dc.disable();
-            assertTrue(dc.isDisabled());
-            dc.enable();
-            assertFalse(dc.isDisabled());
+            assertFalse(deploymentClient.isDisabled());
+            deploymentClient.disable();
+            assertTrue(deploymentClient.isDisabled());
+            deploymentClient.enable();
+            assertFalse(deploymentClient.isDisabled());
             Args args = new Args();
             args.put("targetUri", "1.2.3.4:8080");
-            dc.update(args);
-            assertEquals(dc.getTargetUri(), "1.2.3.4:8080");
+            deploymentClient.update(args);
+            assertEquals(deploymentClient.getTargetUri(), "1.2.3.4:8080");
             args.put("targetUri", uri);
-            dc.update(args);
-            assertEquals(dc.getTargetUri(), uri);
-            dc.getServerClasses();
-            dc.reload();
+            deploymentClient.update(args);
+            assertEquals(deploymentClient.getTargetUri(), uri);
+            deploymentClient.getServerClasses();
+            deploymentClient.reload();
         }
         else {
             System.out.println("WARNING: deploymenClient not configured");

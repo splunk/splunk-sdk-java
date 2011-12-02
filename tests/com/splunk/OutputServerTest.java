@@ -22,14 +22,22 @@ public class OutputServerTest extends SplunkTestCase {
     @Test public void testOutputServer() throws Exception {
         Service service = connect();
 
-        EntityCollection<OutputServer> dos = service.getOutputServers();
+        EntityCollection<OutputServer> outputServers =
+                service.getOutputServers();
 
-        if (dos.values().size() == 0) {
+        if (outputServers.values().size() == 0) {
             System.out.println("WARNING: OutputServer not configured");
             return;
         }
 
-        for (OutputServer entity: dos.values()) {
+        for (OutputServer outputServer: outputServers.values()) {
+            OutputServerAllConnections outputServerAllConnections =
+                    outputServer.allConnections();
+            outputServerAllConnections.getDestHost();
+            outputServerAllConnections.getDestIp();
+            outputServerAllConnections.getDestPort();
+            outputServerAllConnections.getSourcePort();
+            outputServerAllConnections.getStatus();
         }
     }
 }

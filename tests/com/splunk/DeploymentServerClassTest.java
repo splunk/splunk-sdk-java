@@ -22,9 +22,9 @@ public class DeploymentServerClassTest extends SplunkTestCase {
     @Test public void testDeploymentServerClass() throws Exception {
         Service service = connect();
 
-        EntityCollection<DeploymentServerClass> dscs =
-            service.getDeploymentServerClasses();
-        DeploymentServerClass dsc;
+        EntityCollection<DeploymentServerClass> deploymentServerClasses =
+                service.getDeploymentServerClasses();
+        DeploymentServerClass deploymentServerClass;
 
         Args args = new Args();
         args.put("blacklist.0", "bad0.splunk.com");
@@ -50,39 +50,70 @@ public class DeploymentServerClassTest extends SplunkTestCase {
         args.put("whitelist.8", "good8.splunk.com");
         args.put("whitelist.9", "good9.splunk.com");
 
-        if (!dscs.containsKey("sdk-tests")) {
-            dsc = dscs.create("sdk-tests", args);
+        if (!deploymentServerClasses.containsKey("sdk-tests")) {
+            deploymentServerClass =
+                    deploymentServerClasses.create("sdk-tests", args);
         } else {
-            dsc = dscs.get("sdk-tests");
-            dsc.update(args);
+            deploymentServerClass = deploymentServerClasses.get("sdk-tests");
+            deploymentServerClass.update(args);
         }
 
-        assertEquals(dsc.getBlackList0(), args.get("blacklist.0"));
-        assertEquals(dsc.getBlackList1(), args.get("blacklist.1"));
-        assertEquals(dsc.getBlackList2(), args.get("blacklist.2"));
-        assertEquals(dsc.getBlackList3(), args.get("blacklist.3"));
-        assertEquals(dsc.getBlackList4(), args.get("blacklist.4"));
-        assertEquals(dsc.getBlackList5(), args.get("blacklist.5"));
-        assertEquals(dsc.getBlackList6(), args.get("blacklist.6"));
-        assertEquals(dsc.getBlackList7(), args.get("blacklist.7"));
-        assertEquals(dsc.getBlackList8(), args.get("blacklist.8"));
-        assertEquals(dsc.getBlackList9(), args.get("blacklist.9"));
-        assertEquals(
-            dsc.getContinueMatching(), args.get("continueMatching"));
-        assertEquals(dsc.getFilterType(), args.get("filterType"));
-        assertEquals(dsc.getWhiteList0(), args.get("whitelist.0"));
-        assertEquals(dsc.getWhiteList1(), args.get("whitelist.1"));
-        assertEquals(dsc.getWhiteList2(), args.get("whitelist.2"));
-        assertEquals(dsc.getWhiteList3(), args.get("whitelist.3"));
-        assertEquals(dsc.getWhiteList4(), args.get("whitelist.4"));
-        assertEquals(dsc.getWhiteList5(), args.get("whitelist.5"));
-        assertEquals(dsc.getWhiteList6(), args.get("whitelist.6"));
-        assertEquals(dsc.getWhiteList7(), args.get("whitelist.7"));
-        assertEquals(dsc.getWhiteList8(), args.get("whitelist.8"));
-        assertEquals(dsc.getWhiteList9(), args.get("whitelist.9"));
+        assertEquals(deploymentServerClass.getBlackList0(),
+                args.get("blacklist.0"));
+        assertEquals(deploymentServerClass.getBlackList1(),
+                args.get("blacklist.1"));
+        assertEquals(deploymentServerClass.getBlackList2(),
+                args.get("blacklist.2"));
+        assertEquals(deploymentServerClass.getBlackList3(),
+                args.get("blacklist.3"));
+        assertEquals(deploymentServerClass.getBlackList4(),
+                args.get("blacklist.4"));
+        assertEquals(deploymentServerClass.getBlackList5(),
+                args.get("blacklist.5"));
+        assertEquals(deploymentServerClass.getBlackList6(),
+                args.get("blacklist.6"));
+        assertEquals(deploymentServerClass.getBlackList7(),
+                args.get("blacklist.7"));
+        assertEquals(deploymentServerClass.getBlackList8(),
+                args.get("blacklist.8"));
+        assertEquals(deploymentServerClass.getBlackList9(),
+                args.get("blacklist.9"));
+        assertEquals(deploymentServerClass.getContinueMatching(),
+                args.get("continueMatching"));
+        assertEquals(deploymentServerClass.getFilterType(),
+                args.get("filterType"));
+        assertEquals(deploymentServerClass.getWhiteList0(),
+                args.get("whitelist.0"));
+        assertEquals(deploymentServerClass.getWhiteList1(),
+                args.get("whitelist.1"));
+        assertEquals(deploymentServerClass.getWhiteList2(),
+                args.get("whitelist.2"));
+        assertEquals(deploymentServerClass.getWhiteList3(),
+                args.get("whitelist.3"));
+        assertEquals(deploymentServerClass.getWhiteList4(),
+                args.get("whitelist.4"));
+        assertEquals(deploymentServerClass.getWhiteList5(),
+                args.get("whitelist.5"));
+        assertEquals(deploymentServerClass.getWhiteList6(),
+                args.get("whitelist.6"));
+        assertEquals(deploymentServerClass.getWhiteList7(),
+                args.get("whitelist.7"));
+        assertEquals(deploymentServerClass.getWhiteList8(),
+                args.get("whitelist.8"));
+        assertEquals(deploymentServerClass.getWhiteList9(),
+                args.get("whitelist.9"));
 
-        for (DeploymentServerClass entity: dscs.values()) {
-            assertTrue(entity.getRepositoryLocation().length() > 0);
+        for (DeploymentServerClass deploymentServerClass1:
+                deploymentServerClasses.values()) {
+            assertTrue(
+                deploymentServerClass1.getRepositoryLocation().length() > 0);
+            deploymentServerClass1.getBlackList();
+            deploymentServerClass1.getBlackListDot();
+            deploymentServerClass1.getEndpoint();
+            deploymentServerClass1.getTargetRepositoryLocation();
+            deploymentServerClass1.getTmpFolder();
+            deploymentServerClass1.getWhiteList();
+            deploymentServerClass1.getWhiteListDot();
         }
 
         // N.B. No REST endpoint to delete a deployment server class.

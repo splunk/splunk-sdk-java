@@ -57,6 +57,33 @@ public class ApplicationTest extends SplunkTestCase {
         Service service = connect();
 
         EntityCollection<Application> apps = service.getApplications();
+        for (Application app: apps.values()) {
+            try {
+                ApplicationSetup applicationSetup = app.setup();
+                applicationSetup.getSetupXml();
+            } catch (Exception e) {
+                // silent exception, if setup doesn't exist, exception occurs
+            }
+            app.archive();
+            app.getAuthor();
+            app.getCheckForUpdates();
+            app.getDescription();
+            app.getLabel();
+            app.getVersion();
+            app.isConfigured();
+            app.isManageable();
+            app.isVisible();
+            app.stateChangeRequiresRestart();
+            ApplicationUpdate applicationUpdate = app.update();
+            applicationUpdate.getChecksum();
+            applicationUpdate.getChecksumType();
+            applicationUpdate.getHomepage();
+            applicationUpdate.getSize();
+            applicationUpdate.getUpdateName();
+            applicationUpdate.getUrl();
+            applicationUpdate.getVersion();
+            applicationUpdate.isImplicitIdRequired();
+        }
 
         if (apps.containsKey("sdk-tests")) {
             service = cleanApp("sdk-tests", service);
@@ -67,7 +94,7 @@ public class ApplicationTest extends SplunkTestCase {
 
         Args createArgs = new Args();
         createArgs.put("author", "me");
-        // 4.2.4 only
+        // 4.2.4+ only
         //createArgs.put("configured", false);
         createArgs.put("description", "this is a description");
         createArgs.put("label", "SDKTEST");
@@ -95,14 +122,6 @@ public class ApplicationTest extends SplunkTestCase {
         assertTrue(appArchive.getAppName().length() > 0);
         assertTrue(appArchive.getFilePath().length() > 0);
         assertTrue(appArchive.getUrl().length() > 0);
-
-        ApplicationSetup appSetup = app.setup();
-        try {
-            assertTrue(appSetup.getSetupXml().length() > 0);
-        } catch (Exception e) {
-            // silent exception, we expect a 500 error because the
-            // setup.xml file will be missing
-        }
 
         ApplicationUpdate appUpdate = app.update();
         assertTrue(appUpdate.containsKey("eai:acl"));

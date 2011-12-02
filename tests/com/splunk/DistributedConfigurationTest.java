@@ -22,25 +22,37 @@ public class DistributedConfigurationTest extends SplunkTestCase {
     @Test public void testDistributedConfiguration() throws Exception {
         Service service = connect();
 
-        DistributedConfiguration dc = service.getDistributedConfiguration();
+        DistributedConfiguration distributedConfiguration =
+                service.getDistributedConfiguration();
 
         Args savedSetup = new Args();
-        savedSetup.put("autoAddServers", dc.getAutoAddServers());
-        savedSetup.put("blacklistNames", dc.getBlacklistNames());
-        savedSetup.put("blacklistURLs", dc.getBlacklistUrls());
+        savedSetup.put("autoAddServers",
+                distributedConfiguration.getAutoAddServers());
+        savedSetup.put("blacklistNames",
+                distributedConfiguration.getBlacklistNames());
+        savedSetup.put("blacklistURLs",
+                distributedConfiguration.getBlacklistUrls());
         savedSetup.put("checkTimedOutServersFrequency",
-                        dc.getCheckTimedOutServersFrequency());
-        savedSetup.put("disabled", dc.isDisabled());
-        savedSetup.put("heartbeatFrequency", dc.getHeartbeatFrequency());
-        savedSetup.put("heartbeatMcastAddr", dc.getHeartbeatMcastAddress());
-        savedSetup.put("heartbeatPort", dc.getHeartbeatPort());
-        savedSetup.put("removedTimedOutServers", dc.getRemovedTimedOutServers());
-        savedSetup.put("serverTimeout", dc.getServerTimeout());
-        savedSetup.put("servers", dc.getServers());
-        savedSetup.put("shareBundles", dc.getShareBundles());
-        savedSetup.put("skipOurselves", dc.getSkipOurselves());
-        savedSetup.put("statusTimeout", dc.getStatusTimeout());
-        savedSetup.put("ttl", dc.getTtl());
+                distributedConfiguration.getCheckTimedOutServersFrequency());
+        savedSetup.put("disabled", distributedConfiguration.isDisabled());
+        savedSetup.put("heartbeatFrequency",
+                distributedConfiguration.getHeartbeatFrequency());
+        savedSetup.put("heartbeatMcastAddr",
+                distributedConfiguration.getHeartbeatMcastAddress());
+        savedSetup.put("heartbeatPort",
+                distributedConfiguration.getHeartbeatPort());
+        savedSetup.put("removedTimedOutServers",
+                distributedConfiguration.getRemovedTimedOutServers());
+        savedSetup.put("serverTimeout",
+                distributedConfiguration.getServerTimeout());
+        savedSetup.put("servers", distributedConfiguration.getServers());
+        savedSetup.put("shareBundles",
+                distributedConfiguration.getShareBundles());
+        savedSetup.put("skipOurselves",
+                distributedConfiguration.getSkipOurselves());
+        savedSetup.put("statusTimeout",
+                distributedConfiguration.getStatusTimeout());
+        savedSetup.put("ttl", distributedConfiguration.getTtl());
         for (String key: savedSetup.keySet()) {
             if (savedSetup.get(key) == null)
                 savedSetup.put(key, "");
@@ -64,37 +76,48 @@ public class DistributedConfigurationTest extends SplunkTestCase {
         updateArgs.put("statusTimeout", 100);
         updateArgs.put("ttl", 5);
 
-        dc.update(updateArgs);
+        distributedConfiguration.update(updateArgs);
         assertEquals(
-            dc.getAutoAddServers(), updateArgs.get("autoAddServers"));
+                distributedConfiguration.getAutoAddServers(),
+                updateArgs.get("autoAddServers"));
         assertEquals(
-            dc.getBlacklistNames(), updateArgs.get("blacklistNames"));
+                distributedConfiguration.getBlacklistNames(),
+                updateArgs.get("blacklistNames"));
         assertEquals(
-            dc.getBlacklistUrls(), updateArgs.get("blacklistURLs"));
+                distributedConfiguration.getBlacklistUrls(),
+                updateArgs.get("blacklistURLs"));
         assertEquals(
-            dc.getCheckTimedOutServersFrequency(),
-            updateArgs.get("checkTimedOutServersFrequency"));
-        assertEquals(dc.isDisabled(), updateArgs.get("disabled"));
+                distributedConfiguration.getCheckTimedOutServersFrequency(),
+                updateArgs.get("checkTimedOutServersFrequency"));
+        assertEquals(distributedConfiguration.isDisabled(),
+                updateArgs.get("disabled"));
         assertEquals(
-            dc.getHeartbeatFrequency(), updateArgs.get("heartbeatFrequency"));
+                distributedConfiguration.getHeartbeatFrequency(),
+                updateArgs.get("heartbeatFrequency"));
         assertEquals(
-            dc.getHeartbeatMcastAddress(),
-            updateArgs.get("heartbeatMcastAddr"));
+                distributedConfiguration.getHeartbeatMcastAddress(),
+                updateArgs.get("heartbeatMcastAddr"));
         assertEquals(
-            dc.getHeartbeatPort(), updateArgs.get("heartbeatPort"));
+                distributedConfiguration.getHeartbeatPort(),
+                updateArgs.get("heartbeatPort"));
         assertEquals(
-            dc.getRemovedTimedOutServers(),
-            updateArgs.get("removedTimedOutServers"));
+                distributedConfiguration.getRemovedTimedOutServers(),
+                updateArgs.get("removedTimedOutServers"));
         assertEquals(
-            dc.getServerTimeout(),updateArgs.get("serverTimeout"));
-        assertEquals(dc.getServers(), updateArgs.get("servers"));
+                distributedConfiguration.getServerTimeout(),
+                updateArgs.get("serverTimeout"));
+        assertEquals(distributedConfiguration.getServers(),
+                updateArgs.get("servers"));
         assertEquals(
-            dc.getShareBundles(), updateArgs.get("shareBundles"));
+                distributedConfiguration.getShareBundles(),
+                updateArgs.get("shareBundles"));
         assertEquals(
-            dc.getSkipOurselves(), updateArgs.get("skipOurselves"));
+                distributedConfiguration.getSkipOurselves(),
+                updateArgs.get("skipOurselves"));
         assertEquals(
-            dc.getStatusTimeout(), updateArgs.get("statusTimeout"));
-        assertEquals(dc.getTtl(), updateArgs.get("ttl"));
+                distributedConfiguration.getStatusTimeout(),
+                updateArgs.get("statusTimeout"));
+        assertEquals(distributedConfiguration.getTtl(), updateArgs.get("ttl"));
 
         // handle nulls specially
         if (savedSetup.get("blacklistNames") == null)
@@ -102,41 +125,55 @@ public class DistributedConfigurationTest extends SplunkTestCase {
         if (savedSetup.get("blacklistURLs") == null)
             savedSetup.put("blacklistURLs", "");
 
-        dc.update(savedSetup);
+        distributedConfiguration.update(savedSetup);
 
         assertEquals(
-            dc.getAutoAddServers(), savedSetup.get("autoAddServers"));
+                distributedConfiguration.getAutoAddServers(),
+                savedSetup.get("autoAddServers"));
         assertEquals(
-            dc.getBlacklistNames() == null ? "" : dc.getBlacklistNames(),
-            savedSetup.get("blacklistNames") );
+                distributedConfiguration.getBlacklistNames() == null ? "" :
+                distributedConfiguration.getBlacklistNames(),
+                savedSetup.get("blacklistNames") );
         assertEquals(
-            dc.getBlacklistUrls() == null ? "" : dc.getBlacklistUrls(),
-            savedSetup.get("blacklistURLs"));
+                distributedConfiguration.getBlacklistUrls() == null ? "" :
+                distributedConfiguration.getBlacklistUrls(),
+                savedSetup.get("blacklistURLs"));
         assertEquals(
-            dc.getCheckTimedOutServersFrequency(),
-            savedSetup.get("checkTimedOutServersFrequency"));
-        assertEquals(dc.isDisabled(), savedSetup.get("disabled"));
+                distributedConfiguration.getCheckTimedOutServersFrequency(),
+                savedSetup.get("checkTimedOutServersFrequency"));
+        assertEquals(distributedConfiguration.isDisabled(),
+                savedSetup.get("disabled"));
         assertEquals(
-            dc.getHeartbeatFrequency(), savedSetup.get("heartbeatFrequency"));
+                distributedConfiguration.getHeartbeatFrequency(),
+                savedSetup.get("heartbeatFrequency"));
         assertEquals(
-            dc.getHeartbeatMcastAddress(),
-            savedSetup.get("heartbeatMcastAddr"));
+                distributedConfiguration.getHeartbeatMcastAddress(),
+                savedSetup.get("heartbeatMcastAddr"));
         assertEquals(
-            dc.getHeartbeatPort(), savedSetup.get("heartbeatPort"));
+                distributedConfiguration.getHeartbeatPort(),
+                savedSetup.get("heartbeatPort"));
         assertEquals(
-            dc.getRemovedTimedOutServers(),
-            savedSetup.get("removedTimedOutServers"));
+                distributedConfiguration.getRemovedTimedOutServers(),
+                savedSetup.get("removedTimedOutServers"));
         assertEquals(
-            dc.getServerTimeout(), savedSetup.get("serverTimeout"));
+                distributedConfiguration.getServerTimeout(),
+                savedSetup.get("serverTimeout"));
         assertEquals(
-            dc.getServers() == null ? "" : dc.getServers(),
-            savedSetup.get("servers"));
+                distributedConfiguration.getServers() == null ? "" :
+                distributedConfiguration.getServers(),
+                savedSetup.get("servers"));
         assertEquals(
-            dc.getShareBundles(), savedSetup.get("shareBundles"));
+                distributedConfiguration.getShareBundles(),
+                savedSetup.get("shareBundles"));
         assertEquals(
-            dc.getSkipOurselves(), savedSetup.get("skipOurselves"));
+                distributedConfiguration.getSkipOurselves(),
+                savedSetup.get("skipOurselves"));
         assertEquals(
-            dc.getStatusTimeout(), savedSetup.get("statusTimeout"));
-        assertEquals(dc.getTtl(), savedSetup.get("ttl"));
+                distributedConfiguration.getStatusTimeout(),
+                savedSetup.get("statusTimeout"));
+        assertEquals(distributedConfiguration.getTtl(),
+                savedSetup.get("ttl"));
+
+        distributedConfiguration.isDistSearchEnabled();
     }
 }

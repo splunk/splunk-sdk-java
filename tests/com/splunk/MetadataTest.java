@@ -37,8 +37,8 @@ public class MetadataTest extends SplunkTestCase {
         metadata.isModifiable();
     }
 
-    void checkMetadata(EntityCollection collection) {
-        for (Object entity : collection.values())
+    void checkMetadata(EntityCollection entityCollection) {
+        for (Object entity : entityCollection.values())
             checkMetadata((Entity)entity);
     }
 

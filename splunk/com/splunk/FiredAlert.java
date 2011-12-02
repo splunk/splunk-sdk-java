@@ -52,7 +52,7 @@ public class FiredAlert extends Entity {
     }
 
     public Date getTriggerTime() {
-        return getDateFromEpoch("trigger_time", new Date(0));
+        return getDateFromEpoch("trigger_time", null);
     }
 
     public String getTriggerTimeRendered() {
@@ -60,6 +60,6 @@ public class FiredAlert extends Entity {
     }
 
     public boolean isDigestMode() {
-        return getBoolean("digest_mode", false); // UNDONE: Correct default?
+        return getBoolean("digest_mode", false);
     }
 }

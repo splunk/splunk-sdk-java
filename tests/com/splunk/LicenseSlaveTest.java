@@ -24,7 +24,8 @@ public class LicenseSlaveTest extends SplunkTestCase {
     @Test public void testLicenseSlave() throws Exception {
         Service service = connect();
 
-        EntityCollection<LicenseSlave> ds = service.getLicenseSlaves();
+        EntityCollection<LicenseSlave> licenseSlaves = 
+                service.getLicenseSlaves();
 
         // list of pools
         List<String> pools = Arrays.asList("auto_generated_pool_download-trial",
@@ -34,9 +35,9 @@ public class LicenseSlaveTest extends SplunkTestCase {
         List<String> stacks = Arrays.asList(
              "download-trial", "enterprise", "forwarder", "free");
 
-        for (LicenseSlave entity: ds.values()) {
-            assertTrue(entity.getLabel().length() > 0);
-            for (String pool: entity.getPoolIds()) {
+        for (LicenseSlave licenseSlave: licenseSlaves.values()) {
+            assertTrue(licenseSlave.getLabel().length() > 0);
+            for (String pool: licenseSlave.getPoolIds()) {
                 // special-case, fixed sourcetype has a hash at the end; so
                 // no fixed value will match. Thus only check versus known
                 // fixed values from list.
@@ -44,7 +45,7 @@ public class LicenseSlaveTest extends SplunkTestCase {
                     assertTrue(pools.contains(pool));
                 }
             }
-            for (String stack: entity.getStackIds()) {
+            for (String stack: licenseSlave.getStackIds()) {
                 assertTrue(stacks.contains(stack));
             }
         }

@@ -21,6 +21,10 @@ public class TcpSplunkInput extends Input {
         super(service, path);
     }
 
+    public String getConnectionHost() {
+        return getString("connection_host", null);
+    }
+
     public String getGroup() {
         return getString("group");
     }
@@ -37,7 +41,27 @@ public class TcpSplunkInput extends Input {
         return InputKind.TcpSplunk;
     }
 
+    public String getQueue() {
+        return getString("queue", null);
+    }
+
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
+    }
+
+    public String getRestrictToHost() {
+        return getString("restrictToHost", null);
+    }
+
+    public String getSource() {
+        return getString("source", null);
+    }
+
+    public String getSourceType() {
+        return getString("sourceType", null);
+    }
+
+    public boolean getSSL() {
+        return getBoolean("SSL", false);
     }
 }

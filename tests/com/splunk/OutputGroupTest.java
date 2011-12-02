@@ -22,17 +22,17 @@ public class OutputGroupTest extends SplunkTestCase {
     @Test public void testOutputGroup() throws Exception {
         Service service = connect();
 
-        EntityCollection<OutputGroup> dog = service.getOutputGroups();
+        EntityCollection<OutputGroup> outputGroups = service.getOutputGroups();
 
-        if (dog.values().size() == 0) {
+        if (outputGroups.values().size() == 0) {
             System.out.println("WARNING: OutputGroup not configured");
             return;
         }
 
-        for (OutputGroup entity: dog.values()) {
-            entity.getMethod();
-            entity.getServers();
-            entity.isDisabled();
+        for (OutputGroup outputGroup: outputGroups.values()) {
+            outputGroup.getMethod();
+            outputGroup.getServers();
+            outputGroup.isDisabled();
         }
     }
 }

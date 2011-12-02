@@ -26,7 +26,7 @@ public class WindowsEventLogInput extends Input {
     }
 
     public String getIndex() {
-        return getString("index");
+        return getString("index", null);
     }
 
     public InputKind getKind() {

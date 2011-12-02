@@ -37,6 +37,10 @@ public class ApplicationUpdate extends Entity {
         return getString("update.name", null);
     }
 
+    public String getUrl() {
+        return getString("update.appurl", null);
+    }
+
     public int getSize() {
         return getInteger("update.size", -1);
     }
@@ -48,5 +52,4 @@ public class ApplicationUpdate extends Entity {
     public boolean isImplicitIdRequired() {
         return getBoolean("update.implicit_id_required", false);
     }
-
 }

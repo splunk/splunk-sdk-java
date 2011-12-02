@@ -22,7 +22,7 @@ public class User extends Entity {
     }
 
     public String getDefaultApp() {
-        return getString("defaultApp");
+        return getString("defaultApp", null);
     }
 
     public boolean getDefaultAppIsUserOverride() {
@@ -34,18 +34,26 @@ public class User extends Entity {
     }
 
     public String getEmail() {
-        return getString("email");
+        return getString("email", null);
     }
 
     public String getPassword() {
-        return getString("password");
+        return getString("password", null);
     }
 
     public String getRealName() {
-        return getString("realname");
+        return getString("realname", null);
     }
 
     public String[] getRoles() {
-        return getStringArray("roles");
+        return getStringArray("roles", null);
+    }
+
+    public String getType() {
+        return getString("type", null);
+    }
+
+    public String getTz() {
+        return getString("tz", null);
     }
 }

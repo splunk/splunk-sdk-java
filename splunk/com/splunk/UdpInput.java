@@ -21,6 +21,10 @@ public class UdpInput extends Input {
         super(service, path);
     }
 
+    public String getConnectionHost() {
+        return getString("connection_host", null);
+    }
+
     public String getGroup() {
         return getString("group");
     }
@@ -37,7 +41,27 @@ public class UdpInput extends Input {
         return InputKind.Udp;
     }
 
+    public String getQueue() {
+        return getString("queue", null);
+    }
+
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
+    }
+
+    public String getSource() {
+        return getString("source", null);
+    }
+
+    public String getSourceType() {
+        return getString("sourceType", null);
+    }
+
+    public boolean noAppendingTimeStamp() {
+        return getBoolean("no_appending_timestamp", false);
+    }
+
+    public boolean noPriorityStripping() {
+        return getBoolean("no_priority_stripping", false);
     }
 }

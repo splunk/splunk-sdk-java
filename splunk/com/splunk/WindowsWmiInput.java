@@ -26,15 +26,15 @@ public class WindowsWmiInput extends Input {
     }
 
     public String [] getFields() {
-        return getStringArray("fields", new String[0]);
+        return getStringArray("fields", null);
     }
 
     public String getIndex() {
-        return getString("index");
+        return getString("index", null);
     }
 
     public String [] getInstances() {
-        return getStringArray("instances", new String[0]);
+        return getStringArray("instances", null);
     }
 
     public int getInterval() {

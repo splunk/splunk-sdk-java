@@ -22,32 +22,32 @@ public class OutputDefaultTest extends SplunkTestCase {
     @Test public void testOutputDefault() throws Exception {
         Service service = connect();
 
-        OutputDefault dof = service.getOutputDefault();
+        OutputDefault outputDefault = service.getOutputDefault();
 
-        dof.autoLb();
-        dof.blockOnCloning();
-        dof.blockOnQueueFull();
-        dof.getAutoLbFrequency();
-        dof.getConnectionTimeout();
-        dof.getDefaultGroup();
-        dof.getDropClonedEventsOnQueueFull();
-        dof.getDropEventsOnQueueFull();
-        dof.getForwardedIndex0Whitelist();
-        dof.getForwardedIndex1Blacklist();
-        dof.getForwardedIndex2Whitelist();
-        dof.getHeartbeatFrequency();
-        dof.getMaxConnectionsPerIndexer();
-        dof.getMaxFailuresPerInterval();
-        dof.getMaxQueueSize();
-        dof.getReadTimeout();
-        dof.getSecsInFailureInterval();
-        dof.getWriteTimeout();
-        dof.indexAndForward();
-        dof.isCompressed();
-        dof.isDisabled();
-        dof.isForwardedIndexFilterDisable();
-        dof.isIndexAndForward();
-        dof.sendCookedData();
-        dof.useAck();
+        outputDefault.autoLb();
+        outputDefault.blockOnCloning();
+        outputDefault.blockOnQueueFull();
+        outputDefault.getAutoLbFrequency();
+        outputDefault.getConnectionTimeout();
+        outputDefault.getDefaultGroup();
+        outputDefault.getDropClonedEventsOnQueueFull();
+        outputDefault.getDropEventsOnQueueFull();
+        outputDefault.getForwardedIndex0Whitelist();
+        outputDefault.getForwardedIndex1Blacklist();
+        outputDefault.getForwardedIndex2Whitelist();
+        outputDefault.getHeartbeatFrequency();
+        outputDefault.getMaxConnectionsPerIndexer();
+        outputDefault.getMaxFailuresPerInterval();
+        outputDefault.getMaxQueueSize();
+        outputDefault.getReadTimeout();
+        outputDefault.getSecsInFailureInterval();
+        outputDefault.getWriteTimeout();
+        outputDefault.indexAndForward();
+        outputDefault.isCompressed();
+        outputDefault.isDisabled();
+        outputDefault.isForwardedIndexFilterDisable();
+        outputDefault.isIndexAndForward();
+        outputDefault.sendCookedData();
+        outputDefault.useAck();
     }
 }

@@ -26,11 +26,15 @@ public class Application extends Entity {
     }
 
     public boolean getCheckForUpdates() {
-        return getBoolean("check_for_updates");
+        return getBoolean("check_for_updates", false);
+    }
+
+    public String getDescription() {
+        return getString("description", null);
     }
 
     public String getLabel() {
-        return getString("label", "");
+        return getString("label", null);
     }
 
     public String getVersion() {
@@ -42,11 +46,15 @@ public class Application extends Entity {
     }
 
     public boolean isManageable() {
-        return getBoolean("manageable");
+        return getBoolean("manageable", false);
     }
 
     public boolean isVisible() {
-        return getBoolean("visible");
+        return getBoolean("visible", false);
+    }
+
+    public boolean stateChangeRequiresRestart() {
+        return getBoolean("state_change_requires_restart", false);
     }
 
     public ApplicationArchive archive() {

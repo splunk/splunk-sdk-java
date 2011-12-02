@@ -22,9 +22,9 @@ import org.junit.*;
 public class InputTest extends SplunkTestCase {
 
     private void touchSpecificInput(Input input) {
-        InputKind kind = input.getKind();
+        InputKind inputKind = input.getKind();
 
-        switch (kind) {
+        switch (inputKind) {
             case Monitor:
                 MonitorInput monitorInput = (MonitorInput) input;
                 monitorInput.getFileCount();
@@ -42,29 +42,47 @@ public class InputTest extends SplunkTestCase {
                 break;
             case Tcp:
                 TcpInput tcpInput = (TcpInput) input;
+                tcpInput.getConnectionHost();
                 tcpInput.getGroup();
                 tcpInput.getHost();
                 tcpInput.getIndex();
+                tcpInput.getQueue();
                 tcpInput.getRcvBuf();
                 tcpInput.getRestrictToHost();
+                tcpInput.getSource();
+                tcpInput.getSourceType();
+                tcpInput.getSSL();
                 break;
             case TcpSplunk:
                 TcpSplunkInput tcpSplunkInput = (TcpSplunkInput) input;
+                tcpSplunkInput.getConnectionHost();
                 tcpSplunkInput.getGroup();
                 tcpSplunkInput.getHost();
                 tcpSplunkInput.getIndex();
+                tcpSplunkInput.getQueue();
                 tcpSplunkInput.getRcvBuf();
+                tcpSplunkInput.getSource();
+                tcpSplunkInput.getSourceType();
+                tcpSplunkInput.getSSL();
             case Udp:
                 UdpInput udpInput = (UdpInput) input;
+                udpInput.getConnectionHost();
                 udpInput.getGroup();
                 udpInput.getHost();
                 udpInput.getIndex();
+                udpInput.getQueue();
                 udpInput.getRcvBuf();
+                udpInput.getSource();
+                udpInput.getSourceType();
+                udpInput.noAppendingTimeStamp();
+                udpInput.noPriorityStripping();
             case WindowsActiveDirectory:
                 WindowsActiveDirectoryInput windowsActiveDirectoryInput =
                         (WindowsActiveDirectoryInput) input;
                 windowsActiveDirectoryInput.getIndex();
                 windowsActiveDirectoryInput.getMonitorSubtree();
+                windowsActiveDirectoryInput.getStartingNode();
+                windowsActiveDirectoryInput.getTargetDc();
                 break;
             case WindowsEventLog:
                 WindowsEventLogInput windowsEventLogInput =
@@ -78,6 +96,7 @@ public class InputTest extends SplunkTestCase {
             case WindowsPerfmon:
                 WindowsPerfmonInput windowsPerfmonInput =
                         (WindowsPerfmonInput) input;
+                windowsPerfmonInput.getCounters();
                 windowsPerfmonInput.getIndex();
                 windowsPerfmonInput.getInstances();
                 windowsPerfmonInput.getInterval();
@@ -127,20 +146,20 @@ public class InputTest extends SplunkTestCase {
     @Test public void testInputCrud() {
         Service service = connect();
 
-        InputCollection inputs = service.getInputs();
+        InputCollection inputCollection = service.getInputs();
 
         // Tcp inputs require the name to be the input's port number.
         String name = "9999"; // test port
 
-        if (inputs.containsKey(name))
+        if (inputCollection.containsKey(name))
             fail("Input test port already exists: " + name);
 
-        assertFalse(inputs.containsKey(name));
+        assertFalse(inputCollection.containsKey(name));
 
-        inputs.create(name, InputKind.Tcp);
-        assertTrue(inputs.containsKey(name));
+        inputCollection.create(name, InputKind.Tcp);
+        assertTrue(inputCollection.containsKey(name));
 
-        TcpInput tcpInput = (TcpInput)inputs.get(name);
+        TcpInput tcpInput = (TcpInput)inputCollection.get(name);
 
         Args args = new Args();
         args.put("sourcetype", "sdk-tests");
@@ -148,7 +167,7 @@ public class InputTest extends SplunkTestCase {
         assertEquals(tcpInput.get("sourcetype"), "sdk-tests");
 
         tcpInput.remove();
-        inputs.refresh();
-        assertFalse(inputs.containsKey(name));
+        inputCollection.refresh();
+        assertFalse(inputCollection.containsKey(name));
     }
 }

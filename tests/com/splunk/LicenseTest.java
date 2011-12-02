@@ -29,7 +29,8 @@ public class LicenseTest extends SplunkTestCase {
     @Test public void testLicense() throws Exception {
         Service service = connect();
 
-        EntityCollection<License> ds = service.getLicenses();
+        EntityCollection<License> licenses =
+                service.getLicenses();
 
         // list of features, empirically created
         List<String> features = Arrays.asList(
@@ -51,21 +52,19 @@ public class LicenseTest extends SplunkTestCase {
             "forwarder", "enterprise", "free", "download-trial");
 
         // test for sane data in licenses
-        for (License entity: ds.values()) {
-            assertTrue(entity.getCreationTime().after(new Date(0)));
-            assertTrue(entity.getExpirationTime().after(new Date(0)));
-            assertTrue(entity.getQuota() > 0);
-            assertTrue(entity.getLicenseHash().length() == 64);
-            for (String feature: entity.getFeatures()) {
+        for (License license: licenses.values()) {
+            assertTrue(license.getCreationTime().after(new Date(0)));
+            assertTrue(license.getExpirationTime().after(new Date(0)));
+            assertTrue(license.getQuota() > 0);
+            assertTrue(license.getLicenseHash().length() == 64);
+            for (String feature: license.getFeatures()) {
                 assertTrue(features.contains(feature));
             }
-            assertTrue(groups.contains(entity.getGroupId()));
-            assertTrue(entity.getLabel().length() > 0);
-            assertTrue(entity.getMaxViolations() != 0);
-            //System.out.println(entity.getSourceTypes());
-            assertTrue(stati.contains(entity.getStatus()));
-            assertTrue(types.contains(entity.getType()));
-            //System.out.println(entity.getWindowPeriod());
+            assertTrue(groups.contains(license.getGroupId()));
+            assertTrue(license.getLabel().length() > 0);
+            assertTrue(license.getMaxViolations() != 0);
+            assertTrue(stati.contains(license.getStatus()));
+            assertTrue(types.contains(license.getType()));
         }
 
         // create
@@ -85,12 +84,12 @@ public class LicenseTest extends SplunkTestCase {
         BufferedReader reader = new BufferedReader(fileReader);
         reader.read(buffer);
         Args args = new Args("payload", new String(buffer));
-        License lic = ds.create("sdk-test", args);
-        assertTrue(ds.containsKey(
+        licenses.create("sdk-test", args);
+        assertTrue(licenses.containsKey(
            "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
-        ds.remove(
+        licenses.remove(
            "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101");
-        assertFalse(ds.containsKey(
-           "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
+        assertFalse(licenses.containsKey(
+                "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
     }
 }

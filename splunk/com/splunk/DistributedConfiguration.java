@@ -83,12 +83,11 @@ public class DistributedConfiguration extends Entity {
         return getInteger("ttl");
     }
 
+    public boolean isDistSearchEnabled() {
+        return getBoolean("dist_search_enabled");
+    }
+
     public boolean isDisabled() {
         return getBoolean("disabled");
     }
-
-    // UNDONE: docs can post these, example does not return them in Atom.
-    // connectionTimeout (int)  *
-    // receiveTimeout (int)     *
-    // sendTimeout (int)        *
 }

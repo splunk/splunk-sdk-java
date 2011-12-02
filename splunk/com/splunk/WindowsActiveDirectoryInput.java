@@ -22,7 +22,7 @@ public class WindowsActiveDirectoryInput extends Input {
     }
 
     public String getIndex() {
-        return getString("index");
+        return getString("index", null);
     }
 
     public InputKind getKind() {
@@ -31,5 +31,13 @@ public class WindowsActiveDirectoryInput extends Input {
 
     public boolean getMonitorSubtree() {
         return getBoolean("monitorSubtree");
+    }
+
+    public String getStartingNode() {
+        return getString("startingNode", null);
+    }
+
+    public String getTargetDc() {
+        return getString("targetDc", null);
     }
 }

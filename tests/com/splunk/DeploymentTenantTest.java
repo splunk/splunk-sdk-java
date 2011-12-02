@@ -22,15 +22,16 @@ public class DeploymentTenantTest extends SplunkTestCase {
     @Test public void testDeploymentTenant() throws Exception {
         Service service = connect();
 
-        EntityCollection<DeploymentTenant> ds = service.getDeploymentTenants();
-        if (ds.values().size() == 0) {
+        EntityCollection<DeploymentTenant> deploymentTenants =
+                service.getDeploymentTenants();
+        if (deploymentTenants.values().size() == 0) {
             System.out.println("WARNING: Deployment Tenant not configured");
             return;
         }
         
-        for (DeploymentTenant entity: ds.values()) {
-            assertTrue(entity.getWhiteList0().length() > 0);
-            entity.getCheckNew();
+        for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
+            assertTrue(deploymentTenant.getWhiteList0().length() > 0);
+            deploymentTenant.getCheckNew();
         }
     }
 }

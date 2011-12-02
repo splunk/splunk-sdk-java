@@ -21,6 +21,10 @@ public class TcpInput extends Input {
         super(service, path);
     }
 
+    public String getConnectionHost() {
+        return getString("connection_host", null);
+    }
+
     public String getGroup() {
         return getString("group");
     }
@@ -30,11 +34,15 @@ public class TcpInput extends Input {
     }
 
     public String getIndex() {
-        return getString("index");
+        return getString("index", null);
     }
 
     public InputKind getKind() {
         return InputKind.Tcp;
+    }
+
+    public String getQueue() {
+        return getString("queue", null);
     }
 
     public int getRcvBuf() {
@@ -43,5 +51,17 @@ public class TcpInput extends Input {
 
     public String getRestrictToHost() {
         return getString("restrictToHost", null);
+    }
+
+    public String getSource() {
+        return getString("source", null);
+    }
+
+    public String getSourceType() {
+        return getString("sourceType", null);
+    }
+
+    public boolean getSSL() {
+        return getBoolean("SSL", false);
     }
 }

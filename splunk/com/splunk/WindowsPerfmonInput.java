@@ -21,12 +21,16 @@ public class WindowsPerfmonInput extends Input {
         super(service, path);
     }
 
+    public String getCounters() {
+        return getString("counters", null);
+    }
+
     public String getIndex() {
         return getString("index");
     }
 
-    public String [] getInstances() {
-        return getStringArray("index", new String[0]);
+    public String getInstances() {
+        return getString("index", null);
     }
 
     public int getInterval() {

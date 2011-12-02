@@ -24,16 +24,17 @@ public class LicenseGroupTest extends SplunkTestCase {
     @Test public void testLicenseGroup() throws Exception {
         Service service = connect();
 
-        EntityCollection<LicenseGroup> ds = service.getLicenseGroups();
+        EntityCollection<LicenseGroup> licenseGroups =
+                service.getLicenseGroups();
 
         // list of stackids, empirically created
         List<String> stacks = Arrays.asList("forwarder", "enterprise", "free");
-        for (LicenseGroup entity: ds.values()) {
+        for (LicenseGroup licenseGroup: licenseGroups.values()) {
             // enterprise, forwarder, free
-            for (String id: entity.getStackIds()) {
+            for (String id: licenseGroup.getStackIds()) {
                 assertTrue(stacks.contains(id));
             }
-            entity.isActive();
+            licenseGroup.isActive();
         }
     }
 }

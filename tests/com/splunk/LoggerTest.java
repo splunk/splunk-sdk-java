@@ -27,12 +27,12 @@ public class LoggerTest extends SplunkTestCase {
         List<String> expected = Arrays.asList(
             "INFO", "WARN", "ERROR", "DEBUG", "CRIT");
 
-        EntityCollection<Logger> loggers = service.getLoggers();
-        for (Logger ent: loggers.values()) {
+        EntityCollection<Logger> serviceLoggers = service.getLoggers();
+        for (Logger ent: serviceLoggers.values()) {
             assertTrue(expected.contains(ent.getLevel()));
         }
 
-        Logger logger = loggers.get("AuditLogger");
+        Logger logger = serviceLoggers.get("AuditLogger");
         String saved = logger.getLevel();
         Args update = new Args();
 

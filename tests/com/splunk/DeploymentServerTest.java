@@ -22,15 +22,16 @@ public class DeploymentServerTest extends SplunkTestCase {
     @Test public void testDeploymentServer() throws Exception {
         Service service = connect();
 
-        EntityCollection<DeploymentServer> ds = service.getDeploymentServers();
-        if (ds.values().size() == 0) {
+        EntityCollection<DeploymentServer> deploymentServers =
+                service.getDeploymentServers();
+        if (deploymentServers.values().size() == 0) {
             System.out.println("WARNING: Deployment Server not configured");
             return;
         }
 
-        for (DeploymentServer entity: ds.values()) {
-            assertTrue(entity.getWhiteList0().length() > 0);
-            entity.getCheckNew();
+        for (DeploymentServer deploymentServer: deploymentServers.values()) {
+            assertTrue(deploymentServer.getWhiteList0().length() > 0);
+            deploymentServer.getCheckNew();
         }
     }
 }

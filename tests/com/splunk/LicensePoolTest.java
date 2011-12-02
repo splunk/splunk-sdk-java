@@ -19,30 +19,30 @@ package com.splunk;
 import org.junit.Test;
 
 public class LicensePoolTest extends SplunkTestCase {
-    void checkLicensePool(LicensePool pool) {
-        pool.getDescription();
-        pool.getQuota();
-        pool.getSlaves();
-        pool.getSlavesUsageBytes();
-        pool.getStackId();
-        pool.getUsedBytes();
+    void checkLicensePool(LicensePool licensePool) {
+        licensePool.getDescription();
+        licensePool.getQuota();
+        licensePool.getSlaves();
+        licensePool.getSlavesUsageBytes();
+        licensePool.getStackId();
+        licensePool.getUsedBytes();
     }
 
-    void checkLicensePools(LicensePoolCollection pools) {
-        for (LicensePool pool : pools.values())
-            checkLicensePool(pool);
+    void checkLicensePools(LicensePoolCollection licensePoolCollection) {
+        for (LicensePool licensePool : licensePoolCollection.values())
+            checkLicensePool(licensePool);
     }
 
     @Test public void testLicensePool() throws Exception {
         Service service = connect();
 
-        LicensePoolCollection pools = service.getLicensePools();
+        LicensePoolCollection licensePoolCollection = service.getLicensePools();
 
-        checkLicensePools(pools);
+        checkLicensePools(licensePoolCollection);
 
         try {
             // The following will fail because there is no quota available
-            pools.create("sdk-test", 1, "download-trial");
+            licensePoolCollection.create("sdk-test", 1, "download-trial");
             fail("Expected pool create to fail");
         }
         catch (HttpException e) {
@@ -50,27 +50,27 @@ public class LicensePoolTest extends SplunkTestCase {
         }
       
         // Try updating some pools ..
-        for (LicensePool pool : pools.values()) {
-            if (pool.getStackId().equals("download-trial"))
+        for (LicensePool licensePool : licensePoolCollection.values()) {
+            if (licensePool.getStackId().equals("download-trial"))
                 continue; // Can't edit a pool in stack: download-trial
-            if (pool.getStackId().equals("forwarder"))
+            if (licensePool.getStackId().equals("forwarder"))
                 continue; // Can't edit a pool in stack: forwarder
-            if (pool.getStackId().equals("free"))
+            if (licensePool.getStackId().equals("free"))
                 continue; // Can't edit a pool in stack: free
 
             Args saved = new Args();
-            saved.put("description", pool.getDescription());
+            saved.put("description", licensePool.getDescription());
 
             Args args = new Args();
             args.put("description", "sdk-test description");
             args.put("quota", 1024*1024);
-            pool.update(args);
-            assertEquals(pool.getDescription(), args.get("description"));
-            assertEquals(pool.getQuota(), 1024*1024);
+            licensePool.update(args);
+            assertEquals(licensePool.getDescription(), args.get("description"));
+            assertEquals(licensePool.getQuota(), 1024*1024);
 
             saved.put("quota", "MAX");
-            pool.update(saved);
-            assertEquals(pool.getDescription(),saved.get("description"));
+            licensePool.update(saved);
+            assertEquals(licensePool.getDescription(),saved.get("description"));
         }
     }
 }

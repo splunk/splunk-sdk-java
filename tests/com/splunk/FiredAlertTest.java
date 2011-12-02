@@ -21,25 +21,25 @@ import org.junit.Test;
 public class FiredAlertTest extends SplunkTestCase {
     @Test public void testFiredAlerts() throws Exception {
         Service service = connect();
-        EntityCollection<FiredAlert> alerts = service.getFiredAlerts();
+        EntityCollection<FiredAlert> firedAlerts = service.getFiredAlerts();
 
-        if (alerts.values().size() == 0) {
+        if (firedAlerts.values().size() == 0) {
             System.out.println("WARNING: no fired alerts detected");
             return;
         }
 
         // N.B. cant create or modify, only read & delete. skipping delete.
-        for (FiredAlert entity: alerts.values()) {
-            entity.getAction();
-            entity.getAlertType();
-            entity.getExpirationTime();
-            entity.getSavedSearchName();
-            entity.getSeverity();
-            entity.getSid();
-            entity.getTriggeredAlertCount();
-            entity.getTriggerTime();
-            entity.getTriggerTimeRendered();
-            entity.isDigestMode();
+        for (FiredAlert firedAlert: firedAlerts.values()) {
+            firedAlert.getAction();
+            firedAlert.getAlertType();
+            firedAlert.getExpirationTime();
+            firedAlert.getSavedSearchName();
+            firedAlert.getSeverity();
+            firedAlert.getSid();
+            firedAlert.getTriggeredAlertCount();
+            firedAlert.getTriggerTime();
+            firedAlert.getTriggerTimeRendered();
+            firedAlert.isDigestMode();
         }
     }
 }

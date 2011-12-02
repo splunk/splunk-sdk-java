@@ -32,5 +32,9 @@ public class EventType extends Entity {
     public String getSearch() {
         return getString("search", null);
     }
+
+    public String [] getTags() {
+        return getStringArray("tags", null);
+    }
 }
 

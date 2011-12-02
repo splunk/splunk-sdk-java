@@ -34,12 +34,13 @@ public class EventTypeTest extends SplunkTestCase {
     @Test public void testEventType() throws Exception {
         Service service = connect();
 
-        EventTypeCollection eventTypes = service.getEventTypes();
-        if (eventTypes.containsKey("sdk-test"))
-            eventTypes.remove("sdk-test");
-        assertFalse(eventTypes.containsKey("sdk-test"));
+        EventTypeCollection eventTypeCollection = service.getEventTypes();
 
-        checkEventTypes(eventTypes);
+        if (eventTypeCollection.containsKey("sdk-test"))
+            eventTypeCollection.remove("sdk-test");
+        assertFalse(eventTypeCollection.containsKey("sdk-test"));
+
+        checkEventTypes(eventTypeCollection);
 
         String search = "index=_internal *";
 
@@ -47,9 +48,10 @@ public class EventTypeTest extends SplunkTestCase {
         args.put("description", "Dummy description");
         args.put("disabled", true);
         args.put("priority", 2);
-        EventType eventType = eventTypes.create("sdk-test", search, args);
+        EventType eventType =
+                eventTypeCollection.create("sdk-test", search, args);
 
-        assertTrue(eventTypes.containsKey("sdk-test"));
+        assertTrue(eventTypeCollection.containsKey("sdk-test"));
 
         assertEquals(eventType.getName(), "sdk-test");
         assertEquals(eventType.getDescription(), args.get("description"));
@@ -70,7 +72,7 @@ public class EventTypeTest extends SplunkTestCase {
         assertEquals(eventType.getSearch(), args.get("search"));
         assertFalse(eventType.isDisabled());
 
-        eventTypes.remove("sdk-test");
-        assertFalse(eventTypes.containsKey("sdk-test"));
+        eventTypeCollection.remove("sdk-test");
+        assertFalse(eventTypeCollection.containsKey("sdk-test"));
     }
 }

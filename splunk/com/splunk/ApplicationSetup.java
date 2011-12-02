@@ -25,7 +25,7 @@ public class ApplicationSetup extends Entity {
         return getString("eai:setup");
     }
 
-    // access through getContent() and iterate over the keys. Seems the
-    // keys are application specific and not regular.
+    // Because all other keys are dynamic and context specific, all
+    // other key/value pairs should be retrieved via standard Map access.
 }
 

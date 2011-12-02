@@ -23,21 +23,22 @@ public class LicenseMessageTest extends SplunkTestCase {
     @Test public void testLicenseMessage() throws Exception {
         Service service = connect();
 
-        EntityCollection<LicenseMessage> lm = service.getLicenseMessages();
-        if (lm.values().size() == 0) {
+        EntityCollection<LicenseMessage> licenseMessages =
+                service.getLicenseMessages();
+        if (licenseMessages.values().size() == 0) {
             System.out.println("WARNING: no license messages found");
             return;
         }
 
         // test for sane data in licenses
-        for (LicenseMessage entity: lm.values()) {
-            assertTrue(entity.getCreationTime().after(new Date(0)));
-            entity.getCategory();
-            entity.getDescription();
-            entity.getPoolId();
-            entity.getSeverity();
-            entity.getSlaveId();
-            entity.getStackId();
+        for (LicenseMessage licenseMessage: licenseMessages.values()) {
+            assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
+            licenseMessage.getCategory();
+            licenseMessage.getDescription();
+            licenseMessage.getPoolId();
+            licenseMessage.getSeverity();
+            licenseMessage.getSlaveId();
+            licenseMessage.getStackId();
         }
     }
 }

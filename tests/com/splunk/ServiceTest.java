@@ -300,6 +300,7 @@ public class ServiceTest extends SplunkTestCase {
         assertEquals(user.getRealName(), "Renzo");
         assertEquals(user.getEmail(), "email.me@now.com");
         assertEquals(user.getDefaultApp(), "search");
+        user.getTz();
 
         users.remove(username);
         assertFalse(users.containsKey(username));
