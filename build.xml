@@ -96,18 +96,6 @@
         </javac>
     </target>
 
-    <target name="compile-examples" 
-     depends="
-        compile-examples-explorer,
-        compile-examples-export,
-        compile-examples-index,
-        compile-examples-info,
-        compile-examples-inputs,
-        compile-examples-loaded,
-        compile-examples-search,
-        compile-examples-spurl,
-        compile-examples-test"/>
-
     <target name="compile-examples-explorer" depends="compile-libs">
         <mkdir dir="${dir.build.examples.explorer}"/>
         <javac includeantruntime="false"
