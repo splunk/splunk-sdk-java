@@ -23,6 +23,7 @@ public class Application extends Entity {
 
     /**
      * Class constructor.
+     *
      * @param service The connected service instance.
      * @param path relative path of the app, usually the app name.
      */
@@ -126,7 +127,7 @@ public class Application extends Entity {
      * @return Archival information of the app.
      */
     public ApplicationArchive archive() {
-        return new ApplicationArchive(service, path + "/package");
+        return new ApplicationArchive(service, path);
     }
 
     /**
@@ -135,7 +136,7 @@ public class Application extends Entity {
      * @return Returns the app's setup information.
      */
     public ApplicationSetup setup() {
-        return new ApplicationSetup(service, path + "/setup");
+        return new ApplicationSetup(service, path);
     }
 
     /**
@@ -144,7 +145,7 @@ public class Application extends Entity {
      * @return Returns update information for the app.
      */
     public ApplicationUpdate update() {
-        return new ApplicationUpdate(service, path + "/update");
+        return new ApplicationUpdate(service, path);
     }
 }
 

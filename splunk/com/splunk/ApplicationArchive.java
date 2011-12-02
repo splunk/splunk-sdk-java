@@ -16,19 +16,46 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Splunk Application Archive.
+ */
 public class ApplicationArchive extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path the full-path of the parent end point.
+     */
     ApplicationArchive(Service service, String path) {
-        super(service, path);
+        super(service, path + "/package");
     }
 
+    /**
+     * Returns the app name.
+     *
+     * @return The app name string.
+     */
     public String getAppName() {
         return getString("name");
     }
 
+    /**
+     * Returns the file path, on the server where the archive file is stored,
+     * accessible with direct file access on the server.
+     *
+     * @return The server file path of the archive file.
+     */
     public String getFilePath() {
         return getString("path");
     }
 
+    /**
+     * Returns the URL that points to the archive file on the server, accessible
+     * with a browser.
+     *
+     * @return The URL of the archive file.
+     */
     public String getUrl() {
         return getString("url");
     }

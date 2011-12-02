@@ -80,7 +80,7 @@ public class ApplicationTest extends SplunkTestCase {
             applicationUpdate.getHomepage();
             applicationUpdate.getSize();
             applicationUpdate.getUpdateName();
-            applicationUpdate.getUrl();
+            applicationUpdate.getAppUrl();
             applicationUpdate.getVersion();
             applicationUpdate.isImplicitIdRequired();
         }
