@@ -63,11 +63,9 @@ public class Program {
 
     static int getCsvEventTimeOffset(String str) {
 
-        // UNDONE: does this work with line-break events?
-
         // get first event in this buffer
-        int eventStart = str.indexOf("\n");
-        int eventEnd = str.indexOf("\n", eventStart + 1);
+        int eventStart = str.indexOf("\"\n");
+        int eventEnd = str.indexOf("\"\n", eventStart + 1);
         if (eventEnd < 0)
             return -1;
 
@@ -77,7 +75,7 @@ public class Program {
         // walk through events until time changes
         eventStart = eventEnd;
         while (eventEnd > 0) {
-            eventEnd = str.indexOf("\n", eventStart + 1);
+            eventEnd = str.indexOf("\"\n", eventStart + 1);
             if (eventEnd < 0)
                 return -1;
             String time = str.substring(eventStart, eventEnd)
@@ -86,7 +84,7 @@ public class Program {
             if (!time.equals(lastTime)) {
                 return eventStart;
             }
-            nextEventOffset = eventEnd;
+            nextEventOffset = eventEnd + 1; // include two-char end-of-event.
             eventStart = eventEnd;
         }
 
