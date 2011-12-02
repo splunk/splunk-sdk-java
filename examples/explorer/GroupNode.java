@@ -14,20 +14,16 @@
  * under the License.
  */
 
-import com.splunk.ConfCollection;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 
-// UNDONE: Some duplication of EntityConnectionNode below, eg: title count
-// and size property - could probably be refactored into a shared 
-// CollectionNode base class.
-class ConfCollectionNode extends ResourceNode {
-    ConfCollectionNode(ConfCollection value) {
-        super(value, new ConfCollectionKids(value));
-        setDisplayName(String.format("Configuration (%d)", value.size()));
-    }
-
-    @Override protected PropertyList getMetadata() {
-        PropertyList list = super.getMetadata();
-        list.add(int.class, "size");
-        return list;
+// A simple named container node.
+class GroupNode extends AbstractNode {
+    GroupNode(String name, final Node... kids) {
+        super(Children.LEAF);
+        setDisplayName(name);
+        setChildren(new Children.Array() {{ add(kids); }});
     }
 }
+
