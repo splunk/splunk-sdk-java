@@ -17,14 +17,9 @@
 -->
 
 <!--
-  UNDONE: Should build be a single file at root? or separate files for eg:
-  splunk, examples and tests? or even more granular?
-
   UNDONE: How should manifest Class-Path be set for sample jars? They are 
   currently hardcoded to the corresponding relative repo paths, but that
   seems suspect.
-
-  UNDONE: Do we need debug & retail builds?
 -->
 
 <project name="splunk-sdk-java" basedir="." default="build">
@@ -103,39 +98,39 @@
         </sequential>
     </macrodef>
 
-    <target name="compile-examples-explorer" depends="compile-libs">
+    <target name="compile-example-explorer" depends="compile-libs">
         <compile-example name="explorer" classpath="classpath.examples-gui"/>
     </target>
 
-    <target name="compile-examples-export" depends="compile-libs">
+    <target name="compile-example-export" depends="compile-libs">
         <compile-example name="export" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-index" depends="compile-libs">
+    <target name="compile-example-index" depends="compile-libs">
         <compile-example name="index" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-info" depends="compile-libs">
+    <target name="compile-example-info" depends="compile-libs">
         <compile-example name="info" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-inputs" depends="compile-libs">
+    <target name="compile-example-inputs" depends="compile-libs">
         <compile-example name="inputs" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-loaded" depends="compile-libs">
+    <target name="compile-example-loaded" depends="compile-libs">
         <compile-example name="loaded" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-search" depends="dist-libs">
+    <target name="compile-example-search" depends="dist-libs">
         <compile-example name="search" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-spurl" depends="dist-libs">
+    <target name="compile-example-spurl" depends="dist-libs">
         <compile-example name="spurl" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-test" depends="dist-libs">
+    <target name="compile-example-test" depends="dist-libs">
         <compile-example name="test" classpath="classpath.examples"/>
     </target>
 
@@ -179,15 +174,15 @@
     <!-- Distribution targets -->
     <target name="dist-examples"
      depends="
-        dist-examples-explorer,
-        dist-examples-export,
-        dist-examples-index,
-        dist-examples-info,
-        dist-examples-inputs,
-        dist-examples-loaded,
-        dist-examples-search,
-        dist-examples-spurl,
-        dist-examples-test"/>
+        dist-example-explorer,
+        dist-example-export,
+        dist-example-index,
+        dist-example-info,
+        dist-example-inputs,
+        dist-example-loaded,
+        dist-example-search,
+        dist-example-spurl,
+        dist-example-test"/>
 
     <!-- Common dist action for all examples -->
     <macrodef name="dist-example">
@@ -207,7 +202,7 @@
         </sequential>
     </macrodef>
 
-    <target name="dist-examples-explorer" depends="compile-examples-explorer">
+    <target name="dist-example-explorer" depends="compile-example-explorer">
         <dist-example name="explorer" 
          classpath="
             ../splunk.jar 
@@ -221,42 +216,42 @@
             ../../lib/org-openide-util-lookup.jar"/>
     </target>
 
-    <target name="dist-examples-export" depends="compile-examples-export">
+    <target name="dist-example-export" depends="compile-example-export">
         <dist-example name="export" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-index" depends="compile-examples-index">
+    <target name="dist-example-index" depends="compile-example-index">
         <dist-example name="index" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-info" depends="compile-examples-info">
+    <target name="dist-example-info" depends="compile-example-info">
         <dist-example name="info" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-inputs" depends="compile-examples-inputs">
+    <target name="dist-example-inputs" depends="compile-example-inputs">
         <dist-example name="inputs" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-loaded" depends="compile-examples-loaded">
+    <target name="dist-example-loaded" depends="compile-example-loaded">
         <dist-example name="loaded" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-search" depends="compile-examples-search">
+    <target name="dist-example-search" depends="compile-example-search">
         <dist-example name="search" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-spurl" depends="compile-examples-spurl">
+    <target name="dist-example-spurl" depends="compile-example-spurl">
         <dist-example name="spurl" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-test" depends="compile-examples-test">
+    <target name="dist-example-test" depends="compile-example-test">
         <dist-example name="test" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
