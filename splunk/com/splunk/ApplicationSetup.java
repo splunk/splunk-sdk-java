@@ -16,16 +16,33 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Splunk Application setup information.
+ */
 public class ApplicationSetup extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path the full-path of the parent end point.
+     */
     ApplicationSetup(Service service, String path) {
-        super(service, path);
+        super(service, path + "/setup");
     }
 
+    /**
+     * Returns the app's setup information in XML format.
+     *
+     * @return The app's setup information in XML format.
+     */
     public String getSetupXml() {
         return getString("eai:setup");
     }
 
-    // Because all other keys are dynamic and context specific, all
-    // other key/value pairs should be retrieved via standard Map access.
+    /*
+     * Because all other keys are dynamic and context specific, they should
+     * be retrieved via standard Map access.
+     */
 }
 
