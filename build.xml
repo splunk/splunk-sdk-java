@@ -365,8 +365,10 @@
          includes="**/*.class">
             <manifest>
                 <attribute name="Main-Class" value="Program"/>
+                <!--
                 <attribute name="Class-Path"
                  value="../splunk.jar ../splunk-sdk.jar"/>
+                -->
             </manifest>
         </jar>
     </target>
@@ -382,6 +384,11 @@
                  value="./splunk.jar ./splunk-sdk.jar ../lib/junit-4.8.1.jar"/>
             </manifest>
         </jar>
+    </target>
+
+    <target name="javadoc">
+        <mkdir dir="${dir.dist.docs}"/>
+        <javadoc destdir="${dir.dist.docs}" sourcepath="${dir.splunk}"/>
     </target>
 
     <!-- Execute unit tests -->

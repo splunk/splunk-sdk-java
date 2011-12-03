@@ -63,6 +63,10 @@ In order to remove all build artifacts from the repository simply type:
 
 > ant clean
 
+And to build the javadocs for the SDK, type:
+
+> ant javadoc
+
 Take a look at `build.xml` for other targets if you are interested in more
 control of the build process.
 
