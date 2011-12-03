@@ -372,17 +372,17 @@ Stay connected with other developers building on Splunk.
 
 <tr>
 <td><em>Issues</em>
-<td>https://github.com/splunk/splunk-sdk-java/issues/</td>
+<td><span>https://github.com/splunk/splunk-sdk-java/issues/</span></td>
 </tr>
 
 <tr>
 <td><em>Answers</em>
-<td>http://splunk-base.splunk.com/tags/java/</td>
+<td><span>http://splunk-base.splunk.com/tags/java/</span></td>
 </tr>
 
 <tr>
 <td><em>Blog</em>
-<td>http://blogs.splunk.com/dev/</td>
+<td><span>http://blogs.splunk.com/dev/</span></td>
 </tr>
 
 <tr>
