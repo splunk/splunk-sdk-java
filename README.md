@@ -387,7 +387,7 @@ Stay connected with other developers building on Splunk.
 
 <tr>
 <td><em>Twitter</em>
-<td>[@splunkdev](http://twitter.com)</td>
+<td>@splunkdev</td>
 </tr>
 
 </table>
