@@ -361,25 +361,36 @@ For an introduction to the Splunk product and some of its capabilities:
 
 ## Community
 
-Email: Stay connected with other developers building on Splunk
+Stay connected with other developers building on Splunk.
 
-* devinfo@splunk.com
+<table>
 
-Issues: 
+<tr>
+<td><em>Email</em></td>
+<td>devinfo@splunk.com</td>
+</tr>
 
-* https://github.com/splunk/splunk-sdk-java/issues
+<tr>
+<td><em>Issues</em>
+<td>https://github.com/splunk/splunk-sdk-java/issues/</td>
+</tr>
 
-Answers: Check out the Java tag on Splunk answers
+<tr>
+<td><em>Answers</em>
+<td>http://splunk-base.splunk.com/tags/java/</td>
+</tr>
 
-* http://splunk-base.splunk.com/tags/java/
+<tr>
+<td><em>Blog</em>
+<td>http://blogs.splunk.com/dev/</td>
+</tr>
 
-Blog: 
+<tr>
+<td><em>Twitter</em>
+<td>[@splunkdev](http://twitter.com)</td>
+</tr>
 
-* http://blogs.splunk.com/dev/
-
-Twitter: 
-
-* [@splunkdev](http://twitter.com)
+</table>
 
 ### How to contribute
 
