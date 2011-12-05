@@ -48,9 +48,19 @@ You can get a copy of the SDK sources by cloning into the repository with git:
 
 The SDK requires Java version 1.6+, aka Java SE 6+.
 
-A good description of the Java version history can be found at:
+A good description of the Java version history can be found at
 
 * http://en.wikipedia.org/wiki/Java_version_history
+
+#### Setup for Windows
+
+You will need to install both Java JDK from Oracle and Ant from Apache. 
+
+* http://www.oracle.com/technetwork/java/javase/downloads/index.html
+* http://ant.apache.org/
+
+Set the environment variables ANT_HOME to the location where you unzipped Ant.
+Set the environment variable JAVA_HOME to the directory you installed the JDK.
 
 ### Building
 
@@ -63,23 +73,15 @@ In order to remove all build artifacts from the repository simply type:
 
 > ant clean
 
+And to build the javadocs for the SDK, type:
+
+> ant javadoc
+
 Take a look at `build.xml` for other targets if you are interested in more
 control of the build process.
 
 You can also type `ant {target} -find` from anywhere in the repository and 
-ant will automatically find the root build file.
-
-### Setup for Windows
-
-If not already installed, install both Java JDK from Oracle and Ant from
-Apache. 
-
-* http://www.oracle.com/technetwork/java/javase/downloads/index.html
-* http://ant.apache.org/ respectively.
-
-Set the environment variables ANT_HOME to the location you unzipped the ant
-installation. Set the environment variable JAVA_HOME to the directory
-you installed the Java JDK.
+Ant will automatically find the root build file.
 
 ### Running the examples and unit tests
 
@@ -355,27 +357,42 @@ For an introduction to the Splunk product and some of its capabilities:
 
 * http://docs.splunk.com/Documentation/Splunk/latest/User/SplunkOverview
 
+For more information on the SDK and this repository check out our GitHub Wiki
+
+* https://github.com/splunk/splunk-sdk-java/wiki/
+
 ## Community
 
-Email: Stay connected with other developers building on Splunk
+Stay connected with other developers building on Splunk.
 
-* devinfo@splunk.com
+<table>
 
-Issues: 
+<tr>
+<td><em>Email</em></td>
+<td>devinfo@splunk.com</td>
+</tr>
 
-* https://github.com/splunk/splunk-sdk-java/issues
+<tr>
+<td><em>Issues</em>
+<td><span>https://github.com/splunk/splunk-sdk-java/issues/</span></td>
+</tr>
 
-Answers: Check out the Java tag on Splunk answers
+<tr>
+<td><em>Answers</em>
+<td><span>http://splunk-base.splunk.com/tags/java/</span></td>
+</tr>
 
-* http://splunk-base.splunk.com/tags/java/
+<tr>
+<td><em>Blog</em>
+<td><span>http://blogs.splunk.com/dev/</span></td>
+</tr>
 
-Blog: 
+<tr>
+<td><em>Twitter</em>
+<td>@splunkdev</td>
+</tr>
 
-* http://blogs.splunk.com/dev/
-
-Twitter: 
-
-* [@splunkdev](http://twitter.com)
+</table>
 
 ### How to contribute
 

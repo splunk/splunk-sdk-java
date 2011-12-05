@@ -17,24 +17,12 @@
 -->
 
 <!--
-  UNDONE: Should build be a single file at root? or separate files for eg:
-  splunk, examples and tests? or even more granular?
-
   UNDONE: How should manifest Class-Path be set for sample jars? They are 
   currently hardcoded to the corresponding relative repo paths, but that
   seems suspect.
-
-  UNDONE: Example targets are hightly repetitive, seems like we should be
-  able to do something better, eg: macroize?
-
-  UNDONE: Do we need debug & retail builds?
-
-  UNDONE: Should we add "run" targets (for tests & examples) to the build file?
-  instead of using the run script?
 -->
 
 <project name="splunk-sdk-java" basedir="." default="build">
-
     <property file="build.properties"/>
 
     <path id="classpath.splunk-sdk">
@@ -96,98 +84,54 @@
         </javac>
     </target>
 
-    <target name="compile-examples" 
-     depends="
-        compile-examples-explorer,
-        compile-examples-export,
-        compile-examples-index,
-        compile-examples-info,
-        compile-examples-inputs,
-        compile-examples-loaded,
-        compile-examples-search,
-        compile-examples-spurl,
-        compile-examples-test"/>
+    <!-- Common compile action for all examples -->
+    <macrodef name="compile-example">
+        <attribute name="name"/>
+        <attribute name="classpath"/>
+        <sequential>
+            <mkdir dir="${dir.build.examples}/@{name}"/>
+            <javac includeantruntime="false"
+             srcdir="${dir.examples}/@{name}"
+             destdir="${dir.build.examples}/@{name}">
+                <classpath refid="@{classpath}"/>
+            </javac>
+        </sequential>
+    </macrodef>
 
-    <target name="compile-examples-explorer" depends="compile-libs">
-        <mkdir dir="${dir.build.examples.explorer}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.explorer}"
-         destdir="${dir.build.examples.explorer}">
-            <classpath refid="classpath.examples-gui"/>
-        </javac>
+    <target name="compile-example-explorer" depends="compile-libs">
+        <compile-example name="explorer" classpath="classpath.examples-gui"/>
     </target>
 
-    <target name="compile-examples-export" depends="compile-libs">
-        <mkdir dir="${dir.build.examples.export}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.export}"
-         destdir="${dir.build.examples.export}">
-            <classpath refid="classpath.examples-gui"/>
-        </javac>
+    <target name="compile-example-export" depends="compile-libs">
+        <compile-example name="export" classpath="classpath.examples"/>
     </target>
 
-
-    <target name="compile-examples-index" depends="compile-libs">
-        <mkdir dir="${dir.build.examples.index}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.index}"
-         destdir="${dir.build.examples.index}">
-            <classpath refid="classpath.examples"/>
-        </javac>
+    <target name="compile-example-index" depends="compile-libs">
+        <compile-example name="index" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-info" depends="compile-libs">
-        <mkdir dir="${dir.build.examples.info}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.info}"
-         destdir="${dir.build.examples.info}">
-            <classpath refid="classpath.examples"/>
-        </javac>
+    <target name="compile-example-info" depends="compile-libs">
+        <compile-example name="info" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-inputs" depends="compile-libs">
-        <mkdir dir="${dir.build.examples.inputs}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.inputs}"
-         destdir="${dir.build.examples.inputs}">
-            <classpath refid="classpath.examples"/>
-        </javac>
+    <target name="compile-example-inputs" depends="compile-libs">
+        <compile-example name="inputs" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-loaded" depends="compile-libs">
-        <mkdir dir="${dir.build.examples.loaded}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.loaded}"
-         destdir="${dir.build.examples.loaded}">
-            <classpath refid="classpath.examples"/>
-        </javac>
+    <target name="compile-example-loaded" depends="compile-libs">
+        <compile-example name="loaded" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-search" depends="dist-libs">
-        <mkdir dir="${dir.build.examples.search}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.search}"
-         destdir="${dir.build.examples.search}">
-            <classpath refid="classpath.examples"/>
-        </javac>
+    <target name="compile-example-search" depends="dist-libs">
+        <compile-example name="search" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-spurl" depends="dist-libs">
-        <mkdir dir="${dir.build.examples.spurl}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.spurl}"
-         destdir="${dir.build.examples.spurl}">
-            <classpath refid="classpath.examples"/>
-        </javac>
+    <target name="compile-example-spurl" depends="dist-libs">
+        <compile-example name="spurl" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-examples-test" depends="dist-libs">
-        <mkdir dir="${dir.build.examples.test}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.examples.test}"
-         destdir="${dir.build.examples.test}">
-            <classpath refid="classpath.examples"/>
-        </javac>
+    <target name="compile-example-test" depends="dist-libs">
+        <compile-example name="test" classpath="classpath.examples"/>
     </target>
 
     <target name="compile-tests" depends="dist-libs">
@@ -221,166 +165,95 @@
          includes="**/*.class">
             <manifest>
                 <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
+                <attribute name="Class-Path" 
                  value="../lib/commons-cli-1.2.jar"/>
             </manifest>
         </jar>
     </target>
 
+    <!-- Distribution targets -->
     <target name="dist-examples"
      depends="
-        dist-examples-explorer,
-        dist-examples-export,
-        dist-examples-index,
-        dist-examples-info,
-        dist-examples-inputs,
-        dist-examples-loaded,
-        dist-examples-search,
-        dist-examples-spurl,
-        dist-examples-test"/>
+        dist-example-explorer,
+        dist-example-export,
+        dist-example-index,
+        dist-example-info,
+        dist-example-inputs,
+        dist-example-loaded,
+        dist-example-search,
+        dist-example-spurl,
+        dist-example-test"/>
 
-    <target name="dist-examples-explorer" depends="compile-examples-explorer">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.explorer}"
-         destfile="${dir.dist.examples}/explorer.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="
-                    ../splunk.jar 
-                    ../splunk-sdk.jar 
-                    ../../lib/org-openide-actions.jar 
-                    ../../lib/org-openide-awt.jar 
-                    ../../lib/org-openide-dialogs.jar 
-                    ../../lib/org-openide-explorer.jar 
-                    ../../lib/org-openide-nodes.jar 
-                    ../../lib/org-openide-util.jar 
-                    ../../lib/org-openide-util-lookup.jar"/>
-            </manifest>
-        </jar>
+    <!-- Common dist action for all examples -->
+    <macrodef name="dist-example">
+        <attribute name="name"/>
+        <attribute name="classpath"/>
+        <sequential>
+          <mkdir dir="${dir.dist.examples}"/>
+          <jar
+           basedir="${dir.build.examples}/@{name}"
+           destfile="${dir.dist.examples}/@{name}.jar"
+           includes="**/*.class">
+              <manifest>
+                  <attribute name="Main-Class" value="Program"/>
+                  <attribute name="Class-Path" value="@{classpath}"/>
+              </manifest>
+          </jar>
+        </sequential>
+    </macrodef>
+
+    <target name="dist-example-explorer" depends="compile-example-explorer">
+        <dist-example name="explorer" 
+         classpath="
+            ../splunk.jar 
+            ../splunk-sdk.jar 
+            ../../lib/org-openide-actions.jar 
+            ../../lib/org-openide-awt.jar 
+            ../../lib/org-openide-dialogs.jar 
+            ../../lib/org-openide-explorer.jar 
+            ../../lib/org-openide-nodes.jar 
+            ../../lib/org-openide-util.jar 
+            ../../lib/org-openide-util-lookup.jar"/>
     </target>
 
-    <target name="dist-examples-export" depends="compile-examples-export">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.export}"
-         destfile="${dir.dist.examples}/export.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-export" depends="compile-example-export">
+        <dist-example name="export" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-index" depends="compile-examples-index">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.index}"
-         destfile="${dir.dist.examples}/index.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-index" depends="compile-example-index">
+        <dist-example name="index" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-info" depends="compile-examples-info">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.info}"
-         destfile="${dir.dist.examples}/info.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-info" depends="compile-example-info">
+        <dist-example name="info" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-inputs" depends="compile-examples-inputs">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.inputs}"
-         destfile="${dir.dist.examples}/inputs.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-inputs" depends="compile-example-inputs">
+        <dist-example name="inputs" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-loaded" depends="compile-examples-loaded">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.loaded}"
-         destfile="${dir.dist.examples}/loaded.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-loaded" depends="compile-example-loaded">
+        <dist-example name="loaded" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-search" depends="compile-examples-search">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.search}"
-         destfile="${dir.dist.examples}/search.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-search" depends="compile-example-search">
+        <dist-example name="search" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-spurl" depends="compile-examples-spurl">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.spurl}"
-         destfile="${dir.dist.examples}/spurl.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute 
-                 name="Class-Path" 
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-spurl" depends="compile-example-spurl">
+        <dist-example name="spurl" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-examples-test" depends="compile-examples-test">
-        <mkdir dir="${dir.dist.examples}"/>
-        <jar 
-         basedir="${dir.build.examples.test}"
-         destfile="${dir.dist.examples}/test.jar"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Main-Class" value="Program"/>
-                <attribute name="Class-Path"
-                 value="../splunk.jar ../splunk-sdk.jar"/>
-            </manifest>
-        </jar>
+    <target name="dist-example-test" depends="compile-example-test">
+        <dist-example name="test" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
     <target name="dist-tests" depends="compile-tests">
@@ -396,6 +269,11 @@
         </jar>
     </target>
 
+    <target name="javadoc">
+        <mkdir dir="${dir.dist.docs}"/>
+        <javadoc destdir="${dir.dist.docs}" sourcepath="${dir.splunk}"/>
+    </target>
+
     <!-- Execute unit tests -->
     <target name="test" depends="dist">
         <junit fork="yes" haltonfailure="no">
@@ -408,5 +286,4 @@
             <formatter type="plain" usefile="false"/>
         </junit>
     </target>
-
 </project>
