@@ -58,49 +58,49 @@ public class DeploymentServerClassTest extends SplunkTestCase {
             deploymentServerClass.update(args);
         }
 
-        assertEquals(deploymentServerClass.getBlackList0(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(0),
                 args.get("blacklist.0"));
-        assertEquals(deploymentServerClass.getBlackList1(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(1),
                 args.get("blacklist.1"));
-        assertEquals(deploymentServerClass.getBlackList2(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(2),
                 args.get("blacklist.2"));
-        assertEquals(deploymentServerClass.getBlackList3(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(3),
                 args.get("blacklist.3"));
-        assertEquals(deploymentServerClass.getBlackList4(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(4),
                 args.get("blacklist.4"));
-        assertEquals(deploymentServerClass.getBlackList5(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(5),
                 args.get("blacklist.5"));
-        assertEquals(deploymentServerClass.getBlackList6(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(6),
                 args.get("blacklist.6"));
-        assertEquals(deploymentServerClass.getBlackList7(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(7),
                 args.get("blacklist.7"));
-        assertEquals(deploymentServerClass.getBlackList8(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(8),
                 args.get("blacklist.8"));
-        assertEquals(deploymentServerClass.getBlackList9(),
+        assertEquals(deploymentServerClass.getBlackListByIndex(9),
                 args.get("blacklist.9"));
         assertEquals(deploymentServerClass.getContinueMatching(),
                 args.get("continueMatching"));
         assertEquals(deploymentServerClass.getFilterType(),
                 args.get("filterType"));
-        assertEquals(deploymentServerClass.getWhiteList0(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(0),
                 args.get("whitelist.0"));
-        assertEquals(deploymentServerClass.getWhiteList1(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(1),
                 args.get("whitelist.1"));
-        assertEquals(deploymentServerClass.getWhiteList2(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(2),
                 args.get("whitelist.2"));
-        assertEquals(deploymentServerClass.getWhiteList3(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(3),
                 args.get("whitelist.3"));
-        assertEquals(deploymentServerClass.getWhiteList4(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(4),
                 args.get("whitelist.4"));
-        assertEquals(deploymentServerClass.getWhiteList5(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(5),
                 args.get("whitelist.5"));
-        assertEquals(deploymentServerClass.getWhiteList6(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(6),
                 args.get("whitelist.6"));
-        assertEquals(deploymentServerClass.getWhiteList7(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(7),
                 args.get("whitelist.7"));
-        assertEquals(deploymentServerClass.getWhiteList8(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(8),
                 args.get("whitelist.8"));
-        assertEquals(deploymentServerClass.getWhiteList9(),
+        assertEquals(deploymentServerClass.getWhiteListByIndex(9),
                 args.get("whitelist.9"));
 
         for (DeploymentServerClass deploymentServerClass1:
@@ -108,12 +108,10 @@ public class DeploymentServerClassTest extends SplunkTestCase {
             assertTrue(
                 deploymentServerClass1.getRepositoryLocation().length() > 0);
             deploymentServerClass1.getBlackList();
-            deploymentServerClass1.getBlackListDot();
             deploymentServerClass1.getEndpoint();
             deploymentServerClass1.getTargetRepositoryLocation();
             deploymentServerClass1.getTmpFolder();
             deploymentServerClass1.getWhiteList();
-            deploymentServerClass1.getWhiteListDot();
         }
 
         // N.B. No REST endpoint to delete a deployment server class.

@@ -25,7 +25,7 @@ public class ApplicationArchive extends Entity {
      * Class Constructor.
      *
      * @param service The connected service instance.
-     * @param path the full-path of the parent end point.
+     * @param path the full-path of the parent endpoint.
      */
     ApplicationArchive(Service service, String path) {
         super(service, path + "/package");

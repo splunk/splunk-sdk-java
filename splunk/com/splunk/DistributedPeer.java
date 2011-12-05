@@ -16,51 +16,107 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Splunk distributed peer.
+ */
 public class DistributedPeer extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The deployment server endpoint.
+     */
     DistributedPeer(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this peer's build number.
+     *
+     * @return This peer's build number.
+     */
     public String getBuild() {
         return getString("build", null);
     }
 
+    /**
+     * Returns the list of bundle versions.
+     *
+     * @return The list of bundle versions.
+     */
     public String[] getBundleVersions() {
         return getStringArray("bundle_versions", null);
     }
 
+    /**
+     * Returns this peer's GUID.
+     *
+     * @return this peer's GUID.
+     */
     public String getGuid() {
         return getString("guid", null);
     }
 
+    /**
+     * Returns this peer's license signature.
+     *
+     * @return This peer's license signature.
+     */
     public String getLicenseSignature() {
         return getString("licenseSignature", null);
     }
 
+    /**
+     * Returns this peer's name.
+     *
+     * @return Thid peer's name.
+     */
     public String getPeerName() {
         return getString("peerName", null);
     }
 
+    /**
+     * Returns this peer's type.
+     *
+     * @return This peer's type.
+     */
     public String getPeerType() {
         return getString("peerType", null);
     }
 
+    /**
+     * Returns this peer's replication status.
+     *
+     * @return This peer's replication status.
+     */
     public String getReplicationStatus() {
         return getString("replicationStatus", null);
     }
 
+    /**
+     * Return this peer's overall status.
+     *
+     * @return This peer's overall status.
+     */
     public String getStatus() {
         return getString("status", null);
     }
 
+    /**
+     * Returns this peer's version.
+     *
+     * @return This peer's version.
+     */
     public String getVersion() {
         return getString("version", null);
     }
 
-    public boolean isDisabled() {
-        return getBoolean("disabled", true);
-    }
-
+    /**
+     * Returns whether or not this peer is using HTTPS.
+     *
+     * @return whether or not this peer is using HTTPS.
+     */
     public boolean isHttps() {
         return getBoolean("is_https", true);
     }

@@ -25,7 +25,7 @@ public class Application extends Entity {
      * Class constructor.
      *
      * @param service The connected service instance.
-     * @param path relative path of the app, usually the app name.
+     * @param path The application endpoint.
      */
     Application(Service service, String path) {
         super(service, path);

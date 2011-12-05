@@ -16,15 +16,44 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Splunk deployment tenant.
+ */
 public class DeploymentTenant extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The deployment tenant endpoint.
+     */
     DeploymentTenant(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * If true, this deployment server in a multi-tenant configuration reviews the information in its configuration to find out if there is something new or updated to push out to a deployment client.
+     * @return
+     */
+    /**
+     * Returns whether or not this deployment server should review its
+     * configuration, in a multi-tenant configuration, and inform the deployment
+     * client if something is new or updated.
+     *
+     * @return Whether this deployment server notifies the deployment client for
+     * new or changed configurations.
+     */
     public boolean getCheckNew() {
         return getBoolean("check-new", false);
     }
 
+    /**
+     * Returns inclusive criteria for determining deployment client access to
+     * this deployment server.
+     *
+     * @return Criteria for determining deployment client access to this
+     * deployment server.
+     */
     public String getWhiteList0() {
         return getString("whitelist.0");
     }

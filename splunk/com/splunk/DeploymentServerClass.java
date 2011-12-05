@@ -16,128 +16,116 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Splunk deployment server class.
+ */
 public class DeploymentServerClass extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The deployment server class endpoint.
+     */
     DeploymentServerClass(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns a comma separated list of hosts excluded from this server class,
+     * or null if not specified.
+     *
+     * @return A comma separated list of hosts excluded from this server class.
+     */
     public String getBlackList() {
         return getString("blacklist", null);
     }
 
-    public String getBlackListDot() {
-        return getString("blacklist.", null);
+    /**
+     * Return excluded client address by index.
+     *
+     * @return Excluded client address by index.
+     */
+    public String getBlackListByIndex(int index) {
+        return getString(String.format("blacklist.%d", index), null);
     }
 
-    public String getBlackList0() {
-        return getString("blacklist.0", null);
-    }
-
-    public String getBlackList1() {
-        return getString("blacklist.1", null);
-    }
-
-    public String getBlackList2() {
-        return getString("blacklist.2", null);
-    }
-
-    public String getBlackList3() {
-        return getString("blacklist.3", null);
-    }
-
-    public String getBlackList4() {
-        return getString("blacklist.4", null);
-    }
-
-    public String getBlackList5() {
-        return getString("blacklist.5", null);
-    }
-
-    public String getBlackList6() {
-        return getString("blacklist.6", null);
-    }
-
-    public String getBlackList7() {
-        return getString("blacklist.7", null);
-    }
-
-    public String getBlackList8() {
-        return getString("blacklist.8", null);
-    }
-
-    public String getBlackList9() {
-        return getString("blacklist.9", null);
-    }
-
+    /**
+     * Returns whether lookups halt on first server match (false) or continues
+     * to match against multiple servers (true).
+     *
+     * @return whether server matches first or multiple servers.
+     */
     public boolean getContinueMatching() {
         return getBoolean("continueMatching");
     }
 
+    /**
+     * Returns the URL endpoint for deployment client content downloads.
+     *
+     * @return URL endpoint for deployment client downloads.
+     */
     public String getEndpoint() {
         return getString("endpoint", null);
     }
 
+    /**
+     * Returns the filter type applied first. If filterType is whitelist, all
+     * whitelist filters are applied first, followed by blacklist filters. If
+     * filterType is blacklist, all blacklist filters are applied first,
+     * followed by whitelist filters.
+     *
+     * @return Filter type.
+     */
     public String getFilterType() {
         return getString("filterType");
     }
 
+    /**
+     * Returns the deployment server content storage file path. Note that the path
+     * may contain macro expansions or substitutions.
+     *
+     * @return The deployment server content storage file path.
+     */
     public String getRepositoryLocation() {
         return getString("repositoryLocation");
     }
 
+    /**
+     * Returns the deployment client content storage file path. Note that the path
+     * may contain macro expansions or substitutions.
+     *
+     * @return The deployment client content storage file path.
+     */
     public String getTargetRepositoryLocation() {
         return getString("targetRepositoryLocation", null);
     }
 
+    /**
+     * Returns the deployment server's working file path. Note that the path
+     * may contain macro expansions or substitutions.
+     * @return the deployment server's working file path.
+     */
     public String getTmpFolder() {
         return getString("tmpFolder", null);
     }
 
+    /**
+     * Returns a comma separated list of hosts included for this server class,
+     * or null if not specified.
+     *
+     * @return A comma separated list of hosts included for this server class.
+     */
     public String getWhiteList() {
         return getString("whitelist", null);
     }
 
-    public String getWhiteListDot() {
-        return getString("whitelist.", null);
-    }
-
-    public String getWhiteList0() {
-        return getString("whitelist.0", null);
-    }
-
-    public String getWhiteList1() {
-        return getString("whitelist.1", null);
-    }
-
-    public String getWhiteList2() {
-        return getString("whitelist.2", null);
-    }
-
-    public String getWhiteList3() {
-        return getString("whitelist.3", null);
-    }
-
-    public String getWhiteList4() {
-        return getString("whitelist.4", null);
-    }
-
-    public String getWhiteList5() {
-        return getString("whitelist.5", null);
-    }
-
-    public String getWhiteList6() {
-        return getString("whitelist.6", null);
-    }
-
-    public String getWhiteList7() {
-        return getString("whitelist.7", null);
-    }
-
-    public String getWhiteList8() {
-        return getString("whitelist.8", null);
-    }
-
-    public String getWhiteList9() {
-        return getString("whitelist.9", null);
+    /**
+     * Return included client address by index.
+     *
+     * @return Included client address by index.
+     */
+    public String getWhiteListByIndex(int index) {
+        return getString(String.format("whitelist.%d", index), null);
     }
 }

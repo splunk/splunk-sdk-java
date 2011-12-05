@@ -25,6 +25,7 @@ public class DeploymentClientTest extends SplunkTestCase {
         DeploymentClient deploymentClient = service.getDeploymentClient();
         String uri = deploymentClient.getTargetUri();
         if (uri != null) {
+            deploymentClient.refresh();
             if (deploymentClient.isDisabled()) {
                 deploymentClient.enable();
             }

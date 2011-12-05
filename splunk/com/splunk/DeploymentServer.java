@@ -16,15 +16,40 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Splunk deployment server
+ */
 public class DeploymentServer extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The deployment server endpoint.
+     */
     DeploymentServer(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns whether or not this deployment server reviews its configuration
+     * information and informs the deployment client if something is new or
+     * updated.
+     *
+     * @return Whether this deployment server notifies the deployment client for
+     * new or changed configurations.
+     */
     public boolean getCheckNew() {
         return getBoolean("check-new", false);
     }
 
+    /**
+     * Returns inclusive criteria for determining deployment client access to
+     * this deployment server.
+     *
+     * @return Criteria for determining deployment client access to this
+     * deployment server.
+     */
     public String getWhiteList0() {
         return getString("whitelist.0");
     }
