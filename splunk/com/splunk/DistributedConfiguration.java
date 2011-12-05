@@ -30,6 +30,12 @@ public class DistributedConfiguration extends Entity {
         super(service, "search/distributed/config");
     }
 
+    /**
+     * Returns the action path.
+     *
+     * @param action The requested action.
+     * @return The action path.
+     */
     @Override protected String actionPath(String action) {
         if (action.equals("edit"))
             return path + "/distributedSearch";

@@ -30,6 +30,12 @@ public class DeploymentClient extends Entity {
         super(service, "deployment/client");
     }
 
+    /**
+     * Returns the action path.
+     *
+     * @param action The requested action.
+     * @return The action path.
+     */
     @Override protected String actionPath(String action) {
         if (action.equals("edit"))
             return path + "/deployment-client";
@@ -77,16 +83,6 @@ public class DeploymentClient extends Entity {
      */
     public String getTargetUri() {
         return getString("targetUri", null);
-    }
-
-    /**
-     * UNDONE: vestige?
-     * @param entry
-     */
-    void load(AtomEntry entry) {
-        super.load(entry);
-        if (entry == null)
-            setTitle("deploymentclient");
     }
 
     /**
