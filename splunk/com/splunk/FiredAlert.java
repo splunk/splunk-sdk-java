@@ -18,47 +18,108 @@ package com.splunk;
 
 import java.util.Date;
 
+/**
+ * Representation of Fired Alerts.
+ */
 public class FiredAlert extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The fired alert endpoint.
+     */
     FiredAlert(Service service, String path) {
         super(service, path);
     }
 
-    public String [] getAction() {
-        return getStringArray("actions", null);
+    /**
+     * Returns this alert's actions.
+     *
+     * @return This alert's actions.
+     */
+    public String getAction() {
+        return getString("actions", null);
     }
 
+    /**
+     * Returns this alert's type.
+     *
+     * @return This alert's type.
+     */
     public String getAlertType() {
         return getString("alert_type", null);
     }
 
+    /**
+     * Returns this alerts's rendered expiration time. (4.3+)
+     *
+     * @return This alert's rendered expiration time.
+     */
     public String getExpirationTime() {
         return getString("expiration_time_rendered", null);
     }
 
+    /**
+     * Returns this alert's saved search name.
+     *
+     * @return this alert's saved search name.
+     */
     public String getSavedSearchName() {
         return getString("savedsearch_name", null);
     }
 
+    /**
+     * Returns this alert's severity, on a scale of 1 to 10, with 1 being the
+     * highest priority.
+     *
+     * @return This alert's severity.
+     */
     public int getSeverity() {
         return getInteger("severity", -1);
     }
 
+    /**
+     * Returns this alert's SID.
+     *
+     * @return This alerts SID.
+     */
     public String getSid() {
         return getString("sid", null);
     }
 
+    /**
+     * Returns the number of triggered alerts. (4.3+)
+     *
+     * @return The number of triggered alerts.
+     */
     public int getTriggeredAlertCount() {
         return getInteger("triggered_alerts", -1);
     }
 
+    /**
+     * Returns this alert's trigger time.
+     *
+     * @return This alert's trigger time.
+     */
     public Date getTriggerTime() {
         return getDateFromEpoch("trigger_time", null);
     }
 
+    /**
+     * Returns this alert's rendered trigger time. (4.3+)
+     *
+     * @return This alert's rendered trigger time.
+     */
     public String getTriggerTimeRendered() {
         return getString("trigger_time_rendered", null);
     }
 
+    /**
+     * Returned whether or not the result is a digest. (4.3+)
+     *
+     * @return whether ot nor the result is a digest.
+     */
     public boolean isDigestMode() {
         return getBoolean("digest_mode", false);
     }
