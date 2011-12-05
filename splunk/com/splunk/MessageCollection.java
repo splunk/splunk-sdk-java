@@ -16,13 +16,27 @@
 
 package com.splunk;
 
-import java.util.Map;
-
+/**
+ * Representation of Collection of Messages.
+ */
 public class MessageCollection extends EntityCollection<Message> {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     */
     MessageCollection(Service service) {
         super(service, "messages", Message.class);
     }
-    
+
+    /**
+     * Create a new message.
+     *
+     * @param name The name of the new message.
+     * @param value The value of the message.
+     * @return The created message.
+     */
     public Message create(String name, String value) {
         Args args = new Args("value", value);
         return create(name, args);

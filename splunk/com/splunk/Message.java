@@ -16,15 +16,33 @@
 
 package com.splunk;
 
+/**
+ * Representation of Message.
+ */
 public class Message extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The message endpoint.
+     */
     Message(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this message's title.
+     * @return This message's title.
+     */
     public String getKey() {
         return getTitle();
     }
 
+    /**
+     * Returns this message's value.
+     * @return This message's value.
+     */
     public String getValue() {
         return getString(getKey());
     }
