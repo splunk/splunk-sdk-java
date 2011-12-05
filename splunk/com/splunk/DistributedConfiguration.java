@@ -72,6 +72,15 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
+     * Return connection timeout in seconds.
+     *
+     * @return The connection timeout in seconds.
+     */
+    public int getConnectionTimeout() {
+        return getInteger("connectionTimeout", -1);
+    }
+
+    /**
      * Returns the number of seconds between checking servers that are already
      * timed-out. Zero means do not recheck. The default is sixty seconds. If
      * removeTimedOutServers is false the setting has no effect.
@@ -112,6 +121,15 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
+     * Returns receive timeout in seconds.
+     *
+     * @return The receive timeout in seconds.
+     */
+    public int getReceiveTimeout() {
+        return getInteger("receiveTimeout", -1);
+    }
+
+    /**
      * Returns whether or not timed out servers are removed from the distributed
      * configuration.
      *
@@ -121,9 +139,8 @@ public class DistributedConfiguration extends Entity {
     public boolean getRemovedTimedOutServers() {
         return getBoolean("removedTimedOutServers");
     }
-
     /**
-     * @deprecated
+     * @deprecated Use specific connectionTimeout, receiveTimeout, sendTimeout.
      *
      * Returns the timeout in seconds, to determine a server timeout.
      *
@@ -131,6 +148,15 @@ public class DistributedConfiguration extends Entity {
      */
     public int getServerTimeout() {
         return getInteger("serverTimeout");
+    }
+
+    /**
+     * Returns send timeout in seconds.
+     *
+     * @return The send timeout in seconds.
+     */
+    public int getSendTimeout() {
+        return getInteger("sendTimeout", -1);
     }
 
     /**
@@ -193,8 +219,4 @@ public class DistributedConfiguration extends Entity {
     public boolean isDistSearchEnabled() {
         return getBoolean("dist_search_enabled");
     }
-
-    // UNDONE: no samples for:
-    // connectionTimeout, receiveTimeout, sendTimeout
-
 }

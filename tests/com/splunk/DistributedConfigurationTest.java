@@ -174,6 +174,10 @@ public class DistributedConfigurationTest extends SplunkTestCase {
         assertEquals(distributedConfiguration.getTtl(),
                 savedSetup.get("ttl"));
 
+        distributedConfiguration.getConnectionTimeout();
+        distributedConfiguration.getReceiveTimeout();
+        distributedConfiguration.getSendTimeout();
+
         distributedConfiguration.isDistSearchEnabled();
     }
 }

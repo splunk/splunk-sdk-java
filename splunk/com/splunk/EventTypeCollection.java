@@ -18,15 +18,40 @@ package com.splunk;
 
 import java.util.Map;
 
+/**
+ * Representation of the Collection of Event Types.
+ */
 public class EventTypeCollection extends EntityCollection<EventType> {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     */
     EventTypeCollection(Service service) {
         super(service, "saved/eventtypes", EventType.class);
     }
-    
+
+    /**
+     * Creates an event type.
+     *
+     * @param name The name of this new event type.
+     * @param search The search string of this new event type.
+     *
+     * @return The event type.
+     */
     public EventType create(String name, String search) {
         return create(name, search, null);
     }
 
+    /**
+     * Create an event type.
+     *
+     * @param name The name of this new event type.
+     * @param search The search string of this new event type.
+     * @param args Secondary arguments.
+     * @return the event type.
+     */
     public EventType create(String name, String search, Map args) {
         args = Args.create(args).add("search", search);
         return create(name, args);
