@@ -18,35 +18,80 @@ package com.splunk;
 
 import java.util.Date;
 
+/**
+ * Representation of License Message.
+ */
 public class LicenseMessage extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The license group endpoint.
+     */
     LicenseMessage(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this license message's category.
+     *
+     * @return This license message's category.
+     */
     public String getCategory() {
         return getString("category");
     }
 
+    /**
+     * Returns this license message's creation time.
+     *
+     * @return This license message's creation time.
+     */
     public Date getCreationTime() {
         return getDateFromEpoch("create_time");
     }
 
+    /**
+     * Returns this license message's description,, or null if not specified.
+     *
+     * @return This license message's description.
+     */
     public String getDescription() {
         return getString("description", null);
     }
 
+    /**
+     * Returns this license message's pool ID, or null if not specified.
+     *
+     * @return This license message's pool ID.
+     */
     public String getPoolId() {
         return getString("pool_id", null);
     }
 
+    /**
+     * Returns this license message's severity, or null if not specified.
+     *
+     * @return This license message's severity.
+     */
     public String getSeverity() {
         return getString("severity", null);
     }
 
+    /**
+     * Returns this license message's slave ID, or null if not specified.
+     *
+     * @return this license message's slave ID.
+     */
     public String getSlaveId() {
         return getString("slave_id", null);
     }
 
+    /**
+     * Returns this license message's stack ID, or null if not specified.
+     *
+     * @return This license message's stack ID.
+     */
     public String getStackId() {
         return getString("stack_id", null);
     }

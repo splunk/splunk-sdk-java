@@ -42,7 +42,7 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Return excluded client address by index.
+     * Return excluded client address by index, or null if not specified.
      *
      * @return Excluded client address by index.
      */
@@ -61,7 +61,8 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns the URL endpoint for deployment client content downloads.
+     * Returns the URL endpoint for deployment client content downloads, or null
+     * if not specified.
      *
      * @return URL endpoint for deployment client downloads.
      */
@@ -82,8 +83,8 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns the deployment server content storage file path. Note that the path
-     * may contain macro expansions or substitutions.
+     * Returns the deployment server content storage file path. Note that the
+     * path may contain macro expansions or substitutions.
      *
      * @return The deployment server content storage file path.
      */
@@ -92,8 +93,9 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns the deployment client content storage file path. Note that the path
-     * may contain macro expansions or substitutions.
+     * Returns the deployment client content storage file path, or null if not
+     * specified. Note that the path may contain macro expansions or
+     * substitutions.
      *
      * @return The deployment client content storage file path.
      */
@@ -102,8 +104,10 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns the deployment server's working file path. Note that the path
-     * may contain macro expansions or substitutions.
+     * Returns the deployment server's working file path, or null if not
+     * specified. Note that the path may contain macro expansions or
+     * substitutions.
+     *
      * @return the deployment server's working file path.
      */
     public String getTmpFolder() {
@@ -121,7 +125,7 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Return included client address by index.
+     * Return included client address by index, or null if not specified.
      *
      * @return Included client address by index.
      */

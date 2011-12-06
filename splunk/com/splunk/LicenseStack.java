@@ -16,19 +16,44 @@
 
 package com.splunk;
 
+/**
+ * Representation of License Stack.
+ */
 public class LicenseStack extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The license stack endpoint.
+     */
     LicenseStack(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this license stack's label, or null if not specified.
+     *
+     * @return This license stack's label.
+     */
     public String getLabel() {
         return getString("label", null);
     }
 
+    /**
+     * Returns this license stack's daily indexing quota.
+     *
+     * @return This license stack's daily indexing quota.
+     */
     public long getQuota() {
-        return getLong("quota", 0);
+        return getByteCount("quota", 0);
     }
 
+    /**
+     * Returns this license stack's type.
+     *
+     * @return This license stack's type.
+     */
     public String getType() {
         return getString("type");
     }

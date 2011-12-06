@@ -16,34 +16,73 @@
 
 package com.splunk;
 
+/**
+ * Representation of License Pool.
+ */
 public class LicensePool extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The license group endpoint.
+     */
     LicensePool(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this license pool's description, or null if not specified.
+     *
+     * @return This license pool's description.
+     */
     public String getDescription() {
         return getString("description", null);
     }
 
-    public long getQuota() {
-        String option = getString("quota");
-        if (option.equals("MAX"))
-            return Long.MAX_VALUE; //UNDONE: correct interpretation?
-        return getLong("quota");
+    /**
+     * Returns this license pool's ingest quota, in bytes. Note: the return
+     * type is a string, because the value can also be a literal "MAX".
+     *
+     * @return This license pool's data ingest quota.
+     */
+    public String getQuota() {
+        return getString("quota", "0");
     }
 
+    /**
+     * Returns this license pool's list of slaves, or null if not specified.
+     *
+     * @return This license pool's list of slaves.
+     */
     public String[] getSlaves() {
-        return getStringArray("slaves");
+        return getStringArray("slaves", null);
     }
 
+    /**
+     * Returns this license pool's slave bytes used.
+     *
+     * @return This license pool's slave bytes used.
+     */
     public long getSlavesUsageBytes() {
         return getLong("salves_usage_bytes", 0);
     }
 
+    /**
+     * Returns this license pool's stack ID, or null if not specified. The valid
+     * values are download-trial, enterprise, forwarder, or free.
+     *
+     * @return This license pool's stack ID.
+     */
     public String getStackId() {
         return getString("stack_id", null);
     }
 
+    /**
+     * Returns this license pool's used bytes.
+     *
+     * @return This license pool's used bytes.
+     */
     public long getUsedBytes() {
         return getLong("used_bytes", 0);
     }

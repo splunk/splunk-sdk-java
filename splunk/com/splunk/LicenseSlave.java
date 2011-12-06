@@ -16,19 +16,44 @@
 
 package com.splunk;
 
+/**
+ * Representation of License Slave.
+ */
 public class LicenseSlave extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The license slave endpoint.
+     */
     LicenseSlave(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this license slave's label, or null if not specified.
+     *
+     * @return This license slave's label.
+     */
     public String getLabel() {
         return getString("label", null);
     }
 
+    /**
+     * Returns this license slave's list of pool IDs.
+     *
+     * @return This license slave's list of pool IDs.
+     */
     public String[] getPoolIds() {
         return getStringArray("pool_ids");
     }
 
+    /**
+     * Returns this license slave's list of stack IDs.
+     *
+     * @return This license slave's list of stack IDs.
+     */
     public String[] getStackIds() {
         return getStringArray("stack_ids");
     }

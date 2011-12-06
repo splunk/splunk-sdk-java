@@ -32,7 +32,7 @@ public class ApplicationUpdate extends Entity {
     }
 
     /**
-     * Returns the app's fully qualified update URL, or null if not present.
+     * Returns the app's fully qualified update URL, or null if not specified.
      *
      * @return the app's update URL.
      */
@@ -41,7 +41,7 @@ public class ApplicationUpdate extends Entity {
     }
 
     /**
-     * Returns the checksum of the app, or null if not present.
+     * Returns the checksum of the app, or null if not specified.
      *
      * @return The checksum of them app.
      */
@@ -50,7 +50,7 @@ public class ApplicationUpdate extends Entity {
     }
 
     /**
-     * Returns the checksum type of the app, or null if not present.
+     * Returns the checksum type of the app, or null if not specified.
      *
      * @return the checksum type of the app.
      */
@@ -59,8 +59,7 @@ public class ApplicationUpdate extends Entity {
     }
 
     /**
-     * Returns the app's fully qualified homepage URL, or null if not
-     * present.
+     * Returns the app's fully qualified homepage URL, or null if not specified.
      *
      * @return The app's homepage URL.
      */
@@ -69,7 +68,7 @@ public class ApplicationUpdate extends Entity {
     }
 
     /**
-     * Returns the app's name.
+     * Returns the app's name, or null if not specified.
      *
      * @return The app's name.
      */
@@ -78,7 +77,7 @@ public class ApplicationUpdate extends Entity {
     }
 
     /**
-     * Returns the app's update size, in bytes.
+     * Returns the app's update size, in bytes, or -1 if not specified.
      *
      * @return The app's update size.
      */
@@ -87,7 +86,7 @@ public class ApplicationUpdate extends Entity {
     }
 
     /**
-     * Returns the app's version string.
+     * Returns the app's version string, or null if not specified.
      *
      * @return The app's version.
      */

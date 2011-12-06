@@ -16,15 +16,35 @@
 
 package com.splunk;
 
+/**
+ * Representation of License Group.
+ */
 public class LicenseGroup extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The license group endpoint.
+     */
     LicenseGroup(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this license group's stack ID, or null if not specified.
+     *
+     * @return This license group's stack ID.
+     */
     public String[] getStackIds() {
         return getStringArray("stack_ids", null);
     }
 
+    /**
+     * Returns whether or not this license group is active.
+     *
+     * @return Whether or not this license group is active.
+     */
     public boolean isActive() {
         return getBoolean("is_active");
     }

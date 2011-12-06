@@ -32,7 +32,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's build number.
+     * Returns this peer's build number, or null if not specified.
      *
      * @return This peer's build number.
      */
@@ -41,7 +41,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns the list of bundle versions.
+     * Returns the list of bundle versions, or null if not specified.
      *
      * @return The list of bundle versions.
      */
@@ -50,7 +50,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's GUID.
+     * Returns this peer's GUID, or null if not specified.
      *
      * @return this peer's GUID.
      */
@@ -59,7 +59,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's license signature.
+     * Returns this peer's license signature, or null if not specified.
      *
      * @return This peer's license signature.
      */
@@ -68,7 +68,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's name.
+     * Returns this peer's name, or null if not specified.
      *
      * @return Thid peer's name.
      */
@@ -77,7 +77,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's type.
+     * Returns this peer's type, or null if not specified.
      *
      * @return This peer's type.
      */
@@ -86,7 +86,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's replication status.
+     * Returns this peer's replication status, or null if not specified.
      *
      * @return This peer's replication status.
      */
@@ -95,7 +95,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Return this peer's overall status.
+     * Return this peer's overall status, or null if not specified.
      *
      * @return This peer's overall status.
      */
@@ -104,7 +104,7 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's version.
+     * Returns this peer's version, or null if not specified.
      *
      * @return This peer's version.
      */
@@ -113,7 +113,8 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns whether or not this peer is using HTTPS.
+     * Returns whether or not this peer is using HTTPS, or null if not
+     * specified.
      *
      * @return whether or not this peer is using HTTPS.
      */

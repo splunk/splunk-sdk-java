@@ -67,7 +67,7 @@ public class DeploymentClient extends Entity {
     }
 
     /**
-     * Returns the list of server classes.
+     * Returns the list of server classes, or null if not specified.
      *
      * @return The list of server clasess.
      */
@@ -77,7 +77,7 @@ public class DeploymentClient extends Entity {
 
     /**
      * Returns the target URI of the deployment server for this deployment
-     * client. The format returned is server:port.
+     * client, or null if not specified. The format returned is server:port.
      *
      * @return The target URI for the deployment server.
      */

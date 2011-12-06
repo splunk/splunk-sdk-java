@@ -32,11 +32,11 @@ public class Application extends Entity {
     }
 
     /**
-     * Returns the app's author name. If a splunkbase app, this should be the
-     * username of the splunk.com account. For internal apps, this should be
-     * full contact info.
+     * Returns the app's author name, or null if not specified. If a splunkbase
+     * app, this should be the username of the splunk.com account. For internal
+     * apps, this should be full contact info.
      *
-     * @return Splunk author's name string, or null if none exists.
+     * @return Splunk author's name string.
      */
     public String getAuthor() {
         return getString("author", null);
@@ -53,9 +53,10 @@ public class Application extends Entity {
 
     /**
      * Returns the description string which is a short explanatory note that
-     * is displayed underneath the app's title in Launcher.
+     * is displayed underneath the app's title in Launcher, or null if not
+     * specified.
      *
-     * @return The description string, or null if none exists.
+     * @return The description string.
      */
     public String getDescription() {
         return getString("description", null);
@@ -63,18 +64,18 @@ public class Application extends Entity {
 
     /**
      * Returns the label string of the app which shows in the Splunk GUI or
-     * Launcher.
+     * Launcher, or null if not specified.
      *
-     * @return The label string, or null if none exists.
+     * @return The label string.
      */
     public String getLabel() {
         return getString("label", null);
     }
 
     /**
-     * Returns the version string of the app.
+     * Returns the version string of the app, or null if not specified.
      *
-     * @return The version string of the app, or null if none exists.
+     * @return The version string of the app.
      */
     public String getVersion() {
         return getString("version", null);

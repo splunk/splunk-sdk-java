@@ -65,8 +65,8 @@ public class LicensePoolTest extends SplunkTestCase {
             args.put("description", "sdk-test description");
             args.put("quota", 1024*1024);
             licensePool.update(args);
-            assertEquals(licensePool.getDescription(), args.get("description"));
-            assertEquals(licensePool.getQuota(), 1024*1024);
+            assertEquals(
+                    (int)Integer.valueOf(licensePool.getQuota()), 1024*1024);
 
             saved.put("quota", "MAX");
             licensePool.update(saved);

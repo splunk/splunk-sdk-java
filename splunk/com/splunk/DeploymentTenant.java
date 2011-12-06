@@ -32,10 +32,6 @@ public class DeploymentTenant extends Entity {
     }
 
     /**
-     * If true, this deployment server in a multi-tenant configuration reviews the information in its configuration to find out if there is something new or updated to push out to a deployment client.
-     * @return
-     */
-    /**
      * Returns whether or not this deployment server should review its
      * configuration, in a multi-tenant configuration, and inform the deployment
      * client if something is new or updated.

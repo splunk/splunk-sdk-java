@@ -53,7 +53,7 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Returns a comma separated list of server names that are excluded from
-     * being peers.
+     * being peers, or null if not available.
      *
      * @return servers, by name, that are excluded from being peers.
      */
@@ -63,7 +63,7 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Returns a comma separated list of server URLs that are excluded from
-     * being peers. URLs are in the form x.x.x.x:port.
+     * being peers. URLs are in the form x.x.x.x:port, or null if not available.
      *
      * @return servers, by URL, that are excluded from being peers.
      */
@@ -72,7 +72,7 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Return connection timeout in seconds.
+     * Return connection timeout in seconds, or -1 if not specified.
      *
      * @return The connection timeout in seconds.
      */
@@ -103,7 +103,7 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Returns the multi-cast address to discover other servers and receive
-     * heartbeats.
+     * heartbeats, or null if not available.
      *
      * @return The multi-cast address for discovery and heartbeat messages.
      */
@@ -121,7 +121,7 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns receive timeout in seconds.
+     * Returns receive timeout in seconds, or -1 if not specified.
      *
      * @return The receive timeout in seconds.
      */
@@ -151,7 +151,7 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns send timeout in seconds.
+     * Returns send timeout in seconds, or -1 if not specified.
      *
      * @return The send timeout in seconds.
      */
@@ -160,7 +160,7 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns a comma separated list of peer servers.
+     * Returns a comma separated list of peer servers, or null if not available.
      *
      * @return The list of peer servers.
      */

@@ -49,7 +49,7 @@ public class EventTypeCollection extends EntityCollection<EventType> {
      *
      * @param name The name of this new event type.
      * @param search The search string of this new event type.
-     * @param args Secondary arguments.
+     * @param args Optional arguments.
      * @return the event type.
      */
     public EventType create(String name, String search, Map args) {
