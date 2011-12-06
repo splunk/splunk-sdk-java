@@ -16,11 +16,27 @@
 
 package com.splunk;
 
+/**
+ * Representation of Logger.
+ */
 public class Logger extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The logger endpoint.
+     */
     Logger(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this logger's logging level. Valid values are in the set FATAL,
+     * CRIT, WARN, INFO, and DEBUG.
+     *
+     * @return This logger's logging level.
+     */
     public String getLevel() {
         return getString("level");
     }

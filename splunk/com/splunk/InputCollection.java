@@ -18,8 +18,11 @@ package com.splunk;
 
 import java.util.Map;
 
-// InputCollection is a heterogenous collection where each item contains a
-// kind property that indicates the kind of input and corresponding item type.
+/**
+ * Representation of the Collection of Inputs. The collection is
+ * heterogeneous and contains a kind-property that indicates the specific
+ * kind of input.
+ */
 public class InputCollection extends EntityCollection<Input> {
 
     // CONSIDER: We can probably initialize the following based on platform and
@@ -37,22 +40,59 @@ public class InputCollection extends EntityCollection<Input> {
         InputKind.WindowsWmi
     };
 
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     */
     InputCollection(Service service) {
         super(service, "data/inputs");
     }
 
+    /**
+     * Create stub.
+     *
+     * @param name The name of the input.
+     * @return no return.
+     * @throws UnsupportedOperationException
+     */
     @Override public Input create(String name) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Create stub.
+     *
+     * @param name The name of the input.
+     * @param args Optional arguments.
+     * @return no return.
+     * @throws UnsupportedOperationException
+     */
     @Override public Input create(String name, Map args) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Creates a specific kind up input.
+     *
+     * @param name The name of the input created.
+     * @param kind The specific kind of input created.
+     * @param <T> The implicit type of the input created.
+     * @return The created input.
+     */
     public <T extends Input> T create(String name, InputKind kind) {
         return (T)create(name, kind, null);
     }
 
+    /**
+     * Creates a specific kind up input.
+     *
+     * @param name The name of the input created.
+     * @param kind The specific kind of input created.
+     * @param args Optional arguments.
+     * @param <T> The implicit type of the input created.
+     * @return The created input.
+     */
     public <T extends Input> T
     create(String name, InputKind kind, Map<String, Object> args) {
         args = Args.create(args).add("name", name);
@@ -62,6 +102,12 @@ public class InputCollection extends EntityCollection<Input> {
         return (T)get(name);
     }
 
+    /**
+     * Create an Input resource item.
+     *
+     * @param entry The Atom object describing the entry.
+     * @return the created input.
+     */
     @Override protected Input createItem(AtomEntry entry) {
         String path = itemPath(entry);
         InputKind kind = itemKind(path);
@@ -69,7 +115,12 @@ public class InputCollection extends EntityCollection<Input> {
         return createItem(inputClass, path);
     }
 
-    // Return the InputKind of the item associated with the given path.
+    /**
+     * Returns the the path's InputKind.
+     *
+     * @param path The input path.
+     * @return The input kind.
+     */
     protected InputKind itemKind(String path) {
         for (InputKind kind : kinds) {
             // UNDONE: Is there a better way to determine input kind from the
@@ -80,6 +131,11 @@ public class InputCollection extends EntityCollection<Input> {
         return InputKind.Unknown; // Didn't recognize the input kind
     }
 
+    /**
+     * Refresh this input collection.
+     *
+     * @return The refreshed input collection.
+     */
     @Override public InputCollection refresh() {
         items.clear();
 

@@ -16,13 +16,28 @@
 
 package com.splunk;
 
-// The Input base class, shared by all typed inputs and also used in the case
-// that we dont recognize an input kind.
+/**
+ * Representation of Input. This class is the base class of all typed input
+ * sub-classes, as well as used in the case where we do not recognize an
+ * input kind.
+ */
 public class Input extends Entity {
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The Input endpoint.
+     */
     Input(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns unknown input kind. Overridden in sub-classes.
+     *
+     * @return Unknonw input kind.
+     */
     public InputKind getKind() {
         return InputKind.Unknown;
     }
