@@ -92,7 +92,7 @@ to any of the command line examples.
 
 #### .splunkrc
 
-The examples and units are also desigend to receive arguments from an optional
+The examples and units are also designed to receive arguments from an optional
 `.splunkrc` file located in your home directory. The format of the file is
 simply a list of key=value pairs, same as the options that are taken on the
 command line, for example:
