@@ -57,7 +57,7 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
      * @param quota The quota in bytes of this license pool.
      * @param stackId The stack ID corresponding to this license pool.
      * @param args Optional arguments.
-     * @return
+     * @return The new license pool.
      */
     public LicensePool 
     create(String name, int quota, String stackId, Map args) {
