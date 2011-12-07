@@ -16,19 +16,43 @@
 
 package com.splunk;
 
-import java.util.Map;
-
+/**
+ * Representation of the Collection of Passwords.
+ */
 public class PasswordCollection extends EntityCollection<Password> {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     */
     PasswordCollection(Service service) {
         // Starting with 4.3 this is available at "storage/passwords"
         super(service, "admin/passwords", Password.class);
     }
-    
+
+    /**
+     * Creates a credential.
+     *
+     * @param name The username to be created.
+     * @param password The password associated with this username.
+     *
+     * @return The new credential.
+     */
     public Password create(String name, String password) {
         Args args = new Args("password", password);
         return create(name, args);
     }
 
+    /**
+     * Creates a credential.
+     *
+     * @param name The username to be created.
+     * @param password The password associated with this username.
+     * @param realm The credential realm.
+     *
+     * @return The new credential.
+     */
     public Password create(String name, String password, String realm) {
         Args args = new Args();
         args.put("password", password);
@@ -37,6 +61,13 @@ public class PasswordCollection extends EntityCollection<Password> {
     }
 
     // Passwords user the username as a key.
+
+    /**
+     * Returns the username
+     *
+     * @param entry  The Atom object describing the credential.
+     * @return The username.
+     */
     @Override protected String itemKey(AtomEntry entry) {
         return (String)entry.content.get("username");
     }
