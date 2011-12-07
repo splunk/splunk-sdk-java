@@ -16,31 +16,76 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Windows Event Log input subclass.
+ */
 public class WindowsEventLogInput extends Input {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The Windows Event Log input endpoint.
+     */
     WindowsEventLogInput(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns a comma separated list of additional hosts used in monitoring.
+     *
+     * @return additional hosts used in monitoring.
+     */
     public String getHosts() {
         return getString("hosts", null);
     }
 
+    /**
+     * Returns this Windows Event Log input's index name, or null if not
+     * specified.
+     *
+     * @return This Windows Event Log input's index name.
+     */
     public String getIndex() {
         return getString("index", null);
     }
 
+    /**
+     * Returns the Windows Event Log input kind.
+     *
+     * @return The Windows Event Log input kind.
+     */
     public InputKind getKind() {
         return InputKind.WindowsEventLog;
     }
 
+    /**
+     * Returns this Windows Event log input's list of event log names.
+     *
+     * @return This Windows Event log input's list of event log names.
+     */
     public String [] getLogs() {
         return getStringArray("logs", null);
     }
 
+    /**
+     * Returns this Windows Event log input's collection name. This name
+     * appears in configuration file, as well as the source and the sourcetype of
+     * the indexed data. If the value is "localhost", it will use native event
+     * log collection; otherwise, it will use WMI.
+     *
+     * @return This Windows Event log input's collection.
+     */
     public String getLocalName() {
         return getString("name");
     }
 
+    /**
+     * Returns this Windows Event log input's main host. Secondary hosts are
+     * specified in the hosts attribute.
+     *
+     * @return This Windows Event log input's main host.
+     */
     public String getLookupHost() {
         return getString("lookup_host");
     }

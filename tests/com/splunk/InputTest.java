@@ -122,7 +122,7 @@ public class InputTest extends SplunkTestCase {
                 windowsWmiInput.getLocalName();
                 windowsWmiInput.getLookupHost();
                 windowsWmiInput.getServer();
-                windowsWmiInput.getWq1();
+                windowsWmiInput.getWql();
         }
     }
 

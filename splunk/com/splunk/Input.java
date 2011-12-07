@@ -36,7 +36,7 @@ public class Input extends Entity {
     /**
      * Returns unknown input kind. Overridden in sub-classes.
      *
-     * @return Unknonw input kind.
+     * @return Unknown input kind.
      */
     public InputKind getKind() {
         return InputKind.Unknown;

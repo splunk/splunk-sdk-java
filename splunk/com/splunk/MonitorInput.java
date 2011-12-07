@@ -16,27 +16,62 @@
 
 package com.splunk;
 
+/**
+ * Representation of the monitor input subclass.
+ */
 public class MonitorInput extends Input {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The monitor input endpoint.
+     */
     MonitorInput(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this monitor input's filecount.
+     *
+     * @return This monitor input's filecount.
+     */
     public int getFileCount() {
         return getInteger("filecount", -1);
     }
 
+    /**
+     * Returns this monitor input's host, or null if not specified.
+     *
+     * @return This monitor input's host.
+     */
     public String getHost() {
         return getString("host", null);
     }
 
+    /**
+     * Returns this monitor input's index name.
+     *
+     * @return This monitor input's index name.
+     */
     public String getIndex() {
         return getString("index");
     }
 
+    /**
+     * Returns the monitor input kind.
+     *
+     * @return The monitor input kind.
+     */
     public InputKind getKind() {
         return InputKind.Monitor;
     }
 
+    /**
+     * Returns this monitor input's _rcvbuf attribute.
+     *
+     * @return This monitor input's _rcvbuf attribute.
+     */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
     }
