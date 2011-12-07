@@ -16,31 +16,73 @@
 
 package com.splunk;
 
+/**
+ * Representation of the Script input subclass.
+ */
 public class ScriptInput extends Input {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The Script input endpoint.
+     */
     ScriptInput(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this script input's group.
+     *
+     * @return This script input's group.
+     */
     public String getGroup() {
         return getString("group", null);
     }
 
+    /**
+     * Returns this script input's source host, or null if not specified.
+     *
+     * @return This TCP input's source host.
+     */
     public String getHost() {
         return getString("host", null);
     }
 
+    /**
+     * Returns this script input's index name.
+     *
+     * @return This script input's index name.
+     */
     public String getIndex() {
         return getString("index");
     }
 
-    public int getInterval() {
-        return getInteger("interval");
+    /**
+     * Returns this script input's execution frequency in seconds, or a cron
+     * schedule.
+     *
+     * @return This scripts input's execution frequency in seconds, or a cron
+     * schedule.
+     */
+    public String getInterval() {
+        return getString("interval");
     }
 
+    /**
+     * Returns the script input kind.
+     *
+     * @return The script input kind.
+     */
     public InputKind getKind() {
         return InputKind.Script;
     }
 
+    /**
+     * Returns this script input's _rcvbuf attribute.
+     *
+     * @return This script input's _rcvbuf attribute.
+     */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
     }
