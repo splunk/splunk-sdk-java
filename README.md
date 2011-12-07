@@ -63,6 +63,11 @@ Set the environment variables ANT_HOME to the location where you unzipped Ant.
 Set the environment variable JAVA_HOME to the directory you installed the JDK.
 Add to the system path environment variable %ANT_HOME%\bin
 
+For full installation instructions see:
+
+http://ant.apache.org/manual/install.html
+http://www.oracle.com/technetwork/java/javase/index-137561.html
+
 ### Building
 
 In order to build the SDK, simply type the following from the root of the 
