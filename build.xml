@@ -91,7 +91,7 @@
         <sequential>
             <mkdir dir="${dir.build.examples}/@{name}"/>
             <javac includeantruntime="false"
-             srcdir="${dir.examples}/@{name}"
+             srcdir="${dir.examples}/@{name}/com/splunk/sdk/@{name}"
              destdir="${dir.build.examples}/@{name}">
                 <classpath refid="@{classpath}"/>
             </javac>
@@ -195,7 +195,8 @@
            destfile="${dir.dist.examples}/@{name}.jar"
            includes="**/*.class">
               <manifest>
-                  <attribute name="Main-Class" value="Program"/>
+                  <attribute name="Main-Class" 
+                   value="com.splunk.sdk.@{name}.Program"/>
                   <attribute name="Class-Path" value="@{classpath}"/>
               </manifest>
           </jar>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="splunk"/>
+	<classpathentry kind="src" path="splunk-sdk"/>
+	<classpathentry kind="src" path="tests"/>
+	<classpathentry kind="src" path="examples/abc"/>
+	<classpathentry kind="src" path="examples/explorer"/>
+	<classpathentry kind="src" path="examples/export"/>
+	<classpathentry kind="src" path="examples/index"/>
+	<classpathentry kind="src" path="examples/info"/>
+	<classpathentry kind="src" path="examples/inputs"/>
+	<classpathentry kind="src" path="examples/loaded"/>
+	<classpathentry kind="src" path="examples/search"/>
+	<classpathentry kind="src" path="examples/spurl"/>
+	<classpathentry kind="src" path="examples/test"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-actions.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-awt.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-compat.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-dialogs.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-execution.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-explorer.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-filesystems.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-io.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-loaders.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-modules.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-nodes.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-options.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-text.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-util-enumerations.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-util-lookup.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-util.jar"/>
+	<classpathentry kind="lib" path="lib/org-openide-windows.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="out/production/tests"/>
+</classpath>
