@@ -61,6 +61,7 @@ You will need to install both Java JDK from Oracle and Ant from Apache.
 
 Set the environment variables ANT_HOME to the location where you unzipped Ant.
 Set the environment variable JAVA_HOME to the directory you installed the JDK.
+Add to the system path environment variable %ANT_HOME%\bin
 
 ### Building
 
