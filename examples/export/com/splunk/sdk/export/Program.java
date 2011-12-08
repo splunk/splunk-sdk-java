@@ -228,7 +228,10 @@ public class Program {
     }
 
     static void run(String[] argv) throws Exception {
-        Command command = Command.splunk("export").parse(argv);
+        Command command = Command.splunk("export");
+        command.addRule("search", String.class, "Search string to export");
+
+        command.parse(argv);
         Service service = Service.connect(command.opts);
 
         Args args = new Args();
@@ -302,7 +305,14 @@ public class Program {
         args.put("output_mode", format);    // output in specific format
         args.put("ealiest_time", "0.000");  // always to beginning of index
         args.put("time_format", "%s.%Q");   // epoch time plus fraction
-        String search = String.format("search index=%s *", command.args[0]);
+        String search = null;
+
+        if (command.opts.containsKey("search")) {
+            search = (String)command.opts.get("search");
+        }
+        else {
+            search = String.format("search index=%s *", command.args[0]);
+        }
 
         //System.out.println("search: " + search + ", args: " + args);
         InputStream is = service.export(search, args);
