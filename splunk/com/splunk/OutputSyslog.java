@@ -16,15 +16,35 @@
 
 package com.splunk;
 
+/**
+ * Representation of output syslog.
+ */
 public class OutputSyslog extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The output syslog endpoint.
+     */
     OutputSyslog(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this server's destination host:port.
+     *
+     * @return This server's destination host:port.
+     */
     public String getServer() {
         return getString("server");
     }
 
+    /**
+     * Returns this server's connection type.
+     *
+     * @return this server's connection type.
+     */
     public String getType() {
         return getString("type");
     }

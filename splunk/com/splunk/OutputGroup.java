@@ -16,20 +16,37 @@
 
 package com.splunk;
 
+/**
+ * Representation of output group.
+ */
 public class OutputGroup extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The output group endpoint.
+     */
     OutputGroup(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this forwarder's group output processor. Valid values are from
+     * the set tcpout, syslog, httpout.
+     *
+     * @return This forwarder's group output processor.
+     */
     public String getMethod() {
         return getString("method", null);
     }
 
+    /**
+     * Returns this forwarder group's server list.
+     *
+     * @return This forwarder group's server list.
+     */
     public String[] getServers() {
         return getStringArray("servers");
-    }
-
-    public boolean isDisabled() {
-        return getBoolean("disabled", false);
     }
 }

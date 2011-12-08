@@ -16,11 +16,26 @@
 
 package com.splunk;
 
+/**
+ * Representation of output server.
+ */
 public class OutputServer extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The output server endpoint.
+     */
     OutputServer(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this server's all-connections object.
+     *
+     * @return This server's all-connections object.
+     */
     public OutputServerAllConnections allConnections() {
         return new OutputServerAllConnections(
                 service, path + "/allconnections");

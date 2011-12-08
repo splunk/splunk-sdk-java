@@ -335,30 +335,20 @@ public class Program {
     static void printOutputDefault(OutputDefault outputDefault) {
         printEntity(outputDefault);
         printField("autoLb", outputDefault.autoLb());
-        printField("blockOnCloning", outputDefault.blockOnCloning());
         printField("blockOnQueueFull", outputDefault.blockOnQueueFull());
         printField("AutoLbFrequency", outputDefault.getAutoLbFrequency());
-        printField("ConnectionTimeout", outputDefault.getConnectionTimeout());
         printField("DefaultGroup", outputDefault.getDefaultGroup());
-        printField("DropClonedEventsOnQueueFull", outputDefault.getDropClonedEventsOnQueueFull());
         printField("DropEventsOnQueueFull", outputDefault.getDropEventsOnQueueFull());
         printField("ForwardedIndex0Whitelist", outputDefault.getForwardedIndex0Whitelist());
         printField("ForwardedIndex1Blacklist", outputDefault.getForwardedIndex1Blacklist());
         printField("ForwardedIndex2Whitelist", outputDefault.getForwardedIndex2Whitelist());
         printField("HeartbeatFrequency", outputDefault.getHeartbeatFrequency());
-        printField("MaxConnectionsPerIndexer", outputDefault.getMaxConnectionsPerIndexer());
-        printField("MaxFailuresPerInterval", outputDefault.getMaxFailuresPerInterval());
         printField("MaxQueueSize", outputDefault.getMaxQueueSize());
-        printField("ReadTimeout", outputDefault.getReadTimeout());
-        printField("SecsInFailureInterval", outputDefault.getSecsInFailureInterval());
-        printField("WriteTimeout", outputDefault.getWriteTimeout());
         printField("indexAndForward", outputDefault.indexAndForward());
         printField("isCompressed", outputDefault.isCompressed());
         printField("isDisabled", outputDefault.isDisabled());
         printField("isForwardedIndexFilterDisable", outputDefault.isForwardedIndexFilterDisable());
-        printField("isIndexAndForward", outputDefault.isIndexAndForward());
         printField("sendCookedData", outputDefault.sendCookedData());
-        printField("useAck", outputDefault.useAck());
     }
 
     static void printOutputGroup(OutputGroup outputGroup) {
