@@ -54,7 +54,7 @@ public class Program {
         }
     }
 
-    static Map getStartNextCSVEvent(int location, String str) {
+    static Map<String, Integer> getStartNextCSVEvent(int location, String str) {
 
         Map<String, Integer> pair = new HashMap<String, Integer>();
         pair.put("start", -1);
