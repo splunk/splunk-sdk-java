@@ -18,17 +18,40 @@ package com.splunk;
 
 import java.util.Map;
 
+/**
+ * Representation of conf collections.
+ */
 public class ConfCollection 
     extends ResourceCollection<EntityCollection<Entity>> 
 {
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     */
     ConfCollection(Service service) {
         super(service, "properties", EntityCollection.class);
     }
 
+    /**
+     * Creates a config.
+     *
+     * @param name The new config name.
+     *
+     * @return The new config.
+     */
     public EntityCollection<Entity> create(String name) {
         return create(name, null);
     }
 
+    /**
+     * Creates a new config.
+     *
+     * @param name The new config name.
+     * @param args Optional arguments.
+     * @return the new config.
+     */
     public EntityCollection<Entity> create(String name, Map args) {
         args = Args.create(args).add("__conf", name);
         service.post(path, args);
@@ -36,7 +59,12 @@ public class ConfCollection
         return get(name);
     }
     
-    // Search jobs use the sid value as the key.
+    /**
+     * Returns This config's endpoint path.
+     *
+     * @param entry The atom representation of this entry.
+     * @return This config's endpoint path.
+     */
     @Override protected String itemPath(AtomEntry entry) {
         return String.format("configs/conf-%s", entry.title);
     }
