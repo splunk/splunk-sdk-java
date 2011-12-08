@@ -25,29 +25,19 @@ public class OutputDefaultTest extends SplunkTestCase {
         OutputDefault outputDefault = service.getOutputDefault();
 
         outputDefault.autoLb();
-        outputDefault.blockOnCloning();
         outputDefault.blockOnQueueFull();
         outputDefault.getAutoLbFrequency();
-        outputDefault.getConnectionTimeout();
         outputDefault.getDefaultGroup();
-        outputDefault.getDropClonedEventsOnQueueFull();
         outputDefault.getDropEventsOnQueueFull();
         outputDefault.getForwardedIndex0Whitelist();
         outputDefault.getForwardedIndex1Blacklist();
         outputDefault.getForwardedIndex2Whitelist();
         outputDefault.getHeartbeatFrequency();
-        outputDefault.getMaxConnectionsPerIndexer();
-        outputDefault.getMaxFailuresPerInterval();
         outputDefault.getMaxQueueSize();
-        outputDefault.getReadTimeout();
-        outputDefault.getSecsInFailureInterval();
-        outputDefault.getWriteTimeout();
         outputDefault.indexAndForward();
         outputDefault.isCompressed();
         outputDefault.isDisabled();
         outputDefault.isForwardedIndexFilterDisable();
-        outputDefault.isIndexAndForward();
         outputDefault.sendCookedData();
-        outputDefault.useAck();
     }
 }

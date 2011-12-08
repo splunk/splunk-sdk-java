@@ -16,27 +16,62 @@
 
 package com.splunk;
 
+/**
+ * Representation of output server's all-connections.
+ */
 public class OutputServerAllConnections extends Entity {
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The output server all-connections endpoint.
+     */
     OutputServerAllConnections(Service service, String path) {
         super(service, path);
     }
 
+    /**
+     * Returns this connection's destination host name.
+     *
+     * @return This connection's destination host name.
+     */
     public String getDestHost() {
         return getString("destHost");
     }
 
+    /**
+     * Returns this connection's destination host IP address.
+     *
+     * @return This connection's destination host IP address.
+     */
     public String getDestIp() {
         return getString("destIp");
     }
 
+    /**
+     * Return this connection's destination port.
+     *
+     * @return This connection's destination port.
+     */
     public int getDestPort() {
         return getInteger("destPort");
     }
 
+    /**
+     * Returns this connection's source port.
+     *
+     * @return This connection's source port.
+     */
     public int getSourcePort() {
         return getInteger("sourcePort");
     }
 
+    /**
+     * Returns this connection's status.
+     *
+     * @return This connection's status.
+     */
     public String getStatus() {
         return getString("status");
     }
