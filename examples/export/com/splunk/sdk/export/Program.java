@@ -27,6 +27,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Export.java: export an splunk entire index in XML, CSV or JSON (4.3+). The
@@ -51,49 +54,68 @@ public class Program {
         }
     }
 
-    static int getStartNextEvent(
-            int indexTimeOffset, String str, String pattern) {
-        int curr = str.indexOf(pattern);
-        int last = 0;
-        while ((curr < indexTimeOffset) && curr > 0)  {
-            last = curr;
-            curr = curr + pattern.length();
-            curr = str.indexOf(pattern, curr);
+    static Map getStartNextCSVEvent(int location, String str) {
+
+        Map<String, Integer> pair = new HashMap<String, Integer>();
+        pair.put("start", -1);
+        pair.put("end", -1);
+
+        int eventStart = str.indexOf("\n", location) + 1;
+        int eventEnd = str.indexOf("\"\n", eventStart + 1);
+
+        while (eventEnd > 0) {
+            String substring = str.substring(eventStart, eventEnd);
+            String [] parts = substring.split(",");
+            // test parts 0 and 1 of the CSV, for <number> and time.qqq stamp
+            try {
+                Integer.parseInt(parts[0]);
+                String timestamp = parts[1].replace("\"","");
+                String [] timeparts = timestamp.split("\\.");
+                Integer.parseInt(timeparts[0]);
+                Integer.parseInt(timeparts[1]);
+                pair.put("start", eventStart);
+                pair.put("end", eventEnd);
+                return pair;
+            }
+            catch (Exception e) {
+                // if any of the fields accessed caused an exception, then
+                // we didn't have a valid start of event, so try again.
+                eventStart = str.indexOf("\n", eventEnd + 2);
+                eventEnd = str.indexOf("\"\n", eventStart + 1);
+            }
         }
-        return last;
+        return pair;
     }
 
-    static int getCsvEventTimeOffset(String str) {
+    static int getCsvEventStart(String str) {
 
-        // get first event in this buffer
-        int eventStart = str.indexOf("\"\n");
-        int eventEnd = str.indexOf("\"\n", eventStart + 1);
-        if (eventEnd < 0)
+        Map<String, Integer>pair = getStartNextCSVEvent(0, str);
+        if (pair.get("start")< 0)
             return -1;
 
-        lastTime = str.substring(eventStart).split(",")[1].replace("\"","");
-        nextEventOffset = eventEnd;
+        lastTime = str.substring(pair.get("start"))
+                                    .split(",")[1]
+                                    .replace("\"","");
+        nextEventOffset = pair.get("end");
 
         // walk through events until time changes
-        eventStart = eventEnd;
-        while (eventEnd > 0) {
-            eventEnd = str.indexOf("\"\n", eventStart + 1);
-            if (eventEnd < 0)
+        while (pair.get("end") > 0) {
+            pair = getStartNextCSVEvent(pair.get("start"), str);
+            if (pair.get("end") < 0)
                 return -1;
-            String time = str.substring(eventStart, eventEnd)
+            String time = str.substring(pair.get("start"), pair.get("end"))
                     .split(",")[1]
                     .replace("\"", "");
             if (!time.equals(lastTime)) {
-                return eventStart;
+                return pair.get("start");
             }
-            nextEventOffset = eventEnd + 1; // include two-char end-of-event.
-            eventStart = eventEnd;
+            nextEventOffset = pair.get("end") + 1;
         }
 
         return -1;
     }
 
-    static int getXmlEventTimeOffset(String str) {
+    static int getXmlEventStart(String str) {
         String timeKeyPattern = "<field k='_time'>";
         String timeStartPattern = "<value><text>";
         String timeEndPattern = "<";
@@ -135,7 +157,7 @@ public class Program {
         return -1;
     }
 
-    static int getJsonEventTimeOffset(String str) {
+    static int getJsonEventStart(String str) {
 
         String timeKeyPattern = "\"_time\":\"";
         String timeEndPattern = "\"";
@@ -184,16 +206,16 @@ public class Program {
         return -1;
     }
 
-    static int getLastGoodEventOffset(byte[] buffer, String format)
+    static int getEventStart(byte[] buffer, String format)
             throws Exception {
 
         String str = new String(buffer);
         if (format.equals("csv"))
-            return getCsvEventTimeOffset(str);
+            return getCsvEventStart(str);
         else if (format.equals("xml"))
-            return getXmlEventTimeOffset(str);
+            return getXmlEventStart(str);
         else
-            return getJsonEventTimeOffset(str);
+            return getJsonEventStart(str);
     }
 
     static void cleanupTail(Writer out, String format) throws Exception {
@@ -255,8 +277,8 @@ public class Program {
                 byte [] buffer = new byte[bufferSize];
                 raf.seek(fptr);
                 raf.read(buffer, 0, bufferSize);
-                int eventTimeOffset = getLastGoodEventOffset(buffer, format);
-                if (eventTimeOffset != -1) {
+                int eventStart = getEventStart(buffer, format);
+                if (eventStart != -1) {
                     fptrEof = nextEventOffset + fptr;
                     break;
                 }
