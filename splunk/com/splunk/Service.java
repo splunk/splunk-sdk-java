@@ -23,6 +23,8 @@ public class Service extends HttpService {
     protected String app = null;
     protected String token = null;
     protected String owner = null;
+    protected String username = null;
+    protected String password = null;
 
     public static String DEFAULT_HOST = "localhost";
     public static int DEFAULT_PORT = 8089;
@@ -227,6 +229,10 @@ public class Service extends HttpService {
             this, "data/outputs/tcp/syslog", OutputSyslog.class);
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     public PasswordCollection getPasswords() {
         return new PasswordCollection(this);
     }
@@ -249,11 +255,18 @@ public class Service extends HttpService {
         return this.token;
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
     public UserCollection getUsers() {
         return new UserCollection(this);
     }
 
     public Service login(String username, String password) {
+        this.username = username;
+        this.password = password;
+
         Args args = new Args();
         args.put("username", username);
         args.put("password", password);
@@ -263,6 +276,7 @@ public class Service extends HttpService {
             .item(0)
             .getTextContent();
         this.token = "Splunk " + sessionKey;
+
         return this;
     }
 

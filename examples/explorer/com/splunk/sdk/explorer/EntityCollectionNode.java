@@ -34,7 +34,7 @@ class EntityCollectionNode extends ResourceNode {
 
     static EntityComparator comparator = new EntityComparator();
 
-    EntityCollectionNode(String title, EntityCollection value, Class itemClass) 
+    EntityCollectionNode(String title, EntityCollection value, Class itemClass)
     {
         super(value, Children.LEAF);
         this.itemClass = itemClass;
