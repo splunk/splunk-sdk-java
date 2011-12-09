@@ -49,6 +49,53 @@ public class IndexTest extends SplunkTestCase {
         String date = sdf.format(new Date());
 
         EntityCollection<Index> indexes = service.getIndexes();
+        for (Index index: indexes.values()) {
+            index.getAssureUTF8();
+            index.getBlockSignatureDatabase();
+            index.getBlockSignSize();
+            index.getColdPath();
+            index.getColdPathExpanded();
+            index.getColdToFrozenDir();
+            index.getColdToFrozenScript();
+            index.getCompressRawdata();
+            index.getCurrentDBSizeMB();
+            index.getDefaultDatabase();
+            index.getEnableRealtimeSearch();
+            index.getFrozenTimePeriodInSecs();
+            index.getHomePath();
+            index.getHomePathExpanded();
+            index.getIndexThreads();
+            index.getLastInitTime();
+            index.getMaxConcurrentOptimizes();
+            index.getMaxDataSize();
+            index.getMaxHotBuckets();
+            index.getMaxHotIdleSecs();
+            index.getMaxHotSpanSecs();
+            index.getMaxMemMB();
+            index.getMaxMetaEntries();
+            index.getMaxRunningProcessGroups();
+            index.getMaxTime();
+            index.getMaxTotalDataSizeMB();
+            index.getMaxWarmDBCount();
+            index.getMemPoolMB();
+            index.getMinRawFileSyncSecs();
+            index.getMinTime();
+            index.getPartialServiceMetaPeriod();
+            index.getQuarantineFutureSecs();
+            index.getQuarantinePastSecs();
+            index.getRawChunkSizeBytes();
+            index.getRotatePeriodInSecs();
+            index.getServiceMetaPeriod();
+            index.getSuppressBannerList();
+            index.getSync();
+            index.getSyncMeta();
+            index.getThawedPath();
+            index.getThawedPathExpanded();
+            index.getThrottleCheckPeriod();
+            index.getTotalEventCount();
+            index.isDisabled();
+            index.isInternal();
+        }
 
         if (!indexes.containsKey("sdk-tests")) {
             indexes.create("sdk-tests");
