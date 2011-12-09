@@ -164,7 +164,6 @@
          destfile="${dist.splunk-sdk}"
          includes="**/*.class">
             <manifest>
-                <attribute name="Main-Class" value="Program"/>
                 <attribute name="Class-Path" 
                  value="../lib/commons-cli-1.2.jar"/>
             </manifest>
