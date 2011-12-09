@@ -22,14 +22,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Base class for almost every endpoint return. Specific endpoints extend
+ * this class.
+ */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
 
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     */
     Entity(Service service, String path) {
         super(service, path);
     }
 
-    // Returns the path corresponding to the given action.
+    /**
+     * Returns the path corresponding to the requested action.
+     *
+     * @param action Action requested.
+     * @return The return path.
+     */
     protected String actionPath(String action) {
         if (action.equals("disable"))
             return path + "/disable";
@@ -44,48 +59,109 @@ public class Entity extends Resource implements Map<String, Object> {
         throw new IllegalArgumentException("Invalid action: " + action);
     }
 
+    //UNDONE: This is not used?
     public void clear() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Returns whether or not the specified key is in the content of this
+     * entity.
+     *
+     * @param key The key to look up.
+     * @return Whether or not the specified key is in the content of this
+     * entity.
+     */
     public boolean containsKey(Object key) {
         return getContent().containsKey(key);
     }
 
+    //UNDONE: this is not used?
     public boolean containsValue(Object value) {
         return getContent().containsValue(value);
     }
 
+    /**
+     * Disabled the entity named by this endpoint. Available on almost every
+     * endpoint.
+     */
     public void disable() {
         service.post(actionPath("disable"));
         invalidate();
     }
 
+    /**
+     * Enables the entity named by this endpoint. Available on almost every
+     * endpoint.
+     */
     public void enable() {
         service.post(actionPath("enable"));
         invalidate();
     }
 
+    /**
+     * Returns this Entity's hash map entry set.
+     *
+     * @return This Entity's hash map entry set.
+     */
     public Set<Map.Entry<String, Object>> entrySet() {
         return getContent().entrySet();
     }
 
+    /**
+     * Returns the value of the specified key from the entity's content.
+     *
+     * @param key The key to look up.
+     * @return The value associated with the specified key.
+     */
     public Object get(Object key) {
         return getContent().get(key);
     }
 
+    /**
+     * Returns the boolean value associated with the specified key. Values
+     * values can be converted from the set 0, 1, true, false.
+     *
+     * @param key The key to look up.
+     * @return The boolean value associated with the specified key.
+     */
     boolean getBoolean(String key) {
         return getContent().getBoolean(key);
     }
 
+    /**
+     * Returns the boolean value associated with the specified key, or the
+     * default value if the key does not exist. Boolean values can be converted
+     * from the set 0, 1, true, false.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The boolean value associated with the specified key.
+     */
     boolean getBoolean(String key, boolean defaultValue) {
         return getContent().getBoolean(key, defaultValue);
     }
 
+    /**
+     * Returns the long value associated with the specified key. Long values
+     * can be converted from the set number, numberMB, numberGB.
+     *
+     * @param key The key to look up.
+     * @return The long value associated with the specified key.
+     */
     long getByteCount(String key) {
         return getContent().getByteCount(key);
     }
 
+    /**
+     * Returns the long value associated with the specified key, or the default
+     * value if the key does not exist. Long values can be converted from the
+     * set number, numberMB, numberGB.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The long value associated with the specified key.
+     */
     long getByteCount(String key, long defaultValue) {
         return getContent().getByteCount(key, defaultValue);
     }
@@ -94,42 +170,106 @@ public class Entity extends Resource implements Map<String, Object> {
         return validate().content;
     }
 
+    /**
+     * Returns a date value associated with the specified key. Date values can
+     * be converted from standard UTC time formats.
+     *
+     * @param key The key to look up.
+     * @return The date value associated with the specified key.
+     */
     Date getDate(String key) {
         return getContent().getDate(key);
     }
 
+    /**
+     * Returns a date value associated with the specified key, or the default
+     * value if the key does not exist. ate values can be converted from
+     * standard UTC time formats.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The date value associated with the specified key.
+     */
     Date getDate(String key, Date defaultValue) {
         return getContent().getDate(key, defaultValue);
     }
 
+    /**
+     * Returns a date value associated with the specified key. Date values can
+     * be converted from epoch time formats.
+     *
+     * @param key The key to look up.
+     * @return The date value associated with the specified. key.
+     */
     Date getDateFromEpoch(String key) {
         return getContent().getDateFromEpoch(key);
     }
 
+    /**
+     * Returns a date value associated with the specified key, or the default
+     * value if the key does not exist. Date values can be converted from epoch
+     * time formats.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The date value associated with the specified. key.
+     */
     Date getDateFromEpoch(String key, Date defaultValue) {
         return getContent().getDateFromEpoch(key, defaultValue);
     }
 
+    /**
+     * Returns the floating point value associated with the specified key.
+     *
+     * @param key The key to look up.
+     * @return The floating point value associated with the specified key.
+     */
     float getFloat(String key) {
         return getContent().getFloat(key);
     }
 
+    /**
+     * Returns the integer point value associated with the specified key.
+     *
+     * @param key The key to look up.
+     * @return The integer point value associated with the specified key.
+     */
     int getInteger(String key) {
         return getContent().getInteger(key);
     }
 
+    /**
+     * Returns the integer value associated with the specified key.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The integer value associated with the specified key.
+     */
     int getInteger(String key, int defaultValue) {
         return getContent().getInteger(key, defaultValue);
     }
 
+    //UNDONE: this is not used?
     long getLong(String key) {
         return getContent().getLong(key);
     }
 
+    /**
+     * Returns the long value associated with the specified key.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The long value associated with the specified key.
+     */
     long getLong(String key, int defaultValue) {
         return getContent().getLong(key, defaultValue);
     }
 
+    /**
+     * Returns the meta data (eai:acl) of this entity, or null if none exist.
+     *
+     * @return the meta data of this entity.
+     */
     public EntityMetadata getMetadata() {
         // CONSIDER: For entities that dont have an eai:acl field, which is
         // uncommon, but does happen at least in the case of a DeploymentClient
@@ -139,30 +279,70 @@ public class Entity extends Resource implements Map<String, Object> {
         return new EntityMetadata(this);
     }
 
+    /**
+     * Returns the string value associated with the specified key.
+     *
+     * @param key The key to look up.
+     * @return The string value associated with the specified key.
+     */
     String getString(String key) {
         return getContent().getString(key);
     }
 
+    /**
+     * Returns the string value associated with the specified key, or the
+     * default value if the key does not exist.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The string value associated with the specified key.
+     */
     String getString(String key, String defaultValue) {
         return getContent().getString(key, defaultValue);
     }
 
+    /**
+     * Returns the string array value associated with the specified key.
+     *
+     * @param key The key to look up.
+     * @return The string array value associated with the specified key.
+     */
     String[] getStringArray(String key) {
         return getContent().getStringArray(key);
     }
 
+    /**
+     * Returns the string array value associated with the specified key, or the
+     * default value if the key does not exist.
+     *
+     * @param key The key to look up.
+     * @param defaultValue The default value.
+     * @return The string array value associated with the specified key.
+     */
     String[] getStringArray(String key, String[] defaultValue) {
         return getContent().getStringArray(key, defaultValue);
     }
 
+    //UNDONE: is note used?
     public boolean isEmpty() {
         return getContent().isEmpty();
     }
 
+    /**
+     * Returns whether or not this entity is disabled. Available on almost
+     * evey endpoint.
+     *
+     * @return Whether or not this entity is disabled.
+     */
     public boolean isDisabled() {
         return getBoolean("disabled", false);
     }
 
+    /**
+     * Returns this entity's content key set.
+     *
+     * @return This entity's content key set.
+     */
     public Set<String> keySet() {
         return getContent().keySet();
     }
@@ -179,15 +359,23 @@ public class Entity extends Resource implements Map<String, Object> {
         return this;
     }
 
+    //UNDONE: not used?
     public Object put(String key, Object value) {
         throw new UnsupportedOperationException();
     }
 
+    //UNDONE: not used?
     public void putAll(Map<? extends String, ? extends Object> map) {
         throw new UnsupportedOperationException();
     }
 
     // Refresh the current (singleton) entity instance.
+
+    /**
+     * Refreshes this entity's content.
+     *
+     * @return This entity.
+     */
     @Override public Entity refresh() {
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200); // UNDONE
@@ -199,33 +387,51 @@ public class Entity extends Resource implements Map<String, Object> {
         return this;
     }
 
+    /**
+     * Performs this entity's reload action.
+     */
     public void reload() {
         service.get(actionPath("reload"));
         invalidate();
     }
 
+    //UNDONE: not used?
     public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
+    //UNDONE: not used?
     public int size() {
         return getContent().size();
     }
 
+    /**
+     * Updates the entity with the specified arguments.
+     *
+     * @param args The arguments being updated.
+     */
     public void update(Map<String, Object> args) {
         service.post(actionPath("edit"), args);
         invalidate();
     }
 
+    /**
+     * Removes this entity.
+     */
     public void remove() {
         service.delete(actionPath("remove"));
     }
 
+    /**
+     * Validates this entity.
+     * @return This entity.
+     */
     @Override public Entity validate() { 
         super.validate(); 
         return this;
     }
 
+    //UNDONE: not used?
     public Collection<Object> values() {
         return getContent().values();
     }
