@@ -16,30 +16,11 @@
 
 package com.splunk.sdk.explorer;
 
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Sheet;
+import com.splunk.Service;
 
-// Abstract node that simplifies the creation of node metadata.
-class ExplorerNode extends AbstractNode {
-    Object value;
-
-    ExplorerNode(Object value) {
-        super(Children.LEAF);
-        this.value = value;
-    }
-
-    ExplorerNode(Object value, Children kids) {
-        super(kids);
-        this.value = value;
-    }
-
-    protected PropertyList getMetadata() {
-        return new PropertyList();
-    }
-
-    @Override protected Sheet createSheet() {
-        return getMetadata().createSheet(value);
+class NamespacesNode extends ExplorerNode {
+    NamespacesNode(Service service) {
+        super(service, new NamespacesKids(service));
+        setDisplayName("Namespaces");
     }
 }
-

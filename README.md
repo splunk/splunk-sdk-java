@@ -151,15 +151,12 @@ You can also use `ant test -find` to run the units from anywhere in the
 repository.
     
 It's also possible to run the units from within popular Java IDEs such as
-IntelliJ.
+Eclipse and IntelliJ.
 
-### Using Eclipse
+### Eclipse and IntelliJ
 
-_TODO_
-
-### Using IntelliJ
-
-_TODO_
+The repository contains support for both Eclipse and IntelliJ and the units
+and examples can be run from within both of those tools.
 
 ## Overview
 

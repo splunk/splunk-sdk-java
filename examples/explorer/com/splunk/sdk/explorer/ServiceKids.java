@@ -32,61 +32,15 @@ class ServiceKids extends Children.Keys<String> {
     @Override protected void addNotify() {
         String[] kinds = new String[] {
             "system",
-            "deployment",
-            "licensing",
             "indexes",
             "inputs",
             "outputs",
-            "apps",
-            "confs",
-            "searches",
-            "eventtypes",
-            "passwords",
-            "jobs",
+            "namespaces",
         };
         setKeys(kinds);
     }
 
     private Node createNode(String kind) {
-        if (kind.equals("apps"))
-            return new EntityCollectionNode(
-                "Applications", 
-                service.getApplications(), 
-                AppNode.class);
-
-        if (kind.equals("confs"))
-            return new ConfCollectionNode(service.getConfs());
-
-        if (kind.equals("deployment"))
-            return new GroupNode(
-                "Deployment",
-                new DistributedConfigurationNode(
-                    service.getDistributedConfiguration()),
-                new EntityCollectionNode(
-                    "Distributed Peers", 
-                    service.getDistributedPeers(), 
-                    DistributedPeerNode.class),
-                new DeploymentClientNode(
-                    service.getDeploymentClient()),
-                new EntityCollectionNode(
-                    "Deployment Servers",
-                    service.getDeploymentServers(),
-                    DeploymentServerNode.class),
-                new EntityCollectionNode(
-                    "Deployment Server Classes",
-                    service.getDeploymentServerClasses(),
-                    DeploymentServerClassNode.class),
-                new EntityCollectionNode(
-                    "Deployment Tenants",
-                    service.getDeploymentTenants(),
-                    DeploymentTenantNode.class));
-
-        if (kind.equals("eventtypes"))
-            return new EntityCollectionNode(
-                "EventTypes", 
-                service.getEventTypes(), 
-                EventTypeNode.class);
-
         if (kind.equals("indexes"))
             return new EntityCollectionNode(
                 "Indexes", 
@@ -99,35 +53,8 @@ class ServiceKids extends Children.Keys<String> {
                 service.getInputs(), 
                 InputNode.class);
 
-        if (kind.equals("jobs"))
-            return new EntityCollectionNode(
-                "Jobs", 
-                service.getJobs(), 
-                JobNode.class);
-
-        if (kind.equals("licensing"))
-            return new GroupNode(
-                "Licensing",
-                new EntityCollectionNode(
-                    "Licenses", 
-                    service.getLicenses(), 
-                    LicenseNode.class),
-                new EntityCollectionNode(
-                    "License Pools", 
-                    service.getLicensePools(), 
-                    LicensePoolNode.class),
-                new EntityCollectionNode(
-                    "License Groups", 
-                    service.getLicenseGroups(), 
-                    LicenseGroupNode.class),
-                new EntityCollectionNode(
-                    "License Slaves",
-                    service.getLicenseSlaves(),
-                    LicenseSlaveNode.class),
-                new EntityCollectionNode(
-                    "License Stacks", 
-                    service.getLicenseStacks(), 
-                    LicenseStackNode.class));
+        if (kind.equals("namespaces"))
+            return new NamespacesNode(service);
 
         if (kind.equals("outputs"))
             return new GroupNode(
@@ -146,18 +73,6 @@ class ServiceKids extends Children.Keys<String> {
                     service.getOutputSyslogs(), 
                     OutputSyslogNode.class));
                     
-        if (kind.equals("passwords"))
-            return new EntityCollectionNode(
-                "Passwords",
-                service.getPasswords(),
-                PasswordNode.class);
-
-        if (kind.equals("searches"))
-            return new EntityCollectionNode(
-                "Saved Searches", 
-                service.getSavedSearches(), 
-                SavedSearchNode.class);
-
         if (kind.equals("system"))
             return new GroupNode(
                 "System",
@@ -166,6 +81,50 @@ class ServiceKids extends Children.Keys<String> {
                     "Loggers", service.getLoggers(), LoggerNode.class),
                 new EntityCollectionNode(
                     "Messages", service.getMessages(), MessageNode.class),
+                new GroupNode(
+                    "Deployment",
+                    new DistributedConfigurationNode(
+                        service.getDistributedConfiguration()),
+                    new EntityCollectionNode(
+                        "Distributed Peers", 
+                        service.getDistributedPeers(), 
+                        DistributedPeerNode.class),
+                    new DeploymentClientNode(
+                        service.getDeploymentClient()),
+                    new EntityCollectionNode(
+                        "Deployment Servers",
+                        service.getDeploymentServers(),
+                        DeploymentServerNode.class),
+                    new EntityCollectionNode(
+                        "Deployment Server Classes",
+                        service.getDeploymentServerClasses(),
+                        DeploymentServerClassNode.class),
+                    new EntityCollectionNode(
+                        "Deployment Tenants",
+                        service.getDeploymentTenants(),
+                        DeploymentTenantNode.class)),
+                new GroupNode(
+                    "Licensing",
+                    new EntityCollectionNode(
+                        "Licenses", 
+                        service.getLicenses(), 
+                        LicenseNode.class),
+                    new EntityCollectionNode(
+                        "License Pools", 
+                        service.getLicensePools(), 
+                        LicensePoolNode.class),
+                    new EntityCollectionNode(
+                        "License Groups", 
+                        service.getLicenseGroups(), 
+                        LicenseGroupNode.class),
+                    new EntityCollectionNode(
+                        "License Slaves",
+                        service.getLicenseSlaves(),
+                        LicenseSlaveNode.class),
+                    new EntityCollectionNode(
+                        "License Stacks", 
+                        service.getLicenseStacks(), 
+                        LicenseStackNode.class)),
                 new EntityCollectionNode(
                     "Roles", service.getRoles(), RoleNode.class),
                 new EntityCollectionNode(
