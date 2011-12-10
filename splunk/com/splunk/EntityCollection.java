@@ -18,19 +18,51 @@ package com.splunk;
 
 import java.util.Map;
 
+/**
+ * The collection of entity base class.
+ *
+ * @param <T> The entity subclass.
+ */
 public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     */
     EntityCollection(Service service, String path) {
         super(service, path, Entity.class);
     }
-    
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     * @param itemClass The entity's subclass.
+     */
     public EntityCollection(Service service, String path, Class itemClass) {
         super(service, path, itemClass);
     }
 
+    /**
+     * Creates an entity in this collection.
+     *
+     * @param name The name of the entity created.
+     * @return The entity.
+     */
     public T create(String name) {
         return create(name, null);
     }
 
+    /**
+     * Creates an entity in this collection.
+     *
+     * @param name The name of the entity created.
+     * @param args The arguments supplied to the creation.
+     * @return The entity.
+     */
     public T create(String name, Map args) {
         args = Args.create(args).add("name", name);
         service.post(path, args);
@@ -38,6 +70,12 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
         return get(name);
     }
 
+    /**
+     * Removes an entity from this collection.
+     *
+     * @param key the name of the entity to remove.
+     * @return this collection.
+     */
     public T remove(Object key) {
         validate();
         if (!containsKey(key)) return null;
