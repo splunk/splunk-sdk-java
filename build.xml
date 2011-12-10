@@ -154,7 +154,16 @@
         <jar 
          basedir="${dir.build.splunk}"
          destfile="${dist.splunk}"
-         includes="**/*.class"/>
+         includes="**/*.class">
+            <manifest>
+                <attribute 
+                 name="Implementation-Title" value="com.splunk"/>
+                <attribute 
+                 name="Implementation-Vendor" value="Splunk, Inc."/>
+                <attribute 
+                 name="Implementation-Version" value="${version.number}"/>
+            </manifest>
+        </jar>
     </target>
 
     <target name="dist-splunk-sdk" depends="compile-splunk-sdk">
@@ -164,8 +173,14 @@
          destfile="${dist.splunk-sdk}"
          includes="**/*.class">
             <manifest>
-                <attribute name="Class-Path" 
-                 value="../lib/commons-cli-1.2.jar"/>
+                <attribute 
+                 name="Class-Path" value="../lib/commons-cli-1.2.jar"/>
+                <attribute 
+                 name="Implementation-Title" value="com.splunk.sdk"/>
+                <attribute 
+                 name="Implementation-Vendor" value="Splunk, Inc."/>
+                <attribute 
+                 name="Implementation-Version" value="${version.number}"/>
             </manifest>
         </jar>
     </target>
