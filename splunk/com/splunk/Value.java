@@ -36,7 +36,7 @@ class Value {
         if (value.toLowerCase().equals("true"))
             return true;
         String message = String.format("Value error: '%s'", value);
-        throw new RuntimeException(message); // UNDONE
+        throw new RuntimeException(message);
     }
 
     static long toByteCount(String value) {
@@ -50,7 +50,7 @@ class Value {
                 multiplier = 1024*1024*1024;
             else {
                 String message = String.format("Value error: '%s'", value);
-                throw new RuntimeException(message); // UNDONE
+                throw new RuntimeException(message);
             }
             value = value.substring(0, value.length()-2);
         }
@@ -78,7 +78,7 @@ class Value {
             result = dateFormat.parse(value);
         }
         catch (ParseException e) {
-            throw new RuntimeException(e.getMessage()); // UNDONE
+            throw new RuntimeException(e.getMessage());
         }
         return result;
     }

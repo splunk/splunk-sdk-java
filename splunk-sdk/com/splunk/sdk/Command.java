@@ -14,8 +14,6 @@
  * under the License.
  */
 
-// UNDONE: Support for additional builtin types?
-
 package com.splunk.sdk;
 
 import java.io.BufferedReader;

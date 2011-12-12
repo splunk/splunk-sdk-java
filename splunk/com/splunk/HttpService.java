@@ -196,7 +196,6 @@ public class HttpService {
                 cn.setDoOutput(true);
                 OutputStream stream = cn.getOutputStream();
                 OutputStreamWriter writer = new OutputStreamWriter(stream);
-                // UNDONE: Figure out how to support streaming request content
                 writer.write((String)content);
                 writer.close();
             }

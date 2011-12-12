@@ -286,6 +286,40 @@ public class Service extends HttpService {
         return this;
     }
 
+    /**
+     * Creates a 'oneshot' synchronous search with a UTF8 pre-encoded search
+     * request.
+     *
+     * @param query The search query string.
+     * @return The response message of the search.
+     */
+    public InputStream oneShotSearch(String query) {
+       return oneShotSearch(query, new Args());
+    }
+
+    /**
+     * Creates a 'oneshot' synchronous search.
+     *
+     * @param query The search query.
+     * @param args The arguments to the search.
+     * @return The results of the search.
+     */
+    public InputStream oneShotSearch(String query, Map args) {
+        String onlyOneShotAllowed = String.format(
+                "When using oneshot search, no other exec_mode is allowed");
+        if (args.containsKey("exec_mode") &&
+            !args.get("exec_mode").equals("oneshot")) {
+            throw new RuntimeException(onlyOneShotAllowed);
+        }
+        args.put("search", query);
+        if (!args.containsKey("exec_mode")) {
+            args.put("exec_mode", "oneshot");
+        }
+
+        ResponseMessage response = post("search/jobs/", args);
+        return response.getContent();
+    }
+
     public ResponseMessage parse(String query) {
         return parse(query, null);
     }
