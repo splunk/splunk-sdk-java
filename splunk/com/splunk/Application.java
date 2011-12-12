@@ -112,10 +112,10 @@ public class Application extends Entity {
     }
 
     /**
-     * Indicates whether ot not an app state change requires [UNDONE] the app
-     * or Splunk to be restarted.
+     * Indicates whether ot not an app state change requires the app to be
+     * restarted.
      *
-     * @return Indicates if [UNDONE] the app or Splunk needs to be restarted.
+     * @return Indicates if the app needs to be restarted.
      */
     public boolean stateChangeRequiresRestart() {
         return getBoolean("state_change_requires_restart", false);
