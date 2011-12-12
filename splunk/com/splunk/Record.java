@@ -91,7 +91,6 @@ public class Record extends HashMap<String, Object> {
         return get(key).toString();
     }
 
-    // UNDONE: Is there a better (and unsafe-cast free) way to convert?
     String[] getStringArray(String key) {
         List<String> value = (List<String>)get(key);
         return value.toArray(new String[value.size()]);
