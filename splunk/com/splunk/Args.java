@@ -14,8 +14,6 @@
  * under the License.
  */
 
-// UNDONE: CONSIDER: Make put chainable
-
 package com.splunk;
 
 import java.io.UnsupportedEncodingException;
