@@ -21,14 +21,28 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * This is the common base class shared by {@code AtomFeed} and
+ * {@code AtomEntry}
+ */
 public class AtomObject {
+    /** The value of the Atom {@code id} element. */
     public String id;
+
+    /** The value of any {@code link} elements contains by this Atom object. */
     public Map<String, String> links = new HashMap<String, String>();
+
+    /** The value of the Atom {@code title} element. */
     public String title;
+
+    /** The value of the Atom {@code updated} element. */
     public String updated;
 
-    AtomObject() {}
-
+    /**
+     * Initialize the current instance from the given XML element.
+     *
+     * @param element The XML element.
+     */
     void init(Element element) {
         String name = element.getTagName();
         if (name.equals("id")) {
@@ -54,9 +68,13 @@ public class AtomObject {
         }
     }
 
-    // Initialize the AtomObject based on the contents of the given XML
-    // element.
+    /**
+     * Initialize the current instance from the given XML element.
+     *
+     * @param element The XML element.
+     */
     void load(Element element) {
+        // UNDONE: Review the following init loop ..
         for (Node child = element.getFirstChild();
              child != null;
              child = child.getNextSibling()) 
