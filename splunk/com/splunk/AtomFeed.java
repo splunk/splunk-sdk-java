@@ -20,16 +20,37 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 
+/**
+ * Representation of an Atom feed.
+ */
 public class AtomFeed extends AtomObject {
+    /** The list of Atom entries contained by this Atom feed. */
     public ArrayList<AtomEntry> entries = new ArrayList<AtomEntry>();
+
+    /** The value of the Atom feed's {@code itemsPerPage} element. */
     public String itemsPerPage = null;
+
+    /** The value of the Atom feed's {@code startIndex} element. */
     public String startIndex = null;
+
+    /** The value of the Atom feed's {@code totalResults} element. */
     public String totalResults = null;
 
+    /**
+     * Creates a new AtomFeed instance.
+     *
+     * @return A new AtomFeed instance.
+     */
     static AtomFeed create() {
         return new AtomFeed();
     }
 
+    /**
+     * Creates a new AtomFeed instance based on the given stream.
+     *
+     * @param input The input stream.
+     * @return An {@code AtomFeed} instance representing the parsed stream.
+     */
     public static AtomFeed parse(InputStream input) {
         Element root = Xml.parse(input).getDocumentElement();
         String rname = root.getTagName();
@@ -40,13 +61,23 @@ public class AtomFeed extends AtomObject {
         return AtomFeed.parse(root);
     }
 
+    /**
+     * Create a new {@code AtomFeed} instance based on the given XML element.
+     *
+     * @param element The XML element.
+     * @return An {@code AtomFeed} instance representing the parsed element.
+     */
     static AtomFeed parse(Element element) {
         AtomFeed feed = AtomFeed.create();
         feed.load(element);
         return feed;
     }
 
-    // UNDONE: Create dispatch table for property lookups
+    /**
+     * Initialize the current instance from the given XML element.
+     *
+     * @param element The XML element.
+     */
     @Override void init(Element element) {
         String name = element.getTagName();
         if (name.equals("entry")) {

@@ -22,16 +22,33 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * Representation of an Atom entry element.
+ */
 public class AtomEntry extends AtomObject {
+    /** The value of the Atom entry's {@code published} element. */
     public String published;
+
+    /** The value of the Atom entry's {@code content} element. */
     public Record content;
 
+    /**
+     * Creates a new AtomEntry instance.
+     *
+     * @return A new AtomEntry instance.                  ––
+     */
     static AtomEntry create() {
         return new AtomEntry();
     }
 
-    // We have a few endpoints (eg: search/jobs/{sid}) that return an AtomEntry
-    // as the root element of the response.
+    /**
+     * Creates a new {@code AtomEntry} instanced based on the given stream.
+     * There are a few endpoints, such as {@code search/jobs/{sid}}, that
+     * return an Atom entry element as the root of the response.
+     *
+     * @param input The input stream.
+     * @return An {@code AtomEntry} instance representing the parsed stream.
+     */
     public static AtomEntry parse(InputStream input) {
         Element root = Xml.parse(input).getDocumentElement();
         String rname = root.getTagName();
@@ -42,12 +59,23 @@ public class AtomEntry extends AtomObject {
         return AtomEntry.parse(root);
     }
 
+    /**
+     * Create a new {@code AtomEntry} instance based on the given XML element.
+     *
+     * @param element The XML element.
+     * @return An {@code AtomEntry} instance representing the parsed element.
+     */
     static AtomEntry parse(Element element) {
         AtomEntry entry = AtomEntry.create();
         entry.load(element);
         return entry;
     }
 
+    /**
+     * Initialize the current instance from the given XML element.
+     *
+     * @param element The XML element.
+     */
     @Override void init(Element element) {
         String name = element.getTagName();
         if (name.equals("published")) {
@@ -61,7 +89,14 @@ public class AtomEntry extends AtomObject {
         }
     }
 
-    // Return a filtered list of child Element nodes.
+    /**
+     * Returns a filtered list of child XML element nodes. This is a helper
+     * function that makes it a little easier to get only the element children
+     * of an XML element.
+     *
+     * @param element The XML element to return child nodes for.
+     * @return A list of child element nodes.
+     */
     static ArrayList<Element> getChildElements(Element element) {
         ArrayList<Element> result = new ArrayList<Element>();
         for (Node child = element.getFirstChild();
@@ -72,7 +107,12 @@ public class AtomEntry extends AtomObject {
         return result;
     }
 
-    // Parse the <content> element of an Atom entry.
+    /**
+     * Parse the {@code <content>} element of an Atom entry.
+     *
+     * @param element The XML element to parse.
+     * @return A record object containing the parsed values.
+     */
     Record parseContent(Element element) {
         assert(element.getTagName().equals("content"));
 
@@ -93,7 +133,13 @@ public class AtomEntry extends AtomObject {
         return content;
     }
 
-    // Parse a <dict> element and return a corresponding Record object.
+    /**
+     * Parse a {@code <dict>} content element and return a Record object
+     * containing the parsed values.
+     *
+     * @param element The dict element to parse.
+     * @return A record object containing the parsed values.
+     */
     Record parseDict(Element element) {
         assert(element.getTagName().equals("s:dict"));
 
@@ -114,7 +160,13 @@ public class AtomEntry extends AtomObject {
         return result;
     }
 
-    // Parse a <list> element and return a corresponding List object.
+    /**
+     * Parse a {@code <list>} element and return a List object containing the parsed
+     * values.
+     *
+     * @param element The list element to parse.
+     * @return A list object containing the parsed values.
+     */
     List parseList(Element element) {
         assert(element.getTagName().equals("s:list"));
 
@@ -134,8 +186,17 @@ public class AtomEntry extends AtomObject {
         return result;
     }
 
-    // Parse the value content of a dict/key or a list/item element. The
-    // value is either text, a <dict> or a <list> element.
+    /**
+     * Parse the value content of a dict/key or a list/item element. The value
+     * is either text, a {@code <dict>} or a {@code <list>}} element.
+     *
+     * @param element The XML element containing the values to parse.
+     * @return An object containing the parsed values. The object is a
+     *         {@code String} if the source was a text value, it is a
+     *         {@code Record} object if the source was a {@code <dict>} element
+     *         and it is a {@code List} object if the source was a <list>
+     *         element.
+     */
     Object parseValue(Element element) {
         String name = element.getTagName();
 

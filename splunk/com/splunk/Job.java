@@ -300,7 +300,7 @@ public class Job extends Entity {
         return getBoolean("isZombie");
     }
 
-    // Job "entities" dont return an AtomFeed, only an AtomEntry.
+    // Job "entities" don't return an AtomFeed, only an AtomEntry.
     @Override public Job refresh() {
         ResponseMessage response = service.get(path);
         AtomEntry entry = AtomEntry.parse(response.getContent());
