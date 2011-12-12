@@ -25,8 +25,6 @@ public class JobCollection extends EntityCollection<Job> {
 
     final String oneShotNotAllowed = String.format(
                  "Oneshot not allowed, use createOneShot method");
-    final String onlyOneShotAllowed = String.format(
-                "When using oneshot, no other exec_mode is allowed");
     /**
      * Class constructor.
      *
@@ -70,37 +68,6 @@ public class JobCollection extends EntityCollection<Job> {
         invalidate();
         String sid = Job.getSid(response);
         return get(sid);
-    }
-
-    /**
-     * Creates a 'oneshot' synchronous search with a UTF8 pre-encoded search
-     * request.
-     *
-     * @param query The search query string.
-     * @return The response message of the search.
-     */
-    public ResponseMessage createOneShot(String query) {
-       return createOneShot(query, new Args());
-    }
-
-    /**
-     * Creates a 'oneshot' synchronous search.
-     *
-     * @param query The search query.
-     * @param args The arguments to the search.
-     * @return The results of the search.
-     */
-    public ResponseMessage createOneShot(String query, Map args) {
-        if (args.containsKey("exec_mode") &&
-            !args.get("exec_mode").equals("oneshot")) {
-            throw new RuntimeException(onlyOneShotAllowed);
-        }
-        args.put("search", query);
-        if (!args.containsKey("exec_mode")) {
-            args.put("exec_mode", "oneshot");
-        }
-
-        return service.post("search/jobs/", args);
     }
 
     /**
