@@ -37,7 +37,7 @@ public class JobCollection extends EntityCollection<Job> {
 
     /**
      * Creates a search job with a UTF8 pre-encoded search request. Note that
-     * a 'oneshot'request is invalid here. Please use the createOneShot method
+     * a 'oneshot' request is invalid here. Please use the createOneShot method
      * instead.
      *
      * @param query The search query string.
