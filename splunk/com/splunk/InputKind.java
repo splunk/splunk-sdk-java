@@ -20,49 +20,27 @@ package com.splunk;
  * Representation of the different input kinds.
  */
 public enum InputKind {
-    /**
-     * Unknown input kind.
-     */
+    /** Unknown input kind. */
     Unknown("Unknown", Input.class),
-    /**
-     * Monitor input kind.
-     */
+    /** {@code Monitor} input kind. */
     Monitor("monitor", MonitorInput.class),
-    /**
-     * Script input kind.
-     */
+    /** {@code Script} input kind. */
     Script("script", ScriptInput.class),
-    /**
-     * TCP input kind, raw input data.
-     */
+    /** {@code TCP} input kind, raw input data. */
     Tcp("tcp/raw", TcpInput.class),
-    /**
-     * TCP input kind, processed input data.
-     */
+    /** {@code TCP} input kind, processed input data. */
     TcpSplunk("tcp/cooked", TcpSplunkInput.class),
-    /**
-     * UDP input kind.
-     */
+    /** {@code UDP} input kind. */
     Udp("udp", UdpInput.class),
-    /**
-     * Windows Active Directory input kind.
-     */
+    /** {@code Windows Active Directory} input kind. */
     WindowsActiveDirectory("ad", WindowsActiveDirectoryInput.class),
-    /**
-     * Windows Event Log input kind.
-     */
+    /** {@code Windows Event Log} input kind. */
     WindowsEventLog("win-event-log-collections",WindowsEventLogInput.class),
-    /**
-     * Windows Perfmon input kind.
-     */
+    /** {@code Windows Perfmon} input kind. */
     WindowsPerfmon("win-perfmon", WindowsPerfmonInput.class),
-    /**
-     * Windows Registry input kind.
-     */
+    /** {@code Windows Registry} input kind. */
     WindowsRegistry("registry", WindowsRegistryInput.class),
-    /**
-     * Windows WMI input kind.
-     */
+    /** {@code Windows WMI} input kind. */
     WindowsWmi("win-wmi-collections", WindowsWmiInput.class);
 
     /**
