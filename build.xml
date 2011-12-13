@@ -126,6 +126,18 @@
         <compile-example name="search" classpath="classpath.examples"/>
     </target>
 
+    <target name="compile-example-search-blocking" depends="dist-libs">
+        <compile-example name="search_blocking" classpath="classpath.examples"/>
+    </target>
+
+    <target name="compile-example-search-oneshot" depends="dist-libs">
+        <compile-example name="search_oneshot" classpath="classpath.examples"/>
+    </target>
+
+    <target name="compile-example-search-realtime" depends="dist-libs">
+        <compile-example name="search_realtime" classpath="classpath.examples"/>
+    </target>
+
     <target name="compile-example-spurl" depends="dist-libs">
         <compile-example name="spurl" classpath="classpath.examples"/>
     </target>
@@ -195,6 +207,9 @@
         dist-example-inputs,
         dist-example-loaded,
         dist-example-search,
+        dist-example-search-blocking,
+        dist-example-search-oneshot,
+        dist-example-search-realtime,
         dist-example-spurl,
         dist-example-test"/>
 
@@ -258,6 +273,21 @@
 
     <target name="dist-example-search" depends="compile-example-search">
         <dist-example name="search" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
+    </target>
+
+    <target name="dist-example-search-blocking" depends="compile-example-search-blocking">
+        <dist-example name="search_blocking" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
+    </target>
+
+    <target name="dist-example-search-oneshot" depends="compile-example-search-oneshot">
+        <dist-example name="search_oneshot" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
+    </target>
+
+    <target name="dist-example-search-realtime" depends="compile-example-search-realtime">
+        <dist-example name="search_realtime" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 

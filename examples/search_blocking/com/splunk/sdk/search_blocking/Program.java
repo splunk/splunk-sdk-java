@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.sdk.search;
+package com.splunk.sdk.search_blocking;
 
 import com.splunk.Args;
 import com.splunk.HttpException;
@@ -69,7 +69,6 @@ public class Program {
         command.addRule("output", String.class, outputText);
         command.addRule("output_mode", String.class, outputModeText);
         command.addRule("status_buckets", Integer.class, statusBucketsText);
-        command.addRule("verbose", "Display search progress");
         command.parse(args);
 
         if (command.args.length != 1)
@@ -111,8 +110,6 @@ public class Program {
         if (command.opts.containsKey("status_buckets"))
             statusBuckets = (Integer)command.opts.get("status_buckets");
 
-        boolean verbose = command.opts.containsKey("verbose");
-
         Service service = Service.connect(command.opts);
 
         // Check the syntax of the query.
@@ -135,32 +132,10 @@ public class Program {
             queryArgs.put("latest_time", latestTime);
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
+
+        // always block until results are ready.
+        queryArgs.put("exec_mode", "blocking");
         Job job = service.getJobs().create(query, queryArgs);
-
-        // Wait until results are available.
-        boolean status = false;
-        while (true) {
-            if (job.isDone())
-                break;
-
-            // If no outputs are available, optionally print status and wait.
-            if (verbose) {
-                float progress = job.getDoneProgress() * 100.0f;
-                int scanned = job.getScanCount();
-                int matched = job.getEventCount();
-                int results = job.getResultCount();
-                System.out.format(
-                    "\r%03.1f%% done -- %d scanned -- %d matched -- %d results",
-                    progress, scanned, matched, results);
-                status = true;
-            }
-
-            try { Thread.sleep(2000); }
-            catch (InterruptedException e) {}
-
-            job.refresh();
-        }
-        if (status) System.out.println("");
 
         InputStream stream = null;
 

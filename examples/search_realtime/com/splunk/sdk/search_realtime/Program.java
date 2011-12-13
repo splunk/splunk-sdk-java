@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.sdk.search;
+package com.splunk.sdk.search_realtime;
 
 import com.splunk.Args;
 import com.splunk.HttpException;
@@ -34,14 +34,16 @@ public class Program {
         "events", "results", "preview", "searchlog", "summary", "timeline"
     };
 
-    static String earliestTime = "Search earliest time";
+    static String earliestTime =
+        "Search earliest time (default: 'rt-5m')";
     static String fieldListText =
         "A comma-separated list of the fields to return";
-    static String latestTime = "Search latest time";
+    static String latestTime =
+        "Search latest time (default: 'rt' (i.e. now))";
     static String offset =
         "The first result (inclusive) from which to begin returning data. (default: 0)";
     static String outputText =
-        "Which search results to output {events, results, preview, searchlog, summary, timeline} (default: results)";
+        "Which search results to output {events, results, preview, searchlog, summary, timeline} (default: preview)";
     static String outputModeText =
         "Search output format {csv, raw, json, xml} (default: xml)";
     static String resultsCount =
@@ -69,7 +71,6 @@ public class Program {
         command.addRule("output", String.class, outputText);
         command.addRule("output_mode", String.class, outputModeText);
         command.addRule("status_buckets", Integer.class, statusBucketsText);
-        command.addRule("verbose", "Display search progress");
         command.parse(args);
 
         if (command.args.length != 1)
@@ -80,7 +81,7 @@ public class Program {
         if (command.opts.containsKey("count"))
             resultsCount = (Integer)command.opts.get("count");
 
-        String earliestTime = null;
+        String earliestTime = "rt-5m";
         if (command.opts.containsKey("earliest_time"))
             earliestTime = (String)command.opts.get("earliest_time");
 
@@ -88,7 +89,7 @@ public class Program {
         if (command.opts.containsKey("field_list"))
             fieldList = (String)command.opts.get("field_list");
 
-        String latestTime = null;
+        String latestTime = "rt";
         if (command.opts.containsKey("latest_time"))
             earliestTime = (String)command.opts.get("latest_time");
 
@@ -96,7 +97,7 @@ public class Program {
         if (command.opts.containsKey("offset"))
             offset = (Integer)command.opts.get("offset");
 
-        String output = "results";
+        String output = "preview";
         if (command.opts.containsKey("output")) {
             output = (String)command.opts.get("output");
             if (!Arrays.asList(outputChoices).contains(output))
@@ -110,8 +111,6 @@ public class Program {
         int statusBuckets = 0;
         if (command.opts.containsKey("status_buckets"))
             statusBuckets = (Integer)command.opts.get("status_buckets");
-
-        boolean verbose = command.opts.containsKey("verbose");
 
         Service service = Service.connect(command.opts);
 
@@ -127,40 +126,18 @@ public class Program {
 
         // Create a search job for the given query & query arguments.
         Args queryArgs = new Args();
-        if (earliestTime != null)
-            queryArgs.put("earliest_time", earliestTime);
         if (fieldList != null)
             queryArgs.put("field_list", fieldList);
-        if (latestTime != null)
-            queryArgs.put("latest_time", latestTime);
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
+
+
+        // always set real time search mode
+        queryArgs.put("search_mode", "realtime");
+        queryArgs.put("earliest_time", earliestTime);
+        queryArgs.put("latest_time", latestTime);
+
         Job job = service.getJobs().create(query, queryArgs);
-
-        // Wait until results are available.
-        boolean status = false;
-        while (true) {
-            if (job.isDone())
-                break;
-
-            // If no outputs are available, optionally print status and wait.
-            if (verbose) {
-                float progress = job.getDoneProgress() * 100.0f;
-                int scanned = job.getScanCount();
-                int matched = job.getEventCount();
-                int results = job.getResultCount();
-                System.out.format(
-                    "\r%03.1f%% done -- %d scanned -- %d matched -- %d results",
-                    progress, scanned, matched, results);
-                status = true;
-            }
-
-            try { Thread.sleep(2000); }
-            catch (InterruptedException e) {}
-
-            job.refresh();
-        }
-        if (status) System.out.println("");
 
         InputStream stream = null;
 

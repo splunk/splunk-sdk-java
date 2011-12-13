@@ -14,11 +14,10 @@
  * under the License.
  */
 
-package com.splunk.sdk.search;
+package com.splunk.sdk.search_oneshot;
 
 import com.splunk.Args;
 import com.splunk.HttpException;
-import com.splunk.Job;
 import com.splunk.sdk.Command;
 import com.splunk.Service;
 
@@ -26,26 +25,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
 
 // Note: not all search parameters are exposed to the CLI for this example.
 public class Program {
-    static String[] outputChoices = new String[] {
-        "events", "results", "preview", "searchlog", "summary", "timeline"
-    };
 
     static String earliestTime = "Search earliest time";
     static String fieldListText =
-        "A comma-separated list of the fields to return";
+         "A comma-separated list of the fields to return";
     static String latestTime = "Search latest time";
-    static String offset =
-        "The first result (inclusive) from which to begin returning data. (default: 0)";
-    static String outputText =
-        "Which search results to output {events, results, preview, searchlog, summary, timeline} (default: results)";
-    static String outputModeText =
-        "Search output format {csv, raw, json, xml} (default: xml)";
-    static String resultsCount =
-        "The maximum number of results to return (default: 100)";
     static String statusBucketsText =
         "Number of status buckets to use for search (default: 0)";
 
@@ -61,24 +48,15 @@ public class Program {
 
     static void run(String[] args) throws IOException {
         Command command = Command.splunk("search");
-        command.addRule("count", Integer.class, resultsCount);
         command.addRule("earliest_time", String.class, earliestTime);
         command.addRule("field_list", String.class, fieldListText);
         command.addRule("latest_time", String.class, latestTime);
-        command.addRule("offset", Integer.class, offset);
-        command.addRule("output", String.class, outputText);
-        command.addRule("output_mode", String.class, outputModeText);
         command.addRule("status_buckets", Integer.class, statusBucketsText);
-        command.addRule("verbose", "Display search progress");
         command.parse(args);
 
         if (command.args.length != 1)
             Command.error("Search expression required");
         String query = command.args[0];
-
-        int resultsCount = 100;
-        if (command.opts.containsKey("count"))
-            resultsCount = (Integer)command.opts.get("count");
 
         String earliestTime = null;
         if (command.opts.containsKey("earliest_time"))
@@ -92,26 +70,9 @@ public class Program {
         if (command.opts.containsKey("latest_time"))
             earliestTime = (String)command.opts.get("latest_time");
 
-        int offset = 0;
-        if (command.opts.containsKey("offset"))
-            offset = (Integer)command.opts.get("offset");
-
-        String output = "results";
-        if (command.opts.containsKey("output")) {
-            output = (String)command.opts.get("output");
-            if (!Arrays.asList(outputChoices).contains(output))
-                Command.error("Unsupported output: '%s'", output);
-        }
-
-        String outputMode = "xml";
-        if (command.opts.containsKey("output_mode"))
-            outputMode = (String)command.opts.get("output_mode");
-
         int statusBuckets = 0;
         if (command.opts.containsKey("status_buckets"))
             statusBuckets = (Integer)command.opts.get("status_buckets");
-
-        boolean verbose = command.opts.containsKey("verbose");
 
         Service service = Service.connect(command.opts);
 
@@ -125,7 +86,7 @@ public class Program {
             Command.error("query '%s' is invalid: %s", query, detail);
         }
 
-        // Create a search job for the given query & query arguments.
+        // Create the oneshot search query & query arguments.
         Args queryArgs = new Args();
         if (earliestTime != null)
             queryArgs.put("earliest_time", earliestTime);
@@ -135,53 +96,10 @@ public class Program {
             queryArgs.put("latest_time", latestTime);
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
-        Job job = service.getJobs().create(query, queryArgs);
 
-        // Wait until results are available.
-        boolean status = false;
-        while (true) {
-            if (job.isDone())
-                break;
-
-            // If no outputs are available, optionally print status and wait.
-            if (verbose) {
-                float progress = job.getDoneProgress() * 100.0f;
-                int scanned = job.getScanCount();
-                int matched = job.getEventCount();
-                int results = job.getResultCount();
-                System.out.format(
-                    "\r%03.1f%% done -- %d scanned -- %d matched -- %d results",
-                    progress, scanned, matched, results);
-                status = true;
-            }
-
-            try { Thread.sleep(2000); }
-            catch (InterruptedException e) {}
-
-            job.refresh();
-        }
-        if (status) System.out.println("");
-
-        InputStream stream = null;
-
-        Args outputArgs = new Args();
-        outputArgs.put("count", resultsCount);
-        outputArgs.put("offset", offset);
-        outputArgs.put("output_mode", outputMode);
-
-        if (output.equals("results"))
-            stream = job.getResults(outputArgs);
-        else if (output.equals("events"))
-            stream = job.getEvents(outputArgs);
-        else if (output.equals("preview"))
-            stream = job.getResultsPreview(outputArgs);
-        else if (output.equals("searchlog"))
-            stream = job.getSearchLog(outputArgs);
-        else if (output.equals("summary"))
-            stream = job.getSummary(outputArgs);
-        else if (output.equals("timeline"))
-            stream = job.getTimeline(outputArgs);
-        else assert(false);
+        // execute the oneshot query, which returns the stream (i.e. there is
+        // no search job created, just a one time search)
+        InputStream stream = service.oneShotSearch(query, queryArgs);
 
         InputStreamReader reader = new InputStreamReader(stream);
         OutputStreamWriter writer = new OutputStreamWriter(System.out);
@@ -197,7 +115,5 @@ public class Program {
         writer.write("\n");
         writer.close();
         reader.close();
-
-        job.cancel();
     }
 }
