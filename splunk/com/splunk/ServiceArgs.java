@@ -16,12 +16,25 @@
 
 package com.splunk;
 
-// Record used to initialize Splunk service instances.
+/**
+ * A collection of arguments used to initialize a Splunk service instance.
+ */
 public class ServiceArgs {
+    /** The application context for the service */
     public String app = null;
+
+    /** The host name of the service */
     public String host = null;
+
+    /** The owner contet for the service */
     public String owner = null;
+
+    /** The port number for the service */
     public Integer port = null;
-    public String scheme = null;    
+
+    /** The scheme to use for accessing the service */
+    public String scheme = null;
+
+    /** A Splunk auth token to use for the session */
     public String token = null;
 }

@@ -29,6 +29,7 @@ import org.xml.sax.InputSource;
 public class Xml {
     /**
      * Parse the given {@code InputStream} and return as an XML DOM.
+     *
      * @param input Input stream.
      * @return XML DOM.
      */
