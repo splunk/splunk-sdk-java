@@ -17,29 +17,39 @@
 package com.splunk;
 
 /**
- * Representation of the different input kinds.
+ * Enumeration of the various Splunk input kinds.
  */
 public enum InputKind {
     /** Unknown input kind. */
     Unknown("Unknown", Input.class),
+
     /** {@code Monitor} input kind. */
     Monitor("monitor", MonitorInput.class),
+
     /** {@code Script} input kind. */
     Script("script", ScriptInput.class),
+
     /** {@code TCP} input kind, raw input data. */
     Tcp("tcp/raw", TcpInput.class),
+
     /** {@code TCP} input kind, processed input data. */
     TcpSplunk("tcp/cooked", TcpSplunkInput.class),
+
     /** {@code UDP} input kind. */
     Udp("udp", UdpInput.class),
+
     /** {@code Windows Active Directory} input kind. */
     WindowsActiveDirectory("ad", WindowsActiveDirectoryInput.class),
+
     /** {@code Windows Event Log} input kind. */
     WindowsEventLog("win-event-log-collections",WindowsEventLogInput.class),
+
     /** {@code Windows Perfmon} input kind. */
     WindowsPerfmon("win-perfmon", WindowsPerfmonInput.class),
+
     /** {@code Windows Registry} input kind. */
     WindowsRegistry("registry", WindowsRegistryInput.class),
+
     /** {@code Windows WMI} input kind. */
     WindowsWmi("win-wmi-collections", WindowsWmiInput.class);
 
