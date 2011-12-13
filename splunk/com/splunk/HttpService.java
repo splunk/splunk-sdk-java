@@ -27,7 +27,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.net.Socket;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HttpsURLConnection;
@@ -38,9 +37,18 @@ import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
+/**
+ * Represents a generic HTTP service at a given address (host:port) accessed
+ * using a given protocol "scheme" ({@code http} or {@code https}).
+ */
 public class HttpService {
+    /** The scheme used to access the service. */
     protected String scheme = "https";
+
+    /** The host name of the service. */
     protected String host = "localhost";
+
+    /** The port number of the service. */
     protected int port = 8089;
 
     private String prefix = null;
@@ -60,21 +68,42 @@ public class HttpService {
         }
     };
 
+    /** Constructs a new {@code HttpService} instance. */
     public HttpService() {
         setTrustPolicy();
     }
 
+    /**
+     * Constructs a new {@code HttpService} instance at the given host.
+     *
+     * @param host Host name of the service.
+     */
     public HttpService(String host) {
         this.host = host;
         setTrustPolicy();
     }
 
+    /**
+     * Constructs a new {@code HttpService} instance at the given host and port.
+     *
+     * @param host Host name of the service.
+     * @param port Port number of the service.
+     */
     public HttpService(String host, int port) {
         this.host = host;
         this.port = port;
         setTrustPolicy();
     }
 
+    /**
+     * Constructs a new {@code HttpService} instance using the given host, port
+     * and scheme.
+     *
+     * @param host Host name of the service.
+     * @param port Port number of the service.
+     * @param scheme Scheme for accessing the service
+     *        ({@code http} or {@code https}).
+     */
     public HttpService(String host, int port, String scheme) {
         this.host = host;
         this.port = port;
@@ -88,10 +117,24 @@ public class HttpService {
         return args.size();
     }
 
+    /**
+     * Issue an HTTP GET request against the service using the given path.
+     *
+     * @param path Request path.
+     * @return HTTP response.
+     */
     public ResponseMessage get(String path) {
         return send(path, new RequestMessage("GET"));
     }
 
+    /**
+     * Issue an HTTP GET request against the service using the given path and
+     * query arguments.
+     *
+     * @param path The request path.
+     * @param args Query arguments.
+     * @return HTTP response.
+     */
     public ResponseMessage get(String path, Map<String, Object> args) {
         if (count(args) > 0)
             path = path + "?" + Args.encode(args);
@@ -99,15 +142,30 @@ public class HttpService {
         return send(path, request);
     }
 
+    /**
+     * Returns the host name of this service.
+     *
+     * @return Host name.
+     */
     public String getHost() { 
         return this.host; 
     }
 
+    /**
+     * Returns the port number of this service.
+     *
+     * @return Port number.
+     */
     public int getPort() {
         return this.port;
     }
 
-    // Returns the URL prefix for this service.
+    /**
+     * Returns the URL prefix of this service, consisting of
+     * {@code scheme://host[:port]}
+     *
+     * @return URL prefix.
+     */
     public String getPrefix() {
         if (this.prefix == null)
             this.prefix = String.format("%s://%s:%s",
@@ -115,10 +173,21 @@ public class HttpService {
         return this.prefix;
     }
 
+    /**
+     * Returns the scheme used by this service.
+     *
+     * @return Scheme.
+     */
     public String getScheme() {
         return this.scheme;
     }
 
+    /**
+     * Construct a fully qualified URL for this service using the given path.
+     *
+     * @param path The path to qualify.
+     * @return Fully qualified URL.
+     */
     public URL getUrl(String path) {
         try {
             return new URL(getPrefix() + path);
@@ -128,10 +197,24 @@ public class HttpService {
         }
     }
 
+    /**
+     * Issue a POST request against the service using the given path.
+     *
+     * @param path The request path.
+     * @return HTTP response.
+     */
     public ResponseMessage post(String path) {
         return post(path, null);
     }
 
+    /**
+     * Issue a POST request against the service using the given path and
+     * form arguments.
+     *
+     * @param path The request path.
+     * @param args Form arguments.
+     * @return HTTP response.
+     */
     public ResponseMessage post(String path, Map<String, Object> args) {
         RequestMessage request = new RequestMessage("POST");
         request.getHeader().put(
@@ -141,11 +224,25 @@ public class HttpService {
         return send(path, request);
     }
 
+    /**
+     * Issue a DELETE request against the service using the given path.
+     *
+     * @param path The request path.
+     * @return HTTP response.
+     */
     public ResponseMessage delete(String path) {
         RequestMessage request = new RequestMessage("DELETE");
         return send(path, request);
     }
 
+    /**
+     * Issue a DELETE request against the service using the given path
+     * and query arguments.
+     *
+     * @param path The request path.
+     * @param args Query arguments.
+     * @return HTTP response.
+     */
     public ResponseMessage delete(String path, Map<String, Object> args) {
         if (count(args) > 0) 
             path = path + "?" + Args.encode(args);
@@ -153,6 +250,14 @@ public class HttpService {
         return send(path, request);
     }
 
+    /**
+     * Issue an HTTP request against the service using the given path and
+     * request message.
+     *
+     * @param path Request path.
+     * @param request Request message.
+     * @return HTTP response.
+     */
     public ResponseMessage send(String path, RequestMessage request) {
         // Construct a full URL to the resource
         URL url = getUrl(path);
@@ -241,6 +346,13 @@ public class HttpService {
         return response;
     }
 
+    /**
+     * Creates a socket connection to the service.
+     *
+     * @return Socket.
+     * @throws IOException.
+     */
+    // UNDONE: Consider making this package-private visibility
     public Socket streamConnect() throws IOException {
         if (this.scheme.equals("https")) {
             SSLSocketFactory sslsocketfactory;
@@ -257,7 +369,10 @@ public class HttpService {
         return new Socket(this.host, this.port);
     }
 
-    // Set trust policy to be used by this instance.
+    /**
+     * Set the trust policy used by this service instance.
+     */
+    // UNDONE: This is currently fixed but eventually needs to be "pluggable".
     void setTrustPolicy() {
         try {
             SSLContext context = SSLContext.getInstance("SSL");

@@ -20,6 +20,10 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Represents an HTTP response message including status code, response headers
+ * and body content.
+ */
 public class ResponseMessage {
     int status;
     Map<String, String> header = null;
@@ -36,16 +40,31 @@ public class ResponseMessage {
         this.content = content;
     }
 
+    /**
+     * Returns the body content stream.
+     *
+     * @return Content stream.
+     */
     public InputStream getContent() {
         return this.content;
     }
 
+    /**
+     * Returns the response headers.
+     *
+     * @return Response headers.
+     */
     public Map<String, String> getHeader() {
         if (this.header == null)
             this.header = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
         return this.header;
     }
 
+    /**
+     * Returns the response status.
+     *
+     * @return Response status.
+     */
     public int getStatus() {
         return this.status;
     }

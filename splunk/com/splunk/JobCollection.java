@@ -19,12 +19,13 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of a collection of jobs
+ * Representation of a collection of jobs.
  */
 public class JobCollection extends EntityCollection<Job> {
 
-    final String oneShotNotAllowed = String.format(
-                 "Oneshot not allowed, use service oneShotSearch method");
+    static String oneShotNotAllowed = String.format(
+         "Oneshot not allowed, use service oneShotSearch method");
+
     /**
      * Class constructor.
      *
@@ -43,24 +44,21 @@ public class JobCollection extends EntityCollection<Job> {
      * @return The search job SID.
      */
     public Job create(String query) {
-        if (query.contains("exec_mode=oneshot")) {
-            throw new RuntimeException(oneShotNotAllowed);
-        }
         return create(query, null);
     }
 
     /**
      * Creates a search job. Note that a 'oneshot' request is invalid here.
-     * Please use the craeteOneShot method instead.
+     * Please use the createOneShot method instead.
      *
      * @param query The search query.
      * @param args The arguments supplied to this job's creation.
      * @return The search job SID.
      */
     public Job create(String query, Map args) {
-        if (args.containsKey("exec_mode") &&
-            args.get("exec_mode").equals("oneshot")) {
-            throw new RuntimeException(oneShotNotAllowed);
+        if (args != null && args.containsKey("exec_mode")) {
+            if (args.get("exec_mode").equals("oneshot"))
+                throw new RuntimeException(oneShotNotAllowed);
         }
         args = Args.create(args).add("search", query);
         ResponseMessage response = service.post(path, args);

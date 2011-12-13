@@ -19,6 +19,9 @@ package com.splunk;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+/**
+ * Thrown for HTTP responses that return an error status code.
+ */
 public class HttpException extends RuntimeException {
     private int status;
     private String detail; // Error message detail
@@ -29,6 +32,12 @@ public class HttpException extends RuntimeException {
         this.detail = detail;
     }
 
+    /**
+     * Create an {@code HttpException} instance based on the given response.
+     *
+     * @param response The HTTP response that returned an error code.
+     * @return A new {@code HttpException) instance.
+     */
     static HttpException create(ResponseMessage response) {
         int status = response.getStatus();
 
@@ -50,10 +59,20 @@ public class HttpException extends RuntimeException {
         return new HttpException(status, message, detail);
     }
 
+    /**
+     * Returns the HTTP error response message detail.
+     *
+     * @return HTTP error response message detail.
+     */
     public String getDetail() {
         return detail;
     }
 
+    /**
+     * Returns the HTTP status code.
+     *
+     * @return HTTP status code.
+     */
     public int getStatus() {
         return status;
     }

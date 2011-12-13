@@ -20,17 +20,29 @@ import java.io.OutputStream;
 import java.util.TreeMap;
 import java.util.Map;
 
+/**
+ * Represents an HTTP request message including method, headers and body
+ * content.
+ */
 public class RequestMessage {
     String method = "GET";  // "GET" | "PUT" | "POST" | "DELETE"
     Map<String, String> header = null;
     Object content = null;
 
+    /** Creates a new {@code RequestMessage} instance. */
     public RequestMessage() {}
 
+    /** Creates a {@code RequestMessage} instance with the given method */
     public RequestMessage(String method) {
         this.method = method;
     }
 
+    /**
+     * Answers if the given value is a supported HTTP method.
+     *
+     * @param value The value to check.
+     * @return {@code true} if the value is a supported method.
+     */
     boolean checkMethod(String value) {
         return
             value.equalsIgnoreCase("GET") ||
@@ -39,6 +51,11 @@ public class RequestMessage {
             value.equalsIgnoreCase("DELETE");
     }
 
+    /**
+     * Returns the {@code Map} of message headers.
+     *
+     * @return Message headers.
+     */
     public Map<String, String> getHeader() {
         if (this.header == null)
             this.header = new TreeMap<String, String>(
@@ -46,10 +63,20 @@ public class RequestMessage {
         return this.header;
     }
 
+    /**
+     * Returns the message's HTTP method value.
+     *
+     * @return HTTP method.
+     */
     public String getMethod() {
         return this.method;
     }
 
+    /**
+     * Sets the message's HTTP method value.
+     *
+     * @param value HTTP method.
+     */
     public void setMethod(String value) {
         value = value.toUpperCase();
         if (!checkMethod(value))
@@ -57,10 +84,20 @@ public class RequestMessage {
         this.method = value;
     }
 
+    /**
+     * Returns the message body content.
+     *
+     * @return Message content.
+     */
     public Object getContent() {
         return this.content;
     }
 
+    /**
+     * Sets the message body content.
+     *
+     * @param value Message content.
+     */
     public void setContent(String value) {
         this.content = value;
     }
