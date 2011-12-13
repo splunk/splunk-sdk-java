@@ -172,6 +172,5 @@ public class Program {
         reader.close();
 
         job.cancel();
-
     }
 }
