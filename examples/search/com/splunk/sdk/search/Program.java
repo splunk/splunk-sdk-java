@@ -167,9 +167,11 @@ public class Program {
             writer.write(buffer, 0, count);
         }
 
+        writer.write("\n");
         writer.close();
         reader.close();
 
         job.cancel();
+
     }
 }
