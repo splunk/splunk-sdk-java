@@ -18,6 +18,9 @@ package com.splunk;
 
 import java.util.Map;
 
+/**
+ * Base class for all Splunk resources.
+ */
 public abstract class Resource {
     protected Map<String, String> actions;
     protected String path;
@@ -30,39 +33,81 @@ public abstract class Resource {
         this.service = service;
     }
 
+    /**
+     * Returns a map of actions that are enabled for this resource.
+     *
+     * @return Action map.
+     */
     public Map<String, String> getActions() {
         return validate().actions;
     }
 
-    // Every resource has a name, which by default is its title. That name
-    // may also be used as the key for the resources if it belongs to a 
-    // container resource, as in the case of an entity that belongs to an 
-    // entity collection.
+    /**
+     * Returns the resource name. Every resource has a name, which by default
+     * is its title. That name may also be used as the key for the resources
+     * if it belongs to a container resource, as in the case of an entity that
+     * belongs to an entity collection.
+     *
+     * @return Resource namne.
+     */
+    //
     public String getName() {
         return getTitle();
     }
 
+    /**
+     * Returns the path to this resource.
+     *
+     * @return Resource path.
+     */
     public String getPath() {
         return this.path;
     }
 
+    /**
+     * Returns the service instance this resource instance is affiliated with.
+     *
+     * @return Service instance.
+     */
     public Service getService() {
         return this.service;
     }
 
+    /**
+     * Return the title of this resource. This corresponds to the Atom title
+     * element return in the Splunk REST API.
+     *
+     * @return Resource title.
+     */
     public String getTitle() {
         return validate().title;
     }
 
+    /**
+     * Set the title of this resource.
+     *
+     * @param value Resource title.
+     */
     void setTitle(String value) {
         this.title = value;
     }
 
+    /**
+     * Mark the local state of this resource instance as no longer current.
+     *
+     * @return The current resource instance.
+     */
     public Resource invalidate() {
         this.maybeValid = false;
         return this;
     }
 
+    /**
+     * Load the state of this resource instance from the given Atom object.
+     *
+     * @param value Atom object to load resources state from.
+     * @return The current resource instance.
+     */
     Resource load(AtomObject value) {
         if (value == null) {
             this.title = "title";
@@ -75,8 +120,19 @@ public abstract class Resource {
         return this;
     }
 
+    /**
+     * Refresh the local state of this resource instance.
+     *
+     * @return The current resource instance.
+     */
     public abstract Resource refresh();
 
+    /**
+     * Ensure that the local state of the resource instance is current,
+     * possibly invoking {@code refresh} if necessarry.
+     *
+     * @return The current resource instance.
+     */
     public Resource validate() {
         if (this.maybeValid == false) refresh();
         return this;

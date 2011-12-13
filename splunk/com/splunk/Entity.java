@@ -18,13 +18,11 @@ package com.splunk;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Base class for almost every endpoint return. Specific endpoints extend
- * this class.
+ * Base class for all Splunk entity resources.
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
@@ -59,24 +57,17 @@ public class Entity extends Resource implements Map<String, Object> {
         throw new IllegalArgumentException("Invalid action: " + action);
     }
 
-    //UNDONE: This is not used?
+    /** {@inheritDoc} */
     public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Returns whether or not the specified key is in the content of this
-     * entity.
-     *
-     * @param key The key to look up.
-     * @return Whether or not the specified key is in the content of this
-     * entity.
-     */
+    /** {@inheritDoc} */
     public boolean containsKey(Object key) {
         return getContent().containsKey(key);
     }
 
-    //UNDONE: this is not used?
+    /** {@inheritDoc} */
     public boolean containsValue(Object value) {
         return getContent().containsValue(value);
     }
@@ -99,21 +90,12 @@ public class Entity extends Resource implements Map<String, Object> {
         invalidate();
     }
 
-    /**
-     * Returns this Entity's hash map entry set.
-     *
-     * @return This Entity's hash map entry set.
-     */
+    /** {@inheritDoc} */
     public Set<Map.Entry<String, Object>> entrySet() {
         return getContent().entrySet();
     }
 
-    /**
-     * Returns the value of the specified key from the entity's content.
-     *
-     * @param key The key to look up.
-     * @return The value associated with the specified key.
-     */
+    /** {@inheritDoc} */
     public Object get(Object key) {
         return getContent().get(key);
     }
@@ -249,7 +231,12 @@ public class Entity extends Resource implements Map<String, Object> {
         return getContent().getInteger(key, defaultValue);
     }
 
-    //UNDONE: this is not used?
+    /**
+     * Returns the long value associated with the specified key.
+     *
+     * @param key The key to look up.
+     * @return The long value associated with the specified key.
+     */
     long getLong(String key) {
         return getContent().getLong(key);
     }
@@ -271,7 +258,7 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return the meta data of this entity.
      */
     public EntityMetadata getMetadata() {
-        // CONSIDER: For entities that dont have an eai:acl field, which is
+        // CONSIDER: For entities that don't have an eai:acl field, which is
         // uncommon, but does happen at least in the case of a DeploymentClient
         // that is not enabled, we return null. A slightly friendlier option
         // would be to return a metadata instance that defaults all values?
@@ -323,7 +310,7 @@ public class Entity extends Resource implements Map<String, Object> {
         return getContent().getStringArray(key, defaultValue);
     }
 
-    //UNDONE: is note used?
+    /** {@inheritDoc} */
     public boolean isEmpty() {
         return getContent().isEmpty();
     }
@@ -338,11 +325,7 @@ public class Entity extends Resource implements Map<String, Object> {
         return getBoolean("disabled", false);
     }
 
-    /**
-     * Returns this entity's content key set.
-     *
-     * @return This entity's content key set.
-     */
+    /** {@inheritDoc} */
     public Set<String> keySet() {
         return getContent().keySet();
     }
@@ -359,23 +342,17 @@ public class Entity extends Resource implements Map<String, Object> {
         return this;
     }
 
-    //UNDONE: not used?
+    /** {@inheritDoc} */
     public Object put(String key, Object value) {
         throw new UnsupportedOperationException();
     }
 
-    //UNDONE: not used?
+    /** {@inheritDoc} */
     public void putAll(Map<? extends String, ? extends Object> map) {
         throw new UnsupportedOperationException();
     }
 
-    // Refresh the current (singleton) entity instance.
-
-    /**
-     * Refreshes this entity's content.
-     *
-     * @return This entity.
-     */
+    /** {@inheritDoc} */
     @Override public Entity refresh() {
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200); // UNDONE
@@ -395,12 +372,12 @@ public class Entity extends Resource implements Map<String, Object> {
         invalidate();
     }
 
-    //UNDONE: not used?
+    /** {@inheritDoc} */
     public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
-    //UNDONE: not used?
+    /** {@inheritDoc} */
     public int size() {
         return getContent().size();
     }
@@ -416,22 +393,19 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Removes this entity.
+     * Removes this entity from its corresponding collection.
      */
     public void remove() {
         service.delete(actionPath("remove"));
     }
 
-    /**
-     * Validates this entity.
-     * @return This entity.
-     */
+    /** {@inheritDoc} */
     @Override public Entity validate() { 
         super.validate(); 
         return this;
     }
 
-    //UNDONE: not used?
+    /** {@inheritDoc} */
     public Collection<Object> values() {
         return getContent().values();
     }

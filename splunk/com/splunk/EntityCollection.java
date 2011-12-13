@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * The collection of entity base class.
  *
- * @param <T> The entity subclass.
+ * @param <T> The type of members of the collection.
  */
 public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
 

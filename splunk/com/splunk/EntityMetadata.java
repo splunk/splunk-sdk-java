@@ -16,11 +16,9 @@
 
 package com.splunk;
 
-// A class that provides access to an entities metadata. Instances of this
-// class are obtained via Entity.getMetadata.
-
 /**
- * Representation of Entity and its subclasses meta data fields.
+ * Provides access to the metadata properties of a corresponding entity.
+ * Instances of this class are obtained via {@code Entity.getMetadata}.
  */
 public class EntityMetadata {
     private Entity entity;
@@ -105,9 +103,6 @@ public class EntityMetadata {
     public String getOwner() {
         return getEaiAcl().getString("owner");
     }
-
-    // Returns the entity's permissions. The permissions are represented as
-    // a Map that maps action to a list of roles that can perform the action.
 
     /**
      * Returns this entity's permissions. These permissions represent an
