@@ -23,8 +23,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+/**
+ * XML utilities.
+ */
 public class Xml {
-    // Returns the given input stream as an XML DOM.
+    /**
+     * Parse the given {@code InputStream} and return as an XML DOM.
+     * @param input Input stream.
+     * @return XML DOM.
+     */
     public static Document parse(InputStream input) {
         try {
             DocumentBuilderFactory factory =

@@ -16,95 +16,246 @@
 
 package com.splunk;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-// An extension of map with a collection of value converting accessors.
+/**
+ * An extension of {@code HashMap} that contains a variety of value converting
+ * access methods.
+ */
 public class Record extends HashMap<String, Object> {
+    /**
+     * Returns the {@code boolean} value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key, or {@code null} if the
+     *         key does not exist.
+     */
     boolean getBoolean(String key) {
         return Value.toBoolean(getString(key));
     }
 
+    /**
+     * Returns the {@code boolean} value associated with the given key, or the
+     * {@code defaultValue} if the key does not exist.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     boolean getBoolean(String key, boolean defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return Value.toBoolean(getString(key));
     }
 
+    /**
+     * Returns the {@code long} byte count value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key, or {@code null} if the
+     *         key does not exist.
+     */
     long getByteCount(String key) {
         return Value.toByteCount(getString(key));
     }
 
+    /**
+     * Returns the {@code long} byte count value associated with the given key,
+     * or {@code defaultValue} if the key does not exist.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     long getByteCount(String key, long defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return Value.toByteCount(getString(key));
     }
 
+    /**
+     * Returns the {@code Date} value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key, or {@code null} if the
+     *         key does not exist.
+     */
     Date getDate(String key) {
         return Value.toDate(getString(key));
     }
 
+    /**
+     * Returns the {@code Date} value associated with the given key, or
+     * {@code defaultValue} if the key does not exist.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     Date getDate(String key, Date defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return Value.toDate(getString(key));
     }
 
+    /**
+     * Returns the {@code Date} value associated with the given key. The value
+     * stored in the record is a string representation of a date from the epoch.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key, or {@code null} if the
+     *         key does not exist.
+     */
     Date getDateFromEpoch(String key) {
         return Value.toDateFromEpoch(getString(key));
     }
 
+    /**
+     * Returns the {@code Date} value associated with the given key, or
+     * {@code defaultValue} if the key does not exist. The value stored in the
+     * record is a string representation of a data from the epoch.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     Date getDateFromEpoch(String key, Date defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return Value.toDateFromEpoch(getString(key));
     }
 
+    /**
+     * Returns the {@code float} value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key.
+     */
     float getFloat(String key) {
         return Value.toFloat(getString(key));
     }
 
+    /**
+     * Returns the {@code int} value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key.
+     */
     int getInteger(String key) {
         return Value.toInteger(getString(key));
     }
 
+    /**
+     * Returns the {@code int} value associated with the given key, or
+     * {@code defaultValue} if the key does not exist.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     int getInteger(String key, int defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return Value.toInteger(getString(key));
     }
 
+    /**
+     * Returns the {@code long} value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key.
+     */
     long getLong(String key) {
         return Value.toLong(getString(key));
     }
 
+    /**
+     * Returns the {@code long} value associated with the given key, or
+     * {@code defaultValue} if the key does not exist.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     long getLong(String key, int defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return Value.toLong(getString(key));
     }
 
+    /**
+     * Returns the {@code String} value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key.
+     */
     String getString(String key) {
         return get(key).toString();
     }
 
+    /**
+     * Returns the {@code String} value associated with the given key, or
+     * {@code defaultValue} if the key does not exist.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     String getString(String key, String defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return get(key).toString();
     }
 
+    /**
+     * Returns the {@code String[]} value associated with the given key.
+     *
+     * @param key The key of the value being retrieved.
+     * @return The value associated with the given key.
+     */
     String[] getStringArray(String key) {
         List<String> value = (List<String>)get(key);
         return value.toArray(new String[value.size()]);
     }
 
+    /**
+     * Returns the {@code String[]} value associated with the given key, or
+     * {@code defaultValue} if the key does not exist.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist
+     * @return The value associated with the given key, or {@code defaultValue}
+     *         if the key does not exist.
+     */
     String[] getStringArray(String key, String[] defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return getStringArray(key);
     }
 
+    /**
+     * Returns the value associated with the given key, cast to the given type
+     * parameter.
+     *
+     * @param key The key of the value being retrieved.
+     * @param <T> The type to cast the return value to.
+     * @return The value associated with the given key, cast to the given type.
+     */
     <T> T getValue(String key) {
         return (T)get(key);
     }
 
+    /**
+     * Returns the value associated with the given key, or {@code defaultValue}
+     * if the key does not exist, cast to the given type parameter.
+     *
+     * @param key The key of the value being retrieved.
+     * @param defaultValue The value to return if the key does not exist.
+     * @param <T> The type to cast the return value to.
+     * @return The value associated with the given key, or {@code defautlValue}
+     *         if the key does not exist.
+     */
     <T> T getValue(String key, T defaultValue) {
         if (!containsKey(key)) return defaultValue;
         return (T)get(key);

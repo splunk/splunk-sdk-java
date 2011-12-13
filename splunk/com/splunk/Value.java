@@ -22,9 +22,16 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Value conversion helpers
+/**
+ * Value conversion helper functions.
+ */
 class Value {
-    // Convert the given string to a boolean value.
+    /**
+     * Convert the given {@code String} to a boolean value.
+     *
+     * @param value Value to convert.
+     * @return boolean value.
+     */
     static boolean toBoolean(String value) {
         if (value == null) return false;
         if (value.equals("0"))
@@ -39,6 +46,12 @@ class Value {
         throw new RuntimeException(message);
     }
 
+    /**
+     * Convert the given {@code String} to a numeric byte count.
+     *
+     * @param value Value to convert.
+     * @return Count of bytes.
+     */
     static long toByteCount(String value) {
         long multiplier = 1;
         if (value.endsWith("B")) {
@@ -59,6 +72,13 @@ class Value {
 
     private static SimpleDateFormat dateFormat = null;
     private static Pattern datePattern = null;
+
+    /**
+     * Convert the given {@code String} to a {@code Date} value.
+     *
+     * @param value Value to convert.
+     * @return Date value.
+     */
     static Date toDate(String value) {
         if (dateFormat == null) {
             dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -83,18 +103,43 @@ class Value {
         return result;
     }
 
+    /**
+     * Convert the given {@code String}, representing a date from the epoch,
+     * to a {@code Date} value.
+     *
+     * @param value Value to convert.
+     * @return Date value.
+     */
     static Date toDateFromEpoch(String value) {
         return new Date(Long.parseLong(value)*1000);
     }
 
+    /**
+     * Convert the given {@code String} to a {@code float} value.
+     *
+     * @param value Value to convert.
+     * @return {@code float} value.
+     */
     static float toFloat(String value) {
         return Float.parseFloat(value);
     }
 
+    /**
+     * Convert the given {@code String} to an {@code int} value.
+     *
+     * @param value Value to convert.
+     * @return {@code int} value.
+     */
     static int toInteger(String value) {
         return Integer.parseInt(value);
     }
 
+    /**
+     * Convert the given {@code String} to a {@code long} value.
+     *
+     * @param value Value to convert.
+     * @return {@code long} value.
+     */
     static long toLong(String value) {
         return Long.parseLong(value);
     }

@@ -61,7 +61,6 @@ public class Args extends HashMap<String, Object> {
      *
      * @param key The key name.
      * @param value The value. (String or String [])
-     *
      * @return This Args set.
      */
     public Args add(String key, Object value) {
@@ -141,7 +140,7 @@ public class Args extends HashMap<String, Object> {
     /**
      * Encodes an Args instance into a UTF8 encoded string.
      *
-     * @return The UTF8 encodede string.
+     * @return The UTF8 encoded string.
      */
     public String encode() {
         StringBuilder builder = new StringBuilder();
