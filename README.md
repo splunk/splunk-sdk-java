@@ -8,13 +8,13 @@ map-reduce architecture to efficiently index, search and process large
 time-varying data sets.
 
 The Splunk product is popular with system administrators for aggregation and
-monitoring of IT machine data, security, compliance and a wide variety of other
-scenarios that share a requirement to efficiently index, search, analyze and
-generate real-time notifications from large volumes of time series data.
+monitoring of IT machine data, security, compliance and a wide variety of 
+other scenarios that share a requirement to efficiently index, search, analyze
+and generate real-time notifications from large volumes of time series data.
 
-The Splunk developer platform enables developers to take advantage of the same
-technology used by the Splunk product to build exciting new applications that
-are enabled by Splunk's unique capabilities.
+The Splunk developer platform enables developers to take advantage of the 
+same technology used by the Splunk product to build exciting new applications
+that are enabled by Splunk's unique capabilities.
 
 ## License
 
@@ -23,8 +23,8 @@ License 2.0. Details can be found in the file LICENSE.
 
 ## This SDK is a Preview Release
 
-1.  This Preview release a pre-beta release.  There will also be a beta release 
-    prior to a general release. It is incomplete and may have bugs.
+1.  This Preview release a pre-beta release.  There will also be a beta 
+    release prior to a general release. It is incomplete and may have bugs.
 
 2.  The Apache license only applies to the SDK and no other Software provided 
     by Splunk.
@@ -32,161 +32,203 @@ License 2.0. Details can be found in the file LICENSE.
 3.  Splunk in using the Apache license is not providing any warranties, 
     indemnification or accepting any liabilities  with the Preview SDK.
 
-4.  Splunk is not accepting any Contributions to the Preview release of the SDK.  
+4.  Splunk is not accepting any Contributions to the Preview release of 
+    the SDK.  
     All Contributions during the Preview SDK will be returned without review.
 
-## Getting started
+## Getting started with the Splunk Java SDK
 
-In order to use the SDK you are going to need a copy of Splunk. If you don't 
-already have a copy you can download one from http://www.splunk.com/download.
-
-You can get a copy of the SDK sources by cloning into the repository with git:
-
-> git clone https://github.com/splunk/splunk-sdk-java.git
+The Splunk Java SDK contains library code and examples that show how to 
+programmatically interact with Splunk for a variety of scenarios including 
+searching, saved searches, data inputs, and many more, along with building 
+complete applications. 
 
 ### Requirements
 
-The SDK requires Java version 1.6+, aka Java SE 6+.
+Here's what you need to get going with the Splunk Java SDK.
 
-A good description of the Java version history can be found at
+#### Splunk
 
-* http://en.wikipedia.org/wiki/Java_version_history
+If you haven't already installed Splunk, download it here: 
+http://www.splunk.com/download. For more about installing and running Splunk 
+and system requirements, see Installing & Running Splunk 
+(http://dev.splunk.com/view/SP-CAAADRV). 
 
-#### Setup for Windows
+#### Splunk Java SDK
 
-You will need to install both Java JDK from Oracle and Ant from Apache. 
+Get the Splunk Java SDK from GitHub (https://github.com/) and clone the 
+resources to your computer. For example, use the following command: 
 
-* http://www.oracle.com/technetwork/java/javase/downloads/index.html
-* http://ant.apache.org/
+>  git clone https://github.com/splunk/splunk-sdk-Java.git
 
-Set the environment variables ANT_HOME to the location where you unzipped Ant.
-Set the environment variable JAVA_HOME to the directory you installed the JDK.
-Add to the system path environment variable %ANT_HOME%\bin
+#### Java and Ant
 
-For full installation instructions see:
+You'll need Java SE version 6 or higher, which you can download from the 
+Oracle web site 
+(http://www.oracle.com/technetwork/java/javase/downloads/index.html). 
 
-http://ant.apache.org/manual/install.html
-http://www.oracle.com/technetwork/java/javase/index-137561.html
+You'll also need Ant, which you can install from the Apache website 
+(http://ant.apache.org/bindownload.cgi). 
 
-### Building
+If you are using Windows, you'll need to make sure the following system 
+variables are created and set: 
 
-In order to build the SDK, simply type the following from the root of the 
-repository.
+*   ANT_HOME should be set to the location where Ant is installed.
 
-> ant
+*   JAVA_HOME should be set to the directory where the JDK is installed.
 
-In order to remove all build artifacts from the repository simply type:
+*   PATH should include the path to the %ANT_HOME%\bin directory.
 
-> ant clean
+For full installation instructions, you can find more information here:
+ 
+*   http://www.oracle.com/technetwork/java/javase/index-137561.html
 
-And to build the javadocs for the SDK, type:
+*   http://ant.apache.org/manual/install.html
 
-> ant javadoc
+### Building the SDK and documentation
 
-Take a look at `build.xml` for other targets if you are interested in more
-control of the build process.
+To build the SDK, open a command prompt at the root of the Splunk Java SDK 
+repository and enter: 
 
-You can also type `ant {target} -find` from anywhere in the repository and 
-Ant will automatically find the root build file.
+>  ant
 
-### Running the examples and unit tests
+To remove all build artifacts from the repository, enter:
 
-The SDK examples and unit tests require a common set of command line arguments
-that specify things like the Splunk host, port and login credentials. You can
-get a full list of command line arguments by typing `--help` as an argument
-to any of the command line examples.
+>  ant clean
 
-#### .splunkrc
+To build the documentation for the SDK, enter: 
 
-The examples and units are also designed to receive arguments from an optional
-`.splunkrc` file located in your home directory. The format of the file is
-simply a list of key=value pairs, same as the options that are taken on the
-command line, for example:
+>  ant javadoc
 
+If you are interested in more control of the build process, see the build.xml 
+file. You can also type the following command from anywhere in the repository 
+and Ant will find the root build file:
+
+>  ant {target} -find
+
+### Examples and unit tests
+
+The Splunk Java SDK includes several examples and unit tests that are run at 
+the command line. 
+
+
+#### Set up the .splunkrc file
+
+To connect to Splunk, many of the SDK examples and unit tests take command-
+line arguments that specify values for the host, port, and login credentials 
+for Splunk. For convenience during development, you can store these arguments 
+as key-value pairs in a text file named .splunkrc. Then, when you don't 
+specify these arguments at the command line, the SDK examples and unit tests 
+use the values from the .splunkrc file. 
+
+To use a .splunkrc file, create a text file with the following format:
+
+    # Host at which Splunk is reachable (OPTIONAL)
     host=localhost
-    username=admin
+    # Port at which Splunk is reachable (OPTIONAL)
+    # Use the admin port, which is 8089 by default.
+    port=8089
+    # Splunk username
+    user=admin
+    # Splunk password
     password=changeme
+    # Access scheme (OPTIONAL)
+    scheme=https
+    # Namespace to use (OPTIONAL)
+    namespace=*:*
 
-The `.splunkrc` file is a feature of the SDK examples and unit tests and not
-the Splunk platform or SDK libraries and is intended simply as convenience for
-developers using the SDK.
 
-The `.splunkrc` file should not be used for storing user credentials for apps
-built on Splunk and should not be used if you are concerned about the security
-of the credentails used in your development environment.
+Save the file as .splunkrc in the current user's home directory.
 
-You can view a sample `.splunkrc` file by looking at the `splunkrc.spec` file
-in the root directory of the repistory.
+*   For example on Mac OS X, save the file as: 
 
-#### Examples
+    >  ~/.splunkrc
 
-You can run any of the SDK examples by invoking the Java interpreter on the
-command line, using the -jar flag to specify the target example jar file and
-adding any other command line arguments required by the example.
+*   On Windows, save the file as: 
 
-The build process deposits examples under ./dist/examples, so in order to
-launch the search example, you might type the following:
+    >  C:\Users\currentusername\.splunkrc
 
-> java -jar dist/examples/search.jar "search * | head 10" --output_mode=csv
+    You might get errors in Windows when you try to name the file because
+    ".splunkrc" looks like a nameless file with an extension. You can use
+    the command line to create this fileâ go to the 
+    C:\Users\currentusername directory and enter the following command: 
 
-And to get a list of all command line arguments supported by the example
-you would type:
+    >  Notepad.exe .splunkrc
 
-> java -jar dist/examples/search.jar --help
+    Click Yes, then continue creating the file.
 
-There is also a helper script called `run` in the root of the repository that 
-simplifies running the SDK examples, so instead of the command above, you 
-could simply type:
+NOTE: Storing login credentials in the .splunkrc file is only for convenience 
+during developmentâ€”this file isn't part of the Splunk platform and 
+shouldn't be used for storing user credentials for production. And, if you're 
+at all concerned about the security of your credentials, just enter them at 
+the command line rather than saving them in the .splunkrc file. 
 
-> ./run search "search * | head 10" --output_mode=csv
 
-#### Unit tests
+#### Run examples
 
-In order to run the SDK unit tests, you simply type the following from the
-root of the repository.
+After you build the SDK, examples are put in the splunk-sdk-
+java/dist/examples directory. To run the examples, run the Java interpreter 
+at the command line using the -jar flag to specify the target example jar 
+file, and include any arguments that are required by the example. To get help 
+for an example, use the --help argument with an example. 
 
-> ant test
+For example, to see the command-line arguments for the Search example, open a 
+command prompt in the splunk-sdk-java directory and enter: 
 
-You can also use `ant test -find` to run the units from anywhere in the
-repository.
-    
-It's also possible to run the units from within popular Java IDEs such as
-Eclipse and IntelliJ.
+>  java -jar dist/examples/search.jar --help
 
-### Eclipse and IntelliJ
+To run the Search example, open a command prompt in the splunk-sdk-java 
+directory and enter: 
 
-The repository contains support for both Eclipse and IntelliJ and the units
-and examples can be run from within both of those tools.
+>  java -jar dist/examples/search.jar "search * | head 10" --output_mode=csv
 
-## Overview
+There is also a helper script called run in the root of the repository that 
+simplifies running the SDK examples. For example, on Mac OS X you could 
+simply enter: 
 
-The Splunk developer platform consists of three primary components: `splunkd`,
-the engine, `splunkweb`, the app framework that sits on top of the engine,
-and the Splunk SDKs that interface with the REST API and extension points.
+>  ./run search "search * | head 10" --output_mode=csv
 
-This SDK enables developers to target `splunkd` by making calls against the
-engine's REST API and by accessing the various `splunkd` extension points such
-as custom search commands, lookup functions, scripted inputs and custom REST
+#### Run unit tests
+
+To run the SDK unit tests, open a command prompt at the root of the Splunk 
+Java SDK repository and enter: 
+
+>  ant test
+
+To run the units from anywhere in the repository, enter:
+
+>  ant test -find
+
+It's also possible to run the units within Java IDEs such as IntelliJ and 
+Eclipse.
+
+
+## The Splunk Java SDK components
+
+The Splunk developer platform consists of three primary components: splunkd, 
+the engine; splunkweb, the app framework that sits on top of the engine; and 
+the Splunk SDKs that interface with the REST API and extension points.
+
+The Splunk Java SDK lets you target splunkd by making calls against the 
+engine's REST API and accessing the various splunkd extension points such as 
+custom search commands, lookup functions, scripted inputs, and custom REST 
 handlers.
-
-You can find additional information about building applications on Splunk at
-our developer portal at http://dev.splunk.com.
 
 ### Service
 
-The `Service` class is the primary entry point for the client library. You 
-construct an instance of the Service class, providing any arguments required
-to connect to an available Splunk server. Once the Service instance is created, 
-you need to call the `login` method and provide login credentials. Once you
-have an authenticated Service instance, you can use it to navigate, enumerate
-and operate on a wide variety of Splunk resources. You can also use it to issue
-searches and even make low level REST API calls.
+The Service class is the primary entry point for the client library. 
+Construct an instance of the Service class and provide any arguments that are 
+required to connect to an available Splunk server. Once the Service instance 
+is created, call the login() method and provide login credentials. Once you 
+have an authenticated Service instance, you can use it to navigate, 
+enumerate, and operate on a wide variety of Splunk resources. You can also 
+use it to issue searches and make REST API calls. 
 
-The following example creates a Service instance and prints the Splunk version
-number.
+The following example creates a Service instance and prints the Splunk 
+version number:
 
     import com.splunk.Service;
-
+    
     public class Program {
         public static void run(String[] args) {
             Service service = new Service("localhost", 8089);
@@ -197,9 +239,10 @@ number.
     }
 
 The Service class provides a variety of constructor overloads to handle 
-various scenarios that require different combinations of arguments and in the
-most general case takes a map of arguments, which simplifies passing large
-and varying combinations of arguments.
+various scenarios that require different combinations of arguments. In the 
+most general case, the Service class takes a map of arguments, which 
+simplifies passing large and varying combinations of arguments, as shown in 
+the following example:
 
     Map<String, Object> args = new HashMap<String, Object>();
     args.put("host", "localhost");
@@ -207,10 +250,11 @@ and varying combinations of arguments.
     Service service = new Service(args);
     service.login("admin", "changeme");
 
-The Service class also provides a static helper methods that takes a map and
-combines the construction and authentication of the instance into a single
-call. This is the most general and flexible method and is the method most often
-used in the SDK examples and unit tests.
+The Service class also provides a static helper method that takes a map and 
+combines the construction and authentication of the instance into a single 
+call. Because of its flexibility, it is the method that is used most often in 
+the SDK examples and unit tests. The following example shows how to use this 
+helper method:
 
     Map<String, Object> args = new HashMap<String, Object>();
     args.put("host", "localhost");
@@ -224,36 +268,36 @@ used in the SDK examples and unit tests.
 
 ### Entities and collections
 
-The Splunk REST API is a rich interface consisting of over 160 endpoints that
-provide access to virtually every feature area of Splunk. The majority of this
-API follows a convention of exposing resorces as collections of entities, where
-an entity is simply a resource that has properties, actions and metadata that
-describes the entity. The entity/collection pattern provides a consistent
-approach to interacting with resources and collections of resources.
+The Splunk REST API consists of over 160 endpoints that provide access to 
+almost every feature of Splunk. The majority of the Splunk Java SDK API 
+follows a convention of exposing resources as collections of entities, where 
+an entity is a resource that has properties, actions, and metadata that 
+describes the entity. The entity/collection pattern provides a consistent 
+approach to interacting with resources and collections of resources. 
 
-For example, the following code fragment prints out all Splunk users.
+For example, the following code prints all Splunk users:
 
     Service service = Service.connect(...);
     for (User user : service.getUsers().values())
         System.out.println(user.getName());
 
-And in a very similar way, the following code prints out all the Splunk apps.
+Similarly, the following code prints all the Splunk apps:
 
     Service service = Service.connect(...);
     for (Application app : service.getApplications().values())
-        System.out.println(app.getName());
+    System.out.println(app.getName());
 
-Collections have a common way of creating and removing entities. Entities have
-a common way of retrieving property values, updating those values and accessing
-entity metadata. So once you are familiar with this pattern you will have a
-reasonable understanding of how much of the SDK and underlying REST API work.
+Collections use a common mechanism to create and remove entities. Entities 
+use a common mechanism to retrieve and update property values, and access 
+entity metadata. Once you're familiar with this pattern, you'll have a 
+reasonable understanding of how the SDK and underlying REST API work. 
 
-The SDK contains the base classes `Entity` and `EntityCollection`. Both Entity 
-and EntityCollection derive from the common base class `Resource`. Notice that
-Service itself is not a Resource, but is a container that provides access to
-all features associated with a Splunk instance.
+The SDK contains the base classes Entity and EntityCollection, both of which 
+derive from the common base class Resource. Note that Service is not a 
+Resource, but is a container that provides access to all features associated 
+with a Splunk instance. 
 
-Following is the class hierarchy for the core of the SDK library:
+The class hierarchy for the core SDK library is as follows:
 
     Service
     Resource
@@ -263,10 +307,9 @@ Following is the class hierarchy for the core of the SDK library:
 
 ### Search
 
-One of the primary features of Splunk is the ability to exceute searches and
-retrive search results. To help get you started, the following code fragment
-shows creating a search job, polling for completion and retrieving the result
-stream.
+One of the primary features of Splunk is running searches and retrieving 
+search results. The following code example shows how to create a search job, 
+poll for completion, and retrieve the result stream:
 
     Service service = Service.connect(...);
     Job job = service.getJobs().create("search * | head 10")
@@ -276,12 +319,11 @@ stream.
     }
     InputStream stream = job.getResults();
 
-The Splunk search API has many features, including realtime search, numerious
-search options, various kinds of search results and the ability to execute 
-synchronous search requests in addition to the basic async interface show above.
+The SDK API has many features such as real-time search, numerous search 
+options, various types of search results, and the ability to execute 
+synchronous and asynchronous search requests. To explore core search 
+features, see the Search example included in the SDK. 
 
-The core search features are explored in the SDK `search` example and other
-variations are explored in various other SDK examples.
 
 ### Client state
 
@@ -292,12 +334,14 @@ _TODO_
 <table>
 <tr>
 <td><em>build</em><td>
-<td>This directory is created by the build and contains intermediate build ouputs</td>
+<td>This directory is created by the build and contains intermediate build 
+ouputs</td>
 </tr>
 
 <tr>
 <td><em>dist</em><td>
-<td>This directory is created by the build and contains final build outputs</td>
+<td>This directory is created by the build and contains final build 
+outputs</td>
 </tr>
 
 <tr>
@@ -322,7 +366,8 @@ _TODO_
 
 <tr>
 <td><em>splunk-sdk</em><td>
-<td>Source for <code>com.splunk.sdk</code>, utilities shared by examples and units</td>
+<td>Source for <code>com.splunk.sdk</code>, utilities shared by examples and 
+units</td>
 </tr>
 
 <tr>
@@ -340,7 +385,8 @@ of changes for each version of the SDK. You can also find it online at:
 
 ### Branches
 
-The `master` branch always represents a stable and released version of the SDK.
+The `master` branch always represents a stable and released version of the 
+SDK.
 You can read more about our branching model on our Wiki:
 
 * https://github.com/splunk/splunk-sdk-java/wiki/Branching-Model
@@ -399,7 +445,7 @@ Stay connected with other developers building on Splunk.
 
 ### How to contribute
 
-We aren't ready to accept code contributions yet, but will be shortly.  Check 
+We aren't ready to accept code contributions yet, but will be shortly. Check 
 this README for more updates soon.
 
 ### Support
@@ -407,7 +453,8 @@ this README for more updates soon.
 * SDKs in Preview will not be Splunk supported. Once the Java SDK moves to an
   Open Beta we will provide more detail on support.  
 
-* Issues should be filed here: https://github.com/splunk/splunk-sdk-java/issues
+* Issues should be filed here: 
+  https://github.com/splunk/splunk-sdk-java/issues
 
 ### Contact Us
 
