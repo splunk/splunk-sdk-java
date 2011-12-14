@@ -203,8 +203,11 @@ To run the units from anywhere in the repository, enter:
 >  ant test -find
 
 It's also possible to run the units within Java IDEs such as IntelliJ and 
-Eclipse.
-
+Eclipse. For example, to open the Splunk Java SDK project in Eclipse: 
+1.  Click File, Import. 
+2.  Click General, Existing Projects into Workspace, then click Next. 
+3.  In Select root directory, type the path to the Splunk Java SDK root
+    directory (or click Browse to locate it), then click Finish. 
 
 ## The Splunk Java SDK components
 
