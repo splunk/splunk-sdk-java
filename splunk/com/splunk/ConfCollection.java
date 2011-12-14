@@ -38,7 +38,6 @@ public class ConfCollection
      * Creates a config.
      *
      * @param name The new config name.
-     *
      * @return The new config.
      */
     public EntityCollection<Entity> create(String name) {
