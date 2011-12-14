@@ -17,7 +17,6 @@
 package com.splunk.sdk.spurl;
 
 import com.splunk.Service;
-import com.splunk.RequestMessage;
 import com.splunk.ResponseMessage;
 import com.splunk.sdk.Command;
 
