@@ -58,8 +58,6 @@ public class SavedSearchTest extends SplunkTestCase {
             savedSearch.getDispatchTtl();
             savedSearch.getDisplayView();
             savedSearch.getMaxConcurrent();
-            savedSearch.getNextScheduledTime();
-            savedSearch.getQualifiedSearch();
             savedSearch.getRealtimeSchedule();
             savedSearch.getRequestUiDispatchApp();
             savedSearch.getRequestUiDispatchView();
