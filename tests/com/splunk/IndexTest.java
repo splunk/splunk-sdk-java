@@ -20,7 +20,6 @@ import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 public class IndexTest extends SplunkTestCase {

@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.Map;
 import org.junit.Test;
 
 public class ConfTest extends SplunkTestCase {

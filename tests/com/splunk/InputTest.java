@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.Map;
 import org.junit.*;
 
 public class InputTest extends SplunkTestCase {
