@@ -16,12 +16,6 @@
   under the License.
 -->
 
-<!--
-  UNDONE: How should manifest Class-Path be set for sample jars? They are 
-  currently hardcoded to the corresponding relative repo paths, but that
-  seems suspect.
--->
-
 <project name="splunk-sdk-java" basedir="." default="build">
     <property file="build.properties"/>
 
