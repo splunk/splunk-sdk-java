@@ -134,6 +134,10 @@
         <compile-example name="spurl" classpath="classpath.examples"/>
     </target>
 
+    <target name="compile-example-tail" depends="dist-libs">
+        <compile-example name="tail" classpath="classpath.examples"/>
+    </target>
+
     <target name="compile-tests" depends="dist-libs">
         <mkdir dir="${dir.build.tests}"/>
         <javac includeantruntime="false"
@@ -196,7 +200,8 @@
         dist-example-search-blocking,
         dist-example-search-oneshot,
         dist-example-search-realtime,
-        dist-example-spurl"/>
+        dist-example-spurl,
+        dist-example-tail"/>
 
     <!-- Common dist action for all examples -->
     <macrodef name="dist-example">
@@ -268,6 +273,11 @@
 
     <target name="dist-example-spurl" depends="compile-example-spurl">
         <dist-example name="spurl" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
+    </target>
+
+    <target name="dist-example-tail" depends="compile-example-tail">
+        <dist-example name="tail" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
