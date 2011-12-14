@@ -90,9 +90,6 @@ public class SavedSearch extends Entity {
             catch (InterruptedException e) {}; 
         }
 
-        // UNDONE: If job == null we should probably throw some kind of 
-        // exception indicating a failed dispatch.
-
         return job;
     }
 
@@ -118,7 +115,6 @@ public class SavedSearch extends Entity {
      *
      * @return Answer if search results are attached to an email.
      */
-    // UNDONE: Shouldn't this be a boolean?
     public String getActionEmailSendResults() {
         return getString("action.email.sendresults", null);
     }
@@ -155,7 +151,6 @@ public class SavedSearch extends Entity {
      *
      * @return Answer if alert suppression is enabled for this search.
      */
-    // UNDONE: Shouldn't this be a boolean?
     public String getAlertSuppress() {
         return getString("alert.suppress", null);
     }

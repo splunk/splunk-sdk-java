@@ -123,8 +123,6 @@ public class InputCollection extends EntityCollection<Input> {
      */
     protected InputKind itemKind(String path) {
         for (InputKind kind : kinds) {
-            // UNDONE: Is there a better way to determine input kind from the
-            // contents of the entities atom response?
             if (path.indexOf("data/inputs/" + kind.relpath) > 0)
                 return kind;
         }

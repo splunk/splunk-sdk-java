@@ -335,7 +335,6 @@ public class HttpService {
         }
         catch (IOException e) { assert(false); }
 
-        // UNDONE: Populate response headers
         ResponseMessage response = new ResponseMessage(status, input);
 
         // System.out.format("%d\n", status);
@@ -349,8 +348,8 @@ public class HttpService {
     /**
      * Creates a socket connection to the service.
      *
-     * @return Socket.
-     * @throws IOException.
+     * @return Socket
+     * @throws IOException
      */
     Socket streamConnect() throws IOException {
         if (this.scheme.equals("https")) {
@@ -371,7 +370,6 @@ public class HttpService {
     /**
      * Set the trust policy used by this service instance.
      */
-    // UNDONE: This is currently a fixed policy but needs to be "pluggable".
     void setTrustPolicy() {
         try {
             SSLContext context = SSLContext.getInstance("SSL");

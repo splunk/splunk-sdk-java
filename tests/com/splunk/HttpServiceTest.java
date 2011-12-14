@@ -14,15 +14,6 @@
  * under the License.
  */
 
-//
-// UNDONE: Test basic HTTP level interactions
-//   * send/get/post/delete
-//       - Headers, params, result codes ...
-//   * timeouts
-//   * Server cert validation
-//   * Proxy tunneling
-//
-
 package com.splunk;
 
 import java.util.HashMap;

@@ -14,8 +14,6 @@
  * under the License.
  */
 
-// UNDONE: performance property
-
 package com.splunk;
 
 import java.io.InputStream;
