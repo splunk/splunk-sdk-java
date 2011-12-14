@@ -8,11 +8,8 @@
 	<classpathentry kind="src" path="examples/export"/>
 	<classpathentry kind="src" path="examples/index"/>
 	<classpathentry kind="src" path="examples/info"/>
-	<classpathentry kind="src" path="examples/inputs"/>
-	<classpathentry kind="src" path="examples/loaded"/>
 	<classpathentry kind="src" path="examples/search"/>
 	<classpathentry kind="src" path="examples/spurl"/>
-	<classpathentry kind="src" path="examples/test"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-actions.jar"/>

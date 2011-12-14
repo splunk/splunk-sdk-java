@@ -114,14 +114,6 @@
         <compile-example name="info" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-example-inputs" depends="compile-libs">
-        <compile-example name="inputs" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-loaded" depends="compile-libs">
-        <compile-example name="loaded" classpath="classpath.examples"/>
-    </target>
-
     <target name="compile-example-search" depends="dist-libs">
         <compile-example name="search" classpath="classpath.examples"/>
     </target>
@@ -140,10 +132,6 @@
 
     <target name="compile-example-spurl" depends="dist-libs">
         <compile-example name="spurl" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-test" depends="dist-libs">
-        <compile-example name="test" classpath="classpath.examples"/>
     </target>
 
     <target name="compile-tests" depends="dist-libs">
@@ -204,14 +192,11 @@
         dist-example-export,
         dist-example-index,
         dist-example-info,
-        dist-example-inputs,
-        dist-example-loaded,
         dist-example-search,
         dist-example-search-blocking,
         dist-example-search-oneshot,
         dist-example-search-realtime,
-        dist-example-spurl,
-        dist-example-test"/>
+        dist-example-spurl"/>
 
     <!-- Common dist action for all examples -->
     <macrodef name="dist-example">
@@ -261,16 +246,6 @@
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
-    <target name="dist-example-inputs" depends="compile-example-inputs">
-        <dist-example name="inputs" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-loaded" depends="compile-example-loaded">
-        <dist-example name="loaded" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
     <target name="dist-example-search" depends="compile-example-search">
         <dist-example name="search" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
@@ -293,11 +268,6 @@
 
     <target name="dist-example-spurl" depends="compile-example-spurl">
         <dist-example name="spurl" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-test" depends="compile-example-test">
-        <dist-example name="test" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
