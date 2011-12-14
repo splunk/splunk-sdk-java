@@ -149,7 +149,7 @@ Save the file as .splunkrc in the current user's home directory.
 
 *   On Windows, save the file as: 
 
-    >  C:\Users\currentusername\.splunkrc
+    >  C:\Users\currentusername\\.splunkrc
 
     You might get errors in Windows when you try to name the file because
     ".splunkrc" looks like a nameless file with an extension. You can use
