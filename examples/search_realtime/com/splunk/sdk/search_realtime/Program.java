@@ -131,7 +131,6 @@ public class Program {
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
 
-
         // always set real time search mode
         queryArgs.put("search_mode", "realtime");
         queryArgs.put("earliest_time", earliestTime);
