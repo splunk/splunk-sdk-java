@@ -19,9 +19,7 @@ package com.splunk;
 import org.junit.Test;
 
 public class MetadataTest extends SplunkTestCase {
-    // UNDONE: The following could do a little better check on app (should
-    // be in apps list or well known value), owner (should be in user list or
-    // well known value) and sharing (should be well known value).
+
     void checkMetadata(Entity entity) {
         EntityMetadata metadata = entity.getMetadata();
         if (metadata == null) return;
@@ -45,8 +43,6 @@ public class MetadataTest extends SplunkTestCase {
     @Test public void testMetadata() {
         Service service = connect();
 
-        // UNDONE: Double check and make sure all Service members are
-        // referenced below.
         checkMetadata(service.getApplications());
         checkMetadata(service.getDeploymentClient());
         checkMetadata(service.getDeploymentServerClasses());
