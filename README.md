@@ -81,9 +81,11 @@ variables are created and set:
 
 For full installation instructions, you can find more information here:
  
-*   http://www.oracle.com/technetwork/java/javase/index-137561.html
+*   Java Platform Installation 
+    (http://www.oracle.com/technetwork/java/javase/index-137561.html)
 
-*   http://ant.apache.org/manual/install.html
+*   Installing Apache Ant 
+    (http://ant.apache.org/manual/install.html)
 
 ### Building the SDK and documentation
 
@@ -129,14 +131,15 @@ To use a .splunkrc file, create a text file with the following format:
     # Use the admin port, which is 8089 by default.
     port=8089
     # Splunk username
-    user=admin
+    username=admin
     # Splunk password
     password=changeme
     # Access scheme (OPTIONAL)
     scheme=https
-    # Namespace to use (OPTIONAL)
-    namespace=*:*
-
+    # Application context (OPTIONAL)
+    app=MyApp
+    # Owner context (OPTIONAL)
+    owner=User1
 
 Save the file as .splunkrc in the current user's home directory.
 
@@ -146,11 +149,11 @@ Save the file as .splunkrc in the current user's home directory.
 
 *   On Windows, save the file as: 
 
-    >  C:\Users\currentusername\.splunkrc
+    >  C:\Users\currentusername\\.splunkrc
 
     You might get errors in Windows when you try to name the file because
     ".splunkrc" looks like a nameless file with an extension. You can use
-    the command line to create this fileâ go to the 
+    the command line to create this file--go to the 
     C:\Users\currentusername directory and enter the following command: 
 
     >  Notepad.exe .splunkrc
@@ -200,8 +203,11 @@ To run the units from anywhere in the repository, enter:
 >  ant test -find
 
 It's also possible to run the units within Java IDEs such as IntelliJ and 
-Eclipse.
-
+Eclipse. For example, to open the Splunk Java SDK project in Eclipse: 
+1.  Click File, Import. 
+2.  Click General, Existing Projects into Workspace, then click Next. 
+3.  In Select root directory, type the path to the Splunk Java SDK root
+    directory (or click Browse to locate it), then click Finish. 
 
 ## The Splunk Java SDK components
 
