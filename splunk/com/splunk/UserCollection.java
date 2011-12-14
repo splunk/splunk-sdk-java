@@ -18,19 +18,54 @@ package com.splunk;
 
 import java.util.Map;
 
+/**
+ * Represents a collection of user entities.
+ */
 public class UserCollection extends EntityCollection<User> {
+    /**
+     * Constructs an instance of {@code UserCollection}.
+     *
+     * @param service This service instance this collection is affiliated with.
+     */
     UserCollection(Service service) {
         super(service, "authentication/users", User.class);
     }
-    
+
+    /**
+     * Create a new user entity using the given name, password and role.
+     *
+     * @param name The name for the new user entity.
+     * @param password The password for the new user entity.
+     * @param role The role to assign to the new entity.
+     * @return The newly craeted user entity.
+     */
     public User create(String name, String password, String role) {
         return create(name, password, role, null);
     }
 
+    /**
+     * Create a new user entity using the given name, password and array of
+     * roles.
+     *
+     * @param name The name for the new user entity.
+     * @param password The password for the new user entity.
+     * @param roles Array of roles to assign to the new user entity.
+     * @return The newly created user entity.
+     */
     public User create(String name, String password, String[] roles) {
         return create(name, password, roles, null);
     }
 
+    /**
+     * Create a new user entity using the given name, password, role and
+     * map of extra args.
+     *
+     * @param name The name for the new user entity.
+     * @param password The password for the new user entity.
+     * @param role The role to assign to the new entity.
+     * @param args A map of extra arguments for the new user entity.
+     * @return The newly created user entity.
+     */
     public User create(String name, String password, String role, Map args) {
         args = Args.create(args);
         args.put("password", password);
@@ -38,6 +73,17 @@ public class UserCollection extends EntityCollection<User> {
         return create(name, args);
     }
 
+
+    /**
+     * Create a new user entity using the given name, password and array of
+     * roles.
+     *
+     * @param name The name for the new user entity.
+     * @param password The password for the new user entity.
+     * @param roles Array of roles to assign to the new user entity.
+     * @param args A map of extra arguments for the new user entity.
+     * @return The newly created user entity.
+     */
     public User 
     create(String name, String password, String[] roles, Map args) {
         args = Args.create(args);

@@ -109,8 +109,8 @@ public class TcpSplunkInput extends Input {
     }
 
     /**
-     * Returns this TCP cooked input's initial source key, or null if not specified.
-     * This is normally the input file path.
+     * Returns this TCP cooked input's initial source key, or null if not
+     * specified. This is normally the input file path.
      *
      * @return This TCP cooked input's source.
      */
