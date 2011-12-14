@@ -65,7 +65,6 @@ public class Program {
         args.put("earliest_time", "rt");        // realtime
         args.put("latest_time", "rt");          // realtime
         args.put("search_mode", "realtime");    // realtime
-        String search = null;
 
         InputStream is = service.export(query, args);
 
