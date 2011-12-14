@@ -352,8 +352,7 @@ public class HttpService {
      * @return Socket.
      * @throws IOException.
      */
-    // UNDONE: Consider making this package-private visibility
-    public Socket streamConnect() throws IOException {
+    Socket streamConnect() throws IOException {
         if (this.scheme.equals("https")) {
             SSLSocketFactory sslsocketfactory;
             try {
@@ -372,7 +371,7 @@ public class HttpService {
     /**
      * Set the trust policy used by this service instance.
      */
-    // UNDONE: This is currently fixed but eventually needs to be "pluggable".
+    // UNDONE: This is currently a fixed policy but needs to be "pluggable".
     void setTrustPolicy() {
         try {
             SSLContext context = SSLContext.getInstance("SSL");

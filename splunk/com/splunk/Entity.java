@@ -355,7 +355,7 @@ public class Entity extends Resource implements Map<String, Object> {
     /** {@inheritDoc} */
     @Override public Entity refresh() {
         ResponseMessage response = service.get(path);
-        assert(response.getStatus() == 200); // UNDONE
+        assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
         int count = feed.entries.size();
         assert(count == 0 || count == 1);

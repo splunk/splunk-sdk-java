@@ -198,7 +198,7 @@ public class ResourceCollection<T extends Resource>
     @Override public ResourceCollection refresh() {
         items.clear();
         ResponseMessage response = list();
-        assert(response.getStatus() == 200); // UNDONE
+        assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
         load(feed);
         return this;

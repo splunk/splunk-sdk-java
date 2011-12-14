@@ -531,7 +531,7 @@ public class Index extends Entity {
      */
     public void rollHotBuckets() {
         ResponseMessage response = service.post(path + "/roll-hot-buckets");
-        assert(response.getStatus() == 200); // UNDONE
+        assert(response.getStatus() == 200);
     }
 
     /**

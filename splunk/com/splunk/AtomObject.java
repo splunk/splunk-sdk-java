@@ -39,7 +39,8 @@ public class AtomObject {
     public String updated;
 
     /**
-     * Initialize the current instance from the given XML element.
+     * Initialize a property of the current instance based on the given XML
+     * element.
      *
      * @param element The XML element.
      */
@@ -63,18 +64,17 @@ public class AtomObject {
             // Ignore
         }
         else {
-            // UNDONE: Warning
-            System.out.format("Unrecognized element: '%s'\n", name);
+            // Ignore
         }
     }
 
     /**
-     * Initialize the current instance from the given XML element.
+     * Initialize the current instance from the given XML element by calling
+     * {@code init} on each child of the XML element.
      *
      * @param element The XML element.
      */
     void load(Element element) {
-        // UNDONE: Review the following init loop ..
         for (Node child = element.getFirstChild();
              child != null;
              child = child.getNextSibling()) 

@@ -85,7 +85,7 @@ public class AtomFeed extends AtomObject {
             this.entries.add(entry);
         }
         else if (name.equals("s:messages")) {
-            // UNDONE
+            // Ignore
         }
         else if (name.equals("opensearch:totalResults")) {
             this.totalResults = element.getTextContent().trim();

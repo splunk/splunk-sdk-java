@@ -67,7 +67,7 @@ public class SavedSearch extends Entity {
      * @param args Dispatch arguments.
      * @return The search job.
      */
-    // UNDONE: We should take an optional maxWait argument
+    // CONSIDER: We should take an optional maxWait argument
     // CONSIDER: Another alternative is to return a MaybeJob object that
     // has an "exists" property, so the user can call maybeJob.refresh()
     // until exists == true.
