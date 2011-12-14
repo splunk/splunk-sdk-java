@@ -303,7 +303,7 @@ public class Program {
         // search args
         args.put("timeout", "60");          // don't keep search around
         args.put("output_mode", format);    // output in specific format
-        args.put("ealiest_time", "0.000");  // always to beginning of index
+        args.put("earliest_time", "0.000"); // always to beginning of index
         args.put("time_format", "%s.%Q");   // epoch time plus fraction
         String search = null;
 
