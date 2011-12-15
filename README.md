@@ -314,6 +314,29 @@ The class hierarchy for the core SDK library is as follows:
         ResourceCollection
             EntityCollection
 
+### Client state
+
+Instances of the Resources class maintain a client side copy of the state of
+corresponding Splunk resource. For example, an entity will have a copy of
+its properties and a collection will have a copy of its members. Requesting
+a property (or collection member) will return the local copy if available
+or will request a new copy from the server if not available or if the local
+copy is known to be out of date, which is the case for example if an update
+method has just been called.
+
+Note that in general there is no way to know if your local client state is
+in sync with the server other than forcing a refresh of the corresponding
+`Resource` instance.
+
+The `Resource` class provides the following methods for managing client
+side state:
+
+* `refresh` unconditionally refreshes the client state fo the object
+* `invalidate` marks the local state as invalid, which will result in
+  a refresh the next time the objects state is accessed.
+* `validate` will check to see if the local state has been marked invalid
+  and will call `refresh` if necessarry.
+
 ### Search
 
 One of the primary features of Splunk is running searches and retrieving 
@@ -332,11 +355,6 @@ The SDK API has many features such as real-time search, numerous search
 options, various types of search results, and the ability to execute 
 synchronous and asynchronous search requests. To explore core search 
 features, see the Search example included in the SDK. 
-
-
-### Client state
-
-_TODO_
 
 ## Repository
 
