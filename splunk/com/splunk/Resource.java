@@ -28,6 +28,12 @@ public abstract class Resource {
     protected String title;
     private boolean maybeValid = false;
 
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     */
     Resource(Service service, String path) {
         this.path = service.fullpath(path);
         this.service = service;
