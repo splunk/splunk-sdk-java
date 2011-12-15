@@ -316,7 +316,7 @@ The class hierarchy for the core SDK library is as follows:
 
 ### Client state
 
-Instances of the Resources class maintain a client-side copy of the state of 
+Instances of the Resource class maintain a client-side copy of the state of 
 the corresponding Splunk resource. For example, an entity will have a copy of 
 its properties, and a collection will have a copy of its members. When you 
 request a property (or collection member), the local copy is returned if it's 
