@@ -331,7 +331,7 @@ in sync with the server other than forcing a refresh of the corresponding
 The `Resource` class provides the following methods for managing client
 side state:
 
-* `refresh` unconditionally refreshes the client state fo the object
+* `refresh` unconditionally refreshes the client state of the object
 * `invalidate` marks the local state as invalid, which will result in
   a refresh the next time the objects state is accessed.
 * `validate` will check to see if the local state has been marked invalid
