@@ -99,7 +99,7 @@ public class Program {
 
         // execute the oneshot query, which returns the stream (i.e. there is
         // no search job created, just a one time search)
-        InputStream stream = service.oneShotSearch(query, queryArgs);
+        InputStream stream = service.oneshot(query, queryArgs);
 
         InputStreamReader reader = new InputStreamReader(stream);
         OutputStreamWriter writer = new OutputStreamWriter(System.out);
