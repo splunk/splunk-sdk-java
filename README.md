@@ -220,6 +220,9 @@ engine's REST API and accessing the various splunkd extension points such as
 custom search commands, lookup functions, scripted inputs, and custom REST 
 handlers.
 
+For more information about the API, see the Splunk Java SDK documentation 
+(http://splunk.github.com/splunk-sdk-javascript/docs/0.1.0/index.html).
+
 ### Service
 
 The Service class is the primary entry point for the client library. 
@@ -403,6 +406,10 @@ You can find anything having to do with developing on Splunk at the Splunk
 developer portal:
 
 * http://dev.splunk.com
+
+For Splunk Java SDK reference documentation, see: 
+
+* http://splunk.github.com/splunk-sdk-javascript/docs/0.1.0/index.html
 
 You can also find reference documentation for the REST API:
 
