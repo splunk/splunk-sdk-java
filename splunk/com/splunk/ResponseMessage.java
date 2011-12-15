@@ -29,8 +29,16 @@ public class ResponseMessage {
     Map<String, String> header = null;
     InputStream content;
 
+    /**
+     * Default class constructor.
+     */
     ResponseMessage() {}
 
+    /**
+     * Class constructor.
+     *
+     * @param status The initial status.
+     */
     ResponseMessage(int status) {
         this.status = status;
     }
