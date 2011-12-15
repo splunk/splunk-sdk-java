@@ -27,7 +27,6 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
      * Constructs an instance of the {@code SavedSearchCollection}.
      *
      * @param service The service the entity is affiliated with.
-     * @param path The resource path.
      */
     SavedSearchCollection(Service service) {
         super(service, "saved/searches", SavedSearch.class);
