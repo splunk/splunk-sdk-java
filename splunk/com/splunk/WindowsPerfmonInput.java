@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Windows Perfmon input subclass.
+ * Representation of a Windows Perfmon input.
  */
 public class WindowsPerfmonInput extends Input {
 

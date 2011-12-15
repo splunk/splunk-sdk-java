@@ -24,7 +24,7 @@ import java.util.Date;
 import java.net.Socket;
 
 /**
- * Representation of Index.
+ * Representation of an index.
  */
 public class Index extends Entity {
 

@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Information regarding the corresponding service instance.
+ * Information regarding a service instance.
  */
 public class ServiceInfo extends Entity {
     ServiceInfo(Service service) {

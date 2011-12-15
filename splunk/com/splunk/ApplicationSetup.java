@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk Application setup information.
+ * Representation of Splunk application setup information.
  */
 public class ApplicationSetup extends Entity {
 
@@ -40,9 +40,7 @@ public class ApplicationSetup extends Entity {
         return getString("eai:setup");
     }
 
-    /*
-     * Because all other keys are dynamic and context specific, they should
-     * be retrieved via standard Map access.
-     */
+     // Because all other keys are dynamic and context specific, they should
+     // be retrieved via standard Map access.
 }
 

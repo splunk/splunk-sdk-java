@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
  * Value conversion helper functions.
  */
 class Value {
+
     /**
      * Convert the given {@code String} to a boolean value.
      *

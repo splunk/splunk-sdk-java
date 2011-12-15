@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk Application, commonly referred to as an 'app'.
+ * Representation of a Splunk application, commonly referred to as an 'app'.
  */
 public class Application extends Entity {
 

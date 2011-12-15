@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Script input subclass.
+ * Representation of a script input.
  */
 public class ScriptInput extends Input {
 

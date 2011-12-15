@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of Collection of Messages.
+ * Representation of a collection of messages.
  */
 public class MessageCollection extends EntityCollection<Message> {
 

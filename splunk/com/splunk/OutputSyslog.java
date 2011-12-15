@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of output syslog.
+ * Representation of a syslog output.
  */
 public class OutputSyslog extends Entity {
 

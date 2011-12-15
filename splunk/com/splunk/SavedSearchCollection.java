@@ -18,20 +18,47 @@ package com.splunk;
 
 import java.util.Map;
 
+/**
+ * Representation of a collection of saved searches.
+ */
 public class SavedSearchCollection extends EntityCollection<SavedSearch> {
+
+    /**
+     * Constructs an instance of the {@code SavedSearchCollection}.
+     *
+     * @param service The service the entity is affiliated with.
+     * @param path The resource path.
+     */
     SavedSearchCollection(Service service) {
         super(service, "saved/searches", SavedSearch.class);
     }
 
-    public SavedSearch create(String name) {
+    /** {@inheritDoc} */
+    @Override public SavedSearch create(String name) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Create a saved search with the given name and search expression.
+     *
+     * @param name The name of the new saved search.
+     * @param search The search expression for the new saved search.
+     * @return The newly created saved search.
+     */
     public SavedSearch create(String name, String search) {
         Args args = new Args("search", search);
         return create(name, args);
     }
 
+    /**
+     * Create a saved search with the given name, search expression and
+     * additional saved search arguments.
+     *
+     * @param name The name of the new saved search.
+     * @param search The search expression for the new saved search.
+     * @param args Additional saved search arguments.
+     * @return The newly created saved search.
+     */
     public SavedSearch create(String name, String search, Map args) {
         args = Args.create(args).add("search", search);
         return create(name, args);

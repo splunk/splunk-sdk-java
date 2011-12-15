@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Represents service configuration information for an instance of Splunk.
+ * Representation of configuration information for an instance of Splunk.
  */
 public class Settings extends Entity {
     Settings(Service service) {

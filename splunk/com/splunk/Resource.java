@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Base class for all Splunk resources.
+ * Representation of a Splunk resource.
  */
 public abstract class Resource {
     protected Map<String, String> actions;

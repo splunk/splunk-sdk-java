@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Windows WMI input subclass.
+ * Representation of a Windows WMI input.
  */
 public class WindowsWmiInput extends Input {
 

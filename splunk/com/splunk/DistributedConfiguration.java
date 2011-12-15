@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk distributed search configuration.
+ * Representation of a Splunk distributed search configuration.
  */
 public class DistributedConfiguration extends Entity {
 

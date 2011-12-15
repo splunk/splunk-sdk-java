@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk deployment server class.
+ * Representation of a Splunk deployment server class.
  */
 public class DeploymentServerClass extends Entity {
 

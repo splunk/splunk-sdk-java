@@ -17,8 +17,8 @@
 package com.splunk;
 
 /**
- * Representation of the TCP cooked input subclass. This differs from TCP, as
- * the data indexed is processed and not in raw form.
+ * Representation of a TCP cooked input. This differs from TCP, as the data
+ * indexed is processed and not in raw form.
  */
 public class TcpSplunkInput extends Input {
 

@@ -19,12 +19,11 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of conf collections.
+ * Representation of a collection of configurations.
  */
 public class ConfCollection 
     extends ResourceCollection<EntityCollection<Entity>> 
 {
-
     /**
      * Class constructor.
      *

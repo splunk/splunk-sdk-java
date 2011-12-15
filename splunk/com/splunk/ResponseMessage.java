@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Represents an HTTP response message including status code, response headers
- * and body content.
+ * Representation of an HTTP response message including status code, response
+ * headers and body content.
  */
 public class ResponseMessage {
     int status;

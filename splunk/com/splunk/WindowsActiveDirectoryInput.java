@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Windows Active Directory input subclass.
+ * Representation of a Windows Active Directory input.
  */
 public class WindowsActiveDirectoryInput extends Input {
 

@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk Application Archive.
+ * Representation of a Splunk application archive.
  */
 public class ApplicationArchive extends Entity {
 

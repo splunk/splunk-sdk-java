@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of output group.
+ * Representation of an output group.
  */
 public class OutputGroup extends Entity {
 

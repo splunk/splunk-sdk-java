@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk Application update information.
+ * Representation of a Splunk application update information.
  */
 public class ApplicationUpdate extends Entity {
 

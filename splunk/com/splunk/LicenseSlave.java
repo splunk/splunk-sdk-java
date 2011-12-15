@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of License Slave.
+ * Representation of a license slave.
  */
 public class LicenseSlave extends Entity {
 

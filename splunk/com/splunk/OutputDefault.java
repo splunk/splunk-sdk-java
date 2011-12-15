@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the default TCP output object.
+ * Representation of the default TCP output configuration.
  */
 public class OutputDefault extends Entity {
 

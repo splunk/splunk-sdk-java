@@ -25,6 +25,7 @@ import java.util.List;
  * access methods.
  */
 public class Record extends HashMap<String, Object> {
+
     /**
      * Returns the {@code boolean} value associated with the given key.
      *

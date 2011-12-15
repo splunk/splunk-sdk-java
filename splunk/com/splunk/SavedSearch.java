@@ -22,6 +22,7 @@ import java.util.Map;
  * Representation of a saved search.
  */
 public class SavedSearch extends Entity {
+
     /**
      * Constructs an instance of the SavedSearch entity.
      *

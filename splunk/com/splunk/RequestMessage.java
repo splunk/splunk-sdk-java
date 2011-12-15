@@ -21,7 +21,7 @@ import java.util.TreeMap;
 import java.util.Map;
 
 /**
- * Represents an HTTP request message including method, headers and body
+ * Representation of an HTTP request message including method, headers and body
  * content.
  */
 public class RequestMessage {

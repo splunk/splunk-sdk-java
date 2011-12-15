@@ -20,6 +20,7 @@ package com.splunk;
  * Representation of a Splunk role.
  */
 public class Role extends Entity {
+
     /**
      * Constructs an instance of the Role entity.
      *

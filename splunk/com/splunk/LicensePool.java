@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of License Pool.
+ * Representation of a license pool.
  */
 public class LicensePool extends Entity {
 

@@ -38,8 +38,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- * Represents a generic HTTP service at a given address (host:port) accessed
- * using a given protocol "scheme" ({@code http} or {@code https}).
+ * Representation of a generic HTTP service at a given address (host:port)
+ * accessed using a given protocol "scheme" ({@code http} or {@code https}).
  */
 public class HttpService {
     /** The scheme used to access the service. */

@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * Representation of Fired Alerts.
+ * Representation of a fired alert.
  */
 public class FiredAlert extends Entity {
 

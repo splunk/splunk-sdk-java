@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of output server.
+ * Representation of an output server.
  */
 public class OutputServer extends Entity {
 

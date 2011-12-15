@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of Message.
+ * Representation of a message.
  */
 public class Message extends Entity {
 

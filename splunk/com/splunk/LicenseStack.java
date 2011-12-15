@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of License Stack.
+ * Representation of a license stack.
  */
 public class LicenseStack extends Entity {
 

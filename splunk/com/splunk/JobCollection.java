@@ -22,7 +22,6 @@ import java.util.Map;
  * Representation of a collection of jobs.
  */
 public class JobCollection extends EntityCollection<Job> {
-
     static String oneShotNotAllowed = String.format(
          "Oneshot not allowed, use service oneShotSearch method");
 

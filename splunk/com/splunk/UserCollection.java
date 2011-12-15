@@ -19,9 +19,10 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Represents a collection of user entities.
+ * Representation of a collection of user entities.
  */
 public class UserCollection extends EntityCollection<User> {
+
     /**
      * Constructs an instance of {@code UserCollection}.
      *

@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of the Collection of License Pools.
+ * Representation of a collection of license pools.
  */
 public class LicensePoolCollection extends EntityCollection<LicensePool> {
 

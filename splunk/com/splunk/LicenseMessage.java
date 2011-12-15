@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * Representation of License Message.
+ * Representation of a license message.
  */
 public class LicenseMessage extends Entity {
 

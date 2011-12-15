@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of Event Types.
+ * Representation of an event type.
  */
 public class EventType extends Entity {
 

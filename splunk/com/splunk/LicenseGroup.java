@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of License Group.
+ * Representation of a License Group.
  */
 public class LicenseGroup extends Entity {
 

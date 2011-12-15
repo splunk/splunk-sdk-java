@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Represenration of Credentials (Password).
+ * Represenration of saved credential.
  */
 public class Password extends Entity {
 

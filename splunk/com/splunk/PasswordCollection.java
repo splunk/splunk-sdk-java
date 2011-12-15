@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Collection of Passwords.
+ * Representation of a collection of passwords.
  */
 public class PasswordCollection extends EntityCollection<Password> {
 

@@ -20,8 +20,8 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * Represents a Splunk service at a given address (host:port) accessed using
- * a given protocol "scheme" ({@code http} or {@code https}). A service
+ * Representation of a Splunk service at a given address (host:port) accessed
+ * using a given protocol "scheme" ({@code http} or {@code https}). A service
  * instance also captures an optional namespace context consisting of
  * an optional owner name (or "-" wildcard) and optional app name (or "-"
  * wildcard. In order to access {@code Service} members the instance must

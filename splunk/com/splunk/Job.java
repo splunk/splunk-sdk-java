@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Representation of the Jobs object.
+ * Representation of a search job.
  */
 public class Job extends Entity {
 

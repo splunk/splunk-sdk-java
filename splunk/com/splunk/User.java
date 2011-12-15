@@ -20,6 +20,7 @@ package com.splunk;
  * Representation of a Splunk user.
  */
 public class User extends Entity {
+
     /**
      * Constructs an instance of the User entity.
      *

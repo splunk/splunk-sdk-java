@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Windows Registry input subclass.
+ * Representation of a Windows Registry input.
  */
 public class WindowsRegistryInput extends Input {
 

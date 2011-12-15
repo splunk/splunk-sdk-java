@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * Representation of License.
+ * Representation of a license.
  */
 public class License extends Entity {
 

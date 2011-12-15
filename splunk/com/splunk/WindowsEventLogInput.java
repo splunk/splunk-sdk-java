@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Windows Event Log input subclass.
+ * Representation of a Windows Event Log input.
  */
 public class WindowsEventLogInput extends Input {
 

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents a collection of Splunk resources.
+ * Representation of a collection of Splunk resources.
  *
  * @param <T> The type of members of the collection.
  */

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * The Args class extends standard HashMap.
+ * A helper for Splunk REST API arguments.
  *
  * The extension is mainly for encoding arguments for UTF8 transmission
  * to the Splunk instance in a key?value pairing for a string object, or

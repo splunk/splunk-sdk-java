@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the UDP input subclass.
+ * Representation of a UDP input.
  */
 public class UdpInput extends Input {
 

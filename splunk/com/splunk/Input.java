@@ -17,9 +17,9 @@
 package com.splunk;
 
 /**
- * Representation of Input. This class is the base class of all typed input
- * sub-classes, as well as used in the case where we do not recognize an
- * input kind.
+ * Representation of an input. This class is the base for all typed input
+ * classes and is also used in any case where we do not recognize an input
+ * kind.
  */
 public class Input extends Entity {
 

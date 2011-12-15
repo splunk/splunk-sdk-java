@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk deployment tenant.
+ * Representation of a Splunk deployment tenant.
  */
 public class DeploymentTenant extends Entity {
 

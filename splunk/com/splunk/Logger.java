@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of Logger.
+ * Representation of a logger.
  */
 public class Logger extends Entity {
 

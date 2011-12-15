@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the monitor input subclass.
+ * Representation of a monitor input.
  */
 public class MonitorInput extends Input {
 

@@ -24,9 +24,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 /**
- * XML utilities.
+ * A collection of XML utilities.
  */
 public class Xml {
+
     /**
      * Parse the given {@code InputStream} and return as an XML DOM.
      *

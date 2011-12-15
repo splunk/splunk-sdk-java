@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of the Collection of Event Types.
+ * Representation of a collection of event types.
  */
 public class EventTypeCollection extends EntityCollection<EventType> {
 

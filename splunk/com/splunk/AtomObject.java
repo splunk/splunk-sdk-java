@@ -22,8 +22,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * This is the common base class shared by {@code AtomFeed} and
- * {@code AtomEntry}
+ * Representation of a generic Atom object. This is a common base class shared
+ * by {@code AtomFeed} and {@code AtomEntry}
  */
 public class AtomObject {
     /** The value of the Atom {@code id} element. */

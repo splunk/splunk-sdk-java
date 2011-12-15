@@ -19,12 +19,11 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of the Collection of Inputs. The collection is
- * heterogeneous and contains a kind-property that indicates the specific
+ * Representation of a collection of inputs. The collection is heterogeneous
+ * and each member contains a kind-property that indicates the specific
  * kind of input.
  */
 public class InputCollection extends EntityCollection<Input> {
-
     // CONSIDER: We can probably initialize the following based on platform and
     // avoid adding the Windows inputs to the list on non-Windows platforms.
     static InputKind[] kinds = new InputKind[] {

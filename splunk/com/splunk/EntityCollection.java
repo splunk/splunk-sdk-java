@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * The collection of entity base class.
+ * Representation of a collection of entities.
  *
  * @param <T> The type of members of the collection.
  */

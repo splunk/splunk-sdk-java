@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk distributed peer.
+ * Representation of a Splunk distributed peer.
  */
 public class DistributedPeer extends Entity {
 

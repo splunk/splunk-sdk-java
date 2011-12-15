@@ -17,7 +17,7 @@
 package com.splunk;
 
 /**
- * Representation of output server's all-connections.
+ * Representation of an output server's connections.
  */
 public class OutputServerAllConnections extends Entity {
 
