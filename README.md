@@ -316,26 +316,30 @@ The class hierarchy for the core SDK library is as follows:
 
 ### Client state
 
-Instances of the Resources class maintain a client side copy of the state of
-corresponding Splunk resource. For example, an entity will have a copy of
-its properties and a collection will have a copy of its members. Requesting
-a property (or collection member) will return the local copy if available
-or will request a new copy from the server if not available or if the local
-copy is known to be out of date, which is the case for example if an update
-method has just been called.
+Instances of the Resources class maintain a client-side copy of the state of 
+the corresponding Splunk resource. For example, an entity will have a copy of 
+its properties, and a collection will have a copy of its members. When you 
+request a property (or collection member), the local copy is returned if it's 
+available. Otherwise, a new copy is requested from the server if it's not 
+available or if the local copy is known to be out of date (for example, when 
+the update method was just called).
 
-Note that in general there is no way to know if your local client state is
-in sync with the server other than forcing a refresh of the corresponding
-`Resource` instance.
+Note: In general, there is no way to determine whether your local client 
+state is in sync with the server other than forcing a refresh of the 
+corresponding Resource instance.
 
-The `Resource` class provides the following methods for managing client
-side state:
+The Resource class provides the following methods for managing client-side 
+state:
 
-* `refresh` unconditionally refreshes the client state of the object
-* `invalidate` marks the local state as invalid, which will result in
-  a refresh the next time the objects state is accessed.
-* `validate` will check to see if the local state has been marked invalid
-  and will call `refresh` if necessarry.
+*   The `refresh` method unconditionally refreshes the client state for the 
+    object.
+
+*   The `invalidate` method marks the local state as invalid, and it is 
+    refreshed the next time the object's state is accessed. 
+
+*   The `validate` method checks whether the local state has been marked 
+    invalid and calls the refresh method if necessary.
+
 
 ### Search
 
