@@ -45,10 +45,9 @@ public class Index extends Entity {
      * @throws IOException
      */
     public Socket attach() throws IOException {
-        Socket socket = service.streamConnect();
+        Socket socket = service.open();
         OutputStream ostream = socket.getOutputStream();
         Writer out = new OutputStreamWriter(ostream, "UTF8");
-
         String header = String.format(
             "POST /services/receivers/stream?index=%s HTTP/1.1\r\n" +
             "Host: %s:%d\r\n" +
@@ -70,10 +69,8 @@ public class Index extends Entity {
      */
     public Index clean() {
         Args saved = new Args();
-        saved.put("maxTotalDataSizeMB",
-                  Integer.toString(this.getMaxTotalDataSizeMB()));
-        saved.put("frozenTimePeriodInSecs",
-                  Integer.toString(this.getFrozenTimePeriodInSecs()));
+        saved.put("maxTotalDataSizeMB", getMaxTotalDataSizeMB());
+        saved.put("frozenTimePeriodInSecs", getFrozenTimePeriodInSecs());
 
         Args reset = new Args();
         reset.put("maxTotalDataSizeMB", "1");
@@ -187,9 +184,9 @@ public class Index extends Entity {
     }
 
     /**
-     * Return the splunk instances default index name.
+     * Return the Splunk instances default index name.
      *
-     * @return The splunk instances default index name.
+     * @return The Splunk instances default index name.
      */
     public String getDefaultDatabase() {
         return getString("defaultDatabase");
@@ -547,7 +544,7 @@ public class Index extends Entity {
 
     /**
      * Uploads a file to this index as an event stream. Note: this file must
-     * be accessible to the splunk instance as a local file or through NAS.
+     * be directly accessible to the Splunk server.
      *
      * @param filename The file uploaded.
      */
@@ -555,7 +552,7 @@ public class Index extends Entity {
         Args args = new Args();
         args.put("name", filename);
         args.put("index", getName());
-        service.post("/services/data/inputs/oneshot", args);
+        service.post("data/inputs/oneshot", args);
     }
 }
 

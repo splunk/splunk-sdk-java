@@ -251,6 +251,28 @@ public class HttpService {
     }
 
     /**
+     * Open a socket to this service.
+     *
+     * @return Socket
+     * @throws IOException
+     */
+    Socket open() throws IOException {
+        if (this.scheme.equals("https")) {
+            SSLSocketFactory sslsocketfactory;
+            try {
+                SSLContext context = SSLContext.getInstance("SSL");
+                context.init(null, trustAll, new java.security.SecureRandom());
+                sslsocketfactory = context.getSocketFactory();
+            }
+            catch (Exception e) {
+                throw new RuntimeException("Error installing trust manager.");
+            }
+            return sslsocketfactory.createSocket(this.host, this.port);
+        } 
+        return new Socket(this.host, this.port);
+    }
+
+    /**
      * Issue an HTTP request against the service using the given path and
      * request message.
      *
@@ -343,28 +365,6 @@ public class HttpService {
             throw HttpException.create(response);
 
         return response;
-    }
-
-    /**
-     * Creates a socket connection to the service.
-     *
-     * @return Socket
-     * @throws IOException
-     */
-    Socket streamConnect() throws IOException {
-        if (this.scheme.equals("https")) {
-            SSLSocketFactory sslsocketfactory;
-            try {
-                SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, trustAll, new java.security.SecureRandom());
-                sslsocketfactory = context.getSocketFactory();
-            }
-            catch (Exception e) {
-                throw new RuntimeException("Error installing trust manager.");
-            }
-            return sslsocketfactory.createSocket(this.host, this.port);
-        } 
-        return new Socket(this.host, this.port);
     }
 
     /**
