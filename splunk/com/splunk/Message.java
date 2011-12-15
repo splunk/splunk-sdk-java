@@ -33,6 +33,7 @@ public class Message extends Entity {
 
     /**
      * Returns this message's title.
+     *
      * @return This message's title.
      */
     public String getKey() {
@@ -41,6 +42,7 @@ public class Message extends Entity {
 
     /**
      * Returns this message's value.
+     *
      * @return This message's value.
      */
     public String getValue() {
