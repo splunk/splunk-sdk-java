@@ -1,0 +1,10 @@
+*.class
+*.DS_Store*
+*.swp
+.idea/workspace.xml
+.settings
+bin
+build
+build.log
+dist
+out
