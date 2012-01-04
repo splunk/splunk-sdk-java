@@ -16,7 +16,9 @@
 
 package com.splunk;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.util.Map;
 
 /**
@@ -596,6 +598,18 @@ public class Service extends HttpService {
         args.put("exec_mode", "oneshot");
         ResponseMessage response = post("search/jobs/", args);
         return response.getContent();
+    }
+
+    /**
+     * Open a raw socket to this service.
+     *
+     * @param port The specific port to be opened. It must already have been
+     * created as an allowable tcp input to the service to function properly.
+     * @return Socket
+     * @throws java.io.IOException
+     */
+    public Socket open(int port) throws IOException {
+        return new Socket(this.host, port);
     }
 
     /**

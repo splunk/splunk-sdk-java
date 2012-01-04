@@ -100,6 +100,10 @@
         <compile-example name="export" classpath="classpath.examples"/>
     </target>
 
+    <target name="compile-example-genevents" depends="dist-libs">
+        <compile-example name="genevents" classpath="classpath.examples"/>
+    </target>
+
     <target name="compile-example-index" depends="compile-libs">
         <compile-example name="index" classpath="classpath.examples"/>
     </target>
@@ -188,6 +192,7 @@
      depends="
         dist-example-explorer,
         dist-example-export,
+        dist-example-genevents,
         dist-example-index,
         dist-example-info,
         dist-example-search,
@@ -232,6 +237,11 @@
 
     <target name="dist-example-export" depends="compile-example-export">
         <dist-example name="export" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
+    </target>
+
+    <target name="dist-example-genevents" depends="compile-example-genevents">
+        <dist-example name="genevents" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 

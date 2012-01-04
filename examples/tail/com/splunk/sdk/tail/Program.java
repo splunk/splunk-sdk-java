@@ -45,7 +45,7 @@ public class Program {
     static void run(String[] argsIn) throws Exception {
 
         Command command = Command.splunk("tail");
-        command.addRule("format", Integer.class, outputModeText);
+        command.addRule("format", String.class, outputModeText);
         command.parse(argsIn);
 
         if (command.args.length != 1)
@@ -55,8 +55,8 @@ public class Program {
         Service service = Service.connect(command.opts);
 
         String outputMode = "csv";
-        if (command.opts.containsKey("output_mode"))
-            outputMode = (String)command.opts.get("output_mode");
+        if (command.opts.containsKey("format"))
+            outputMode = (String)command.opts.get("format");
         Args args = new Args();
 
         // search args
