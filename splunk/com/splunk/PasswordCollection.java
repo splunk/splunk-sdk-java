@@ -32,6 +32,17 @@ public class PasswordCollection extends EntityCollection<Password> {
     }
 
     /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    PasswordCollection(Service service, Args args) {
+        // Starting with 4.3 this is available at "storage/passwords"
+        super(service, "admin/passwords", Password.class, args);
+    }
+
+    /**
      * Creates a credential.
      *
      * @param name The username to be created.

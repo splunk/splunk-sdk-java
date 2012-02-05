@@ -31,6 +31,16 @@ public class MessageCollection extends EntityCollection<Message> {
     }
 
     /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    MessageCollection(Service service, Args args) {
+        super(service, "messages", Message.class, args);
+    }
+
+    /**
      * Create a new message.
      *
      * @param name The name of the new message.

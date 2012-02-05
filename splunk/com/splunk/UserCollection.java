@@ -33,6 +33,16 @@ public class UserCollection extends EntityCollection<User> {
     }
 
     /**
+     * Constructs an instance of {@code UserCollection}.
+     *
+     * @param service This service instance this collection is affiliated with.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    UserCollection(Service service, Args args) {
+        super(service, "authentication/users", User.class, args);
+    }
+
+    /**
      * Create a new user entity using the given name, password and role.
      *
      * @param name The name for the new user entity.

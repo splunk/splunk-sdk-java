@@ -40,10 +40,33 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param service The connected service instance.
      * @param path The entity's endpoint.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    EntityCollection(Service service, String path, Args args) {
+        super(service, path, Entity.class, args);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
      * @param itemClass The entity's subclass.
      */
     public EntityCollection(Service service, String path, Class itemClass) {
         super(service, path, itemClass);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     * @param itemClass The entity's subclass.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    public EntityCollection(Service service, String path, Class itemClass, Args args) {
+        super(service, path, itemClass, args);
     }
 
     /**

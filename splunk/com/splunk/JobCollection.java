@@ -35,6 +35,16 @@ public class JobCollection extends EntityCollection<Job> {
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    JobCollection(Service service, Args args) {
+        super(service, "search/jobs", Job.class, args);
+    }
+
+    /**
      * Creates a search job with a UTF8 pre-encoded search request. Note that
      * a 'oneshot' request is invalid here. Please use the createOneShot method
      * instead.

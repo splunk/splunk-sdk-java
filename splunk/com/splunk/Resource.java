@@ -26,6 +26,8 @@ public abstract class Resource {
     protected String path;
     protected Service service;
     protected String title;
+    protected String offset = "0";
+    protected String count = "-1";
     private boolean maybeValid = false;
 
     /**
@@ -37,6 +39,23 @@ public abstract class Resource {
     Resource(Service service, String path) {
         this.path = service.fullpath(path);
         this.service = service;
+    }
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    Resource(Service service, String path, Args args) {
+        this.path = service.fullpath(path);
+        this.service = service;
+        // sanitize
+        if (args.containsKey("offset"))
+            this.offset = (String)args.get("offset");
+        if (args.containsKey("count"))
+            this.count = (String)args.get("count");
     }
 
     /**

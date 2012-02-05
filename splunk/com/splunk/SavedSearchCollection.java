@@ -32,6 +32,16 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
         super(service, "saved/searches", SavedSearch.class);
     }
 
+    /**
+     * Constructs an instance of the {@code SavedSearchCollection}.
+     *
+     * @param service The service the entity is affiliated with.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    SavedSearchCollection(Service service, Args args) {
+        super(service, "saved/searches", SavedSearch.class, args);
+    }
+
     /** {@inheritDoc} */
     @Override public SavedSearch create(String name) {
         throw new UnsupportedOperationException();
