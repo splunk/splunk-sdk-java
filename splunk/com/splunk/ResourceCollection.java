@@ -166,8 +166,7 @@ public class ResourceCollection<T extends Resource>
      * @return List response message.
      */
     public ResponseMessage list() {
-        return service.get(path + "?count=" + this.count
-                                + "&offset=" + this.offset);
+        return service.get(path, this.refreshArgs);
     }
 
     /**

@@ -26,8 +26,7 @@ public abstract class Resource {
     protected String path;
     protected Service service;
     protected String title;
-    protected String offset = "0";
-    protected String count = "-1";
+    protected Args refreshArgs;
     private boolean maybeValid = false;
 
     /**
@@ -39,6 +38,7 @@ public abstract class Resource {
     Resource(Service service, String path) {
         this.path = service.fullpath(path);
         this.service = service;
+        this.refreshArgs = new Args("count", "-1");
     }
 
     /**
@@ -51,11 +51,7 @@ public abstract class Resource {
     Resource(Service service, String path, Args args) {
         this.path = service.fullpath(path);
         this.service = service;
-        // sanitize
-        if (args.containsKey("offset"))
-            this.offset = (String)args.get("offset");
-        if (args.containsKey("count"))
-            this.count = (String)args.get("count");
+        this.refreshArgs = args;
     }
 
     /**
