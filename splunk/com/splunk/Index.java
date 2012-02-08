@@ -63,6 +63,31 @@ public class Index extends Entity {
     }
 
     /**
+     * Creates a writable socket to this index.
+     *
+     * @return The Socket.
+     * @throws IOException
+     */
+    public Socket attach(Args args) throws IOException {
+        Socket socket = service.open();
+        OutputStream ostream = socket.getOutputStream();
+        Writer out = new OutputStreamWriter(ostream, "UTF8");
+        String header = String.format(
+            "POST /services/receivers/stream?index=%s&%s HTTP/1.1\r\n" +
+            "Host: %s:%d\r\n" +
+            "Accept-Encoding: identity\r\n" +
+            "Authorization: %s\r\n" +
+            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
+            getName(),
+            args.encode(),
+            service.getHost(), service.getPort(),
+            service.token);
+        out.write(header);
+        out.flush();
+        return socket;
+    }
+
+    /**
      * Cleans this index, removing all events.
      *
      * @return This index.
