@@ -64,7 +64,14 @@ public class JobCollection extends EntityCollection<Job> {
         assert(response.getStatus() == 201);
         invalidate();
         String sid = Job.getSid(response);
-        return get(sid);
+        Job job = get(sid);
+        while (job == null) {
+            try { Thread.sleep(500); }
+            catch (InterruptedException e) {}
+            invalidate();
+            job = get(sid);
+        }
+        return job;
     }
 
     /**
