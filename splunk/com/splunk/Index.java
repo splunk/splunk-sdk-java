@@ -120,7 +120,7 @@ public class Index extends Entity {
             }
             refresh();
         }
-        throw new SplunkException(SplunkException.JOB_NOTREADY,
+        throw new SplunkException(SplunkException.TIMEOUT,
                                   "Index cleaning timed out");
     }
 
