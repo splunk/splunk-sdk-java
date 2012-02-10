@@ -21,6 +21,8 @@ public class SplunkException extends RuntimeException {
     private String text;
 
     public static int JOB_NOTREADY = 1;
+    public static int TIMEOUT = 2;
+
 
     SplunkException(int code, String text) {
         this.code = code;

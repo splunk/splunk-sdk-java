@@ -91,9 +91,11 @@ public class Index extends Entity {
     /**
      * Cleans this index, removing all events.
      *
+     * @param maxSeconds the maximum number of seconds to wait before returning;
+     *                   -1 means effectively wait for ever.
      * @return This index.
      */
-    public Index clean() {
+    public Index clean(int maxSeconds) {
         Args saved = new Args();
         saved.put("maxTotalDataSizeMB", getMaxTotalDataSizeMB());
         saved.put("frozenTimePeriodInSecs", getFrozenTimePeriodInSecs());
@@ -104,19 +106,22 @@ public class Index extends Entity {
         update(reset);
         rollHotBuckets();
 
-        while (true) {
+        while (maxSeconds != 0) {
             try {
                 Thread.sleep(1000); // 1000ms (1 second sleep)
+                maxSeconds = maxSeconds - 1;
             }
             catch (InterruptedException e) {
                 return this; // eat
             }
-            if (this.getTotalEventCount() == 0)
-                break;
+            if (this.getTotalEventCount() == 0) {
+                update(saved);
+                return this;
+            }
             refresh();
         }
-        update(saved);
-        return this;
+        throw new SplunkException(SplunkException.JOB_NOTREADY,
+                                  "Index cleaning timed out");
     }
 
     /**
