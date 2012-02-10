@@ -65,6 +65,7 @@ public class Index extends Entity {
     /**
      * Creates a writable socket to this index.
      *
+     * @param args the optional arguments to the streaming endpoint.
      * @return The Socket.
      * @throws IOException
      */
@@ -565,6 +566,20 @@ public class Index extends Entity {
         RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
         service.send("receivers/simple?index=" + getName(), request);
+    }
+
+    /**
+     * Submits an event to this index through HTTP POST.
+     *
+     * @param data Event data posted.
+     * @param args optional arguments for the simple receivers endpoint.
+     */
+    public void submit(String data, Args args) {
+        RequestMessage request = new RequestMessage("POST");
+        request.setContent(data);
+        String argString = String.format("index=%s&%s",
+                                            getName(), args.encode());
+        service.send("receivers/simple?" + argString, request);
     }
 
     /**
