@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 /**
@@ -62,15 +64,20 @@ public class JobCollection extends EntityCollection<Job> {
         args = Args.create(args).add("search", query);
         ResponseMessage response = service.post(path, args);
         assert(response.getStatus() == 201);
+
+        String sid = Xml.parse(response.getContent())
+            .getElementsByTagName("sid")
+            .item(0)
+            .getTextContent();
+
         invalidate();
-        String sid = Job.getSid(response);
         Job job = get(sid);
-        while (job == null) {
-            try { Thread.sleep(500); }
-            catch (InterruptedException e) {}
-            invalidate();
-            job = get(sid);
+
+        // if job not yet scheduled, create an empty job object
+        if (job == null) {
+            job = new Job(service, "search/jobs/" + sid);
         }
+
         return job;
     }
 

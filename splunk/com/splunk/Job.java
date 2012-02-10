@@ -655,6 +655,13 @@ public class Job extends Entity {
      */
     @Override public Job refresh() {
         ResponseMessage response = service.get(path);
+        if (response.getStatus() == 204) {
+            // empty response from server means the job has not yet been
+            // scheduled; so throw an exception up to the caller.
+            throw new SplunkException(SplunkException.JOB_NOTREADY,
+                                      "Job not yet scheduled by server");
+        }
+
         AtomEntry entry = AtomEntry.parse(response.getContent());
         load(entry);
         return this;
