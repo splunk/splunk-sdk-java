@@ -17,9 +17,6 @@
 package com.splunk;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Date;
 import java.net.Socket;
 
