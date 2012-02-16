@@ -33,6 +33,8 @@ import java.util.List;
 
 public class Program {
 
+    static String indexName =
+        "Name of index to send events to. If unspecified, 'default' is used";
     static int ingestPort = 9002;
     static String ingestMethod =
         "Ingest events via method {stream, submit, tcp} (default: stream)";
@@ -56,33 +58,36 @@ public class Program {
     }
 
     static void buildRules(Command command, String[] argsIn) {
+        command.addRule("index", String.class, indexName);
         command.addRule("itype", String.class, ingestMethod);
         command.addRule("iport", String.class, tcpPort);
         command.parse(argsIn);
-        if (command.args.length != 1)
-            Command.error("Index name required");
     }
 
     static void run(String[] argsIn) throws Exception {
 
         Command command;
         int count;
-        Index index;
-        String indexName;
+        Index index = null;
         String ingest;
+        String iname;
         List ingestTypes = Arrays.asList("submit", "stream", "tcp");
         OutputStream ostream;
+        Receiver receiver = null;
         Service service;
         Socket stream = null;
         Writer writerOut = null;
 
         command = Command.splunk("genevents");
         buildRules(command, argsIn);
-        indexName = command.args[0];
         service = Service.connect(command.opts);
 
         // determine ingest method and other input arguments
+        iname = null;
         ingest = "stream";
+        if (command.opts.containsKey("index")) {
+            iname = (String)command.opts.get("index");
+        }
         if (command.opts.containsKey("itype"))
             ingest = (String)command.opts.get("itype");
         if (command.opts.containsKey("iport")) {
@@ -93,17 +98,27 @@ public class Program {
         if (!ingestTypes.contains(ingest)) {
             Command.error("Method '"+ingest+"' must be in set: "+ingestTypes);
         }
-        index = service.getIndexes().get(indexName);
-        if (index == null) {
-            Command.error("Index '" + indexName + "' was not found.");
+
+        if (iname != null) {
+            index = service.getIndexes().get(iname);
+            if (index == null) {
+                Command.error("Index '" + iname + "' was not found.");
+            }
+        } else {
+            receiver = service.getReceiver();
         }
+
 
         // for stream and tcp, they both require a socket, though setup
         // slightly differently.
         if (ingest.equals("stream") || ingest.equals("tcp")) {
             if (ingest.equals("stream"))
                 try {
-                    stream = index.attach();
+                    // a specific index or not?
+                    if (iname != null)
+                        stream = index.attach();
+                    else
+                        stream = receiver.attach();
                 }
                 catch (NullPointerException e) {
                     System.out.println("Failed to attach to index.");
@@ -130,7 +145,10 @@ public class Program {
                 if (ingest.equals("stream") || ingest.equals("tcp"))
                     writerOut.write(lastEvent);
                 else
-                    index.submit(lastEvent);
+                    if (iname != null)
+                        index.submit(lastEvent);
+                    else
+                        receiver.submit(lastEvent);
                 count++;
             }
             System.out.println("Submitted "+count+" events, using "+ingest);

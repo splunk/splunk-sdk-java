@@ -45,21 +45,8 @@ public class Index extends Entity {
      * @throws IOException
      */
     public Socket attach() throws IOException {
-        Socket socket = service.open();
-        OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
-        String header = String.format(
-            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n" +
-            "Host: %s:%d\r\n" +
-            "Accept-Encoding: identity\r\n" +
-            "Authorization: %s\r\n" +
-            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            getName(),
-            service.getHost(), service.getPort(),
-            service.token);
-        out.write(header);
-        out.flush();
-        return socket;
+        Receiver receiver = service.getReceiver();
+        return receiver.attach(getName());
     }
 
     /**
@@ -70,22 +57,8 @@ public class Index extends Entity {
      * @throws IOException
      */
     public Socket attach(Args args) throws IOException {
-        Socket socket = service.open();
-        OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
-        String header = String.format(
-            "POST /services/receivers/stream?index=%s&%s HTTP/1.1\r\n" +
-            "Host: %s:%d\r\n" +
-            "Accept-Encoding: identity\r\n" +
-            "Authorization: %s\r\n" +
-            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            getName(),
-            args.encode(),
-            service.getHost(), service.getPort(),
-            service.token);
-        out.write(header);
-        out.flush();
-        return socket;
+        Receiver receiver = service.getReceiver();
+        return receiver.attach(getName(), args);
     }
 
     /**
@@ -568,9 +541,8 @@ public class Index extends Entity {
      * @param data Event data posted.
      */
     public void submit(String data) {
-        RequestMessage request = new RequestMessage("POST");
-        request.setContent(data);
-        service.send("receivers/simple?index=" + getName(), request);
+        Receiver receiver = service.getReceiver();
+        receiver.submit(getName(), data);
     }
 
     /**
@@ -580,11 +552,8 @@ public class Index extends Entity {
      * @param args optional arguments for the simple receivers endpoint.
      */
     public void submit(String data, Args args) {
-        RequestMessage request = new RequestMessage("POST");
-        request.setContent(data);
-        String argString = String.format("index=%s&%s",
-                                            getName(), args.encode());
-        service.send("receivers/simple?" + argString, request);
+        Receiver receiver = service.getReceiver();
+        receiver.submit(getName(), data, args);
     }
 
     /**
@@ -594,10 +563,8 @@ public class Index extends Entity {
      * @param filename The file uploaded.
      */
     public void upload(String filename) {
-        Args args = new Args();
-        args.put("name", filename);
-        args.put("index", getName());
-        service.post("data/inputs/oneshot", args);
+        Receiver receiver = service.getReceiver();
+        receiver.upload(getName(), filename);
     }
 }
 

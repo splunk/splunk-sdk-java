@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -483,6 +485,15 @@ public class Service extends HttpService {
      */
     public PasswordCollection getPasswords() {
         return new PasswordCollection(this);
+    }
+
+    /**
+     * Returns information about the Splunk service.
+     *
+     * @return Splunk service information.
+     */
+    public Receiver getReceiver() {
+        return new Receiver(this);
     }
 
     /**
