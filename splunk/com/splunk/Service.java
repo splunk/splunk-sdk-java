@@ -490,7 +490,7 @@ public class Service extends HttpService {
     /**
      * Returns information about the Splunk service.
      *
-     * @return Splunk service information.
+     * @return Splunk receiver object.
      */
     public Receiver getReceiver() {
         return new Receiver(this);
