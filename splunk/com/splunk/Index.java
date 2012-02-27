@@ -560,8 +560,9 @@ public class Index extends Entity {
      * @param filename The file uploaded.
      */
     public void upload(String filename) {
-        Receiver receiver = service.getReceiver();
-        receiver.upload(getName(), filename);
+        EntityCollection<Upload> uploads = service.getUploads();
+        Args args = new Args("index", getName());
+        uploads.create(filename, args);
     }
 }
 

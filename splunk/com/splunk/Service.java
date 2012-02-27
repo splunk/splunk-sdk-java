@@ -533,6 +533,16 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of in progress oneshot uploads.
+     *
+     * @return Collection of in progress oneshot uploads
+     */
+    public EntityCollection<Upload> getUploads() {
+        return new EntityCollection<Upload>(
+            this, "data/inputs/oneshot", Upload.class);
+    }
+
+    /**
      * Returns the username used to authenticate the current session.
      *
      * @return Current username.

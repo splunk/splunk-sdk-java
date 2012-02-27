@@ -60,7 +60,7 @@ public class Program {
             return;
         }
 
-        Index index = (Index)indexes.get(name);
+        Index index = indexes.get(name);
         if (index == null)
             Command.error("Index '" + name + "' does not exists");
 

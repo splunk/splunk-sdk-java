@@ -189,29 +189,4 @@ public class Receiver extends Entity {
         service.send(
              "receivers/simple?" + argString, request);
     }
-
-    /**
-     * Uploads a file to the default index as an event stream. Note: this file
-     * must be directly accessible to the Splunk server.
-     *
-     * @param filename The file uploaded.
-     */
-    public void upload(String filename) {
-        Args args = new Args();
-        args.put("name", filename);
-        service.post("data/inputs/oneshot", args);
-    }
-
-    /**
-     * Uploads a file to the default index as an event stream. Note: this file
-     * must be directly accessible to the Splunk server.
-     *
-     * @param filename The file uploaded.
-     */
-    public void upload(String indexName, String filename) {
-        Args args = new Args();
-        args.put("index", indexName);
-        args.put("name", filename);
-        service.post("data/inputs/oneshot", args);
-    }
 }
