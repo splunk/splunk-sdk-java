@@ -94,7 +94,6 @@ class Value {
             String pattern = "(.*)\\.\\d+([\\-+]\\d+):(\\d+)";
             datePattern = Pattern.compile(pattern);
         }
-        Date result;
         try {
             // Must first remove the colon (':') from the timezone
             // field, or SimpleDataFormat will not parse correctly.
@@ -103,10 +102,11 @@ class Value {
             value = matcher.replaceAll("$1$2$3");
             return dateFormat.parse(value);
         }
-        catch (ParseException e) {
-            try {
-                return dateFormat2.parse(value);
-            } catch (ParseException e2) {}
+        catch (ParseException e) {}
+        // try another format
+        try {
+            return dateFormat2.parse(value);
+        } catch (ParseException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
