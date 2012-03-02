@@ -39,11 +39,13 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
      * followed by MB or GB.
      *
      * @param name The name of this new license pool.
-     * @param quota The quota in bytes of this license pool.
+     * @param quota The quota in bytes of this license pool. This can also be
+     *              a literal MAX or number followed by MB or GB. For example
+     *              10GB.
      * @param stackId The stack ID corresponding to this license pool.
      * @return The new license pool.
      */
-    public LicensePool create(String name, int quota, String stackId) {
+    public LicensePool create(String name, String quota, String stackId) {
         return create(name, quota, stackId, null);
     }
 
