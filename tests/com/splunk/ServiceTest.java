@@ -23,7 +23,18 @@ import org.junit.Test;
 public class ServiceTest extends SplunkTestCase {
     // Perform some non-intrusive inspection of the given Job object.
     void checkJob(Job job) {
-        job.getCursorTime();
+        // There may be a race condition between a job creation and job being
+        // ready. If we hit it, checking any job attribute will raise a splunk
+        // Exception of job-not-ready. So keep retrying after 500 ms.
+        while (true) {
+            try {
+                job.getCursorTime();
+                break;
+            } catch (SplunkException e) {
+                sleep(500);
+                continue;
+            }
+        }
         job.getDelegate();
         job.getDiskUsage();
         job.getDispatchState();
@@ -303,6 +314,20 @@ public class ServiceTest extends SplunkTestCase {
 
         users.remove(username);
         assertFalse(users.containsKey(username));
+
+        assertFalse(users.containsKey("sdk-user"));
+        if (users.containsKey("SDK-user"))
+            users.remove("SDK-user");
+        assertFalse(users.containsKey("SDK-user"));
+
+        args = new Args();
+        args.put("password", password);
+        args.put("roles", "power");
+        assertTrue(user.getName().equals(username));
+        assertFalse(users.containsKey("SDK-user"));
+        users.remove(username);
+        assertFalse(users.containsKey(username));
+
     }
 }
 

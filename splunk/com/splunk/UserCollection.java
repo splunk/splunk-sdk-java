@@ -43,12 +43,23 @@ public class UserCollection extends EntityCollection<User> {
     }
 
     /**
+     * Create a new user entity using the given name, and args.
+     *
+     * @param name The name for the new user entity.
+     * @param args The argument list.
+     * @return The newly created user entity.
+     */
+    public User create(String name, Args args) {
+        return super.create(name.toLowerCase(), args);
+    }
+
+    /**
      * Create a new user entity using the given name, password and role.
      *
      * @param name The name for the new user entity.
      * @param password The password for the new user entity.
      * @param role The role to assign to the new entity.
-     * @return The newly craeted user entity.
+     * @return The newly created user entity.
      */
     public User create(String name, String password, String role) {
         return create(name, password, role, null);
@@ -81,9 +92,8 @@ public class UserCollection extends EntityCollection<User> {
         args = Args.create(args);
         args.put("password", password);
         args.put("roles", role);
-        return create(name, args);
+        return create(name.toLowerCase(), args);
     }
-
 
     /**
      * Create a new user entity using the given name, password and array of
@@ -100,6 +110,6 @@ public class UserCollection extends EntityCollection<User> {
         args = Args.create(args);
         args.put("password", password);
         args.put("roles", roles);
-        return create(name, args);
+        return create(name.toLowerCase(), args);
     }
 }
