@@ -33,6 +33,16 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
     }
 
     /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    LicensePoolCollection(Service service, Args args) {
+        super(service, "licenser/pools", LicensePool.class, args);
+    }
+
+    /**
      * Creates a license pool.
      *
      * Quota can be MAX (Only one pool can use MAX size), a number or a number

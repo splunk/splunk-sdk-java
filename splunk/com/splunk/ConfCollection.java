@@ -34,6 +34,16 @@ public class ConfCollection
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    ConfCollection(Service service, Args args) {
+        super(service, "properties", EntityCollection.class, args);
+    }
+
+    /**
      * Creates a config.
      *
      * @param name The new config name.

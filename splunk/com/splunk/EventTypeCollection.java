@@ -33,6 +33,16 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     }
 
     /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    EventTypeCollection(Service service, Args args) {
+        super(service, "saved/eventtypes", EventType.class, args);
+    }
+
+    /**
      * Creates an event type.
      *
      * @param name The name of this new event type.

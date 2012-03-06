@@ -161,8 +161,8 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Parse a {@code <list>} element and return a List object containing the parsed
-     * values.
+     * Parse a {@code <list>} element and return a List object containing the
+     * parsed values.
      *
      * @param element The list element to parse.
      * @return A list object containing the parsed values.

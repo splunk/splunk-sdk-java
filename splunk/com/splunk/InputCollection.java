@@ -49,6 +49,16 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    InputCollection(Service service, Args args) {
+        super(service, "data/inputs", args);
+    }
+
+    /**
      * Create stub.
      *
      * @param name The name of the input.

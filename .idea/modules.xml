@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/examples/search_blocking/search_blocking.iml" filepath="$PROJECT_DIR$/examples/search_blocking/search_blocking.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/search_oneshot/search_oneshot.iml" filepath="$PROJECT_DIR$/examples/search_oneshot/search_oneshot.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/search_realtime/search_realtime.iml" filepath="$PROJECT_DIR$/examples/search_realtime/search_realtime.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/examples/search_saved/search_saved.iml" filepath="$PROJECT_DIR$/examples/search_saved/search_saved.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/splunk/splunk.iml" filepath="$PROJECT_DIR$/splunk/splunk.iml" />
       <module fileurl="file://$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" filepath="$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/examples/spurl/spurl.iml" filepath="$PROJECT_DIR$/examples/spurl/spurl.iml" group="examples" />

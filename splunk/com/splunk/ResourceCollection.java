@@ -39,6 +39,11 @@ public class ResourceCollection<T extends Resource>
         this.itemClass = itemClass;
     }
 
+    ResourceCollection(Service service, String path, Class itemClass, Args args) {
+        super(service, path, args);
+        this.itemClass = itemClass;
+    }
+
     /** {@inheritDoc} */
     public void clear() {
         throw new UnsupportedOperationException();
@@ -161,7 +166,7 @@ public class ResourceCollection<T extends Resource>
      * @return List response message.
      */
     public ResponseMessage list() {
-        return service.get(path + "?count=-1");
+        return service.get(path, this.refreshArgs);
     }
 
     /**
