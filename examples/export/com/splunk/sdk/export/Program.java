@@ -30,7 +30,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Export.java: export an splunk entire index in XML, CSV or JSON (4.3+). The
  * return data is in strict descending time order.
@@ -246,8 +245,12 @@ public class Program {
         //
         // N.B. json output only valid with 4.3+
 
-        if (command.args.length == 0)
-            throw new Error("Index-name required");
+        String indexName = null;
+        if (command.args.length == 0) {
+            System.out.println("Exporting main index");
+            indexName = "main";
+        } else
+            indexName = command.args[0];
 
         if (command.args.length > 1) {
             for (int index=1; index < command.args.length; index++) {
@@ -311,7 +314,7 @@ public class Program {
             search = (String)command.opts.get("search");
         }
         else {
-            search = String.format("search index=%s *", command.args[0]);
+            search = String.format("search index=%s *", indexName);
         }
 
         //System.out.println("search: " + search + ", args: " + args);
