@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -21,8 +21,8 @@ import java.util.TreeMap;
 import java.util.Map;
 
 /**
- * Representation of an HTTP request message including method, headers and body
- * content.
+ * The {@code RequestMessage} class represents an HTTP request message including 
+ * method, headers, and body content.
  */
 public class RequestMessage {
     String method = "GET";  // "GET" | "PUT" | "POST" | "DELETE"
@@ -32,16 +32,16 @@ public class RequestMessage {
     /** Creates a new {@code RequestMessage} instance. */
     public RequestMessage() {}
 
-    /** Creates a {@code RequestMessage} instance with the given method */
+    /** Creates a new {@code RequestMessage} instance with a given method */
     public RequestMessage(String method) {
         this.method = method;
     }
 
     /**
-     * Answers if the given value is a supported HTTP method.
+     * Indicates whether the given value is a supported HTTP method.
      *
      * @param value The value to check.
-     * @return {@code true} if the value is a supported method.
+     * @return {@code true} if the value is a supported method, {@code false} if not.
      */
     boolean checkMethod(String value) {
         return
@@ -64,18 +64,18 @@ public class RequestMessage {
     }
 
     /**
-     * Returns the message's HTTP method value.
+     * Returns the message's HTTP method.
      *
-     * @return HTTP method.
+     * @return The HTTP method.
      */
     public String getMethod() {
         return this.method;
     }
 
     /**
-     * Sets the message's HTTP method value.
+     * Sets the message's HTTP method.
      *
-     * @param value HTTP method.
+     * @param value The HTTP method.
      */
     public void setMethod(String value) {
         value = value.toUpperCase();
@@ -87,7 +87,7 @@ public class RequestMessage {
     /**
      * Returns the message body content.
      *
-     * @return Message content.
+     * @return The message content.
      */
     public Object getContent() {
         return this.content;
@@ -96,7 +96,7 @@ public class RequestMessage {
     /**
      * Sets the message body content.
      *
-     * @param value Message content.
+     * @param value The message content.
      */
     public void setContent(String value) {
         this.content = value;

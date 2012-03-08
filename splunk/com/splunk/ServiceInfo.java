@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,7 +17,8 @@
 package com.splunk;
 
 /**
- * Information regarding a service instance.
+ * The {@code ServiceInfo} class contains information about a running Splunk 
+ * {@code Service} instance (Splunkd).
  */
 public class ServiceInfo extends Entity {
     ServiceInfo(Service service) {
@@ -25,126 +26,128 @@ public class ServiceInfo extends Entity {
     }
 
     /**
-     * Returns the service's build number.
+     * Returns the build number of this instance.
      *
-     * @return Build number.
+     * @return The build number.
      */
     public int getBuild() {
         return getInteger("build");
     }
 
     /**
-     * Returns the service's CPU architecture.
+     * Returns the CPU architecture of this Splunk instance.
      *
-     * @return CPU architecture.
+     * @return The CPU architecture.
      */
     public String getCpuArch() {
         return getString("cpu_arch");
     }
 
     /**
-     * Returns a GUID identifying the Splunk instance.
+     * Returns a GUID identifying this Splunk instance.
      *
-     * @return GUID identifying the Splunk instance.
+     * @return The Splunk instance GUID.
      */
     public String getGuid() {
         return getString("guid");
     }
 
     /**
-     * Returns an array of the service's license keys.
+     * Returns an array of the license keys for this Splunk instance.
      *
-     * @return Array of license keys.
+     * @return An array of license keys.
      */
     public String[] getLicenseKeys() {
         return getStringArray("licenseKeys", null);
     }
 
     /**
-     * Returns the service's license signature.
+     * Returns the license signature for this Splunk instance.
      *
-     * @return License signature.
+     * @return The license signature.
      */
     public String getLicenseSignature() {
         return getString("licenseSignature");
     }
 
     /**
-     * Returns the service's curernt license state.
+     * Returns the current license state of this Splunk instance.
      *
-     * @return License state.
+     * @return The license state.
      */
     public String getLicenseState() {
         return getString("licenseState");
     }
 
     /**
-     * Returns the GUID identifying the license master.
+     * Returns a GUID identifying the license master for this Splunk instance.
      *
-     * @return GUID of the license master.
+     * @return The license master GUID.
      */
     public String getMasterGuid() {
         return getString("master_guid");
     }
 
     /**
-     * Returns the service's current mode.
+     * Returns the current mode of this Splunk instance.
      *
-     * @return Service mode.
+     * @return The mode.
      */
     public String getMode() {
         return getString("mode");
     }
 
     /**
-     * Returns the service's OS build.
+     * Returns the OS build of this Splunk instance.
      *
-     * @return OS build.
+     * @return The OS build.
      */
     public String getOsBuild() {
         return getString("os_build");
     }
 
     /**
-     * Returns the service's OS version.
+     * Returns the OS version of this Splunk instance.
      *
-     * @return OS version.
+     * @return The OS version.
      */
     public String getOsVersion() {
         return getString("os_version");
     }
 
     /**
-     * Returns the services server name.
+     * Returns the server name of this Splunk instance.
      *
-     * @return Server name.
+     * @return The server name.
      */
     public String getServerName() {
         return getString("serverName");
     }
 
     /**
-     * Returns the services Splunk version number.
+     * Returns the version number of this Splunk instance.
      *
-     * @return Splunk version number.
+     * @return The Splunk version number.
      */
     public String getVersion() {
         return getString("version");
     }
 
     /**
-     * Answers if the service is running under a free license.
+     * Indicates whether this Splunk instance is running under a free license.
      *
-     * @return {@code true} if the current license is a free license.
+     * @return {@code true} if the current license is a free license, 
+     * {@code false} if not.
      */
     public boolean isFree() {
         return getBoolean("isFree");
     }
 
     /**
-     * Answers if the service is running under a trial license.
+     * Indicates whether this Splunk instance is running under a trial license.
      *
-     * @return {@code true} if the current license is a trial license.
+     * @return {@code true} if the current license is a trial license, 
+     * {@code false} if not.
      */
     public boolean isTrial() {
         return getBoolean("isTrial");

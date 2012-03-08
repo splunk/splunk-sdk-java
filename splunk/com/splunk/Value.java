@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -23,15 +23,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Value conversion helper functions.
+ * The {@code Value} class contains helper functions for value conversion.
  */
 class Value {
 
     /**
-     * Convert the given {@code String} to a boolean value.
+     * Converts a {@code String} to a boolean value.
      *
      * @param value Value to convert.
-     * @return boolean value.
+     * @return Boolean value.
      */
     static boolean toBoolean(String value) {
         if (value == null) return false;
@@ -48,7 +48,7 @@ class Value {
     }
 
     /**
-     * Convert the given {@code String} to a numeric byte count.
+     * Converts a {@code String} to a numeric byte count.
      *
      * @param value Value to convert.
      * @return Count of bytes.
@@ -75,7 +75,7 @@ class Value {
     private static Pattern datePattern = null;
 
     /**
-     * Convert the given {@code String} to a {@code Date} value.
+     * Converts a {@code String} to a {@code Date} value.
      *
      * @param value Value to convert.
      * @return Date value.
@@ -105,7 +105,7 @@ class Value {
     }
 
     /**
-     * Convert the given {@code String}, representing a date from the epoch,
+     * Converts a {@code String}, representing a date from the epoch,
      * to a {@code Date} value.
      *
      * @param value Value to convert.
@@ -116,7 +116,7 @@ class Value {
     }
 
     /**
-     * Convert the given {@code String} to a {@code float} value.
+     * Converts a {@code String} to a {@code float} value.
      *
      * @param value Value to convert.
      * @return {@code float} value.
@@ -126,7 +126,7 @@ class Value {
     }
 
     /**
-     * Convert the given {@code String} to an {@code int} value.
+     * Converts a {@code String} to an {@code int} value.
      *
      * @param value Value to convert.
      * @return {@code int} value.
@@ -136,7 +136,7 @@ class Value {
     }
 
     /**
-     * Convert the given {@code String} to a {@code long} value.
+     * Converts a {@code String} to a {@code long} value.
      *
      * @param value Value to convert.
      * @return {@code long} value.

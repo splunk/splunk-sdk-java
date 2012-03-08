@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,14 +19,17 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * Representation of a license message.
+ * The {@code LicenseMessage} class represents a license message.
+ * Messages may range from helpful warnings about being close to violations 
+ * or licenses expiring, to more severe alerts regarding overages and exceeding 
+ * the daily indexing volume limit. 
  */
 public class LicenseMessage extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The license group endpoint.
      */
     LicenseMessage(Service service, String path) {
@@ -34,63 +37,63 @@ public class LicenseMessage extends Entity {
     }
 
     /**
-     * Returns this license message's category.
+     * Returns the category of this license message.
      *
-     * @return This license message's category.
+     * @return The category.
      */
     public String getCategory() {
         return getString("category");
     }
 
     /**
-     * Returns this license message's creation time.
+     * Returns the time and date that this license message was created.
      *
-     * @return This license message's creation time.
+     * @return The creation time and date.
      */
     public Date getCreationTime() {
         return getDateFromEpoch("create_time");
     }
 
     /**
-     * Returns this license message's description,, or null if not specified.
+     * Returns the description of this license message.
      *
-     * @return This license message's description.
+     * @return The description, or {@code null} if not specified.
      */
     public String getDescription() {
         return getString("description", null);
     }
 
     /**
-     * Returns this license message's pool ID, or null if not specified.
+     * Returns the pool ID of this license message.
      *
-     * @return This license message's pool ID.
+     * @return The pool ID, or {@code null} if not specified.
      */
     public String getPoolId() {
         return getString("pool_id", null);
     }
 
     /**
-     * Returns this license message's severity, or null if not specified.
+     * Returns the severity of this license message.
      *
-     * @return This license message's severity.
+     * @return The severity, or {@code null} if not specified.
      */
     public String getSeverity() {
         return getString("severity", null);
     }
 
     /**
-     * Returns this license message's slave ID, or null if not specified.
+     * Returns the slave ID of this license message.
      *
-     * @return this license message's slave ID.
+     * @return The slave ID, or {@code null} if not specified.
      */
     public String getSlaveId() {
         return getString("slave_id", null);
     }
 
     /**
-     * Returns this license message's stack ID, or null if not specified.
+     * Returns the stack ID of this license message.
      *
-     * @return This license message's stack ID.
+     * @return The stack ID, or {@code null} if not specified.
      */
     public String getStackId() {
         return getString("stack_id", null);

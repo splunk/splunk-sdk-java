@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,71 +17,70 @@
 package com.splunk;
 
 /**
- * Representation of a script input.
+ * The {@code ScriptInput} class represents a script input.
  */
 public class ScriptInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param path The Script input endpoint.
+     * @param service The connected {@code Service} instance.
+     * @param path The script input endpoint.
      */
     ScriptInput(Service service, String path) {
         super(service, path);
     }
 
     /**
-     * Returns this script input's group.
+     * Returns the group for this script input.
      *
-     * @return This script input's group.
+     * @return The group, or {@code null} if not specified.
      */
     public String getGroup() {
         return getString("group", null);
     }
 
     /**
-     * Returns this script input's source host, or null if not specified.
+     * Returns the source host for this script input.
      *
-     * @return This TCP input's source host.
+     * @return The source host, or {@code null} if not specified.
      */
     public String getHost() {
         return getString("host", null);
     }
 
     /**
-     * Returns this script input's index name.
+     * Returns the index name for this script input.
      *
-     * @return This script input's index name.
+     * @return The index name.
      */
     public String getIndex() {
         return getString("index");
     }
 
     /**
-     * Returns this script input's execution frequency in seconds, or a cron
-     * schedule.
+     * Returns the execution frequency for this script input.
      *
-     * @return This scripts input's execution frequency in seconds, or a cron
-     * schedule.
+     * @return The execution frequency in seconds or a cron schedule.
      */
     public String getInterval() {
         return getString("interval");
     }
 
     /**
-     * Returns the script input kind.
+     * Returns the input type for this script input.
+     * @see InputKind
      *
-     * @return The script input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.Script;
     }
 
     /**
-     * Returns this script input's _rcvbuf attribute.
+     * Returns the value of the {@code _rcvbuf} attribute for this script input.
      *
-     * @return This script input's _rcvbuf attribute.
+     * @return The {@code _rcvbuf} value.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");

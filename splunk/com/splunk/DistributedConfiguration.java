@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a Splunk distributed search configuration.
+ * The {@code DistributedConfiguration} class represents a Splunk distributed 
+ * search configuration, providing access to Splunk's distributed search options.
  */
 public class DistributedConfiguration extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     DistributedConfiguration(Service service) {
         super(service, "search/distributed/config");
@@ -43,167 +44,171 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns whether Splunk automatically discovers other servers.
+     * Indicates whether Splunk automatically adds all discovered servers.
      *
-     * @return whether Splunk automatically discovers other servers.
+     * @return {@code true} if Splunk automatically adds servers, {@code false} if not.
      */
     public boolean getAutoAddServers() {
         return getBoolean("autoAddServers");
     }
 
     /**
-     * Returns a comma separated list of server names that are excluded from
-     * being peers, or null if not available.
+     * Returns a list of server names that are excluded from
+     * being peers.
      *
-     * @return servers, by name, that are excluded from being peers.
+     * @return A comma-separated list of excluded servers by name, or {@code null} if not available.
      */
     public String getBlacklistNames() {
         return getString("blacklistNames", null);
     }
 
     /**
-     * Returns a comma separated list of server URLs that are excluded from
-     * being peers. URLs are in the form x.x.x.x:port, or null if not available.
+     * Returns a list of server URLs that are excluded from being peers.
      *
-     * @return servers, by URL, that are excluded from being peers.
+     * @return A comma-separated list of excluded servers by URL in the 
+     * format "x.x.x.x:port", or {@code null} if not available.
      */
     public String getBlacklistUrls() {
         return getString("blacklistURLs", null);
     }
 
     /**
-     * Return connection timeout in seconds, or -1 if not specified.
+     * Returns the time-out period for connecting to search peers. 
      *
-     * @return The connection timeout in seconds.
+     * @return The connection time-out period, in seconds, or -1 if not specified.
      */
     public int getConnectionTimeout() {
         return getInteger("connectionTimeout", -1);
     }
 
     /**
-     * Returns the number of seconds between checking servers that are already
-     * timed-out. Zero means do not recheck. The default is sixty seconds. If
-     * removeTimedOutServers is false the setting has no effect.
+     * Returns the frequency at which servers that have timed out are rechecked.
+     * If {@code removeTimedOutServers} is false, this setting has no effect.
      *
-     * @return The number of seconds to check timed-out servers.
+     * @return The frequency, in seconds, to recheck timed-out servers. If 0, servers 
+     * are not rechecked. The default is 60 seconds.
      */
     public int getCheckTimedOutServersFrequency() {
         return getInteger("checkTimedOutServersFrequency");
     }
 
     /**
-     * Returns the number of seconds between checking on other servers health.
-     * If set to zero, heartbeat checks are disabled.
+     * Returns the period between heartbeat checks on other servers' health.
      *
-     * @return The number of seconds between checking on other servers health.
+     * @return The heartbeat period, in seconds. If 0, heartbeat checks are disabled. 
      */
     public int getHeartbeatFrequency() {
         return getInteger("heartbeatFrequency");
     }
 
     /**
-     * Returns the multi-cast address to discover other servers and receive
-     * heartbeats, or null if not available.
+     * Returns the multi-cast address where each Splunk server sends and 
+     * listens for heartbeat messages.
      *
-     * @return The multi-cast address for discovery and heartbeat messages.
+     * @return The multi-cast address for discovery and heartbeat messages, 
+     * or {@code null} if not available.
      */
     public String getHeartbeatMcastAddress() {
         return getString("heartbeatMcastAddr", null);
     }
 
     /**
-     * Returns the port used for heartbeat messages.
+     * Returns the port where each Splunk server sends and listens for heartbeat messages.
      *
-     * @return The heatbeat port.
+     * @return The heartbeat port.
      */
     public int getHeartbeatPort() {
         return getInteger("heartbeatPort");
     }
 
     /**
-     * Returns receive timeout in seconds, or -1 if not specified.
+     * Returns the time-out period for trying to read and receive data from a search peer.
      *
-     * @return The receive timeout in seconds.
+     * @return The receive time-out period, in seconds, or -1 if not specified.
      */
     public int getReceiveTimeout() {
         return getInteger("receiveTimeout", -1);
     }
 
     /**
-     * Returns whether or not timed out servers are removed from the distributed
+     * Indicates whether timed-out servers are removed from the distributed
      * configuration.
      *
-     * @return whether ot not timed out servers are removed from the distributed
-     * configuration.
+     * @return {@code true} if timed-out servers are removed from the distributed
+     * configuration, {@code false} if not.
      */
     public boolean getRemovedTimedOutServers() {
         return getBoolean("removedTimedOutServers");
     }
+
     /**
-     * @deprecated Use specific connectionTimeout, receiveTimeout, sendTimeout.
+     * @deprecated Use specific {@code getConnectionTimeout}, 
+     * {@code getReceiveTimeout}, and {@code getSendTimeout}.
      *
-     * Returns the timeout in seconds, to determine a server timeout.
+     * Returns the server time-out period.
      *
-     * @return The timeout in seconds, to determine a server timeout.
+     * @return The server time-out period, in seconds.
      */
     public int getServerTimeout() {
         return getInteger("serverTimeout");
     }
 
     /**
-     * Returns send timeout in seconds, or -1 if not specified.
+     * Returns the time-out period for trying to write or send data to a search peer.
      *
-     * @return The send timeout in seconds.
+     * @return The send time-out period, in seconds, or -1 if not specified.
      */
     public int getSendTimeout() {
         return getInteger("sendTimeout", -1);
     }
 
     /**
-     * Returns a comma separated list of peer servers, or null if not available.
+     * Returns a list of peer servers.
      *
-     * @return The list of peer servers.
+     * @return The comma-separated list of peer servers, or {@code null} if not available.
      */
     public String getServers() {
         return getString("servers", null);
     }
 
     /**
-     * Returns whether or not this server uses bundle replication to share
-     * search time configuration with search peers. Note: if set to false,
-     * the search head assumes the search peers can access a bundles through
-     * shared storage (NAS).
+     * Indicates whether this server uses bundle replication to share
+     * search-time configuration with search peers. 
+     * 
+     * Note: If set to {@code false}, the search head assumes that the
+     * search peers can access the correct bundles using an NFS share.
      *
-     * @return whether or not this server uses bundle replication.
+     * @return {@code true} if this server uses bundle replication, {@code false} if not.
      */
     public boolean getShareBundles() {
         return getBoolean("shareBundles");
     }
 
     /**
-     * Returns whether or not this server participates in a search. If set to
+     * Indicates whether this server participates in a search. If set to
      * true, this server does NOT participate as a server in any search or other
-     * call. This is used for building a node that does nothing but merge the
+     * call. This setting is used for building a node that does nothing but merge the
      * results from other servers.
      *
-     * @return Whether or not this server participates in a search.
+     * @return {@code true} if the server does not participate as a server in any
+     * search, {@code false} if it does.
      */
     public boolean getSkipOurselves() {
         return getBoolean("skipOurselves");
     }
 
     /**
-     * Returns the number of seconds for connection timeouts when gathering a
-     * search peer's basic information.
+     * Returns the time-out period for gathering a search peer's basic info 
+     * (/services/server/info).
      *
-     * @return The number of seconds for connection timeout.
+     * @return The time-out period, in seconds.
      */
     public int getStatusTimeout() {
         return getInteger("statusTimeout");
     }
 
     /**
-     * Returns the time-to-live of heartbeat messages.
+     * Returns the time-to-live (ttl) of heartbeat messages.
      *
      * @return The time-to-live of heartbeat messages.
      */
@@ -212,9 +217,9 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns whether or not distributed search is enabled.
+     * Indicates whether distributed search is enabled.
      *
-     * @return If distributed search is enabled or disabled.
+     * @return {@code true} if distributed search is enabled, {@code false} if disabled.
      */
     public boolean isDistSearchEnabled() {
         return getBoolean("dist_search_enabled");

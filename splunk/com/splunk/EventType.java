@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Representation of an event type.
+ * The {@code EventType} class represents an event type.
  */
 public class EventType extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The event type endpoint.
      */
     EventType(Service service, String path) {
@@ -42,7 +42,7 @@ public class EventType extends Entity {
 
     /**
      * Returns the priority of this event type. The range is 1 to 10, with 1
-     * beging the highest priority.
+     * being the highest priority.
      *
      * @return The priority of this event type.
      */
@@ -51,9 +51,9 @@ public class EventType extends Entity {
     }
 
     /**
-     * Returns this event type's search terms.
+     * Returns the search terms for this event type.
      *
-     * @return This event types' search terms.
+     * @return The search terms for this event type.
      */
     public String getSearch() {
         return getString("search", null);
@@ -63,9 +63,9 @@ public class EventType extends Entity {
      * @deprecated Use tags.conf.spec file to assign tags to groups of events
      * with related field values.
      *
-     * Returns this event types list of tags.
+     * Returns the list of tags for this event type.
      *
-     * @return This event types list of tags.
+     * @return The list of tags for this event type.
      */
     public String [] getTags() {
         return getStringArray("tags", null);

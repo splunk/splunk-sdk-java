@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -21,32 +21,32 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 
 /**
- * Representation of an Atom feed.
+ * The {@code AtomFeed} class represents an Atom feed.
  */
 public class AtomFeed extends AtomObject {
-    /** The list of Atom entries contained by this Atom feed. */
+    /** The list of Atom entries contained in this {@code AtomFeed} object. */
     public ArrayList<AtomEntry> entries = new ArrayList<AtomEntry>();
 
-    /** The value of the Atom feed's {@code itemsPerPage} element. */
+    /** The value of the Atom feed's {@code <itemsPerPage>} element. */
     public String itemsPerPage = null;
 
-    /** The value of the Atom feed's {@code startIndex} element. */
+    /** The value of the Atom feed's {@code <startIndex>} element. */
     public String startIndex = null;
 
-    /** The value of the Atom feed's {@code totalResults} element. */
+    /** The value of the Atom feed's {@code <totalResults>} element. */
     public String totalResults = null;
 
     /**
-     * Creates a new AtomFeed instance.
+     * Creates a new {@code AtomFeed} instance.
      *
-     * @return A new AtomFeed instance.
+     * @return A new {@code AtomFeed} instance.
      */
     static AtomFeed create() {
         return new AtomFeed();
     }
 
     /**
-     * Creates a new AtomFeed instance based on the given stream.
+     * Creates a new {@code AtomFeed} instance based on the given stream.
      *
      * @param input The input stream.
      * @return An {@code AtomFeed} instance representing the parsed stream.
@@ -62,7 +62,7 @@ public class AtomFeed extends AtomObject {
     }
 
     /**
-     * Create a new {@code AtomFeed} instance based on the given XML element.
+     * Create a new {@code AtomFeed} instance based on a given XML element.
      *
      * @param element The XML element.
      * @return An {@code AtomFeed} instance representing the parsed element.
@@ -74,7 +74,7 @@ public class AtomFeed extends AtomObject {
     }
 
     /**
-     * Initialize the current instance from the given XML element.
+     * Initializes the current instance from a given XML element.
      *
      * @param element The XML element.
      */

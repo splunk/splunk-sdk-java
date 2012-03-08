@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Representation of a Windows Active Directory input.
+ * The {@code WindowsActiveDirectoryInput} class represents a Windows Active Directory input.
  */
 public class WindowsActiveDirectoryInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The Windows Active Directory input endpoint.
      */
     WindowsActiveDirectoryInput(Service service, String path) {
@@ -32,53 +32,51 @@ public class WindowsActiveDirectoryInput extends Input {
     }
 
     /**
-     * Returns this Windows Active Directory input's index name, or null if not
-     * specified.
+     * Returns the index name of this Windows Active Directory input.
      *
-     * @return This Windows Active Directory input's index name.
+     * @return The index name, or {@code null}  if not specified.
      */
     public String getIndex() {
         return getString("index", null);
     }
 
     /**
-     * Returns the Windows Active Directory input kind.
+     * Returns the input type of this Windows Active Directory input.
+     * @see InputKind
      *
-     * @return The Windows Active Directory input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.WindowsActiveDirectory;
     }
 
     /**
-     * Returns whether or not this Windows Active Directory input's directory
-     * path subtree is being monitored.
+     * Indicates whether the directory path subtree is being monitored for
+     * this Windows Active Directory input.
      *
-     * @return Whether or not this Windows Active Directory input's directory
-     * path subtree is being monitored.
+     * @return {@code true} if the directory path subtree is being monitored, 
+     * {@code false} if not.
      */
     public boolean getMonitorSubtree() {
         return getBoolean("monitorSubtree");
     }
 
     /**
-     * Returns this Windows Active Directory input's starting location in the
-     * directory path. Null if not specified. If not specified, the the root of
-     * the directory tree is used.
+     * Returns the starting location in the directory path for this Windows Active
+     * Directory input. If not specified, the the root of the directory tree is used.
      *
-     * @return this Windows Active Directory input's starting location in the
-     * directory path.
+     * @return The starting location in the directory path, or {@code null} if 
+     * not specified.
      */
     public String getStartingNode() {
         return getString("startingNode", null);
     }
 
     /**
-     * Returns the fully qualified domain name of a valid, network accessible
-     * Domain Controller. Null if not specified. If not specified, the local
-     * machine is used.
+     * Returns the fully-qualified domain name of a valid, network-accessible
+     * domain controller. If not specified, the local machine is used.
      *
-     * @return The fully qualified domain name.
+     * @return The fully-qualified domain name, or {@code null} if not specified.
      */
     public String getTargetDc() {
         return getString("targetDc", null);

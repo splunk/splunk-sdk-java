@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Representation of an HTTP response message including status code, response
- * headers and body content.
+ * The {@code ResponseMessage} class represents an HTTP response message that 
+ * includes status codes, response headers, and body content.
  */
 public class ResponseMessage {
     int status;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,7 +19,9 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of a collection of jobs.
+ * The {@code JobCollection} class represents a collection of jobs. A job
+ * is an individual instance of a running or completed search or report, along 
+ * with its related output.
  */
 public class JobCollection extends EntityCollection<Job> {
     static String oneShotNotAllowed = String.format(
@@ -28,31 +30,34 @@ public class JobCollection extends EntityCollection<Job> {
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     JobCollection(Service service) {
         super(service, "search/jobs", Job.class);
     }
 
     /**
-     * Creates a search job with a UTF8 pre-encoded search request. Note that
-     * a 'oneshot' request is invalid here. Please use the createOneShot method
-     * instead.
+     * Creates a search with a UTF8 pre-encoded search request. </br/>
+     * Note: A 'oneshot' request is invalid. To create a oneshot search, use
+     * the {@code Service.oneshot()} method instead.
+     * @see Service#oneshot Service.oneshot
      *
      * @param query The search query string.
-     * @return The search job SID.
+     * @return The unique search identifier (SID).
      */
     public Job create(String query) {
         return create(query, null);
     }
 
     /**
-     * Creates a search job. Note that a 'oneshot' request is invalid here.
-     * Please use the createOneShot method instead.
+     * Creates a search. </br/>
+     * Note: A 'oneshot' request is invalid. To create a oneshot search, use
+     * the {@code Service.oneshot()} method instead.
+     * @see Service#oneshot Service.oneshot
      *
-     * @param query The search query.
-     * @param args The arguments supplied to this job's creation.
-     * @return The search job SID.
+     * @param query The search query string.
+     * @param args Additional arguments for this job.
+     * @return The unique search identifier (SID).
      */
     public Job create(String query, Map args) {
         if (args != null && args.containsKey("exec_mode")) {
@@ -68,18 +73,18 @@ public class JobCollection extends EntityCollection<Job> {
     }
 
     /**
-     * Returns this job's response.
+     * Returns the job's response.
      *
-     * @return This job's response.
+     * @return The job's response.
      */
     @Override public ResponseMessage list() {
         return service.get(path + "?count=0");
     }
 
     /**
-     * Returns this job's SID. The SID is used as this item's key.
+     * Returns the job's unique search identifier (SID), which is used as this item's key.
      *
-     * @param entry The Atom response.
+     * @param entry The {@code AtomEntry} response.
      * @return This job's SID.
      */
     @Override protected String itemKey(AtomEntry entry) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -38,8 +38,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- * Representation of a generic HTTP service at a given address (host:port)
- * accessed using a given protocol "scheme" ({@code http} or {@code https}).
+ * The {@code HttpService} class represents a generic HTTP service at a given
+ * address ({@code host:port}), accessed using a given protocol scheme ({@code http} or {@code https}).
  */
 public class HttpService {
     /** The scheme used to access the service. */
@@ -76,7 +76,7 @@ public class HttpService {
     /**
      * Constructs a new {@code HttpService} instance at the given host.
      *
-     * @param host Host name of the service.
+     * @param host The host name of the service.
      */
     public HttpService(String host) {
         this.host = host;
@@ -86,8 +86,8 @@ public class HttpService {
     /**
      * Constructs a new {@code HttpService} instance at the given host and port.
      *
-     * @param host Host name of the service.
-     * @param port Port number of the service.
+     * @param host The host name of the service.
+     * @param port The port number of the service.
      */
     public HttpService(String host, int port) {
         this.host = host;
@@ -96,11 +96,11 @@ public class HttpService {
     }
 
     /**
-     * Constructs a new {@code HttpService} instance using the given host, port
-     * and scheme.
+     * Constructs a new {@code HttpService} instance using the given host, 
+     * port, and scheme.
      *
-     * @param host Host name of the service.
-     * @param port Port number of the service.
+     * @param host The host name of the service.
+     * @param port The port number of the service.
      * @param scheme Scheme for accessing the service
      *        ({@code http} or {@code https}).
      */
@@ -111,29 +111,29 @@ public class HttpService {
         setTrustPolicy();
     }
 
-    // Returns the count of args in the given map
+    // Returns the count of arguments in the given {@code args} map.
     private static int count(Map<String, Object> args) {
         if (args == null) return 0;
         return args.size();
     }
 
     /**
-     * Issue an HTTP GET request against the service using the given path.
+     * Issues an HTTP GET request against the service using a given path.
      *
-     * @param path Request path.
-     * @return HTTP response.
+     * @param path The request path.
+     * @return The HTTP response.
      */
     public ResponseMessage get(String path) {
         return send(path, new RequestMessage("GET"));
     }
 
     /**
-     * Issue an HTTP GET request against the service using the given path and
+     * Issues an HTTP GET request against the service using a given path and
      * query arguments.
      *
      * @param path The request path.
-     * @param args Query arguments.
-     * @return HTTP response.
+     * @param args The query arguments.
+     * @return The HTTP response.
      */
     public ResponseMessage get(String path, Map<String, Object> args) {
         if (count(args) > 0)
@@ -145,7 +145,7 @@ public class HttpService {
     /**
      * Returns the host name of this service.
      *
-     * @return Host name.
+     * @return The host name.
      */
     public String getHost() { 
         return this.host; 
@@ -154,7 +154,7 @@ public class HttpService {
     /**
      * Returns the port number of this service.
      *
-     * @return Port number.
+     * @return The port number.
      */
     public int getPort() {
         return this.port;
@@ -162,9 +162,9 @@ public class HttpService {
 
     /**
      * Returns the URL prefix of this service, consisting of
-     * {@code scheme://host[:port]}
+     * {@code scheme://host[:port]}.
      *
-     * @return URL prefix.
+     * @return The URL prefix.
      */
     public String getPrefix() {
         if (this.prefix == null)
@@ -176,17 +176,17 @@ public class HttpService {
     /**
      * Returns the scheme used by this service.
      *
-     * @return Scheme.
+     * @return The scheme.
      */
     public String getScheme() {
         return this.scheme;
     }
 
     /**
-     * Construct a fully qualified URL for this service using the given path.
+     * Constructs a fully-qualified URL for this service using a given path.
      *
      * @param path The path to qualify.
-     * @return Fully qualified URL.
+     * @return Fully-qualified URL.
      */
     public URL getUrl(String path) {
         try {
@@ -198,22 +198,22 @@ public class HttpService {
     }
 
     /**
-     * Issue a POST request against the service using the given path.
+     * Issues a POST request against the service using a given path.
      *
      * @param path The request path.
-     * @return HTTP response.
+     * @return The HTTP response.
      */
     public ResponseMessage post(String path) {
         return post(path, null);
     }
 
     /**
-     * Issue a POST request against the service using the given path and
+     * Issues a POST request against the service using a given path and
      * form arguments.
      *
      * @param path The request path.
-     * @param args Form arguments.
-     * @return HTTP response.
+     * @param args The form arguments.
+     * @return The HTTP response.
      */
     public ResponseMessage post(String path, Map<String, Object> args) {
         RequestMessage request = new RequestMessage("POST");
@@ -225,10 +225,10 @@ public class HttpService {
     }
 
     /**
-     * Issue a DELETE request against the service using the given path.
+     * Issues a DELETE request against the service using a given path.
      *
      * @param path The request path.
-     * @return HTTP response.
+     * @return The HTTP response.
      */
     public ResponseMessage delete(String path) {
         RequestMessage request = new RequestMessage("DELETE");
@@ -236,12 +236,12 @@ public class HttpService {
     }
 
     /**
-     * Issue a DELETE request against the service using the given path
+     * Issues a DELETE request against the service using a given path
      * and query arguments.
      *
      * @param path The request path.
-     * @param args Query arguments.
-     * @return HTTP response.
+     * @param args The query arguments.
+     * @return The HTTP response.
      */
     public ResponseMessage delete(String path, Map<String, Object> args) {
         if (count(args) > 0) 
@@ -251,9 +251,9 @@ public class HttpService {
     }
 
     /**
-     * Open a socket to this service.
+     * Opens a socket to this service.
      *
-     * @return Socket
+     * @return The socket.
      * @throws IOException
      */
     Socket open() throws IOException {
@@ -273,12 +273,12 @@ public class HttpService {
     }
 
     /**
-     * Issue an HTTP request against the service using the given path and
+     * Issue an HTTP request against the service using a given path and
      * request message.
      *
-     * @param path Request path.
-     * @param request Request message.
-     * @return HTTP response.
+     * @param path The request path.
+     * @param request The request message.
+     * @return The HTTP response.
      */
     public ResponseMessage send(String path, RequestMessage request) {
         // Construct a full URL to the resource
@@ -295,7 +295,7 @@ public class HttpService {
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
 
-        // Set the reqeust method
+        // Set the request method
         String method = request.getMethod();
         try {
             cn.setRequestMethod(method);
@@ -368,7 +368,7 @@ public class HttpService {
     }
 
     /**
-     * Set the trust policy used by this service instance.
+     * Sets the trust policy used by this {@code Service} instance.
      */
     void setTrustPolicy() {
         try {

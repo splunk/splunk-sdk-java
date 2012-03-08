@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -22,77 +22,80 @@ import java.net.Socket;
 import java.util.Map;
 
 /**
- * Representation of a Splunk service at a given address (host:port) accessed
- * using a given protocol "scheme" ({@code http} or {@code https}). A service
- * instance also captures an optional namespace context consisting of
+ * The {@code Service} class represents a Splunk service instance at a given address
+ * (host:port), accessed using the {@code http} or {@code https} protocol scheme.
+ * </br></br>
+ * A {@code Service} instance also captures an optional namespace context consisting of
  * an optional owner name (or "-" wildcard) and optional app name (or "-"
- * wildcard. In order to access {@code Service} members the instance must
- * be authenticated by presenting credentials using the {@code login} method
- * or by constructing the instance using the {@code connect} method which
- * both creates and authenticates the instance.
+ * wildcard). 
+ * </br></br>
+ * To access {@code Service} members, the {@code Service} instance must be authenticated
+ * by presenting credentials using the {@code login} method, or by constructing the 
+ * {@code Service} instance using the {@code connect} method, which both creates and 
+ * authenticates the instance.
  */
 public class Service extends HttpService {
-    /** The current app context */
+    /** The current app context. */
     protected String app = null;
 
-    /** The current session token */
+    /** The current session token. */
     protected String token = null;
 
-    /** The current owner context */
+    /** The current owner context. A value of "nobody" means that all users have access 
+     * to the resource. 
+     */
     protected String owner = null;
 
-    /** The username used to authenticate the instance */
+    /** The Splunk account username, which is used to authenticate the Splunk instance. */
     protected String username = null;
 
-    /** The password used to authenticate the instance */
+    /** The password, which is used to authenticate the Splunk instance. */
     protected String password = null;
 
-    /** The default host name, used if no host is provided */
+    /** The default host name, which is used when a host name is not provided. */
     public static String DEFAULT_HOST = "localhost";
 
-    /** The default port number, used if no port is provided */
+    /** The default port number, which is used when a port number is not provided. */
     public static int DEFAULT_PORT = 8089;
 
-    /** The default scheme, used if no scheme is provided */
+    /** The default scheme, which is used when a scheme is not provided. */
     public static String DEFAULT_SCHEME = "https";
 
     /**
-     * Creates a new {@code Service} instance using the given host.
+     * Creates a new {@code Service} instance using a host.
      *
-     * @param host Host name of the service.
+     * @param host The host name.
      */
     public Service(String host) {
         super(host);
     }
 
     /**
-     * Creates a new {@code Service} instance using the given host and port.
+     * Creates a new {@code Service} instance using a host and port.
      *
-     * @param host Host name of the service.
-     * @param port Port number of the service
+     * @param host The host name.
+     * @param port The port number.
      */
     public Service(String host, int port) {
         super(host, port);
     }
 
     /**
-     * Creates a new {@code Service} instance using the given host, port and
-     * scheme.
+     * Creates a new {@code Service} instance using a host, port, and
+     * scheme for accessing the service ({@code http} or {@code https}).
      *
-     * @param host Host name of the service.
-     * @param port Port number of the service.
-     * @param scheme Scheme for accessing the service
-     *        ({@code http} or {@code https}).
+     * @param host The host name.
+     * @param port The port number.
+     * @param scheme The scheme ({@code http} or {@code https}).
      */
     public Service(String host, int port, String scheme) {
         super(host, port, scheme);
     }
 
     /**
-     * Creates a new {@code Service} instance using the given
-     * {@code ServiceArgs}
+     * Creates a new {@code Service} instance using a collection of arguments.
      *
-     * @param args {@code ServiceArgs} to initialize the service.
+     * @param args The {@code ServiceArgs} to initialize the service.
      */
     public Service(ServiceArgs args) {
         super();
@@ -105,10 +108,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Creates a new {@code Service} instance using the given {@code Map} of
-     * service arguments.
+     * Creates a new {@code Service} instance using a map of arguments.
      *
-     * @param args {@code Map} of arguments to initialize the service.
+     * @param args A {@code Map} of arguments to initialize the service.
      */
     public Service(Map<String, Object> args) {
         super();
@@ -121,12 +123,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Establish a connection to a Splunk service using the given arguments.
-     * This member constructs a new {@code Service} instance and authenticates
-     * the session using credentials passed in the {@code args} map.
+     * Establishes a connection to a Splunk service using a map of arguments. 
+     * This member creates a new {@code Service} instance and authenticates 
+     * the session using credentials passed in from the {@code args} map.
      *
-     * @param args Map of arguments used to initialize and authenticate the
-     *             sevice.
+     * @param args The {@code args} map.
      * @return A new {@code Service} instance.
      */
     public static Service connect(Map<String, Object> args) {
@@ -140,23 +141,23 @@ public class Service extends HttpService {
     }
 
     /**
-     * Execute a search using the export endpoint which streams results back
-     * in the returned {@code InputStream}.
+     * Runs a search using the {@code search/jobs/export} endpoint, which streams 
+     * results back in an input stream.
      *
-     * @param search The search query to execute.
-     * @return {@code InputStream} containing the search results.
+     * @param search The search query to run.
+     * @return The {@code InputStream} object that contains the search results.
      */
     public InputStream export(String search) {
         return export(search, null);
     }
 
     /**
-     * Execute a search using the export endpoint which streams results back
-     * in the returned {@code InputStream}.
+     * Runs a search with arguments using the {@code search/jobs/export} endpoint, 
+     * which streams results back in an input stream.
      *
-     * @param search The search query to execute.
+     * @param search The search query to run.
      * @param args Additional search arguments.
-     * @return {@code InputStream} containing the search results.
+     * @return The {@code InputStream} object that contains the search results.
      */
     public InputStream export(String search, Map args) {
         args = Args.create(args).add("search", search);
@@ -166,11 +167,11 @@ public class Service extends HttpService {
 
     /**
      * Ensures that the given path is fully qualified, prepending a path
-     * prefix if necessarry. The path prefix will be constructed using the
-     * current owner & app context if available.
+     * prefix if necessary. The path prefix is constructed using the
+     * current owner and app context if available.
      *
      * @param path The path to verify.
-     * @return A fully qualified resource path.
+     * @return A fully-qualified resource path.
      */
     String fullpath(String path) {
         if (path.startsWith("/"))
@@ -182,10 +183,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns the app context for this service instance, {@code null}
-     * indicates no app context and {@code "-"} indicates an app wildcard.
+     * Returns the app context for this {@code Service} instance. 
+     * A {@code null} value indicates no app context, and a value of 
+     * {@code "-"} indicates an app wildcard.
      *
-     * @return The app context for the service.
+     * @return The app context.
      */
     public String getApp() {
         return this.app;
@@ -194,7 +196,7 @@ public class Service extends HttpService {
     /**
      * Returns the collection of applications.
      *
-     * @return Application collection.
+     * @return The application collection.
      */
     public EntityCollection<Application> getApplications() {
         return new EntityCollection<Application>(
@@ -204,7 +206,7 @@ public class Service extends HttpService {
     /**
      * Returns the collection of configurations.
      *
-     * @return Configurations collection.
+     * @return The configurations collection.
      */
     public ConfCollection getConfs() {
         return new ConfCollection(this);
@@ -213,7 +215,7 @@ public class Service extends HttpService {
     /**
      * Returns an array of system capabilities.
      *
-     * @return Capabilities.
+     * @return An array of capabilities.
      */
     public String[] getCapabilities() {
         Entity caps = new Entity(this, "authorization/capabilities");
@@ -221,9 +223,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns deployment client configuration and status.
+     * Returns the configuration and status of a deployment client.
      *
-     * @return Deployment client configuration and status.
+     * @return The configuration and status of a deployment client.
      */
     public DeploymentClient getDeploymentClient() {
         return new DeploymentClient(this);
@@ -232,7 +234,7 @@ public class Service extends HttpService {
     /**
      * Returns the configuration of all deployment servers.
      *
-     * @return Configuration of deployment servers.
+     * @return The configuration of deployment servers.
      */
     public EntityCollection<DeploymentServer> getDeploymentServers() {
         return new EntityCollection<DeploymentServer>(
@@ -240,9 +242,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of deployment server class configurations.
+     * Returns a collection of class configurations for a deployment server.
      *
-     * @return Collection of server class configurations.
+     * @return A collection of class configurations for a deployment server.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(){
         return new EntityCollection<DeploymentServerClass>(
@@ -250,9 +252,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of multi-tenant configurations.
+     * Returns a collection of multi-tenant configurations.
      *
-     * @return Colleciton of multi-tenant configurations.
+     * @return A collection of multi-tenant configurations.
      */
     public EntityCollection<DeploymentTenant> getDeploymentTenants() {
         return new EntityCollection<DeploymentTenant>(
@@ -260,7 +262,7 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns information regarding distributed search options.
+     * Returns information about distributed search options.
      *
      * @return Distributed search information.
      */
@@ -270,12 +272,12 @@ public class Service extends HttpService {
 
 
     /**
-     * Returns collection of distributed search peers. A search peer is a
+     * Returns a collection of distributed search peers. A <i>search peer</i> is a
      * Splunk server to which another Splunk server distributes searches. The
-     * Splunk server where the search originates is referred to as the search
-     * head.
+     * Splunk server where the search originates is referred to as the <i>search
+     * head</i>.
      *
-     * @return Collection of search peers.
+     * @return A collection of search peers.
      */
     public EntityCollection<DistributedPeer> getDistributedPeers() {
         return new EntityCollection<DistributedPeer>(
@@ -283,18 +285,19 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of saved event types.
+     * Returns a collection of saved event types.
      *
-     * @return Collection of saved event types.
+     * @return A collection of saved event types.
      */
     public EventTypeCollection getEventTypes() {
         return new EventTypeCollection(this);
     }
 
     /**
-     * Returns collection of alerts that have been fired by the service.
+     * Returns a collection of alerts that have been fired by this {@code Service}
+     * instance.
      *
-     * @return Collection of fired alerts.
+     * @return A collection of fired alerts.
      */
     public EntityCollection<FiredAlert> getFiredAlerts() {
         return new EntityCollection<FiredAlert>(
@@ -302,9 +305,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of Splunk indexes.
+     * Returns a collection of Splunk indexes.
      *
-     * @return Collection of indexes.
+     * @return A collection of indexes.
      */
     public EntityCollection<Index> getIndexes() {
         return new EntityCollection<Index>(this, "data/indexes", Index.class);
@@ -322,7 +325,7 @@ public class Service extends HttpService {
     /**
      * Returns a collection of configured inputs.
      *
-     * @return Collection of inputs.
+     * @return A collection of inputs.
      */
     public InputCollection getInputs() {
         return new InputCollection(this);
@@ -331,16 +334,16 @@ public class Service extends HttpService {
     /**
      * Returns a collection of current search jobs.
      *
-     * @return Collection of search jobs.
+     * @return A collection of search jobs.
      */
     public JobCollection getJobs() {
         return new JobCollection(this);
     }
 
     /**
-     * Returns collection of license group configurations.
+     * Returns a collection of license group configurations.
      *
-     * @return Collectio nof license group configurations.
+     * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups() {
         return new EntityCollection<LicenseGroup>(
@@ -348,9 +351,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of messages from the licenser.
+     * Returns a collection of messages from the licenser.
      *
-     * @return Collection of licenser messages.
+     * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages() {
         return new EntityCollection<LicenseMessage>(
@@ -358,29 +361,29 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns the current owner context for this service instance,
-     * {@code "-"} indicates wildcard and {@code null} indicates no owner
-     * context.
+     * Returns the current owner context. 
+     * A value of {@code "-"} indicates a wildcard, and a {@code null} value indicates 
+     * no owner context.
      *
-     * @return Current owner context.
+     * @return The current owner context.
      */
     public String getOwner() {
         return this.owner;
     }
 
     /**
-     * Returns collection of licenser pool configurations.
+     * Returns a collection of licenser pool configurations.
      *
-     * @return Collection of licenser pool configurations.
+     * @return A collection of licenser pool configurations.
      */
     public LicensePoolCollection getLicensePools() {
         return new LicensePoolCollection(this);
     }
 
     /**
-     * Returns collection of slaves reporting to this license master.
+     * Returns a collection of licenser slaves that report to the license master.
      *
-     * @return Collection of licenser slaves.
+     * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
         return new EntityCollection<LicenseSlave>(
@@ -388,9 +391,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of license stack configurations.
+     * Returns a collection of license stack configurations.
      *
-     * @return Collection of license stack configurations.
+     * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks() {
         return new EntityCollection<LicenseStack>(
@@ -398,9 +401,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of licenses for this service.
+     * Returns a collection of licenses for this service.
      *
-     * @return Collection of licenses.
+     * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses() {
         return new EntityCollection<License>(
@@ -408,9 +411,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of service logging categories and their status.
+     * Returns a collection of logging categories and their status.
      *
-     * @return Collection of logging categories.
+     * @return A collection of logging categories and status.
      */
     public EntityCollection<Logger> getLoggers() {
         return new EntityCollection<Logger>(
@@ -418,9 +421,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of system messages.
+     * Returns a collection of system messages.
      *
-     * @return Collection of system messages.
+     * @return A collection of system messages.
      */
     public MessageCollection getMessages() {
         return new MessageCollection(this);
@@ -436,9 +439,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of output group configurations.
+     * Returns a collection of output group configurations.
      *
-     * @return Collection of output group configurations.
+     * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups() {
         return new EntityCollection<OutputGroup>(
@@ -446,9 +449,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of data forwarding configurations.
+     * Returns a collection of data-forwarding configurations.
      *
-     * @return Collection of data forwarding configurations.
+     * @return A collection of data-forwarding configurations.
      */
     public EntityCollection<OutputServer> getOutputServers() {
         return new EntityCollection<OutputServer>(
@@ -456,10 +459,10 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of configurations for forwarding data in standard
+     * Returns a collection of configurations for forwarding data in standard
      * syslog format.
      *
-     * @return Collection of syslog forwarders.
+     * @return A collection of syslog forwarders.
      */
     public EntityCollection<OutputSyslog> getOutputSyslogs() {
         return new EntityCollection<OutputSyslog>(
@@ -467,19 +470,19 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns the current password use to authenticate the session.
+     * Returns the current password that was used to authenticate the session.
      *
-     * @return Current password.
+     * @return The current password.
      */
     public String getPassword() {
         return this.password;
     }
 
     /**
-     * Return collection of passwords, this collection is used for the
-     * management of secure credentials.
+     * Return a collection of passwords. This collection is used for managing
+     * secure credentials.
      *
-     * @return Collection of passwords.
+     * @return A collection of passwords.
      */
     public PasswordCollection getPasswords() {
         return new PasswordCollection(this);
@@ -488,7 +491,7 @@ public class Service extends HttpService {
     /**
      * Returns a collection of Splunk user roles.
      *
-     * @return Collection of user roles.
+     * @return A collection of user roles.
      */
     public EntityCollection<Role> getRoles() {
         return new EntityCollection<Role>(
@@ -498,7 +501,7 @@ public class Service extends HttpService {
     /**
      * Returns a collection of saved searches.
      *
-     * @return Collection of saved searches.
+     * @return A collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches() {
         return new SavedSearchCollection(this);
@@ -514,39 +517,40 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns the current session token. This allows sharing of session tokens
-     * across multiple service instances.
+     * Returns the current session token. Session tokens can be shared across
+     * multiple {@code Service} instances.
      *
-     * @return Session token.
+     * @return The session token.
      */
     public String getToken() {
         return this.token;
     }
 
     /**
-     * Returns the username used to authenticate the current session.
+     * Returns the Splunk account username that was used to authenticate the current
+     * session.
      *
-     * @return Current username.
+     * @return The current username.
      */
     public String getUsername() {
         return this.username;
     }
 
     /**
-     * Returns collection of Splunk users.
+     * Returns a collection of Splunk users.
      *
-     * @return Collection of users.
+     * @return A collection of users.
      */
     public UserCollection getUsers() {
         return new UserCollection(this);
     }
 
     /**
-     * Authenticate the instance using the given credentials.
+     * Authenticates the {@code Service} instance with a username and password.
      *
-     * @param username User name.
-     * @param password Password.
-     * @return The current service instance.
+     * @param username The Splunk account username.
+     * @param password The password for the username.
+     * @return The current {@code Service} instance.
      */
     public Service login(String username, String password) {
         this.username = username;
@@ -566,9 +570,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Forget the current session token.
+     * Forgets the current session token.
      *
-     * @return The current service instance.
+     * @return The current {@code Service} instance.
      */
     public Service logout() {
         this.token = null;
@@ -576,21 +580,21 @@ public class Service extends HttpService {
     }
 
     /**
-     * Creates a 'oneshot' synchronous search.
+     * Creates a oneshot synchronous search.
      *
-     * @param query The search query string.
-     * @return The response message of the search.
+     * @param query The search query.
+     * @return The search results.
      */
     public InputStream oneshot(String query) {
        return oneshot(query, null);
     }
 
     /**
-     * Creates a 'oneshot' synchronous search.
+     * Creates a oneshot synchronous search using search arguments.
      *
      * @param query The search query.
-     * @param args The arguments to the search.
-     * @return The results of the search.
+     * @param args The search arguments.
+     * @return The search results.
      */
     public InputStream oneshot(String query, Map args) {
         args = Args.create(args);
@@ -601,11 +605,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Open a raw socket to this service.
+     * Opens a raw socket to this service.
      *
-     * @param port The specific port to be opened. It must already have been
-     * created as an allowable tcp input to the service to function properly.
-     * @return Socket
+     * @param port The port to open. This port must already have been
+     * created as an allowable TCP input to the service.
+     * @return The socket.
      * @throws java.io.IOException
      */
     public Socket open(int port) throws IOException {
@@ -613,21 +617,22 @@ public class Service extends HttpService {
     }
 
     /**
-     * Parse the given search query and return a semantic map for the search.
+     * Parses a search query and returns a semantic map for the search in JSON format.
      *
-     * @param query The query to parse.
-     * @return Parse response message.
+     * @param query The search query.
+     * @return The parse response message.
      */
     public ResponseMessage parse(String query) {
         return parse(query, null);
     }
 
     /**
-     * Parse the given search query and return a semantic map for the search.
+     * Parses a search query with additional arguments and returns a semantic
+     * map for the search in JSON format.
      *
-     * @param query The query to parse.
+     * @param query The search query.
      * @param args Additional parse arguments.
-     * @return Parse response message.
+     * @return The parse response message.
      */
     public ResponseMessage parse(String query, Map args) {
         args = Args.create(args).add("q", query);
@@ -635,24 +640,24 @@ public class Service extends HttpService {
     }
 
     /**
-     * Restart the service. The service will be unavailable until it has
+     * Restarts the service. The service will be unavailable until it has
      * sucessfully restarted.
      *
-     * @return Restart response message.
+     * @return The restart response message.
      */
     public ResponseMessage restart() {
         return get("server/control/restart");
     }
 
     /**
-     * Issue an HTTP request against the service using the given path and
-     * request message. This method overrides the base HttpService send method
-     * and applies the Splunk auth header which is required for authenticated
+     * Issues an HTTP request against the service using a request path and message. 
+     * This method overrides the base {@code HttpService.send} method
+     * and applies the Splunk authorization header, which is required for authenticated
      * interactions with the Splunk service.
      *
-     * @param path Request path.
-     * @param request Request message.
-     * @return HTTP response.
+     * @param path The request path.
+     * @param request The request message.
+     * @return The HTTP response.
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
         request.getHeader().put("Authorization", token);
@@ -660,10 +665,10 @@ public class Service extends HttpService {
     }
 
     /**
-     * Provides a session token for use by this service instance. This allows
-     * sharing of session tokens across multiple service instances.
+     * Provides a session token for use by this {@code Service} instance. 
+     * Session tokens can be shared across multiple {@code Service} instances.
      *
-     * @param value Session token.
+     * @param value The session token.
      */
     public void setToken(String value) {
         this.token = value;

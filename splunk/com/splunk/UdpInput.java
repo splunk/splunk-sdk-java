@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Representation of a UDP input.
+ * The {@code UdpInput} class represents a UDP input.
  */
 public class UdpInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The UDP input endpoint.
      */
     UdpInput(Service service, String path) {
@@ -32,107 +32,105 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the style of host connection, or null if not specified. Valid
-     * values are from the set ip, dns, and none.
+     * Returns the style of host connection. Valid values are: {@code ip}, {@code dns}, and {@code none}.
      *
-     * @return The style of host connection.
+     * @return The style of host connection, or {@code null} if not specified.
      */
     public String getConnectionHost() {
         return getString("connection_host", null);
     }
 
     /**
-     * Returns this UDP input's group.
+     * Returns the group for this UDP input.
      *
-     * @return This UDP input's group.
+     * @return The group.
      */
     public String getGroup() {
         return getString("group");
     }
 
     /**
-     * Returns this UDP input's source host, where this indexer gets its data.
-     * Null is returned if it is not specified.
+     * Returns the source host for this UDP input, where this indexer gets its data.
      *
-     * @return This UDP input's source host.
+     * @return The source host, or {@code null} if not specified.
      */
     public String getHost() {
         return getString("host");
     }
 
     /**
-     * Returns this UDP input's index name, or null if not specified.
+     * Returns the index name for this UDP input.
      *
-     * @return This UDP input's index name.
+     * @return The index name.
      */
     public String getIndex() {
         return getString("index");
     }
 
     /**
-     * Returns the UDP input kind.
+     * Returns the input type for this UDP input.
+     * @see InputKind
      *
-     * @return The UDP input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.Udp;
     }
 
     /**
-     * Returns this UDP input's queue, or null if not specified. Valid values
-     * are from the set parsingQueue, indexQueue.
+     * Returns the queue for this UDP input. Valid values are: {@code parsingQueue} and {@code indexQueue}.
      *
-     * @return This UDP input's queue.
+     * @return The queue, or {@code null} if not specified.
      */
     public String getQueue() {
         return getString("queue", null);
     }
 
     /**
-     * Returns this UDP input's _rcvbuf attribute.
+     * Returns the value of the {@code _rcvbuf} attribute for this UDP input.
      *
-     * @return This UDP input's _rcvbuf attribute.
+     * @return The {@code _rcvbuf} value.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
     }
 
     /**
-     * Returns this UDP input's initial source key, or null if not specified.
-     * This is normally the input file path.
+     * Returns the initial source key for this UDP input.
+     * Typically, this value is the input file path.
      *
-     * @return This UDP input's source.
+     * @return The source, or {@code null} if not specified.
      */
     public String getSource() {
         return getString("source", null);
     }
 
     /**
-     * Returns this UDP input's event source type, or null if not specified.
+     * Returns the event source type for this UDP input.
      *
-     * @return this UDP input's event source type.
+     * @return The event source type, or {@code null} if not specified.
      */
     public String getSourceType() {
         return getString("sourceType", null);
     }
 
     /**
-     * Returns whether or not Splunk prepends a timestamp and hostname to
+     * Indicates whether Splunk prepends a timestamp and hostname to
      * incoming events.
      *
-     * @return Whether or not Splunk prepends a timestamp and hostname to
-     * incoming events.
+     * @return {@code true} if Splunk does <i>not</i> prepend a timestamp and hostname to
+     * incoming events, {@code false} if it does.
      */
     public boolean noAppendingTimeStamp() {
         return getBoolean("no_appending_timestamp", false);
     }
 
     /**
-     * Returns whether or not Splunk removes the priority field to incoming
-     * events.
+     * Indicates whether Splunk removes the priority field from incoming
+     * events. 
      *
-     * @return Whether or not Splunk removes the priority field to incoming
-     * events.
+     * @return {@code true} if Splunk does <i>not</i> remove the priority field 
+     * from incoming syslog events, {@code false} if it does.
      */
     public boolean noPriorityStripping() {
         return getBoolean("no_priority_stripping", false);

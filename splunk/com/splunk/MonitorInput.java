@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a monitor input.
+* The {@code MonitorInput} class represents a monitor input, which is a file,
+* directory, script, or network port that is monitored for new data.
  */
 public class MonitorInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The monitor input endpoint.
      */
     MonitorInput(Service service, String path) {
@@ -32,45 +33,46 @@ public class MonitorInput extends Input {
     }
 
     /**
-     * Returns this monitor input's filecount.
+     * Returns the file count of this monitor input.
      *
-     * @return This monitor input's filecount.
+     * @return The file count.
      */
     public int getFileCount() {
         return getInteger("filecount", -1);
     }
 
     /**
-     * Returns this monitor input's host, or null if not specified.
+     * Returns the host for this monitor input.
      *
-     * @return This monitor input's host.
+     * @return The host, or {@code null} if not specified.
      */
     public String getHost() {
         return getString("host", null);
     }
 
     /**
-     * Returns this monitor input's index name.
+     * Returns the index name for this monitor input.
      *
-     * @return This monitor input's index name.
+     * @return The index name.
      */
     public String getIndex() {
         return getString("index");
     }
 
     /**
-     * Returns the monitor input kind.
+     * Returns the type of monitor input.
+     * @see InputKind
      *
-     * @return The monitor input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.Monitor;
     }
 
     /**
-     * Returns this monitor input's _rcvbuf attribute.
+     * Returns value of the {@code _rcvbuf} attribute for this monitor input.
      *
-     * @return This monitor input's _rcvbuf attribute.
+     * @return The {@code _rcvbuf} value.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");

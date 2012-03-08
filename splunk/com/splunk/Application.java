@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Representation of a Splunk application, commonly referred to as an 'app'.
+ * The {@code Application} class represents a locally-installed Splunk app.
  */
 public class Application extends Entity {
 
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The application endpoint.
      */
     Application(Service service, String path) {
@@ -32,118 +32,111 @@ public class Application extends Entity {
     }
 
     /**
-     * Returns the app's author name, or null if not specified. If a splunkbase
-     * app, this should be the username of the splunk.com account. For internal
-     * apps, this should be full contact info.
+     * Returns the name of the app's author. For Splunkbase
+     * apps, this value is the username of the Splunk.com account. For internal
+     * apps, this value is the full name.
      *
-     * @return Splunk author's name string.
+     * @return The author name, or {@code null} if not specified.
      */
     public String getAuthor() {
         return getString("author", null);
     }
 
     /**
-     * Returns whether or not Splunk checks splunkbase for updates.
+     * Indicates whether Splunk checks Splunkbase for updates.
      *
-     * @return Whether or not Splunk checks splunkbase for updates.
+     * @return {@code true} if Splunk checks Splunkbase for updates, {@code false} if not.
      */
     public boolean getCheckForUpdates() {
         return getBoolean("check_for_updates", false);
     }
 
     /**
-     * Returns the description string which is a short explanatory note that
-     * is displayed underneath the app's title in Launcher, or null if not
-     * specified.
+     * Returns a short description of the app.
      *
-     * @return The description string.
+     * @return The description, or {@code null} if not specified.
      */
     public String getDescription() {
         return getString("description", null);
     }
 
     /**
-     * Returns the label string of the app which shows in the Splunk GUI or
-     * Launcher, or null if not specified.
+     * Returns the app's label (its name).
      *
-     * @return The label string.
+     * @return The label, or {@code null} if not specified.
      */
     public String getLabel() {
         return getString("label", null);
     }
 
     /**
-     * Returns the version string of the app, or null if not specified.
+     * Returns the version of the app.
      *
-     * @return The version string of the app.
+     * @return The version, or {@code null} if not specified.
      */
     public String getVersion() {
         return getString("version", null);
     }
 
     /**
-     * Returns an indication if the app's custom setup has been
-     * performed. This field is only available in Splunk's version 4.2.4+.
+     * Indicates whether the app's custom setup has been
+     * performed. This field is available in Splunk version 4.2.4 and later.
      *
-     * @return Indicates if the app's custom setup has been performed.
+     * @return {@code true} if custom setup has been performed, {@code false} if not.
      */
     public boolean isConfigured() {
         return getBoolean("configured", false);
     }
 
     /**
-     * Returns whether or not the app can be managed by Splunk Manager.
+     * Indicates whether the app can be managed by Splunk Manager.
      *
-     * @return Indicates if the app can be managed by Splunk Manager or not.
+     * @return {@code true} if the app can be managed by Splunk Manager, {@code false} if not.
      */
     public boolean isManageable() {
         return getBoolean("manageable", false);
     }
 
     /**
-     * Returns whether or not an app is visible and navigable from the Splunk
-     * GUI.
+     * Indicates whether an app is visible and navigable from Splunk Web.
      *
-     * @return Indicates if the app is visible and navigable from the Splunk
-     *         GUI.
+     * @return {@code true} if the app is visible and navigable from Splunk Web, {@code false} if not.
      */
     public boolean isVisible() {
         return getBoolean("visible", false);
     }
 
     /**
-     * Indicates whether ot not an app state change requires the app to be
-     * restarted.
+     * Indicates whether a state change requires the app to be restarted.
      *
-     * @return Indicates if the app needs to be restarted.
+     * @return {@code true} if state changes require the app to be restarted, {@code false} if not.
      */
     public boolean stateChangeRequiresRestart() {
         return getBoolean("state_change_requires_restart", false);
     }
 
     /**
-     * Archives the appliction into a .spl file on the server's file system.
-     * The return object contains location specific information.
+     * Archives the app on the server file system. 
      *
-     * @return Archival information of the app.
+     * @return Location of the archived app, as {app_name}.spl.
      */
     public ApplicationArchive archive() {
         return new ApplicationArchive(service, path);
     }
 
     /**
-     * Returns the the app's setup information.
+     * Returns the app's setup information.
      *
-     * @return Returns the app's setup information.
+     * @return The app's setup information.
      */
     public ApplicationSetup setup() {
         return new ApplicationSetup(service, path);
     }
 
     /**
-     * Returns update information of the app.
+     * Returns any update information that is available for the app.
      *
-     * @return Returns update information for the app.
+     * @return Update information for the app.
      */
     public ApplicationUpdate update() {
         return new ApplicationUpdate(service, path);

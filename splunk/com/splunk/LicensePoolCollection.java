@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,14 +19,14 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of a collection of license pools.
+ * The {@code LicensePoolCollection} class represents a collection of license pools.
  */
 public class LicensePoolCollection extends EntityCollection<LicensePool> {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     LicensePoolCollection(Service service) {
         super(service, "licenser/pools", LicensePool.class);
@@ -35,11 +35,11 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
     /**
      * Creates a license pool.
      *
-     * Quota can be MAX (Only one pool can use MAX size), a number or a number
-     * followed by MB or GB.
+     * Quota can be one of the following: a number, a number followed by MB or GB, or 
+     * "MAX" (only one license pool in a license stack can be set to "MAX").
      *
-     * @param name The name of this new license pool.
-     * @param quota The quota in bytes of this license pool.
+     * @param name The name of the new license pool.
+     * @param quota The indexing quota of this license pool.
      * @param stackId The stack ID corresponding to this license pool.
      * @return The new license pool.
      */
@@ -50,11 +50,11 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
     /**
      * Creates a license pool.
      *
-     * Quota can be MAX (Only one pool can use MAX size), a number or a number
-     * followed by MB or GB.
+     * Quota can be one of the following: a number, a number followed by MB or GB, or 
+     * "MAX" (only one license pool in a license stack can be set to "MAX").
      *
-     * @param name The name of this new license pool.
-     * @param quota The quota in bytes of this license pool.
+     * @param name The name of the new license pool.
+     * @param quota The indexing quota of this license pool.
      * @param stackId The stack ID corresponding to this license pool.
      * @param args Optional arguments.
      * @return The new license pool.

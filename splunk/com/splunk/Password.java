@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Represenration of saved credential.
+ * The {@code Password} class represents a saved credential.
  */
 public class Password extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The password endpoint.
      */
     Password(Service service, String path) {
@@ -32,54 +32,54 @@ public class Password extends Entity {
     }
 
     /**
-     * Returns this credential's clear-text password.
+     * Returns the clear-text password for this credential.
      *
-     * @return This credential's clear-text password.
+     * @return The clear-text password.
      */
     public String getClearPassword() {
         return getString("clear_password");
     }
 
     /**
-     * Returns this credential's encrypted password.
+     * Returns the encrypted password for this credential.
      *
-     * @return This credential's encrypted password.
+     * @return The encrypted password.
      */
     public String getEncryptedPassword() {
         return getString("encr_password");
     }
 
     /**
-     * Returns this credentials username.
+     * Returns the username for this credential.
      *
-     * @return This credentials username.
+     * @return The username.
      */
     @Override public String getName() {
         return getUsername();
     }
 
     /**
-     * Returns this credentials displayable password string.
+     * Returns the displayable password string for this credential.
      *
-     * @return This credentials displayable password string.
+     * @return The displayable password string, as asterisks.
      */
     public String getPassword() {
         return getString("password");
     }
 
     /**
-     * Returns this credentials realm.
+     * Returns the credential realm.
      *
-     * @return This credentials realm.
+     * @return The realm.
      */
     public String getRealm() {
         return getString("realm", null);
     }
 
     /**
-     * Returns this credentials username.
+     * Returns the username for this credential.
      *
-     * @return This credentials username.
+     * @return The username.
      */
     public String getUsername() {
         return getString("username");

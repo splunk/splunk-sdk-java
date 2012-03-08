@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,16 @@
 package com.splunk;
 
 /**
- * Representation of a license slave.
+ * The {@code LicenseSlave} class represents a license slave, which is a member 
+ * of one or more license pools. The access a license slave has to license volume
+ * is controlled by its license master.
  */
 public class LicenseSlave extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The license slave endpoint.
      */
     LicenseSlave(Service service, String path) {
@@ -32,27 +34,27 @@ public class LicenseSlave extends Entity {
     }
 
     /**
-     * Returns this license slave's label, or null if not specified.
+     * Returns the label for this license slave.
      *
-     * @return This license slave's label.
+     * @return The label, or {@code null} if not specified.
      */
     public String getLabel() {
         return getString("label", null);
     }
 
     /**
-     * Returns this license slave's list of pool IDs.
+     * Returns a list of pool IDs for this license slave.
      *
-     * @return This license slave's list of pool IDs.
+     * @return The list of pool IDs.
      */
     public String[] getPoolIds() {
         return getStringArray("pool_ids");
     }
 
     /**
-     * Returns this license slave's list of stack IDs.
+     * Returns a list of stack IDs for this license pool. 
      *
-     * @return This license slave's list of stack IDs.
+     * @return The list of stack IDs.
      */
     public String[] getStackIds() {
         return getStringArray("stack_ids");

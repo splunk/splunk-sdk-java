@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,7 +17,8 @@
 package com.splunk;
 
 /**
- * Enumeration of the various Splunk input kinds.
+ * The {@code InputKind} enumeration defines the different types of Splunk data
+ * inputs (<i>input kinds</i>).
  */
 public enum InputKind {
     /** Unknown input kind. */
@@ -54,7 +55,7 @@ public enum InputKind {
     WindowsWmi("win-wmi-collections", WindowsWmiInput.class);
 
     /**
-     * Sets the active objects relative path and input class.
+     * Sets the relative path and input class for the active object.
      *
      * @param relpath The relative path.
      * @param inputClass The input class.

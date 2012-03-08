@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,14 +19,14 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of a collection of event types.
+ * The {@code EventTypeCollection} class represents a collection of event types.
  */
 public class EventTypeCollection extends EntityCollection<EventType> {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     EventTypeCollection(Service service) {
         super(service, "saved/eventtypes", EventType.class);
@@ -45,12 +45,12 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     }
 
     /**
-     * Create an event type.
+     * Creates an event type.
      *
      * @param name The name of this new event type.
      * @param search The search string of this new event type.
      * @param args Optional arguments.
-     * @return the event type.
+     * @return The event type.
      */
     public EventType create(String name, String search, Map args) {
         args = Args.create(args).add("search", search);

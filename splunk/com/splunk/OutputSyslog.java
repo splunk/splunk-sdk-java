@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,16 @@
 package com.splunk;
 
 /**
- * Representation of a syslog output.
+ * The {@code OutputSyslog} class represents a syslog output, providing access
+ * to properties of a forwarding server that provides data in standard syslog 
+ * format.
  */
 public class OutputSyslog extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The output syslog endpoint.
      */
     OutputSyslog(Service service, String path) {
@@ -32,18 +34,18 @@ public class OutputSyslog extends Entity {
     }
 
     /**
-     * Returns this server's destination host:port.
+     * Returns the destination host:port of this server.
      *
-     * @return This server's destination host:port.
+     * @return The destination host:port.
      */
     public String getServer() {
         return getString("server");
     }
 
     /**
-     * Returns this server's connection type.
+     * Returns the connection type of this server.
      *
-     * @return this server's connection type.
+     * @return The connection type.
      */
     public String getType() {
         return getString("type");

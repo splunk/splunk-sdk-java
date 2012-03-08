@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,16 +19,16 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of a collection of entities.
+ * The {@code EntityCollection} class represents a collection of entities.
  *
- * @param <T> The type of members of the collection.
+ * @param <T> The type of members in the collection.
  */
 public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
 
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
      */
     EntityCollection(Service service, String path) {
@@ -38,7 +38,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
      * @param itemClass The entity's subclass.
      */
@@ -49,7 +49,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     /**
      * Creates an entity in this collection.
      *
-     * @param name The name of the entity created.
+     * @param name The name of the entity.
      * @return The entity.
      */
     public T create(String name) {
@@ -59,8 +59,8 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     /**
      * Creates an entity in this collection.
      *
-     * @param name The name of the entity created.
-     * @param args The arguments supplied to the creation.
+     * @param name The name of the entity.
+     * @param args The arguments that are provided for creating the entity.
      * @return The entity.
      */
     public T create(String name, Map args) {
@@ -73,8 +73,8 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     /**
      * Removes an entity from this collection.
      *
-     * @param key the name of the entity to remove.
-     * @return this collection.
+     * @param key The name of the entity to remove.
+     * @return This collection.
      */
     public T remove(Object key) {
         validate();

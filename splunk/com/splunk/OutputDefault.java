@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,151 +17,170 @@
 package com.splunk;
 
 /**
- * Representation of the default TCP output configuration.
+ * The {@code OutputDefault} class represents the default TCP output configuration,
+ * providing access to global TCP output properties.
  */
 public class OutputDefault extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     OutputDefault(Service service) {
         super(service, "data/outputs/tcp/default");
     }
 
     /**
-     * Returns whether or not this forwarded performs automatic load balancing.
-     * When true, this forwarder selects a new indexer every autoLBFrequency
-     * seconds, or immediately when an open connection to an indexer is lost.
+     * Indicates whether this forwarder performs automatic load balancing.
+     * When {@code true}, this forwarder selects a new indexer using the frequency
+     * specified by {@code autoLBFrequency}, or immediately when an open connection
+     * to an indexer is lost.
      *
-     * @return Whether or not this forwarder performs automatic load balancing.
+     * @see #getAutoLbFrequency
+     *
+     * @return {@code true} if this forwarder performs automatic load balancing,
+     * {@code false} if not.
      */
     public boolean autoLb() {
         return getBoolean("autoLB");
     }
 
     /**
-     * Returns whether or not this forwarder will block. If set to false, events
-     * will get thrown away if no indexers in the group are reachable.
+     * Indicates whether this forwarder blocks when the output queue is full. 
+     * Blocking causes further blocking up the processing chain--if any target group's queue
+     * is blocked, no more data reaches any other target group.
+     * When {@code false}, events are dropped when indexers in the group 
+     * can't be reached. 
      *
-     * @return Whether or not this forwarder will block.
+     * @return {@code true} if this forwarder will block, {@code false} if not.
      */
     public boolean blockOnQueueFull() {
         return getBoolean("blockOnQueueFull", true);
     }
 
     /**
-     * Returns this forwarder's auto load balancing frequency, or -1 if not
-     * specified.
+     * Returns the frequency of automatic load balancing. 
      *
-     * @return this forwards auto load balancing frequency.
+     * @return The automatic load-balancing frequency in seconds, or -1 if not specified.
      */
     public int getAutoLbFrequency() {
         return getInteger("autoLBFrequency", -1);
     }
 
     /**
-     * Returns this forwarder's default group as a comma separated list, or null
-     * if not specified. After Splunk 4.2, this attribute is no longer required.
+     * Returns the default indexer group that this forwarder sends all data to. <br/>
+     * Note: This attribute is not required after Splunk version 4.2.
      *
-     * @return this forwarder's default group list.
+     * @return A comma-separated list that contains one or more target group names,
+     * or {@code null} if not specified.
      */
     public String getDefaultGroup() {
         return getString("defaultGroup", null);
     }
 
     /**
-     * Returns the number of second this forwarder's waits before throwing out
+     * Returns the amount of time this forwarder waits before dropping
      * events if the output queue is full. A setting of 0 or -1 causes this
      * forwarder to block.
      *
-     * @return this forwards wait time, in seconds, before events are dropped
-     * under queue full conditions.
+     * @return The wait time, in seconds.
      */
     public int getDropEventsOnQueueFull() {
         return getInteger("dropEventsOnQueueFull", -1);
     }
 
     /**
-     * Returns this forwarder's inclusive set of indexes.
+     * Returns the inclusive set of indexes (whitelist 0) for this forwarder.
+     * This is an ordered list of whitelists and blacklists, which together decide
+     * if events should be forwarded to an index.
      *
-     * @return This forwarder's inclusive set of indexes.
+     * @return The inclusive set of indexes.
      */
     public String getForwardedIndex0Whitelist() {
         return getString("forwardedindex.0.whitelist");
     }
 
     /**
-     * Returns this forwarder's exclusive set of indexes.
+     * Returns the exclusive set of indexes (blacklist 1) for this forwarder.
+     * This is an ordered list of whitelists and blacklists, which together decide
+     * if events should be forwarded to an index.
      *
-     * @return This forwarder's exclusive set of indexes.
+     * @return The exclusive set of indexes.
      */
     public String getForwardedIndex1Blacklist() {
         return getString("forwardedindex.1.blacklist");
     }
 
     /**
-     * Returns this forwarder's inclusive set of indexes.
+     * Returns the inclusive set of indexes (whitelist 2) for this forwarder.
+     * This is an ordered list of whitelists and blacklists, which together decide
+     * if events should be forwarded to an index.
      *
-     * @return This forwarder's inclusive set of indexes.
+     * @return The inclusive set of indexes.
      */
     public String getForwardedIndex2Whitelist() {
         return getString("forwardedindex.2.whitelist");
     }
 
     /**
-     * Returns this forwarder's heartbeat frequency sent to the indexer. Note
-     * that this field is only used if sendCookedData is set to true.
+     * Returns the frequency that specifies how often to send a heartbeat packet
+     * to the receiving server.<br/>
+     * Note: This field is only used when {@code sendCookedData} is {@code true}.
      *
-     * @return This forwarder's heartbeat frequency.
+     * @see #sendCookedData
+     * @return The heartbeat frequency, in seconds.
      */
     public int getHeartbeatFrequency() {
         return getInteger("heartbeatFrequency", 30);
     }
 
     /**
-     * Returns this forwarder's outbound event queue's maximum size, in bytes.
-     * Implicitly this forwarder's wait queue is 3 times this value.
+     * Returns the maximum size of the output queue for this forwarder.
+     * The maximum size of the wait queue is set to three times this value. 
      *
-     * @return This forwarder's output event queue's maximum size.
+     * @return The maximum size of the output queue, in bytes.
      */
     public long getMaxQueueSize() {
         return getByteCount("maxQueueSize");
     }
 
     /**
-     * Returns whether or not to index data locally in addition to forwarding.
-     * This setting is not available for light forwarders.
+     * Indicates whether to index data locally in addition to forwarding it.<br/>
+     * Note: This setting is not available for light forwarders.
      *
-     * @return Whether or not to index data locally in addition to forarding.
+     * @return {@code true} if data is indexed locally and forwarded, {@code false} 
+     * if not.
      */
     public boolean indexAndForward() {
         return getBoolean("indexAndForward", false);
     }
 
     /**
-     * Returns whether or not this forwarder sends compressed data.
+     * Indicates whether this forwarder sends compressed data.
      *
-     * @return Whether or not this forwarder sends compressed data.
+     * @return {@code true} if this forwarder sends compressed data, {@code false}
+     * if not.
      */
     public boolean isCompressed() {
         return getBoolean("compressed", false);
     }
 
     /**
-     * Returns whether or not this forwarder's index filter is disabled.
+     * Indicates whether the index filter for this forwarder is disabled.
      *
-     * @return Whether or not this forwarder's index filter is disabled.
+     * @return {@code true} if the index filter is disabled, {@code false}
+     * if events are raw and untouched before sending.
      */
     public boolean isForwardedIndexFilterDisable() {
         return getBoolean("forwardedindex.filter.disable");
     }
 
     /**
-     * Returns whether or not the event data has been processed by Splunk.
+     * Indicates whether Splunk has processed ("cooked") the event data.
      *
-     * @return Whether ot nor the event data has been processed by Splunk.
+     * @return {@code true} if the event data has been processed, {@code false}
+     * if not.
      */
     public boolean sendCookedData() {
         return getBoolean("sendCookedData", true);

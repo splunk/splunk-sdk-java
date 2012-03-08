@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,53 +19,60 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of a collection of user entities.
+ * The {@code UserCollection} class represents a collection of Splunk users who
+ * are registered on the current Splunk server.
  */
 public class UserCollection extends EntityCollection<User> {
 
     /**
-     * Constructs an instance of {@code UserCollection}.
+     * Class constructor.
      *
-     * @param service This service instance this collection is affiliated with.
+     * @param service The connected {@code Service} instance.
      */
     UserCollection(Service service) {
         super(service, "authentication/users", User.class);
     }
 
     /**
-     * Create a new user entity using the given name, password and role.
+     * Creates a new user entity from a username, password, and role. 
+     * Usernames must be unique on the system, and are used by the user to log in
+     * to Splunk. 
      *
-     * @param name The name for the new user entity.
+     * @param name The username for the new user entity.
      * @param password The password for the new user entity.
      * @param role The role to assign to the new entity.
-     * @return The newly craeted user entity.
+     * @return The new user entity.
      */
     public User create(String name, String password, String role) {
         return create(name, password, role, null);
     }
 
     /**
-     * Create a new user entity using the given name, password and array of
+     * Creates a new user entity from a username, password, and array of
      * roles.
+     * Usernames must be unique on the system, and are used by the user to log in
+     * to Splunk. 
      *
-     * @param name The name for the new user entity.
+     * @param name The username for the new user entity.
      * @param password The password for the new user entity.
      * @param roles Array of roles to assign to the new user entity.
-     * @return The newly created user entity.
+     * @return The new user entity.
      */
     public User create(String name, String password, String[] roles) {
         return create(name, password, roles, null);
     }
 
     /**
-     * Create a new user entity using the given name, password, role and
-     * map of extra args.
+     * Creates a new user entity from a username, password, role, and
+     * additional arguments.
+     * Usernames must be unique on the system, and are used by the user to log in
+     * to Splunk. 
      *
-     * @param name The name for the new user entity.
+     * @param name The username for the new user entity.
      * @param password The password for the new user entity.
-     * @param role The role to assign to the new entity.
-     * @param args A map of extra arguments for the new user entity.
-     * @return The newly created user entity.
+     * @param role The role to assign to the new user entity.
+     * @param args A map of additional arguments for the new user entity.
+     * @return The new user entity.
      */
     public User create(String name, String password, String role, Map args) {
         args = Args.create(args);
@@ -76,14 +83,16 @@ public class UserCollection extends EntityCollection<User> {
 
 
     /**
-     * Create a new user entity using the given name, password and array of
-     * roles.
+     * Creates a new user entity from a username, password, array of
+     * roles, and additional arguments.
+     * Usernames must be unique on the system, and are used by the user to log in
+     * to Splunk. 
      *
-     * @param name The name for the new user entity.
+     * @param name The username for the new user entity.
      * @param password The password for the new user entity.
      * @param roles Array of roles to assign to the new user entity.
-     * @param args A map of extra arguments for the new user entity.
-     * @return The newly created user entity.
+     * @param args A map of additional arguments for the new user entity.
+     * @return The new user entity.
      */
     public User 
     create(String name, String password, String[] roles, Map args) {

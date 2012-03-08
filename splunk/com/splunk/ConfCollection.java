@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of a collection of configurations.
+ * The {@code ConfCollection} class represents a collection of configuration files.
  */
 public class ConfCollection 
     extends ResourceCollection<EntityCollection<Entity>> 
@@ -27,28 +27,28 @@ public class ConfCollection
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     ConfCollection(Service service) {
         super(service, "properties", EntityCollection.class);
     }
 
     /**
-     * Creates a config.
+     * Creates a new stanza in the current configuration file.
      *
-     * @param name The new config name.
-     * @return The new config.
+     * @param name The name of the stanza to create.
+     * @return The name of the new stanza.
      */
     public EntityCollection<Entity> create(String name) {
         return create(name, null);
     }
 
     /**
-     * Creates a new config.
+     * Creates a new stanza in the current configuration file with attributes.
      *
-     * @param name The new config name.
-     * @param args Optional arguments.
-     * @return the new config.
+     * @param name The name of the stanza to create.
+     * @param args Optional. A set of attributes as key-value pairs to put in the new stanza.
+     * @return The name of the new stanza.
      */
     public EntityCollection<Entity> create(String name, Map args) {
         args = Args.create(args).add("__conf", name);
@@ -58,10 +58,11 @@ public class ConfCollection
     }
     
     /**
-     * Returns This config's endpoint path.
+     * Returns the endpoint path for this configuration stanza.
      *
-     * @param entry The atom representation of this entry.
-     * @return This config's endpoint path.
+     * @param entry The {@code AtomEntry} representation of this entry.
+     * @return This stanza's endpoint path in the format 
+     * "/servicesNS/{user}/{app}/configs/conf-{file}/{stanza}".
      */
     @Override protected String itemPath(AtomEntry entry) {
         return String.format("configs/conf-%s", entry.title);

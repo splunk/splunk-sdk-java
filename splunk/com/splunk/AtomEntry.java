@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -23,28 +23,28 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * Representation of an Atom entry element.
+ * The {@code AtomEntry} class represents an Atom {@code <entry>} element.
  */
 public class AtomEntry extends AtomObject {
-    /** The value of the Atom entry's {@code published} element. */
+    /** The value of the Atom entry's {@code <published>} element. */
     public String published;
 
-    /** The value of the Atom entry's {@code content} element. */
+    /** The value of the Atom entry's {@code <content>} element. */
     public Record content;
 
     /**
-     * Creates a new AtomEntry instance.
+     * Creates a new {@code AtomEntry} instance.
      *
-     * @return A new AtomEntry instance.                  ––
+     * @return A new {@code AtomEntry} instance.                  ––
      */
     static AtomEntry create() {
         return new AtomEntry();
     }
 
     /**
-     * Creates a new {@code AtomEntry} instanced based on the given stream.
-     * There are a few endpoints, such as {@code search/jobs/{sid}}, that
-     * return an Atom entry element as the root of the response.
+     * Creates a new {@code AtomEntry} instance based on a given stream.
+     * A few endpoints, such as {@code search/jobs/{sid}},
+     * return an Atom {@code <entry>} element as the root of the response.
      *
      * @param input The input stream.
      * @return An {@code AtomEntry} instance representing the parsed stream.
@@ -60,7 +60,7 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Create a new {@code AtomEntry} instance based on the given XML element.
+     * Creates a new {@code AtomEntry} instance based on a given XML element.
      *
      * @param element The XML element.
      * @return An {@code AtomEntry} instance representing the parsed element.
@@ -72,7 +72,7 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Initialize the current instance from the given XML element.
+     * Initializes the current instance with a given XML element.
      *
      * @param element The XML element.
      */
@@ -90,11 +90,11 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Returns a filtered list of child XML element nodes. This is a helper
-     * function that makes it a little easier to get only the element children
-     * of an XML element.
+     * Returns a filtered list of child XML element nodes. This helper
+     * function makes it easier to retrieve only the element children
+     * of a given XML element.
      *
-     * @param element The XML element to return child nodes for.
+     * @param element The XML element.
      * @return A list of child element nodes.
      */
     static ArrayList<Element> getChildElements(Element element) {
@@ -108,10 +108,10 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Parse the {@code <content>} element of an Atom entry.
+     * Parses the {@code <content>} element of an Atom entry.
      *
      * @param element The XML element to parse.
-     * @return A record object containing the parsed values.
+     * @return A {@code Record} object containing the parsed values.
      */
     Record parseContent(Element element) {
         assert(element.getTagName().equals("content"));
@@ -122,7 +122,7 @@ public class AtomEntry extends AtomObject {
 
         int count = children.size();
 
-        // Expect content to be empty or a single <dict element
+        // Expect content to be empty or a single <dict> element
         assert(count == 0 || count == 1);
 
         if (count == 1) {
@@ -134,11 +134,11 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Parse a {@code <dict>} content element and return a Record object
+     * Parses a {@code <dict>} content element and returns a {@code Record} object
      * containing the parsed values.
      *
-     * @param element The dict element to parse.
-     * @return A record object containing the parsed values.
+     * @param element The {@code <dict>} element to parse.
+     * @return A {@code Record} object containing the parsed values.
      */
     Record parseDict(Element element) {
         assert(element.getTagName().equals("s:dict"));
@@ -161,11 +161,11 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Parse a {@code <list>} element and return a List object containing the parsed
+     * Parse a {@code <list>} element and return a {@code List} object containing the parsed
      * values.
      *
-     * @param element The list element to parse.
-     * @return A list object containing the parsed values.
+     * @param element The {@code <list>} element to parse.
+     * @return A {@code List} object containing the parsed values.
      */
     List parseList(Element element) {
         assert(element.getTagName().equals("s:list"));
@@ -187,15 +187,14 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Parse the value content of a dict/key or a list/item element. The value
-     * is either text, a {@code <dict>} or a {@code <list>}} element.
+     * Parses the value content of a dict/key or a list/item element. The value
+     * is either text, a {@code <dict>} element, or a {@code <list>} element.
      *
      * @param element The XML element containing the values to parse.
-     * @return An object containing the parsed values. The object is a
-     *         {@code String} if the source was a text value, it is a
-     *         {@code Record} object if the source was a {@code <dict>} element
-     *         and it is a {@code List} object if the source was a <list>
-     *         element.
+     * @return An object containing the parsed values. If the source was a text value, 
+     *         the object is a {@code String}. If the source was a {@code <dict>} element,
+     *         the object is a {@code Record}. If the source was a {@code <list>} element,
+     *         the object is a {@code List} object.
      */
     Object parseValue(Element element) {
         String name = element.getTagName();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * An extension of {@code HashMap} that contains a variety of value converting
- * access methods.
+ * The {@code Record} class represents an extension of {@code HashMap} that 
+ * contains a variety of value-converting access methods.
  */
 public class Record extends HashMap<String, Object> {
 
     /**
-     * Returns the {@code boolean} value associated with the given key.
+     * Returns the {@code Boolean} value associated with the given key.
      *
      * @param key The key of the value being retrieved.
      * @return The value associated with the given key, or {@code null} if the
@@ -38,11 +38,11 @@ public class Record extends HashMap<String, Object> {
     }
 
     /**
-     * Returns the {@code boolean} value associated with the given key, or the
+     * Returns the {@code Boolean} value associated with the given key, or the
      * {@code defaultValue} if the key does not exist.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */
@@ -67,7 +67,7 @@ public class Record extends HashMap<String, Object> {
      * or {@code defaultValue} if the key does not exist.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */
@@ -92,7 +92,7 @@ public class Record extends HashMap<String, Object> {
      * {@code defaultValue} if the key does not exist.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */
@@ -119,7 +119,7 @@ public class Record extends HashMap<String, Object> {
      * record is a string representation of a data from the epoch.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */
@@ -153,7 +153,7 @@ public class Record extends HashMap<String, Object> {
      * {@code defaultValue} if the key does not exist.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */
@@ -177,7 +177,7 @@ public class Record extends HashMap<String, Object> {
      * {@code defaultValue} if the key does not exist.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */
@@ -201,7 +201,7 @@ public class Record extends HashMap<String, Object> {
      * {@code defaultValue} if the key does not exist.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */
@@ -226,7 +226,7 @@ public class Record extends HashMap<String, Object> {
      * {@code defaultValue} if the key does not exist.
      *
      * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist
+     * @param defaultValue The value to return if the key does not exist.
      * @return The value associated with the given key, or {@code defaultValue}
      *         if the key does not exist.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,15 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of Splunk application setup information.
+ * The {@code ApplicationSetup} class represents the setup information for a Splunk app.
  */
 public class ApplicationSetup extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param path the full-path of the parent endpoint.
+     * @param service The connected {@code Service} instance.
+     * @param path The full path of the parent endpoint.
      */
     ApplicationSetup(Service service, String path) {
         super(service, path + "/setup");
@@ -34,13 +34,13 @@ public class ApplicationSetup extends Entity {
     /**
      * Returns the app's setup information in XML format.
      *
-     * @return The app's setup information in XML format.
+     * @return The setup information for the app.
      */
     public String getSetupXml() {
         return getString("eai:setup");
     }
 
      // Because all other keys are dynamic and context specific, they should
-     // be retrieved via standard Map access.
+     // be retrieved using standard Map access.
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Representation of a Windows Event Log input.
+ * The {@code WindowsEventLogInput} class represents a Windows Event Log input.
  */
 public class WindowsEventLogInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The Windows Event Log input endpoint.
      */
     WindowsEventLogInput(Service service, String path) {
@@ -32,59 +32,61 @@ public class WindowsEventLogInput extends Input {
     }
 
     /**
-     * Returns a comma separated list of additional hosts used in monitoring.
+     * Returns a list of additional hosts used in monitoring.
      *
-     * @return additional hosts used in monitoring.
+     * @return A comma-separated list of additional hosts used in monitoring, or {@code null} if not specified.
      */
     public String getHosts() {
         return getString("hosts", null);
     }
 
     /**
-     * Returns this Windows Event Log input's index name, or null if not
-     * specified.
+     * Returns the index name of this Windows Event Log input.
      *
-     * @return This Windows Event Log input's index name.
+     * @return The index name, or {@code null} if not specified.
      */
     public String getIndex() {
         return getString("index", null);
     }
 
     /**
-     * Returns the Windows Event Log input kind.
+     * Returns the input type of this Windows Event Log input.
+     * @see InputKind
      *
-     * @return The Windows Event Log input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.WindowsEventLog;
     }
 
     /**
-     * Returns this Windows Event log input's list of event log names.
+     * Returns the list of event log names to gather data from for this Windows
+     * Event Log input.
      *
-     * @return This Windows Event log input's list of event log names.
+     * @return The list of event log names, or {@code null} if not specified.
      */
     public String [] getLogs() {
         return getStringArray("logs", null);
     }
 
     /**
-     * Returns this Windows Event log input's collection name. This name
-     * appears in configuration file, as well as the source and the sourcetype of
+     * Returns the collection name of this Windows Event Log input. This name
+     * appears in the configuration file, the source, and the sourcetype of
      * the indexed data. If the value is "localhost", it will use native event
      * log collection; otherwise, it will use WMI.
      *
-     * @return This Windows Event log input's collection.
+     * @return The collection name.
      */
     public String getLocalName() {
         return getString("name");
     }
 
     /**
-     * Returns this Windows Event log input's main host. Secondary hosts are
-     * specified in the hosts attribute.
+     * Returns the main host of this Windows Event Log input. Secondary hosts are
+     * specified in the {@code hosts} attribute.
+     * @see #getHosts
      *
-     * @return This Windows Event log input's main host.
+     * @return The main host.
      */
     public String getLookupHost() {
         return getString("lookup_host");

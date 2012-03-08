@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -24,14 +24,14 @@ import java.util.Date;
 import java.net.Socket;
 
 /**
- * Representation of an index.
+ * The {@code Index} class represents an index.
  */
 public class Index extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The index endpoint.
      */
     Index(Service service, String path) {
@@ -41,7 +41,7 @@ public class Index extends Entity {
     /**
      * Creates a writable socket to this index.
      *
-     * @return The Socket.
+     * @return The writable socket.
      * @throws IOException
      */
     public Socket attach() throws IOException {
@@ -94,430 +94,427 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns whether or not data retrieved from this index is in UTF8
-     * encoding.
+     * Indicates whether the data retrieved from this index has been
+     * UTF8-encoded.
      *
-     * @return Whether or not data retrieved from this index is in UTF8.
+     * @return {@code true} if the retrieved data is in UTF8, {@code false} if not. 
      */
     public boolean getAssureUTF8() {
         return getBoolean("assureUTF8");
     }
 
     /**
-     * Returns this index's block signature database.
+     * Returns the block signature database for this index.
      *
-     * @return This index's block signature database.
+     * @return The block signature database.
      */
     public String getBlockSignatureDatabase() {
         return getString("blockSignatureDatabase");
     }
 
     /**
-     * Returns this index's block sign size. This value defines  the number of
+     * Returns the block sign size for this index. This value defines the number of
      * events that make up a block for block signatures. A value of 0 means
      * block signing is disabled.
      *
-     * @return This index's block sign size.
+     * @return The block sign size.
      */
     public int getBlockSignSize() {
         return getInteger("blockSignSize");
     }
 
     /**
-     * Returns this index's colddbs's absolute file path, or null if not
-     * specified. This value may contain shell expansion terms.
+     * Returns the absolute file path to the cold database for this index. 
+     * This value may contain shell expansion terms.
      *
-     * @return this index's colddbs's absolute file path.
+     * @return The colddbs's absolute file path, or {@code null} if not specified.
      */
     public String getColdPath() {
         return getString("coldPath", null);
     }
 
     /**
-     * Returns this index's colddbs's expanded absolute file path, or null if
-     * not specified.
+     * Returns the expanded absolute file path to the cold database for this index.
      *
-     * @return this index's colddbs's expanded absolute file path.
+     * @return The colddbs's expanded absolute file path, or {@code null} if not specified.
      */
     public String getColdPathExpanded() {
         return getString("coldPath_expanded", null);
     }
 
     /**
-     * Returns this index's frozen archive destination path, or null if not
-     * specified.
+     * Returns the frozen archive destination path for this index.
      *
-     * @return This index's frozen archive destination path.
+     * @return The frozen archive destination path, or {@code null} if not specified.
      */
     public String getColdToFrozenDir() {
         return getString("coldToFrozenDir", null);
     }
 
     /**
-     * Returns this index's archiving script, or null if not specified.
      *
-     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes">Notes on this attribute</a>
+     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes" 
+     * target="_blank">Attributes for the "data/indexes" endpoint in the REST API documentation</a>
      *
-     * @return This index's archiving script
+     * @return The archiving script, or {@code null} if not specified.
      */
     public String getColdToFrozenScript() {
         return getString("coldToFrozenScript", null);
     }
 
     /**
-     * Returns whether or not raw data is compressed.
+     * Indicates whether raw data is compressed.
      *
      * @deprecated Splunk always compresses raw data.
-     * @return Whether or not raw data is compressed.
+     * @return {@code true} if raw data is compressed, {@code false} if not.
      */
     public boolean getCompressRawdata() {
         return getBoolean("compressRawdata");
     }
 
     /**
-     * Returns this index's current size in MBs.
+     * Returns the current size of this index.
      *
-     * @return This index's current size in MB's
+     * @return The current size of the index, in MB.
      */
     public int getCurrentDBSizeMB() {
         return getInteger("currentDBSizeMB");
     }
 
     /**
-     * Return the Splunk instances default index name.
+     * Return the default index name of the Splunk instance.
      *
-     * @return The Splunk instances default index name.
+     * @return The default index name.
      */
     public String getDefaultDatabase() {
         return getString("defaultDatabase");
     }
 
     /**
-     * Returns whether or not this index has real-time-search enabled.
+     * Indicates whether real-time search is enabled for this index.
      *
-     * @return Whether or not this index has real-time-search enabled.
+     * @return {@code true} if real-time search is enabled, {@code false} if not.
      */
     public boolean getEnableRealtimeSearch() {
         return getBoolean("enableRealtimeSearch");
     }
 
     /**
-     * Returns how long, in seconds, that this index's data rolls to frozen. If
-     * archiving is necessary for frozen data, see coldToFrozen attributes.
+     * Returns the maximum age for a bucket, after which the data in this index rolls to 
+     * frozen. If archiving is necessary for frozen data, see the {@code coldToFrozen} attributes.
      *
-     * @return How long, in seconds, that this index's data rolls to frozen.
+     * @return The maximum age, in seconds, after which data rolls to frozen.
      */
     public int getFrozenTimePeriodInSecs() {
         return getInteger("frozenTimePeriodInSecs");
     }
 
     /**
-     * Returns this index's absolute path to both hot and warm buckets, or null
-     * if not specified. This value may contain shell expansion terms.
+     * Returns the absolute path to both hot and warm buckets for this index. This value may contain shell expansion terms.
      *
-     * @return This index's absolute path to both hot and warm buckets.
+     * @return This index's absolute path to both hot and warm buckets, or {@code null} if not specified.
      */
     public String getHomePath() {
         return getString("homePath", null);
     }
 
     /**
-     * Returns this index's expanded absolute path to both hot and warm buckets,
-     * or null if not specified.
+     * Returns the expanded absolute path to both hot and warm buckets for this index.
      *
-     * @return This index's expanded absolute path to both hot and warm buckets.
+     * @return The expanded absolute path to both hot and warm buckets, or {@code null} if not specified.
      */
     public String getHomePathExpanded() {
         return getString("homePath_expanded", null);
     }
 
     /**
-     * Returns this index's index thread.
+     * Returns the index thread for this index.
      *
-     * @return This index's index thread.
+     * @return The index thread.
      */
     public String getIndexThreads() {
         return getString("indexThreads");
     }
 
     /**
-     * Returns this index's last initialization time, or null if not specified.
+     * Returns the last initialization time for this index.
      *
-     * @return This index's last initialization time.
+     * @return The last initialization time, or {@code null} if not specified.
      */
     public String getLastInitTime() {
         return getString("lastInitTime", null);
     }
 
     /**
-     * Returns this index's maximum number of concurrent optimize processes per
-     * hot bucket.
+     * Returns the maximum number of concurrent optimize processes that
+     * can run against a hot bucket for this index.
      *
-     * @return This index's maximum number of concurrent optimize processes per
-     * hot bucket.
+     * @return The maximum number of concurrent optimize processes.
      */
     public int getMaxConcurrentOptimizes() {
         return getInteger("maxConcurrentOptimizes");
     }
 
     /**
-     * Returns this index's maximum data size, in MB or "auto" or
-     * "auto_high_volume", before triggering a roll from hot to warm buckets.
+     * Returns the maximum data size before triggering a roll from hot to warm buckets for this index.
      *
-     * @return This index's maximum data size, before triggering a roll from hot
-     * to warm buckets.
+     * @return The maximum data size, in MB, or "auto" (which means 750MB), or
+     * "auto_high_volume" (which means 10GB on a 64-bit system, or 1GB on a 32-bit system).
      */
     public String getMaxDataSize() {
         return getString("maxDataSize");
     }
 
     /**
-     * Returns this index's maximum number of hot buckets.
+     * Returns the maximum number of hot buckets that can exist for this index.
      *
-     * @return this index's maximum number of hot buckets.
+     * @return The maximum number of hot buckets.
      */
     public int getMaxHotBuckets() {
         return getInteger("maxHotBuckets");
     }
 
     /**
-     * Returns this index's hot bucket's maximum life, in seconds. A value of
-     * zero means infinite.
+     * Returns the maximum lifetime of a hot bucket for this index. 
+     * If a hot bucket exceeds this value, Splunk rolls it to warm. 
+     * A value of 0 means an infinite lifetime.
      *
-     * @return This index's hot bucket's maximum life, in seconds.
+     * @return The hot bucket's maximum lifetime, in seconds.
      */
     public int getMaxHotIdleSecs() {
         return getInteger("maxHotIdleSecs");
     }
 
     /**
-     * Returns this index's hot/warm bucket upper bound timespan, in seconds.
+     * Returns the upper bound of the target maximum timespan of 
+     * hot and warm buckets for this index.
      *
-     * @return This index's hot/warm bucket upper bound timespan, in seconds.
+     * @return The upper bound of the target maximum timespan, in seconds.
      */
     public int getMaxHotSpanSecs() {
         return getInteger("maxHotSpanSecs");
     }
 
     /**
-     * Returns this index's single tsidx file maximum size, in MB.
+     * Returns the amount of memory to allocate for buffering 
+     * a single tsidx file into memory before flushing to disk. 
      *
-     * @return This index's single tsidx file maximum size, in MB.
+     * @return The amount of memory, in MB.
      */
     public int getMaxMemMB() {
         return getInteger("maxMemMB");
     }
 
     /**
-     * Returns this index's maximum number of lines permissible in the .data
-     * file. A value of zero means infinite.
+     * Returns the maximum number of unique lines that are allowed 
+     * in a bucket's .data files for this index. A value of 0 means infinite lines.
      *
-     * @return This index's maximum number of lines permissible in the .data
-     * file.
+     * @return The maximum number of unique lines.
      */
     public int getMaxMetaEntries() {
         return getInteger("maxMetaEntries");
     }
 
     /**
-     * Returns this index's maximum concurrent helper processes.
+     * Returns the maximum number of concurrent helper processes for this index.
      *
-     * @return This index's maximum concurrent helper processes.
+     * @return The maximum number of concurrent helper processes.
      */
     public int getMaxRunningProcessGroups() {
         return getInteger("maxRunningProcessGroups");
     }
 
     /**
-     * Returns this index's max time attribute, or null if not specified.
+     * Returns the maximum time attribute for this index.
      *
-     * @return This index's max time attribute.
+     * @return The maximum time attribute, or {@code null} if not specified.
      */
     public Date getMaxTime() {
         return getDate("maxTime", null);
     }
 
     /**
-     * Returns this index's maximum allowable size, in MB. If the index grows
-     * larger, the oldest data is frozen.
+     * Returns the maximum size for this index. If an index
+     * grows larger than this value, the oldest data is frozen.
      *
-     * @return This index's maximum allowable size, in MB.
+     * @return The maximum index size, in MB.
      */
     public int getMaxTotalDataSizeMB() {
         return getInteger("maxTotalDataSizeMB");
     }
 
     /**
-     * Returns this index's warm bucket count maximum. If this value is
-     * exceeded, the warm buckets with oldest latest times are moved to cold.
+     * Returns the maximum number of warm buckets for this index. If this 
+     * value is exceeded, the warm buckets with the lowest value for their 
+     * latest times are moved to cold.
      *
-     * @return This index's warm bucket count maximum.
+     * @return The maximum number of warm buckets.
      */
     public int getMaxWarmDBCount() {
         return getInteger("maxWarmDBCount");
     }
 
     /**
-     * Returns this index's memory pool, in MB or "auto".
+     * Returns the memory pool for this index.
      *
-     * @return This index's memory pool, in MB.
+     * @return The memory pool, in MB or "auto".
      */
     public String getMemPoolMB() {
         return getString("memPoolMB");
     }
 
     /**
-     * Returns this index's file system sync frequency while compressing
-     * journal slices. Note that a value of "disable" disables this feature
-     * completely, while a value of 0 forces a filesystem sync after
-     * every journal slice.
+     * Returns the frequency at which Splunkd forces a filesystem sync while 
+     * compressing journal slices for this index.
+     * A value of "disable" disables this feature completely, while a value of 0
+     * forces a file-system sync after completing compression of every journal slice.
      *
-     * @return This index's file system sync frequency while compressing
-     * journal slices.
+     * @return The file-system sync frequency, as an integer or "disable".
      */
     public String getMinRawFileSyncSecs() {
         return getString("minRawFileSyncSecs");
     }
 
     /**
-     * Returns this index's minimum time attribute, or null if not specified.
+     * Returns the minimum time attribute for this index.
      *
-     * @return This index's minimum time attribute.
+     * @return The minimum time attribute, or {@code null} if not specified.
      */
     public Date getMinTime() {
         return getDate("minTime", null);
     }
 
     /**
-     * Returns this index's meta data sync interval, in seconds. A value of zero
-     * disables sync until a requested metadata sync.
+     * Returns the frequency at which metadata is for partially synced (synced in-place)
+     * for this index. A value of 0 disables partial syncing, so metadata is 
+     * only synced on the ServiceMetaPeriod interval. 
+     * @see #getServiceMetaPeriod getServiceMetaPeriod
      *
-     * @return This index's meta data sync interval, in seconds.
+     * @return The metadata sync interval, in seconds.
      */
     public int getPartialServiceMetaPeriod() {
         return getInteger("partialServiceMetaPeriod");
     }
 
     /**
-     * Returns this index's future event time quarantine, in seconds. Events
+     * Returns the future event-time quarantine for this index. Events
      * that are newer than now plus this value are quarantined.
      *
-     * @return This index's future event time quarantine, in seconds.
+     * @return The future event-time quarantine, in seconds.
      */
     public int getQuarantineFutureSecs() {
         return getInteger("quarantineFutureSecs");
     }
 
     /**
-     * Returns this index's past event time quarantine, in seconds. Events
+     * Returns the past event-time quarantine for this index. Events
      * that are older than now minus this value are quarantined.
      *
-     * @return This index's past event time quarantine, in seconds.
+     * @return The past event-time quarantine, in seconds.
      */
     public int getQuarantinePastSecs() {
         return getInteger("quarantinePastSecs");
     }
 
     /**
-     * Returns this index's raw slice uncompressed size, in bytes.
+     * Returns the target uncompressed size of individual raw slices in the
+     * rawdata journal for this index.
      *
-     * @return This index's raw slice uncompressed size, in bytes.
+     * @return The target uncompressed size, in bytes.
      */
     public int getRawChunkSizeBytes() {
         return getInteger("rawChunkSizeBytes");
     }
 
     /**
-     * Returns this index's hot bucket creation check frequency. This value
-     * also indicates warm to cold and cold to frozen check frequency.
+     * Returns the frequency to check for the need to create a new hot bucket and
+     * the need to roll or freeze any warm or cold buckets for this index.
      *
-     * @return This index's hot bucket creation check frequency.
+     * @return The check frequency, in seconds.
      */
     public int getRotatePeriodInSecs() {
         return getInteger("rotatePeriodInSecs");
     }
 
     /**
-     * Returns this index's meta data sync frequency.
+     * Returns the frequency at which metadata is synced to disk for this index.
      *
-     * @return This index's meta data sync frequency.
+     * @return The meta data sync frequency, in seconds.
      */
     public int getServiceMetaPeriod() {
         return getInteger("serviceMetaPeriod");
     }
 
     /**
-     * Returns a comma separated list of indexes that suppress index missing
-     * messages.
+     * Returns a list of indexes that suppress "index missing" messages.
      *
-     * @return A comma separated list of indexes that suppress index missing
-     * messages.
+     * @return A comma-separated list of indexes.
      */
     public String getSuppressBannerList() {
         return getString("suppressBannerList", null);
     }
 
     /**
-     * Returns this index's sync attribute.
+     * Returns the sync attribute for this index.
      *
-     * @return This index's sync attribute.
+     * @return The sync attribute.
      */
     public boolean getSync() {
         return getBoolean("sync");
     }
 
     /**
-     * Returns this index's syncMeta attribute. When true, a sync operation is
-     * invoked before the file descriptor is closed on metadata updates.
+     * Indicates whether the sync operation is invoked before the file descriptor is 
+     * closed on metadata updates. 
      *
-     * @return This index's syncMeta attribute.
+     * @return {@code true} if the sync operation is invoked before the file descriptor 
+     * is closed on metadata updates, {@code false} if not.
      */
     public boolean getSyncMeta() {
         return getBoolean("syncMeta");
     }
 
     /**
-     * Returns this index's absolute path to the thawed index, or null if not
-     * present. This value may contain shell expansion terms.
+     * Returns the absolute path to the thawed index for this index. This value may 
+     * contain shell expansion terms.
      *
-     * @return This index's absolute path to the thawed index.
+     * @return The absolute path to the thawed index, or {@code null} if not specified.
      */
     public String getThawedPath() {
         return getString("thawedPath", null);
     }
 
     /**
-     * Returns this index's expanded absolute path to the thawed index, or null
-     * if not present.
+     * Returns the expanded absolute path to the thawed index for this index.
      *
-     * @return This index's expanded absolute path to the thawed index.
+     * @return The expanded absolute path to the thawed index, or {@code null} if not specified.
      */
     public String getThawedPathExpanded() {
         return getString("thawedPath_expanded", null);
     }
 
     /**
-     * Returns this index's throttling frequency check, in seconds.
+     * Returns the frequency at which Splunk checks for an index throttling condition.
      *
-     * @return This index's throttling frequency check, in seconds.
+     * @return The frequency of the throttling check, in seconds.
      */
     public int getThrottleCheckPeriod() {
         return getInteger("throttleCheckPeriod");
     }
 
     /**
-     * Returns this index's total event count.
+     * Returns the total event count for this index.
      *
-     * @return This index's total event count.
+     * @return The total event count.
      */
     public int getTotalEventCount() {
         return getInteger("totalEventCount");
     }
 
     /**
-     * Returns whether or not this index is an internal index.
+     * Indicates whether this index is an internal index.
      *
-     * @return Whether ot not this index is an internal index.
+     * @return {@code true} if this index is an internal index, {@code false} if not.
      */
     public boolean isInternal() {
         return getBoolean("isInternal");
@@ -532,9 +529,9 @@ public class Index extends Entity {
     }
 
     /**
-     * Submits an event to this index through HTTP POST.
+     * Submits an event to this index through an HTTP POST request.
      *
-     * @param data Event data posted.
+     * @param data The event data that was posted.
      */
     public void submit(String data) {
         RequestMessage request = new RequestMessage("POST");
@@ -543,10 +540,10 @@ public class Index extends Entity {
     }
 
     /**
-     * Uploads a file to this index as an event stream. Note: this file must
-     * be directly accessible to the Splunk server.
+     * Uploads a file to this index as an event stream. 
+     * <br/>Note: This file must be directly accessible by the Splunk server.
      *
-     * @param filename The file uploaded.
+     * @param filename The uploaded file.
      */
     public void upload(String filename) {
         Args args = new Args();
