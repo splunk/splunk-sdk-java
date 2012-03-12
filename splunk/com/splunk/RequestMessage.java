@@ -17,8 +17,8 @@
 package com.splunk;
 
 import java.io.OutputStream;
-import java.util.TreeMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Representation of an HTTP request message including method, headers and body

@@ -640,7 +640,7 @@ public class Job extends Entity {
     /**
      * returns this job's isZombie attribute.
      *
-     * @return Thsi job's isZombie attribute.
+     * @return This job's isZombie attribute.
      */
     public boolean isZombie() {
         return getBoolean("isZombie");
