@@ -19,6 +19,7 @@ package com.splunk;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -173,12 +174,62 @@ public class Service extends HttpService {
      * @return A fully qualified resource path.
      */
     String fullpath(String path) {
+        return fullpath(path, null);
+    }
+
+    /**
+     * Ensures that the given path is fully qualified, prepending a path
+     * prefix if necessarry. The path prefix will be constructed using the
+     * current owner & app context if available.
+     *
+     * @param path The path to verify.
+     * @param namespace the name space dictionary w/ keys app, owner, sharing.
+     * @return A fully qualified resource path.
+     */
+    public String fullpath(String path, HashMap<String, Object> namespace) {
+
+        // if already fully qualified (i.e. root begins with /) then return
+        // the already qualified path.
         if (path.startsWith("/"))
             return path;
-        if (owner == null && app == null)
+
+        // if no namespace at all, and no service instance of app, and no
+        // sharing, return base service endpoint + path.
+        if (namespace == null && app == null) {
             return "/services/" + path;
-        return String.format("/servicesNS/%s/%s/%s", 
-            owner == null ? "-" : owner, app == null ? "-" : app, path);
+        }
+
+        // base namespace values
+        String localApp = app;
+        String localOwner = owner;
+        String localSharing = "";
+
+        // override with invocation namespace if set.
+        if (namespace != null) {
+            if (namespace.containsKey("app"))
+                localApp = (String)namespace.get("app");
+            if (namespace.containsKey("owner"))
+                localOwner = (String)namespace.get("owner");
+            if (namespace.containsKey("sharing"))
+                localSharing = (String)namespace.get("sharing");
+        }
+
+        // sharing, if set calls for special mapping, override here.
+        // "user"    --> {user}/{app}
+        // "app"     --> nobody/{app}
+        // "global"  --> nobody/{app}
+        // "system"  --> nobody/system
+        if (localSharing.equals("app") || localSharing.equals("global"))
+            localOwner = "nobody";
+        else if (localSharing.equals("system")) {
+            localApp = "system";
+            localOwner = "nobody";
+        }
+
+        return String.format("/servicesNS/%s/%s/%s",
+                localOwner == null ? "-" : localOwner,
+                localApp   == null ? "-" : localApp,
+                path);
     }
 
     /**
@@ -198,7 +249,7 @@ public class Service extends HttpService {
      */
     public EntityCollection<Application> getApplications() {
         return new EntityCollection<Application>(
-            this, "apps/local", Application.class);
+            this, "/services/apps/local", Application.class);
     }
 
     /**

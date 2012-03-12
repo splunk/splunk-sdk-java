@@ -34,8 +34,30 @@ public class ResourceCollection<T extends Resource>
     protected Map<String, T> items = new HashMap<String, T>();
     protected Class itemClass;
 
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param itemClass The class of this resource item.
+     */
     ResourceCollection(Service service, String path, Class itemClass) {
         super(service, path);
+        this.itemClass = itemClass;
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param namespace The namespace of this resource. This namespace will
+     *        override the namespace of the service context.
+     * @param itemClass The class of this resource item.
+     */
+    ResourceCollection(Service service, String path,
+                       HashMap<String, Object> namespace, Class itemClass) {
+        super(service, path, namespace);
         this.itemClass = itemClass;
     }
 
@@ -63,7 +85,8 @@ public class ResourceCollection<T extends Resource>
      * @param path Path to the member resource.
      * @return The created member.
      */
-    protected T createItem(Class itemClass, String path) {
+    protected T createItem(Class itemClass, String path,
+                           HashMap<String, Object> namespace) {
         Constructor ctor;
         try {
             ctor = itemClass.getDeclaredConstructor(itemSig);
@@ -74,7 +97,8 @@ public class ResourceCollection<T extends Resource>
 
         T item;
         try {
-            item = (T)ctor.newInstance(service, path);
+            item =
+               (T)ctor.newInstance(service, service.fullpath(path, namespace));
         }
         catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -99,7 +123,7 @@ public class ResourceCollection<T extends Resource>
      * @return The newly created member.
      */
     protected T createItem(AtomEntry entry) {
-        return createItem(itemClass, itemPath(entry));
+        return createItem(itemClass, itemPath(entry), namespace(entry));
     }
 
     /** {@inheritDoc} */
@@ -139,7 +163,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Returns the vlaue to use as the item path from the given Atom entry.
+     * Returns the value to use as the item path from the given Atom entry.
      * Subclasses may override this to support alternative methods of
      * determining a members path.
      *
@@ -148,6 +172,24 @@ public class ResourceCollection<T extends Resource>
      */
     protected String itemPath(AtomEntry entry) {
         return entry.links.get("alternate");
+    }
+
+    private HashMap<String, Object> namespace(AtomEntry entry) {
+        HashMap<String, Object>namespace = new HashMap<String, Object>();
+
+        // no content? return an empty namespace.
+        if (entry.content == null)
+            return namespace;
+
+        HashMap<String, Object> entityMetadata =
+                (HashMap<String,Object>)entry.content.get("eai:acl");
+        if (entityMetadata.containsKey("owner"))
+            namespace.put("owner", entityMetadata.get("owner"));
+        if (entityMetadata.containsKey("app"))
+            namespace.put("app", entityMetadata.get("app"));
+        if (entityMetadata.containsKey("sharing"))
+            namespace.put("sharing", entityMetadata.get("sharing"));
+        return namespace;
     }
 
     /** {@inheritDoc} */
