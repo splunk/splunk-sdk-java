@@ -16,11 +16,8 @@
 
 package com.splunk.sdk.search;
 
-import com.splunk.Args;
-import com.splunk.HttpException;
-import com.splunk.Job;
+import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -140,8 +137,21 @@ public class Program {
         // Wait until results are available.
         boolean status = false;
         while (true) {
-            if (job.isDone())
-                break;
+            // first touch of job may result in an exception that the job
+            // is not ready. Catch it here, wait a short time and we'll try
+            // again.
+            try {
+                if (job.isDone())
+                    break;
+            }
+            catch (SplunkException splunkException) {
+                if (splunkException.getCode() == SplunkException.JOB_NOTREADY) {
+                    try { Thread.sleep(500); continue; }
+                    catch (Exception e) {}
+                } else {
+                    throw splunkException;
+                }
+            }
 
             // If no outputs are available, optionally print status and wait.
             if (verbose) {

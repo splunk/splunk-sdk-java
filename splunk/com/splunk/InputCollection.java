@@ -111,7 +111,7 @@ public class InputCollection extends EntityCollection<Input> {
         String path = itemPath(entry);
         InputKind kind = itemKind(path);
         Class inputClass = kind.inputClass;
-        return createItem(inputClass, path);
+        return createItem(inputClass, path, null);
     }
 
     /**

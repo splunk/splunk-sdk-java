@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * Representation of configuration information for an instance of Splunk.
  */
@@ -135,5 +137,15 @@ public class Settings extends Entity {
      */
     public String getTrustedIP() {
         return getString("trustedIP", null);
+    }
+
+    /**
+     * Updates the settings entity with the specified arguments.
+     *
+     * @param args The arguments being updated.
+     */
+    @Override public void update(Map<String, Object> args) {
+        service.post(path + "/settings", args);
+        invalidate();
     }
 }

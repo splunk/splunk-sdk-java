@@ -17,11 +17,8 @@
 package com.splunk;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.Date;
 import java.net.Socket;
+import java.util.Date;
 
 /**
  * Representation of an index.
@@ -45,29 +42,30 @@ public class Index extends Entity {
      * @throws IOException
      */
     public Socket attach() throws IOException {
-        Socket socket = service.open();
-        OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
-        String header = String.format(
-            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n" +
-            "Host: %s:%d\r\n" +
-            "Accept-Encoding: identity\r\n" +
-            "Authorization: %s\r\n" +
-            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            getName(),
-            service.getHost(), service.getPort(),
-            service.token);
-        out.write(header);
-        out.flush();
-        return socket;
+        Receiver receiver = service.getReceiver();
+        return receiver.attach(getName());
+    }
+
+    /**
+     * Creates a writable socket to this index.
+     *
+     * @param args the optional arguments to the streaming endpoint.
+     * @return The Socket.
+     * @throws IOException
+     */
+    public Socket attach(Args args) throws IOException {
+        Receiver receiver = service.getReceiver();
+        return receiver.attach(getName(), args);
     }
 
     /**
      * Cleans this index, removing all events.
      *
+     * @param maxSeconds the maximum number of seconds to wait before returning;
+     *                   -1 means effectively wait for ever.
      * @return This index.
      */
-    public Index clean() {
+    public Index clean(int maxSeconds) {
         Args saved = new Args();
         saved.put("maxTotalDataSizeMB", getMaxTotalDataSizeMB());
         saved.put("frozenTimePeriodInSecs", getFrozenTimePeriodInSecs());
@@ -78,19 +76,22 @@ public class Index extends Entity {
         update(reset);
         rollHotBuckets();
 
-        while (true) {
+        while (maxSeconds != 0) {
             try {
                 Thread.sleep(1000); // 1000ms (1 second sleep)
+                maxSeconds = maxSeconds - 1;
             }
             catch (InterruptedException e) {
                 return this; // eat
             }
-            if (this.getTotalEventCount() == 0)
-                break;
+            if (this.getTotalEventCount() == 0) {
+                update(saved);
+                return this;
+            }
             refresh();
         }
-        update(saved);
-        return this;
+        throw new SplunkException(SplunkException.TIMEOUT,
+                                  "Index cleaning timed out");
     }
 
     /**
@@ -537,9 +538,19 @@ public class Index extends Entity {
      * @param data Event data posted.
      */
     public void submit(String data) {
-        RequestMessage request = new RequestMessage("POST");
-        request.setContent(data);
-        service.send("receivers/simple?index=" + getName(), request);
+        Receiver receiver = service.getReceiver();
+        receiver.submit(getName(), data);
+    }
+
+    /**
+     * Submits an event to this index through HTTP POST.
+     *
+     * @param data Event data posted.
+     * @param args optional arguments for the simple receivers endpoint.
+     */
+    public void submit(String data, Args args) {
+        Receiver receiver = service.getReceiver();
+        receiver.submit(getName(), data, args);
     }
 
     /**
@@ -549,10 +560,9 @@ public class Index extends Entity {
      * @param filename The file uploaded.
      */
     public void upload(String filename) {
-        Args args = new Args();
-        args.put("name", filename);
-        args.put("index", getName());
-        service.post("data/inputs/oneshot", args);
+        EntityCollection<Upload> uploads = service.getUploads();
+        Args args = new Args("index", getName());
+        uploads.create(filename, args);
     }
 }
 

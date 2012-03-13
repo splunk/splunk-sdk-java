@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import org.junit.*;
+import org.junit.Test;
 
 public class InputTest extends SplunkTestCase {
 

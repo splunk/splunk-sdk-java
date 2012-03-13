@@ -151,7 +151,7 @@ public class IndexTest extends SplunkTestCase {
         index.isDisabled();
         index.isInternal();
 
-        index.clean();
+        index.clean(60);
         assertEquals(index.getTotalEventCount(), 0);
 
         index.disable();
@@ -167,7 +167,7 @@ public class IndexTest extends SplunkTestCase {
         assertEquals(index.getTotalEventCount(), 2);
 
         // clean
-        index.clean();
+        index.clean(60);
         assertEquals(index.getTotalEventCount(), 0);
 
         // stream events to index
@@ -184,7 +184,7 @@ public class IndexTest extends SplunkTestCase {
         assertEquals(index.getTotalEventCount(), 2);
 
         // clean
-        index.clean();
+        index.clean(60);
         assertEquals(index.getTotalEventCount(), 0);
 
         // test must run on machine where splunkd runs,

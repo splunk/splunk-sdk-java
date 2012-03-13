@@ -16,7 +16,9 @@
 
 package com.splunk;
 
+
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Representation of a Splunk resource.
@@ -36,6 +38,19 @@ public abstract class Resource {
      */
     Resource(Service service, String path) {
         this.path = service.fullpath(path);
+        this.service = service;
+    }
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param namespace The namespace of this resource. This namespace will
+     *        override the namespace of the service context.
+     */
+    Resource(Service service, String path, HashMap<String, Object> namespace) {
+        this.path = service.fullpath(path, namespace);
         this.service = service;
     }
 
@@ -140,7 +155,7 @@ public abstract class Resource {
      * @return The current resource instance.
      */
     public Resource validate() {
-        if (this.maybeValid == false) refresh();
+        if (!this.maybeValid) refresh();
         return this;
     }
 }

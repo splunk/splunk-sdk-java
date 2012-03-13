@@ -37,7 +37,7 @@ public class LicenseGroup extends Entity {
      * @return This license group's stack ID.
      */
     public String[] getStackIds() {
-        return getStringArray("stack_ids", null);
+        return getStringArray("stack_ids", new String[]{""});
     }
 
     /**

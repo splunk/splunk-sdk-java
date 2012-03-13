@@ -42,9 +42,14 @@ public class ConfTest extends SplunkTestCase {
             conf.getTitle();
             conf.getPath();
             for (Entity stanza : conf.values()) {
-                stanza.getName();
-                stanza.getTitle();
-                stanza.getPath();
+                try {
+                    stanza.getName();
+                    stanza.getTitle();
+                    stanza.getPath();
+                } catch (Exception e) {
+                    // IF the application is disabled, trying to get info
+                    // on it will in fact give us a 404 exception.
+                }
             }
         }
     }

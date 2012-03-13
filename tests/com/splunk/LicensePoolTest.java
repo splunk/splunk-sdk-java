@@ -42,7 +42,7 @@ public class LicensePoolTest extends SplunkTestCase {
 
         try {
             // The following will fail because there is no quota available
-            licensePoolCollection.create("sdk-test", 1, "download-trial");
+            licensePoolCollection.create("sdk-test", "MAX", "download-trial");
             fail("Expected pool create to fail");
         }
         catch (HttpException e) {

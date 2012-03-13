@@ -31,8 +31,19 @@ public class SettingsTest extends SplunkTestCase {
         settings.getMinFreeSpace();
         settings.getPass4SymmKey();
         settings.getServerName();
-        settings.getSessionTimeout();
+        String timeout = settings.getSessionTimeout(); // set aside original
         settings.getStartWebServer();
         settings.getTrustedIP();
+
+        // test update
+        Args args = new Args("sessionTimeout", "2h");
+        settings.update(args);
+        String updatedTimeout = settings.getSessionTimeout();
+        assertEquals("Must be equal", updatedTimeout, "2h");
+        // restore original timeout
+        args.put("sessionTimeout", timeout);
+        settings.update(args);
+        updatedTimeout = settings.getSessionTimeout();
+        assertEquals("Must be equal", updatedTimeout, timeout);
     }
 }

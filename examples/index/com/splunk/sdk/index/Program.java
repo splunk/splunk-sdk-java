@@ -60,12 +60,12 @@ public class Program {
             return;
         }
 
-        Index index = (Index)indexes.get(name);
+        Index index = indexes.get(name);
         if (index == null)
             Command.error("Index '" + name + "' does not exists");
 
         if (action.equals("clean"))
-            index.clean();
+            index.clean(30); // 30 seconds before timeout
         else if (action.equals("disable"))
             index.disable();
         else if (action.equals("enable"))

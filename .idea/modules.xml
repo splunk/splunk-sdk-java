@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/examples/explorer/explorer.iml" filepath="$PROJECT_DIR$/examples/explorer/explorer.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/export/export.iml" filepath="$PROJECT_DIR$/examples/export/export.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/examples/genevents/genevents.iml" filepath="$PROJECT_DIR$/examples/genevents/genevents.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/index/index.iml" filepath="$PROJECT_DIR$/examples/index/index.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/info/info.iml" filepath="$PROJECT_DIR$/examples/info/info.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/search/search.iml" filepath="$PROJECT_DIR$/examples/search/search.iml" group="examples" />

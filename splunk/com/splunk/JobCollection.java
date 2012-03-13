@@ -62,9 +62,21 @@ public class JobCollection extends EntityCollection<Job> {
         args = Args.create(args).add("search", query);
         ResponseMessage response = service.post(path, args);
         assert(response.getStatus() == 201);
+
+        String sid = Xml.parse(response.getContent())
+            .getElementsByTagName("sid")
+            .item(0)
+            .getTextContent();
+
         invalidate();
-        String sid = Job.getSid(response);
-        return get(sid);
+        Job job = get(sid);
+
+        // if job not yet scheduled, create an empty job object
+        if (job == null) {
+            job = new Job(service, "search/jobs/" + sid);
+        }
+
+        return job;
     }
 
     /**
