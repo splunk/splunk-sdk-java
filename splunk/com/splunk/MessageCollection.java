@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+
 /**
  * Representation of a collection of messages.
  */
@@ -40,5 +42,19 @@ public class MessageCollection extends EntityCollection<Message> {
     public Message create(String name, String value) {
         Args args = new Args("value", value);
         return create(name, args);
+    }
+
+    /**
+     * Create a new message.
+     *
+     * @param name The name of the new message.
+     * @param value The value of the message.
+     * @param namespace The namespace.
+     * @return The created message.
+     */
+    public Message
+    create(String name, String value, HashMap<String, String>namespace) {
+        Args args = new Args("value", value);
+        return create(name, args, namespace);
     }
 }

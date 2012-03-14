@@ -26,6 +26,7 @@ import java.util.HashMap;
 public abstract class Resource {
     protected Map<String, String> actions;
     protected String path;
+    protected String partialPath;
     protected Service service;
     protected String title;
     private boolean maybeValid = false;
@@ -38,19 +39,7 @@ public abstract class Resource {
      */
     Resource(Service service, String path) {
         this.path = service.fullpath(path);
-        this.service = service;
-    }
-
-    /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The target endpoint.
-     * @param namespace The namespace of this resource. This namespace will
-     *        override the namespace of the service context.
-     */
-    Resource(Service service, String path, HashMap<String, Object> namespace) {
-        this.path = service.fullpath(path, namespace);
+        this.partialPath = path;
         this.service = service;
     }
 

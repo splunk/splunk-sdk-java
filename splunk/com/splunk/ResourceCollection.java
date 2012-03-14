@@ -46,21 +46,6 @@ public class ResourceCollection<T extends Resource>
         this.itemClass = itemClass;
     }
 
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The target endpoint.
-     * @param namespace The namespace of this resource. This namespace will
-     *        override the namespace of the service context.
-     * @param itemClass The class of this resource item.
-     */
-    ResourceCollection(Service service, String path,
-                       HashMap<String, Object> namespace, Class itemClass) {
-        super(service, path, namespace);
-        this.itemClass = itemClass;
-    }
-
     /** {@inheritDoc} */
     public void clear() {
         throw new UnsupportedOperationException();
@@ -83,10 +68,11 @@ public class ResourceCollection<T extends Resource>
      *
      * @param itemClass Class of the member to create.
      * @param path Path to the member resource.
+     * @param namespace The namespace.
      * @return The created member.
      */
     protected T createItem(Class itemClass, String path,
-                           HashMap<String, Object> namespace) {
+                           HashMap<String, String> namespace) {
         Constructor ctor;
         try {
             ctor = itemClass.getDeclaredConstructor(itemSig);
@@ -174,15 +160,15 @@ public class ResourceCollection<T extends Resource>
         return entry.links.get("alternate");
     }
 
-    private HashMap<String, Object> namespace(AtomEntry entry) {
-        HashMap<String, Object>namespace = new HashMap<String, Object>();
+    private HashMap<String, String> namespace(AtomEntry entry) {
+        HashMap<String, String>namespace = new HashMap<String, String>();
 
         // no content? return an empty namespace.
         if (entry.content == null)
             return namespace;
 
-        HashMap<String, Object> entityMetadata =
-                (HashMap<String,Object>)entry.content.get("eai:acl");
+        HashMap<String, String> entityMetadata =
+                (HashMap<String, String>)entry.content.get("eai:acl");
         if (entityMetadata.containsKey("owner"))
             namespace.put("owner", entityMetadata.get("owner"));
         if (entityMetadata.containsKey("app"))

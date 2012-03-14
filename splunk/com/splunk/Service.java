@@ -186,7 +186,7 @@ public class Service extends HttpService {
      * @param namespace the name space dictionary w/ keys app, owner, sharing.
      * @return A fully qualified resource path.
      */
-    public String fullpath(String path, HashMap<String, Object> namespace) {
+    public String fullpath(String path, HashMap<String, String> namespace) {
 
         // if already fully qualified (i.e. root begins with /) then return
         // the already qualified path.

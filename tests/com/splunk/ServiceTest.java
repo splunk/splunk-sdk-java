@@ -211,7 +211,7 @@ public class ServiceTest extends SplunkTestCase {
 
     @Test public void testNamespace() {
         Service service = connect();
-        HashMap<String, Object> namespace = new HashMap<String, Object>();
+        HashMap<String, String> namespace = new HashMap<String, String>();
 
         // synctactic tests
         namespace.clear();

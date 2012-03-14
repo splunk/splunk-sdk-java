@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+
 /**
  * Representation of a collection of passwords.
  */
@@ -36,7 +38,6 @@ public class PasswordCollection extends EntityCollection<Password> {
      *
      * @param name The username to be created.
      * @param password The password associated with this username.
-     *
      * @return The new credential.
      */
     public Password create(String name, String password) {
@@ -50,7 +51,6 @@ public class PasswordCollection extends EntityCollection<Password> {
      * @param name The username to be created.
      * @param password The password associated with this username.
      * @param realm The credential realm.
-     *
      * @return The new credential.
      */
     public Password create(String name, String password, String realm) {
@@ -60,7 +60,37 @@ public class PasswordCollection extends EntityCollection<Password> {
         return create(name, args);
     }
 
-    // Passwords user the username as a key.
+    /**
+     * Creates a credential.
+     *
+     * @param name The username to be created.
+     * @param password The password associated with this username.
+     * @param namespace The namespace.
+     * @return The new credential.
+     */
+    public Password
+    create(String name, String password, HashMap<String, String>namespace) {
+        Args args = new Args("password", password);
+        return create(name, args, namespace);
+    }
+
+    /**
+     * Creates a credential.
+     *
+     * @param name The username to be created.
+     * @param password The password associated with this username.
+     * @param realm The credential realm.
+     * @param namespace The namespace.
+     * @return The new credential.
+     */
+    public Password
+    create(String name, String password,
+           String realm, HashMap<String, String>namespace) {
+        Args args = new Args();
+        args.put("password", password);
+        args.put("realm", realm);
+        return create(name, args, namespace);
+    }
 
     /**
      * Returns the username
