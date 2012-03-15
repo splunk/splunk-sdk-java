@@ -187,28 +187,24 @@ public class IndexTest extends SplunkTestCase {
         index.clean(60);
         assertEquals(index.getTotalEventCount(), 0);
 
-        // test must run on machine where splunkd runs,
-        // otherwise an failure is expected and printed as a WARNING
-
-        File file;
         FileReader fileReader;
-        String path;
-        try {
-            file = new File(
-                "tests" + File.separator + "com" + File.separator +
-                "splunk" + File.separator + "testfile.txt");
-            path = file.getAbsolutePath();
-            fileReader = new FileReader(path);
+        ServiceInfo info = service.getInfo();
+        String filename;
+        if (info.getOsName().equals("Windows"))
+            filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
+        else if (info.getOsName().equals("Linux"))
+            filename = "/var/log/syslog";
+        else if (info.getOsName().equals("Darwin")) {
+            filename = "/var/log/system.log";
+        } else {
+            throw new Error("OS: " + info.getOsName() + " not supported");
         }
-        catch (FileNotFoundException e) { return; }
+
         try {
-            index.upload(path);
+            index.upload(filename);
         }
-        catch (HttpException e) {
-            if (e.getStatus() == 400) {
-                System.out.println("WARNING: index upload failed (is splunkd "
-                + "running on this machine?)");
-            }
+        catch (Exception e) {
+            throw new Error("File " + filename + "failed to upload");
         }
     }
 }

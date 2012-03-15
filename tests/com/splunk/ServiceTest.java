@@ -164,15 +164,18 @@ public class ServiceTest extends SplunkTestCase {
         info.getCpuArch();
         info.getGuid();
         info.getLicenseKeys();
+        info.getLicenseLabels();
         info.getLicenseSignature();
         info.getLicenseState();
         info.getMasterGuid();
         info.getMode();
         info.getOsBuild();
+        info.getOsName();
         info.getOsVersion();
         info.getServerName();
         info.getVersion();
         info.isFree();
+        info.isRtSearchEnabled();
         info.isTrial();
     }
 
