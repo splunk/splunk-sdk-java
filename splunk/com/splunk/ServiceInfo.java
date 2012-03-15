@@ -51,6 +51,15 @@ public class ServiceInfo extends Entity {
         return getString("guid");
     }
 
+     /**
+      * Returns an array of the service's license labels.
+      *
+      * @return Array of license labels.
+      */
+    public String[] getLicenseLabels() {
+        return getStringArray("license_labels", null);
+    }
+
     /**
      * Returns an array of the service's license keys.
      *
@@ -106,6 +115,15 @@ public class ServiceInfo extends Entity {
     }
 
     /**
+     * Returns the service's OS name (type).
+     *
+     * @return OS build.
+     */
+    public String getOsName() {
+        return getString("os_name");
+    }
+
+    /**
      * Returns the service's OS version.
      *
      * @return OS version.
@@ -139,6 +157,15 @@ public class ServiceInfo extends Entity {
      */
     public boolean isFree() {
         return getBoolean("isFree");
+    }
+
+    /**
+     * Answers if the service has real time search enabled.
+     *
+     * @return {@code true} if real time search is enabled.
+     */
+    public boolean isRtSearchEnabled() {
+        return getBoolean("rtsearch_enabled");
     }
 
     /**

@@ -23,8 +23,19 @@ public class UploadTest extends SplunkTestCase {
 
         Service service = connect();
 
-        // hack!! need to get a better file to upload -- this is an ubuntu file.
-        service.getUploads().create("/var/log/kern.log.1");
+        ServiceInfo info = service.getInfo();
+        String filename;
+        if (info.getOsName().equals("Windows"))
+            filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
+        else if (info.getOsName().equals("Linux"))
+            filename = "/var/log/syslog";
+        else if (info.getOsName().equals("Darwin")) {
+            filename = "/var/log/system.log";
+        } else {
+            throw new Error("OS: " + info.getOsName() + " not supported");
+        }
+
+        service.getUploads().create(filename);
         EntityCollection<Upload> oneshots = service.getUploads();
 
         for (Upload oneshot: oneshots.values()) {
