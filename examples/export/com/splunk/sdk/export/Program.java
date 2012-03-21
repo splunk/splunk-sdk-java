@@ -116,14 +116,15 @@ public class Program {
     }
 
     static int getXmlEventStart(String str) {
+        String resultPattern = "<result offset='";
         String timeKeyPattern = "<field k='_time'>";
         String timeStartPattern = "<value><text>";
         String timeEndPattern = "<";
         String eventEndPattern = "</result>";
 
         // get first event in this buffer. If no event end kick back
-        int eventStart = str.indexOf("<result offset='");
-        int eventEnd = str.indexOf("eventEndPattern", eventStart)
+        int eventStart = str.indexOf(resultPattern);
+        int eventEnd = str.indexOf(eventEndPattern, eventStart)
                 + eventEndPattern.length();
         if (eventEnd < 0)
             return -1;
@@ -131,15 +132,15 @@ public class Program {
         int timeStart = str.indexOf(timeStartPattern, timeKeyStart)
                 + timeStartPattern.length();
         int timeEnd = str.indexOf(timeEndPattern, timeStart+1);
-
         lastTime = str.substring(timeStart, timeEnd);
+
         nextEventOffset = eventEnd;
 
         // walk through events until time changes
         eventStart = eventEnd;
         while (eventEnd > 0) {
-            eventStart = str.indexOf("<result offset='", eventStart+1);
-            eventEnd = str.indexOf("</result>", eventStart)
+            eventStart = str.indexOf(resultPattern, eventStart+1);
+            eventEnd = str.indexOf(eventEndPattern, eventStart)
                     + eventEndPattern.length();
             if (eventEnd < 0)
                 return -1;
@@ -162,7 +163,7 @@ public class Program {
         String timeKeyPattern = "\"_time\":\"";
         String timeEndPattern = "\"";
         String eventEndPattern = "\"},\n";
-        String eventEndPattern2 = "\"}[]";
+        String eventEndPattern2 = "\"}[]"; // old json output format bug
 
         // get first event in this buffer. If no event end kick back
         int eventStart = str.indexOf("{\"_cd\":\"");
@@ -224,7 +225,7 @@ public class Program {
         else if (format.equals("xml"))
             out.write("\n</results>\n");
         else
-            out.write("[]\n");
+            out.write("\n]\n");
     }
 
     static void run(String[] argv) throws Exception {
