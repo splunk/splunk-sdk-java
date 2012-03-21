@@ -33,6 +33,16 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
         super(service, "saved/searches", SavedSearch.class);
     }
 
+    /**
+     * Constructs an instance of the {@code SavedSearchCollection}.
+     *
+     * @param service The service the entity is affiliated with.
+     * @param namespace This collection's namespace.
+     */
+    SavedSearchCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "saved/searches", SavedSearch.class, namespace);
+    }
+
     /** {@inheritDoc} */
     @Override public SavedSearch create(String name) {
         throw new UnsupportedOperationException();
@@ -62,36 +72,5 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
     public SavedSearch create(String name, String search, Map args) {
         args = Args.create(args).add("search", search);
         return create(name, args);
-    }
-
-    /**
-     * Create a saved search with the given name and search expression.
-     *
-     * @param name The name of the new saved search.
-     * @param search The search expression for the new saved search.
-     * @param namespace The namespace.
-     * @return The newly created saved search.
-     */
-    public SavedSearch
-    create(String name, String search, HashMap<String, String>namespace) {
-        Args args = new Args("search", search);
-        return create(name, args, namespace);
-    }
-
-    /**
-     * Create a saved search with the given name, search expression and
-     * additional saved search arguments.
-     *
-     * @param name The name of the new saved search.
-     * @param search The search expression for the new saved search.
-     * @param args Additional saved search arguments.
-     * @param namespace The namespace.
-     * @return The newly created saved search.
-     */
-    public SavedSearch
-    create(String name, String search,
-           Map args, HashMap<String, String>namespace) {
-        args = Args.create(args).add("search", search);
-        return create(name, args, namespace);
     }
 }

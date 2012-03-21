@@ -36,6 +36,16 @@ public class JobCollection extends EntityCollection<Job> {
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace
+     */
+    JobCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "search/jobs", Job.class, namespace);
+    }
+
+    /**
      * Creates a search job with a UTF8 pre-encoded search request. Note that
      * a 'oneshot' request is invalid here. Please use the createOneShot method
      * instead.
@@ -62,55 +72,6 @@ public class JobCollection extends EntityCollection<Job> {
         }
         args = Args.create(args).add("search", query);
         ResponseMessage response = service.post(path, args);
-        assert(response.getStatus() == 201);
-
-        String sid = Xml.parse(response.getContent())
-            .getElementsByTagName("sid")
-            .item(0)
-            .getTextContent();
-
-        invalidate();
-        Job job = get(sid);
-
-        // if job not yet scheduled, create an empty job object
-        if (job == null) {
-            job = new Job(service, "search/jobs/" + sid);
-        }
-
-        return job;
-    }
-
-
-    /**
-     * Creates a search job with a UTF8 pre-encoded search request. Note that
-     * a 'oneshot' request is invalid here. Please use the createOneShot method
-     * instead.
-     *
-     * @param query The search query string.
-     * @param namespace The namespace.
-     * @return The search job SID.
-     */
-    public Job create(String query, HashMap<String, String>namespace) {
-        return create(query, null, namespace);
-    }
-
-    /**
-     * Creates a search job. Note that a 'oneshot' request is invalid here.
-     * Please use the createOneShot method instead.
-     *
-     * @param query The search query.
-     * @param args The arguments supplied to this job's creation.
-     * @param namespace The namespace.
-     * @return The search job SID.
-     */
-    public Job create(String query, Map args, HashMap<String, String>namespace){
-        if (args != null && args.containsKey("exec_mode")) {
-            if (args.get("exec_mode").equals("oneshot"))
-                throw new RuntimeException(oneShotNotAllowed);
-        }
-        args = Args.create(args).add("search", query);
-        ResponseMessage response = service
-                       .post(service.fullpath(partialPath, namespace), args);
         assert(response.getStatus() == 201);
 
         String sid = Xml.parse(response.getContent())

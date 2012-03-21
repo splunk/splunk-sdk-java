@@ -35,6 +35,16 @@ public class ConfCollection
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    ConfCollection(Service service, HashMap<String, String>namespace) {
+        super(service, "properties", EntityCollection.class, namespace);
+    }
+
+    /**
      * Creates a config.
      *
      * @param name The new config name.
@@ -54,34 +64,6 @@ public class ConfCollection
     public EntityCollection<Entity> create(String name, Map args) {
         args = Args.create(args).add("__conf", name);
         service.post(path, args);
-        invalidate();
-        return get(name);
-    }
-
-    /**
-     * Creates a config.
-     *
-     * @param name The new config name.
-     * @param namespace The namespace.
-     * @return The new config.
-     */
-    public EntityCollection<Entity>
-    create(String name, HashMap<String, String>namespace) {
-        return create(name, null, namespace);
-    }
-
-    /**
-     * Creates a new config.
-     *
-     * @param name The new config name.
-     * @param args Optional arguments.
-     * @param namespace The namespace.
-     * @return the new config.
-     */
-    public EntityCollection<Entity>
-    create(String name, Map args, HashMap<String, String>namespace) {
-        args = Args.create(args).add("__conf", name);
-        service.post(service.fullpath(partialPath, namespace), args);
         invalidate();
         return get(name);
     }

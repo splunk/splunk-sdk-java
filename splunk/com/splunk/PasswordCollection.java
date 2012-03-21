@@ -34,6 +34,17 @@ public class PasswordCollection extends EntityCollection<Password> {
     }
 
     /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    PasswordCollection(Service service, HashMap<String, String> namespace) {
+        // Starting with 4.3 this is available at "storage/passwords"
+        super(service, "admin/passwords", Password.class, namespace);
+    }
+
+    /**
      * Creates a credential.
      *
      * @param name The username to be created.
@@ -58,38 +69,6 @@ public class PasswordCollection extends EntityCollection<Password> {
         args.put("password", password);
         args.put("realm", realm);
         return create(name, args);
-    }
-
-    /**
-     * Creates a credential.
-     *
-     * @param name The username to be created.
-     * @param password The password associated with this username.
-     * @param namespace The namespace.
-     * @return The new credential.
-     */
-    public Password
-    create(String name, String password, HashMap<String, String>namespace) {
-        Args args = new Args("password", password);
-        return create(name, args, namespace);
-    }
-
-    /**
-     * Creates a credential.
-     *
-     * @param name The username to be created.
-     * @param password The password associated with this username.
-     * @param realm The credential realm.
-     * @param namespace The namespace.
-     * @return The new credential.
-     */
-    public Password
-    create(String name, String password,
-           String realm, HashMap<String, String>namespace) {
-        Args args = new Args();
-        args.put("password", password);
-        args.put("realm", realm);
-        return create(name, args, namespace);
     }
 
     /**

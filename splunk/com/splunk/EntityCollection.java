@@ -41,10 +41,35 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param service The connected service instance.
      * @param path The entity's endpoint.
+     * @param namespace This collection's namespace.
+     */
+    EntityCollection(Service service, String path,
+                     HashMap<String, String> namespace) {
+        super(service, path, Entity.class, namespace);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
      * @param itemClass The entity's subclass.
      */
     public EntityCollection(Service service, String path, Class itemClass) {
         super(service, path, itemClass);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     * @param itemClass The entity's subclass.
+     * @param namespace This collection's namespace.
+     */
+    public EntityCollection(Service service, String path, Class itemClass,
+                            HashMap<String, String> namespace) {
+        super(service, path, itemClass, namespace);
     }
 
     /**
@@ -67,32 +92,6 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     public T create(String name, Map args) {
         args = Args.create(args).add("name", name);
         service.post(path, args);
-        invalidate();
-        return get(name);
-    }
-
-    /**
-     * Creates an entity in this collection, with a specific namespace.
-     *
-     * @param name The name of the entity created.
-     * @param namespace The namespace.
-     * @return The entity.
-     */
-    public T create(String name, HashMap<String, String>namespace) {
-        return create(name, null, namespace);
-    }
-
-    /**
-     * Creates an entity in this collection, with a specific namespace.
-     *
-     * @param name The name of the entity created.
-     * @param args The arguments supplied to the creation.
-     * @param namespace The namespace.
-     * @return The entity.
-     */
-    public T create(String name, Map args, HashMap<String, String>namespace) {
-        args = Args.create(args).add("name", name);
-        service.post(service.fullpath(partialPath, namespace), args);
         invalidate();
         return get(name);
     }

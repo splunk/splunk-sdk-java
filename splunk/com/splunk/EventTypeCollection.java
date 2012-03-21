@@ -34,6 +34,16 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     }
 
     /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    EventTypeCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "saved/eventtypes", EventType.class, namespace);
+    }
+
+    /**
      * Creates an event type.
      *
      * @param name The name of this new event type.
@@ -56,34 +66,5 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     public EventType create(String name, String search, Map args) {
         args = Args.create(args).add("search", search);
         return create(name, args);
-    }
-
-    /**
-     * Creates an event type.
-     *
-     * @param name The name of this new event type.
-     * @param search The search string of this new event type.
-     * @param namespace The namespace.
-     * @return The event type.
-     */
-    public EventType
-    create(String name, String search, HashMap<String, String>namespace) {
-        return create(name, search, null, namespace);
-    }
-
-    /**
-     * Create an event type.
-     *
-     * @param name The name of this new event type.
-     * @param search The search string of this new event type.
-     * @param args Optional arguments.
-     * @param namespace The namespace.
-     * @return the event type.
-     */
-    public EventType
-    create(String name, String search,
-           Map args, HashMap<String, String>namespace) {
-        args = Args.create(args).add("search", search);
-        return create(name, args, namespace);
     }
 }

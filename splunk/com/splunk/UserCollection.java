@@ -34,6 +34,16 @@ public class UserCollection extends EntityCollection<User> {
     }
 
     /**
+     * Constructs an instance of {@code UserCollection}.
+     *
+     * @param service This service instance this collection is affiliated with.
+     * @param namespace This collection's namespace.
+     */
+    UserCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "authentication/users", User.class, namespace);
+    }
+
+    /**
      * Create a new user entity using the given name, password and role.
      *
      * @param name The name for the new user entity.
@@ -92,75 +102,5 @@ public class UserCollection extends EntityCollection<User> {
         args.put("password", password);
         args.put("roles", roles);
         return create(name, args);
-    }
-
-    /**
-     * Create a new user entity using the given name, password and role.
-     *
-     * @param name The name for the new user entity.
-     * @param password The password for the new user entity.
-     * @param role The role to assign to the new entity.
-     * @param namespace The namespace.
-     * @return The newly craeted user entity.
-     */
-    public User
-    create(String name, String password,
-           String role, HashMap<String, String>namespace) {
-        return create(name, password, role, null, namespace);
-    }
-
-    /**
-     * Create a new user entity using the given name, password and array of
-     * roles.
-     *
-     * @param name The name for the new user entity.
-     * @param password The password for the new user entity.
-     * @param roles Array of roles to assign to the new user entity.
-     * @param namespace The namespace.
-     * @return The newly created user entity.
-     */
-    public User
-    create(String name, String password,
-           String[] roles, HashMap<String, String>namespace) {
-        return create(name, password, roles, null, namespace);
-    }
-
-    /**
-     * Create a new user entity using the given name, password, role and
-     * map of extra args.
-     *
-     * @param name The name for the new user entity.
-     * @param password The password for the new user entity.
-     * @param role The role to assign to the new entity.
-     * @param args A map of extra arguments for the new user entity.
-     * @param namespace The namespace.
-     * @return The newly created user entity.
-     */
-    public User
-    create(String name, String password,
-           String role, Map args, HashMap<String, String>namespace) {
-        args = Args.create(args);
-        args.put("password", password);
-        args.put("roles", role);
-        return create(name, args, namespace);
-    }
-
-    /**
-     * Create a new user entity using the given name, password and array of
-     * roles.
-     *
-     * @param name The name for the new user entity.
-     * @param password The password for the new user entity.
-     * @param roles Array of roles to assign to the new user entity.
-     * @param args A map of extra arguments for the new user entity.
-     * @return The newly created user entity.
-     */
-    public User
-    create(String name, String password,
-           String[] roles, Map args, HashMap<String, String>namespace) {
-        args = Args.create(args);
-        args.put("password", password);
-        args.put("roles", roles);
-        return create(name, args, namespace);
     }
 }

@@ -253,12 +253,34 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns the collection of applications.
+     *
+     * @param namespace This collection's namespace.
+     * @return Application collection.
+     */
+    public EntityCollection<Application>
+    getApplications(HashMap<String, String> namespace) {
+        return new EntityCollection<Application>(
+            this, "/services/apps/local", Application.class, namespace);
+    }
+
+    /**
      * Returns the collection of configurations.
      *
      * @return Configurations collection.
      */
     public ConfCollection getConfs() {
         return new ConfCollection(this);
+    }
+
+    /**
+     * Returns the collection of configurations.
+     *
+     * @param namespace This collection's namespace.
+     * @return Configurations collection.
+     */
+    public ConfCollection getConfs(HashMap<String, String> namespace) {
+        return new ConfCollection(this, namespace);
     }
 
     /**
@@ -291,6 +313,18 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns the configuration of all deployment servers.
+     *
+     * @param namespace This collection's namespace.
+     * @return Configuration of deployment servers.
+     */
+    public EntityCollection<DeploymentServer>
+    getDeploymentServers(HashMap<String, String> namespace) {
+        return new EntityCollection<DeploymentServer>(
+            this, "deployment/server", DeploymentServer.class, namespace);
+    }
+
+    /**
      * Returns collection of deployment server class configurations.
      *
      * @return Collection of server class configurations.
@@ -298,6 +332,18 @@ public class Service extends HttpService {
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(){
         return new EntityCollection<DeploymentServerClass>(
             this, "deployment/serverclass", DeploymentServerClass.class);
+    }
+
+    /**
+     * Returns collection of deployment server class configurations.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of server class configurations.
+     */
+    public EntityCollection<DeploymentServerClass>
+    getDeploymentServerClasses(HashMap<String, String> namespace){
+        return new EntityCollection<DeploymentServerClass>(
+        this, "deployment/serverclass", DeploymentServerClass.class, namespace);
     }
 
     /**
@@ -311,6 +357,18 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of multi-tenant configurations
+     *
+     * @param namespace This collection's namespace.
+     * @return Colleciton of multi-tenant configurations.
+     */
+    public EntityCollection<DeploymentTenant>
+    getDeploymentTenants(HashMap<String, String> namespace) {
+        return new EntityCollection<DeploymentTenant>(
+            this, "deployment/tenants", DeploymentTenant.class, namespace);
+    }
+
+    /**
      * Returns information regarding distributed search options.
      *
      * @return Distributed search information.
@@ -318,7 +376,6 @@ public class Service extends HttpService {
     public DistributedConfiguration getDistributedConfiguration() {
         return new DistributedConfiguration(this);
     }
-
 
     /**
      * Returns collection of distributed search peers. A search peer is a
@@ -334,12 +391,38 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of distributed search peers. A search peer is a
+     * Splunk server to which another Splunk server distributes searches. The
+     * Splunk server where the search originates is referred to as the search
+     * head.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of search peers.
+     */
+    public EntityCollection<DistributedPeer>
+    getDistributedPeers(HashMap<String, String> namespace) {
+        return new EntityCollection<DistributedPeer>(
+            this, "search/distributed/peers", DistributedPeer.class, namespace);
+    }
+
+    /**
      * Returns collection of saved event types.
      *
      * @return Collection of saved event types.
      */
     public EventTypeCollection getEventTypes() {
         return new EventTypeCollection(this);
+    }
+
+    /**
+     * Returns collection of saved event types.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of saved event types.
+     */
+    public EventTypeCollection
+    getEventTypes(HashMap<String, String> namespace) {
+        return new EventTypeCollection(this, namespace);
     }
 
     /**
@@ -353,12 +436,36 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of alerts that have been fired by the service.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of fired alerts.
+     */
+    public EntityCollection<FiredAlert>
+    getFiredAlerts(HashMap<String, String> namespace) {
+        return new EntityCollection<FiredAlert>(
+            this, "alerts/fired_alerts", FiredAlert.class, namespace);
+    }
+
+    /**
      * Returns collection of Splunk indexes.
      *
      * @return Collection of indexes.
      */
     public EntityCollection<Index> getIndexes() {
         return new EntityCollection<Index>(this, "data/indexes", Index.class);
+    }
+
+    /**
+     * Returns collection of Splunk indexes.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of indexes.
+     */
+    public EntityCollection<Index>
+    getIndexes(HashMap<String, String> namespace) {
+        return new EntityCollection<Index>(
+                this, "data/indexes", Index.class, namespace);
     }
 
     /**
@@ -380,12 +487,32 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns a collection of configured inputs.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of inputs.
+     */
+    public InputCollection getInputs(HashMap<String, String> namespace) {
+        return new InputCollection(this, namespace);
+    }
+
+    /**
      * Returns a collection of current search jobs.
      *
      * @return Collection of search jobs.
      */
     public JobCollection getJobs() {
         return new JobCollection(this);
+    }
+
+    /**
+     * Returns a collection of current search jobs.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of search jobs.
+     */
+    public JobCollection getJobs(HashMap<String, String> namespace) {
+        return new JobCollection(this, namespace);
     }
 
     /**
@@ -399,6 +526,18 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of license group configurations.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collectio nof license group configurations.
+     */
+    public EntityCollection<LicenseGroup>
+    getLicenseGroups(HashMap<String, String> namespace) {
+        return new EntityCollection<LicenseGroup>(
+            this, "licenser/groups", LicenseGroup.class, namespace);
+    }
+
+    /**
      * Returns collection of messages from the licenser.
      *
      * @return Collection of licenser messages.
@@ -406,6 +545,18 @@ public class Service extends HttpService {
     public EntityCollection<LicenseMessage> getLicenseMessages() {
         return new EntityCollection<LicenseMessage>(
             this, "licenser/messages", LicenseMessage.class);
+    }
+
+    /**
+     * Returns collection of messages from the licenser.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of licenser messages.
+     */
+    public EntityCollection<LicenseMessage>
+    getLicenseMessages(HashMap<String, String> namespace) {
+        return new EntityCollection<LicenseMessage>(
+            this, "licenser/messages", LicenseMessage.class, namespace);
     }
 
     /**
@@ -429,6 +580,17 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of licenser pool configurations.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of licenser pool configurations.
+     */
+    public LicensePoolCollection
+    getLicensePools(HashMap<String, String> namespace) {
+        return new LicensePoolCollection(this, namespace);
+    }
+
+    /**
      * Returns collection of slaves reporting to this license master.
      *
      * @return Collection of licenser slaves.
@@ -436,6 +598,18 @@ public class Service extends HttpService {
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
         return new EntityCollection<LicenseSlave>(
             this, "licenser/slaves", LicenseSlave.class);
+    }
+
+    /**
+     * Returns collection of slaves reporting to this license master.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of licenser slaves.
+     */
+    public EntityCollection<LicenseSlave>
+    getLicenseSlaves(HashMap<String, String> namespace) {
+        return new EntityCollection<LicenseSlave>(
+            this, "licenser/slaves", LicenseSlave.class, namespace);
     }
 
     /**
@@ -449,6 +623,18 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of license stack configurations.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of license stack configurations.
+     */
+    public EntityCollection<LicenseStack>
+    getLicenseStacks(HashMap<String, String> namespace) {
+        return new EntityCollection<LicenseStack>(
+            this, "licenser/stacks", LicenseStack.class, namespace);
+    }
+
+    /**
      * Returns collection of licenses for this service.
      *
      * @return Collection of licenses.
@@ -456,6 +642,18 @@ public class Service extends HttpService {
     public EntityCollection<License> getLicenses() {
         return new EntityCollection<License>(
             this, "licenser/licenses", License.class);
+    }
+
+    /**
+     * Returns collection of licenses for this service.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of licenses.
+     */
+    public EntityCollection<License>
+    getLicenses(HashMap<String, String> namespace) {
+        return new EntityCollection<License>(
+            this, "licenser/licenses", License.class, namespace);
     }
 
     /**
@@ -469,12 +667,34 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of service logging categories and their status.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of logging categories.
+     */
+    public EntityCollection<Logger>
+    getLoggers(HashMap<String, String> namespace) {
+        return new EntityCollection<Logger>(
+            this, "server/logger", Logger.class, namespace);
+    }
+
+    /**
      * Returns collection of system messages.
      *
      * @return Collection of system messages.
      */
     public MessageCollection getMessages() {
         return new MessageCollection(this);
+    }
+
+    /**
+     * Returns collection of system messages.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of system messages.
+     */
+    public MessageCollection getMessages(HashMap<String, String> namespace) {
+        return new MessageCollection(this, namespace);
     }
 
     /**
@@ -497,6 +717,18 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of output group configurations.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of output group configurations.
+     */
+    public EntityCollection<OutputGroup>
+    getOutputGroups(HashMap<String, String> namespace) {
+        return new EntityCollection<OutputGroup>(
+            this, "data/outputs/tcp/group", OutputGroup.class, namespace);
+    }
+
+    /**
      * Returns collection of data forwarding configurations.
      *
      * @return Collection of data forwarding configurations.
@@ -504,6 +736,18 @@ public class Service extends HttpService {
     public EntityCollection<OutputServer> getOutputServers() {
         return new EntityCollection<OutputServer>(
             this, "data/outputs/tcp/server", OutputServer.class);
+    }
+
+    /**
+     * Returns collection of data forwarding configurations.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of data forwarding configurations.
+     */
+    public EntityCollection<OutputServer>
+    getOutputServers(HashMap<String, String> namespace) {
+        return new EntityCollection<OutputServer>(
+            this, "data/outputs/tcp/server", OutputServer.class, namespace);
     }
 
     /**
@@ -515,6 +759,19 @@ public class Service extends HttpService {
     public EntityCollection<OutputSyslog> getOutputSyslogs() {
         return new EntityCollection<OutputSyslog>(
             this, "data/outputs/tcp/syslog", OutputSyslog.class);
+    }
+
+    /**
+     * Returns collection of configurations for forwarding data in standard
+     * syslog format.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of syslog forwarders.
+     */
+    public EntityCollection<OutputSyslog>
+    getOutputSyslogs(HashMap<String, String> namespace) {
+        return new EntityCollection<OutputSyslog>(
+            this, "data/outputs/tcp/syslog", OutputSyslog.class, namespace);
     }
 
     /**
@@ -537,6 +794,17 @@ public class Service extends HttpService {
     }
 
     /**
+     * Return collection of passwords, this collection is used for the
+     * management of secure credentials.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of passwords.
+     */
+    public PasswordCollection getPasswords(HashMap<String, String> namespace) {
+        return new PasswordCollection(this, namespace);
+    }
+
+    /**
      * Returns information about the Splunk service.
      *
      * @return Splunk receiver object.
@@ -556,12 +824,34 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns a collection of Splunk user roles.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of user roles.
+     */
+    public EntityCollection<Role> getRoles(HashMap<String, String> namespace) {
+        return new EntityCollection<Role>(
+            this, "authentication/roles", Role.class, namespace);
+    }
+
+    /**
      * Returns a collection of saved searches.
      *
      * @return Collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches() {
         return new SavedSearchCollection(this);
+    }
+
+    /**
+     * Returns a collection of saved searches.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of saved searches.
+     */
+    public SavedSearchCollection
+    getSavedSearches(HashMap<String, String> namespace) {
+        return new SavedSearchCollection(this, namespace);
     }
 
     /**
@@ -594,6 +884,18 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns collection of in progress oneshot uploads.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of in progress oneshot uploads
+     */
+    public EntityCollection<Upload>
+    getUploads(HashMap<String, String> namespace) {
+        return new EntityCollection<Upload>(
+            this, "data/inputs/oneshot", Upload.class, namespace);
+    }
+
+    /**
      * Returns the username used to authenticate the current session.
      *
      * @return Current username.
@@ -609,6 +911,16 @@ public class Service extends HttpService {
      */
     public UserCollection getUsers() {
         return new UserCollection(this);
+    }
+
+    /**
+     * Returns collection of Splunk users.
+     *
+     * @param namespace This collection's namespace.
+     * @return Collection of users.
+     */
+    public UserCollection getUsers(HashMap<String, String> namespace) {
+        return new UserCollection(this, namespace);
     }
 
     /**

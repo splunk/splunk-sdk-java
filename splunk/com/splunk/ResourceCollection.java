@@ -46,6 +46,20 @@ public class ResourceCollection<T extends Resource>
         this.itemClass = itemClass;
     }
 
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param itemClass The class of this resource item.
+     * @param namespace The namespace of this collection.
+     */
+    ResourceCollection(Service service, String path,
+                       Class itemClass, HashMap<String, String> namespace) {
+        super(service, service.fullpath(path, namespace));
+        this.itemClass = itemClass;
+    }
+
     /** {@inheritDoc} */
     public void clear() {
         throw new UnsupportedOperationException();

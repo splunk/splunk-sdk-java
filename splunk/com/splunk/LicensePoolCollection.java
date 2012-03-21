@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +31,16 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
      */
     LicensePoolCollection(Service service) {
         super(service, "licenser/pools", LicensePool.class);
+    }
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    LicensePoolCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "licenser/pools", LicensePool.class, namespace);
     }
 
     /**

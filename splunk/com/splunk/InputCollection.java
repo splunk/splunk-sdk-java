@@ -50,6 +50,16 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    InputCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "data/inputs", namespace);
+    }
+
+    /**
      * Create stub.
      *
      * @param name The name of the input.
@@ -97,41 +107,6 @@ public class InputCollection extends EntityCollection<Input> {
     create(String name, InputKind kind, Map<String, Object> args) {
         args = Args.create(args).add("name", name);
         String path = this.path + "/" + kind.relpath;
-        service.post(path, args);
-        invalidate();
-        return (T)get(name);
-    }
-
-    /**
-     * Creates a specific kind up input.
-     *
-     * @param name The name of the input created.
-     * @param kind The specific kind of input created.
-     * @param <T> The implicit type of the input created.
-     * @param namespace The namespace.
-     * @return The created input.
-     */
-    public <T extends Input> T
-        create(String name, InputKind kind, HashMap<String, String>namespace) {
-            return (T)create(name, kind, null, namespace);
-    }
-
-    /**
-     * Creates a specific kind up input.
-     *
-     * @param name The name of the input created.
-     * @param kind The specific kind of input created.
-     * @param args Optional arguments.
-     * @param <T> The implicit type of the input created.
-     * @param namespace The namespace.
-     * @return The created input.
-     */
-    public <T extends Input> T
-        create(String name, InputKind kind, Map<String, Object> args,
-                            HashMap<String, String>namespace) {
-        args = Args.create(args).add("name", name);
-        String path = service.fullpath(this.partialPath, namespace)
-                            + "/" + kind.relpath;
         service.post(path, args);
         invalidate();
         return (T)get(name);
