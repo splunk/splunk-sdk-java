@@ -200,9 +200,7 @@ public class NamespaceTest extends SplunkTestCase {
                 .equals("/servicesNS/nobody/system/"));
     }
 
-
-
-    @Test public void testLiveNamespace() throws Exception {
+    @Test public void testLiveNamespace1() throws Exception {
 
         String username = "sdk-user";
         String password = "changeme";
@@ -211,8 +209,8 @@ public class NamespaceTest extends SplunkTestCase {
 
         // Setup a namespace
         HashMap<String, String> namespace = new HashMap<String, String>();
-        namespace.put("app", "search");
         namespace.put("owner", username);
+        namespace.put("app", "search");
 
         Service service = connect(); // using default name space
 
@@ -243,6 +241,172 @@ public class NamespaceTest extends SplunkTestCase {
         // remove user
         users.remove(username);
         assertFalse(users.containsKey(username));
+    }
+
+    @Test public void testLiveNamespace2() throws Exception {
+
+        /* establish naming convention for separate namespaces */
+        String search = "search *";
+
+        String searchName11 = "sdk-test-search11";
+        String searchName12 = "sdk-test-search12";
+        String searchName21 = "sdk-test-search21";
+        String searchName22 = "sdk-test-search22";
+
+        String username1 = "sdk-user1";
+        String username2 = "sdk-user2";
+        String appname1 = "sdk-app1";
+        String appname2 = "sdk-app2";
+
+        HashMap<String, String> namespace11 = new HashMap<String, String>();
+        HashMap<String, String> namespace12 = new HashMap<String, String>();
+        HashMap<String, String> namespace21 = new HashMap<String, String>();
+        HashMap<String, String> namespace22 = new HashMap<String, String>();
+
+        namespace11.put("owner", username1);
+        namespace11.put("app",  appname1);
+        namespace12.put("owner", username1);
+        namespace12.put("app",  appname2);
+        namespace21.put("owner", username2);
+        namespace21.put("app",  appname1);
+        namespace22.put("owner", username2);
+        namespace22.put("app",  appname2);
+
+        Service service = connect(); // using default name space
+
+        /* scrub to make sure apps don't already exist */
+        EntityCollection<Application> apps = service.getApplications();
+        if (apps.containsKey(appname1)) {
+            apps.remove(appname1);
+            splunkRestart();
+            service = connect(); // using default name space
+            apps = service.getApplications();
+        }
+        if (apps.containsKey(appname2)) {
+            apps.remove(appname2);
+            splunkRestart();
+            service = connect(); // using default name space
+            apps = service.getApplications();
+        }
+        assertFalse(apps.containsKey(appname1));
+        assertFalse(apps.containsKey(appname2));
+
+        /* scrub to make sure users don't already exist */
+        UserCollection users = service.getUsers();
+        if (users.containsKey(username1))
+            users.remove(username1);
+        if (users.containsKey(username2))
+            users.remove(username2);
+        assertFalse(users.containsKey(username1));
+        assertFalse(users.containsKey(username2));
+
+        /* create users */
+        users.create(username1, "abc", "user");
+        users.create(username2, "abc", "user");
+        assertTrue(users.containsKey(username1));
+        assertTrue(users.containsKey(username2));
+
+        /* create apps */
+        apps.create(appname1);
+        apps.create(appname2);
+        assertTrue(apps.containsKey(appname1));
+        assertTrue(apps.containsKey(appname2));
+
+        /* create namespace specfic UNIQUE searches */
+        SavedSearchCollection
+                savedSearches11 = service.getSavedSearches(namespace11);
+        SavedSearchCollection
+                savedSearches12 = service.getSavedSearches(namespace12);
+        SavedSearchCollection
+                savedSearches21 = service.getSavedSearches(namespace21);
+        SavedSearchCollection
+                savedSearches22 = service.getSavedSearches(namespace22);
+
+        // create in 11 namespace, make sure there, but not in others
+        savedSearches11.create(searchName11, search);
+        assertTrue(savedSearches11.containsKey(searchName11));
+        savedSearches12.refresh();
+        assertFalse(savedSearches12.containsKey(searchName11));
+        savedSearches21.refresh();
+        assertFalse(savedSearches21.containsKey(searchName11));
+        savedSearches22.refresh();
+        assertFalse(savedSearches22.containsKey(searchName11));
+
+        // create in 12 namespace, make sure there, but not in others
+        savedSearches12.create(searchName12, search);
+        assertTrue(savedSearches12.containsKey(searchName12));
+        savedSearches11.refresh();
+        assertFalse(savedSearches11.containsKey(searchName12));
+        savedSearches12.refresh();
+        assertFalse(savedSearches21.containsKey(searchName12));
+        savedSearches22.refresh();
+        assertFalse(savedSearches22.containsKey(searchName12));
+
+        // create in 21 namespace, make sure there, but not in others
+        savedSearches21.create(searchName21, search);
+        assertTrue(savedSearches21.containsKey(searchName21));
+        savedSearches11.refresh();
+        assertFalse(savedSearches11.containsKey(searchName21));
+        savedSearches12.refresh();
+        assertFalse(savedSearches12.containsKey(searchName21));
+        savedSearches22.refresh();
+        assertFalse(savedSearches22.containsKey(searchName21));
+
+        // create in 22 namespace, make sure there, but not in others
+        savedSearches22.create(searchName22, search);
+        assertTrue(savedSearches22.containsKey(searchName22));
+        savedSearches11.refresh();
+        assertFalse(savedSearches11.containsKey(searchName22));
+        savedSearches12.refresh();
+        assertFalse(savedSearches12.containsKey(searchName22));
+        savedSearches21.refresh();
+        assertFalse(savedSearches21.containsKey(searchName22));
+
+        /* now remove the UNIQUE saved searches */
+        savedSearches11.remove(searchName11);
+        savedSearches12.remove(searchName12);
+        savedSearches21.remove(searchName21);
+        savedSearches22.remove(searchName22);
+        assertFalse(savedSearches11.containsKey(searchName11));
+        assertFalse(savedSearches12.containsKey(searchName12));
+        assertFalse(savedSearches21.containsKey(searchName21));
+        assertFalse(savedSearches22.containsKey(searchName22));
+
+        /* create same search name in different namespaces */
+        savedSearches11.create("sdk-test-search", search);
+        savedSearches21.create("sdk-test-search", search);
+        assertTrue(savedSearches11.containsKey("sdk-test-search"));
+        assertTrue(savedSearches21.containsKey("sdk-test-search"));
+        savedSearches11.remove("sdk-test-search");
+        savedSearches21.remove("sdk-test-search");
+        assertFalse(savedSearches11.containsKey("sdk-test-search"));
+        assertFalse(savedSearches21.containsKey("sdk-test-search"));
+
+        /* cleanup apps */
+        apps.refresh();
+        if (apps.containsKey(appname1)) {
+            apps.remove(appname1);
+            splunkRestart();
+            service = connect(); // using default name space
+            apps = service.getApplications();
+        }
+        if (apps.containsKey(appname2)) {
+            apps.remove(appname2);
+            splunkRestart();
+            service = connect(); // using default name space
+            apps = service.getApplications();
+        }
+        assertFalse(apps.containsKey(appname1));
+        assertFalse(apps.containsKey(appname2));
+
+        /* cleanup users */
+        users = service.getUsers(); // need to re-establish, because of restart
+        if (users.containsKey(username1))
+            users.remove(username1);
+        if (users.containsKey(username2))
+            users.remove(username2);
+        assertFalse(users.containsKey(username1));
+        assertFalse(users.containsKey(username2));
     }
 }
 
