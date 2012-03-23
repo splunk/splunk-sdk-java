@@ -401,7 +401,6 @@ public class NamespaceTest extends SplunkTestCase {
         savedSearchesNobody1.remove("sdk-test-search");
         assertFalse(savedSearches11.containsKey("sdk-test-search"));
         assertFalse(savedSearches21.containsKey("sdk-test-search"));
-        assertFalse(savedSearchesx1.containsKey("sdk-test-search"));
         assertFalse(savedSearchesNobody1.containsKey("sdk-test-search"));
 
         /* cleanup apps */
