@@ -262,6 +262,8 @@ public class NamespaceTest extends SplunkTestCase {
         HashMap<String, String> namespace12 = new HashMap<String, String>();
         HashMap<String, String> namespace21 = new HashMap<String, String>();
         HashMap<String, String> namespace22 = new HashMap<String, String>();
+        HashMap<String, String> namespacex1  = new HashMap<String, String>();
+        HashMap<String, String> namespaceNobody1 = new HashMap<String, String>();
 
         namespace11.put("owner", username1);
         namespace11.put("app",  appname1);
@@ -271,6 +273,10 @@ public class NamespaceTest extends SplunkTestCase {
         namespace21.put("app",  appname1);
         namespace22.put("owner", username2);
         namespace22.put("app",  appname2);
+        namespacex1.put("owner", "-");
+        namespacex1.put("app", appname1);
+        namespaceNobody1.put("owner", "nobody");
+        namespaceNobody1.put("app", appname1);
 
         Service service = connect(); // using default name space
 
@@ -321,6 +327,10 @@ public class NamespaceTest extends SplunkTestCase {
                 savedSearches21 = service.getSavedSearches(namespace21);
         SavedSearchCollection
                 savedSearches22 = service.getSavedSearches(namespace22);
+        SavedSearchCollection
+                savedSearchesx1 = service.getSavedSearches(namespacex1);
+        SavedSearchCollection
+            savedSearchesNobody1 = service.getSavedSearches(namespaceNobody1);
 
         // create in 11 namespace, make sure there, but not in others
         savedSearches11.create(searchName11, search);
@@ -373,14 +383,26 @@ public class NamespaceTest extends SplunkTestCase {
         assertFalse(savedSearches22.containsKey(searchName22));
 
         /* create same search name in different namespaces */
-        savedSearches11.create("sdk-test-search", search);
-        savedSearches21.create("sdk-test-search", search);
+        savedSearches11.create("sdk-test-search", search + " | head 1");
+        savedSearches21.create("sdk-test-search", search + " | head 2");
+        savedSearchesNobody1.create("sdk-test-search", search + " | head 4");
         assertTrue(savedSearches11.containsKey("sdk-test-search"));
         assertTrue(savedSearches21.containsKey("sdk-test-search"));
+        assertTrue(savedSearchesNobody1.containsKey("sdk-test-search"));
+
+        savedSearchesx1.refresh();
+        // TODO --
+        // test extraction of 'sdk-test-search' -- should be a list of three
+        // saved searches in different namespaces; and a single lookup needs
+        // to be namespace specific.
+
         savedSearches11.remove("sdk-test-search");
         savedSearches21.remove("sdk-test-search");
+        savedSearchesNobody1.remove("sdk-test-search");
         assertFalse(savedSearches11.containsKey("sdk-test-search"));
         assertFalse(savedSearches21.containsKey("sdk-test-search"));
+        assertFalse(savedSearchesx1.containsKey("sdk-test-search"));
+        assertFalse(savedSearchesNobody1.containsKey("sdk-test-search"));
 
         /* cleanup apps */
         apps.refresh();
