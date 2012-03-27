@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.net.Socket;
 import org.junit.Test;
@@ -390,16 +391,19 @@ public class NamespaceTest extends SplunkTestCase {
         assertTrue(savedSearches21.containsKey("sdk-test-search"));
         assertTrue(savedSearchesNobody1.containsKey("sdk-test-search"));
 
+        // we have created three saved searches with the same name, make sure we
+        // can see all three with a wild-carded get.
         savedSearchesx1.refresh();
-        // TODO --
-        // test extraction of 'sdk-test-search' -- should be a list of three
-        // saved searches in different namespaces; and a single lookup needs
-        // to be namespace specific.
+        assertTrue(savedSearchesx1.values().size() == 3);
 
+        assertTrue(savedSearchesx1.get("sdk-test-search", namespace21) != null);
+
+        // remove one of the saved searches through a specific namespace path
+        savedSearchesx1.remove("sdk-test-search", namespace21);
         savedSearches11.remove("sdk-test-search");
-        savedSearches21.remove("sdk-test-search");
         savedSearchesNobody1.remove("sdk-test-search");
         assertFalse(savedSearches11.containsKey("sdk-test-search"));
+        savedSearches21.refresh();
         assertFalse(savedSearches21.containsKey("sdk-test-search"));
         assertFalse(savedSearchesNobody1.containsKey("sdk-test-search"));
 

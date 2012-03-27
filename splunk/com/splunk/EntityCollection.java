@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -101,14 +102,41 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param key the name of the entity to remove.
      * @return this collection.
+     * @throws SplunkException "AMBIGUOUS" if the collection contains more than
+     * one entity with the specified key. Disambiguation is done through the
+     * similar method {@code remove(Object key, HashMap<String,String>namespace}
+     * which uses the namespace to perform the disambiguation.
      */
-    public T remove(Object key) {
+    public T remove(String key) {
         validate();
         if (!containsKey(key)) return null;
-        T entity = items.get(key);
+        LinkedList<T> entities = litems.get(key);
+        if (entities != null && entities.size() > 1) {
+            throw new SplunkException(SplunkException.AMBIGUOUS,
+                    "Key has multiple values, specify a namespace");
+        }
+        if (entities == null) return null;
+        T entity = entities.get(0);
         entity.remove();
-        items.remove(key);
+        litems.remove(key);
         invalidate();
         return entity;
+    }
+
+    public T remove(String key, HashMap<String, String> namespace) {
+        validate();
+        if (!containsKey(key)) return null;
+        LinkedList<T> entities = litems.get(key);
+        String pathMatcher = service.fullpath("", namespace);
+        if (entities == null || entities.size() == 0) return null;
+        for (T entity: entities) {
+            if (entity.path.startsWith(pathMatcher)) {
+                entity.remove();
+                litems.remove(key);
+                invalidate();
+                return entity;
+            }
+        }
+        return null;
     }
 }

@@ -18,10 +18,7 @@ package com.splunk;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Representation of a collection of Splunk resources.
@@ -29,9 +26,10 @@ import java.util.Set;
  * @param <T> The type of members of the collection.
  */
 public class ResourceCollection<T extends Resource> 
-    extends Resource implements Map<String, T> 
+    extends Resource implements Map<String, T>
 {
-    protected Map<String, T> items = new HashMap<String, T>();
+    protected Map<String, LinkedList<T>>
+                litems = new HashMap<String, LinkedList<T>>();
     protected Class itemClass;
 
     /**
@@ -67,12 +65,12 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public boolean containsKey(Object key) {
-        return validate().items.containsKey(key);
+        return validate().litems.containsKey(key);
     }
 
     /** {@inheritDoc} */
     public boolean containsValue(Object value) {
-        return validate().items.containsValue(value);
+        return validate().litems.containsValue(value);
     }
 
     static Class[] itemSig = new Class[] { Service.class, String.class };
@@ -128,26 +126,47 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public Set<Map.Entry<String, T>> entrySet() {
-        return validate().items.entrySet();
+        throw new UnsupportedOperationException();
     }
 
     /** {@inheritDoc} */
     @Override public boolean equals(Object o) {
-        return validate().items.equals(o);
+        return validate().litems.equals(o);
     }
 
     /** {@inheritDoc} */
     public T get(Object key) {
-        return validate().items.get(key);
+        validate();
+        LinkedList<T> entities = litems.get(key);
+        if (entities != null && entities.size() > 1) {
+            throw new SplunkException(SplunkException.AMBIGUOUS,
+                    "Key has multiple values, specify a namespace");
+        }
+        if (entities == null || entities.size() == 0) return null;
+        return entities.get(0);
+    }
+
+    /** {@inheritDoc} */
+    public T get(Object key, HashMap<String, String> namespace) {
+        validate();
+        LinkedList<T> entities = litems.get(key);
+        String pathMatcher = service.fullpath("", namespace);
+        if (entities == null || entities.size() == 0) return null;
+        for (T entity: entities) {
+            if (entity.path.startsWith(pathMatcher)) {
+                return entity;
+            }
+        }
+        return null;
     }
 
     @Override public int hashCode() {
-        return validate().items.hashCode();
+        return validate().litems.hashCode();
     }
 
     /** {@inheritDoc} */
     public boolean isEmpty() {
-        return validate().items.isEmpty();
+        return validate().litems.isEmpty();
     }
     
     /**
@@ -194,7 +213,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public Set<String> keySet() {
-        return validate().items.keySet();
+        return validate().litems.keySet();
     }
 
     /**
@@ -217,7 +236,14 @@ public class ResourceCollection<T extends Resource>
         for (AtomEntry entry : value.entries) {
             String key = itemKey(entry);
             T item = createItem(entry);
-            items.put(key, item);
+            if (litems.containsKey(key)) {
+                LinkedList<T> list = litems.get(key);
+                list.add(item);
+            } else {
+                LinkedList<T> list = new LinkedList<T>();
+                list.add(item);
+                litems.put(key, list);
+            }
         }
         return this;
     }
@@ -238,7 +264,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     @Override public ResourceCollection refresh() {
-        items.clear();
+        litems.clear();
         ResponseMessage response = list();
         assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -253,7 +279,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public int size() {
-        return validate().items.size();
+        return validate().litems.size();
     }
 
     /** {@inheritDoc} */
@@ -264,6 +290,15 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public Collection<T> values() {
-        return validate().items.values();
+        LinkedList<T> collection = new LinkedList<T>();
+        validate();
+        Set<String> keySet = litems.keySet();
+        for (String key: keySet) {
+            LinkedList<T> list = litems.get(key);
+            for (T item: list) {
+                collection.add(item);
+            }
+        }
+        return collection;
     }
 }
