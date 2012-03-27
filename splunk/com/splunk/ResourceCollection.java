@@ -309,4 +309,17 @@ public class ResourceCollection<T extends Resource>
         }
         return collection;
     }
+
+    /**
+     * Returns the number of values a specific key represents.
+     *
+     * @param key The key to lookup.
+     * @returns The number of entity values represented by the key.
+     */
+    public int valueSize(Object key) {
+        validate();
+        LinkedList<T> entities = litems.get(key);
+        if (entities == null || entities.size() == 0) return 0;
+        return entities.size();
+    }
 }
