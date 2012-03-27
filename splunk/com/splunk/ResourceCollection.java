@@ -156,11 +156,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     @Override public boolean equals(Object o) {
-        // value should be a non-linked-list value; values are stored as linked
-        // lists inside our container.
-        LinkedList<Object> linkedList = new LinkedList<Object>();
-        linkedList.add(o);
-        return validate().linkedListItems.equals(linkedList);
+        return validate().linkedListItems.equals(o);
     }
 
     /**
