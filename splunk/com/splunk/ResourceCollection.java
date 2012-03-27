@@ -68,7 +68,14 @@ public class ResourceCollection<T extends Resource>
         return validate().linkedListItems.containsKey(key);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Determines whether or not a scoped (i.e. namespace constrained) key
+     * exists within this collection.
+     *
+     * @param key The key to lookup.
+     * @param namespace The namespace to constrain the search to.
+     * @return true if the constrained key exists, otherwise false.
+     */
     public boolean containsKey(Object key, HashMap<String, String> namespace) {
         validate();
         LinkedList<T> entities = linkedListItems.get(key);
@@ -156,7 +163,14 @@ public class ResourceCollection<T extends Resource>
         return validate().linkedListItems.equals(linkedList);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Gets a the value of  key if it exists within this collection.
+     *
+     * @param key The key to lookup.
+     * @return The value indexed by the key, or null if it does not exist.
+     * @throws SplunkException if there is more than one value represented by
+     * this key.
+     */
     public T get(Object key) {
         validate();
         LinkedList<T> entities = linkedListItems.get(key);
@@ -168,7 +182,14 @@ public class ResourceCollection<T extends Resource>
         return entities.get(0);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Gets a the value of a scoped (i.e. namespace constrained) key if it
+     * exists within this collection.
+     *
+     * @param key The key to lookup.
+     * @param namespace The namespace to constrain the search to.
+     * @return The value indexed by the key, or null if it does not exist.
+     */
     public T get(Object key, HashMap<String, String> namespace) {
         validate();
         LinkedList<T> entities = linkedListItems.get(key);
@@ -328,7 +349,7 @@ public class ResourceCollection<T extends Resource>
      * Returns the number of values a specific key represents.
      *
      * @param key The key to lookup.
-     * @returns The number of entity values represented by the key.
+     * @return The number of entity values represented by the key.
      */
     public int valueSize(Object key) {
         validate();
