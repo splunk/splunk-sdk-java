@@ -265,6 +265,7 @@ public class NamespaceTest extends SplunkTestCase {
         HashMap<String, String> namespace22 = new HashMap<String, String>();
         HashMap<String, String> namespacex1  = new HashMap<String, String>();
         HashMap<String, String> namespaceNobody1 = new HashMap<String, String>();
+        HashMap<String, String> namespaceBad = new HashMap<String, String>();
 
         namespace11.put("owner", username1);
         namespace11.put("app",  appname1);
@@ -278,6 +279,8 @@ public class NamespaceTest extends SplunkTestCase {
         namespacex1.put("app", appname1);
         namespaceNobody1.put("owner", "nobody");
         namespaceNobody1.put("app", appname1);
+        namespaceBad.put("owner", "magilicuddy");
+        namespaceBad.put("app",  "oneBadApp");
 
         Service service = connect(); // using default name space
 
@@ -396,6 +399,8 @@ public class NamespaceTest extends SplunkTestCase {
         savedSearchesx1.refresh();
         assertTrue(savedSearchesx1.values().size() == 3);
 
+        assertFalse(savedSearchesx1.containsKey("sdk-test-search", namespaceBad));
+        assertTrue(savedSearchesx1.containsKey("sdk-test-search", namespace21));
         assertTrue(savedSearchesx1.get("sdk-test-search", namespace21) != null);
 
         // remove one of the saved searches through a specific namespace path
