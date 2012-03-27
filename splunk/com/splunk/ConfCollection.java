@@ -40,7 +40,7 @@ public class ConfCollection
      * @param service The connected service instance.
      * @param namespace This collection's namespace.
      */
-    ConfCollection(Service service, HashMap<String, String>namespace) {
+    ConfCollection(Service service, HashMap<String, String> namespace) {
         super(service, "properties", EntityCollection.class, namespace);
     }
 

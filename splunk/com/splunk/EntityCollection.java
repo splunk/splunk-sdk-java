@@ -110,7 +110,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     public T remove(String key) {
         validate();
         if (!containsKey(key)) return null;
-        LinkedList<T> entities = litems.get(key);
+        LinkedList<T> entities = linkedListItems.get(key);
         if (entities != null && entities.size() > 1) {
             throw new SplunkException(SplunkException.AMBIGUOUS,
                     "Key has multiple values, specify a namespace");
@@ -118,7 +118,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
         if (entities == null) return null;
         T entity = entities.get(0);
         entity.remove();
-        litems.remove(key);
+        // by invalidating any access to linkedListItems will get refreshed
         invalidate();
         return entity;
     }
@@ -126,13 +126,14 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
     public T remove(String key, HashMap<String, String> namespace) {
         validate();
         if (!containsKey(key)) return null;
-        LinkedList<T> entities = litems.get(key);
+        LinkedList<T> entities = linkedListItems.get(key);
         String pathMatcher = service.fullpath("", namespace);
         if (entities == null || entities.size() == 0) return null;
         for (T entity: entities) {
             if (entity.path.startsWith(pathMatcher)) {
                 entity.remove();
-                litems.remove(key);
+                // by invalidating any access to linkedListItems will get
+                // refreshed
                 invalidate();
                 return entity;
             }

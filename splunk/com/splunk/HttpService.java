@@ -304,9 +304,6 @@ public class HttpService {
             throw new RuntimeException(e.getMessage());
         }
 
-        //debugging output
-        //System.out.println("http: "+method+": "+path);
-
         // Add headers from request message
         Map<String, String> header = request.getHeader();
         for (Entry<String, String> entry : header.entrySet())

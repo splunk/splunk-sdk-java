@@ -29,7 +29,7 @@ public class ResourceCollection<T extends Resource>
     extends Resource implements Map<String, T>
 {
     protected Map<String, LinkedList<T>>
-                litems = new HashMap<String, LinkedList<T>>();
+            linkedListItems = new HashMap<String, LinkedList<T>>();
     protected Class itemClass;
 
     /**
@@ -65,7 +65,21 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public boolean containsKey(Object key) {
-        return validate().litems.containsKey(key);
+        return validate().linkedListItems.containsKey(key);
+    }
+
+    /** {@inheritDoc} */
+    public boolean containsKey(Object key, HashMap<String, String> namespace) {
+        validate();
+        LinkedList<T> entities = linkedListItems.get(key);
+        if (entities == null || entities.size() == 0) return false;
+        String pathMatcher = service.fullpath("", namespace);
+        for (T entity: entities) {
+            if (entity.path.startsWith(pathMatcher)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -74,7 +88,7 @@ public class ResourceCollection<T extends Resource>
         // lists inside our container.
         LinkedList<Object> linkedList = new LinkedList<Object>();
         linkedList.add(value);
-        return validate().litems.containsValue(linkedList);
+        return validate().linkedListItems.containsValue(linkedList);
     }
 
     static Class[] itemSig = new Class[] { Service.class, String.class };
@@ -139,13 +153,13 @@ public class ResourceCollection<T extends Resource>
         // lists inside our container.
         LinkedList<Object> linkedList = new LinkedList<Object>();
         linkedList.add(o);
-        return validate().litems.equals(linkedList);
+        return validate().linkedListItems.equals(linkedList);
     }
 
     /** {@inheritDoc} */
     public T get(Object key) {
         validate();
-        LinkedList<T> entities = litems.get(key);
+        LinkedList<T> entities = linkedListItems.get(key);
         if (entities != null && entities.size() > 1) {
             throw new SplunkException(SplunkException.AMBIGUOUS,
                     "Key has multiple values, specify a namespace");
@@ -157,9 +171,9 @@ public class ResourceCollection<T extends Resource>
     /** {@inheritDoc} */
     public T get(Object key, HashMap<String, String> namespace) {
         validate();
-        LinkedList<T> entities = litems.get(key);
-        String pathMatcher = service.fullpath("", namespace);
+        LinkedList<T> entities = linkedListItems.get(key);
         if (entities == null || entities.size() == 0) return null;
+        String pathMatcher = service.fullpath("", namespace);
         for (T entity: entities) {
             if (entity.path.startsWith(pathMatcher)) {
                 return entity;
@@ -169,12 +183,12 @@ public class ResourceCollection<T extends Resource>
     }
 
     @Override public int hashCode() {
-        return validate().litems.hashCode();
+        return validate().linkedListItems.hashCode();
     }
 
     /** {@inheritDoc} */
     public boolean isEmpty() {
-        return validate().litems.isEmpty();
+        return validate().linkedListItems.isEmpty();
     }
     
     /**
@@ -221,7 +235,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public Set<String> keySet() {
-        return validate().litems.keySet();
+        return validate().linkedListItems.keySet();
     }
 
     /**
@@ -244,13 +258,13 @@ public class ResourceCollection<T extends Resource>
         for (AtomEntry entry : value.entries) {
             String key = itemKey(entry);
             T item = createItem(entry);
-            if (litems.containsKey(key)) {
-                LinkedList<T> list = litems.get(key);
+            if (linkedListItems.containsKey(key)) {
+                LinkedList<T> list = linkedListItems.get(key);
                 list.add(item);
             } else {
                 LinkedList<T> list = new LinkedList<T>();
                 list.add(item);
-                litems.put(key, list);
+                linkedListItems.put(key, list);
             }
         }
         return this;
@@ -272,7 +286,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     @Override public ResourceCollection refresh() {
-        litems.clear();
+        linkedListItems.clear();
         ResponseMessage response = list();
         assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -287,7 +301,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public int size() {
-        return validate().litems.size();
+        return validate().linkedListItems.size();
     }
 
     /** {@inheritDoc} */
@@ -300,9 +314,9 @@ public class ResourceCollection<T extends Resource>
     public Collection<T> values() {
         LinkedList<T> collection = new LinkedList<T>();
         validate();
-        Set<String> keySet = litems.keySet();
+        Set<String> keySet = linkedListItems.keySet();
         for (String key: keySet) {
-            LinkedList<T> list = litems.get(key);
+            LinkedList<T> list = linkedListItems.get(key);
             for (T item: list) {
                 collection.add(item);
             }
@@ -318,7 +332,7 @@ public class ResourceCollection<T extends Resource>
      */
     public int valueSize(Object key) {
         validate();
-        LinkedList<T> entities = litems.get(key);
+        LinkedList<T> entities = linkedListItems.get(key);
         if (entities == null || entities.size() == 0) return 0;
         return entities.size();
     }

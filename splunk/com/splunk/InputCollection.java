@@ -145,7 +145,7 @@ public class InputCollection extends EntityCollection<Input> {
      * @return The refreshed input collection.
      */
     @Override public InputCollection refresh() {
-        litems.clear();
+        linkedListItems.clear();
 
         // Iterate over all input kinds and collect all instances.
         for (InputKind kind : kinds) {
