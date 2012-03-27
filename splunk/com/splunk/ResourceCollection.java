@@ -70,7 +70,11 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public boolean containsValue(Object value) {
-        return validate().litems.containsValue(value);
+        // value should be a non-linked-list value; values are stored as linked
+        // lists inside our container.
+        LinkedList<Object> linkedList = new LinkedList<Object>();
+        linkedList.add(value);
+        return validate().litems.containsValue(linkedList);
     }
 
     static Class[] itemSig = new Class[] { Service.class, String.class };
@@ -131,7 +135,11 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     @Override public boolean equals(Object o) {
-        return validate().litems.equals(o);
+        // value should be a non-linked-list value; values are stored as linked
+        // lists inside our container.
+        LinkedList<Object> linkedList = new LinkedList<Object>();
+        linkedList.add(o);
+        return validate().litems.equals(linkedList);
     }
 
     /** {@inheritDoc} */
