@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,6 +45,28 @@ public class ConfCollection
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    ConfCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "properties", EntityCollection.class, namespace);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    ConfCollection(
+            Service service, Args args, HashMap<String, String> namespace) {
+        super(service, "properties", EntityCollection.class, args, namespace);
+    }
+
+    /**
      * Creates a config.
      *
      * @param name The new config name.
@@ -66,7 +89,7 @@ public class ConfCollection
         invalidate();
         return get(name);
     }
-    
+
     /**
      * Returns This config's endpoint path.
      *

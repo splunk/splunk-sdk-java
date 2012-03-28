@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,6 +41,28 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
      */
     SavedSearchCollection(Service service, Args args) {
         super(service, "saved/searches", SavedSearch.class, args);
+    }
+
+    /**
+     * Constructs an instance of the {@code SavedSearchCollection}.
+     *
+     * @param service The service the entity is affiliated with.
+     * @param namespace This collection's namespace.
+     */
+    SavedSearchCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "saved/searches", SavedSearch.class, namespace);
+    }
+
+    /**
+     * Constructs an instance of the {@code SavedSearchCollection}.
+     *
+     * @param service The service the entity is affiliated with.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    SavedSearchCollection(
+            Service service, Args args, HashMap<String, String> namespace) {
+        super(service, "saved/searches", SavedSearch.class, args, namespace);
     }
 
     /** {@inheritDoc} */

@@ -23,7 +23,7 @@ License 2.0. Details can be found in the file LICENSE.
 
 ## This SDK is a Preview Release
 
-1.  This Preview release a pre-beta release.  There will also be a beta 
+1.  This Preview release is a pre-beta release.  There will also be a beta 
     release prior to a general release. It is incomplete and may have bugs.
 
 2.  The Apache license only applies to the SDK and no other Software provided 
@@ -59,7 +59,7 @@ and system requirements, see Installing & Running Splunk
 Get the Splunk Java SDK from GitHub (https://github.com/) and clone the 
 resources to your computer. For example, use the following command: 
 
->  git clone https://github.com/splunk/splunk-sdk-Java.git
+>  git clone https://github.com/splunk/splunk-sdk-java.git
 
 #### Java and Ant
 

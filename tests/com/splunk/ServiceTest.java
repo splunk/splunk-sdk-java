@@ -17,8 +17,11 @@
 package com.splunk;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.net.Socket;
 import org.junit.Test;
+
 
 public class ServiceTest extends SplunkTestCase {
     // Perform some non-intrusive inspection of the given Job object.
@@ -211,7 +214,6 @@ public class ServiceTest extends SplunkTestCase {
 
     @Test public void testRestart() throws Exception {
 
-        int retry = 10;
         boolean restarted = false;
 
         Service service = connect();
@@ -219,16 +221,47 @@ public class ServiceTest extends SplunkTestCase {
         ResponseMessage response = service.restart();
         assertEquals(200, response.getStatus());
 
-        while (retry > 0) {
-            Thread.sleep(5000); // 5 seconds
-            retry = retry-1;
+        // port sniff. expect connection ... then no connection ...
+        // the connection. Max 3 minutes.
+
+        int totalTime = 0;
+        // server up, wait until socket no longer accepted.
+        while (totalTime < (3*60*1000)) {
             try {
-                service = connect();
+                Socket ServerSok = new Socket(service.getHost(),service.getPort());
+			    ServerSok.close();
+			    Thread.sleep(10); // 10 milliseconds
+                totalTime += 10;
+    		}
+            catch (Exception e) {
+                break;
+		    }
+        }
+
+        // server down, wait until socket accepted.
+        while (totalTime < (3*60*1000)) {
+            try {
+                Socket ServerSok = new Socket(service.getHost(),service.getPort());
+			    ServerSok.close();
+                break;
+
+    		}
+            catch (Exception e) {
+			    Thread.sleep(10); // 10 milliseconds
+                totalTime += 10;
+		    }
+        }
+
+        while (totalTime < (3*60*1000)) {
+            try {
+                connect();
                 restarted = true;
                 break;
             }
             catch (Exception e) {
                 // server not back yet
+                Thread.sleep(100);
+                totalTime += 10;
             }
         }
         assertTrue(restarted);

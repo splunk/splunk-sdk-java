@@ -16,7 +16,9 @@
 
 package com.splunk;
 
+
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Representation of a Splunk resource.
@@ -24,6 +26,7 @@ import java.util.Map;
 public abstract class Resource {
     protected Map<String, String> actions;
     protected String path;
+    protected String partialPath;
     protected Service service;
     protected String title;
     protected Args refreshArgs;
@@ -37,6 +40,7 @@ public abstract class Resource {
      */
     Resource(Service service, String path) {
         this.path = service.fullpath(path);
+        this.partialPath = path;
         this.service = service;
         this.refreshArgs = new Args("count", "-1");
     }
@@ -155,7 +159,7 @@ public abstract class Resource {
      * @return The current resource instance.
      */
     public Resource validate() {
-        if (this.maybeValid == false) refresh();
+        if (!this.maybeValid) refresh();
         return this;
     }
 }

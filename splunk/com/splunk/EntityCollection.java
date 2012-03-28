@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -51,9 +53,36 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param service The connected service instance.
      * @param path The entity's endpoint.
-     * @param itemClass The entity's subclass.
+     * @param namespace This collection's namespace.
      */
-    public EntityCollection(Service service, String path, Class itemClass) {
+    EntityCollection(
+            Service service, String path, HashMap<String, String> namespace) {
+        super(service, path, Entity.class, namespace);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    EntityCollection(Service service, String path, Args args,
+                     HashMap<String, String> namespace) {
+        super(service, path, Entity.class, args, namespace);
+    }
+
+
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     * @param itemClass This entity's class.
+     */
+    EntityCollection(Service service, String path, Class itemClass) {
         super(service, path, itemClass);
     }
 
@@ -62,11 +91,38 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param service The connected service instance.
      * @param path The entity's endpoint.
-     * @param itemClass The entity's subclass.
+     * @param itemClass This entity's class.
      * @param args Arguments use at instantiation, such as count and offset.
      */
-    public EntityCollection(Service service, String path, Class itemClass, Args args) {
+    EntityCollection(Service service, String path, Class itemClass, Args args) {
         super(service, path, itemClass, args);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     * @param itemClass This entity's class.
+     * @param namespace This collection's namespace.
+     */
+    EntityCollection(Service service, String path, Class itemClass,
+            HashMap<String, String> namespace) {
+        super(service, path, itemClass, namespace);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The entity's endpoint.
+     * @param itemClass This entity's class.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    EntityCollection(Service service, String path, Class itemClass, Args args,
+                     HashMap<String, String> namespace) {
+        super(service, path, itemClass, args, namespace);
     }
 
     /**
@@ -76,7 +132,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @return The entity.
      */
     public T create(String name) {
-        return create(name, null);
+        return create(name, (Map)null);
     }
 
     /**
@@ -98,14 +154,42 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param key the name of the entity to remove.
      * @return this collection.
+     * @throws SplunkException "AMBIGUOUS" if the collection contains more than
+     * one entity with the specified key. Disambiguation is done through the
+     * similar method {@code remove(Object key, HashMap<String,String>namespace}
+     * which uses the namespace to perform the disambiguation.
      */
-    public T remove(Object key) {
+    public T remove(String key) {
         validate();
         if (!containsKey(key)) return null;
-        T entity = items.get(key);
+        LinkedList<T> entities = linkedListItems.get(key);
+        if (entities != null && entities.size() > 1) {
+            throw new SplunkException(SplunkException.AMBIGUOUS,
+                    "Key has multiple values, specify a namespace");
+        }
+        if (entities == null) return null;
+        T entity = entities.get(0);
         entity.remove();
-        items.remove(key);
+        // by invalidating any access to linkedListItems will get refreshed
         invalidate();
         return entity;
+    }
+
+    public T remove(String key, HashMap<String, String> namespace) {
+        validate();
+        if (!containsKey(key)) return null;
+        LinkedList<T> entities = linkedListItems.get(key);
+        String pathMatcher = service.fullpath("", namespace);
+        if (entities == null || entities.size() == 0) return null;
+        for (T entity: entities) {
+            if (entity.path.startsWith(pathMatcher)) {
+                entity.remove();
+                // by invalidating any access to linkedListItems will get
+                // refreshed
+                invalidate();
+                return entity;
+            }
+        }
+        return null;
     }
 }

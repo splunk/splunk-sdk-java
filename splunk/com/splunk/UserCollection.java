@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,14 +44,25 @@ public class UserCollection extends EntityCollection<User> {
     }
 
     /**
-     * Create a new user entity using the given name, and args.
+     * Constructs an instance of {@code UserCollection}.
      *
-     * @param name The name for the new user entity.
-     * @param args The argument list.
-     * @return The newly created user entity.
+     * @param service This service instance this collection is affiliated with.
+     * @param namespace This collection's namespace.
      */
-    public User create(String name, Args args) {
-        return super.create(name.toLowerCase(), args);
+    UserCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "authentication/users", User.class, namespace);
+    }
+
+    /**
+     * Constructs an instance of {@code UserCollection}.
+     *
+     * @param service This service instance this collection is affiliated with.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    UserCollection(
+            Service service, Args args, HashMap<String, String> namespace) {
+        super(service, "authentication/users", User.class, args, namespace);
     }
 
     /**

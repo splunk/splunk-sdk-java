@@ -18,10 +18,7 @@ package com.splunk;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Representation of a collection of Splunk resources.
@@ -29,18 +26,64 @@ import java.util.Set;
  * @param <T> The type of members of the collection.
  */
 public class ResourceCollection<T extends Resource> 
-    extends Resource implements Map<String, T> 
+    extends Resource implements Map<String, T>
 {
-    protected Map<String, T> items = new HashMap<String, T>();
+    protected Map<String, LinkedList<T>>
+            linkedListItems = new HashMap<String, LinkedList<T>>();
     protected Class itemClass;
 
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param itemClass The class of this resource item.
+     */
     ResourceCollection(Service service, String path, Class itemClass) {
         super(service, path);
         this.itemClass = itemClass;
     }
 
-    ResourceCollection(Service service, String path, Class itemClass, Args args) {
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param itemClass The class of this resource item.
+     * @param args Arguments use at instantiation, such as count and offset.
+     */
+    ResourceCollection(
+            Service service, String path, Class itemClass, Args args) {
         super(service, path, args);
+        this.itemClass = itemClass;
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param itemClass The class of this resource item.
+     * @param namespace The namespace of this collection.
+     */
+    ResourceCollection(Service service, String path,
+                       Class itemClass, HashMap<String, String> namespace) {
+        super(service, service.fullpath(path, namespace));
+        this.itemClass = itemClass;
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param path The target endpoint.
+     * @param itemClass The class of this resource item.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace The namespace of this collection.
+     */
+    ResourceCollection(Service service, String path, Class itemClass,
+                       Args args, HashMap<String, String> namespace) {
+        super(service, service.fullpath(path, namespace), args);
         this.itemClass = itemClass;
     }
 
@@ -51,12 +94,37 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public boolean containsKey(Object key) {
-        return validate().items.containsKey(key);
+        return validate().linkedListItems.containsKey(key);
+    }
+
+    /**
+     * Determines whether or not a scoped (i.e. namespace constrained) key
+     * exists within this collection.
+     *
+     * @param key The key to lookup.
+     * @param namespace The namespace to constrain the search to.
+     * @return true if the constrained key exists, otherwise false.
+     */
+    public boolean containsKey(Object key, HashMap<String, String> namespace) {
+        validate();
+        LinkedList<T> entities = linkedListItems.get(key);
+        if (entities == null || entities.size() == 0) return false;
+        String pathMatcher = service.fullpath("", namespace);
+        for (T entity: entities) {
+            if (entity.path.startsWith(pathMatcher)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** {@inheritDoc} */
     public boolean containsValue(Object value) {
-        return validate().items.containsValue(value);
+        // value should be a non-linked-list value; values are stored as linked
+        // lists inside our container.
+        LinkedList<Object> linkedList = new LinkedList<Object>();
+        linkedList.add(value);
+        return validate().linkedListItems.containsValue(linkedList);
     }
 
     static Class[] itemSig = new Class[] { Service.class, String.class };
@@ -66,9 +134,11 @@ public class ResourceCollection<T extends Resource>
      *
      * @param itemClass Class of the member to create.
      * @param path Path to the member resource.
+     * @param namespace The namespace.
      * @return The created member.
      */
-    protected T createItem(Class itemClass, String path) {
+    protected T createItem(Class itemClass, String path,
+                           HashMap<String, String> namespace) {
         Constructor ctor;
         try {
             ctor = itemClass.getDeclaredConstructor(itemSig);
@@ -79,7 +149,8 @@ public class ResourceCollection<T extends Resource>
 
         T item;
         try {
-            item = (T)ctor.newInstance(service, path);
+            item =
+               (T)ctor.newInstance(service, service.fullpath(path, namespace));
         }
         catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -104,31 +175,66 @@ public class ResourceCollection<T extends Resource>
      * @return The newly created member.
      */
     protected T createItem(AtomEntry entry) {
-        return createItem(itemClass, itemPath(entry));
+        return createItem(itemClass, itemPath(entry), namespace(entry));
     }
 
     /** {@inheritDoc} */
     public Set<Map.Entry<String, T>> entrySet() {
-        return validate().items.entrySet();
+        throw new UnsupportedOperationException();
     }
 
     /** {@inheritDoc} */
     @Override public boolean equals(Object o) {
-        return validate().items.equals(o);
+        return validate().linkedListItems.equals(o);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Gets a the value of  key if it exists within this collection.
+     *
+     * @param key The key to lookup.
+     * @return The value indexed by the key, or null if it does not exist.
+     * @throws SplunkException if there is more than one value represented by
+     * this key.
+     */
     public T get(Object key) {
-        return validate().items.get(key);
+        validate();
+        LinkedList<T> entities = linkedListItems.get(key);
+        if (entities != null && entities.size() > 1) {
+            throw new SplunkException(SplunkException.AMBIGUOUS,
+                    "Key has multiple values, specify a namespace");
+        }
+        if (entities == null || entities.size() == 0) return null;
+        return entities.get(0);
+    }
+
+    /**
+     * Gets a the value of a scoped (i.e. namespace constrained) key if it
+     * exists within this collection.
+     *
+     * @param key The key to lookup.
+     * @param namespace The namespace to constrain the search to.
+     * @return The value indexed by the key, or null if it does not exist.
+     */
+    public T get(Object key, HashMap<String, String> namespace) {
+        validate();
+        LinkedList<T> entities = linkedListItems.get(key);
+        if (entities == null || entities.size() == 0) return null;
+        String pathMatcher = service.fullpath("", namespace);
+        for (T entity: entities) {
+            if (entity.path.startsWith(pathMatcher)) {
+                return entity;
+            }
+        }
+        return null;
     }
 
     @Override public int hashCode() {
-        return validate().items.hashCode();
+        return validate().linkedListItems.hashCode();
     }
 
     /** {@inheritDoc} */
     public boolean isEmpty() {
-        return validate().items.isEmpty();
+        return validate().linkedListItems.isEmpty();
     }
     
     /**
@@ -144,7 +250,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Returns the vlaue to use as the item path from the given Atom entry.
+     * Returns the value to use as the item path from the given Atom entry.
      * Subclasses may override this to support alternative methods of
      * determining a members path.
      *
@@ -155,9 +261,27 @@ public class ResourceCollection<T extends Resource>
         return entry.links.get("alternate");
     }
 
+    private HashMap<String, String> namespace(AtomEntry entry) {
+        HashMap<String, String>namespace = new HashMap<String, String>();
+
+        // no content? return an empty namespace.
+        if (entry.content == null)
+            return namespace;
+
+        HashMap<String, String> entityMetadata =
+                (HashMap<String, String>)entry.content.get("eai:acl");
+        if (entityMetadata.containsKey("owner"))
+            namespace.put("owner", entityMetadata.get("owner"));
+        if (entityMetadata.containsKey("app"))
+            namespace.put("app", entityMetadata.get("app"));
+        if (entityMetadata.containsKey("sharing"))
+            namespace.put("sharing", entityMetadata.get("sharing"));
+        return namespace;
+    }
+
     /** {@inheritDoc} */
     public Set<String> keySet() {
-        return validate().items.keySet();
+        return validate().linkedListItems.keySet();
     }
 
     /**
@@ -180,7 +304,14 @@ public class ResourceCollection<T extends Resource>
         for (AtomEntry entry : value.entries) {
             String key = itemKey(entry);
             T item = createItem(entry);
-            items.put(key, item);
+            if (linkedListItems.containsKey(key)) {
+                LinkedList<T> list = linkedListItems.get(key);
+                list.add(item);
+            } else {
+                LinkedList<T> list = new LinkedList<T>();
+                list.add(item);
+                linkedListItems.put(key, list);
+            }
         }
         return this;
     }
@@ -201,7 +332,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     @Override public ResourceCollection refresh() {
-        items.clear();
+        linkedListItems.clear();
         ResponseMessage response = list();
         assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -216,7 +347,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public int size() {
-        return validate().items.size();
+        return validate().linkedListItems.size();
     }
 
     /** {@inheritDoc} */
@@ -227,6 +358,28 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public Collection<T> values() {
-        return validate().items.values();
+        LinkedList<T> collection = new LinkedList<T>();
+        validate();
+        Set<String> keySet = linkedListItems.keySet();
+        for (String key: keySet) {
+            LinkedList<T> list = linkedListItems.get(key);
+            for (T item: list) {
+                collection.add(item);
+            }
+        }
+        return collection;
+    }
+
+    /**
+     * Returns the number of values a specific key represents.
+     *
+     * @param key The key to lookup.
+     * @return The number of entity values represented by the key.
+     */
+    public int valueSize(Object key) {
+        validate();
+        LinkedList<T> entities = linkedListItems.get(key);
+        if (entities == null || entities.size() == 0) return 0;
+        return entities.size();
     }
 }

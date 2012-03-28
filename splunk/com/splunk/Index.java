@@ -17,8 +17,8 @@
 package com.splunk;
 
 import java.io.IOException;
-import java.util.Date;
 import java.net.Socket;
+import java.util.Date;
 
 /**
  * Representation of an index.

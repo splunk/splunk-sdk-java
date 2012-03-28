@@ -16,8 +16,7 @@
 
 package com.splunk;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -47,6 +46,28 @@ public class JobCollection extends EntityCollection<Job> {
     }
 
     /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    JobCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "search/jobs", Job.class, namespace);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    JobCollection(
+            Service service, Args args, HashMap<String, String> namespace) {
+        super(service, "search/jobs", Job.class, args, namespace);
+    }
+
+    /**
      * Creates a search job with a UTF8 pre-encoded search request. Note that
      * a 'oneshot' request is invalid here. Please use the createOneShot method
      * instead.
@@ -55,7 +76,7 @@ public class JobCollection extends EntityCollection<Job> {
      * @return The search job SID.
      */
     public Job create(String query) {
-        return create(query, null);
+        return create(query, (Map)null);
     }
 
     /**

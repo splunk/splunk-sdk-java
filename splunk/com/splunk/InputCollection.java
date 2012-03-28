@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -58,6 +59,29 @@ public class InputCollection extends EntityCollection<Input> {
         super(service, "data/inputs", args);
     }
 
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    InputCollection(Service service, HashMap<String, String> namespace) {
+        super(service, "data/inputs", namespace);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    InputCollection(
+            Service service, Args args, HashMap<String, String> namespace) {
+        super(service, "data/inputs", args, namespace);
+    }
+
     /**
      * Create stub.
      *
@@ -90,7 +114,7 @@ public class InputCollection extends EntityCollection<Input> {
      * @return The created input.
      */
     public <T extends Input> T create(String name, InputKind kind) {
-        return (T)create(name, kind, null);
+        return (T)create(name, kind, (Map<String, Object>)null);
     }
 
     /**
@@ -121,7 +145,7 @@ public class InputCollection extends EntityCollection<Input> {
         String path = itemPath(entry);
         InputKind kind = itemKind(path);
         Class inputClass = kind.inputClass;
-        return createItem(inputClass, path);
+        return createItem(inputClass, path, null);
     }
 
     /**
@@ -144,7 +168,7 @@ public class InputCollection extends EntityCollection<Input> {
      * @return The refreshed input collection.
      */
     @Override public InputCollection refresh() {
-        items.clear();
+        linkedListItems.clear();
 
         // Iterate over all input kinds and collect all instances.
         for (InputKind kind : kinds) {

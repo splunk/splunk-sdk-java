@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+
 /**
  * Representation of a collection of passwords.
  */
@@ -43,11 +45,34 @@ public class PasswordCollection extends EntityCollection<Password> {
     }
 
     /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param namespace This collection's namespace.
+     */
+    PasswordCollection(Service service, HashMap<String, String> namespace) {
+        // Starting with 4.3 this is available at "storage/passwords"
+        super(service, "admin/passwords", Password.class, namespace);
+    }
+
+    /**
+     * Class Constructor.
+     *
+     * @param service The connected service instance.
+     * @param args Arguments use at instantiation, such as count and offset.
+     * @param namespace This collection's namespace.
+     */
+    PasswordCollection(
+            Service service, Args args, HashMap<String, String> namespace) {
+        // Starting with 4.3 this is available at "storage/passwords"
+        super(service, "admin/passwords", Password.class, args, namespace);
+    }
+
+    /**
      * Creates a credential.
      *
      * @param name The username to be created.
      * @param password The password associated with this username.
-     *
      * @return The new credential.
      */
     public Password create(String name, String password) {
@@ -61,7 +86,6 @@ public class PasswordCollection extends EntityCollection<Password> {
      * @param name The username to be created.
      * @param password The password associated with this username.
      * @param realm The credential realm.
-     *
      * @return The new credential.
      */
     public Password create(String name, String password, String realm) {
@@ -70,8 +94,6 @@ public class PasswordCollection extends EntityCollection<Password> {
         args.put("realm", realm);
         return create(name, args);
     }
-
-    // Passwords user the username as a key.
 
     /**
      * Returns the username

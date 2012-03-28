@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import org.junit.*;
+import org.junit.Test;
 
 public class InputTest extends SplunkTestCase {
 
@@ -63,6 +63,7 @@ public class InputTest extends SplunkTestCase {
                 tcpSplunkInput.getSource();
                 tcpSplunkInput.getSourceType();
                 tcpSplunkInput.getSSL();
+                break;
             case Udp:
                 UdpInput udpInput = (UdpInput) input;
                 udpInput.getConnectionHost();
@@ -75,6 +76,7 @@ public class InputTest extends SplunkTestCase {
                 udpInput.getSourceType();
                 udpInput.noAppendingTimeStamp();
                 udpInput.noPriorityStripping();
+                break;
             case WindowsActiveDirectory:
                 WindowsActiveDirectoryInput windowsActiveDirectoryInput =
                         (WindowsActiveDirectoryInput) input;
@@ -122,6 +124,7 @@ public class InputTest extends SplunkTestCase {
                 windowsWmiInput.getLookupHost();
                 windowsWmiInput.getServer();
                 windowsWmiInput.getWql();
+                break;
         }
     }
 
