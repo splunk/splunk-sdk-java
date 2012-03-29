@@ -16,16 +16,14 @@
 
 package com.splunk;
 
+import au.com.bytecode.opencsv.CSVReader;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.io.UnsupportedEncodingException;
-
-import au.com.bytecode.opencsv.CSVReader;
-
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 
 public class ResultsReader {
     String streamType;
@@ -51,6 +49,7 @@ public class ResultsReader {
                     InputStreamReader(inputStream, "UTF-8");
         }
         catch (UnsupportedEncodingException e) { assert false; }
+
         if (streamType.equals("csv")) {
             csvReader = new CSVReader(inputStreamReader);
             csvKeys = csvReader.readNext();
@@ -74,7 +73,6 @@ public class ResultsReader {
             String [] nextLine = csvReader.readNext();
             if (nextLine == null) return null;
 
-            // create map w/ this.keys
             for (String key: csvKeys) {
                 data.put(key, nextLine[index++]);
             }
@@ -86,7 +84,6 @@ public class ResultsReader {
             while (jsonReader.hasNext()) {
                 data.put(jsonReader.nextName(), jsonReader.nextString());
             }
-            jsonReader.endObject();
             if (jsonReader.peek() == JsonToken.END_OBJECT) {
                 jsonReader.endObject();
             }
@@ -102,7 +99,8 @@ public class ResultsReader {
             csvReader.close();
             csvReader = null;
         } else if (streamType.equals("json")) {
-
+            jsonReader.close();
+            jsonReader = null;
         } else {
 
         }
