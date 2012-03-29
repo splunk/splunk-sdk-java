@@ -16,17 +16,15 @@
 
 package com.splunk.sdk.search_realtime;
 
-import com.splunk.Args;
-import com.splunk.HttpException;
-import com.splunk.Job;
+import com.splunk.*;
 import com.splunk.sdk.Command;
-import com.splunk.Service;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.HashMap;
 
 // Note: not all search parameters are exposed to the CLI for this example.
 public class Program {
@@ -46,6 +44,7 @@ public class Program {
         "Which search results to output {events, results, preview, searchlog, summary, timeline} (default: preview)";
     static String outputModeText =
         "Search output format {csv, raw, json, xml} (default: xml)";
+    static String rawText = "Set to 1 if raw events are displayed";
     static String resultsCount =
         "The maximum number of results to return (default: 100)";
     static String statusBucketsText =
@@ -70,6 +69,7 @@ public class Program {
         command.addRule("offset", Integer.class, offset);
         command.addRule("output", String.class, outputText);
         command.addRule("output_mode", String.class, outputModeText);
+        command.addRule("raw", Integer.class, rawText);
         command.addRule("status_buckets", Integer.class, statusBucketsText);
         command.parse(args);
 
@@ -159,21 +159,37 @@ public class Program {
             stream = job.getTimeline(outputArgs);
         else assert(false);
 
-        InputStreamReader reader = new InputStreamReader(stream);
-        OutputStreamWriter writer = new OutputStreamWriter(System.out);
-
-        int size = 1024;
-        char[] buffer = new char[size];
-        while (true) {
-            int count = reader.read(buffer);
-            if (count == -1) break;
-            writer.write(buffer, 0, count);
+        boolean rawData = false;
+        if (command.opts.containsKey("raw")) {
+            int tmp  = (Integer)command.opts.get("raw");
+            if (tmp == 0 ) rawData = false;
         }
 
-        writer.write("\n");
-        writer.close();
-        reader.close();
+        if (!rawData) {
+            HashMap<String, String> map;
+            ResultsReader resultsReader = new ResultsReader(stream, outputMode);
+            while ((map = resultsReader.getNextEvent()) != null) {
+                System.out.println("EVENT:********");
+                System.out.println("   " + map);
+            }
+            resultsReader.close();
+        }
+        else {
+            InputStreamReader reader = new InputStreamReader(stream);
+            OutputStreamWriter writer = new OutputStreamWriter(System.out);
 
+            int size = 1024;
+            char[] buffer = new char[size];
+            while (true) {
+                int count = reader.read(buffer);
+                if (count == -1) break;
+                writer.write(buffer, 0, count);
+            }
+
+            writer.write("\n");
+            writer.close();
+            reader.close();
+        }
         job.cancel();
     }
 }

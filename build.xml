@@ -37,6 +37,14 @@
         <pathelement location="${lib.org-openide-util-lookup}"/>
     </path>
 
+    <path id="classpath.gson">
+        <pathelement location="${lib.gson}"/>
+    </path>
+
+    <path id="classpath.opencsv">
+        <pathelement location="${lib.opencsv}"/>
+    </path>
+
     <!-- Classpaath for building tests -->
     <path id="classpath.tests">
         <pathelement location="${dist.splunk}"/>
@@ -66,7 +74,10 @@
         <mkdir dir="${dir.build.splunk}"/>
         <javac includeantruntime="false"
          srcdir="${dir.splunk}"
-         destdir="${dir.build.splunk}"/>
+         destdir="${dir.build.splunk}">
+            <classpath refid="classpath.opencsv"/>
+            <classpath refid="classpath.gson"/>
+        </javac>
     </target>
 
     <target name="compile-splunk-sdk">
@@ -262,22 +273,34 @@
 
     <target name="dist-example-search" depends="compile-example-search">
         <dist-example name="search" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar 
+                    ../../lib/opencsv-2.3.jar 
+                    ../../lib/gson-2.1.jar"/>
     </target>
 
     <target name="dist-example-search-blocking" depends="compile-example-search-blocking">
         <dist-example name="search_blocking" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar 
+                    ../../lib/opencsv-2.3.jar 
+                    ../../lib/gson-2.1.jar"/>
     </target>
 
     <target name="dist-example-search-oneshot" depends="compile-example-search-oneshot">
         <dist-example name="search_oneshot" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar 
+                    ../../lib/opencsv-2.3.jar 
+                    ../../lib/gson-2.1.jar"/>
     </target>
 
     <target name="dist-example-search-realtime" depends="compile-example-search-realtime">
         <dist-example name="search_realtime" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar 
+                    ../../lib/opencsv-2.3.jar 
+                    ../../lib/gson-2.1.jar"/>
     </target>
 
     <target name="dist-example-search-saved" depends="compile-example-search-saved">
