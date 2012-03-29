@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a License Group.
- */
+* The {@code LicenseGroup} class represents a license group, which is a
+* collection of one or more license stacks. 
+*/
 public class LicenseGroup extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The license group endpoint.
      */
     LicenseGroup(Service service, String path) {
@@ -32,18 +33,19 @@ public class LicenseGroup extends Entity {
     }
 
     /**
-     * Returns this license group's stack ID, or null if not specified.
+     * Returns the stack IDs of the license stacks in this license group.
      *
-     * @return This license group's stack ID.
+     * @return The stack IDs, or {@code null} if not specified.
      */
     public String[] getStackIds() {
         return getStringArray("stack_ids", new String[]{""});
     }
 
     /**
-     * Returns whether or not this license group is active.
+     * Indicates whether this license group is active.
      *
-     * @return Whether or not this license group is active.
+     * @return {@code true} if this license group is active, {@code false}
+     * if not. 
      */
     public boolean isActive() {
         return getBoolean("is_active");

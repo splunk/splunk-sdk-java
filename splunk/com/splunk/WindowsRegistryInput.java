@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Representation of a Windows Registry input.
+ * The {@code WindowsRegistryInput} class represents a Windows Registry input.
  */
 public class WindowsRegistryInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The Windows Registry input endpoint.
      */
     WindowsRegistryInput(Service service, String path) {
@@ -32,70 +32,71 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns whether or not this Windows Registry input has a baseline
-     * established.
+     * Indicates whether this Windows Registry input has an established baseline.
      *
-     * @return Whether or not this Windows Registry input has a baseline
-     * established.
+     * @return {@code true} if this Windows Registry input has an established
+     * baseline, {@code false} if not.
      */
     public boolean getBaseline() {
         return getBoolean("baseline");
     }
 
     /**
-     * Returns this Windows Registry input's regular expression (regex) that is
-     * executed against process names when including/excluding events.
+     * Returns the regular expression (regex) that is executed against process 
+     * names when including or excluding events for this Windows Registry input.
+     * Changes are only collected if a process name matches this regex. 
      *
-     * @return This Windows Registry input's process regular expression.
+     * @return The process names regex.
      */
     public String getProc() {
         return getString("proc");
     }
 
     /**
-     * Returns this Windows Registry input's hive name to monitor.
+     * Returns the hive name to monitor for this Windows Registry input.
      *
-     * @return This Windows Registry input's hive name to monitor.
+     * @return The hive name to monitor.
      */
     public String getHive() {
         return getString("hive");
     }
 
     /**
-     * Returns this Windows Registry input's index name, or null if not
-     * specified.
+     * Returns the index name for this Windows Registry input.
      *
-     * @return This Windows Registry input's index name.
+     * @return The index name.
      */
     public String getIndex() {
         return getString("index");
     }
 
     /**
-     * Returns the Windows Registry input kind.
+     * Returns the input type for this Windows Registry input.
+     * @see InputKind
      *
-     * @return The Windows Registry input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.WindowsRegistry;
     }
 
     /**
-     * Returns whether or not this Windows Registry input monitors all
+     * Indicates whether this Windows Registry input monitors all
      * sub-nodes under a given hive.
      *
-     * @return Whether or not this Windows Registry input monitors all
-     * sub-nodes under a given hive.
+     * @return {@code true} if this Windows Registry input monitors all
+     * sub-nodes under a given hive, {@code false} if not.
      */
     public boolean getMonitorSubnodes() {
         return getBoolean("monitorSubnodes", false);
     }
 
     /**
-     * Returns this Windows Registry input's regular expression (regex) that is
-     * executed against registry event types.
+     * Returns the regular expression (regex) that is executed against registry
+     * event types for this Windows Registry input. Only types that match
+     * this regex are monitored.
      *
-     * @return This Windows Registry input's registry type regular expression.
+     * @return The registry type regex, or {@code null} if not specified.
      */
     public String getType() {
         return getString("type", null);

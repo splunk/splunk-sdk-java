@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a license stack.
+ * The {@code LicenseStack} class represents a license stack, which is 
+ * a collection of licenses of the same type.
  */
 public class LicenseStack extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The license stack endpoint.
      */
     LicenseStack(Service service, String path) {
@@ -32,27 +33,28 @@ public class LicenseStack extends Entity {
     }
 
     /**
-     * Returns this license stack's label, or null if not specified.
+     * Returns the label of this license stack.
      *
-     * @return This license stack's label.
+     * @return This license stack's label, or {@code null} if not specified.
      */
     public String getLabel() {
         return getString("label", null);
     }
 
     /**
-     * Returns this license stack's daily indexing quota.
+     * Returns the combined daily indexing quota for all of the licenses 
+     * in this license stack.
      *
-     * @return This license stack's daily indexing quota.
+     * @return The daily indexing quota, in bytes.
      */
     public long getQuota() {
         return getByteCount("quota", 0);
     }
 
     /**
-     * Returns this license stack's type.
+     * Returns the license type of the licenses in this license stack.
      *
-     * @return This license stack's type.
+     * @return The license type.
      */
     public String getType() {
         return getString("type");

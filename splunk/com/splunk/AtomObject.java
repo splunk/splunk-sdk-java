@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -22,20 +22,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * Representation of a generic Atom object. This is a common base class shared
- * by {@code AtomFeed} and {@code AtomEntry}
+ * The {@code AtomObject}  class represents a generic Atom object. This is a common base class shared
+ * by {@code AtomFeed} and {@code AtomEntry}.
  */
 public class AtomObject {
-    /** The value of the Atom {@code id} element. */
+    /** The value of the Atom {@code <id>} element. */
     public String id;
 
-    /** The value of any {@code link} elements contains by this Atom object. */
+    /** The value of the {@code <link>} elements in this {@code AtomObject}. */
     public Map<String, String> links = new HashMap<String, String>();
 
-    /** The value of the Atom {@code title} element. */
+    /** The value of the Atom {@code <title>} element. */
     public String title;
 
-    /** The value of the Atom {@code updated} element. */
+    /** The value of the Atom {@code <updated>} element. */
     public String updated;
 
     /**
@@ -69,7 +69,7 @@ public class AtomObject {
     }
 
     /**
-     * Initialize the current instance from the given XML element by calling
+     * Initializes the current instance from the given XML element by calling
      * {@code init} on each child of the XML element.
      *
      * @param element The XML element.

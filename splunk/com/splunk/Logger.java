@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,14 @@
 package com.splunk;
 
 /**
- * Representation of a logger.
+ * The {@code Logger} class represents a specific Splunkd logging category.
  */
 public class Logger extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The logger endpoint.
      */
     Logger(Service service, String path) {
@@ -32,10 +32,10 @@ public class Logger extends Entity {
     }
 
     /**
-     * Returns this logger's logging level. Valid values are in the set FATAL,
+     * Returns the logging level of this logger. Valid values are: FATAL,
      * CRIT, WARN, INFO, and DEBUG.
      *
-     * @return This logger's logging level.
+     * @return The logging level.
      */
     public String getLevel() {
         return getString("level");

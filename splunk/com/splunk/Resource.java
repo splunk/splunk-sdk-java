@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Representation of a Splunk resource.
+ * The {@code Resource} class represents a Splunk resource.
  */
 public abstract class Resource {
     protected Map<String, String> actions;
@@ -33,9 +33,9 @@ public abstract class Resource {
     private boolean maybeValid = false;
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The target endpoint.
      */
     Resource(Service service, String path) {
@@ -61,19 +61,19 @@ public abstract class Resource {
     /**
      * Returns a map of actions that are enabled for this resource.
      *
-     * @return Action map.
+     * @return The action map.
      */
     public Map<String, String> getActions() {
         return validate().actions;
     }
 
     /**
-     * Returns the resource name. Every resource has a name, which by default
-     * is its title. That name may also be used as the key for the resources
-     * if it belongs to a container resource, as in the case of an entity that
-     * belongs to an entity collection.
+     * Returns the resource name. By default, the name is the resource title. 
+     * This name may also be used as the key for the resource if it belongs 
+     * to a container resource (for example, an entity that belongs to an 
+     * entity collection).
      *
-     * @return Resource namne.
+     * @return The resource name.
      */
     //
     public String getName() {
@@ -83,44 +83,44 @@ public abstract class Resource {
     /**
      * Returns the path to this resource.
      *
-     * @return Resource path.
+     * @return The resource path.
      */
     public String getPath() {
         return this.path;
     }
 
     /**
-     * Returns the service instance this resource instance is affiliated with.
+     * Returns the {@code Service} instance this resource is connected to.
      *
-     * @return Service instance.
+     * @return The {@code Service} instance.
      */
     public Service getService() {
         return this.service;
     }
 
     /**
-     * Return the title of this resource. This corresponds to the Atom title
-     * element return in the Splunk REST API.
+     * Return the title of this resource, which corresponds to the Atom {@code <title>}
+     * element.
      *
-     * @return Resource title.
+     * @return The resource title.
      */
     public String getTitle() {
         return validate().title;
     }
 
     /**
-     * Set the title of this resource.
+     * Sets the title of this resource.
      *
-     * @param value Resource title.
+     * @param value The resource title.
      */
     void setTitle(String value) {
         this.title = value;
     }
 
     /**
-     * Mark the local state of this resource instance as no longer current.
+     * Marks the local state of this resource as no longer current.
      *
-     * @return The current resource instance.
+     * @return The current {@code Resource} instance.
      */
     public Resource invalidate() {
         this.maybeValid = false;
@@ -128,10 +128,10 @@ public abstract class Resource {
     }
 
     /**
-     * Load the state of this resource instance from the given Atom object.
+     * Loads the state of this resource from a given Atom object.
      *
-     * @param value Atom object to load resources state from.
-     * @return The current resource instance.
+     * @param value The {@code AtomObject} from which to load the resource state.
+     * @return The current {@code Resource} instance.
      */
     Resource load(AtomObject value) {
         if (value == null) {
@@ -146,17 +146,17 @@ public abstract class Resource {
     }
 
     /**
-     * Refresh the local state of this resource instance.
+     * Refreshes the local state of this resource.
      *
-     * @return The current resource instance.
+     * @return The current {@code Resource} instance.
      */
     public abstract Resource refresh();
 
     /**
-     * Ensure that the local state of the resource instance is current,
-     * possibly invoking {@code refresh} if necessarry.
+     * Ensures that the local state of the resource is current,
+     * invoking {@code refresh} if necessary.
      *
-     * @return The current resource instance.
+     * @return The current {@code Resource} instance.
      */
     public Resource validate() {
         if (!this.maybeValid) refresh();

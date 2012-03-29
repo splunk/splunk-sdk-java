@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Representation of a collection of Splunk resources.
+ * The {@code ResourceCollection} class represents a collection of Splunk resources.
  *
  * @param <T> The type of members of the collection.
  */
@@ -130,12 +130,12 @@ public class ResourceCollection<T extends Resource>
     static Class[] itemSig = new Class[] { Service.class, String.class };
 
     /**
-     * Creates a collection member (aka item).
+     * Creates a collection member (or <i>item</i>).
      *
-     * @param itemClass Class of the member to create.
-     * @param path Path to the member resource.
+     * @param itemClass The class of the member to create.
+     * @param path The path to the member resource.
      * @param namespace The namespace.
-     * @return The created member.
+     * @return The new member.
      */
     protected T createItem(Class itemClass, String path,
                            HashMap<String, String> namespace) {
@@ -166,13 +166,13 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Creates a collection member corresponding to the given Atom entry.
-     * This base implementation uses the class object pass in when the generic
-     * ResourceCollection was created. Subclasses may override this method
+     * Creates a collection member  (or <i>item</i>) corresponding to a given Atom entry.
+     * This base implementation uses the class object that was passed in when the generic
+     * {@code ResourceCollection} was created. Subclasses may override this method
      * to provide alternative means of instantiating collection items.
      *
-     * @param entry Atom entry corresponding to the member to instantiate.
-     * @return The newly created member.
+     * @param entry The {@code AtomEntry} corresponding to the member to instantiate.
+     * @return The new member.
      */
     protected T createItem(AtomEntry entry) {
         return createItem(itemClass, itemPath(entry), namespace(entry));
@@ -238,11 +238,12 @@ public class ResourceCollection<T extends Resource>
     }
     
     /**
-     * Returns the value to use as the item key from the given Atom entry.
-     * Subclasses may override this for collections that use something other
-     * than title as the key.
+     * Returns the value to use as the item key from a given Atom entry.
+     * Subclasses may override this value for collections that use something
+     * other than title as the key.
      *
-     * @param entry The Atom entry corresponding to the collection member.
+     * @param entry The {@code AtomEntry} corresponding to the collection
+     * member.
      * @return The value to use as the member's key.
      */
     protected String itemKey(AtomEntry entry) {
@@ -250,12 +251,13 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Returns the value to use as the item path from the given Atom entry.
-     * Subclasses may override this to support alternative methods of
-     * determining a members path.
+     * Returns the value to use as the item path from a given Atom entry.
+     * Subclasses may override this value to support alternative methods of
+     * determining a member's path.
      *
-     * @param entry The Atom entry corresponding to the collection member.
-     * @return The value to use as the members path.
+     * @param entry The {@code AtomEntry} corresponding to the collection
+     * member.
+     * @return The value to use as the member's path.
      */
     protected String itemPath(AtomEntry entry) {
         return entry.links.get("alternate");
@@ -287,17 +289,17 @@ public class ResourceCollection<T extends Resource>
     /**
      * Issues an HTTP request to list the contents of the collection resource.
      *
-     * @return List response message.
+     * @return The list response message.
      */
     public ResponseMessage list() {
         return service.get(path, this.refreshArgs);
     }
 
     /**
-     * Loads the collection resource from the given {@code AtomFeed}.
+     * Loads the collection resource from a given Atom feed.
      *
      * @param value The {@code AtomFeed} instance to load the collection from.
-     * @return The current resource collection instance.
+     * @return The current {@code ResourceCollection} instance.
      */
     ResourceCollection<T> load(AtomFeed value) {
         super.load(value);
@@ -322,7 +324,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Copies all mappings from the given map to this map (unsupported).
+     * Copies all mappings from a given map to this map (unsupported).
      *
      * @param map The set of mappings to copy into this map.
      */

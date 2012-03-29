@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,17 +17,17 @@
 package com.splunk;
 
 /**
- * Representation of an input. This class is the base for all typed input
- * classes and is also used in any case where we do not recognize an input
- * kind.
+ * The {@code Input} class represents a data input. This class is the base for all
+ * typed {@code Input} classes and is also used when Splunk does not recognize an 
+ * input type (<i>input kind</i>).
  */
 public class Input extends Entity {
 
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param path The Input endpoint.
+     * @param service The connected {@code Service} instance.
+     * @param path The input endpoint.
      */
     Input(Service service, String path) {
         super(service, path);

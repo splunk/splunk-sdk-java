@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Representation of configuration information for an instance of Splunk.
+ * The {@code Settings} class represents configuration information for an instance of Splunk.
  */
 public class Settings extends Entity {
     Settings(Service service) {
@@ -27,83 +27,84 @@ public class Settings extends Entity {
     }
 
     /**
-     * Returns the fully qualified path to the directory containing the Splunk
-     * index directories.
+     * Returns the fully-qualified path to the directory containing the 
+     * default index for this instance of Splunk.
      *
-     * @return Path to Splunk index directories.
+     * @return The path to the Splunk index directory.
      */
     public String getSplunkDB() {
         return getString("SPLUNK_DB");
     }
 
     /**
-     * Returns the fully qualified path to the Splunk install directory.
+     * Returns the fully-qualified path to the Splunk installation directory.
      *
-     * @return Path to Splunk install directory.
+     * @return The path to the Splunk installation directory.
      */
     public String getSplunkHome() {
         return getString("SPLUNK_HOME");
     }
 
     /**
-     * Answers if SSL is enabled on the Splunk maangement port.
+     * Indicates whether SSL is enabled on the Splunk management port.
      *
-     * @return {@code true} if SSL is enabled.
+     * @return {@code true} if SSL is enabled, {@code false} if not.
      */
     public boolean getEnableSplunkWebSSL() {
         return getBoolean("enableSplunkWebSSL");
     }
 
     /**
-     * Returns the service's host name.
+     * Returns the default host name to use for data inputs.
      *
-     * @return Service host name.
+     * @return The host name.
      */
     public String getHost() {
         return getString("host", null);
     }
 
     /**
-     * Returns the splunkweb port number.
+     * Returns the port on which Splunk Web is listening for this 
+     * instance of Splunk. The port number defaults to 8000. 
      *
-     * @return Splunkweb port number.
+     * @return The Splunk Web port number.
      */
     public int getHttpPort() {
         return getInteger("httpport");
     }
 
     /**
-     * Returns the splunkd port number.
+     * Returns the IP address:port number for Splunkd.
      *
-     * @return Splunkd port number.
+     * @return The IP address:port number.
      */
     public int getMgmtPort() {
         return getInteger("mgmtHostPort");
     }
 
     /**
-     * Returns the value in megabytes of free disk space required for Splunk
-     * to continue operating.
+     * Returns the amount of free disk space that is required for Splunk
+     * to continue searching and indexing.
      *
-     * @return Megabyes of free disk space required by Splunk.
+     * @return The required amount of free disk space, in megabytes.
      */
     public int getMinFreeSpace() {
         return getInteger("minFreeSpace");
     }
 
     /**
-     * Returns the key that is prepended to the splunk symmetric key to
-     * generate the final key used to sign all traffic between master & slave
+     * Returns the string that is prepended to the Splunk symmetric key to
+     * generate the final key that used to sign all traffic between master and slave
      * licensers.
      *
-     * @return Licenser symm key.
+     * @return Licenser symmetric key.
      */
     public String getPass4SymmKey() {
         return getString("pass4SymmKey");
     }
 
     /**
-     * Returns the name used to identify this Splunk instance for features
+     * Returns the name that is used to identify this Splunk instance for features
      * such as distributed search.
      *
      * @return The name used to identify the Splunk instance.
@@ -115,16 +116,17 @@ public class Settings extends Entity {
     /**
      * Returns the amount of time before a user session times out.
      *
-     * @return The amount of time before a user session times out.
+     * @return The session time-out.
      */
     public String getSessionTimeout() {
         return getString("sessionTimeout");
     }
 
     /**
-     * Answers if the instance is configured to start splunkweb.
+     * Indicates whether the instance is configured to start Splunk Web.
      *
-     * @return {@code true} if the instance is configured to start splunkweb.
+     * @return {@code true} if the instance is configured to start Splunk Web, 
+     * {@code false} if Splunk Web is disabled.
      */
     public boolean getStartWebServer() {
         return getBoolean("startwebserver");
@@ -133,7 +135,7 @@ public class Settings extends Entity {
     /**
      * Returns the IP address of the authenticating proxy.
      *
-     * @return IP address of authenticating proxy.
+     * @return The IP address of the authenticating proxy.
      */
     public String getTrustedIP() {
         return getString("trustedIP", null);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Representation of a collection of inputs. The collection is heterogeneous
- * and each member contains a kind-property that indicates the specific
- * kind of input.
+ * The {@code InputCollection} class represents a collection of inputs. The 
+ * collection is heterogeneous and each member contains an {@code InputKind} property
+ * that indicates the specific type of input (<i>input kind</i>).
  */
 public class InputCollection extends EntityCollection<Input> {
     // CONSIDER: We can probably initialize the following based on platform and
@@ -43,7 +43,7 @@ public class InputCollection extends EntityCollection<Input> {
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     InputCollection(Service service) {
         super(service, "data/inputs");
@@ -83,10 +83,10 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Create stub.
+     * Creates stub.
      *
      * @param name The name of the input.
-     * @return no return.
+     * @return No return value.
      * @throws UnsupportedOperationException
      */
     @Override public Input create(String name) {
@@ -94,11 +94,12 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Create stub.
+     * Creates a stub by providing additional arguments.
+     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">For valid arguments, see the POST requests for the /data/inputs/ endpoints in the Splunk REST API documentation.</a>
      *
      * @param name The name of the input.
      * @param args Optional arguments.
-     * @return no return.
+     * @return No return value.
      * @throws UnsupportedOperationException
      */
     @Override public Input create(String name, Map args) {
@@ -106,25 +107,26 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Creates a specific kind up input.
+     * Creates a specific kind of input.
      *
-     * @param name The name of the input created.
-     * @param kind The specific kind of input created.
-     * @param <T> The implicit type of the input created.
-     * @return The created input.
+     * @param name The name of the input.
+     * @param kind The specific kind of input.
+     * @param <T> The implicit type of the input.
+     * @return The input that was created.
      */
     public <T extends Input> T create(String name, InputKind kind) {
         return (T)create(name, kind, (Map<String, Object>)null);
     }
 
     /**
-     * Creates a specific kind up input.
+     * Creates a specific kind of input by providing arguments.
+     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">For valid arguments, see the POST requests for the /data/inputs/ endpoints in the Splunk REST API documentation.</a>
      *
-     * @param name The name of the input created.
-     * @param kind The specific kind of input created.
+     * @param name The name of the input.
+     * @param kind The specific kind of input.
      * @param args Optional arguments.
-     * @param <T> The implicit type of the input created.
-     * @return The created input.
+     * @param <T> The implicit type of the input.
+     * @return The input that was created.
      */
     public <T extends Input> T
     create(String name, InputKind kind, Map<String, Object> args) {
@@ -136,10 +138,10 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Create an Input resource item.
+     * Creates an {@code Input} resource item.
      *
-     * @param entry The Atom object describing the entry.
-     * @return the created input.
+     * @param entry The {@code AtomEntry} object describing the entry.
+     * @return The input that was created.
      */
     @Override protected Input createItem(AtomEntry entry) {
         String path = itemPath(entry);
@@ -149,10 +151,10 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Returns the the path's InputKind.
+     * Returns the path's {@code InputKind} value.
      *
      * @param path The input path.
-     * @return The input kind.
+     * @return The kind of input.
      */
     protected InputKind itemKind(String path) {
         for (InputKind kind : kinds) {
@@ -163,7 +165,7 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Refresh this input collection.
+     * Refreshes this input collection.
      *
      * @return The refreshed input collection.
      */

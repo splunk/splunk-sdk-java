@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,14 +19,16 @@ package com.splunk;
 import java.util.HashMap;
 
 /**
- * Representation of a collection of messages.
+ * The {@code MessageCollection} class represents a collection of messages, 
+ * providing access to Splunk system messages. Most messages are created by 
+ * Splunkd to inform the user of system problems.
  */
 public class MessageCollection extends EntityCollection<Message> {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     MessageCollection(Service service) {
         super(service, "messages", Message.class);
@@ -65,10 +67,10 @@ public class MessageCollection extends EntityCollection<Message> {
     }
 
     /**
-     * Create a new message.
+     * Creates a new message.
      *
-     * @param name The name of the new message.
-     * @param value The value of the message.
+     * @param name The name (primary key) of the new message.
+     * @param value The message text.
      * @return The created message.
      */
     public Message create(String name, String value) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Provides access to the metadata properties of a corresponding entity.
- * Instances of this class are obtained via {@code Entity.getMetadata}.
+ * The {@code EntityMetadata} class provides access to the metadata properties
+ * of a corresponding entity. Use {@code Entity.getMetadata} to obtain an 
+ * instance of this class.
  */
 public class EntityMetadata {
     private Entity entity;
 
     /**
-     * Clas constructor.
+     * Class constructor.
      *
      * @param entity This entity.
      */
@@ -33,45 +34,50 @@ public class EntityMetadata {
     }
 
     /**
-     * Returns whether or not this entity's permission can be changed.
+     * Indicates whether this entity's permission can be changed.
      *
-     * @return Whether or not this entity's permission can be changed.
+     * @return {@code true} if this entity's permission can be changed,
+     * {@code false} if not.
      */
     public boolean canChangePermissions() {
         return getEaiAcl().getBoolean("can_change_perms", false);
     }
 
     /**
-     * Returns whether or not the resource can be shared via an app.
+     * Indicates whether this resource can be shared via an app.
      *
-     * @return Whether or not the resource can be shared via an app.
+     * @return {@code true} if this resource can be shared via an app,
+     * {@code false} if not.
      */
     public boolean canShareApp() {
         return getEaiAcl().getBoolean("can_share_app", false);
     }
 
     /**
-     * Returns whether or not the resource can be shared globally.
+     * Indicates whether the resource can be shared globally.
      *
-     * @return Whether or not the resource can be shared globally.
+     * @return {@code true} if this resource can be shared globally,
+     * {@code false} if not.
      */
     public boolean canShareGlobal() {
         return getEaiAcl().getBoolean("can_share_global", false);
     }
 
     /**
-     * Returns whether or not the resource can be shared to a specific user.
+     * Indicates whether the resource can be shared to a specific user.
      *
-     * @return Whether ot nor the resource can be shared to a specific user.
+     * @return {@code true} if this resource can be shared to a specific user,
+     * {@code false} if not.
      */
     public boolean canShareUser() {
         return getEaiAcl().getBoolean("can_share_user", false);
     }
 
     /**
-     * Returns whether or not this entity can be modified.
+     * Indicates whether this entity can be modified.
      *
-     * @return Whether or not this entity can be modified.
+     * @return {@code true} if this entity can be modified,
+     * {@code false} if not.
      */
     public boolean canWrite() {
         return getEaiAcl().getBoolean("can_write", false);
@@ -87,16 +93,17 @@ public class EntityMetadata {
     }
 
     /**
-     * Returns the record containing all the metadata information.
+     * Returns a record containing all of the metadata information 
+     * for this resource.
      *
-     * @return The record containing all the metadata information.
+     * @return The record containing the metadata information.
      */
     Record getEaiAcl() {
         return (Record)entity.validate().get("eai:acl");
     }
 
     /**
-     * Returns the resource owner's username.
+     * Returns the username of the resource owner.
      *
      * @return The resource owner's username.
      */
@@ -105,7 +112,7 @@ public class EntityMetadata {
     }
 
     /**
-     * Returns this entity's permissions. These permissions represent an
+     * Returns this entity's permissions, which represent an
      * allowable inclusive action:list-of-roles map.
      *
      * @return This entity's permissions map.
@@ -115,19 +122,19 @@ public class EntityMetadata {
     }
 
     /**
-     * Returns how this resource is shared. Sharing values are from the list
-     * app, global and user.
+     * Returns how this resource is shared (app, global, and/or user).
      *
-     * @return How this resource is shared.
+     * @return Values that indicate how this resource is shared.
      */
     public String getSharing() {
         return getEaiAcl().getString("sharing");
     }
 
     /**
-     * Returns whether or not this entity can be modified.
+     * Indicates whether this entity can be modified.
      *
-     * @return Whether or not this entity can be modified.
+     * @return {@code true} if this entity can be modified,
+     * {@code false} if not.
      */
     public boolean isModifiable() {
         return getEaiAcl().getBoolean("modifiable", false);

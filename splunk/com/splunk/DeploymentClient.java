@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,21 +17,22 @@
 package com.splunk;
 
 /**
- * Representation of the Splunk deployment client
+ * The {@code DeploymentClient} class represents a Splunk deployment client, providing access
+ * to deployment client configuration and status.
  */
 public class DeploymentClient extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     DeploymentClient(Service service) {
         super(service, "deployment/client");
     }
 
     /**
-     * Returns the action path.
+     * Displays the action path.
      *
      * @param action The requested action.
      * @return The action path.
@@ -47,7 +48,7 @@ public class DeploymentClient extends Entity {
      */
     @Override public void disable() {
         /*
-         * disable is not handled through the standard enable/disable action
+         * {@code disable} is not handled through the standard enable/disable action
          * paths; rather it is an edit (i.e. update) action path.
          */
         Args args = new Args("disabled", true);
@@ -59,7 +60,7 @@ public class DeploymentClient extends Entity {
      */
     @Override public void enable() {
         /*
-         * enable is not handled through the standard enable/disable action
+         * {@code enable} is not handled through the standard enable/disable action
          * path; rather it is an edit (i.e. update) action path.
          */
         Args args = new Args("disabled", false);
@@ -67,9 +68,9 @@ public class DeploymentClient extends Entity {
     }
 
     /**
-     * Returns the list of server classes, or null if not specified.
+     * Returns the list of server classes.
      *
-     * @return The list of server clasess.
+     * @return The list of server classes, or {@code null} if not specified.
      */
     public String [] getServerClasses() {
         return getStringArray("serverClasses", null);
@@ -77,16 +78,17 @@ public class DeploymentClient extends Entity {
 
     /**
      * Returns the target URI of the deployment server for this deployment
-     * client, or null if not specified. The format returned is server:port.
+     * client.
      *
-     * @return The target URI for the deployment server.
+     * @return The target URI of the deployment server in the 
+     * format "server:port", or {@code null} if not specified.
      */
     public String getTargetUri() {
         return getString("targetUri", null);
     }
 
     /**
-     * Reload the deployment client fom the conf file.
+     * Reloads the deployment client from the configuration file.
      */
     public void reload() {
         service.get(path + "/deployment-client/Reload");

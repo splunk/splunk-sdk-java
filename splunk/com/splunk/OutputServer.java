@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of an output server.
+ * The {@code OutputServer} class represents an output server, providing access
+ * to data-forwarding configurations.
  */
 public class OutputServer extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The output server endpoint.
      */
     OutputServer(Service service, String path) {
@@ -32,9 +33,9 @@ public class OutputServer extends Entity {
     }
 
     /**
-     * Returns this server's all-connections object.
+     * Returns an object that contains all current connections to the output server.
      *
-     * @return This server's all-connections object.
+     * @return The all-connections object.
      */
     public OutputServerAllConnections allConnections() {
         return new OutputServerAllConnections(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -24,15 +24,15 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 /**
- * A collection of XML utilities.
+ * The {@code Xml} class represents a collection of XML utilities.
  */
 public class Xml {
 
     /**
-     * Parse the given {@code InputStream} and return as an XML DOM.
+     * Parses the given input stream and returns it as an XML document object model (DOM).
      *
-     * @param input Input stream.
-     * @return XML DOM.
+     * @param input The {@code InputStream} to parse.
+     * @return The XML DOM.
      */
     public static Document parse(InputStream input) {
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of an output server's connections.
+ * The {@code OutputServerAllConnections} class represents all the connections 
+ * of an output server.
  */
 public class OutputServerAllConnections extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The output server all-connections endpoint.
      */
     OutputServerAllConnections(Service service, String path) {
@@ -32,45 +33,45 @@ public class OutputServerAllConnections extends Entity {
     }
 
     /**
-     * Returns this connection's destination host name.
+     * Returns the destination host name for this connection.
      *
-     * @return This connection's destination host name.
+     * @return The destination host name.
      */
     public String getDestHost() {
         return getString("destHost");
     }
 
     /**
-     * Returns this connection's destination host IP address.
+     * Returns the IP address of the destination host for this connection.
      *
-     * @return This connection's destination host IP address.
+     * @return The IP address of the destination host.
      */
     public String getDestIp() {
         return getString("destIp");
     }
 
     /**
-     * Return this connection's destination port.
+     * Return the destination port for this connection.
      *
-     * @return This connection's destination port.
+     * @return The destination port.
      */
     public int getDestPort() {
         return getInteger("destPort");
     }
 
     /**
-     * Returns this connection's source port.
+     * Returns the source port for this connection.
      *
-     * @return This connection's source port.
+     * @return The source port.
      */
     public int getSourcePort() {
         return getInteger("sourcePort");
     }
 
     /**
-     * Returns this connection's status.
+     * Returns the status of this connection.
      *
-     * @return This connection's status.
+     * @return The status.
      */
     public String getStatus() {
         return getString("status");

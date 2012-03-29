@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,14 +19,14 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * Representation of a fired alert.
+ * The {@code FiredAlert} class represents a fired alert.
  */
 public class FiredAlert extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The fired alert endpoint.
      */
     FiredAlert(Service service, String path) {
@@ -34,94 +34,97 @@ public class FiredAlert extends Entity {
     }
 
     /**
-     * Returns this alert's actions, or null if not available.
+     * Returns this alert's actions (such as notifying by email, running a 
+     * script, adding to RSS, tracking in Alert Manager, and enabling 
+     * summary indexing). 
      *
-     * @return This alert's actions.
+     * @return The alert actions, or {@code null} if not available.
      */
     public String getAction() {
         return getString("actions", null);
     }
 
     /**
-     * Returns this alert's type, or null if not available.
+     * Returns this alert's type.
      *
-     * @return This alert's type.
+     * @return The alert type, or {@code null} if not available.
      */
     public String getAlertType() {
         return getString("alert_type", null);
     }
 
     /**
-     * Returns this alerts's rendered expiration time, or null if not available.
-     * (4.3+)
+     * Returns the rendered expiration time for this alert.
+     * This method is available in Splunk 4.3 and later.
      *
-     * @return This alert's rendered expiration time.
+     * @return This alert's rendered expiration time, or {@code null} if not available.
      */
     public String getExpirationTime() {
         return getString("expiration_time_rendered", null);
     }
 
     /**
-     * Returns this alert's saved search name, or null if not available.
+     * Returns the saved search name for this alert.
      *
-     * @return this alert's saved search name.
+     * @return The saved search name, or {@code null} if not available.
      */
     public String getSavedSearchName() {
         return getString("savedsearch_name", null);
     }
 
     /**
-     * Returns this alert's severity, on a scale of 1 to 10, with 1 being the
-     * highest priority. -1 if value not specified.
+     * Returns this alert's severity on a scale of 1 to 10, with 1 being the
+     * highest priority.
      *
-     * @return This alert's severity.
+     * @return This alert's severity, or -1 if the value is not specified.
      */
     public int getSeverity() {
         return getInteger("severity", -1);
     }
 
     /**
-     * Returns this alert's SID, or null if not available.
+     * Returns this alert's search ID (SID).
      *
-     * @return This alerts SID.
+     * @return This alerts SID, or {@code null} if not available.
      */
     public String getSid() {
         return getString("sid", null);
     }
 
     /**
-     * Returns the number of triggered alerts, or -1 if not specified (4.3+)
+     * Returns the count of triggered alerts. 
+     * This method is available in Splunk 4.3 and later.
      *
-     * @return The number of triggered alerts.
+     * @return The number of triggered alerts, or -1 if not specified.
      */
     public int getTriggeredAlertCount() {
         return getInteger("triggered_alerts", -1);
     }
 
     /**
-     * Returns this alert's trigger time, or null if not available.
+     * Returns this alert's trigger time.
      *
-     * @return This alert's trigger time.
+     * @return This alert's trigger time, or {@code null} if not available.
      */
     public Date getTriggerTime() {
         return getDateFromEpoch("trigger_time", null);
     }
 
     /**
-     * Returns this alert's rendered trigger time, or null if not available.
-     * (4.3+)
+     * Returns this alert's rendered trigger time.
+     * This method is available in Splunk 4.3 and later.
      *
-     * @return This alert's rendered trigger time.
+     * @return This alert's rendered trigger time, or {@code null} if not available.
      */
     public String getTriggerTimeRendered() {
         return getString("trigger_time_rendered", null);
     }
 
     /**
-     * Returned whether or not the result is a digest, or false if not
-     * specified (4.3+)
+     * Indicates whether the result is a set of events (digest) or a single event (per result).
+     * This method is available in Splunk 4.3 and later.
      *
-     * @return whether ot nor the result is a digest.
+     * @return {@code true} if the result is a digest, {@code false} if per result.
      */
     public boolean isDigestMode() {
         return getBoolean("digest_mode", false);

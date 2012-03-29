@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * A helper for Splunk REST API arguments.
+ * The {@code Args} class is a helper class for working with Splunk REST API arguments.
  *
- * The extension is mainly for encoding arguments for UTF8 transmission
- * to the Splunk instance in a key?value pairing for a string object, or
- * key?value1&key?value2, etc for an array of strings object.
+ * This extension is used mainly for encoding arguments for UTF8 transmission
+ * to a Splunk instance in a key?value pairing for a string, or
+ * key?value1&key?value2 (and so on) for an array of strings.
  */
 public class Args extends HashMap<String, Object> {
 
@@ -37,10 +37,10 @@ public class Args extends HashMap<String, Object> {
     public Args() { super(); }
 
     /**
-     * Class constructor. Initialization of a single key/value pair.
+     * Class constructor. Initializes a single key-value pair.
      *
      * @param key The key name.
-     * @param value The value (String or String [])
+     * @param value The value, as a {@code String:String} or {@code String:String[]}.
      */
     public Args(String key, Object value) {
         super();
@@ -48,20 +48,20 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Class constructor. Initialization of a pre-existing hash map.
+     * Class constructor. Initializes a pre-existing hash map.
      *
-     * @param values A set of key/value pairings.
+     * @param values A set of key-value pairs.
      */
     public Args(Map<String, Object> values) {
         super(values);
     }
 
     /**
-     * Adds to an args set.
+     * Adds an argument to an {@code Args} object.
      *
      * @param key The key name.
-     * @param value The value. (String or String [])
-     * @return This Args set.
+     * @param value The value, as a {@code String:String} or {@code String:String[]}.
+     * @return This {@code Args} set.
      */
     public Args add(String key, Object value) {
         put(key, value);
@@ -69,30 +69,30 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Creates a new Args instance that is empty.
+     * Creates a new empty instance of {@code Args}.
      *
-     * @return The Args instance.
+     * @return The {@code Args} instance.
      */
     public static Args create() {
         return new Args();
     }
 
     /**
-     * Creates a new Args instance initialized with a single key/value pair.
+     * Creates a new {@code Args} instance and initializes it with a single key-value pair.
      *
      * @param key The key name.
-     * @param value The value. (String or String[])
-     * @return The Args instance.
+     * @param value The value, as a {@code String:String} or {@code String:String[]}.
+     * @return The {@code Args} instance.
      */
     public static Args create(String key, Object value) {
         return new Args(key, value);
     }
 
     /**
-     * Creates a new Args instance initialized with a pre-existing hash map.
+     * Creates a new {@code Args} instance and initializes it with a pre-existing hash map.
      *
      * @param values The pre-existing hash map.
-     * @return The Args instance.
+     * @return The {@code Args} instance.
      */
     public static Args create(Map<String, Object> values) {
         return values == null ? new Args() : new Args(values);
@@ -115,8 +115,7 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Encodes a hash map of String:String or String:String[] into a single UTF8
-     * encoded string.
+     * Encodes a hash map of {@code String:String} or {@code String:String[]} into a single UTF8-encoded string.
      *
      * @param args The hash map.
      * @return The string.
@@ -125,7 +124,7 @@ public class Args extends HashMap<String, Object> {
         return Args.create(args).encode();
     }
 
-    // Encode an argument with a list valued argument
+    // Encodes an argument with a list-valued argument.
     private void 
     encodeValues(StringBuilder builder, String key, String[] values) {
         key = encode(key);
@@ -138,9 +137,9 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Encodes an Args instance into a UTF8 encoded string.
+     * Encodes an {@code Args} instance into a UTF8-encoded string.
      *
-     * @return The UTF8 encoded string.
+     * @return The UTF8-encoded string.
      */
     public String encode() {
         StringBuilder builder = new StringBuilder();
@@ -161,7 +160,7 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Returns the hash map value of a specific key, or the default value if
+     * Returns the hash-map value of a specific key, or the default value if
      * the key is not found.
      *
      * @param args The hash map.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,15 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a Splunk application archive.
+ * The {@code ApplicationArchive} class represents an archive of a Splunk app.
  */
 public class ApplicationArchive extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param path the full-path of the parent endpoint.
+     * @param service The connected {@code Service} instance.
+     * @param path The full path of the parent endpoint.
      */
     ApplicationArchive(Service service, String path) {
         super(service, path + "/package");
@@ -34,27 +34,26 @@ public class ApplicationArchive extends Entity {
     /**
      * Returns the app name.
      *
-     * @return The app name string.
+     * @return The app name.
      */
     public String getAppName() {
         return getString("name");
     }
 
     /**
-     * Returns the file path, on the server where the archive file is stored,
-     * accessible with direct file access on the server.
+     * Returns a path indicating where the app archive file is stored on the server, 
+     * for direct file access. 
      *
-     * @return The server file path of the archive file.
+     * @return The path to the archive file.
      */
     public String getFilePath() {
         return getString("path");
     }
 
     /**
-     * Returns the URL that points to the archive file on the server, accessible
-     * with a browser.
+     * Returns a URL to the app archive file on the server, for web browser access.
      *
-     * @return The URL of the archive file.
+     * @return The URL to the archive file.
      */
     public String getUrl() {
         return getString("url");

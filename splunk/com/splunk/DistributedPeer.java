@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a Splunk distributed peer.
+ * The {@code DistributedPeer} class represents a Splunk distributed peer,
+ * providing distributed peer server management.
  */
 public class DistributedPeer extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The deployment server endpoint.
      */
     DistributedPeer(Service service, String path) {
@@ -32,91 +33,90 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Returns this peer's build number, or null if not specified.
+     * Returns this peer's build number.
      *
-     * @return This peer's build number.
+     * @return The build number, or {@code null} if not specified.
      */
     public String getBuild() {
         return getString("build", null);
     }
 
     /**
-     * Returns the list of bundle versions, or null if not specified.
+     * Returns a list of bundle versions.
      *
-     * @return The list of bundle versions.
+     * @return The bundle versions, or {@code null} if not specified.
      */
     public String[] getBundleVersions() {
         return getStringArray("bundle_versions", null);
     }
 
     /**
-     * Returns this peer's GUID, or null if not specified.
+     * Returns this peer's GUID.
      *
-     * @return this peer's GUID.
+     * @return The GUID, or {@code null} if not specified.
      */
     public String getGuid() {
         return getString("guid", null);
     }
 
     /**
-     * Returns this peer's license signature, or null if not specified.
+     * Returns this peer's license signature.
      *
-     * @return This peer's license signature.
+     * @return The license signature, or {@code null} if not specified.
      */
     public String getLicenseSignature() {
         return getString("licenseSignature", null);
     }
 
     /**
-     * Returns this peer's name, or null if not specified.
+     * Returns this peer's name.
      *
-     * @return Thid peer's name.
+     * @return The name, or {@code null} if not specified.
      */
     public String getPeerName() {
         return getString("peerName", null);
     }
 
     /**
-     * Returns this peer's type, or null if not specified.
+     * Returns this peer's type.
      *
-     * @return This peer's type.
+     * @return The type, or {@code null} if not specified.
      */
     public String getPeerType() {
         return getString("peerType", null);
     }
 
     /**
-     * Returns this peer's replication status, or null if not specified.
+     * Returns this peer's replication status.
      *
-     * @return This peer's replication status.
+     * @return The replication status, or {@code null} if not specified.
      */
     public String getReplicationStatus() {
         return getString("replicationStatus", null);
     }
 
     /**
-     * Return this peer's overall status, or null if not specified.
+     * Return this peer's overall status.
      *
-     * @return This peer's overall status.
+     * @return The overall status, or {@code null} if not specified.
      */
     public String getStatus() {
         return getString("status", null);
     }
 
     /**
-     * Returns this peer's version, or null if not specified.
+     * Returns this peer's version.
      *
-     * @return This peer's version.
+     * @return The version, or {@code null} if not specified.
      */
     public String getVersion() {
         return getString("version", null);
     }
 
     /**
-     * Returns whether or not this peer is using HTTPS, or null if not
-     * specified.
+     * Indicates whether this peer is using HTTPS.
      *
-     * @return whether or not this peer is using HTTPS.
+     * @return {@code true} if this peer is using HTTPS, {@code false} if not.
      */
     public boolean isHttps() {
         return getBoolean("is_https", true);

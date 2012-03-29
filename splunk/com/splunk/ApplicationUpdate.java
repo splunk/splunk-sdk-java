@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,87 +17,88 @@
 package com.splunk;
 
 /**
- * Representation of a Splunk application update information.
+ * The {@code ApplicationUpdate} class represents information for an update
+ * to a locally-installed Splunk app.
  */
 public class ApplicationUpdate extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param path the full-path of the parent endpoint.
+     * @param service The connected {@code Service} instance.
+     * @param path The full path of the parent endpoint.
      */
     ApplicationUpdate(Service service, String path) {
         super(service, path + "/update");
     }
 
     /**
-     * Returns the app's fully qualified update URL, or null if not specified.
+     * Returns the fully-qualified URL to the app update.
      *
-     * @return the app's update URL.
+     * @return The URL of the app update, or {@code null} if not specified.
      */
     public String getAppUrl() {
         return getString("update.appurl", null);
     }
 
     /**
-     * Returns the checksum of the app, or null if not specified.
+     * Returns the checksum of the app.
      *
-     * @return The checksum of them app.
+     * @return The checksum of the app, or {@code null} if not specified.
      */
     public String getChecksum() {
         return getString("update.checksum", null);
     }
 
     /**
-     * Returns the checksum type of the app, or null if not specified.
+     * Returns the checksum type of the app.
      *
-     * @return the checksum type of the app.
+     * @return The checksum type, or {@code null} if not specified.
      */
     public String getChecksumType() {
         return getString("update.checksum.type", null);
     }
 
     /**
-     * Returns the app's fully qualified homepage URL, or null if not specified.
+     * Returns the fully-qualified URL to the app's homepage.
      *
-     * @return The app's homepage URL.
+     * @return The URL of the app's homepage, or {@code null} if not specified.
      */
     public String getHomepage() {
         return getString("update.homepage", null);
     }
 
     /**
-     * Returns the app's name, or null if not specified.
+     * Returns the app's name.
      *
-     * @return The app's name.
+     * @return The app's name, or {@code null} if not specified.
      */
     public String getUpdateName() {
         return getString("update.name", null);
     }
 
     /**
-     * Returns the app's update size, in bytes, or -1 if not specified.
+     * Returns the size of the app update.
      *
-     * @return The app's update size.
+     * @return The size of the update, in bytes, or -1 if not specified.
      */
     public int getSize() {
         return getInteger("update.size", -1);
     }
 
     /**
-     * Returns the app's version string, or null if not specified.
+     * Returns the app's version.
      *
-     * @return The app's version.
+     * @return The app's version, or {@code null} if not specified.
      */
     public String getVersion() {
         return getString("update.version", null);
     }
 
     /**
-     * Returns whether or not implicit ID is required.
+     * Indicates whether an implicit ID is required.
      *
-     * @return A boolean indicating if implicit ID is required.
+     * @return {@code true} if an implicit ID is required, {@code false} if not.
      */
     public boolean isImplicitIdRequired() {
         return getBoolean("update.implicit_id_required", false);

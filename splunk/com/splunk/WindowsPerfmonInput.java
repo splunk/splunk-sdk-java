@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a Windows Perfmon input.
+ * The {@code WindowsPerfmonInput} class represents a Windows Performance Monitor 
+ * (Perfmon) input.
  */
 public class WindowsPerfmonInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The Windows Perfmon input endpoint.
      */
     WindowsPerfmonInput(Service service, String path) {
@@ -32,58 +33,59 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns this Windows Perfmon input's monitored counters. This is a comma
-     * separated list. Null is returned if not specified.
+     * Returns a list of monitored counters for this Windows Perfmon input. A "*" 
+     * is equivalent to all counters.
      *
-     * @return This Windows Perfmon input's counters.
+     * @return A comma-separated list of counters, or {@code null} if not specified.
      */
     public String getCounters() {
         return getString("counters", null);
     }
 
     /**
-     * Returns this Windows Perfmon input's index name, or null if not
-     * specified.
+     * Returns the index name of this Windows Perfmon input.
      *
-     * @return This Windows Perfmon input's index name.
+     * @return The index name, or {@code null} if not specified.
      */
     public String getIndex() {
         return getString("index", null);
     }
 
     /**
-     * Returns this Windows Perfmon input's counter instances. A wildcard
-     * equivocates to all instances.
+     * Returns the counter instances of this Windows Perfmon input. A "*" 
+     * is equivalent to all instances.
      *
-     * @return This Windows Perfmon input's counter instances.
+     * @return The counter instances, or {@code null} if not specified.
      */
     public String getInstances() {
         return getString("instances", null);
     }
 
     /**
-     * Returns the frequency, in seconds, to poll this Windows Perfmon input's
-     * performance counters.
+     * Returns the interval at which to poll the performance counters for this
+     * Windows Perfmon input.
      *
-     * @return This Windows Perfmon polling frequency.
+     * @return The polling interval, in seconds.
      */
     public int getInterval() {
         return getInteger("interval");
     }
 
     /**
-     * Returns the Windows Perfmon input kind.
+     * Returns the input type of this Windows Perfmon input.
+     * @see InputKind
      *
-     * @return The Windows Perfmon input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.WindowsPerfmon;
     }
 
     /**
-     * Returns this Windows Perfmon input's Windows performance object.
+     * Returns the performance monitior object for this Windows Perfmon input
+     * (for example, "Process", "Server", or "PhysicalDisk".)
      *
-     * @return This Windows Perfmon input's Windows performance object.
+     * @return The Windows performance object.
      */
     public String getObject() {
         return getString("object");

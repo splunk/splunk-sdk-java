@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Base class for all Splunk entity resources.
+ * The {@code Entity} class is a base class for all Splunk entity resources.
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
@@ -30,7 +30,7 @@ public class Entity extends Resource implements Map<String, Object> {
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
      */
     Entity(Service service, String path) {
@@ -38,9 +38,9 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Returns the path corresponding to the requested action.
+     * Returns the path that corresponds to the requested action.
      *
-     * @param action Action requested.
+     * @param action The requested action.
      * @return The return path.
      */
     protected String actionPath(String action) {
@@ -73,8 +73,8 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Disabled the entity named by this endpoint. Available on almost every
-     * endpoint.
+     * Disables the entity that is named by this endpoint. This method is 
+     * available on almost every endpoint.
      */
     public void disable() {
         service.post(actionPath("disable"));
@@ -82,8 +82,8 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Enables the entity named by this endpoint. Available on almost every
-     * endpoint.
+     * Enables the entity that is named by this endpoint. This method is 
+     * available on almost every endpoint.
      */
     public void enable() {
         service.post(actionPath("enable"));
@@ -101,24 +101,24 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Returns the boolean value associated with the specified key. Values
-     * values can be converted from the set 0, 1, true, false.
+     * Returns the Boolean value associated with the specified key. Values
+     * can be converted from: 0, 1, true, false.
      *
      * @param key The key to look up.
-     * @return The boolean value associated with the specified key.
+     * @return The Boolean value associated with the specified key.
      */
     boolean getBoolean(String key) {
         return getContent().getBoolean(key);
     }
 
     /**
-     * Returns the boolean value associated with the specified key, or the
+     * Returns the Boolean value associated with the specified key, or the
      * default value if the key does not exist. Boolean values can be converted
-     * from the set 0, 1, true, false.
+     * from: 0, 1, true, false.
      *
      * @param key The key to look up.
      * @param defaultValue The default value.
-     * @return The boolean value associated with the specified key.
+     * @return The Boolean value associated with the specified key.
      */
     boolean getBoolean(String key, boolean defaultValue) {
         return getContent().getBoolean(key, defaultValue);
@@ -126,7 +126,7 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /**
      * Returns the long value associated with the specified key. Long values
-     * can be converted from the set number, numberMB, numberGB.
+     * can be converted from: number, numberMB, numberGB.
      *
      * @param key The key to look up.
      * @return The long value associated with the specified key.
@@ -137,8 +137,8 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /**
      * Returns the long value associated with the specified key, or the default
-     * value if the key does not exist. Long values can be converted from the
-     * set number, numberMB, numberGB.
+     * value if the key does not exist. Long values can be converted from: 
+     * number, numberMB, numberGB.
      *
      * @param key The key to look up.
      * @param defaultValue The default value.
@@ -165,7 +165,7 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /**
      * Returns a date value associated with the specified key, or the default
-     * value if the key does not exist. ate values can be converted from
+     * value if the key does not exist. Date values can be converted from
      * standard UTC time formats.
      *
      * @param key The key to look up.
@@ -194,7 +194,7 @@ public class Entity extends Resource implements Map<String, Object> {
      *
      * @param key The key to look up.
      * @param defaultValue The default value.
-     * @return The date value associated with the specified. key.
+     * @return The date value associated with the specified key.
      */
     Date getDateFromEpoch(String key, Date defaultValue) {
         return getContent().getDateFromEpoch(key, defaultValue);
@@ -253,13 +253,13 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Returns the meta data (eai:acl) of this entity, or null if none exist.
+     * Returns the meta data (eai:acl) of this entity.
      *
-     * @return the meta data of this entity.
+     * @return The meta data of this entity, or {@code null} if none exist.
      */
     public EntityMetadata getMetadata() {
         // CONSIDER: For entities that don't have an eai:acl field, which is
-        // uncommon, but does happen at least in the case of a DeploymentClient
+        // uncommon but does happen at least in the case of a DeploymentClient
         // that is not enabled, we return null. A slightly friendlier option
         // would be to return a metadata instance that defaults all values?
         if (!containsKey("eai:acl")) return null;
@@ -316,10 +316,11 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Returns whether or not this entity is disabled. Available on almost
-     * evey endpoint.
+     * Indicates whether this entity is disabled. This method is 
+     * available on almost every endpoint.
      *
-     * @return Whether or not this entity is disabled.
+     * @return {@code true} if this entity is disabled, {@code false} if 
+     * enabled.
      */
     public boolean isDisabled() {
         return getBoolean("disabled", false);
@@ -385,7 +386,7 @@ public class Entity extends Resource implements Map<String, Object> {
     /**
      * Updates the entity with the specified arguments.
      *
-     * @param args The arguments being updated.
+     * @param args The arguments to update.
      */
     public void update(Map<String, Object> args) {
         service.post(actionPath("edit"), args);

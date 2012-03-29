@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,16 @@
 package com.splunk;
 
 /**
- * Representation of a license pool.
+* The {@code LicensePool} class represents a license pool, which is made up 
+* of a single license master and zero or more license slave instances of Splunk 
+* that are configured to use the licensing volume from a set license or license stack.
  */
 public class LicensePool extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The license group endpoint.
      */
     LicensePool(Service service, String path) {
@@ -32,56 +34,56 @@ public class LicensePool extends Entity {
     }
 
     /**
-     * Returns this license pool's description, or null if not specified.
+     * Returns the description of this license pool.
      *
-     * @return This license pool's description.
+     * @return This description, or {@code null} if not specified.
      */
     public String getDescription() {
         return getString("description", null);
     }
 
     /**
-     * Returns this license pool's ingest quota, in bytes. Note: the return
-     * type is a string, because the value can also be a literal "MAX".
+     * Returns the indexing quota for this license pool.
      *
-     * @return This license pool's data ingest quota.
+     * @return A string containing the indexing quota in bytes, or "MAX" to indicate the
+     * maximum amount that is allowed.
      */
     public String getQuota() {
         return getString("quota", "0");
     }
 
     /**
-     * Returns this license pool's list of slaves, or null if not specified.
+     * Returns the list of slaves for this license pool.
      *
-     * @return This license pool's list of slaves.
+     * @return A comma-separated list of slaves by ID, or {@code null} if not specified.
      */
     public String[] getSlaves() {
         return getStringArray("slaves", null);
     }
 
     /**
-     * Returns this license pool's slave bytes used.
+     * Returns the usage of indexing volume by slave licenses in this license pool. 
      *
-     * @return This license pool's slave bytes used.
+     * @return The overall license slave usage, in bytes.
      */
     public long getSlavesUsageBytes() {
         return getLong("salves_usage_bytes", 0);
     }
 
     /**
-     * Returns this license pool's stack ID, or null if not specified. The valid
-     * values are download-trial, enterprise, forwarder, or free.
+     * Returns the stack ID for this license pool. Valid values are: download-trial, 
+     * enterprise, forwarder, and free.
      *
-     * @return This license pool's stack ID.
+     * @return The license pool stack ID, or {@code null} if not specified.
      */
     public String getStackId() {
         return getString("stack_id", null);
     }
 
     /**
-     * Returns this license pool's used bytes.
+     * Returns the usage of indexing volume for this license pool. 
      *
-     * @return This license pool's used bytes.
+     * @return This license pool's usage, in bytes.
      */
     public long getUsedBytes() {
         return getLong("used_bytes", 0);

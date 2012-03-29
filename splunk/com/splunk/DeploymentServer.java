@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,14 +17,15 @@
 package com.splunk;
 
 /**
- * Representation of a Splunk deployment server
+ * The {@code DeploymentServer} class represents a Splunk deployment server, and provides
+ * access to the configurations of all deployment servers.
  */
 public class DeploymentServer extends Entity {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The deployment server endpoint.
      */
     DeploymentServer(Service service, String path) {
@@ -32,12 +33,12 @@ public class DeploymentServer extends Entity {
     }
 
     /**
-     * Returns whether or not this deployment server reviews its configuration
+     * Indicates whether this deployment server reviews its configuration
      * information and informs the deployment client if something is new or
      * updated.
      *
-     * @return Whether this deployment server notifies the deployment client for
-     * new or changed configurations.
+     * @return {@code true} if this deployment server notifies the deployment
+     * client of new or changed configurations, {@code false} if not.
      */
     public boolean getCheckNew() {
         return getBoolean("check-new", false);

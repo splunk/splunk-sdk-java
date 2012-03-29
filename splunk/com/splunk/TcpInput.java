@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,15 +17,16 @@
 package com.splunk;
 
 /**
- * Representation of a TCP input. This differs from TCP cooked, as the data
- * indexed is not processed and in raw form.
+ * The {@code TcpInput} class represents a TCP raw input. This differs from a TCP
+ * <i>cooked</i> input in that this TCP input is in raw form, and is not processed
+ * (or "cooked"). 
  */
 public class TcpInput extends Input {
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The TCP input endpoint.
      */
     TcpInput(Service service, String path) {
@@ -33,104 +34,103 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the style of host connection, or null if not specified. Valid
-     * values are from the set ip, dns, and none.
+     * Returns the style of host connection. Valid values are: {@code ip}, {@code dns}, and {@code none}.
      *
-     * @return The style of host connection.
+     * @return The style of host connection, or {@code null} if not specified.
      */
     public String getConnectionHost() {
         return getString("connection_host", null);
     }
 
     /**
-     * Returns this TCP input's group.
+     * Returns the group of this TCP input.
      *
-     * @return This TCP input's group.
+     * @return The group.
      */
     public String getGroup() {
         return getString("group");
     }
 
     /**
-     * Returns this TPC input's source host, where this indexer gets its data.
-     * Null is returned if it is not specified.
+     * Returns the source host of this TCP input where this indexer gets its data.
      *
-     * @return This TCP input's source host.
+     * @return The source host, or {@code null} if not specified.
      */
     public String getHost() {
         return getString("host", null);
     }
 
     /**
-     * Returns this TCP input's index name, or null if not specified.
+     * Returns the index name of this TCP input.
      *
-     * @return This TCP input's index name.
+     * @return The index name, or {@code null} if not specified.
      */
     public String getIndex() {
         return getString("index", null);
     }
 
     /**
-     * Returns the TCP input kind.
+     * Returns the input type of this TCP input.
+     * @see InputKind
      *
-     * @return The TCP input kind.
+     * @return The input kind.
      */
     public InputKind getKind() {
         return InputKind.Tcp;
     }
 
     /**
-     * Returns this TCP input's queue, or null if not specified. Valid values
-     * are from the set parsingQueue, indexQueue.
+     * Returns the queue for this TCP input. Valid values are: {@code parsingQueue} and
+     * {@code indexQueue}.
      *
-     * @return This TCP input's queue.
+     * @return The queue, or {@code null} if not specified.
      */
     public String getQueue() {
         return getString("queue", null);
     }
 
     /**
-     * Returns this TCP input's _rcvbuf attribute.
+     * Returns the value of the {@code _rcvbuf} attribute for this TCP input.
      *
-     * @return This TCP input's _rcvbuf attribute.
+     * @return The {@code _rcvbuf} value.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
     }
 
     /**
-     * Returns this TCP input's incoming host restriction, or null if not
-     * specified.
+     * Returns the incoming host restriction for this TCP input. When specified, 
+     * this inputonly accepts data from the specified host. 
      *
-     * @return This TCP input's incoming host restriction.
+     * @return The incoming host restriction, or {@code null} if not specified.
      */
     public String getRestrictToHost() {
         return getString("restrictToHost", null);
     }
 
     /**
-     * Returns this TCP input's initial source key, or null if not specified.
-     * This is normally the input file path.
+     * Returns the initial source key for this TCP input.
+     * Typically this value is the input file path.
      *
-     * @return This TCP input's source.
+     * @return The source key, or {@code null} if not specified.
      */
     public String getSource() {
         return getString("source", null);
     }
 
     /**
-     * Returns this TCP input's event source type, or null if not specified.
+     * Returns the event source type for this TCP input.
      *
-     * @return this TCP input's event source type.
+     * @return The event source type, or {@code null} if not specified.
      */
     public String getSourceType() {
         return getString("sourceType", null);
     }
 
     /**
-     * Returns Whether or not this TCP input is using SSL.
+     * Indicates whether this TCP input is using SSL.
      *
-     * @return Whether or not this TCP input is using SSL.
+     * @return {@code true} if this TCP input is using SSL, {@code false} if not.
      */
     public boolean getSSL() {
         return getBoolean("SSL", false);
