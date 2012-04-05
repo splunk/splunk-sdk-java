@@ -18,6 +18,8 @@ package com.splunk.sdk.search;
 
 import com.splunk.*;
 import com.splunk.sdk.Command;
+import com.splunk.external.ResultsReaderCsv;
+import com.splunk.external.ResultsReaderJson;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,9 +46,10 @@ public class Program {
         "Search output format {csv, raw, json, xml} (default: xml)";
     static String resultsCount =
         "The maximum number of results to return (default: 100)";
-    static String rawText = "Set to 1 if raw events are displayed";
+    static String readerText = "Use ResultsReader";
     static String statusBucketsText =
         "Number of status buckets to use for search (default: 0)";
+    static String verboseString = "Display search progress";
 
     public static void main(String[] args) {
         try {
@@ -67,9 +70,9 @@ public class Program {
         command.addRule("offset", Integer.class, offset);
         command.addRule("output", String.class, outputText);
         command.addRule("output_mode", String.class, outputModeText);
-        command.addRule("raw", Integer.class, rawText);
+        command.addRule("reader", readerText);
         command.addRule("status_buckets", Integer.class, statusBucketsText);
-        command.addRule("verbose", "Display search progress");
+        command.addRule("verbose",  verboseString);
         command.parse(args);
 
         if (command.args.length != 1)
@@ -196,20 +199,37 @@ public class Program {
             stream = job.getTimeline(outputArgs);
         else assert(false);
 
-        boolean rawData = true;
-        if (command.opts.containsKey("raw")) {
-            int tmp  = (Integer)command.opts.get("raw");
-            if (tmp == 0 ) rawData = false;
+        boolean useReader = false;
+        if (command.opts.containsKey("reader")) {
+            useReader = true;
         }
 
-        if (!rawData) {
+        if (useReader) {
             HashMap<String, String> map;
-            ResultsReader resultsReader = new ResultsReader(stream, outputMode);
-            while ((map = resultsReader.getNextEvent()) != null) {
-                System.out.println("EVENT:********");
-                System.out.println("   " + map);
+            try {
+                // NOTE: The JSON and CSV results readers requires an external
+                // jar (gson-2.1.jar, opencsv-2.3.jar) for json and csv parsing
+                // and is not part of the base Splunk Java SDK. These readers
+                // are found in the "com.splunk.external" module. If you include
+                // the splunk-external.jar and the both gson-2.1.jar and
+                // opencsv-2.3.jar, you can use any -- just like this sample.
+                ResultsReader resultsReader = null;
+                if (outputMode.equals("xml"))
+                    resultsReader = new ResultsReaderXml(stream);
+                else if (outputMode.equals("json")) {
+                    resultsReader = new ResultsReaderJson(stream);
+                } else {
+                    resultsReader = new ResultsReaderCsv(stream);
+                }
+                while ((map = resultsReader.getNextEvent()) != null) {
+                    System.out.println("EVENT:********");
+                    for (String key: map.keySet())
+                        System.out.println("   " + key + " --> " + map.get(key));
+                }
+                resultsReader.close();
+            } catch (Exception e) {
+                System.out.println("exception: " + e);
             }
-            resultsReader.close();
         }
         else {
             InputStreamReader reader = new InputStreamReader(stream);

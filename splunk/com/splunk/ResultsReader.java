@@ -16,96 +16,32 @@
 
 package com.splunk;
 
-import au.com.bytecode.opencsv.CSVReader;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
-import java.io.UnsupportedEncodingException;
 
-public class ResultsReader {
-    String streamType;
-    String csvKeys[];
+public abstract  class ResultsReader {
     InputStreamReader inputStreamReader = null;
-    CSVReader csvReader = null;
-    JsonReader jsonReader = null;
+    Reader reader = null;
 
     /**
      * Class constructor.
      *
      * @param inputStream The input stream (unread) return stream from a splunk
      * query or export.
-     * @param streamType Specifies the input stream's format. Valid values are
-     * {@code csv, xml,} or {@code json}.
-     *
      * @throws IOException If an IO exception occurs.
      */
-    public ResultsReader(InputStream inputStream, String streamType)
-            throws IOException {
+    public ResultsReader(InputStream inputStream) throws Exception {
         try {
             inputStreamReader = new
                     InputStreamReader(inputStream, "UTF-8");
         }
         catch (UnsupportedEncodingException e) { assert false; }
-
-        if (streamType.equals("csv")) {
-            csvReader = new CSVReader(inputStreamReader);
-            csvKeys = csvReader.readNext();
-        } else if (streamType.equals("json")) {
-            jsonReader = new JsonReader(inputStreamReader);
-            jsonReader.beginArray();
-        } else if (streamType.equals("xml")) {
-
-        } else {
-            throw new RuntimeException("streamType must be xml, json or xml");
-        }
-        this.streamType = streamType;
     }
 
-    public HashMap<String, String> getNextEvent() throws IOException {
-        HashMap<String, String> data = new HashMap<String, String>();
-
-        if (streamType.equals("csv")) {
-            int index = 0;
-
-            String [] nextLine = csvReader.readNext();
-            if (nextLine == null) return null;
-
-            for (String key: csvKeys) {
-                data.put(key, nextLine[index++]);
-            }
-        } else if (streamType.equals("json")) {
-            if (jsonReader.peek() == JsonToken.END_ARRAY) {
-                return null;
-            }
-            jsonReader.beginObject();
-            while (jsonReader.hasNext()) {
-                data.put(jsonReader.nextName(), jsonReader.nextString());
-            }
-            if (jsonReader.peek() == JsonToken.END_OBJECT) {
-                jsonReader.endObject();
-            }
-        } else {
-
-        }
-
-        return data;
+    public HashMap<String, String> getNextEvent() throws Exception {
+        return null;
     }
 
     public void close() throws IOException {
-        if (streamType.equals("csv")) {
-            csvReader.close();
-            csvReader = null;
-        } else if (streamType.equals("json")) {
-            jsonReader.close();
-            jsonReader = null;
-        } else {
-
-        }
-
-        inputStreamReader.close();
-        inputStreamReader = null;
     }
 }

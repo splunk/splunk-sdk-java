@@ -167,12 +167,16 @@ public class Program {
 
         if (!rawData) {
             HashMap<String, String> map;
-            ResultsReader resultsReader = new ResultsReader(stream, outputMode);
-            while ((map = resultsReader.getNextEvent()) != null) {
-                System.out.println("EVENT:********");
-                System.out.println("   " + map);
+            try {
+                ResultsReaderXml resultsReader = new ResultsReaderXml(stream);
+                while ((map = resultsReader.getNextEvent()) != null) {
+                    System.out.println("EVENT:********");
+                    System.out.println("   " + map);
+                }
+                resultsReader.close();
+            } catch (Exception e) {
+                System.out.println("Xml exception: " + e);
             }
-            resultsReader.close();
         }
         else {
             InputStreamReader reader = new InputStreamReader(stream);
