@@ -43,7 +43,7 @@ public class OutputDefault extends Entity {
      * {@code false} if not.
      */
     public boolean autoLb() {
-        return getBoolean("autoLB");
+        return getBoolean("autoLB", false);
     }
 
     /**
