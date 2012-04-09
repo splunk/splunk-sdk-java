@@ -138,7 +138,7 @@ public class Application extends Entity {
      *
      * @return Update information for the app.
      */
-    public ApplicationUpdate update() {
+    public ApplicationUpdate getUpdate() {
         return new ApplicationUpdate(service, path);
     }
 }

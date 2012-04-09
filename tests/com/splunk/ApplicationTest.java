@@ -112,7 +112,7 @@ public class ApplicationTest extends SplunkTestCase {
             app.isManageable();
             app.isVisible();
             app.stateChangeRequiresRestart();
-            ApplicationUpdate applicationUpdate = app.update();
+            ApplicationUpdate applicationUpdate = app.getUpdate();
             applicationUpdate.getChecksum();
             applicationUpdate.getChecksumType();
             applicationUpdate.getHomepage();
@@ -161,7 +161,7 @@ public class ApplicationTest extends SplunkTestCase {
         assertTrue(appArchive.getFilePath().length() > 0);
         assertTrue(appArchive.getUrl().length() > 0);
 
-        ApplicationUpdate appUpdate = app.update();
+        ApplicationUpdate appUpdate = app.getUpdate();
         assertTrue(appUpdate.containsKey("eai:acl"));
 
         service = cleanApp("sdk-tests", service);
