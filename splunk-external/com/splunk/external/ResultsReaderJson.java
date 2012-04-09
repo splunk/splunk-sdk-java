@@ -28,12 +28,29 @@ public class ResultsReaderJson extends ResultsReader {
 
     private JsonReader jsonReader = null;
 
+    /**
+     * Class Constructor.
+     *
+     * Construct a streaming JSON reader for the event stream. One should only
+     * attempt to parse a JSON stream with the JSON reader. Using a non-JSON
+     * stream will yield unpredictable results.
+     *
+     * @param inputStream The stream to be parsed.
+     * @throws Exception On exception.
+     */
     public ResultsReaderJson(InputStream inputStream) throws Exception {
         super(inputStream);
         jsonReader = new JsonReader(new InputStreamReader(inputStream));
         jsonReader.beginArray();
     }
 
+    /** {@inheritDoc} */
+    public void close() throws IOException {
+        jsonReader.close();
+        jsonReader = null;
+    }
+
+    /** {@inheritDoc} */
     public HashMap<String, String> getNextEvent() throws Exception {
         HashMap<String, String> returnData = null;
         int level = 0;
@@ -58,10 +75,5 @@ public class ResultsReaderJson extends ResultsReader {
             }
         }
         return returnData;
-    }
-
-    public void close() throws IOException {
-        jsonReader.close();
-        jsonReader = null;
     }
 }

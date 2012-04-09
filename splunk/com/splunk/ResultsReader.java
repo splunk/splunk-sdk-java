@@ -38,10 +38,23 @@ public abstract  class ResultsReader {
         catch (UnsupportedEncodingException e) { assert false; }
     }
 
+    /**
+     * Close the reader and return resources.
+     *
+     * @throws Exception on Exception
+     */
+    public void close() throws Exception {
+    }
+
+    /**
+     * Get the Next event in the event stream
+     *
+     * @return The HashMap of key/value pairs for an entire event.
+     * @throws Exception on Exception.
+     */
     public HashMap<String, String> getNextEvent() throws Exception {
         return null;
     }
 
-    public void close() throws IOException {
-    }
+
 }

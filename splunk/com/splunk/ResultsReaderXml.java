@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
 
@@ -27,6 +28,16 @@ public class ResultsReaderXml extends ResultsReader {
 
     private XMLEventReader xmlReader = null;
 
+    /**
+     * Class Constructor.
+     *
+     * Construct a streaming XML reader for the event stream. One should only
+     * attempt to parse an XML stream with the XML reader. Using a non-XML
+     * stream will yield unpredictable results.
+     *
+     * @param inputStream The stream to be parsed.
+     * @throws Exception On exception.
+     */
     public ResultsReaderXml(InputStream inputStream) throws Exception {
         super(inputStream);
         reader = new BufferedReader(inputStreamReader);
@@ -40,19 +51,93 @@ public class ResultsReaderXml extends ResultsReader {
             if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT) {
                 EndElement endElement = xmlEvent.asEndElement();
                 if (endElement.getName().getLocalPart().equals("meta")) {
+                    // at the end of the meta data, eat everything until start.
+                    while (xmlReader.peek().getEventType()
+                            != XMLStreamConstants.START_ELEMENT)
+                        xmlReader.nextEvent();
                     return;
                 }
             }
         }
     }
-    public HashMap<String, String> getNextEvent() throws Exception {
-        HashMap<String, String> returnData = null;
 
-        return returnData;
-    }
-
+    /** {@inheritDoc} */
     public void close() throws IOException {
         inputStreamReader.close();
         inputStreamReader = null;
+    }
+
+    /** {@inheritDoc} */
+    public HashMap<String, String> getNextEvent() throws Exception {
+        XMLEvent xmlEvent;
+        int eType;
+
+        while (xmlReader.hasNext()) {
+            xmlEvent = xmlReader.nextEvent();
+            eType = xmlEvent.getEventType();
+            while (eType != XMLStreamConstants.END_DOCUMENT) {
+                if (eType == XMLStreamConstants.START_ELEMENT &&
+                    xmlEvent.asStartElement()
+                            .getName()
+                            .getLocalPart()
+                            .equals("result")) {
+                    return getResultKVPairs();
+                }
+                if (xmlReader.hasNext()) {
+                    xmlEvent = xmlReader.nextEvent();
+                    eType = xmlEvent.getEventType();
+                }
+            }
+        }
+        return null;
+    }
+
+    private HashMap<String, String> getResultKVPairs() throws Exception {
+        HashMap<String, String> returnData = new HashMap<String, String>();
+        XMLEvent xmlEvent;
+        int eType;
+        String key = null;
+        StringBuilder value = new StringBuilder();
+        int level = 0;
+
+        // event results are flat, extract k/v pairs based on XML indentation
+        // level throwing away the uninteresting non-data.
+
+        while (xmlReader.hasNext()) {
+            xmlEvent = xmlReader.nextEvent();
+            eType = xmlEvent.getEventType();
+            switch (eType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    Iterator<Attribute> attrIttr =
+                                xmlEvent.asStartElement().getAttributes();
+                    if (level == 0) {
+                        if (attrIttr.hasNext())
+                            key =  attrIttr.next().getValue();
+                    }
+                    level++;
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (xmlEvent.asEndElement()
+                            .getName()
+                            .getLocalPart()
+                            .equals("result"))
+                        return returnData;
+                    if (--level == 0) {
+                        returnData.put(key, value.toString());
+                        value.setLength(0); //clear
+                        key = null;
+                    }
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    if (level > 1) {
+                        if (value.length() > 0) value.append("\n");
+                        value.append(xmlEvent.asCharacters().getData());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return returnData;
     }
 }

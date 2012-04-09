@@ -28,6 +28,16 @@ public class ResultsReaderCsv extends ResultsReader {
     private CSVReader csvReader = null;
     private String[] keys;
 
+    /**
+     * Class Constructor.
+     *
+     * Construct a streaming CSV reader for the event stream. One should only
+     * attempt to parse an CSV stream with the CSV reader. Using a non-CSV
+     * stream will yield unpredictable results.
+     *
+     * @param inputStream The stream to be parsed.
+     * @throws Exception On exception.
+     */
     public ResultsReaderCsv(InputStream inputStream) throws Exception {
         super(inputStream);
         csvReader = new CSVReader(new InputStreamReader(inputStream));
@@ -35,6 +45,13 @@ public class ResultsReaderCsv extends ResultsReader {
         keys = csvReader.readNext();
     }
 
+    /** {@inheritDoc} */
+    public void close() throws IOException {
+        csvReader.close();
+        csvReader = null;
+    }
+
+    /** {@inheritDoc} */
     public HashMap<String, String> getNextEvent() throws Exception {
         HashMap<String, String> returnData = null;
         String[] line;
@@ -48,10 +65,5 @@ public class ResultsReaderCsv extends ResultsReader {
         }
 
         return returnData;
-    }
-
-    public void close() throws IOException {
-        csvReader.close();
-        csvReader = null;
     }
 }
