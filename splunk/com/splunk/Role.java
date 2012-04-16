@@ -18,8 +18,8 @@ package com.splunk;
 
 /**
  * The {@code Role} class represents a Splunk role, which is a collection of
- * permissions and capabilities. The user's role determines what the user can see 
- * and interact with in Splunk. 
+ * permissions and capabilities. The user's role determines what the user can
+ * see and interact with in Splunk.
  */
 public class Role extends Entity {
 
@@ -62,8 +62,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns an array of roles used to import attributes from, such as capabilities 
-     * and allowed indexes to search.
+     * Returns an array of roles used to import attributes from, such as
+     * capabilities and allowed indexes to search.
      *
      * @return An array of roles.
      */
@@ -72,8 +72,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns the maximum number of concurrent real-time search jobs a user with this role 
-     * is allowed to run. 
+     * Returns the maximum number of concurrent real-time search jobs a user
+     * with this role is allowed to run.
      *
      * @return The imported quota for real-time search jobs.
      */
@@ -82,7 +82,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns the maximum disk space that can be used for search jobs by a user with this role.
+     * Returns the maximum disk space that can be used for search jobs by a user
+     * with this role.
      *
      * @return The imported search disk quota, in megabytes.
      */
@@ -91,9 +92,10 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns a search string that restricts the scope of searches run by this role. 
-     * Only those events that also match this search string are shown to the user. 
-     * If a user has multiple roles with different search filters, they are combined with an OR.
+     * Returns a search string that restricts the scope of searches run by this
+     * role. Only those events that also match this search string are shown to
+     * the user. If a user has multiple roles with different search filters,
+     * they are combined with an OR.
      *
      * @return The imported search filter.
      */
@@ -102,7 +104,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns an array of indexes that a user with this role has permissions to search.
+     * Returns an array of indexes that a user with this role has permissions to
+     * search.
      *
      * @return The imported array of allowed indexes.
      */
@@ -111,8 +114,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns an array of indexes to search by default when no index is specified
-     * for a user with this role.
+     * Returns an array of indexes to search by default when no index is
+     * specified for a user with this role.
      *
      * @return The imported array of default indexes.
      */
@@ -131,8 +134,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns the maximum number of concurrent real-time search jobs a user with this role 
-     * is allowed to run. 
+     * Returns the maximum number of concurrent real-time search jobs a user
+     * with this role is allowed to run.
      *
      * @return Maximum number of concurrent real-time search jobs.
      */
@@ -141,7 +144,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns the maximum disk space that can be used for search jobs by a user with this role.
+     * Returns the maximum disk space that can be used for search jobs by a user
+     * with this role.
      *
      * @return Maximum disk space usage, in megabytes.
      */
@@ -150,9 +154,10 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns a search string that restricts the scope of searches run by this role. 
-     * Only those events that also match this search string are shown to the user. 
-     * If a user has multiple roles with different search filters, they are combined with an OR.
+     * Returns a search string that restricts the scope of searches run by this
+     * role. Only those events that also match this search string are shown to
+     * the user. If a user has multiple roles with different search filters,
+     * they are combined with an OR.
      *
      * @return The search filter.
      */
@@ -161,7 +166,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns an array of indexes that a user with this role has permissions to search.
+     * Returns an array of indexes that a user with this role has permissions
+     * to search.
      *
      * @return Array of allowed indexes.
      */
@@ -170,8 +176,8 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns an array of indexes to search by default when no index is specified
-     * for a user with this role.
+     * Returns an array of indexes to search by default when no index is
+     * specified for a user with this role.
      *
      * @return An array of default indexes.
      */
@@ -190,12 +196,111 @@ public class Role extends Entity {
     }
 
     /**
-     * Returns the maximum time span of a search that is allowed for users in this
-     * role.
+     * Returns the maximum time span of a search that is allowed for users in
+     * this role.
      *
      * @return Maximum time span of a search, in seconds.
      */
     public int getSearchTimeWin() {
         return getInteger("srchTimeWin");
+    }
+
+    /**
+     * Sets the capabilities for the role.
+     *
+     * @param capabilities The capabilities to set.
+     */
+    public void setCapabilities(String[] capabilities) {
+        setCacheValue("capabilities", capabilities);
+    }
+
+    /**
+     * Sets the default app for the role.
+     *
+     * @param defaultApp The name of the default app.
+     */
+    public void setDefaultApp(String defaultApp) {
+        setCacheValue("defaultApp", defaultApp);
+    }
+
+    /**
+     * Sets the imported roles for the role.
+     *
+     * @param importedRoles The name of the default app.
+     */
+    public void setImportedRoles(String[] importedRoles) {
+        setCacheValue("imported_roles", importedRoles);
+    }
+
+    /**
+     * Sets the maximum number of concurrent real time search jobs for this
+     * role. This count is independent from the normal search jobs limit.
+     *
+     * @param numJobs The maximum number of jobs for real-time searches under
+     * this role.
+     */
+    public void setRealTimeSearchJobsQuota(int numJobs) {
+        setCacheValue("rtSrchJobsQuota", numJobs);
+    }
+
+    /**
+     * Sets the maximum disk space in MB that can be used by this roles search
+     * jobs.
+     *
+     * @param srchDiskQuota The maximum disk space allocated, in MB, used for
+     * this roles search jobs.
+     */
+    public void setSearchDiskQuota(int srchDiskQuota) {
+        setCacheValue("srchDiskQuota", srchDiskQuota);
+    }
+
+    /**
+     * Sets a search string that restricts the scope of searches run by this
+     * role. Search results for this role only show events that also match the
+     * search string you specify. In the case that a user has multiple roles
+     * with different search filters, they are combined with an OR.
+     *
+     * @param srchFilter The restrictive search string.
+     */
+    public void setSearchFilter(String srchFilter) {
+        setCacheValue("srchFilter", srchFilter);
+    }
+
+    /**
+     * Sets the indexes that this role has permissions to search.
+     *
+     * @param indexesAllowed The indexes this role is allowed to search.
+     */
+    public void setSearchIndexesAllowed(String[] indexesAllowed) {
+        setCacheValue("srchIndexesAllowed", indexesAllowed);
+    }
+
+    /**
+     * Sets the the default search indexes, when no index is specified.
+     *
+     * @param srchIndexesDefault The default index.
+     */
+    public void setSearchIndexesDefault(String[] srchIndexesDefault) {
+        setCacheValue("srchIndexesDefault", srchIndexesDefault);
+    }
+
+    /**
+     * Sets the maximum number of concurrent searches a user with this role is
+     * allowed to run. In the event of many roles per user, the maximum of
+     * these quotas is applied.
+     *
+     * @param srchJobsQuota The maximum concurrent jobs.
+     */
+    public void setSearchJobsQuota(int srchJobsQuota) {
+        setCacheValue("srchJobsQuota", srchJobsQuota);
+    }
+
+    /**
+     * Sets the maximum time span of a search, in seconds.
+     *
+     * @param srchTimeWin The maximum search time span.
+     */
+    public void setSearchTimeWindow(int srchTimeWin) {
+        setCacheValue("srchTimeWin", srchTimeWin);
     }
 }

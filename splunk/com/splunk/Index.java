@@ -98,7 +98,8 @@ public class Index extends Entity {
      * Indicates whether the data retrieved from this index has been
      * UTF8-encoded.
      *
-     * @return {@code true} if the retrieved data is in UTF8, {@code false} if not. 
+     * @return {@code true} if the retrieved data is in UTF8, {@code false} if
+     * not.
      */
     public boolean getAssureUTF8() {
         return getBoolean("assureUTF8");
@@ -114,8 +115,8 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the block sign size for this index. This value defines the number of
-     * events that make up a block for block signatures. A value of 0 means
+     * Returns the block sign size for this index. This value defines the number
+     * of events that make up a block for block signatures. A value of 0 means
      * block signing is disabled.
      *
      * @return The block sign size.
@@ -128,16 +129,19 @@ public class Index extends Entity {
      * Returns the absolute file path to the cold database for this index. 
      * This value may contain shell expansion terms.
      *
-     * @return The colddbs's absolute file path, or {@code null} if not specified.
+     * @return The colddbs's absolute file path, or {@code null} if not
+     * specified.
      */
     public String getColdPath() {
         return getString("coldPath", null);
     }
 
     /**
-     * Returns the expanded absolute file path to the cold database for this index.
+     * Returns the expanded absolute file path to the cold database for this
+     * index.
      *
-     * @return The colddbs's expanded absolute file path, or {@code null} if not specified.
+     * @return The colddbs's expanded absolute file path, or {@code null} if not
+     * specified.
      */
     public String getColdPathExpanded() {
         return getString("coldPath_expanded", null);
@@ -146,7 +150,8 @@ public class Index extends Entity {
     /**
      * Returns the frozen archive destination path for this index.
      *
-     * @return The frozen archive destination path, or {@code null} if not specified.
+     * @return The frozen archive destination path, or {@code null} if not
+     * specified.
      */
     public String getColdToFrozenDir() {
         return getString("coldToFrozenDir", null);
@@ -194,15 +199,17 @@ public class Index extends Entity {
     /**
      * Indicates whether real-time search is enabled for this index.
      *
-     * @return {@code true} if real-time search is enabled, {@code false} if not.
+     * @return {@code true} if real-time search is enabled, {@code false} if
+     * not.
      */
     public boolean getEnableRealtimeSearch() {
         return getBoolean("enableRealtimeSearch");
     }
 
     /**
-     * Returns the maximum age for a bucket, after which the data in this index rolls to 
-     * frozen. If archiving is necessary for frozen data, see the {@code coldToFrozen} attributes.
+     * Returns the maximum age for a bucket, after which the data in this index
+     * rolls to frozen. If archiving is necessary for frozen data, see the
+     * {@code coldToFrozen} attributes.
      *
      * @return The maximum age, in seconds, after which data rolls to frozen.
      */
@@ -211,18 +218,22 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the absolute path to both hot and warm buckets for this index. This value may contain shell expansion terms.
+     * Returns the absolute path to both hot and warm buckets for this index.
+     * This value may contain shell expansion terms.
      *
-     * @return This index's absolute path to both hot and warm buckets, or {@code null} if not specified.
+     * @return This index's absolute path to both hot and warm buckets, or
+     * {@code null} if not specified.
      */
     public String getHomePath() {
         return getString("homePath", null);
     }
 
     /**
-     * Returns the expanded absolute path to both hot and warm buckets for this index.
+     * Returns the expanded absolute path to both hot and warm buckets for this
+     * index.
      *
-     * @return The expanded absolute path to both hot and warm buckets, or {@code null} if not specified.
+     * @return The expanded absolute path to both hot and warm buckets, or
+     * {@code null} if not specified.
      */
     public String getHomePathExpanded() {
         return getString("homePath_expanded", null);
@@ -257,10 +268,12 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the maximum data size before triggering a roll from hot to warm buckets for this index.
+     * Returns the maximum data size before triggering a roll from hot to warm
+     * buckets for this index.
      *
      * @return The maximum data size, in MB, or "auto" (which means 750MB), or
-     * "auto_high_volume" (which means 10GB on a 64-bit system, or 1GB on a 32-bit system).
+     * "auto_high_volume" (which means 10GB on a 64-bit system, or 1GB on a
+     * 32-bit system).
      */
     public String getMaxDataSize() {
         return getString("maxDataSize");
@@ -308,7 +321,8 @@ public class Index extends Entity {
 
     /**
      * Returns the maximum number of unique lines that are allowed 
-     * in a bucket's .data files for this index. A value of 0 means infinite lines.
+     * in a bucket's .data files for this index. A value of 0 means infinite
+     * lines.
      *
      * @return The maximum number of unique lines.
      */
@@ -368,7 +382,8 @@ public class Index extends Entity {
      * Returns the frequency at which Splunkd forces a filesystem sync while 
      * compressing journal slices for this index.
      * A value of "disable" disables this feature completely, while a value of 0
-     * forces a file-system sync after completing compression of every journal slice.
+     * forces a file-system sync after completing compression of every journal
+     * slice.
      *
      * @return The file-system sync frequency, as an integer or "disable".
      */
@@ -386,9 +401,9 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the frequency at which metadata is for partially synced (synced in-place)
-     * for this index. A value of 0 disables partial syncing, so metadata is 
-     * only synced on the ServiceMetaPeriod interval. 
+     * Returns the frequency at which metadata is for partially synced (synced
+     * in-place) for this index. A value of 0 disables partial syncing, so
+     * metadata is only synced on the ServiceMetaPeriod interval.
      * @see #getServiceMetaPeriod getServiceMetaPeriod
      *
      * @return The metadata sync interval, in seconds.
@@ -428,8 +443,8 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the frequency to check for the need to create a new hot bucket and
-     * the need to roll or freeze any warm or cold buckets for this index.
+     * Returns the frequency to check for the need to create a new hot bucket
+     * and the need to roll or freeze any warm or cold buckets for this index.
      *
      * @return The check frequency, in seconds.
      */
@@ -465,21 +480,22 @@ public class Index extends Entity {
     }
 
     /**
-     * Indicates whether the sync operation is invoked before the file descriptor is 
-     * closed on metadata updates. 
+     * Indicates whether the sync operation is invoked before the file
+     * descriptor is closed on metadata updates.
      *
-     * @return {@code true} if the sync operation is invoked before the file descriptor 
-     * is closed on metadata updates, {@code false} if not.
+     * @return {@code true} if the sync operation is invoked before the file
+     * descriptor is closed on metadata updates, {@code false} if not.
      */
     public boolean getSyncMeta() {
         return getBoolean("syncMeta");
     }
 
     /**
-     * Returns the absolute path to the thawed index for this index. This value may 
-     * contain shell expansion terms.
+     * Returns the absolute path to the thawed index for this index. This value
+     * may contain shell expansion terms.
      *
-     * @return The absolute path to the thawed index, or {@code null} if not specified.
+     * @return The absolute path to the thawed index, or {@code null} if not
+     * specified.
      */
     public String getThawedPath() {
         return getString("thawedPath", null);
@@ -488,14 +504,16 @@ public class Index extends Entity {
     /**
      * Returns the expanded absolute path to the thawed index for this index.
      *
-     * @return The expanded absolute path to the thawed index, or {@code null} if not specified.
+     * @return The expanded absolute path to the thawed index, or {@code null}
+     * if not specified.
      */
     public String getThawedPathExpanded() {
         return getString("thawedPath_expanded", null);
     }
 
     /**
-     * Returns the frequency at which Splunk checks for an index throttling condition.
+     * Returns the frequency at which Splunk checks for an index throttling
+     * condition.
      *
      * @return The frequency of the throttling check, in seconds.
      */
@@ -515,7 +533,8 @@ public class Index extends Entity {
     /**
      * Indicates whether this index is an internal index.
      *
-     * @return {@code true} if this index is an internal index, {@code false} if not.
+     * @return {@code true} if this index is an internal index, {@code false}
+     * if not.
      */
     public boolean isInternal() {
         return getBoolean("isInternal");
@@ -527,6 +546,325 @@ public class Index extends Entity {
     public void rollHotBuckets() {
         ResponseMessage response = service.post(path + "/roll-hot-buckets");
         assert(response.getStatus() == 200);
+    }
+
+    /**
+     * Sets whether or not Splunk guarantees all data retrieved from the index
+     * is in proper UTF8 encoding. Note that indexing performance will degrade
+     * when set to {@code true}.
+     *
+     * @param assure Whether or not all data retrieved is in UTF8 encoding.
+     */
+    public void setAssureUTF8(boolean assure) {
+        setCacheValue("assureUTF8", assure);
+    }
+
+    /**
+     * Sets how many events make up a block for block signature. If set to 0,
+     * block signing is disabled for this index. A recommended value is 100.
+     *
+     * @param value event count for block signing.
+     */
+    public void setBlockSignSize(int value) {
+        setCacheValue("blockSignSize", value);
+    }
+
+    /**
+     * Sets the destination path for the frozen archive.
+     * Bucket freezing policy is as follows:
+     *
+     * New style buckets (4.2 and on): removes all files but the rawdata.
+     * To thaw, run splunk rebuild @{code <bucket dir>} on the bucket, then
+     * move to the thawed directory.
+     *
+     * Old style buckets (Pre-4.2): gzip all the .data and .tsidx files.
+     * To thaw, gunzip the zipped files and move the bucket into the thawed
+     * directory.
+     *
+     * If both coldToFrozenDir and coldToFrozenScript are specified,
+     * coldToFrozenDir takes precedence
+     *
+     * @param destination event count for block signing.
+     */
+    public void setColdToFrozenDir(String destination) {
+        setCacheValue("coldToFrozenDir", destination);
+    }
+
+    /**
+     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes"
+     * target="_blank">Attributes for the "data/indexes" endpoint in the REST API documentation</a>
+     *
+     * @param script  The script.
+     */
+    public void setColdToFrozenScript(String script) {
+        setCacheValue("coldToFrozenScript", script);
+    }
+
+    /**
+     * Sets whether or not asychronous "online fsck" bucket repair is enabled.
+     * When enabled one does not have to wait until buckets are repaired before
+     * starting Splunk. This is new for 4.3.
+     *
+     * @param value whether or not online bucket repair is enabled.
+     */
+    public void setEnableOnlineBucketRepair(boolean value) {
+        setCacheValue("enableOnlineBucketRepair", value);
+    }
+
+    /**
+     * Sets the time, in seconds, after which indexed data rolls to frozen.
+     * Freezing data means it is removed from the index. If on needs to archive
+     * data, refer to {@code coldToFrozenDir} and {@code coldToFrozenScript}.
+     *
+     * @param seconds The time, in seconds, after which indexed data rolls to
+     * frozen.
+     */
+    public void setFrozenTimePeriodInSecs(int seconds) {
+        setCacheValue("frozenTimePeriodInSecs", seconds);
+    }
+
+    /**
+     * Sets the time, as annotated by a postfix {@code m, s, h} or {@code d},
+     * that if a warm or cold bucket is older, do not create or rebuild its
+     * bloomfilter. An example would be {@code 30d}, for 30 days.
+     *
+     * @param time The time, as annotated.
+     */
+    public void setMaxBloomBackfillBucketAge(String time) {
+        setCacheValue("maxBloomBackfillBucketAge", time);
+    }
+
+    /**
+     * Sets the number of concurrent optimize processes that can run against
+     * a hot bucket.
+     *
+     * @param processes The number of concurrent optimize processes.
+     */
+    public void setMaxBloomBackfillBucketAge(int processes) {
+        setCacheValue("maxConcurrentOptimizes", processes);
+    }
+
+    /**
+     * Sets the size, in MB, for a hot DB to reach before a roll to
+     * warm is triggered. Note, allowable values are also, @{code auto} and
+     * @{code auto_high_volume}, which are recommended.
+     *
+     * @param size The size, in MB, for a hot DB to reach before a roll to
+     * warm is triggered.
+     */
+    public void setMaxDataSize(String size) {
+        setCacheValue("maxDataSize", size);
+    }
+
+    /**
+     * Sets the maximum number of hot buckets that can exist per index. When
+     * {@code maxHotBuckets} is exceeded, Splunk rolls the least recently used
+     * (LRU) hot bucket to warm. Both normal hot buckets and quarantined hot
+     * buckets count towards this total. This setting operates independently of
+     * {@code maxHotIdleSecs}, which can also cause hot buckets to roll.
+     *
+     * @param size The maximum number of hot buckets per index.
+     */
+    public void setMaxHotBuckets(int size) {
+        setCacheValue("maxHotBuckets", size);
+    }
+
+    /**
+     * Sets Maximum life, in seconds, of a hot bucket. Defaults to 0.
+     * If a hot bucket exceeds maxHotIdleSecs, Splunk rolls it to warm. This
+     * setting operates independently of maxHotBuckets, which can also cause
+     * hot buckets to roll. A value of 0 turns off the idle check (equivalent
+     * to INFINITE idle time).
+     *
+     * @param seconds The maximum life, in seconds, of a hot bucket.
+     */
+    public void setMaxHotIdleSecs(int seconds) {
+        setCacheValue("maxHotIdleSecs", seconds);
+    }
+
+    /**
+     * Sets the Upper bound of target maximum timespan of hot/warm buckets in
+     * seconds. Defaults to 7776000 seconds (90 days).
+     *
+     * NOTE: if you set this too small, you can get an explosion of hot/warm
+     * buckets in the filesystem. The system sets a lower bound implicitly for
+     * this parameter at 3600, but this is an advanced parameter that should be
+     * set with care and understanding of the characteristics of your data.
+     *
+     * @param seconds The upper bound, in seconds, of target maximum time span.
+     */
+    public void setMaxHotSpanSecs(int seconds) {
+        setCacheValue("maxHotSpanSecs", seconds);
+    }
+
+    /**
+     * Sets the amount of memory, in MB, allocated foe buffering a single tsidx
+     * file before flushing to disk.
+     *
+     * @param memory the amount of memory, in MB, allocated foe buffering a
+     * single tsidx file before flushing to disk.
+     */
+    public void setMaxMemMB(int memory) {
+        setCacheValue("maxMemMB", memory);
+    }
+
+    /**
+     * Sets the maximum number of unique lines in .data files in a bucket, which
+     * may help to reduce memory consumption. If set to 0, this setting is
+     * ignored (it is treated as infinite).
+     *
+     * If exceeded, a hot bucket is rolled to prevent further increase. If your
+     * buckets are rolling due to Strings.data hitting this limit, the culprit
+     * may be the punct field in your data. If you don't use punct, it may be
+     * best to simply disable this
+     * (see props.conf.spec in $SPLUNK_HOME/etc/system/README).
+     *
+     * There is a small time delta between when maximum is exceeded and bucket
+     * is rolled. This means a bucket may end up with epsilon more lines than
+     * specified, but this is not a major concern unless excess is significant.
+     *
+     * @param entries the number of entries.
+     */
+    public void setMaxMetaEntries(int entries) {
+        setCacheValue("maxMetaEntries", entries);
+    }
+
+    /**
+     * Sets the maximum size, in MB, of an index. If an index grows larger than
+     * the maximum size, the oldest data is frozen.
+     *
+     * @param size the maximum size, in MB, of an index.
+     */
+    public void setMaxTotalDataSizeMB(int size) {
+        setCacheValue("maxTotalDataSizeMB", size);
+    }
+
+    /**
+     * Sets the maximum number of warm buckets.  If this number is exceeded,
+     * the warm buckets with the lowest value for their latest times will be
+     * moved to cold.
+     *
+     * @param buckets the maximum number of warm buckets.
+     */
+    public void setMaxWarmDBCount(int buckets) {
+        setCacheValue("maxWarmDBCount", buckets);
+    }
+
+    /**
+     * Sets the frequency, in seconds, that Splunk forces a filesystem sync
+     * while compressing journal slices. Note that {@code 0} specifies a
+     * filesystem sync after every complete slice compression. A value of
+     * {@code disable} disables this feature.
+     *
+     * @param frequency the maximum number of warm buckets.
+     */
+    public void setMinRawFileSyncSecs(String frequency) {
+        setCacheValue("minRawFileSyncSecs", frequency);
+    }
+
+    /**
+     * Sets the frequency, in seconds, of meta data synchronization; but only
+     * for records where the sync can be done efficiently in-place, without
+     * requiring a full re-write of the metadata file. Records that require
+     * full re-write are be synchronized at serviceMetaPeriod.
+     *
+     * @param frequency The number in seconds between mata data synchronization.
+     */
+    public void setPartialServiceMetaPeriod(int frequency) {
+        setCacheValue("partialServiceMetaPeriod", frequency);
+    }
+
+    /**
+     * Sets the quarantine window, in seconds, for events with a future
+     * timestamp.
+     *
+     * This is a mechanism to prevent main hot buckets from being polluted with
+     * fringe events.
+     *
+     * @param window The number of seconds in the future to consider an event
+     * quarantined.
+     */
+    public void setQuarantineFutureSecs(int window) {
+        setCacheValue("quarantineFutureSecs", window);
+    }
+
+    /**
+     * Sets the quarantine window, in seconds, for events with a past
+     * timestamp.
+     *
+     * This is a mechanism to prevent main hot buckets from being polluted with
+     * fringe events.
+     *
+     * @param window The number of seconds in the past to consider an event
+     * quarantined.
+     */
+    public void setQuarantinePastSecs(int window) {
+        setCacheValue("quarantinePastSecs", window);
+    }
+
+    /**
+     * Sets the target uncompressed size, in bytes, for individual raw slice in
+     * the raw data journal of the index. {@code 0} is not a valid value. If
+     * {@code 0} is used, {@code rawChunkSizeBytes} is set to the default value.
+     *
+     * NOTE: rawChunkSizeBytes only specifies a target chunk size. The actual
+     * chunk size may be slightly larger by an amount proportional to an
+     * individual event size.
+     *
+     * WARNING: This is an advanced parameter. Only change it if you are
+     * instructed to do so by Splunk Support.
+     *
+     * @param size The size, in bytes, for the individual raw slice uncompressed
+     * size of the raw data of the index.
+     */
+    public void setRawChunkSizeBytes(int size) {
+        setCacheValue("rawChunkSizeBytes", size);
+    }
+
+    /**
+     * Sets the frequency, in seconds, to check if a new hot bucket needs to be
+     * created. Also, how frequently to check if there are any warm/cold buckets
+     * that should be rolled/frozen.
+     *
+     * @param frequency The number of seconds to check if a new hot bucket needs
+     * to be created.
+     */
+    public void setRotatePeriodInSecs(int frequency) {
+        setCacheValue("rotatePeriodInSecs", frequency);
+    }
+
+    /**
+     * Sets the frequency, in seconds, to synchronize the meta data to disk.
+     *
+     * @param frequency The number of seconds between synchronizing meta data
+     * to disk.
+     */
+    public void setServiceMetaPeriod(int frequency) {
+        setCacheValue("serviceMetaPeriod", frequency);
+    }
+
+    /**
+     * Sets whether or not a synchronize operation is called before file
+     * descriptor is closed on metadata file updates. This functionality
+     * improves integrity of metadata files, especially in regards to operating
+     * system crashes/machine failures.
+     *
+     * Note: Do not change this parameter without the input of a Splunk Support.
+     *
+     * @param sync Whether or not to synchronize.
+     */
+    public void setSyncMeta(boolean sync) {
+        setCacheValue("syncMeta", sync);
+    }
+
+    /**
+     * Sets the frequency, in seconds, for checking index throttling conditions.
+     *
+     * @param frequency The number of seconds between index throttling
+     * conditions checks.
+     */
+    public void setThrottleCheckPeriod(int frequency) {
+        setCacheValue("throttleCheckPeriod", frequency);
     }
 
     /**

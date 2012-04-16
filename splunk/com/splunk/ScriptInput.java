@@ -85,4 +85,95 @@ public class ScriptInput extends Input {
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
     }
+
+    /**
+     * Sets whether the script input is enabled or disabled. Note that the
+     * supported disabled mechanism, is to use the @{code disable} action.
+     *
+     * @param disabled {@code true} to disabled to script input,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets the value to populate in the host field for events from this data
+     * input.
+     *
+     * @param host the value to populate in the host field for events from this
+     * data input.
+     */
+    public void setHost(String host) {
+        setCacheValue("host", host);
+    }
+
+    /**
+     * Sets which index events from this input should be stored in.
+     *
+     * @param index The index name.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets either an interval, in seconds, or cron schedule for how often to
+     * execute the specified script. If a cron schedule is set, the script is
+     * not ececuted on start-up.
+     *
+     * @param interval an interval, in seconds, or cron schedule.
+     */
+    public void setInterval(String interval) {
+        setCacheValue("interval", interval);
+    }
+
+    /**
+     * Sets the script to run as this user.
+     *
+     * @param passAuth the user.
+     */
+    public void setPassAuth(String passAuth) {
+        setCacheValue("passAuth", passAuth);
+    }
+
+    /**
+     * Sets the source name to populate in the source field for events from
+     * this data input. The same source should not be used for multiple data
+     * inputs.
+     *
+     * @param name the source name to populate in the source field.
+     */
+    public void setRenameSource(String name) {
+        setCacheValue("rename-source", name);
+    }
+
+    /**
+     * Sets the source key/field for events from this input.
+     *
+     * The key is used during parsing/indexing, in particular to set the source
+     * field during indexing. It is also the source field used at search time.
+     * As a convenience, the chosen string is prepended with 'source::'.
+     *
+     * Note: Overriding the source key is generally not recommended. Typically,
+     * the input layer provides a more accurate string to aid in problem
+     * analysis and investigation, accurately recording the file from which
+     * the data was retreived. Consider use of source types, tagging, and search
+     * wildcards before overriding this value.
+     *
+     * @param source The source key/field for events from this input.
+     */
+    public void setSource(String source) {
+        setCacheValue("source", source);
+    }
+
+    /**
+     * Sets the source type to populate in the source type for events from
+     * this data input.
+     *
+     * @param sourcetype the source name to populate in the source type field.
+     */
+    public void setSourcetype(String sourcetype) {
+        setCacheValue("sourcetype", sourcetype);
+    }
 }

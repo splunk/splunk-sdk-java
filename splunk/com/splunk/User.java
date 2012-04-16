@@ -115,4 +115,74 @@ public class User extends Entity {
     public String getTz() {
         return getString("tz", null);
     }
+
+    /**
+     * Sets the default app for this user.
+     *
+     * @param defaultApp The default app for this user.
+     */
+    public void setDefaultApp(String defaultApp) {
+        setCacheValue("defaultApp", defaultApp);
+    }
+
+    /**
+     * Sets the email address for this user.
+     *
+     * @param email The email address for this user.
+     */
+    public void setEmail(String email) {
+        setCacheValue("email", email);
+    }
+
+    /**
+     * Sets this user's password.
+     *
+     * @param password This user's password.
+     */
+    public void setPassword(String password) {
+        setCacheValue("password", password);
+    }
+
+    /**
+     * Sets this user's real name.
+     *
+     * @param realname This user's real name.
+     */
+    public void setRealName(String realname) {
+        setCacheValue("realname", realname);
+    }
+
+    /**
+     * Sets whether or not to restart  background search jobs when Splunk
+     * restarts.
+     *
+     * If {@code true}, a background search job for this user that has not
+     * completed is restarted when Splunk restarts.
+     *
+     * @param restart_background_jobs whether or not to restart background
+     * search jobs when Splunk restarts.
+     */
+    public void setRestartBackgroundJobs(boolean restart_background_jobs) {
+        setCacheValue("restart_background_jobs", restart_background_jobs);
+    }
+
+    /**
+     * Sets this user's roles.
+     *
+     * @param roles This user's roles.
+     */
+    public void setRoles(String[] roles) {
+        setCacheValue("roles", roles);
+    }
+
+    /**
+     * Sets this user's time zone, for display purposes.
+     *
+     * Note this is valid for splunk 4.3+ only.
+     *
+     * @param tz This user's timezone.
+     */
+    public void setRoles(String tz) {
+        setCacheValue("tz", tz);
+    }
 }

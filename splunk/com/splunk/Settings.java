@@ -142,6 +142,141 @@ public class Settings extends Entity {
     }
 
     /**
+     * Sets the fully qualified local path to the default index.
+     *
+     * The default value is {@code $SPLUNK_HOME/var/lib/splunk/defaultdb/db/}
+     *
+     * @param path The local ath to the default index.
+     */
+    public void setSplunkDBPath(String path) {
+        setCacheValue("SPLUNK_DB", path);
+    }
+
+    /**
+     * Sets whether Splunk Web uses HTTP or HTTPS. If set to {@code true},
+     * Splunk Web uses SSL and HTTPS. Ff set to {@code false} Splunk Web uses
+     * HTTP.
+     *
+     * @param useHttps Whether Splunk Web uses HTTPS or HTTTP.
+     */
+    public void setEnableSplunkWebSSL(boolean useHttps) {
+        setCacheValue("enableSplunkWebSSL", useHttps);
+    }
+
+    /**
+     * Sets the default hostname to use for data inputs that do not override
+     * this setting.
+     *
+     * @param host The default hostname.
+     */
+    public void setHost(String host) {
+        setCacheValue("host", host);
+    }
+
+    /**
+     * Sets the Splunk Web listening port. If using SSL/HTTPS, this should be
+     * set to the HTTPS port number.
+     *
+     * The port must be present for SplunkWeb to start. If omitted or 0 the
+     * server will NOT start an http listener.
+     *
+     * @param port The Splunk Web listening port.
+     */
+    public void setPort(String port) {
+        setCacheValue("httpport", port);
+    }
+
+    /**
+     * Sets the management host and port for splunkd.
+     *
+     * Default value is {@code 127.0.0.1:8089}.
+     *
+     * @param mgmtHostPort The hostname or IP and port for the management
+     * interface.
+     */
+    public void setManagementHostPort(String mgmtHostPort) {
+        setCacheValue("mgmtHostPort", mgmtHostPort);
+    }
+
+    /**
+     * Sets in MB, the amount of disk space that must exist for splunkd to
+     * continue operating.
+     *
+     * minFreespace affects search and indexing:
+     * Before attempting to launch a search, splunk requires this amount of
+     * free space on the filesystem where the dispatch directory is stored
+     *  $SPLUNK_HOME/var/run/splunk/dispatch).
+     *
+     *  Applied similarly to the search quota values in authorize.conf and
+     *  limits.conf.
+     *
+     *  For indexing, periodically, the indexer checks space on all partitions
+     *  that contain splunk indexes as specified by indexes.conf. When you need
+     *  to clear more disk space, indexing is paused and Splunk posts a ui
+     *  banner + warning.
+     *
+     * @param minFreeSpace The free space, in MB, required for splunkd
+     * operation.
+     */
+    public void setMinimumFreeSpace(int minFreeSpace) {
+        setCacheValue("minFreeSpace", minFreeSpace);
+    }
+
+    /**
+     * Sets the password string that is prepended to the splunk symmetric key
+     * to generate the final key that is used to sign all traffic between
+     * master/slave licenser.
+     *
+     * @param pass4SymmKey The prepended password string.
+     */
+    public void setPasswordSymmKey(String pass4SymmKey) {
+        setCacheValue("pass4SymmKey", pass4SymmKey);
+    }
+
+    /**
+     * Sets the name used to identify this Splunk instance for features such
+     * as distributed search. Defaults to
+     * {@code <hostname>-<user running splunk>}.
+     *
+     * @param serverName The server name.
+     */
+    public void setServerName(String serverName) {
+        setCacheValue("serverName", serverName);
+    }
+
+    /**
+     * Sets the session timeout. Valid value are of the form {@code number}
+     * followed by a specifier of the set {@code s, h, d}.
+     *
+     * @param sessionTimeout The session timeout value.
+     */
+    public void setSessionTimeout(String sessionTimeout) {
+        setCacheValue("sessionTimeout", sessionTimeout);
+    }
+
+    /**
+     * Sets whether or not to start splunk web or not. {@code True} enables
+     * Splunk Wen, {@code false} disables Splunk Web.
+     *
+     * @param startwebserver Whether or not to start Splunk Web.
+     */
+    public void setStartWebServer(boolean startwebserver) {
+        setCacheValue("startwebserver", startwebserver);
+    }
+
+    /**
+     * Sets The IP address of the authenticating proxy. Set to a valid IP
+     * address to enable SSO.
+     *
+     * Disabled by default. Normal value is {@code 127.0.0.1}.
+     *
+     * @param trustedIP The authenticating proxy's IP address.
+     */
+    public void setTrustedIP(String trustedIP) {
+        setCacheValue("trustedIP", trustedIP);
+    }
+
+    /**
      * Updates the settings entity with the specified arguments.
      *
      * @param args The arguments being updated.

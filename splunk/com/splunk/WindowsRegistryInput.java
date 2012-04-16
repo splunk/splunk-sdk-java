@@ -101,4 +101,94 @@ public class WindowsRegistryInput extends Input {
     public String getType() {
         return getString("type", null);
     }
+
+    /**
+     * Sets whether or not to establish a baseline value for the registry keys.
+     * {@code True} means yes, {@code False} means no.
+     *
+     * @param baseline Whether or not to establish a baseline value for the
+     * registry keys.
+     */
+    public void setBaseline(boolean baseline) {
+        setCacheValue("baseline", baseline);
+    }
+
+    /**
+     * Sets whether this input is enabled or disabled. Note that the
+     * supported disabled mechanism, is to use the @{code disable} action.
+     *
+     * @param disabled {@code true} to disabled to script input,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets the registry hive under which to monitor for changes.
+     *
+     * @param hive The registry hive under which to monitor for changes.
+     */
+    public void setHive(String hive) {
+        setCacheValue("hive", hive);
+    }
+
+    /**
+     * Sets index in which to store all generated events.
+     *
+     * @param index The index in which to store all generated events.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets whether or not to monitor the subnodes of the given registry hive.
+     * {@code True} means to monitor, {@code false} mean not to monitor
+     * the subnodes.
+     *
+     * @param monitorSubnodes Whether or not to monitor the subnodes.
+     */
+    public void setMonitorSubnodes(boolean monitorSubnodes) {
+        setCacheValue("monitorSubnodes", monitorSubnodes);
+    }
+
+    /**
+     * Sets the process regular expression. If specified, will only collect
+     * changes if a process name matches that regex.
+     *
+     * @param proc The process regular expression.
+     */
+    public void setProc(String proc) {
+        setCacheValue("proc", proc);
+    }
+
+    /**
+     * Sets the type regular expression. If specified, will only collect
+     * changes if a type name matches that regex.
+     *
+     * @param type The type regular expression.
+     */
+    public void setType(String type) {
+        setCacheValue("type", type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        if (!isUpdateKeyPresent("baseline")) {
+            setCacheValue("baseline", getBaseline()); // required
+        }
+        if (!isUpdateKeyPresent("hive")) {
+            setCacheValue("hive", getHive()); // required
+        }
+        if (!isUpdateKeyPresent("proc")) {
+            setCacheValue("proc", getProc()); // required
+        }
+        if (!isUpdateKeyPresent("type")) {
+            setCacheValue("type", getType()); // required
+        }
+        super.update();
+    }
 }

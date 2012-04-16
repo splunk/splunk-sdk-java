@@ -686,6 +686,7 @@ public class Job extends Entity {
      * @return This job.
      */
     @Override public Job refresh() {
+        clearUpdate();
         ResponseMessage response = service.get(path);
         if (response.getStatus() == 204) {
             // empty response from server means the job has not yet been

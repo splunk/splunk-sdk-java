@@ -126,4 +126,101 @@ public class WindowsWmiInput extends Input {
     public String getWql() {
         return getString("wql");
     }
+
+    /**
+     * Sets the type regular expression. If specified, will only collect
+     * changes if a type name matches that regex.
+     *
+     * @param type The type regular expression.
+     */
+    public void setClasses(String type) {
+        setCacheValue("type", type);
+    }
+
+    /**
+     * Sets whether this input is enabled or disabled. Note that the
+     * supported disabled mechanism, is to use the @{code disable} action.
+     *
+     * @param disabled {@code true} to disabled to script input,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets the Properties (fields) that you want to gather from the given
+     * class.
+     *
+     * @param fields The properties (fields) that you want to gather from the
+     * given class.
+     */
+    public void setFields(String[] fields) {
+        setCacheValue("fields", fields);
+    }
+
+    /**
+     * Sets index in which to store all generated events.
+     *
+     * @param index The index in which to store all generated events.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets the counter instances to monitor.
+     *
+     * @param instances the counter instances to monitor.
+     */
+    public void setInstances(String[] instances) {
+        setCacheValue("instances", instances);
+    }
+
+    /**
+     * Sets the frequency, in seconds, at which the WMI provider(s) will be
+     * queried.
+     *
+     * @param interval The polling frequency, in seconds.
+     */
+    public void setInterval(int interval) {
+        setCacheValue("interval", interval);
+    }
+
+    /**
+     * Sets the host from which we will monitor log events. To specify
+     * additional hosts to be monitored via WMI, use the "server" parameter.
+     *
+     * @param lookup_host The host from which we will monitor log events.
+     */
+    public void setLookupHost(String lookup_host) {
+        setCacheValue("lookup_host", lookup_host);
+    }
+
+    /**
+     * Sets the additional servers that you want to gather data from. Use this
+     * attribute if you need to gather more than a single machine.  This value
+     * is a comma-separated list.
+     *
+     * @param servers The host from which we will monitor log events.
+     */
+    public void setServers(String servers) {
+        setCacheValue("servers", servers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        if (!isUpdateKeyPresent("classes")) {
+            setCacheValue("classes", getClasses()); // required
+        }
+        if (!isUpdateKeyPresent("interval")) {
+            setCacheValue("interval", getInterval()); // required
+        }
+        if (!isUpdateKeyPresent("lookup_host")) {
+            setCacheValue("lookup_host", getLookupHost()); // required
+        }
+        super.update();
+    }
 }

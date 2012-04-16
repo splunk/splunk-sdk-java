@@ -90,4 +90,62 @@ public class WindowsPerfmonInput extends Input {
     public String getObject() {
         return getString("object");
     }
+
+    /**
+     * Sets the counters to monitor. A wildcard value of {@code *} means all
+     * counters.
+     *
+     * @param counters The counters to monitor.
+     */
+    public void setCounters(String[] counters) {
+        setCacheValue("counters", counters);
+    }
+
+    /**
+     * Sets whether this input is enabled or disabled. Note that the
+     * supported disabled mechanism, is to use the @{code disable} action.
+     *
+     * @param disabled {@code true} to disabled to script input,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets index in which to store all generated events.
+     *
+     * @param index The index in which to store all generated events.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets the counter instances to monitor. A wildcard value of {@code *}
+     * means all instances.
+     *
+     * @param instances the counter instances to monitor.
+     */
+    public void setInstances(String[] instances) {
+        setCacheValue("instances", instances);
+    }
+
+    /**
+     * Sets the frequency, in seconds, to poll the performance counters.
+     *
+     * @param interval The polling frequency, in seconds.
+     */
+    public void setInterval(int interval) {
+        setCacheValue("interval", interval);
+    }
+
+    /**
+     * Sets the performance monitor object.
+     *
+     * @param object The performance monitor object.
+     */
+    public void setObject(String object) {
+        setCacheValue("object", object);
+    }
 }

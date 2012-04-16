@@ -44,30 +44,6 @@ public class DeploymentClient extends Entity {
     }
 
     /**
-     * Disables the deployment client.
-     */
-    @Override public void disable() {
-        /*
-         * {@code disable} is not handled through the standard enable/disable action
-         * paths; rather it is an edit (i.e. update) action path.
-         */
-        Args args = new Args("disabled", true);
-        update(args);
-    }
-
-    /**
-     * Enables the deployment client.
-     */
-    @Override public void enable() {
-        /*
-         * {@code enable} is not handled through the standard enable/disable action
-         * path; rather it is an edit (i.e. update) action path.
-         */
-        Args args = new Args("disabled", false);
-        update(args);
-    }
-
-    /**
      * Returns the list of server classes.
      *
      * @return The list of server classes, or {@code null} if not specified.
@@ -93,6 +69,27 @@ public class DeploymentClient extends Entity {
     public void reload() {
         service.get(path + "/deployment-client/Reload");
         invalidate();
+    }
+
+    /**
+     * Sets whether the deployment client is enabled or disabled. Note that the
+     * supported disabled mechanism, is to use the @{code disable} action.
+     *
+     * @param disabled {@code true} to disabled to deployment client,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets the deployment server's target URI for this deployment client. The
+     * form of this URI is deployment_server_uir:port.
+     *
+     * @param targetUri The URI of the deployment server.
+     */
+    public void setTargetUri(String targetUri) {
+        setCacheValue("targetUri", targetUri);
     }
 }
 

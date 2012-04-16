@@ -91,4 +91,56 @@ public class WindowsEventLogInput extends Input {
     public String getLookupHost() {
         return getString("lookup_host");
     }
+
+    /**
+     * Sets the list of <i>additional</i> hosts to be used for monitoring. This
+     * is a comma-separated list of additional hosts to be used for monitoring.
+     * The first host should be specified with "lookup_host", and the additional
+     * ones using this parameter.
+     *
+     * @param hosts The comma-separated list of additional hosts to be
+     * monitored.
+     */
+    public void setHosts(String hosts) {
+        setCacheValue("hosts", hosts);
+    }
+
+    /**
+     * Sets index in which to store all generated events.
+     *
+     * @param index The index in which to store all generated events.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets the list of event log names to gather data from.
+     *
+     * @param logs The list of event log names to gather data from.
+     */
+    public void setLogs(String logs) {
+        setCacheValue("logs", logs);
+    }
+
+    /**
+     * Sets the host from which we will monitor log events. To specify
+     * additional hosts to be monitored via WMI, use the "hosts" parameter.
+     *
+     * @param lookup_host The host from which we will monitor log events.
+     */
+    public void setLookupHost(String lookup_host) {
+        setCacheValue("lookup_host", lookup_host);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+
+    @Override public void update() {
+        if (!isUpdateKeyPresent("lookup_host")) {
+            setCacheValue("lookup_host", getLookupHost()); // required
+        }
+        super.update();
+    }
 }

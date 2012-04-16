@@ -48,10 +48,24 @@ public class DeploymentServer extends Entity {
      * Returns inclusive criteria for determining deployment client access to
      * this deployment server.
      *
-     * @return Criteria for determining deployment client access to this
-     * deployment server.
+     * @param index The index of the whitelist entry to return.
+     * @return A list of included client addresses, or {@code null} if not
+     * specified.
      */
-    public String getWhiteList0() {
-        return getString("whitelist.0");
+    public String getWhiteListByIndex(int index) {
+        return getString(String.format("whitelist.%d", index), null);
+    }
+
+    /**
+     * Sets whether this deployment server reviews the information in its
+     * configuration to find out if there is something new or updated to push
+     * out to its deployment clients. If {@code true} this deployment server
+     * reviews the information, {@code false} and this deployment server does
+     * not review the information.
+     *
+     * @param checkNew Whether or not the information is reviewed.
+     */
+    public void setCheckNew(String checkNew) {
+        setCacheValue("check-new", checkNew);
     }
 }

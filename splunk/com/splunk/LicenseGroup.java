@@ -42,12 +42,22 @@ public class LicenseGroup extends Entity {
     }
 
     /**
-     * Indicates whether this license group is active.
+     * Indicates whether or not this license group is active.
      *
      * @return {@code true} if this license group is active, {@code false}
      * if not. 
      */
     public boolean isActive() {
         return getBoolean("is_active");
+    }
+
+    /**
+     * Sets whether or not this license group is active.
+     *
+     * @param value {@code true} to set this license group is active,
+     * {@code false} to set this license group inactive.
+     */
+    public void setActive(boolean value) {
+        setCacheValue("is_active", value);
     }
 }

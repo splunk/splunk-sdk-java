@@ -16,16 +16,14 @@
 
 package com.splunk;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The {@code Entity} class is a base class for all Splunk entity resources.
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
+    private HashMap<String, Object> toUpdate = new HashMap<String, Object>();
 
     /**
      * Class constructor.
@@ -70,6 +68,13 @@ public class Entity extends Resource implements Map<String, Object> {
     /** {@inheritDoc} */
     public boolean containsValue(Object value) {
         return getContent().containsValue(value);
+    }
+
+    /**
+     * Clear the update cache.
+     */
+    public void clearUpdate() {
+        toUpdate.clear();
     }
 
     /**
@@ -326,6 +331,16 @@ public class Entity extends Resource implements Map<String, Object> {
         return getBoolean("disabled", false);
     }
 
+    /**
+     * Indicates whether or not an update key value is present
+     *
+     * @param key Key to look up in cached update hash map.
+     * @return {@code true} if update key is present, {@code false} otherwise.
+     */
+    public boolean isUpdateKeyPresent(String key) {
+        return toUpdate.containsKey(key);
+    }
+
     /** {@inheritDoc} */
     public Set<String> keySet() {
         return getContent().keySet();
@@ -355,6 +370,7 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /** {@inheritDoc} */
     @Override public Entity refresh() {
+        toUpdate.clear(); // clear old updates if refreshing
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -378,6 +394,17 @@ public class Entity extends Resource implements Map<String, Object> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Sets the local cache update value. Deferred write until tupdate() without
+     * arguments is invoked.
+     *
+     * @param key The key to set.
+     * @param value The default value.
+     */
+    void setCacheValue(String key, Object value) {
+        toUpdate.put(key, value);
+    }
+
     /** {@inheritDoc} */
     public int size() {
         return getContent().size();
@@ -390,6 +417,18 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     public void update(Map<String, Object> args) {
         service.post(actionPath("edit"), args);
+        invalidate();
+    }
+
+    /**
+     * Update the entity with the accumulated arguments, established by the
+     * individual setter methods for each specific entity class.
+     */
+    public void update() {
+        if (toUpdate.size() > 0) {
+            service.post(actionPath("edit"), toUpdate);
+            toUpdate.clear();
+        }
         invalidate();
     }
 

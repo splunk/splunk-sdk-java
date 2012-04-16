@@ -70,5 +70,34 @@ public class EventType extends Entity {
     public String [] getTags() {
         return getStringArray("tags", null);
     }
+
+    /**
+     * Sets the description of the event type.
+     *
+     * @param description The description of the event type.
+     */
+    public void setDescription(String description) {
+        setCacheValue("description", description);
+    }
+
+    /**
+     * Sets the priority of the event type. Valid values are from 1 to 10, with
+     * 1 being the highest priority.
+     *
+     * @param priority The priority of the event type.
+     */
+    public void setPriority(int priority) {
+        setCacheValue("priority", priority);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        if (!isUpdateKeyPresent("search")) {
+            setCacheValue("search", getSearch()); // requires search string
+        }
+        super.update();
+    }
 }
 

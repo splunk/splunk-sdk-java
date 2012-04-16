@@ -88,4 +88,47 @@ public class LicensePool extends Entity {
     public long getUsedBytes() {
         return getLong("used_bytes", 0);
     }
+
+    /**
+     * Sets whether or not to append slaves. The alternative to being appended
+     * is being overwritten.
+     *
+     * @param appendSlaves A value of {@code true} appends slaves, a value of
+     * {@code false} overwrites slaves.
+     */
+    public void setAppendSlaves(boolean appendSlaves) {
+        setCacheValue("append_slaves", appendSlaves);
+    }
+
+    /**
+     * Sets the description.
+     *
+     * @param description The description.
+     */
+    public void setDescription(String description) {
+        setCacheValue("description", description);
+    }
+
+    /**
+     * Sets the byte quota of this pool. Note that values may be specified as:
+     *
+     * {@code number}, {@code number} followed by {@code MB} or {@code GB}, or
+     * finally {@code MAX}. Note that one can only have one pool with MAX size
+     * in a stack.
+     *
+     * @param quota The description.
+     */
+    public void setQuota(String quota) {
+        setCacheValue("quota", quota);
+    }
+
+    /**
+     * Sets the list of slaves that are members of this pool. One can specify
+     * {@code *} to accept all slaves.
+     *
+     * @param slaves The comma separated list of slaves.
+     */
+    public void setSlaves(String slaves) {
+        setCacheValue("slaves", slaves);
+    }
 }

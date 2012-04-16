@@ -38,6 +38,6 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.isCompressed();
         outputDefault.isDisabled();
         outputDefault.isForwardedIndexFilterDisable();
-        outputDefault.sendCookedData();
+        outputDefault.getSendCookedData();
     }
 }

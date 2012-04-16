@@ -30,7 +30,7 @@ public class DeploymentServerTest extends SplunkTestCase {
         }
 
         for (DeploymentServer deploymentServer: deploymentServers.values()) {
-            assertTrue(deploymentServer.getWhiteList0().length() > 0);
+            assertTrue(deploymentServer.getWhiteListByIndex(0).length() > 0);
             deploymentServer.getCheckNew();
         }
     }

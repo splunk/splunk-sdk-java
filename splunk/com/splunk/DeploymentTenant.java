@@ -37,8 +37,8 @@ public class DeploymentTenant extends Entity {
      * should review its configuration and inform the deployment client if 
      * something is new or updated.
      *
-     * @return {@code true} if this deployment server notifies the deployment client for
-     * new or changed configurations, {@code false} if not.
+     * @return {@code true} if this deployment server notifies the deployment
+     * client for new or changed configurations, {@code false} if not.
      */
     public boolean getCheckNew() {
         return getBoolean("check-new", false);
@@ -53,6 +53,19 @@ public class DeploymentTenant extends Entity {
      */
     public String getWhiteList0() {
         return getString("whitelist.0");
+    }
+
+    /**
+     * Sets whether this deployment server reviews the information in its
+     * configuration to find out if there is something new or updated to push
+     * out to its deployment clients. If {@code true} this deployment server
+     * reviews the information, {@code false} and this deployment server does
+     * not review the information.
+     *
+     * @param checkNew Whether or not the information is reviewed.
+     */
+    public void setCheckNew(String checkNew) {
+        setCacheValue("check-new", checkNew);
     }
 }
 
