@@ -42,6 +42,15 @@ public class DeploymentClient extends Entity {
             return path + "/deployment-client";
         return super.actionPath(action);
     }
+    /** {@inheritDoc} */
+    @Override public void disable() {
+        throw new UnsupportedOperationException();
+    }
+
+    /** {@inheritDoc} */
+    @Override public void enable() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Returns the list of server classes.
@@ -72,8 +81,11 @@ public class DeploymentClient extends Entity {
     }
 
     /**
-     * Sets whether the deployment client is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether the deployment client is enabled or disabled. Note that
+     * this effect is not immediate; Splunk must be restarted to take effect.
+     *
+     * Note that the supported disabled mechanism, is to use the
+     * @{code disable} and {@code enable} action.
      *
      * @param disabled {@code true} to disabled to deployment client,
      * {@code false} to enable.

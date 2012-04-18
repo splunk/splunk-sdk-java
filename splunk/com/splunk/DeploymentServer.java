@@ -65,7 +65,18 @@ public class DeploymentServer extends Entity {
      *
      * @param checkNew Whether or not the information is reviewed.
      */
-    public void setCheckNew(String checkNew) {
+    public void setCheckNew(boolean checkNew) {
         setCacheValue("check-new", checkNew);
+    }
+
+    /**
+     * Sets whether the deployment server is enabled or disabled. Note that
+     * this effect is not immediate; Splunk must be restarted to take effect.
+     * The
+     *
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
     }
 }

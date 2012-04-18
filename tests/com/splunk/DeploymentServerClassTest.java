@@ -27,29 +27,16 @@ public class DeploymentServerClassTest extends SplunkTestCase {
         DeploymentServerClass deploymentServerClass;
 
         Args args = new Args();
-        args.put("blacklist.0", "bad0.splunk.com");
-        args.put("blacklist.1", "bad1.splunk.com");
-        args.put("blacklist.2", "bad2.splunk.com");
-        args.put("blacklist.3", "bad3.splunk.com");
-        args.put("blacklist.4", "bad4.splunk.com");
-        args.put("blacklist.5", "bad5.splunk.com");
-        args.put("blacklist.6", "bad6.splunk.com");
-        args.put("blacklist.7", "bad7.splunk.com");
-        args.put("blacklist.8", "bad8.splunk.com");
-        args.put("blacklist.9", "bad9.splunk.com");
+        for (int i=0; i< 10; i++)
+            args.put(String.format("blacklist.%d", i),
+                     String.format("bad%d.splunk.com", i));
         args.put("continueMatching", false);
         args.put("filterType","whitelist");
-        args.put("whitelist.0", "good0.splunk.com");
-        args.put("whitelist.1", "good1.splunk.com");
-        args.put("whitelist.2", "good2.splunk.com");
-        args.put("whitelist.3", "good3.splunk.com");
-        args.put("whitelist.4", "good4.splunk.com");
-        args.put("whitelist.5", "good5.splunk.com");
-        args.put("whitelist.6", "good6.splunk.com");
-        args.put("whitelist.7", "good7.splunk.com");
-        args.put("whitelist.8", "good8.splunk.com");
-        args.put("whitelist.9", "good9.splunk.com");
+        for (int i=0; i< 10; i++)
+            args.put(String.format("whitelist.%d", i),
+                     String.format("good%d.splunk.com", i));
 
+        // create or get
         if (!deploymentServerClasses.containsKey("sdk-tests")) {
             deploymentServerClass =
                     deploymentServerClasses.create("sdk-tests", args);
@@ -58,50 +45,51 @@ public class DeploymentServerClassTest extends SplunkTestCase {
             deploymentServerClass.update(args);
         }
 
-        assertEquals(deploymentServerClass.getBlackListByIndex(0),
-                args.get("blacklist.0"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(1),
-                args.get("blacklist.1"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(2),
-                args.get("blacklist.2"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(3),
-                args.get("blacklist.3"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(4),
-                args.get("blacklist.4"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(5),
-                args.get("blacklist.5"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(6),
-                args.get("blacklist.6"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(7),
-                args.get("blacklist.7"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(8),
-                args.get("blacklist.8"));
-        assertEquals(deploymentServerClass.getBlackListByIndex(9),
-                args.get("blacklist.9"));
+        // check for sanity
+        for (int i=0; i< 10; i++)
+            assertEquals(deploymentServerClass.getBlackListByIndex(i),
+                         String.format("bad%d.splunk.com", i));
         assertEquals(deploymentServerClass.getContinueMatching(),
                 args.get("continueMatching"));
         assertEquals(deploymentServerClass.getFilterType(),
                 args.get("filterType"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(0),
-                args.get("whitelist.0"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(1),
-                args.get("whitelist.1"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(2),
-                args.get("whitelist.2"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(3),
-                args.get("whitelist.3"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(4),
-                args.get("whitelist.4"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(5),
-                args.get("whitelist.5"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(6),
-                args.get("whitelist.6"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(7),
-                args.get("whitelist.7"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(8),
-                args.get("whitelist.8"));
-        assertEquals(deploymentServerClass.getWhiteListByIndex(9),
-                args.get("whitelist.9"));
+        for (int i=0; i< 10; i++)
+            assertEquals(deploymentServerClass.getWhiteListByIndex(i),
+                         String.format("good%d.splunk.com", i));
+        String filter = deploymentServerClass.getFilterType();
+
+        // modify
+        // N.B. paths are OS specific, and not tested here.
+        // and updates to black and whitelist are all or nothing.
+        for (int i=0; i< 10; i++)
+            deploymentServerClass.setBlackListByIndex(i,
+                    String.format("maybe%d.splunk.com", i));
+        deploymentServerClass.setContinueMatching(true);
+        deploymentServerClass.setFilterType("blacklist");
+        for (int i=0; i< 10; i++)
+            deploymentServerClass.setWhiteListByIndex(i,
+                    String.format("maybe%d.splunk.com", i));
+        deploymentServerClass.update();
+
+        // check update
+        for (int i=0; i< 10; i++)
+            assertEquals(deploymentServerClass.getBlackListByIndex(i),
+                         String.format("maybe%d.splunk.com", i));
+        assertTrue(deploymentServerClass.getContinueMatching());
+        assertEquals(deploymentServerClass.getFilterType(), "blacklist");
+        for (int i=0; i< 10; i++)
+            assertEquals(deploymentServerClass.getWhiteListByIndex(i),
+                         String.format("maybe%d.splunk.com", i));
+
+        // cleanup & restore sane values
+        for (int i=0; i< 10; i++)
+            deploymentServerClass.setBlackListByIndex(i,
+                    String.format("bad%d.splunk.com", i));
+        deploymentServerClass.setContinueMatching(false);
+        deploymentServerClass.setFilterType(filter);
+        for (int i=0; i< 10; i++)
+            deploymentServerClass.setWhiteListByIndex(i,
+                    String.format("good%d.splunk.com", i));
 
         for (DeploymentServerClass deploymentServerClass1:
                 deploymentServerClasses.values()) {

@@ -381,6 +381,7 @@ public class Index extends Entity {
     /**
      * Returns the frequency at which Splunkd forces a filesystem sync while 
      * compressing journal slices for this index.
+     *
      * A value of "disable" disables this feature completely, while a value of 0
      * forces a file-system sync after completing compression of every journal
      * slice.
@@ -640,7 +641,7 @@ public class Index extends Entity {
      *
      * @param processes The number of concurrent optimize processes.
      */
-    public void setMaxBloomBackfillBucketAge(int processes) {
+    public void setMaxConcurrentOptimizes(int processes) {
         setCacheValue("maxConcurrentOptimizes", processes);
     }
 

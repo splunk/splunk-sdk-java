@@ -265,7 +265,7 @@ public class DistributedConfiguration extends Entity {
      * @param names A comma separated list of server names or URI's that you
      * do not want to peer with.
      */
-    public void setBlacklistURIs(String names) {
+    public void setBlacklistURLs(String names) {
         setCacheValue("blacklistURLs", names);
     }
 
@@ -293,6 +293,21 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
+     * Sets whether the distributed configuration is enabled or disabled. Note
+     * that this effect is not immediate; Splunk must be restarted to take
+     * effect.
+     *
+     * Note that the supported disabled mechanism, is to use the
+     * @{code disable} and {@code enable} action.
+     *
+     * @param disabled {@code true} to disabled to deployment client,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
      * Sets the heartbeat frequency between peers, in seconds. A setting of 0
      * disables heartbeat messages.
      *
@@ -309,7 +324,7 @@ public class DistributedConfiguration extends Entity {
      * @param mCastAddress The multicast address to use for server
      * auto discovery.
      */
-    public void setheartbeatMcastAddr(String mCastAddress) {
+    public void setHeartbeatMcastAddr(String mCastAddress) {
         setCacheValue("heartbeatMcastAddr", mCastAddress);
     }
 
@@ -319,7 +334,7 @@ public class DistributedConfiguration extends Entity {
      *
      * @param port The port used for heartbeat messages.
      */
-    public void setheartbeatPort(int port) {
+    public void setHeartbeatPort(int port) {
         setCacheValue("heartbeatPort", port);
     }
 

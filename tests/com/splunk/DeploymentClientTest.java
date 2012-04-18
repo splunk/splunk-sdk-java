@@ -25,19 +25,26 @@ public class DeploymentClientTest extends SplunkTestCase {
         DeploymentClient deploymentClient = service.getDeploymentClient();
         String uri = deploymentClient.getTargetUri();
         if (uri != null) {
-            deploymentClient.refresh();
-            if (deploymentClient.isDisabled()) {
-                deploymentClient.enable();
+            try {
+                deploymentClient.disable();
+                assert false;
+            } catch (Exception e) {
+                // except exception
             }
-            assertFalse(deploymentClient.isDisabled());
-            deploymentClient.disable();
-            assertTrue(deploymentClient.isDisabled());
-            deploymentClient.enable();
-            assertFalse(deploymentClient.isDisabled());
-            Args args = new Args();
-            args.put("targetUri", "1.2.3.4:8080");
-            deploymentClient.update(args);
+            try {
+                deploymentClient.enable();
+                assert false;
+            } catch (Exception e) {
+                // except exception
+            }
+            deploymentClient.setDisabled(true);
+            deploymentClient.setDisabled(false);
+            deploymentClient.reload();
+            // use both setters and map update techniques
+            deploymentClient.setTargetUri("1.2.3.4:8080");
+            deploymentClient.update();
             assertEquals(deploymentClient.getTargetUri(), "1.2.3.4:8080");
+            Args args = new Args();
             args.put("targetUri", uri);
             deploymentClient.update(args);
             assertEquals(deploymentClient.getTargetUri(), uri);

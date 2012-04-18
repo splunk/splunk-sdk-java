@@ -174,15 +174,12 @@ public class Application extends Entity {
     }
 
     /**
-     * Sets the app's template to use when creating the app. Note that only
-     * allowable predefined options are: {@code barebones} and
-     * {@code sample_app}. You may also specify any previous template you have
-     * already created.
+     * Sets the app's version string.
      *
-     * @param template The template name.
+     * @param version The version string.
      */
-    public void setTemplate(String template) {
-        setCacheValue("template", template);
+    public void setVersion(String version) {
+        setCacheValue("version", version);
     }
 
     /**

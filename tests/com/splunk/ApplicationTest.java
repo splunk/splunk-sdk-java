@@ -150,9 +150,20 @@ public class ApplicationTest extends SplunkTestCase {
         assertFalse(app.isManageable());
         assertFalse(app.isVisible());
 
-        Args updateArgs = new Args();
-        updateArgs.put("version", "5.0.0");
-        app.update(updateArgs);
+        // update the app
+        app.setAuthor("not me");
+        app.setDescription("new description");
+        app.setLabel("new label");
+        app.setVisible(false);
+        app.setManageable(false);
+        app.setVersion("5.0.0");
+        app.update();
+
+        // check to see if args took.
+        assertEquals(app.getAuthor(), "not me");
+        assertEquals(app.getDescription(), "new description");
+        assertEquals(app.getLabel(), "new label");
+        assertFalse(app.isVisible());
         assertEquals(app.getVersion(), "5.0.0");
 
         // archive (package) the application

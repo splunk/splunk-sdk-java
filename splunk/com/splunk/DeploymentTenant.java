@@ -46,13 +46,28 @@ public class DeploymentTenant extends Entity {
 
     /**
      * Returns inclusive criteria for determining deployment client access to
-     * this deployment server.
+     * this deployment server. The index is form 0 to 9 inclusive.
      *
+     * @param index The whitelist index.
      * @return Criteria for determining deployment client access to this
      * deployment server.
      */
-    public String getWhiteList0() {
-        return getString("whitelist.0");
+    public String getWhiteListByIndex(int index) {
+        return getString(String.format("whitelist.%d", index));
+    }
+
+    /**
+     * Sets whether the deployment tenant is enabled or disabled. Note that
+     * this effect is not immediate; Splunk must be restarted to take effect.
+     *
+     * Note that the supported disabled mechanism, is to use the
+     * @{code disable} and {@code enable} action.
+     *
+     * @param disabled {@code true} to disabled to deployment client,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
     }
 
     /**
@@ -64,7 +79,7 @@ public class DeploymentTenant extends Entity {
      *
      * @param checkNew Whether or not the information is reviewed.
      */
-    public void setCheckNew(String checkNew) {
+    public void setCheckNew(boolean checkNew) {
         setCacheValue("check-new", checkNew);
     }
 }

@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.junit.Test;
 
 public class IndexTest extends SplunkTestCase {
@@ -105,51 +106,71 @@ public class IndexTest extends SplunkTestCase {
 
         Index index = indexes.get("sdk-tests");
 
+        // get old values, skip saving paths and things we cannot write
+        Args restore = new Args();
         index.getAssureUTF8();
         index.getBlockSignatureDatabase();
-        index.getBlockSignSize();
-        index.getColdPath();
-        index.getColdPathExpanded();
-        index.getColdToFrozenDir();
-        index.getColdToFrozenScript();
-        index.getCompressRawdata();
+        restore.put("blockSignSize", index.getBlockSignSize());
         index.getCurrentDBSizeMB();
         index.getDefaultDatabase();
         index.getEnableRealtimeSearch();
-        index.getFrozenTimePeriodInSecs();
-        index.getHomePath();
-        index.getHomePathExpanded();
+        restore.put("frozenTimePeriodInSecs",index.getFrozenTimePeriodInSecs());
         index.getIndexThreads();
         index.getLastInitTime();
-        index.getMaxConcurrentOptimizes();
-        index.getMaxDataSize();
-        index.getMaxHotBuckets();
-        index.getMaxHotIdleSecs();
-        index.getMaxHotSpanSecs();
-        index.getMaxMemMB();
-        index.getMaxMetaEntries();
+        restore.put("maxConcurrentOptimizes", index.getMaxConcurrentOptimizes());
+        restore.put("maxDataSize", index.getMaxDataSize());
+        restore.put("maxHotBuckets", index.getMaxHotBuckets());
+        restore.put("maxHotIdleSecs", index.getMaxHotIdleSecs());
+        restore.put("maxHotSpanSecs", index.getMaxHotSpanSecs());
+        restore.put("maxMemMB", index.getMaxMemMB());
+        restore.put("maxMetaEntries", index.getMaxMetaEntries());
         index.getMaxRunningProcessGroups();
         index.getMaxTime();
-        index.getMaxTotalDataSizeMB();
-        index.getMaxWarmDBCount();
+        restore.put("maxTotalDataSizeMB", index.getMaxTotalDataSizeMB());
+        restore.put("maxWarmDBCount", index.getMaxWarmDBCount());
         index.getMemPoolMB();
-        index.getMinRawFileSyncSecs();
+        restore.put("minRawFileSyncSecs", index.getMinRawFileSyncSecs());
         index.getMinTime();
-        index.getPartialServiceMetaPeriod();
-        index.getQuarantineFutureSecs();
-        index.getQuarantinePastSecs();
-        index.getRawChunkSizeBytes();
-        index.getRotatePeriodInSecs();
-        index.getServiceMetaPeriod();
-        index.getSuppressBannerList();
+        restore.put("partialServiceMetaPeriod", index.getPartialServiceMetaPeriod());
+        restore.put("quarantineFutureSecs", index.getQuarantineFutureSecs());
+        restore.put("quarantinePastSecs", index.getQuarantinePastSecs());
+        restore.put("rawChunkSizeBytes", index.getRawChunkSizeBytes());
+        restore.put("rotatePeriodInSecs", index.getRotatePeriodInSecs());
+        restore.put("serviceMetaPeriod", index.getServiceMetaPeriod());
         index.getSync();
-        index.getSyncMeta();
-        index.getThawedPath();
-        index.getThawedPathExpanded();
-        index.getThrottleCheckPeriod();
+        restore.put("syncMeta", index.getSyncMeta());
+        restore.put("throttleCheckPeriod", index.getThrottleCheckPeriod());
         index.getTotalEventCount();
         index.isDisabled();
         index.isInternal();
+
+        // use setters to update most
+        index.setBlockSignSize(index.getBlockSignSize()+1);
+        index.setEnableOnlineBucketRepair(!index.getEnableRealtimeSearch());
+        index.setFrozenTimePeriodInSecs(index.getFrozenTimePeriodInSecs()+1);
+        index.setMaxBloomBackfillBucketAge("20d");
+        index.setMaxConcurrentOptimizes(index.getMaxConcurrentOptimizes()+1);
+        index.setMaxDataSize("auto");
+        index.setMaxHotBuckets(index.getMaxHotBuckets()+1);
+        index.setMaxHotIdleSecs(index.getMaxHotIdleSecs()+1);
+        index.setMaxMemMB(index.getMaxMemMB()+1);
+        index.setMaxMetaEntries(index.getMaxMetaEntries()+1);
+        index.setMaxTotalDataSizeMB(index.getMaxTotalDataSizeMB()+1);
+        index.setMaxWarmDBCount(index.getMaxWarmDBCount()+1);
+        index.setMinRawFileSyncSecs("disable");
+        index.setPartialServiceMetaPeriod(index.getPartialServiceMetaPeriod()+1);
+        index.setQuarantineFutureSecs(index.getQuarantineFutureSecs()+1);
+        index.setQuarantinePastSecs(index.getQuarantinePastSecs()+1);
+        index.setRawChunkSizeBytes(index.getRawChunkSizeBytes()+1);
+        index.setRotatePeriodInSecs(index.getRotatePeriodInSecs()+1);
+        index.setServiceMetaPeriod(index.getServiceMetaPeriod()+1);
+        index.setSyncMeta(!index.getSyncMeta());
+        index.setThrottleCheckPeriod(index.getThrottleCheckPeriod()+1);
+        index.update();
+
+        // check, then restore using map method
+        index.update(restore);
+        index.refresh();
 
         index.clean(60);
         assertEquals(index.getTotalEventCount(), 0);
