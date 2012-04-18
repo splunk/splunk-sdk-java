@@ -32,180 +32,59 @@ public class OutputServer extends Entity {
         super(service, path);
     }
 
-    /**
-     * Returns the back-off, in seconds, to wait to retry the first time a
-     * retry is needed.
+     /**
+     * Returns the destination host name for this connection.
      *
-     * @return The back-off, in seconds, when the first retry is needed.
+     * @return The destination host name.
      */
-    public Integer getBackoffAtStartup() {
-        return getInteger("backoffAtStartup", -1);
+    public String getDestHost() {
+        return getString("destHost", null);
     }
 
     /**
-     * Returns the back-off, in seconds, to wait to retry after the first
-     * rerty, when a retry is needed.
+     * Returns the IP address of the destination host for this connection.
      *
-     * @return The back-off, in seconds, when subsequent retries are needed.
+     * @return The IP address of the destination host.
      */
-    public Integer getInitialBackoff() {
-        return getInteger("initialBackoff", -1);
+    public String getDestIp() {
+        return getString("destIp", null);
     }
 
     /**
-     * Returns the number of back-offs before reaching the maximum back-off
-     * frequency.
+     * Return the destination port for this connection.
      *
-     * @return the number of back-offs before reaching the maximum back-off
-     * frequency.
+     * @return The destination port.
      */
-    public Integer getMaxBackoff() {
-        return getInteger("maxBackoff", -1);
+    public int getDestPort() {
+        return getInteger("destPort", 0);
     }
 
     /**
-     * Returns the number of times the system should retry after reaching the
-     * highest back-off period, before stopping completely. {@code -1}, the
-     * default value, means to try forever.
+     * Return the destination port for this connection.
      *
-     * @return the number of times the system should retry after reaching the
-     * highest back-off period, before stopping completely.
-     */
-    public Integer getMaxNumberOfRetriesAtHighestBackoff() {
-        return getInteger("maxNumberOfRetriesAtHighestBackoff", -1);
-    }
-
-    /**
-     * Returns the type of data distribution method when two or more servers
-     * exist in the same forwarder group. Valid values are {@code clone},
-     * {@code balance} or {@code autobalance}.
-     *
-     * @return The data distribution method used when two or more servers
-     * exist in the same forwarder group.
+     * @return The destination port.
      */
     public String getMethod() {
-        return getString("method", null);
+        return getString("method");
     }
 
     /**
-     * Returns the alternate name to match in the remote server's SSL
-     * certificate.
+     * Returns the source port for this connection.
      *
-     * @return the alternate name to match in the remote server's SSL
-     * certificate.
+     * @return The source port.
      */
-    public String getSslAltNameToCheck() {
-        return getString("sslAltNameToCheck", null);
+    public int getSourcePort() {
+        return getInteger("sourcePort", 0);
     }
 
     /**
-     * Returns the Path to the client certificate. If specified, connection
-     * uses SSL.
+     * Returns the connection status. This is normally {@code connect_done}, or
+     * {@code connect_fail} or {@code connect_try}.
      *
-     * @return the Path to the client certificate. If specified, connection
-     * uses SSL.
+     * @return The connection status.
      */
-    public String getSslCertPath() {
-        return getString("sslCertPath", null);
-    }
-
-    /**
-     * Returns the SSL Cipher in the form:
-     * {@code ALL:!aNULL:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM}
-     *
-     * @return the SSL Cipher.
-     */
-    public String getSslCipher() {
-        return getString("sslCipher", null);
-    }
-
-    /**
-     * Check the common name of the server's certificate against this name.
-     * If there is no match, assume that Splunk is not authenticated against
-     * this server. You must specify this setting if sslVerifyServerCert is
-     * true.
-     *
-     * @return the SSL Cipher.
-     */
-    public String getSslCommonNameToCheck() {
-        return getString("sslCommonNameToCheck", null);
-    }
-
-    /**
-     * Returns the password associated with the CAcert.
-     *
-     * @return the password associated with the CAcert.
-     */
-    public String getSslPassword() {
-        return getString("sslPassword", null);
-    }
-
-    /**
-     * Returns the path to the root certificate authority file.
-     *
-     * @return the path to the root certificate authority file
-     */
-    public String getsslRootCAPath() {
-        return getString("sslRootCAPath", null);
-    }
-
-    /**
-     * Returns whether or not the server being connected to is authenticated.
-     * Both the common name and the alternate name of the server are checked
-     * for a match.
-     *
-     * @return whether or not the server being connected to is authenticated.
-     */
-    public boolean getSslVerifyServerCert() {
-        return getBoolean("sslVerifyServerCert", false);
-    }
-
-    /**
-     * Sets, in seconds, how long to wait to retry the first time a retry is
-     * needed.
-     *
-     * @param backoffAtStartup how long, in seconds, to wait to retry the first
-     * time a retry is needed.
-     */
-    public void setBackoffAtStartup(int backoffAtStartup) {
-        setCacheValue("backoffAtStartup", backoffAtStartup);
-    }
-
-    /**
-     * Sets how long, in seconds, to wait to retry every time after the first
-     * retry.
-     *
-     * @param initialBackoff how long, in seconds, to wait to retry every time
-     * after the first retry.
-     */
-    public void setInitialBackoff(int initialBackoff) {
-        setCacheValue("initialBackoff", initialBackoff);
-    }
-
-    /**
-     * Sets the number of back-offs before reaching the maximum back-off
-     * frequency.
-     *
-     * @param maxBackoff the number of back-offs before reaching the
-     * maximum back-off frequency.
-     */
-    public void setMaxBackoff(int maxBackoff) {
-        setCacheValue("maxBackoff", maxBackoff);
-    }
-
-    /**
-     * Sets the number of times the system should retry after reaching the
-     * highest back-off period, before stopping completely. {@code -1}, the
-     * default value, means to try forever.
-     *
-     * @param maxNumberOfRetriesAtHighestBackoff the number of times the system
-     * should retry after reaching the highest back-off period, before stopping
-     * completely.
-     */
-    public void setmaxNumberOfRetriesAtHighestBackoff(
-            int maxNumberOfRetriesAtHighestBackoff) {
-        setCacheValue("maxNumberOfRetriesAtHighestBackoff",
-                       maxNumberOfRetriesAtHighestBackoff);
+    public String getStatus() {
+        return getString("status", null);
     }
 
     /**

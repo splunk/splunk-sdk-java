@@ -27,17 +27,51 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.autoLb();
         outputDefault.blockOnQueueFull();
         outputDefault.getAutoLbFrequency();
-        outputDefault.getDefaultGroup();
-        outputDefault.getDropEventsOnQueueFull();
+        String defaultGroup = outputDefault.getDefaultGroup();
+        int onQueueFull = outputDefault.getDropEventsOnQueueFull();
         outputDefault.getForwardedIndex0Whitelist();
         outputDefault.getForwardedIndex1Blacklist();
         outputDefault.getForwardedIndex2Whitelist();
-        outputDefault.getHeartbeatFrequency();
+        int heartbeat = outputDefault.getHeartbeatFrequency();
         outputDefault.getMaxQueueSize();
-        outputDefault.indexAndForward();
+        boolean forward = outputDefault.indexAndForward();
         outputDefault.isCompressed();
         outputDefault.isDisabled();
         outputDefault.isForwardedIndexFilterDisable();
-        outputDefault.getSendCookedData();
+        boolean cookedData = outputDefault.getSendCookedData();
+
+        // set-ables
+
+        outputDefault.setDefaultGroup("bad default group");
+        outputDefault.setDropEventsOnQueueFull(0);
+        outputDefault.setHeartbeatFrequency(heartbeat+1);
+        outputDefault.setIndexAndForward(!forward);
+        outputDefault.setSendCookedData(!cookedData);
+
+        outputDefault.update();
+
+        //check
+        assertEquals(outputDefault.getDefaultGroup(), "bad default group");
+        assertEquals(outputDefault.getDropEventsOnQueueFull(), 0);
+        assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat+1);
+        assertEquals(outputDefault.indexAndForward(), !forward);
+        assertEquals(outputDefault.getSendCookedData(), !cookedData);
+
+        // restore
+        outputDefault.setDefaultGroup(defaultGroup);
+        outputDefault.setDropEventsOnQueueFull(onQueueFull);
+        outputDefault.setHeartbeatFrequency(heartbeat);
+        outputDefault.setIndexAndForward(forward);
+        outputDefault.setSendCookedData(cookedData);
+
+        outputDefault.update();
+
+        //check
+        assertEquals(outputDefault.getDefaultGroup(), defaultGroup);
+        assertEquals(outputDefault.getDropEventsOnQueueFull(), onQueueFull);
+        assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat);
+        assertEquals(outputDefault.indexAndForward(), forward);
+        assertEquals(outputDefault.getSendCookedData(), cookedData);
+
     }
 }

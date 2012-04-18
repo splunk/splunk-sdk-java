@@ -38,6 +38,27 @@ public class OutputServerTest extends SplunkTestCase {
             outputServerAllConnections.getDestPort();
             outputServerAllConnections.getSourcePort();
             outputServerAllConnections.getStatus();
+
+            // things we an get
+            outputServer.getDestHost();
+            outputServer.getDestIp();
+            outputServer.getDestPort();
+            outputServer.getMethod();
+            outputServer.getSourcePort();
+            outputServer.getStatus();
+
+            // things we can set.
+            // NOTE well, these are only writable, so we cannot check.
+            /*
+            outputServer.setMethod();
+            outputServer.setSslAltNameToCheck();
+            outputServer.setSslCertPath();
+            outputServer.setSslCipher();
+            outputServer.setSslCommonNameToCheck();
+            outputServer.setSslPassword();
+            outputServer.setsslRootCAPath();
+            outputServer.setSslVerifyServerCert();
+            */
         }
     }
 }

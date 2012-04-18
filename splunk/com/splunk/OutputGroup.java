@@ -34,6 +34,15 @@ public class OutputGroup extends Entity {
     }
 
     /**
+     * Returns whether or not this forwarder performs automatic load balancing.
+     *
+     * @return whether ot not this forwarder performs automatic load balancing.
+     */
+    public boolean getAutoLB() {
+        return getBoolean("autoLB", false);
+    }
+
+    /**
      * Returns the type of output processor for this forwarder group. 
      * Valid values are: tcpout, syslog, and httpout.
      *

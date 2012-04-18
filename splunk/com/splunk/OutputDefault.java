@@ -303,4 +303,14 @@ public class OutputDefault extends Entity {
     public void setSendCookedData(boolean sendCookedData) {
         setCacheValue("sendCookedData", sendCookedData);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        if (!isUpdateKeyPresent("name")) {
+            setCacheValue("name", "tcpout"); // requires name
+        }
+        super.update();
+    }
 }

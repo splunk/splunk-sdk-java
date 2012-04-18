@@ -30,9 +30,29 @@ public class OutputGroupTest extends SplunkTestCase {
         }
 
         for (OutputGroup outputGroup: outputGroups.values()) {
-            outputGroup.getMethod();
-            outputGroup.getServers();
-            outputGroup.isDisabled();
+            String method = outputGroup.getMethod();
+            String[] servers = outputGroup.getServers();
+            boolean disabled = outputGroup.isDisabled();
+            boolean autoLB = outputGroup.getAutoLB();
+
+            outputGroup.setServers("1.1.1.1:9997");
+            outputGroup.update();
+
+            String[] updatedServers = outputGroup.getServers();
+            String server1 = updatedServers[0];
+            assertEquals(server1, "1.1.1.1:9997");
+
+            // restore originals
+            StringBuilder serverList = new StringBuilder();
+            boolean firstTime = true;
+            for (String server: servers) {
+                if (!firstTime) serverList.append(",");
+                else firstTime = false;
+                serverList.append(server);
+            }
+            outputGroup.setServers(serverList.toString());
+            outputGroup.update();
+            updatedServers = outputGroup.getServers();
         }
     }
 }
