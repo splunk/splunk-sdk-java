@@ -34,6 +34,15 @@ public class TcpInput extends Input {
     }
 
     /**
+     * Returns an object that contains the inbound raw TCP connections.
+     *
+     * @return The TCP connections object.
+     */
+    public TcpConnections connections() {
+        return new TcpConnections(service, path + "/connections");
+    }
+
+    /**
      * Returns the style of host connection. Valid values are: {@code ip},
      * {@code dns}, and {@code none}.
      *

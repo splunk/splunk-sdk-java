@@ -30,8 +30,30 @@ public class OutputSyslogTest extends SplunkTestCase {
         }
 
         for (OutputSyslog entity: dos.values()) {
-            entity.getServer();
-            entity.getType();
+            String server = entity.getServer();
+            String type = entity.getType();
+
+            entity.setServer("1.1.1.1:514");
+            //entity.setPriority(); -- can't check
+            //entity.setTimestampFormat(); -- can't check
+            String otherType = "tcp";
+            if (type.equals("tcp"))
+                otherType = "udp";
+            entity.setType(otherType);
+            entity.update();
+
+            // check
+            assertEquals(entity.getServer(), "1.1.1.1:514");
+            assertEquals(entity.getType(), otherType);
+
+            // restore
+            entity.setServer(server);
+            entity.setType(type);
+            entity.update();
+
+            // re-check
+            assertEquals(entity.getServer(), server);
+            assertEquals(entity.getType(), type);
         }
     }
 }

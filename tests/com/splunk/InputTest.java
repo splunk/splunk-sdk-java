@@ -22,6 +22,8 @@ public class InputTest extends SplunkTestCase {
 
     private void touchSpecificInput(Input input) {
         InputKind inputKind = input.getKind();
+        TcpConnections tcpConnections = null;
+        UdpConnections udpConnections = null;
 
         switch (inputKind) {
             case Monitor:
@@ -51,6 +53,9 @@ public class InputTest extends SplunkTestCase {
                 tcpInput.getSource();
                 tcpInput.getSourceType();
                 tcpInput.getSSL();
+                tcpConnections = tcpInput.connections();
+                tcpConnections.getConnection();
+                tcpConnections.getServername();
                 break;
             case TcpSplunk:
                 TcpSplunkInput tcpSplunkInput = (TcpSplunkInput) input;
@@ -63,6 +68,9 @@ public class InputTest extends SplunkTestCase {
                 tcpSplunkInput.getSource();
                 tcpSplunkInput.getSourceType();
                 tcpSplunkInput.getSSL();
+                tcpConnections = tcpSplunkInput.connections();
+                tcpConnections.getConnection();
+                tcpConnections.getServername();
                 break;
             case Udp:
                 UdpInput udpInput = (UdpInput) input;
@@ -76,6 +84,8 @@ public class InputTest extends SplunkTestCase {
                 udpInput.getSourceType();
                 udpInput.noAppendingTimeStamp();
                 udpInput.noPriorityStripping();
+                udpConnections = udpInput.connections();
+                udpConnections.getGroup();
                 break;
             case WindowsActiveDirectory:
                 WindowsActiveDirectoryInput windowsActiveDirectoryInput =

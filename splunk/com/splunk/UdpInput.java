@@ -32,7 +32,17 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the style of host connection. Valid values are: {@code ip}, {@code dns}, and {@code none}.
+     * Returns an object that contains the inbound raw TCP connections.
+     *
+     * @return The TCP connections object.
+     */
+    public UdpConnections connections() {
+        return new UdpConnections(service, path + "/connections");
+    }
+
+    /**
+     * Returns the style of host connection. Valid values are: {@code ip},
+     * {@code dns}, and {@code none}.
      *
      * @return The style of host connection, or {@code null} if not specified.
      */
@@ -50,7 +60,8 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the source host for this UDP input, where this indexer gets its data.
+     * Returns the source host for this UDP input, where this indexer gets its
+     * data.
      *
      * @return The source host, or {@code null} if not specified.
      */
@@ -78,7 +89,8 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the queue for this UDP input. Valid values are: {@code parsingQueue} and {@code indexQueue}.
+     * Returns the queue for this UDP input. Valid values are:
+     * {@code parsingQueue} and {@code indexQueue}.
      *
      * @return The queue, or {@code null} if not specified.
      */
@@ -118,8 +130,8 @@ public class UdpInput extends Input {
      * Indicates whether Splunk prepends a timestamp and hostname to
      * incoming events.
      *
-     * @return {@code true} if Splunk does <i>not</i> prepend a timestamp and hostname to
-     * incoming events, {@code false} if it does.
+     * @return {@code true} if Splunk does <i>not</i> prepend a timestamp and
+     * hostname to incoming events, {@code false} if it does.
      */
     public boolean noAppendingTimeStamp() {
         return getBoolean("no_appending_timestamp", false);

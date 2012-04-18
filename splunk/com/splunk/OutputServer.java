@@ -173,7 +173,8 @@ public class OutputServer extends Entity {
     }
 
     /**
-     * Returns an object that contains all current connections to the output server.
+     * Returns an object that contains all current connections to the output
+     * server.
      *
      * @return The all-connections object.
      */
