@@ -112,6 +112,10 @@
         <compile-example name="info" classpath="classpath.examples"/>
     </target>
 
+    <target name="compile-example-input" depends="compile-libs">
+        <compile-example name="input" classpath="classpath.examples"/>
+    </target>
+
     <target name="compile-example-search" depends="dist-libs">
         <compile-example name="search" classpath="classpath.examples"/>
     </target>
@@ -199,6 +203,7 @@
         dist-example-genevents,
         dist-example-index,
         dist-example-info,
+        dist-example-input,
         dist-example-search,
         dist-example-search-blocking,
         dist-example-search-oneshot,
@@ -257,6 +262,11 @@
 
     <target name="dist-example-info" depends="compile-example-info">
         <dist-example name="info" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
+    </target>
+
+    <target name="dist-example-input" depends="compile-example-input">
+        <dist-example name="input" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 
