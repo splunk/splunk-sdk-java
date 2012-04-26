@@ -4,9 +4,10 @@
 
 ### Added Features
 
+* Add a Receiver class.
+
 * Add support for index-less (default index) and allow optional parameters for 
-  streaming connections. This includes an added Receiver class that the Index
-  class now uses.
+  streaming connections. The Index class now uses the added Receiver class.
 
 * Add paginate feature for splunk return data. This allows for count/offset 
   method to page through splunk meta data instead of retrieving all the data 
@@ -30,11 +31,15 @@
 
 * Add an Upload class. This class is availabe to query in-progress file uploads.
 
+* Add class setter methods.
+
 ### Minor Additions
 
-* Add genevents example.
+* Add genevents example, to generate events and push into splunk using various
+  methods.
 * Add second time format when parsing time.
 * Add streaming reader to search examples.
+* Add input example, to display splunk inputs and their attributes.
 
 ### Bug fixes
 
