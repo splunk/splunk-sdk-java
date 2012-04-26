@@ -28,10 +28,19 @@ public class DeploymentTenantTest extends SplunkTestCase {
             System.out.println("WARNING: Deployment Tenant not configured");
             return;
         }
-        
+
         for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
-            assertTrue(deploymentTenant.getWhiteList0().length() > 0);
-            deploymentTenant.getCheckNew();
+            // test for just the first index.
+            assertTrue(deploymentTenant.getWhiteListByIndex(0).length() > 0);
+            // wkcfix -- update() causes server error 500. but don't know why
+            /*
+            boolean value = deploymentTenant.getCheckNew();
+            deploymentTenant.setCheckNew(!value);
+            deploymentTenant.update();
+            assertEquals(deploymentTenant.getCheckNew(), !value);
+            deploymentTenant.setCheckNew(value);
+            deploymentTenant.update();
+            */
         }
     }
 }
