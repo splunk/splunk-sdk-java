@@ -33,6 +33,28 @@ public class MonitorInput extends Input {
     }
 
     /**
+     * returns a regular expression for a file path. The file path that matches
+     * this regular expression is not indexed.
+     *
+     * @return the blacklist The path regular expression for exclusion.
+     */
+    public String getBlacklist() {
+        return getString("blacklist", null);
+    }
+
+    /**
+     * Returns a string that modifies the file tracking identity for files in
+     * this input. The magic value @{code <SOURCE>} invokes special behavior
+     * (see admin documentation).
+     *
+     * @return The string that modifies the file tracking identity for files
+     * in this input
+     */
+    public String getCrcSalt() {
+        return getString("crcSalt", null);
+    }
+
+    /**
      * Returns the file count of this monitor input.
      *
      * @return The file count.
@@ -42,12 +64,46 @@ public class MonitorInput extends Input {
     }
 
     /**
+     * Sets whether files that are seen for the first time will be read from
+     * the end.
+     *
+     * @return whether files that are seen for the first time will
+     * be read from the end.
+     */
+    public boolean getFollowTail() {
+        return getBoolean("followTail", false);
+    }
+
+    /**
      * Returns the host for this monitor input.
      *
      * @return The host, or {@code null} if not specified.
      */
     public String getHost() {
         return getString("host", null);
+    }
+
+    /**
+     * Returns the regular expression for a file path. If the path for a file
+     * matches this regular expression, the captured value is used to populate
+     * the host field for events from this data input. The regular expression
+     * must have one capture group.
+     *
+     * @return The regular expression for a file path.
+     */
+    public String getHostRegex() {
+        return getString("host_regex", null);
+    }
+
+    /**
+     * Returns a time value. If the modification time of a file being monitored
+     * falls outside of this rolling time window, the file is no longer being
+     * monitored.
+     *
+     * @return The time value.
+     */
+    public String getIgnoreOlderThan() {
+        return getString("ignoreOlderThan", null);
     }
 
     /**
@@ -70,12 +126,70 @@ public class MonitorInput extends Input {
     }
 
     /**
+     * Returns the queue for this TCP input. Valid values are:
+     * {@code parsingQueue} and {@code indexQueue}.
+     *
+     * @return The queue, or {@code null} if not specified.
+     */
+    public String getQueue() {
+        return getString("queue", null);
+    }
+
+    /**
+     * Returns whether or not to monitor any sub-directories
+     * encountered within this data input.
+     *
+     * @return whether or not to monitor any sub-directories
+     * encountered within this data input.
+     */
+    public boolean getRecursive() {
+        return getBoolean("recursive", false);
+    }
+
+    /**
      * Returns value of the {@code _rcvbuf} attribute for this monitor input.
      *
      * @return The {@code _rcvbuf} value.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
+    }
+
+    /**
+     * Returns the source name.
+     *
+     * @return  the source name.
+     */
+    public String getSource() {
+        return getString("source", null);
+    }
+
+    /**
+     * Returns the source type.
+     *
+     * @return  the source type.
+     */
+    public String getSourceType() {
+        return getString("sourcetype", null);
+    }
+
+    /**
+     * Returns the period, in seconds, to keep a file open.
+     *
+     * @return  The time, in seconds, to keep a file open.
+     */
+    public int getTimeBeforeClose() {
+        return getInteger("time_before_close", -1);
+    }
+
+    /**
+     * Returns a regular expression for a file path. The file path that matches
+     * this regular expression is indexed.
+     *
+     * @return  The path regular expression for inclusion.
+     */
+    public String getWhitelist() {
+        return getString("whitelist", null);
     }
 
     /**

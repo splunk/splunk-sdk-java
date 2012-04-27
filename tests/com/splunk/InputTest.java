@@ -18,6 +18,9 @@ package com.splunk;
 
 import org.junit.Test;
 
+import java.util.Map;
+import java.util.Set;
+
 public class InputTest extends SplunkTestCase {
 
     private void touchSpecificInput(Input input) {
@@ -28,10 +31,21 @@ public class InputTest extends SplunkTestCase {
         switch (inputKind) {
             case Monitor:
                 MonitorInput monitorInput = (MonitorInput) input;
+                monitorInput.getBlacklist();
+                monitorInput.getCrcSalt();
                 monitorInput.getFileCount();
+                monitorInput.getFollowTail();
                 monitorInput.getHost();
+                monitorInput.getHostRegex();
+                monitorInput.getIgnoreOlderThan();
                 monitorInput.getIndex();
+                monitorInput.getQueue();
                 monitorInput.getRcvBuf();
+                monitorInput.getRecursive();
+                monitorInput.getSource();
+                monitorInput.getSourceType();
+                monitorInput.getTimeBeforeClose();
+                monitorInput.getWhitelist();
                 break;
             case Script:
                 ScriptInput scriptInput = (ScriptInput) input;
@@ -179,5 +193,57 @@ public class InputTest extends SplunkTestCase {
         tcpInput.remove();
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(name));
+
+        // create monitor
+        String filename;
+        ServiceInfo info = service.getInfo();
+        if (info.getOsName().equals("Windows"))
+            filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
+        else if (info.getOsName().equals("Linux"))
+            filename = "/var/log/messages";
+        else if (info.getOsName().equals("Darwin")) {
+            filename = "/var/log/system.log";
+        } else {
+            throw new Error("OS: " + info.getOsName() + " not supported");
+        }
+        if (inputCollection.containsKey(filename)) {
+            inputCollection.remove(filename);
+        }
+
+        // create/read/update/remove Monitor Input
+        inputCollection.create(filename, InputKind.Monitor);
+        MonitorInput monitorInput = (MonitorInput)inputCollection.get(filename);
+        monitorInput.setBlacklist("phonyregex*1");
+        monitorInput.setCheckIndex(true);
+        monitorInput.setCheckPath(true);
+        monitorInput.setCrcSalt("ThisIsSalt");
+        monitorInput.setFollowTail(false);
+        monitorInput.setHost("three.four.com");
+        monitorInput.setHostRegex("host*regex*");
+        monitorInput.setHostSegment("");
+        monitorInput.setIgnoreOlderThan("1d");
+        monitorInput.setIndex("main");
+        monitorInput.setRecursive(false);
+        monitorInput.setRenameSource("renamedSource");
+        monitorInput.setSourcetype("monitor");
+        monitorInput.setTimeBeforeClose(120);
+        monitorInput.setWhitelist("phonyregex*2");
+        monitorInput.update();
+        monitorInput.disable();
+        // some attributes are write only; check what we can.
+        assertEquals(monitorInput.getBlacklist(), "phonyregex*1");
+        assertEquals(monitorInput.getFollowTail(), false);
+        assertEquals(monitorInput.getHost(), "three.four.com");
+        assertEquals(monitorInput.getHostRegex(), "host*regex*");
+        assertEquals(monitorInput.getIgnoreOlderThan(), "1d");
+        assertEquals(monitorInput.getIndex(), "main");
+        assertEquals(monitorInput.getRecursive(), false);
+        assertEquals(monitorInput.getSource(), "renamedSource");
+        assertEquals(monitorInput.getSourceType(), "monitor");
+        assertEquals(monitorInput.getTimeBeforeClose(), 120);
+        assertEquals(monitorInput.getWhitelist(), "phonyregex*2");
+        monitorInput.remove();
+
+
     }
 }
