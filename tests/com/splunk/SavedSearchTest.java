@@ -17,6 +17,9 @@
 package com.splunk;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 import org.junit.Test;
 
 public class SavedSearchTest extends SplunkTestCase {
@@ -32,12 +35,64 @@ public class SavedSearchTest extends SplunkTestCase {
             savedSearch.getTitle();
             savedSearch.getPath();
 
-            // SavedSearch properties
+            // SavedSearch properties get
+            savedSearch.getActionEmailAuthPassword();
+            savedSearch.getActionEmailAuthUsername();
             savedSearch.getActionEmailSendResults();
+            savedSearch.getActionEmailBcc();
+            savedSearch.getActionEmailCc();
+            savedSearch.getActionEmailCommand();
+            savedSearch.getActionEmailFormat();
+            savedSearch.getActionEmailInline();
+            savedSearch.getActionEmailMailServer();
+            savedSearch.getActionEmailMaxResults();
+            savedSearch.getActionEmailMaxTime();
+            savedSearch.getActionEmailReportPaperOrientation();
+            savedSearch.getActionEmailReportPaperSize();
+            savedSearch.getActionEmailReportServerEnabled();
+            savedSearch.getActionEmailReportServerUrl();
+            savedSearch.getActionEmailSendPdf();
+            savedSearch.getActionEmailSendResults();
+            savedSearch.getActionEmailSubject();
             savedSearch.getActionEmailTo();
+            savedSearch.getActionEmailTrackAlert();
+            savedSearch.getActionEmailTtl();
+            savedSearch.getActionEmailUseSsl();
+            savedSearch.getActionEmailUseTls();
+            savedSearch.getActionEmailWidthSortColumns();
+            savedSearch.getActionPopulateLookupCommand();
+            savedSearch.getActionPopulateLookupDest();
+            savedSearch.getActionPopulateLookupHostname();
+            savedSearch.getActionPopulateLookupMaxResults();
+            savedSearch.getActionPopulateLookupMaxTime();
+            savedSearch.getActionPopulateLookupTrackAlert();
+            savedSearch.getActionPopulateLookupTtl();
+            savedSearch.getActionRssCommand();
+            savedSearch.getActionRssHostname();
+            savedSearch.getActionRssMaxResults();
+            savedSearch.getActionRssMaxTime();
+            savedSearch.getActionRssTrackAlert();
+            savedSearch.getActionRssTtl();
+            savedSearch.getActionScriptCommand();
+            savedSearch.getActionScriptFilename();
+            savedSearch.getActionScriptHostname();
+            savedSearch.getActionScriptMaxResults();
+            savedSearch.getActionScriptMaxTime();
+            savedSearch.getActionScriptTrackAlert();
+            savedSearch.getActionScriptTtl();
+            savedSearch.getActionSummaryIndexName();
+            savedSearch.getActionSummaryIndexCommand();
+            savedSearch.getActionSummaryIndexHostname();
+            savedSearch.getActionSummaryIndexInline();
+            savedSearch.getActionSummaryIndexMaxResults();
+            savedSearch.getActionSummaryIndexMaxTime();
+            savedSearch.getActionSummaryIndexTrackAlert();
+            savedSearch.getActionSummaryIndexTtl();
+            savedSearch.getAlertDigestMode();
             savedSearch.getAlertExpires();
             savedSearch.getAlertSeverity();
             savedSearch.getAlertSuppress();
+            savedSearch.getAlertSuppressFields();
             savedSearch.getAlertSuppressPeriod();
             savedSearch.getAlertTrack();
             savedSearch.getAlertComparator();
@@ -53,11 +108,14 @@ public class SavedSearchTest extends SplunkTestCase {
             savedSearch.getDispatchMaxCount();
             savedSearch.getDispatchMaxTime();
             savedSearch.getDispatchReduceFreq();
+            savedSearch.getDispatchRtBackfill();
             savedSearch.getDispatchSpawnProcess();
             savedSearch.getDispatchTimeFormat();
             savedSearch.getDispatchTtl();
             savedSearch.getDisplayView();
             savedSearch.getMaxConcurrent();
+            savedSearch.getNextScheduledTime();
+            savedSearch.getQualifiedSearch();
             savedSearch.getRealtimeSchedule();
             savedSearch.getRequestUiDispatchApp();
             savedSearch.getRequestUiDispatchView();
@@ -112,6 +170,132 @@ public class SavedSearchTest extends SplunkTestCase {
         savedSearch = savedSearches.create(
             "sdk-test1", search, new Args("is_visible", false));
         assertEquals(savedSearch.isVisible(), false);
+
+        // set email params
+        savedSearch.setActionEmailAuthPassword("sdk-password");
+        savedSearch.setActionEmailAuthUsername("sdk-username");
+        savedSearch.setActionEmailBcc("sdk-bcc@splunk.com");
+        savedSearch.setActionEmailCc("sdk-cc@splunk.com");
+        savedSearch.setActionEmailCommand("$name1$");
+        savedSearch.setActionEmailFormat("text");
+        savedSearch.setActionEmailFrom("sdk@splunk.com");
+        savedSearch.setActionEmailHostname("dummy1.host.com");
+        savedSearch.setActionEmailInline(true);
+        savedSearch.setActionEmailMailServer("splunk.com");
+        savedSearch.setActionEmailMaxResults(101);
+        savedSearch.setActionEmailMaxTime("10s");
+        savedSearch.setActionEmailPdfView("dummy");
+        savedSearch.setActionEmailPreProcessResults("*");
+        savedSearch.setActionEmailReportPaperOrientation("landscape");
+        savedSearch.setActionEmailReportPaperSize("letter");
+        savedSearch.setActionEmailReportServerEnabled(false);
+        savedSearch.setActionEmailReportServerUrl("splunk.com");
+        savedSearch.setActionEmailSendPdf(false);
+        savedSearch.setActionEmailSendResults(false);
+        savedSearch.setActionEmailSubject("sdk-subject");
+        savedSearch.setActionEmailTo("sdk-to@splunk.com");
+        savedSearch.setActionEmailTrackAlert(false);
+        savedSearch.setActionEmailTtl("61");
+        savedSearch.setActionEmailUseSsl(false);
+        savedSearch.setActionEmailUseTls(false);
+        savedSearch.setActionEmailWidthSortColumns(false);
+        savedSearch.setActionPopulateLookupCommand("$name2$");
+        savedSearch.setActionPopulateLookupDest("dummypath");
+        savedSearch.setActionPopulateLookupHostname("dummy2.host.com");
+        savedSearch.setActionPopulateLookupMaxResults(102);
+        savedSearch.setActionPopulateLookupMaxTime("20s");
+        savedSearch.setActionPopulateLookupTrackAlert(false);
+        savedSearch.setActionPopulateLookupTtl("62");
+        savedSearch.setActionRssCommand("$name3$");
+        savedSearch.setActionRssHostname("dummy3.host.com");
+        savedSearch.setActionRssMaxResults(103);
+        savedSearch.setActionRssMaxTime("30s");
+        savedSearch.setActionRssTrackAlert(false);
+        savedSearch.setActionRssTtl("63");
+        savedSearch.setActionScriptCommand("$name4$");
+        //savedSearch.setActionScriptFilename(String  filename);
+        savedSearch.setActionScriptHostname("dummy4.host.com");
+        savedSearch.setActionScriptMaxResults(104);
+        savedSearch.setActionScriptMaxTime("40s");
+        savedSearch.setActionScriptTrackAlert(false);
+        savedSearch.setActionScriptTtl("64");
+        savedSearch.setActionSummaryIndexName("default");
+        savedSearch.setActionSummaryIndexCommand("$name5$");
+        savedSearch.setActionSummaryIndexHostname("dummy5.host.com");
+        savedSearch.setActionSummaryIndexInline(false);
+        savedSearch.setActionSummaryIndexMaxResults(105);
+        savedSearch.setActionSummaryIndexMaxTime("50s");
+        savedSearch.setActionSummaryIndexTrackAlert(false);
+        savedSearch.setActionSummaryIndexTtl("65");
+        savedSearch.setActions("rss,email,populate_lookup,script,summary_index");
+        savedSearch.update();
+
+        // check
+        assertTrue(savedSearch.isActionEmail());
+        assertTrue(savedSearch.isActionPopulateLookup());
+        assertTrue(savedSearch.isActionRss());
+        assertTrue(savedSearch.isActioncScript());
+        assertTrue(savedSearch.isActionSummaryIndex());
+        assertTrue(savedSearch.isDigestMode());
+
+        assertEquals(savedSearch.getActionEmailAuthPassword(), "sdk-password");
+        assertEquals(savedSearch.getActionEmailAuthUsername(), "sdk-username");
+        assertEquals(savedSearch.getActionEmailBcc(), "sdk-bcc@splunk.com");
+        assertEquals(savedSearch.getActionEmailCc(), "sdk-cc@splunk.com");
+        assertEquals(savedSearch.getActionEmailCommand(), "$name1$");
+        assertEquals(savedSearch.getActionEmailFormat(), "text");
+        assertEquals(savedSearch.getActionEmailFrom(), "sdk@splunk.com");
+        assertEquals(savedSearch.getActionEmailHostname(), "dummy1.host.com");
+        assertEquals(savedSearch.getActionEmailInline(), true);
+        assertEquals(savedSearch.getActionEmailMailServer(), "splunk.com");
+        assertEquals(savedSearch.getActionEmailMaxResults(), 101);
+        assertEquals(savedSearch.getActionEmailMaxTime(), "10s");
+        assertEquals(savedSearch.getActionEmailPdfView(), "dummy");
+        assertEquals(savedSearch.getActionEmailPreProcessResults(), "*");
+        assertEquals(savedSearch.getActionEmailReportPaperOrientation(),
+                "landscape");
+        assertEquals(savedSearch.getActionEmailReportPaperSize(), "letter");
+        assertEquals(savedSearch.getActionEmailReportServerEnabled(), false);
+        assertEquals(savedSearch.getActionEmailReportServerUrl(), "splunk.com");
+        assertEquals(savedSearch.getActionEmailSendPdf(), false);
+        assertEquals(savedSearch.getActionEmailSendResults(), false);
+        assertEquals(savedSearch.getActionEmailSubject(), "sdk-subject");
+        assertEquals(savedSearch.getActionEmailTo(), "sdk-to@splunk.com");
+        assertEquals(savedSearch.getActionEmailTrackAlert(), false);
+        assertEquals(savedSearch.getActionEmailTtl(), "61");
+        assertEquals(savedSearch.getActionEmailUseSsl(), false);
+        assertEquals(savedSearch.getActionEmailUseTls(), false);
+        assertEquals(savedSearch.getActionEmailWidthSortColumns(), false);
+        assertEquals(savedSearch.getActionPopulateLookupCommand(), "$name2$");
+        assertEquals(savedSearch.getActionPopulateLookupDest(), "dummypath");
+        assertEquals(savedSearch.getActionPopulateLookupHostname(),
+                "dummy2.host.com");
+        assertEquals(savedSearch.getActionPopulateLookupMaxResults(), 102);
+        assertEquals(savedSearch.getActionPopulateLookupMaxTime(), "20s");
+        assertEquals(savedSearch.getActionPopulateLookupTrackAlert(), false);
+        assertEquals(savedSearch.getActionPopulateLookupTtl(), "62");
+        assertEquals(savedSearch.getActionRssCommand(), "$name3$");
+        assertEquals(savedSearch.getActionRssHostname(), "dummy3.host.com");
+        assertEquals(savedSearch.getActionRssMaxResults(), 103);
+        assertEquals(savedSearch.getActionRssMaxTime(), "30s");
+        assertEquals(savedSearch.getActionRssTrackAlert(), false);
+        assertEquals(savedSearch.getActionRssTtl(), "63");
+        assertEquals(savedSearch.getActionScriptCommand(), "$name4$");
+        //savedSearch.setActionScriptFilename(String  filename);
+        assertEquals(savedSearch.getActionScriptHostname(), "dummy4.host.com");
+        assertEquals(savedSearch.getActionScriptMaxResults(), 104);
+        assertEquals(savedSearch.getActionScriptMaxTime(), "40s");
+        assertEquals(savedSearch.getActionScriptTrackAlert(), false);
+        assertEquals(savedSearch.getActionScriptTtl(), "64");
+        assertEquals(savedSearch.getActionSummaryIndexName(), "default");
+        assertEquals(savedSearch.getActionSummaryIndexCommand(), "$name5$");
+        assertEquals(savedSearch.getActionSummaryIndexHostname(),
+                "dummy5.host.com");
+        assertEquals(savedSearch.getActionSummaryIndexInline(), false);
+        assertEquals(savedSearch.getActionSummaryIndexMaxResults(), 105);
+        assertEquals(savedSearch.getActionSummaryIndexMaxTime(), "50s");
+        assertEquals(savedSearch.getActionSummaryIndexTrackAlert(), false);
+        assertEquals(savedSearch.getActionSummaryIndexTtl(), "65");
 
         // Delete the saved search - using alternative method
         savedSearch.remove();

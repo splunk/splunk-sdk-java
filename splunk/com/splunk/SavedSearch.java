@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -112,13 +113,214 @@ public class SavedSearch extends Entity {
     }
 
     /**
+     * Returns the email password.
+     *
+     * @return The email password.
+     */
+    public String getActionEmailAuthPassword() {
+        return getString("action.email.auth_password", null);
+    }
+
+    /**
+     * Returns the email username.
+     *
+     * @return The email username.
+     */
+    public String getActionEmailAuthUsername() {
+        return getString("action.email.auth_username", null);
+    }
+
+    /**
+     * Returns the blind carbon copy.
+     *
+     * @return The blind carbon copy.
+     */
+    public String getActionEmailBcc() {
+        return getString("action.email.bcc", null);
+    }
+
+    /**
+     * Returns the carbon copy.
+     *
+     * @return The carbon copy.
+     */
+    public String getActionEmailCc() {
+        return getString("action.email.cc", null);
+    }
+
+    /**
+     * Returns The search command (or pipeline) which is responsible for
+     * executing the action.
+     *
+     * Generally the command is a template search pipeline which is realized
+     * with values from the saved search. To reference saved search field
+     * values wrap them in $, for example to reference the savedsearch name
+     * use $name$, to reference the search use $search$.
+     *
+     * @return The search command (or pipeline) responsible for executing the
+     * action.
+     */
+    public String getActionEmailCommand() {
+        return getString("action.email.command", null);
+    }
+
+    /**
+     * Returns the email format. Valid values are {@code plain, html, raw} or
+     * {@code csv}.
+     *
+     * @return the email format.
+     */
+    public String getActionEmailFormat() {
+        return getString("action.email.format", null);
+    }
+
+    /**
+     * Returns the from name of the email.
+     *
+     * @return The from name of the email.
+     */
+    public String getActionEmailFrom() {
+        return getString("action.email.from", null);
+    }
+
+    /**
+     * Returns the hostname used in the web link (url) sent in alert actions.
+     *
+     * Valid forms are: {@code hostname} and {@code protocol://hostname:port}.
+     *
+     * @return The hostname used in the web link
+     */
+    public String getActionEmailHostname() {
+        return getString("action.email.hostname", null);
+    }
+
+    /**
+     * Returns whether the search results are contained in the body of the
+     * email.
+     *
+     * @return whether the search results are contained in the body of the
+     * email.
+     */
+    public boolean getActionEmailInline() {
+        return getBoolean("action.email.inline", false);
+    }
+
+    /**
+     * Returns the address of the MTA server to be used to send the emails. If not
+     * set, defaults to setting in {@code alert_actions.conf}.
+     *
+     * @return The address of the MTA server to be used to send the emails.
+     */
+    public String getActionEmailMailServer() {
+        return getString("action.email.mailserver", null);
+    }
+
+    /**
+     * Returns the global maximum number of search results to send when
+     * email.action is enabled.
+     *
+     * @return The maximum number of events per email.
+     */
+    public int getActionEmailMaxResults() {
+        return getInteger("action.email.maxresults", -1);
+    }
+
+    /**
+     * Returns the maximum amount of time the execution of an email action takes
+     * before the action is aborted.
+     *
+     * Valid format is {@code number} followed by one of {@code m, s, h} or
+     * {@code d}.
+     *
+     * @return The maximum amount of time the execution of an email action takes
+     * before the action is aborted.
+     */
+    public String getActionEmailMaxTime() {
+        return getString("action.email.maxtime", null);
+    }
+
+    /**
+     * Returns the name of the PDF view
+     *
+     * @return The name of the PDF view.
+     */
+    public String getActionEmailPdfView() {
+        return getString("action.email.pdfview", null);
+    }
+
+    /**
+     * Returns the search string to pre-process results before emailing them.
+     *
+     * @return The search string to pre-process results before emailing them.
+     */
+    public String getActionEmailPreProcessResults() {
+        return getString("action.email.preprocess_results", null);
+    }
+
+    /**
+     * Returns the paper orientation. Valid values are {@code portrait} or
+     * {@code landscape}.
+     *
+     * @return the paper orientation.
+     */
+    public String getActionEmailReportPaperOrientation() {
+        return getString("action.email.reportPaperOrientation", null);
+    }
+
+    /**
+     * Returns the paper size. Valid values are
+     * {@code letter, legal, ledger, a2, a3, a4} or {@code a5}.
+     *
+     * @return the paper size.
+     */
+    public String getActionEmailReportPaperSize() {
+        return getString("action.email.reportPaperSize", null);
+    }
+
+    /**
+     * Returns whether the PDF server is enabled.
+     *
+     * @return whether the PDF server is enabled.
+     */
+    public boolean getActionEmailReportServerEnabled() {
+        return getBoolean("action.email.reportServerEnabled", false);
+    }
+
+    /**
+     * Returns the URL of the PDF report server.
+     *
+     * @return The URL of the PDF report server.
+     */
+    public String getActionEmailReportServerUrl() {
+        return getString("action.email.reportServerURL", null);
+    }
+
+    /**
+     * Returns whether to send the results as a PDF.
+     *
+     * @return whether to send the results as a PDF.
+     */
+    public boolean getActionEmailSendPdf() {
+        return getBoolean("action.email.sendpdf", false);
+    }
+
+    /**
      * Indicates whether search results are attached to an email.
      *
      * @return {@code true} if search results are attached to an email,
      * {@code false} if not.
      */
-    public String getActionEmailSendResults() {
-        return getString("action.email.sendresults", null);
+    public boolean getActionEmailSendResults() {
+        return getBoolean("action.email.sendresults", false);
+    }
+
+    /**
+     * Returns the subject line of the email for this report.
+     *
+     * @return Tthe subject line of the email for this report.
+     */
+    public String getActionEmailSubject() {
+        return getString("action.email.subject", null);
     }
 
     /**
@@ -128,6 +330,391 @@ public class SavedSearch extends Entity {
      */
     public String getActionEmailTo() {
         return getString("action.email.to", null);
+    }
+
+    /**
+     * Indicates whether the execution of this action signifies a
+     * track-able alert.
+     *
+     * @return {@code true} if the execution signifies a track-able alert,
+     * {@code false} if not.
+     */
+    public boolean getActionEmailTrackAlert() {
+        return getBoolean("action.email.track_alert", false);
+    }
+
+    /**
+     * Returns the minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered. If the value is predicates the letter
+     * {@code p}, the value is not interpreted as seconds, but as periods.
+     *
+     * @return The minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered.
+     */
+    public String getActionEmailTtl() {
+        return getString("action.email.ttl", null);
+    }
+
+    /**
+     * Returns whether to use SSL when communicating with the SMTP server.
+     *
+     * @return whether to use SSL when communicating with the SMTP server.
+     */
+    public boolean getActionEmailUseSsl() {
+        return getBoolean("action.email.use_ssl", false);
+    }
+
+    /**
+     * Returns whether to use TLS (transport layer security) when communicating
+     * with the SMTP server.
+     *
+     * @return whether to use TLS (transport layer security) when communicating
+     * with the SMTP server.
+     */
+    public boolean getActionEmailUseTls() {
+        return getBoolean("action.email.use_tls", false);
+    }
+
+    /**
+     * Returns whether columns should be sorted from least wide to most wide,
+     * left to right.
+     *
+     * Only valid if {@code format=text}.
+     *
+     * @return  whether columns should be sorted from least wide
+     * to most wide, left to right.
+     */
+    public boolean getActionEmailWidthSortColumns() {
+        return getBoolean("action.email.width_sort_columns", false);
+    }
+
+    /**
+     * Returns the search command (or pipeline) which is responsible for
+     * executing the action.
+     *
+     * @return The search command (or pipeline) which is responsible for
+     * executing the action.
+     */
+    public String getActionPopulateLookupCommand() {
+        return getString("action.populate_lookup.command", null);
+    }
+
+    /**
+     * Returns the Lookup name of path of the lookup to populate.
+     *
+     * @return the Lookup name of path of the lookup to populate.
+     */
+    public String getActionPopulateLookupDest() {
+        return getString("action.populate_lookup.dest", null);
+    }
+
+    /**
+     * Returns the hostname used in the web link (url) sent in alert actions.
+     *
+     * Valid forms are: {@code hostname} and {@code protocol://hostname:port}.
+     *
+     * @return The hostname used in the web link
+     */
+    public String getActionPopulateLookupHostname() {
+        return getString("action.populate_lookup.hostname", null);
+    }
+
+    /**
+     * Returns the global maximum number of search results via alerts.
+     *
+     * @return Tthe global maximum number of search results via alerts.
+     */
+    public int getActionPopulateLookupMaxResults() {
+        return getInteger("action.populate_lookup.maxresults", -1);
+    }
+
+    /**
+     * Returns the maximum amount of time the execution of an alert
+     * before the action is aborted.
+     *
+     * Valid format is {@code number} followed by one of {@code m, s, h} or
+     * {@code d}.
+     *
+     * @return The maximum amount of time the execution of an alert
+     * before the action is aborted.
+     */
+    public String getActionPopulateLookupMaxTime() {
+        return getString("action.populate_lookup.maxtime", null);
+    }
+
+    /**
+     * Returns whether the execution of this action signifies a trac-kable
+     * alert.
+     *
+     * @return whether the execution of this action signifies a track-able
+     * alert.
+     */
+    public boolean getActionPopulateLookupTrackAlert() {
+        return getBoolean("action.populate_lookup.track_alert", false);
+    }
+
+    /**
+     * Returns the minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered. If the value is predicated with the letter
+     * {@code p}, the value is not interpreted as seconds, but as periods.
+     *
+     * @return The minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered.
+     */
+    public String getActionPopulateLookupTtl() {
+        return getString("action.populate_lookup.ttl", null);
+    }
+
+    /**
+     * Returns the search command (or pipeline) which is responsible for
+     * executing the action.
+     *
+     * @return The search command (or pipeline) which is responsible for
+     * executing the action.
+     */
+    public String getActionRssCommand() {
+        return getString("action.rss.command", null);
+    }
+
+    /**
+     * Returns the hostname used in the web link (url) sent in alert actions.
+     *
+     * Valid forms are: {@code hostname} and {@code protocol://hostname:port}.
+     *
+     * @return The hostname used in the web link
+     */
+    public String getActionRssHostname() {
+        return getString("action.rss.hostname", null);
+    }
+
+    /**
+     * Returns the global maximum number of search results via alerts.
+     *
+     * @return Tthe global maximum number of search results via alerts.
+     */
+    public int getActionRssMaxResults() {
+        return getInteger("action.rss.maxresults", -1);
+    }
+
+    /**
+     * Returns the maximum amount of time the execution of an alert
+     * before the action is aborted.
+     *
+     * Valid format is {@code number} followed by one of {@code m, s, h} or
+     * {@code d}.
+     *
+     * @return The maximum amount of time the execution of an alert
+     * before the action is aborted.
+     */
+    public String getActionRssMaxTime() {
+        return getString("action.rss.maxtime", null);
+    }
+
+    /**
+     * Returns whether the execution of this action signifies a trac-kable
+     * alert.
+     *
+     * @return whether the execution of this action signifies a track-able
+     * alert.
+     */
+    public boolean getActionRssTrackAlert() {
+        return getBoolean("action.rss.track_alert", false);
+    }
+
+    /**
+     * Returns the minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered. If the value is predicated with the letter
+     * {@code p}, the value is not interpreted as seconds, but as periods.
+     *
+     * @return The minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered.
+     */
+    public String getActionRssTtl() {
+        return getString("action.rss.ttl", null);
+    }
+
+    /**
+     * Returns the search command (or pipeline) which is responsible for
+     * executing the action.
+     *
+     * @return The search command (or pipeline) which is responsible for
+     * executing the action.
+     */
+    public String getActionScriptCommand() {
+        return getString("action.script.command", null);
+    }
+
+    /**
+     * Returns the filename of the script to call.
+     *
+     * @return The filename of the script to call.
+     */
+    public String getActionScriptFilename() {
+        return getString("action.script.filename", null);
+    }
+
+    /**
+     * Returns the hostname used in the web link (url) sent in alert actions.
+     *
+     * Valid forms are: {@code hostname} and {@code protocol://hostname:port}.
+     *
+     * @return The hostname used in the web link
+     */
+    public String getActionScriptHostname() {
+        return getString("action.script.hostname", null);
+    }
+
+    /**
+     * Returns the global maximum number of search results via alerts.
+     *
+     * @return Tthe global maximum number of search results via alerts.
+     */
+    public int getActionScriptMaxResults() {
+        return getInteger("action.script.maxresults", -1);
+    }
+
+    /**
+     * Returns the maximum amount of time the execution of an alert
+     * before the action is aborted.
+     *
+     * Valid format is {@code number} followed by one of {@code m, s, h} or
+     * {@code d}.
+     *
+     * @return The maximum amount of time the execution of an alert
+     * before the action is aborted.
+     */
+    public String getActionScriptMaxTime() {
+        return getString("action.script.maxtime", null);
+    }
+
+    /**
+     * Returns whether the execution of this action signifies a trac-kable
+     * alert.
+     *
+     * @return whether the execution of this action signifies a track-able
+     * alert.
+     */
+    public boolean getActionScriptTrackAlert() {
+        return getBoolean("action.script.track_alert", false);
+    }
+
+    /**
+     * Returns the minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered. If the value is predicated with the letter
+     * {@code p}, the value is not interpreted as seconds, but as periods.
+     *
+     * @return The minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered.
+     */
+    public String getActionScriptTtl() {
+        return getString("action.script.ttl", null);
+    }
+//**********************
+
+    /**
+     * Returns the name of the summary index where the results of the scheduled
+     * search are saved.
+     *
+     * @return The name of the summary index where the results of the scheduled
+     * search are saved.
+     */
+    public String getActionSummaryIndexName() {
+        return getString("action.summary_index._name", null);
+    }
+
+    /**
+     * Returns the search command (or pipeline) which is responsible for
+     * executing the action.
+     *
+     * Generally the command is a template search pipeline which is realized
+     * with values from the saved search. To reference saved search field values
+     * wrap them in $, for example to reference the savedsearch name use $name$,
+     * to reference the search use $search$.
+     *
+     * @return The search command (or pipeline) which is responsible for
+     * executing the action.
+     */
+    public String getActionSummaryIndexCommand() {
+        return getString("action.summary_index.command", null);
+    }
+
+    /**
+     * Returns the hostname used in the web link (url) sent in alert actions.
+     *
+     * Valid forms are: {@code hostname} and {@code protocol://hostname:port}.
+     *
+     * @return The hostname used in the web link (url) sent in alert actions.
+     */
+    public String getActionSummaryIndexHostname() {
+        return getString("action.summary_index.hostname", null);
+    }
+
+    /**
+     * Returns whether or not to execute the summary indexing action as part of
+     * the scheduled search.
+     *
+     * @return Whether or not to execute the summary indexing action as part
+     * of the scheduled search.
+     */
+    public boolean getActionSummaryIndexInline() {
+        return getBoolean("action.summary_index.inline", false);
+    }
+
+    /**
+     * Returns the global maximum number of search results via alerts.
+     *
+     * @return Tthe global maximum number of search results via alerts.
+     */
+    public int getActionSummaryIndexMaxResults() {
+        return getInteger("action.summary_index.maxresults", -1);
+    }
+
+    /**
+     * Returns the maximum amount of time the execution of an alert
+     * before the action is aborted.
+     *
+     * Valid format is {@code number} followed by one of {@code m, s, h} or
+     * {@code d}.
+     *
+     * @return The maximum amount of time the execution of an alert
+     * before the action is aborted.
+     */
+    public String getActionSummaryIndexMaxTime() {
+        return getString("action.summary_index.maxtime", null);
+    }
+
+    /**
+     * Returns whether the execution of this action signifies a trac-kable
+     * alert.
+     *
+     * @return whether the execution of this action signifies a track-able
+     * alert.
+     */
+    public boolean getActionSummaryIndexTrackAlert() {
+        return getBoolean("action.summary_index.track_alert", false);
+    }
+
+    /**
+     * Returns the minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered. If the value is predicated with the letter
+     * {@code p}, the value is not interpreted as seconds, but as periods.
+     *
+     * @return The minimum time-to-live in seconds of the search artifacts if
+     * this action is triggered.
+     */
+    public String getActionSummaryIndexTtl() {
+        return getString("action.summary_index.ttl", null);
+    }
+
+    /**
+     * Returns whether Splunk applies the alert actions to the entire result
+     * set (digest) or to each individual search result (per result).
+     *
+     * @return whether Splunk applies the alert actions to the entire result
+     * set (digest) or to each individual search result (per result).
+     */
+    public boolean getAlertDigestMode() {
+        return getBoolean("alert.digest_mode", false);
     }
 
     /**
@@ -156,8 +743,19 @@ public class SavedSearch extends Entity {
      * @return {@code true} if alert suppression is enabled for this
      * search, {@code false} if not.
      */
-    public String getAlertSuppress() {
-        return getString("alert.suppress", null);
+    public boolean getAlertSuppress() {
+        return getBoolean("alert.suppress", false);
+    }
+
+    /**
+     * Returns a comma delimited list of fields to use for suppression when
+     * doing per result alerting.
+     *
+     * @return The comma delimited list of fields to use for suppression when
+     * doing per result alerting.
+     */
+    public String getAlertSuppressFields() {
+        return getString("alert.suppress.fields", null);
     }
 
     /**
@@ -319,6 +917,17 @@ public class SavedSearch extends Entity {
     }
 
     /**
+     * Indicates whether to back fill the real time window for this search.
+     * Parameter valid only if this is a real time search.
+     *
+     * @return {@code true} if Splunk back fills the real time window for
+     * this search, {@code false} if not.
+     */
+    public boolean getDispatchRtBackfill() {
+        return getBoolean("dispatch.rt_backfill");
+    }
+
+    /**
      * Indicates whether Splunk spawns a new search process when this saved
      * search is executed.
      *
@@ -370,6 +979,24 @@ public class SavedSearch extends Entity {
      */
     public int getMaxConcurrent() {
         return getInteger("max_concurrent");
+    }
+
+    /**
+     * Returns the next scheduled time.
+     *
+     * @return The next scheduled time.
+     */
+    public Date getNextScheduledTime() {
+        return getDate("next_scheduled_time", null);
+    }
+
+    /**
+     * Returns the qualified search.
+     *
+     * @return The qualified search.
+     */
+    public String getQualifiedSearch() {
+        return getString("qualfiedSearch", null);
     }
 
     /**
@@ -561,8 +1188,8 @@ public class SavedSearch extends Entity {
      *
      * @param cc The carbon copy email address.
      */
-    public void setActionEmailc(String cc) {
-        setCacheValue("action.email.bcc", cc);
+    public void setActionEmailCc(String cc) {
+        setCacheValue("action.email.cc", cc);
     }
 
     /**
@@ -698,7 +1325,7 @@ public class SavedSearch extends Entity {
      *
      * @param pdfServerEnabled whether the PDF server is enabled.
      */
-    public void setActionEmailReportServerEnabled(String  pdfServerEnabled) {
+    public void setActionEmailReportServerEnabled(boolean  pdfServerEnabled) {
         setCacheValue("action.email.reportServerEnabled", pdfServerEnabled);
     }
 
@@ -723,7 +1350,7 @@ public class SavedSearch extends Entity {
     /**
      * Sets whether to attach the search results in the email.
      *
-     * @param sendResults the URL of the PDF report server.
+     * @param sendResults whether or not to attach search results in the email.
      */
     public void setActionEmailSendResults(boolean  sendResults) {
         setCacheValue("action.email.sendresults", sendResults);
@@ -760,7 +1387,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the minimum time-to-live in seconds of the search artifacts if this
-     * action is triggered. If the value is predicates the letter {@code p}, the
+     * action is triggered. If the value is predicated the letter {@code p}, the
      * value is not interpreted as seconds, but as periods.
      *
      * @param ttl the minimum time-to-live in seconds of the search artifacts
@@ -857,10 +1484,10 @@ public class SavedSearch extends Entity {
         setCacheValue("action.populate_lookup.maxtime", maxTime);
     }
     /**
-     * Sets whether the execution of this action signifies a trackable alert.
+     * Sets whether the execution of this action signifies a track-able alert.
      *
      * @param trackAlert whether the execution of this action signifies a
-     * trackable alert.
+     * track-able alert.
      */
     public void setActionPopulateLookupTrackAlert(boolean  trackAlert) {
         setCacheValue("action.populate_lookup.track_alert", trackAlert);
@@ -868,7 +1495,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the minimum time-to-live in seconds of the search artifacts if this
-     * action is triggered. If the value is predicates the letter {@code p}, the
+     * action is triggered. If the value is predicated the letter {@code p}, the
      * value is not interpreted as seconds, but as periods.
      *
      * @param ttl the minimum time-to-live in seconds of the search artifacts
@@ -1128,6 +1755,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets which actions are enabled.
+     *
+     * For example: "rss,email"
+     *
+     * Valid elements are {@code rss, email, populate_lookup, script} and
+     * {@code summary_index},
      *
      * @param actions a comma separated list of enabled actions.
      */
