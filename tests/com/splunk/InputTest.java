@@ -49,11 +49,13 @@ public class InputTest extends SplunkTestCase {
                 break;
             case Script:
                 ScriptInput scriptInput = (ScriptInput) input;
+                scriptInput.getEndTime();
                 scriptInput.getGroup();
                 scriptInput.getHost();
                 scriptInput.getIndex();
                 scriptInput.getInterval();
                 scriptInput.getRcvBuf();
+                scriptInput.getStartTime();
                 break;
             case Tcp:
                 TcpInput tcpInput = (TcpInput) input;
@@ -194,9 +196,10 @@ public class InputTest extends SplunkTestCase {
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(name));
 
+        ServiceInfo info = service.getInfo();
+
         // create monitor
         String filename;
-        ServiceInfo info = service.getInfo();
         if (info.getOsName().equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
         else if (info.getOsName().equals("Linux"))
@@ -244,6 +247,32 @@ public class InputTest extends SplunkTestCase {
         assertEquals(monitorInput.getWhitelist(), "phonyregex*2");
         monitorInput.remove();
 
+        // create script
+        if (info.getOsName().equals("Windows"))
+            filename = "echo.bat";
+        else
+            filename = "echo.sh";
+        args.clear();
+        args.put("interval", "60");
+        if (inputCollection.get(filename) != null) {
+            inputCollection.remove(filename);
+        }
+        inputCollection.create(filename, InputKind.Script, args);
+        ScriptInput scriptInput = (ScriptInput)inputCollection.get(filename);
 
+        scriptInput.setHost("three.four.com");
+        scriptInput.setIndex("main");
+        scriptInput.setInterval("120");
+        scriptInput.setPassAuth("admin");
+        scriptInput.setRenameSource("renamedSource");
+        scriptInput.setSource("source");
+        scriptInput.setSourcetype("script");
+        scriptInput.update();
+
+        assertEquals(scriptInput.getHost(), "three.four.com");
+        assertEquals(scriptInput.getIndex(), "main");
+        assertEquals(scriptInput.getInterval(), "120");
+
+        scriptInput.remove();
     }
 }

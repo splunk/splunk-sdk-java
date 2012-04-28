@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Date;
+
 /**
  * The {@code ScriptInput} class represents a script input.
  */
@@ -29,6 +31,15 @@ public class ScriptInput extends Input {
      */
     ScriptInput(Service service, String path) {
         super(service, path);
+    }
+
+    /**
+     * Returns the end-time.
+     *
+     * @return The end-time, or {@code null if not specified}
+     */
+    public Date getEndTime() {
+        return getDateFromEpoch("endtime", null);
     }
 
     /**
@@ -84,6 +95,15 @@ public class ScriptInput extends Input {
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
+    }
+
+    /**
+     * Returns the start-time.
+     *
+     * @return The start-time, or {@code null if not specified}
+     */
+    public Date getStartTime() {
+        return getDateFromEpoch("endtime", null);
     }
 
     /**
