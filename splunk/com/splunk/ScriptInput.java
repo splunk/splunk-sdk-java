@@ -89,6 +89,15 @@ public class ScriptInput extends Input {
     }
 
     /**
+     * Returns the value of the user this script runs under.
+     *
+     * @return The user that executes this script.
+     */
+    public String getPassAuth() {
+        return getString("passAuth", null);
+    }
+
+    /**
      * Returns the value of the {@code _rcvbuf} attribute for this script input.
      *
      * @return The {@code _rcvbuf} value.
@@ -98,12 +107,30 @@ public class ScriptInput extends Input {
     }
 
     /**
+     * Returns the source.
+     *
+     * @return The source.
+     */
+    public String getSource() {
+        return getString("source", null);
+    }
+
+    /**
+     * Returns the source type.
+     *
+     * @return The source type.
+     */
+    public String getSourceType() {
+        return getString("sourcetype", null);
+    }
+
+    /**
      * Returns the start-time.
      *
      * @return The start-time, or {@code null if not specified}
      */
     public Date getStartTime() {
-        return getDateFromEpoch("endtime", null);
+        return getDateFromEpoch("starttime", null);
     }
 
     /**

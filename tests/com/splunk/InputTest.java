@@ -174,28 +174,6 @@ public class InputTest extends SplunkTestCase {
 
         InputCollection inputCollection = service.getInputs();
 
-        // Tcp inputs require the name to be the input's port number.
-        String name = "9999"; // test port
-
-        if (inputCollection.containsKey(name))
-            fail("Input test port already exists: " + name);
-
-        assertFalse(inputCollection.containsKey(name));
-
-        inputCollection.create(name, InputKind.Tcp);
-        assertTrue(inputCollection.containsKey(name));
-
-        TcpInput tcpInput = (TcpInput)inputCollection.get(name);
-
-        Args args = new Args();
-        args.put("sourcetype", "sdk-tests");
-        tcpInput.update(args);
-        assertEquals(tcpInput.get("sourcetype"), "sdk-tests");
-
-        tcpInput.remove();
-        inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(name));
-
         ServiceInfo info = service.getInfo();
 
         // create monitor
@@ -246,12 +224,15 @@ public class InputTest extends SplunkTestCase {
         assertEquals(monitorInput.getTimeBeforeClose(), 120);
         assertEquals(monitorInput.getWhitelist(), "phonyregex*2");
         monitorInput.remove();
+        inputCollection.refresh();
+        assertFalse(inputCollection.containsKey(filename));
 
         // create script
         if (info.getOsName().equals("Windows"))
             filename = "echo.bat";
         else
             filename = "echo.sh";
+        Args args = new Args();
         args.clear();
         args.put("interval", "60");
         if (inputCollection.get(filename) != null) {
@@ -272,7 +253,78 @@ public class InputTest extends SplunkTestCase {
         assertEquals(scriptInput.getHost(), "three.four.com");
         assertEquals(scriptInput.getIndex(), "main");
         assertEquals(scriptInput.getInterval(), "120");
+        assertEquals(scriptInput.getPassAuth(), "admin");
+        assertEquals(scriptInput.getSource(), "renamedSource");
+        assertEquals(scriptInput.getSourceType(), "script");
 
         scriptInput.remove();
+        inputCollection.refresh();
+        assertFalse(inputCollection.containsKey(filename));
+
+        // Tcp inputs require the name to be the input's port number.
+        String name = "9999"; // test port
+
+        if (inputCollection.containsKey(name))
+            fail("Input test port already exists: " + name);
+
+        assertFalse(inputCollection.containsKey(name));
+
+        inputCollection.create(name, InputKind.Tcp);
+        assertTrue(inputCollection.containsKey(name));
+
+        TcpInput tcpInput = (TcpInput)inputCollection.get(name);
+
+        tcpInput.setConnectionHost("one.two.three");
+        tcpInput.setHost("myhost");
+        tcpInput.setIndex("main");
+        tcpInput.setQueue("indexQueue");
+        tcpInput.setRawTcpDoneTimeout(120);
+        tcpInput.setRestrictToHost("four.five.com");
+        tcpInput.setSource("tcp");
+        tcpInput.setSourceType("sdk-tests");
+        tcpInput.setSSL(false);
+        tcpInput.update();
+
+        assertEquals(tcpInput.getConnectionHost(), "one.two.three");
+        assertEquals(tcpInput.getHost(), "myhost");
+        assertEquals(tcpInput.getIndex(), "main");
+        assertEquals(tcpInput.getQueue(), "indexQueue");
+        assertEquals(tcpInput.getSource(), "tcp");
+        assertEquals(tcpInput.getSourceType(), "sdk-tests");
+        assertFalse(tcpInput.getSSL());
+        assertEquals(tcpInput.getSource(), "tcp");
+
+        tcpInput.remove();
+        inputCollection.refresh();
+        assertFalse(inputCollection.containsKey(name));
+
+        // Tcp inputs require the name to be the input's port number.
+        name = "9999"; // test port
+
+        if (inputCollection.containsKey(name))
+            fail("Input test port already exists: " + name);
+
+        assertFalse(inputCollection.containsKey(name));
+
+        inputCollection.create(name, InputKind.TcpSplunk);
+        assertTrue(inputCollection.containsKey(name));
+
+        TcpSplunkInput tcpSplunkInput =
+                (TcpSplunkInput)inputCollection.get(name);
+
+        tcpSplunkInput.setConnectionHost("one.two.three");
+        tcpSplunkInput.setHost("myhost");
+        tcpSplunkInput.setRestrictToHost("four.five.com");
+        tcpSplunkInput.setSSL(false);
+        tcpSplunkInput.update();
+
+        assertEquals(tcpSplunkInput.getConnectionHost(), "one.two.three");
+        assertEquals(tcpSplunkInput.getHost(), "myhost");
+        assertFalse(tcpSplunkInput.getSSL());
+
+        tcpSplunkInput.remove();
+        inputCollection.refresh();
+        assertFalse(inputCollection.containsKey(name));
+
     }
 }

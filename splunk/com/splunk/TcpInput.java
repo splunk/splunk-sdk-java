@@ -135,7 +135,7 @@ public class TcpInput extends Input {
      * @return The event source type, or {@code null} if not specified.
      */
     public String getSourceType() {
-        return getString("sourceType", null);
+        return getString("sourcetype", null);
     }
 
     /**
