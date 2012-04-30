@@ -33,6 +33,8 @@
 
 * Add class setter methods.
 
+* Add missing getter methods.
+
 ### Minor Additions
 
 * Add genevents example, to generate events and push into splunk using various
@@ -52,4 +54,4 @@
 * Fix action to update settings.
 * Fix user creation to force lowercase usernames.
 * Fix ServiceInfo missing get methods.
-
+* Fix a number of getter methods. 
