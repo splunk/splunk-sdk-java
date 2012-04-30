@@ -34,6 +34,6 @@ public class UdpConnections extends Entity {
      * @return The server name.
      */
     public String getGroup() {
-        return getString("group");
+        return getString("group", null);
     }
 }

@@ -98,8 +98,8 @@ public class InputTest extends SplunkTestCase {
                 udpInput.getRcvBuf();
                 udpInput.getSource();
                 udpInput.getSourceType();
-                udpInput.noAppendingTimeStamp();
-                udpInput.noPriorityStripping();
+                udpInput.getNoAppendingTimeStamp();
+                udpInput.getNoPriorityStripping();
                 udpConnections = udpInput.connections();
                 udpConnections.getGroup();
                 break;
@@ -176,7 +176,7 @@ public class InputTest extends SplunkTestCase {
 
         ServiceInfo info = service.getInfo();
 
-        // create monitor
+        // CRUD Monitor input
         String filename;
         if (info.getOsName().equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
@@ -191,7 +191,6 @@ public class InputTest extends SplunkTestCase {
             inputCollection.remove(filename);
         }
 
-        // create/read/update/remove Monitor Input
         inputCollection.create(filename, InputKind.Monitor);
         MonitorInput monitorInput = (MonitorInput)inputCollection.get(filename);
         monitorInput.setBlacklist("phonyregex*1");
@@ -227,7 +226,7 @@ public class InputTest extends SplunkTestCase {
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(filename));
 
-        // create script
+        // CRUD Script input
         if (info.getOsName().equals("Windows"))
             filename = "echo.bat";
         else
@@ -261,18 +260,15 @@ public class InputTest extends SplunkTestCase {
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(filename));
 
-        // Tcp inputs require the name to be the input's port number.
-        String name = "9999"; // test port
+        String port = "9999"; // test port
 
-        if (inputCollection.containsKey(name))
-            fail("Input test port already exists: " + name);
+        // CRUD TCP (raw) input
+        assertFalse(inputCollection.containsKey(port));
 
-        assertFalse(inputCollection.containsKey(name));
+        inputCollection.create(port, InputKind.Tcp);
+        assertTrue(inputCollection.containsKey(port));
 
-        inputCollection.create(name, InputKind.Tcp);
-        assertTrue(inputCollection.containsKey(name));
-
-        TcpInput tcpInput = (TcpInput)inputCollection.get(name);
+        TcpInput tcpInput = (TcpInput)inputCollection.get(port);
 
         tcpInput.setConnectionHost("one.two.three");
         tcpInput.setHost("myhost");
@@ -296,21 +292,14 @@ public class InputTest extends SplunkTestCase {
 
         tcpInput.remove();
         inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(name));
+        assertFalse(inputCollection.containsKey(port));
 
-        // Tcp inputs require the name to be the input's port number.
-        name = "9999"; // test port
-
-        if (inputCollection.containsKey(name))
-            fail("Input test port already exists: " + name);
-
-        assertFalse(inputCollection.containsKey(name));
-
-        inputCollection.create(name, InputKind.TcpSplunk);
-        assertTrue(inputCollection.containsKey(name));
+        // CRUD TCP (cooked) input
+        inputCollection.create(port, InputKind.TcpSplunk);
+        assertTrue(inputCollection.containsKey(port));
 
         TcpSplunkInput tcpSplunkInput =
-                (TcpSplunkInput)inputCollection.get(name);
+                (TcpSplunkInput)inputCollection.get(port);
 
         tcpSplunkInput.setConnectionHost("one.two.three");
         tcpSplunkInput.setHost("myhost");
@@ -324,7 +313,35 @@ public class InputTest extends SplunkTestCase {
 
         tcpSplunkInput.remove();
         inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(name));
+        assertFalse(inputCollection.containsKey(port));
+
+        // CRUD UDP input
+        inputCollection.create(port, InputKind.Udp);
+        assertTrue(inputCollection.containsKey(port));
+
+        UdpInput udpInput =(UdpInput)inputCollection.get(port);
+        udpInput.setConnectionHost("connectionHost.com");
+        udpInput.setHost("myhost");
+        udpInput.setIndex("main");
+        udpInput.setNoAppendingTimeStamp(true);
+        udpInput.setNoPriorityStripping(true);
+        udpInput.setQueue("indexQueue");
+        udpInput.setSource("mysource");
+        udpInput.setSourceType("mysourcetype");
+        udpInput.update();
+
+        assertEquals(udpInput.getConnectionHost(), "connectionHost.com");
+        assertEquals(udpInput.getHost(), "myhost");
+        assertEquals(udpInput.getIndex(), "main");
+        assertTrue(udpInput.getNoAppendingTimeStamp());
+        assertTrue(udpInput.getNoPriorityStripping());
+        assertEquals(udpInput.getQueue(), "indexQueue");
+        assertEquals(udpInput.getSource(), "mysource");
+        assertEquals(udpInput.getSourceType(), "mysourcetype");
+
+        udpInput.remove();
+        inputCollection.refresh();
+        assertFalse(inputCollection.containsKey(port));
 
     }
 }

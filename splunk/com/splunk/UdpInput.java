@@ -123,7 +123,7 @@ public class UdpInput extends Input {
      * @return The event source type, or {@code null} if not specified.
      */
     public String getSourceType() {
-        return getString("sourceType", null);
+        return getString("sourcetype", null);
     }
 
     /**
@@ -133,7 +133,7 @@ public class UdpInput extends Input {
      * @return {@code true} if Splunk does <i>not</i> prepend a timestamp and
      * hostname to incoming events, {@code false} if it does.
      */
-    public boolean noAppendingTimeStamp() {
+    public boolean getNoAppendingTimeStamp() {
         return getBoolean("no_appending_timestamp", false);
     }
 
@@ -144,7 +144,7 @@ public class UdpInput extends Input {
      * @return {@code true} if Splunk does <i>not</i> remove the priority field 
      * from incoming syslog events, {@code false} if it does.
      */
-    public boolean noPriorityStripping() {
+    public boolean getNoPriorityStripping() {
         return getBoolean("no_priority_stripping", false);
     }
 
