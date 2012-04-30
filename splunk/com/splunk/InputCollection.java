@@ -167,7 +167,7 @@ public class InputCollection extends EntityCollection<Input> {
             LinkedList<Input> entryValue = entry.getValue();
 
             if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith((String)key)) {
+                if (entryKey.endsWith("/" + key)) {
                     if (entryValue.size() > 1) {
                         throw new SplunkException(SplunkException.AMBIGUOUS,
                                 "Key has multiple values, specify a namespace");
@@ -210,7 +210,7 @@ public class InputCollection extends EntityCollection<Input> {
             LinkedList<Input> entryValue = entry.getValue();
 
             if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith((String)key)) {
+                if (entryKey.endsWith("/" + key)) {
                     for (Input entity: entryValue) {
                         if (entity.path.startsWith(pathMatcher)) {
                             return entity;
@@ -289,7 +289,7 @@ public class InputCollection extends EntityCollection<Input> {
             LinkedList<Input> entryValue = entry.getValue();
 
             if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith((String)key)) {
+                if (entryKey.endsWith("/" + key)) {
                     if (entryValue.size() > 1) {
                         throw new SplunkException(SplunkException.AMBIGUOUS,
                                 "Key has multiple values, specify a namespace");
@@ -330,7 +330,7 @@ public class InputCollection extends EntityCollection<Input> {
             LinkedList<Input> entryValue = entry.getValue();
 
             if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith((String)key)) {
+                if (entryKey.endsWith("/" + key)) {
                     for (Input entity: entryValue) {
                         if (entity.path.startsWith(pathMatcher)) {
                             entity.remove();
