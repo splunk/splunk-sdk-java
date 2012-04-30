@@ -277,11 +277,18 @@ public class Settings extends Entity {
     }
 
     /**
-     * Updates the settings entity with the specified arguments.
-     *
-     * @param args The arguments being updated.
+     * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
+        service.post(path + "/settings", args);
+        invalidate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        Map<String, Object>  args = getToUpdate();
         service.post(path + "/settings", args);
         invalidate();
     }

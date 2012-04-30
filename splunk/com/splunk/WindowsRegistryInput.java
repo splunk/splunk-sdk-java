@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code WindowsRegistryInput} class represents a Windows Registry input.
  */
@@ -171,6 +173,21 @@ public class WindowsRegistryInput extends Input {
      */
     public void setType(String type) {
         setCacheValue("type", type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        if (!args.containsKey("baseline")) // required
+            args = Args.create(args).add("baseline", getBaseline());
+        if (!args.containsKey("hive")) // required
+            args = Args.create(args).add("hive", getHive());
+        if (!args.containsKey("proc")) // required
+            args = Args.create(args).add("proc", getProc());
+        if (!args.containsKey("type")) // required
+            args = Args.create(args).add("type", getType());
+        super.update(args);
     }
 
     /**

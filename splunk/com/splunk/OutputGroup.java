@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code OutputGroup} class represents an output group, providing
  * access to the configuration of a group of one or more data-forwarding
@@ -194,6 +196,16 @@ public class OutputGroup extends Entity {
      */
     public void setSendCookedData(boolean sendCookedData) {
         setCacheValue("sendCookedData", sendCookedData);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        if (!args.containsKey("servers")) { // requires servers
+            args = Args.create(args).add("servers", getServers());
+        }
+        super.update(args);
     }
 
     @Override public void update() {

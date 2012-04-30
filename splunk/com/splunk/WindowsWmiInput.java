@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code WindowsWmiInput} class represents a Windows Management Instrumentation (WMI) input.
  */
@@ -206,6 +208,19 @@ public class WindowsWmiInput extends Input {
      */
     public void setServers(String servers) {
         setCacheValue("servers", servers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        if (!args.containsKey("classes")) // required
+            args = Args.create(args).add("classes", getClasses());
+        if (!args.containsKey("interval")) // required
+            args = Args.create(args).add("interval", getInterval());
+        if (!args.containsKey("lookup_host")) // required
+            args = Args.create(args).add("lookup_host", getLookupHost());
+        super.update(args);
     }
 
     /**

@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code WindowsActiveDirectoryInput} class represents a Windows Active
  * Directory input.
@@ -136,6 +138,15 @@ public class WindowsActiveDirectoryInput extends Input {
      */
     public void setTargetDc(String targetDc) {
         setCacheValue("targetDc", targetDc);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        if (!args.containsKey("monitorSubtree")) // required
+            args = Args.create(args).add("monitorSubtree", getMonitorSubtree());
+        super.update(args);
     }
 
     /**

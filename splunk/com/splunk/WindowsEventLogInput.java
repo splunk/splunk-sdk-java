@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code WindowsEventLogInput} class represents a Windows Event Log input.
  */
@@ -131,6 +133,15 @@ public class WindowsEventLogInput extends Input {
      */
     public void setLookupHost(String lookup_host) {
         setCacheValue("lookup_host", lookup_host);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        if (!args.containsKey("lookup_host")) // required
+            args = Args.create(args).add("lookup_host", getLookupHost());
+        super.update(args);
     }
 
     /**

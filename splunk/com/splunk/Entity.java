@@ -321,6 +321,13 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
+     * Return a copy of the toUpdate hash map.
+     */
+    public HashMap<String, Object> getToUpdate() {
+        return new HashMap<String, Object>(toUpdate);
+    }
+
+    /**
      * Indicates whether this entity is disabled. This method is 
      * available on almost every endpoint.
      *

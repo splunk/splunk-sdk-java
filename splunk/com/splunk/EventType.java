@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code EventType} class represents an event type.
  */
@@ -102,6 +104,16 @@ public class EventType extends Entity {
      */
     public void setPriority(int priority) {
         setCacheValue("priority", priority);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        if (!args.containsKey("search")) {  // requires search string
+            args = Args.create(args).add("search", getSearch());
+        }
+        super.update(args);
     }
 
     /**

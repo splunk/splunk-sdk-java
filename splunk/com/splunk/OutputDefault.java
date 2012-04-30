@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code OutputDefault} class represents the default TCP output
  * configuration, providing access to global TCP output properties.
@@ -302,6 +304,16 @@ public class OutputDefault extends Entity {
      */
     public void setSendCookedData(boolean sendCookedData) {
         setCacheValue("sendCookedData", sendCookedData);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        if (!args.containsKey("name")) { // requires name
+            args = Args.create(args).add("name", "tcpout");
+        }
+        super.update(args);
     }
 
     /**
