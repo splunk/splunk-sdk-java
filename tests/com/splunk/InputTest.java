@@ -23,6 +23,12 @@ import java.util.Set;
 
 public class InputTest extends SplunkTestCase {
 
+    private boolean contains(String[] array, String value) {
+        for (int i = 0; i < array.length; ++i)
+            if (array[i].equals(value)) return true;
+        return false;
+    }
+
     private void touchSpecificInput(Input input) {
         InputKind inputKind = input.getKind();
         TcpConnections tcpConnections = null;
@@ -148,7 +154,7 @@ public class InputTest extends SplunkTestCase {
                 windowsWmiInput.getInterval();
                 windowsWmiInput.getLocalName();
                 windowsWmiInput.getLookupHost();
-                windowsWmiInput.getServer();
+                windowsWmiInput.getServers();
                 windowsWmiInput.getWql();
                 break;
         }
@@ -169,17 +175,15 @@ public class InputTest extends SplunkTestCase {
         }
     }
 
-    @Test public void testInputCrud() {
+    @Test public void testMonitorInputCrud() {
         Service service = connect();
-
         InputCollection inputCollection = service.getInputs();
-
         ServiceInfo info = service.getInfo();
 
         // CRUD Monitor input
         String filename;
         if (info.getOsName().equals("Windows"))
-            filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
+            filename = "C:\\Windows\\WindowsUpdate.log";
         else if (info.getOsName().equals("Linux"))
             filename = "/var/log/messages";
         else if (info.getOsName().equals("Darwin")) {
@@ -192,7 +196,9 @@ public class InputTest extends SplunkTestCase {
         }
 
         inputCollection.create(filename, InputKind.Monitor);
+        assertTrue(inputCollection.containsKey(filename));
         MonitorInput monitorInput = (MonitorInput)inputCollection.get(filename);
+
         monitorInput.setBlacklist("phonyregex*1");
         monitorInput.setCheckIndex(true);
         monitorInput.setCheckPath(true);
@@ -209,6 +215,7 @@ public class InputTest extends SplunkTestCase {
         monitorInput.setTimeBeforeClose(120);
         monitorInput.setWhitelist("phonyregex*2");
         monitorInput.update();
+
         monitorInput.disable();
         // some attributes are write only; check what we can.
         assertEquals(monitorInput.getBlacklist(), "phonyregex*1");
@@ -222,11 +229,19 @@ public class InputTest extends SplunkTestCase {
         assertEquals(monitorInput.getSourceType(), "monitor");
         assertEquals(monitorInput.getTimeBeforeClose(), 120);
         assertEquals(monitorInput.getWhitelist(), "phonyregex*2");
+
         monitorInput.remove();
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(filename));
+    }
+
+    @Test public void testScriptInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
 
         // CRUD Script input
+        String filename;
         if (info.getOsName().equals("Windows"))
             filename = "echo.bat";
         else
@@ -238,6 +253,7 @@ public class InputTest extends SplunkTestCase {
             inputCollection.remove(filename);
         }
         inputCollection.create(filename, InputKind.Script, args);
+        assertTrue(inputCollection.containsKey(filename));
         ScriptInput scriptInput = (ScriptInput)inputCollection.get(filename);
 
         scriptInput.setHost("three.four.com");
@@ -260,14 +276,18 @@ public class InputTest extends SplunkTestCase {
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(filename));
 
-        String port = "9999"; // test port
+    }
+
+    @Test public void testTcpInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
 
         // CRUD TCP (raw) input
+        String port = "9999"; // test port
         assertFalse(inputCollection.containsKey(port));
 
         inputCollection.create(port, InputKind.Tcp);
         assertTrue(inputCollection.containsKey(port));
-
         TcpInput tcpInput = (TcpInput)inputCollection.get(port);
 
         tcpInput.setConnectionHost("one.two.three");
@@ -293,11 +313,16 @@ public class InputTest extends SplunkTestCase {
         tcpInput.remove();
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(port));
+    }
+
+    @Test public void testTcpSplunkInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
 
         // CRUD TCP (cooked) input
+        String port = "9999"; // test port
         inputCollection.create(port, InputKind.TcpSplunk);
         assertTrue(inputCollection.containsKey(port));
-
         TcpSplunkInput tcpSplunkInput =
                 (TcpSplunkInput)inputCollection.get(port);
 
@@ -314,12 +339,19 @@ public class InputTest extends SplunkTestCase {
         tcpSplunkInput.remove();
         inputCollection.refresh();
         assertFalse(inputCollection.containsKey(port));
+    }
+
+    @Test public void testUdpInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
 
         // CRUD UDP input
+        String port = "9999"; // test port
         inputCollection.create(port, InputKind.Udp);
         assertTrue(inputCollection.containsKey(port));
-
         UdpInput udpInput =(UdpInput)inputCollection.get(port);
+
         udpInput.setConnectionHost("connectionHost.com");
         udpInput.setHost("myhost");
         udpInput.setIndex("main");
@@ -344,4 +376,232 @@ public class InputTest extends SplunkTestCase {
         assertFalse(inputCollection.containsKey(port));
 
     }
+
+    @Test public void testWindowsActiveDirectoryInputCrud() {
+    /*
+     * Need an active directory domain controller for Windows Active Directory
+     *
+
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
+
+        if (info.getOsName().equals("Windows")) {
+            String name = "sdk-input";
+            Args args = new Args();
+
+            args.put("monitorSubtree", false);
+            inputCollection.create(
+                    name, InputKind.WindowsActiveDirectory, args);
+            assertTrue(inputCollection.containsKey(name));
+            WindowsActiveDirectoryInput windowsActiveDirectoryInput =
+                    (WindowsActiveDirectoryInput)inputCollection.get(name);
+
+            windowsActiveDirectoryInput.setStartingNode("startnode");
+            windowsActiveDirectoryInput.setIndex("main");
+            windowsActiveDirectoryInput.setMonitorSubtree(false);
+            windowsActiveDirectoryInput.setTargetDc("otherDC");
+            windowsActiveDirectoryInput.update();
+
+            assertEquals(windowsActiveDirectoryInput.getIndex(), "main");
+            assertEquals(
+                    windowsActiveDirectoryInput.getMonitorSubtree(), false);
+            assertEquals(
+                    windowsActiveDirectoryInput.getStartingNode(), "startnode");
+            assertEquals(windowsActiveDirectoryInput.getIndex(), "main");
+
+            windowsActiveDirectoryInput.remove();
+            inputCollection.refresh();
+            assertFalse(inputCollection.containsKey(name));
+    */
+    }
+
+    @Test public void testWindowsEventLogInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
+
+        if (info.getOsName().equals("Windows")) {
+            String name = "sdk-input";
+            Args args = new Args();
+
+            // CRUD Windows Event Log Input
+            args.put("lookup_host", "127.0.0.1");
+            inputCollection.create(name, InputKind.WindowsEventLog, args);
+            assertTrue(inputCollection.containsKey(name));
+            WindowsEventLogInput windowsEventLogInput =
+                     (WindowsEventLogInput)inputCollection.get(name);
+
+            windowsEventLogInput.setIndex("main");
+            windowsEventLogInput.setLookupHost("127.0.0.1");
+            windowsEventLogInput.setHosts("one.two.three,four.five.six");
+            windowsEventLogInput.update();
+
+            assertEquals(windowsEventLogInput.getLookupHost(), "127.0.0.1");
+            assertEquals(
+                windowsEventLogInput.getHosts(), "one.two.three,four.five.six");
+            assertEquals(windowsEventLogInput.getIndex(), "main");
+
+            windowsEventLogInput.remove();
+            inputCollection.refresh();
+            assertFalse(inputCollection.containsKey(name));
+        }
+    }
+
+
+    @Test public void testWindowsPerfmonInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
+
+        if (info.getOsName().equals("Windows")) {
+            String name = "sdk-input";
+            Args args = new Args();
+
+            // CRUD Windows Perfmon Input
+            args.put("interval", 600);
+            args.put("object", "Server");
+            inputCollection.create(name, InputKind.WindowsPerfmon, args);
+            assertTrue(inputCollection.containsKey(name));
+            WindowsPerfmonInput windowsPerfmonInput =
+                    (WindowsPerfmonInput)inputCollection.get(name);
+
+            windowsPerfmonInput.setIndex("main");
+            windowsPerfmonInput.setCounters("% Privileged Time");
+            windowsPerfmonInput.setInstances("wininit");
+            windowsPerfmonInput.setObject("Process");
+            windowsPerfmonInput.setInterval(1200);
+            windowsPerfmonInput.update();
+
+            assertEquals(
+                    windowsPerfmonInput.getCounters(), "[% Privileged Time]");
+            assertEquals(windowsPerfmonInput.getIndex(), "main");
+            assertEquals(windowsPerfmonInput.getInstances(), "[wininit]");
+            assertEquals(windowsPerfmonInput.getInterval(), 1200);
+            assertEquals(windowsPerfmonInput.getObject(), "Process");
+
+            // set multi-series values and update.
+            windowsPerfmonInput.setCounters(
+                    new String[] {"% Privileged Time","% User Time"});
+            windowsPerfmonInput.setInstances(new String[] {"smss","csrss"});
+            windowsPerfmonInput.update();
+
+            assertEquals(
+                    windowsPerfmonInput.getCounters(),
+                    "[% Privileged Time, % User Time]");
+            assertEquals(windowsPerfmonInput.getInstances(), "[smss, csrss]");
+
+            windowsPerfmonInput.remove();
+            inputCollection.refresh();
+            assertFalse(inputCollection.containsKey(name));
+
+        }
+
+    }
+
+    @Test public void testWindowsRegistryInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
+
+        if (info.getOsName().equals("Windows")) {
+            String name = "sdk-input";
+            Args args = new Args();
+
+            // CRUD Windows Registry Input
+            args.put("baseline", false);
+            args.put("hive", "HKEY_USERS");
+            args.put("proc", "*");
+            args.put("type", "*");
+            inputCollection.create(name, InputKind.WindowsRegistry, args);
+            assertTrue(inputCollection.containsKey(name));
+            WindowsRegistryInput windowsRegistryInput =
+                    (WindowsRegistryInput)inputCollection.get(name);
+
+            windowsRegistryInput.setIndex("main");
+            windowsRegistryInput.setMonitorSubnodes(true);
+            windowsRegistryInput.update();
+
+            assertEquals(windowsRegistryInput.getBaseline(), false);
+            assertEquals(windowsRegistryInput.getIndex(), "main");
+
+            // set some of the rrequired fields directly
+            windowsRegistryInput.setHive("HKEY_CURRENT_CONFIG");
+            windowsRegistryInput.setProc("s*");
+            windowsRegistryInput.setType("create,delete");
+            windowsRegistryInput.setBaseline(true);
+            windowsRegistryInput.update();
+
+            assertEquals(windowsRegistryInput.getHive(), "HKEY_CURRENT_CONFIG");
+            assertEquals(windowsRegistryInput.getProc(), "s*");
+            assertEquals(windowsRegistryInput.getType(), "[create,delete]");
+            assertEquals(windowsRegistryInput.getBaseline(), true);
+
+            windowsRegistryInput.remove();
+            inputCollection.refresh();
+            assertFalse(inputCollection.containsKey(name));
+        }
+    }
+
+
+    @Test public void testWmiInputCrud() {
+        Service service = connect();
+        InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
+
+        if (info.getOsName().equals("Windows")) {
+            String name = "sdk-input";
+            Args args = new Args();
+
+            // CRUD Windows Wmi Input
+            args.put("classes", "PerfOS_Processor");
+            args.put("interval", 600);
+            args.put("lookup_host", "127.0.0.1");
+            inputCollection.create(name, InputKind.WindowsWmi, args);
+            assertTrue(inputCollection.containsKey(name));
+            WindowsWmiInput windowsWmiInput =
+                    (WindowsWmiInput)inputCollection.get(name);
+
+            assertEquals(windowsWmiInput.getClasses(),
+                    "Win32_PerfFormattedData_PerfOS_Processor");
+            assertEquals(windowsWmiInput.getInterval(), 600);
+            assertEquals(windowsWmiInput.getLookupHost(), "127.0.0.1");
+
+            windowsWmiInput.setClasses("PerfDisk_LogicalDisk");
+            windowsWmiInput.setFields("Caption");
+            windowsWmiInput.setIndex("main");
+            windowsWmiInput.setInterval(1200);
+            windowsWmiInput.setInstances("_Total");
+            windowsWmiInput.setServers("host1.splunk.com,host2.splunk.com");
+            windowsWmiInput.update();
+
+            assertEquals(windowsWmiInput.getClasses(),
+                    "Win32_PerfFormattedData_PerfDisk_LogicalDisk");
+            assertTrue(windowsWmiInput.getFields().length == 1);
+            assertTrue(contains(windowsWmiInput.getFields(), "Caption"));
+            assertEquals(windowsWmiInput.getIndex(), "main");
+            assertEquals(windowsWmiInput.getInterval(), 1200);
+            assertTrue(windowsWmiInput.getInstances().length == 1);
+            assertTrue(contains(windowsWmiInput.getInstances(), "_Total"));
+            assertEquals(windowsWmiInput.getServers(),
+                    "host1.splunk.com,host2.splunk.com");
+
+            // set list fields
+            windowsWmiInput.setFields(new String[]{"Caption", "Description"});
+            windowsWmiInput.setInstances(new String[]{"1", "_Total"});
+            windowsWmiInput.update();
+
+            assertTrue(windowsWmiInput.getFields().length == 2);
+            assertTrue(contains(windowsWmiInput.getFields(), "Caption"));
+            assertTrue(contains(windowsWmiInput.getFields(), "Description"));
+            assertTrue(windowsWmiInput.getInstances().length == 2);
+            assertTrue(contains(windowsWmiInput.getInstances(), "1"));
+            assertTrue(contains(windowsWmiInput.getInstances(), "_Total"));
+
+            windowsWmiInput.remove();
+            inputCollection.refresh();
+            assertFalse(inputCollection.containsKey(name));
+        }
+    }
+
 }
