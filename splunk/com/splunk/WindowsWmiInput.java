@@ -162,6 +162,18 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
+     * Sets the Properties (field) that you want to gather from the given
+     * class. This is a short cut for setting a single field,
+     * instead of a set of fields.
+     *
+     * @param field The properties (fields) that you want to gather from the
+     * given class.
+     */
+    public void setFields(String field) {
+        setCacheValue("fields", new String [] { field });
+    }
+
+    /**
      * Sets index in which to store all generated events.
      *
      * @param index The index in which to store all generated events.
@@ -177,6 +189,16 @@ public class WindowsWmiInput extends Input {
      */
     public void setInstances(String[] instances) {
         setCacheValue("instances", instances);
+    }
+
+    /**
+     * Sets the counter instance to monitor. This is a short cut for setting a
+     * single instance, instead of a set of instances.
+     *
+     * @param instance the counter instances to monitor.
+     */
+    public void setInstances(String instance) {
+        setCacheValue("instances", new String [] { instance });
     }
 
     /**

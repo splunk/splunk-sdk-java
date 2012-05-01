@@ -215,6 +215,16 @@ public class Role extends Entity {
     }
 
     /**
+     * Sets the capability for the role. This is a short cut when only setting
+     * one capability instead of a set of capabilities.
+     *
+     * @param capability The capability to set.
+     */
+    public void setCapabilities(String capability) {
+        setCacheValue("capabilities", new String [] { capability });
+    }
+
+    /**
      * Sets the default app for the role.
      *
      * @param defaultApp The name of the default app.
@@ -230,6 +240,16 @@ public class Role extends Entity {
      */
     public void setImportedRoles(String[] importedRoles) {
         setCacheValue("imported_roles", importedRoles);
+    }
+
+    /**
+     * Sets the imported role for the role. This is a short cut when only
+     * setting one imported tole instead of a set of imported roles.
+     *
+     * @param importedRole The name of the default app.
+     */
+    public void setImportedRoles(String importedRole) {
+        setCacheValue("imported_roles", new String [] { importedRole });
     }
 
     /**
@@ -276,12 +296,33 @@ public class Role extends Entity {
     }
 
     /**
+     * Sets the index that this role has permissions to search. This is a
+     * short cut to a single search-able index instead of a set of
+     * search-able indexes.
+     *
+     * @param indexAllowed The indexes this role is allowed to search.
+     */
+    public void setSearchIndexesAllowed(String indexAllowed) {
+        setCacheValue("srchIndexesAllowed", new String [] { indexAllowed });
+    }
+
+    /**
      * Sets the the default search indexes, when no index is specified.
      *
      * @param srchIndexesDefault The default index.
      */
     public void setSearchIndexesDefault(String[] srchIndexesDefault) {
         setCacheValue("srchIndexesDefault", srchIndexesDefault);
+    }
+
+    /**
+     * Sets the the default search indexes, when no index is specified. This is
+     * a short cut to set a single default index instead of a set of indexes.
+     *
+     * @param srchIndexDefault The default index.
+     */
+    public void setSearchIndexesDefault(String srchIndexDefault) {
+        setCacheValue("srchIndexesDefault", new String [] { srchIndexDefault });
     }
 
     /**

@@ -176,13 +176,23 @@ public class User extends Entity {
     }
 
     /**
+     * Sets this user's roles. This only sets one role and is a short-cut
+     * when only one role is needed.
+     *
+     * @param role This user's roles.
+     */
+    public void setRoles(String role) {
+        setCacheValue("roles", new String [] { role });
+    }
+
+    /**
      * Sets this user's time zone, for display purposes.
      *
      * Note this is valid for splunk 4.3+ only.
      *
      * @param tz This user's timezone.
      */
-    public void setRoles(String tz) {
+    public void setTz(String tz) {
         setCacheValue("tz", tz);
     }
 }

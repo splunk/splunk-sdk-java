@@ -348,6 +348,22 @@ public class ServiceTest extends SplunkTestCase {
         assertEquals(user.getDefaultApp(), "search");
         user.getTz();
 
+        // update user using setters
+        user.setDefaultApp("search");
+        user.setEmail("none@noway.com");
+        user.setPassword("new-password");
+        user.setRealName("SDK-name");
+        user.setRestartBackgroundJobs(false);
+        user.setRoles("power");
+        user.update();
+        user.refresh();
+
+        assertTrue(user.getRoles().length == 1);
+        assertTrue(contains(user.getRoles(), "power"));
+        assertEquals(user.getRealName(), "SDK-name");
+        assertEquals(user.getEmail(), "none@noway.com");
+        assertEquals(user.getDefaultApp(), "search");
+
         users.remove(username);
         assertFalse(users.containsKey(username));
 

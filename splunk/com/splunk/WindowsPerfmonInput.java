@@ -33,10 +33,11 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns a list of monitored counters for this Windows Perfmon input. A "*" 
-     * is equivalent to all counters.
+     * Returns a list of monitored counters for this Windows Perfmon input. A
+     * "*" is equivalent to all counters.
      *
-     * @return A comma-separated list of counters, or {@code null} if not specified.
+     * @return A comma-separated list of counters, or {@code null} if not
+     * specified.
      */
     public String getCounters() {
         return getString("counters", null);
@@ -102,6 +103,17 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
+     * Sets the counters to monitor. A wildcard value of {@code *} means all
+     * counters. This is a short cut for setting a single counter, instead of
+     * a set of counters.
+     *
+     * @param counter The counters to monitor.
+     */
+    public void setCounters(String counter) {
+        setCacheValue("counters", new String [] { counter });
+    }
+
+    /**
      * Sets whether this input is enabled or disabled. Note that the
      * supported disabled mechanism, is to use the @{code disable} action.
      *
@@ -129,6 +141,17 @@ public class WindowsPerfmonInput extends Input {
      */
     public void setInstances(String[] instances) {
         setCacheValue("instances", instances);
+    }
+
+    /**
+     * Sets the counter instances to monitor. A wildcard value of {@code *}
+     * means all instances. This is a short cut for setting a single instance,
+     * instead of a set of instances.
+     *
+     * @param instance the counter instances to monitor.
+     */
+    public void setInstances(String instance) {
+        setCacheValue("instances", new String [] { instance });
     }
 
     /**
