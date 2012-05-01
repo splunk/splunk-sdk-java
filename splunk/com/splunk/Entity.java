@@ -409,6 +409,7 @@ public class Entity extends Resource implements Map<String, Object> {
      * @param value The default value.
      */
     void setCacheValue(String key, Object value) {
+        validate();
         toUpdate.put(key, value);
     }
 
