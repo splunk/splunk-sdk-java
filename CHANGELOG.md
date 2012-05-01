@@ -52,10 +52,10 @@
 
 * Fix argument processing in tail example.
 * Fix timing window during search job creation;
-  add splunk exception JOB_NOT_READY.
+  add splunk exception `JOB_NOT_READY`.
 * Fix index cleaning to require timeout value; add splunk exception `TIMEOUT`.
 * Fix LicensePool creation to use string quota instead integer.
-  Allows for "MAX" and <number>[M|G|T]
+  Allows for `MAX` and `<number>[M|G|T]`
 * Fix action to update settings.
 * Fix user creation to force lowercase usernames.
 * Fix ServiceInfo missing get methods.
