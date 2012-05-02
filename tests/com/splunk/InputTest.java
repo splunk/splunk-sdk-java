@@ -320,7 +320,7 @@ public class InputTest extends SplunkTestCase {
         InputCollection inputCollection = service.getInputs();
 
         // CRUD TCP (cooked) input
-        String port = "9999"; // test port
+        String port = "9998"; // test port
         inputCollection.create(port, InputKind.TcpSplunk);
         assertTrue(inputCollection.containsKey(port));
         TcpSplunkInput tcpSplunkInput =
@@ -347,7 +347,7 @@ public class InputTest extends SplunkTestCase {
         ServiceInfo info = service.getInfo();
 
         // CRUD UDP input
-        String port = "9999"; // test port
+        String port = "9997"; // test port
         inputCollection.create(port, InputKind.Udp);
         assertTrue(inputCollection.containsKey(port));
         UdpInput udpInput =(UdpInput)inputCollection.get(port);
@@ -387,7 +387,7 @@ public class InputTest extends SplunkTestCase {
         ServiceInfo info = service.getInfo();
 
         if (info.getOsName().equals("Windows")) {
-            String name = "sdk-input";
+            String name = "sdk-input-wad";
             Args args = new Args();
 
             args.put("monitorSubtree", false);
@@ -422,7 +422,7 @@ public class InputTest extends SplunkTestCase {
         ServiceInfo info = service.getInfo();
 
         if (info.getOsName().equals("Windows")) {
-            String name = "sdk-input";
+            String name = "sdk-input-wel";
             Args args = new Args();
 
             // CRUD Windows Event Log Input
@@ -455,7 +455,7 @@ public class InputTest extends SplunkTestCase {
         ServiceInfo info = service.getInfo();
 
         if (info.getOsName().equals("Windows")) {
-            String name = "sdk-input";
+            String name = "sdk-input-wp";
             Args args = new Args();
 
             // CRUD Windows Perfmon Input
@@ -505,7 +505,7 @@ public class InputTest extends SplunkTestCase {
         ServiceInfo info = service.getInfo();
 
         if (info.getOsName().equals("Windows")) {
-            String name = "sdk-input";
+            String name = "sdk-input-wr";
             Args args = new Args();
 
             // CRUD Windows Registry Input
@@ -550,7 +550,7 @@ public class InputTest extends SplunkTestCase {
         ServiceInfo info = service.getInfo();
 
         if (info.getOsName().equals("Windows")) {
-            String name = "sdk-input";
+            String name = "sdk-input-wmi";
             Args args = new Args();
 
             // CRUD Windows Wmi Input

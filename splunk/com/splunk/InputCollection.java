@@ -86,73 +86,15 @@ public class InputCollection extends EntityCollection<Input> {
 
     /** {@inheritDoc} */
     @Override public boolean containsKey(Object key) {
-        validate();
-        // because scripted input names are not 1:1 with the original name
-        // (they are the absolute path on the splunk instance followed by
-        // the original name), we will iterate over the entities in the list,
-        // and if we find one that matches, return it.
-        Set<Entry<String, LinkedList<Input>>> set =  linkedListItems.entrySet();
-        for (Entry<String, LinkedList<Input>> entry: set) {
-            String entryKey = entry.getKey();
-            LinkedList<Input> entryValue = entry.getValue();
-
-            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith("/" + key) ||
-                    entryKey.endsWith("\\" + key)) {
-                    if (entryValue.size() > 1) {
-                        throw new SplunkException(SplunkException.AMBIGUOUS,
-                                "Key has multiple values, specify a namespace");
-                    }
-                    return true;
-                }
-            } else {
-                LinkedList<Input> entities = linkedListItems.get(key);
-                if (entities != null && entities.size() > 1) {
-                    throw new SplunkException(SplunkException.AMBIGUOUS,
-                            "Key has multiple values, specify a namespace");
-                }
-                if (entities == null || entities.size() == 0) continue;
-                return true;
-            }
-        }
-        return false;
+        Input input = retrieveInput((String)key);
+        return (input != null);
     }
 
     @Override public boolean containsKey(
             Object key, HashMap<String, String> namespace) {
-        validate();
-        // because scripted input names are not 1:1 with the original name
-        // (they are the absolute path on the splunk instance followed by
-        // the original name), we will iterate over the entities in the list,
-        // and if we find one that matches, return it.
-        String pathMatcher = service.fullpath("", namespace);
-        Set<Entry<String, LinkedList<Input>>> set =  linkedListItems.entrySet();
-        for (Entry<String, LinkedList<Input>> entry: set) {
-            String entryKey = entry.getKey();
-            LinkedList<Input> entryValue = entry.getValue();
-
-            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith("/" + key)||
-                    entryKey.endsWith("\\" + key)) {
-                    for (Input entity: entryValue) {
-                        if (entity.path.startsWith(pathMatcher)) {
-                            return true;
-                        }
-                    }
-                }
-            } else {
-                LinkedList<Input> entities = linkedListItems.get(key);
-                if (entities == null || entities.size() == 0) continue;
-                for (Input entity: entities) {
-                    if (entity.path.startsWith(pathMatcher)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        Input input = retrieveInput((String)key, namespace);
+        return (input != null);
     }
-
 
     /**
      * Creates stub.
@@ -226,36 +168,8 @@ public class InputCollection extends EntityCollection<Input> {
      * {@inheritDoc}
      */
     @Override public Input get(Object key) {
-        validate();
-        // because scripted input names are not 1:1 with the original name
-        // (they are the absolute path on the splunk instance followed by
-        // the original name), we will iterate over the entities in the list,
-        // and if we find one that matches, return it.
-        Set<Entry<String, LinkedList<Input>>> set =  linkedListItems.entrySet();
-        for (Entry<String, LinkedList<Input>> entry: set) {
-            String entryKey = entry.getKey();
-            LinkedList<Input> entryValue = entry.getValue();
+        return retrieveInput((String)key);
 
-            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith("/" + key)||
-                    entryKey.endsWith("\\" + key)) {
-                    if (entryValue.size() > 1) {
-                        throw new SplunkException(SplunkException.AMBIGUOUS,
-                                "Key has multiple values, specify a namespace");
-                    }
-                    return entryValue.get(0);
-                }
-            } else {
-                LinkedList<Input> entities = linkedListItems.get(key);
-                if (entities != null && entities.size() > 1) {
-                    throw new SplunkException(SplunkException.AMBIGUOUS,
-                            "Key has multiple values, specify a namespace");
-                }
-                if (entities == null || entities.size() == 0) continue;
-                return entities.get(0);
-            }
-        }
-        return null;
     }
 
     /**
@@ -269,37 +183,7 @@ public class InputCollection extends EntityCollection<Input> {
 
 
    public Input get(Object key, HashMap<String, String> namespace) {
-        validate();
-        // because scripted input names are not 1:1 with the original name
-        // (they are the absolute path on the splunk instance followed by
-        // the original name), we will iterate over the entities in the list,
-        // and if we find one that matches, return it.
-        String pathMatcher = service.fullpath("", namespace);
-        Set<Entry<String, LinkedList<Input>>> set =  linkedListItems.entrySet();
-        for (Entry<String, LinkedList<Input>> entry: set) {
-            String entryKey = entry.getKey();
-            LinkedList<Input> entryValue = entry.getValue();
-
-            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith("/" + key)||
-                    entryKey.endsWith("\\" + key)) {
-                    for (Input entity: entryValue) {
-                        if (entity.path.startsWith(pathMatcher)) {
-                            return entity;
-                        }
-                    }
-                }
-            } else {
-                LinkedList<Input> entities = linkedListItems.get(key);
-                if (entities == null || entities.size() == 0) continue;
-                for (Input entity: entities) {
-                    if (entity.path.startsWith(pathMatcher)) {
-                        return entity;
-                    }
-                }
-            }
-        }
-        return null;
+       return retrieveInput((String)key, namespace);
    }
 
     /**
@@ -350,6 +234,27 @@ public class InputCollection extends EntityCollection<Input> {
      * {@inheritDoc}
      */
     @Override public Input remove(String key) {
+        Input input = retrieveInput(key);
+        if (input != null) {
+            input.remove();
+        }
+        return input;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Input remove(
+            String key, HashMap<String, String> namespace) {
+        Input input = retrieveInput(key, namespace);
+        if (input != null) {
+            input.remove();
+        }
+        return input;
+    }
+
+
+    private Input retrieveInput(String key) {
         validate();
         // because scripted input names are not 1:1 with the original name
         // (they are the absolute path on the splunk instance followed by
@@ -367,9 +272,7 @@ public class InputCollection extends EntityCollection<Input> {
                         throw new SplunkException(SplunkException.AMBIGUOUS,
                                 "Key has multiple values, specify a namespace");
                     }
-                    Input entity = entryValue.get(0);
-                    entity.remove();
-                    return entity;
+                    return entryValue.get(0);
                 }
             } else {
                 LinkedList<Input> entities = linkedListItems.get(key);
@@ -378,19 +281,13 @@ public class InputCollection extends EntityCollection<Input> {
                             "Key has multiple values, specify a namespace");
                 }
                 if (entities == null || entities.size() == 0) continue;
-                Input entity = entryValue.get(0);
-                entity.remove();
-                return entity;
+                return entities.get(0);
             }
         }
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override public Input remove(
-            String key, HashMap<String, String> namespace) {
+    private Input retrieveInput(String key, HashMap<String, String> namespace) {
         validate();
         // because scripted input names are not 1:1 with the original name
         // (they are the absolute path on the splunk instance followed by
@@ -407,7 +304,6 @@ public class InputCollection extends EntityCollection<Input> {
                     entryKey.endsWith("\\" + key)) {
                     for (Input entity: entryValue) {
                         if (entity.path.startsWith(pathMatcher)) {
-                            entity.remove();
                             return entity;
                         }
                     }
@@ -417,7 +313,6 @@ public class InputCollection extends EntityCollection<Input> {
                 if (entities == null || entities.size() == 0) continue;
                 for (Input entity: entities) {
                     if (entity.path.startsWith(pathMatcher)) {
-                        entity.remove();
                         return entity;
                     }
                 }
