@@ -19,7 +19,8 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * The {@code Settings} class represents configuration information for an instance of Splunk.
+ * The {@code Settings} class represents configuration information for an
+ * instance of Splunk.
  */
 public class Settings extends Entity {
     Settings(Service service) {
@@ -94,8 +95,8 @@ public class Settings extends Entity {
 
     /**
      * Returns the string that is prepended to the Splunk symmetric key to
-     * generate the final key that used to sign all traffic between master and slave
-     * licensers.
+     * generate the final key that used to sign all traffic between master and
+     * slave licensers.
      *
      * @return Licenser symmetric key.
      */
@@ -104,8 +105,8 @@ public class Settings extends Entity {
     }
 
     /**
-     * Returns the name that is used to identify this Splunk instance for features
-     * such as distributed search.
+     * Returns the name that is used to identify this Splunk instance for
+     * features such as distributed search.
      *
      * @return The name used to identify the Splunk instance.
      */
@@ -182,7 +183,7 @@ public class Settings extends Entity {
      *
      * @param port The Splunk Web listening port.
      */
-    public void setPort(String port) {
+    public void setHttpPort(int port) {
         setCacheValue("httpport", port);
     }
 
@@ -194,7 +195,7 @@ public class Settings extends Entity {
      * @param mgmtHostPort The hostname or IP and port for the management
      * interface.
      */
-    public void setManagementHostPort(String mgmtHostPort) {
+    public void setMgmtHostPort(String mgmtHostPort) {
         setCacheValue("mgmtHostPort", mgmtHostPort);
     }
 

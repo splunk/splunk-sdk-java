@@ -253,7 +253,6 @@ public class InputCollection extends EntityCollection<Input> {
         return input;
     }
 
-
     private Input retrieveInput(String key) {
         validate();
         // because scripted input names are not 1:1 with the original name
