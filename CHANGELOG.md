@@ -7,11 +7,24 @@
 * Add a Receiver class.
 
 * Add support for index-less (default index) and allow optional parameters for
-  streaming connections. The Index class now uses the added Receiver class.
+  streaming connections. The Index class now uses the new Receiver class.
 
 * Add paginate feature for splunk return data. This allows for count/offset
   method to page through splunk meta data instead of retrieving all the data
   at once.
+
+    ConfCollection confs;
+    Args args = new Args();
+    args.put("count", 30);
+    args.put("offset", 0);
+
+    confs = service.getConfs(args);
+    // ... operate on the first 30 elements
+    offset = offset + 30;
+    args.put("offset", offset)
+    confs = service.getConfs(args);
+    // ... operate on the next 30 elements
+
 
 * Add namespacing feature. Added as overload collection creation methods, each
   method supporting namespaces has a method variant to accept an optional
@@ -36,6 +49,27 @@
 
 * Add missing getter methods.
 
+* Add support for Splunk Storm. Instead of connecting to `Service`, connect to
+  `Storm`. The same semantics that `Service` uses, applies here. Get a
+  `Receiver` object and log events. `Storm` requires the `index` key and
+  `sourcetype` parameters when sending events.
+
+    // the storm token provided by Splunk
+    Args loginArgs = new Args("StormToken",
+        "p-n8SwuWEqPlyOXdDU4PjxavFdAn1CnJea9LirgTvzmIhMEBys6w7UJUCtxp_7g7Q9XopR5dW0w=");
+    Storm service = Storm.connect(loginArgs);
+
+    // get the receiver object
+    Receiver receiver = service.getReceiver();
+
+    // index and source type are required for storm event submission
+    Args logArgs = new Args();
+    logArgs.put("index", "0e8a2df0834211e1a6fe123139335741");
+    logArgs.put("sourcetype", "yoursourcetype");
+
+    // log an event.
+    receiver.log("This is a test event from the SDK", logArgs);
+
 ### Minor Additions
 
 * Add genevents example, to generate events and push into splunk using various
@@ -47,6 +81,7 @@
   shows how to use all three result readers. Note that there are some build
   modifications in build.xml to include the ancillary jar files.
 * Add a Input example to display splunk inputs and their attributes.
+* Add alias `log` for `submit` to the Receiver class.
 
 ### Bug fixes
 
@@ -56,7 +91,7 @@
 * Fix index cleaning to require timeout value; add splunk exception `TIMEOUT`.
 * Fix LicensePool creation to use string quota instead integer.
   Allows for `MAX` and `<number>[M|G|T]`
-* Fix action to update settings.
+* Fix `action` when trying to update `Settings`.
 * Fix user creation to force lowercase usernames.
 * Fix ServiceInfo missing get methods.
 * Fix a number of getter methods.

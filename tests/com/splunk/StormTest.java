@@ -25,16 +25,18 @@ public class StormTest {
         // the storm token provided by Splunk
         Args loginArgs = new Args("StormToken",
 "p-n8SwuWEqPlyOXdDU4PjxavFdAn1CnJea9LirgTvzmIhMEBys6w7UJUCtxp_7g7Q9XopR5dW0w=");
-        Args logArgs = new Args();
-
-        // index and source type are required for storm event submission
-        logArgs.put("index", "0e8a2df0834211e1a6fe123139335741");
-        logArgs.put("sourcetype", "script");
         Storm service = Storm.connect(loginArgs);
 
-        // get the receiver object and post (aliased methods).
+        // get the receiver object
         Receiver receiver = service.getReceiver();
+
+        // index and source type are required for storm event submission
+        Args logArgs = new Args();
+        logArgs.put("index", "0e8a2df0834211e1a6fe123139335741");
+        logArgs.put("sourcetype", "yoursourcetype");
+
+        // get the receiver object and post (aliased methods).
         receiver.submit("This is a test from the SDK", logArgs);
-        receiver.log("This is a test from the SDK, part deux", logArgs);
+        receiver.log("This is a test from the SDK, a second time", logArgs);
     }
 }
