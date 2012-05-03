@@ -12,7 +12,7 @@
 * Add paginate feature for splunk return data. This allows for count/offset
   method to page through splunk meta data instead of retrieving all the data
   at once:
-
+```
     ConfCollection confs;
     Args args = new Args();
     args.put("count", 30);
@@ -24,8 +24,7 @@
     args.put("offset", offset)
     confs = service.getConfs(args);
     // ... operate on the next 30 elements
-
-
+```
 * Add namespacing feature. Added as overload collection creation methods, each
   method supporting namespaces has a method variant to accept an optional
   `app` and `owner` and `sharing` map. For a more detailed description of Splunk
@@ -53,7 +52,7 @@
   `Storm`. The same semantics that `Service` uses, applies here. Get a
   `Receiver` object and log events. `Storm` requires the `index` key and
   `sourcetype` parameters when sending events:
-
+```
     // the storm token provided by Splunk
     Args loginArgs = new Args("StormToken",
         "p-n8SwuWEqPlyOXdDU4PjxavFdAn1CnJea9LirgTvzmIhMEBys6w7UJUCtxp_7g7Q9XopR5dW0w=");
@@ -69,7 +68,7 @@
 
     // log an event.
     receiver.log("This is a test event from the SDK", logArgs);
-
+```
 ### Minor Additions
 
 * Add genevents example, to generate events and push into splunk using various
