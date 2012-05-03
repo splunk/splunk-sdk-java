@@ -74,6 +74,7 @@ public class DeploymentServer extends Entity {
      * this effect is not immediate; Splunk must be restarted to take effect.
      * The
      *
+     * @param disabled {@code true} to disabled to deployment client,
      * {@code false} to enable.
      */
     public void setDisabled(boolean disabled) {
