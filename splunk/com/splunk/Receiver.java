@@ -146,7 +146,7 @@ public class Receiver extends Entity {
     public void submit(String data) {
         RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
-        service.send("receivers/simple?", request);
+        service.send(service.simpleReceiverEndPoint, request);
     }
 
     /**
@@ -158,7 +158,8 @@ public class Receiver extends Entity {
     public void submit(String indexName, String data) {
         RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
-        service.send("receivers/simple?index=" + indexName, request);
+        service.send(
+              service.simpleReceiverEndPoint + "?index=" + indexName, request);
     }
 
     /**
@@ -171,11 +172,11 @@ public class Receiver extends Entity {
         RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
         String argString = String.format("%s", args.encode());
-        service.send("receivers/simple?" + argString, request);
+        service.send(service.simpleReceiverEndPoint + "?" + argString, request);
     }
 
     /**
-     * Submits an event to this index through HTTP POST.
+     * Logs an event to this index through HTTP POST.
      *
      * @param indexName The index to write to.
      * @param data Event data posted.
@@ -187,6 +188,50 @@ public class Receiver extends Entity {
         String argString = String.format(
              "index=%s&%s", indexName, args.encode());
         service.send(
-             "receivers/simple?" + argString, request);
+             service.simpleReceiverEndPoint + "?" + argString, request);
+    }
+
+    /**
+     * Submits an event to this index through HTTP POST. This is an alias for
+     * {@code submit()}.
+     *
+     * @param data Event data posted.
+     */
+    public void log(String data) {
+        submit(data);
+    }
+
+    /**
+     * Submits an event to this index through HTTP POST. This is an alias for
+     * {@code submit()}.
+     *
+     * @param indexName The index to write to.
+     * @param data Event data posted.
+     */
+    public void log(String indexName, String data) {
+        submit(indexName, data);
+    }
+
+    /**
+     * Submits an event to this index through HTTP POST. This is an alias for
+     * {@code submit()}.
+     *
+     * @param data Event data posted.
+     * @param args optional arguments for the simple receivers endpoint.
+     */
+    public void log(String data, Args args) {
+        submit(data, args);
+    }
+
+    /**
+     * Logs an event to this index through HTTP POST. This is an alias for
+     * {@code submit()}.
+     *
+     * @param indexName The index to write to.
+     * @param data Event data posted.
+     * @param args optional arguments for the simple receivers endpoint.
+     */
+    public void log(String indexName, String data, Args args) {
+        submit(indexName, data, args);
     }
 }

@@ -53,6 +53,9 @@ public class Service extends HttpService {
     /** The password, which is used to authenticate the Splunk instance. */
     protected String password = null;
 
+    /** The default simple receiver endpoint */
+    protected String simpleReceiverEndPoint = "receivers/simple";
+
     /** The default host name, which is used when a host name is not provided. */
     public static String DEFAULT_HOST = "localhost";
 
@@ -61,6 +64,8 @@ public class Service extends HttpService {
 
     /** The default scheme, which is used when a scheme is not provided. */
     public static String DEFAULT_SCHEME = "https";
+
+
 
     /**
      * Creates a new {@code Service} instance using a host.
