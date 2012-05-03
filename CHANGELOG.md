@@ -11,7 +11,7 @@
 
 * Add paginate feature for splunk return data. This allows for count/offset
   method to page through splunk meta data instead of retrieving all the data
-  at once.
+  at once:
 
     ConfCollection confs;
     Args args = new Args();
@@ -52,7 +52,7 @@
 * Add support for Splunk Storm. Instead of connecting to `Service`, connect to
   `Storm`. The same semantics that `Service` uses, applies here. Get a
   `Receiver` object and log events. `Storm` requires the `index` key and
-  `sourcetype` parameters when sending events.
+  `sourcetype` parameters when sending events:
 
     // the storm token provided by Splunk
     Args loginArgs = new Args("StormToken",
