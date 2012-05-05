@@ -30,17 +30,11 @@ public class DeploymentTenantTest extends SplunkTestCase {
         }
 
         for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
-            // test for just the first index.
             assertTrue(deploymentTenant.getWhiteListByIndex(0).length() > 0);
-            // wkcfix -- update() causes server error 500. but don't know why
-            /*
-            boolean value = deploymentTenant.getCheckNew();
-            deploymentTenant.setCheckNew(!value);
-            deploymentTenant.update();
-            assertEquals(deploymentTenant.getCheckNew(), !value);
-            deploymentTenant.setCheckNew(value);
-            deploymentTenant.update();
-            */
+            deploymentTenant.getCheckNew();
+            deploymentTenant.isDisabled();
+            for (int i=0; i<10; i++)
+                deploymentTenant.getWhiteListByIndex(i);
         }
     }
 }

@@ -53,7 +53,7 @@ public class DeploymentTenant extends Entity {
      * deployment server.
      */
     public String getWhiteListByIndex(int index) {
-        return getString(String.format("whitelist.%d", index));
+        return getString(String.format("whitelist.%d", index), null);
     }
 
     /**
@@ -68,19 +68,6 @@ public class DeploymentTenant extends Entity {
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
-    }
-
-    /**
-     * Sets whether this deployment server reviews the information in its
-     * configuration to find out if there is something new or updated to push
-     * out to its deployment clients. If {@code true} this deployment server
-     * reviews the information, {@code false} and this deployment server does
-     * not review the information.
-     *
-     * @param checkNew Whether or not the information is reviewed.
-     */
-    public void setCheckNew(boolean checkNew) {
-        setCacheValue("check-new", checkNew);
     }
 }
 

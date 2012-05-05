@@ -57,19 +57,6 @@ public class DeploymentServer extends Entity {
     }
 
     /**
-     * Sets whether this deployment server reviews the information in its
-     * configuration to find out if there is something new or updated to push
-     * out to its deployment clients. If {@code true} this deployment server
-     * reviews the information, {@code false} and this deployment server does
-     * not review the information.
-     *
-     * @param checkNew Whether or not the information is reviewed.
-     */
-    public void setCheckNew(boolean checkNew) {
-        setCacheValue("check-new", checkNew);
-    }
-
-    /**
      * Sets whether the deployment server is enabled or disabled. Note that
      * this effect is not immediate; Splunk must be restarted to take effect.
      * The

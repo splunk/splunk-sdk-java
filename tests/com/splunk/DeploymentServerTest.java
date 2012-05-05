@@ -31,16 +31,9 @@ public class DeploymentServerTest extends SplunkTestCase {
 
         for (DeploymentServer deploymentServer: deploymentServers.values()) {
             assertTrue(deploymentServer.getWhiteListByIndex(0).length() > 0);
-            // wkcfix -- update() causes server error 500; but don't know why
-            /*
-            boolean value = deploymentServer.getCheckNew();
-            deploymentServer.setCheckNew(!value);
-            deploymentServer.update();
-            assertEquals(deploymentServer.getCheckNew(), !value);
-            deploymentServer.setCheckNew(value);
-            deploymentServer.update();
-            assertEquals(deploymentServer.getCheckNew(), value);
-            */
+            deploymentServer.getCheckNew();
+            for (int i=0; i<10; i++)
+                deploymentServer.getWhiteListByIndex(i);
         }
     }
 }
