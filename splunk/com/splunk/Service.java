@@ -260,18 +260,6 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns the collection of applications.
-     *
-     * @param namespace This collection's namespace.
-     * @return Application collection.
-     */
-    public EntityCollection<Application>
-    getApplications(HashMap<String, String> namespace) {
-        return new EntityCollection<Application>(
-            this, "/services/apps/local", Application.class, namespace);
-    }
-
-    /**
      * Returns the collection of configurations.
      *
      * @return The configurations collection.
