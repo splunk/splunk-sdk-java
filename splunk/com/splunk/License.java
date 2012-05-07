@@ -42,7 +42,7 @@ public class License extends Entity {
      * @return The creation time and date.
      */
     public Date getCreationTime() {
-        return getDateFromEpoch("creation_time");
+        return getDate("creation_time");
     }
 
     /**
@@ -51,7 +51,7 @@ public class License extends Entity {
      * @return The expiration time and date.
      */
     public Date getExpirationTime() {
-        return getDateFromEpoch("expiration_time");
+        return getDate("expiration_time");
     }
 
     /**

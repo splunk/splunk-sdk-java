@@ -107,7 +107,7 @@ public class FiredAlert extends Entity {
      * @return This alert's trigger time, or {@code null} if not available.
      */
     public Date getTriggerTime() {
-        return getDateFromEpoch("trigger_time", null);
+        return getDate("trigger_time", null);
     }
 
     /**

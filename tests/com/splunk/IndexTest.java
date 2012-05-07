@@ -47,6 +47,7 @@ public class IndexTest extends SplunkTestCase {
         Service service = connect();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         String date = sdf.format(new Date());
+        ServiceInfo info = service.getInfo();
 
         EntityCollection<Index> indexes = service.getIndexes();
         for (Index index: indexes.values()) {
@@ -146,9 +147,11 @@ public class IndexTest extends SplunkTestCase {
 
         // use setters to update most
         index.setBlockSignSize(index.getBlockSignSize()+1);
-        index.setEnableOnlineBucketRepair(!index.getEnableRealtimeSearch());
+        if (versionCompare(info.getVersion(), "4.3") > 0) {
+            index.setEnableOnlineBucketRepair(!index.getEnableRealtimeSearch());
+            index.setMaxBloomBackfillBucketAge("20d");
+        }
         index.setFrozenTimePeriodInSecs(index.getFrozenTimePeriodInSecs()+1);
-        index.setMaxBloomBackfillBucketAge("20d");
         index.setMaxConcurrentOptimizes(index.getMaxConcurrentOptimizes()+1);
         index.setMaxDataSize("auto");
         index.setMaxHotBuckets(index.getMaxHotBuckets()+1);
@@ -208,7 +211,6 @@ public class IndexTest extends SplunkTestCase {
         index.clean(60);
         assertEquals(index.getTotalEventCount(), 0);
 
-        ServiceInfo info = service.getInfo();
         String filename;
         if (info.getOsName().equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log"; // normally here

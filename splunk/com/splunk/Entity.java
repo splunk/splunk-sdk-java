@@ -181,29 +181,6 @@ public class Entity extends Resource implements Map<String, Object> {
         return getContent().getDate(key, defaultValue);
     }
 
-    /**
-     * Returns a date value associated with the specified key. Date values can
-     * be converted from epoch time formats.
-     *
-     * @param key The key to look up.
-     * @return The date value associated with the specified. key.
-     */
-    Date getDateFromEpoch(String key) {
-        return getContent().getDateFromEpoch(key);
-    }
-
-    /**
-     * Returns a date value associated with the specified key, or the default
-     * value if the key does not exist. Date values can be converted from epoch
-     * time formats.
-     *
-     * @param key The key to look up.
-     * @param defaultValue The default value.
-     * @return The date value associated with the specified key.
-     */
-    Date getDateFromEpoch(String key, Date defaultValue) {
-        return getContent().getDateFromEpoch(key, defaultValue);
-    }
 
     /**
      * Returns the floating point value associated with the specified key.

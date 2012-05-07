@@ -39,7 +39,7 @@ public class ScriptInput extends Input {
      * @return The end-time, or {@code null if not specified}
      */
     public Date getEndTime() {
-        return getDateFromEpoch("endtime", null);
+        return getDate("endtime", null);
     }
 
     /**
@@ -130,7 +130,7 @@ public class ScriptInput extends Input {
      * @return The start-time, or {@code null if not specified}
      */
     public Date getStartTime() {
-        return getDateFromEpoch("starttime", null);
+        return getDate("starttime", null);
     }
 
     /**

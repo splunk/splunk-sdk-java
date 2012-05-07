@@ -102,33 +102,6 @@ public class Record extends HashMap<String, Object> {
     }
 
     /**
-     * Returns the {@code Date} value associated with the given key. The value
-     * stored in the record is a string representation of a date from the epoch.
-     *
-     * @param key The key of the value being retrieved.
-     * @return The value associated with the given key, or {@code null} if the
-     *         key does not exist.
-     */
-    Date getDateFromEpoch(String key) {
-        return Value.toDateFromEpoch(getString(key));
-    }
-
-    /**
-     * Returns the {@code Date} value associated with the given key, or
-     * {@code defaultValue} if the key does not exist. The value stored in the
-     * record is a string representation of a data from the epoch.
-     *
-     * @param key The key of the value being retrieved.
-     * @param defaultValue The value to return if the key does not exist.
-     * @return The value associated with the given key, or {@code defaultValue}
-     *         if the key does not exist.
-     */
-    Date getDateFromEpoch(String key, Date defaultValue) {
-        if (!containsKey(key)) return defaultValue;
-        return Value.toDateFromEpoch(getString(key));
-    }
-
-    /**
      * Returns the {@code float} value associated with the given key.
      *
      * @param key The key of the value being retrieved.

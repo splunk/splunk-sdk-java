@@ -282,6 +282,7 @@ public class InputTest extends SplunkTestCase {
     @Test public void testTcpInputCrud() {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
         String port = "9999"; // test port
 
         // CRUD TCP (raw) input
@@ -299,8 +300,11 @@ public class InputTest extends SplunkTestCase {
         tcpInput.setHost("myhost");
         tcpInput.setIndex("main");
         tcpInput.setQueue("indexQueue");
-        tcpInput.setRawTcpDoneTimeout(120);
-        tcpInput.setRestrictToHost("four.five.com");
+        if (versionCompare(info.getVersion(), "4.3") > 0) {
+            tcpInput.setRawTcpDoneTimeout(120);
+            // Behavioral difference between 4.3 and earlier versions
+            tcpInput.setRestrictToHost("four.five.com");
+        }
         tcpInput.setSource("tcp");
         tcpInput.setSourceType("sdk-tests");
         tcpInput.setSSL(false);
@@ -323,6 +327,7 @@ public class InputTest extends SplunkTestCase {
     @Test public void testTcpSplunkInputCrud() {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
+        ServiceInfo info = service.getInfo();
         String port = "9998"; // test port
 
         // CRUD TCP (cooked) input
@@ -339,7 +344,10 @@ public class InputTest extends SplunkTestCase {
 
         tcpSplunkInput.setConnectionHost("one.two.three");
         tcpSplunkInput.setHost("myhost");
-        tcpSplunkInput.setRestrictToHost("four.five.com");
+        if (versionCompare(info.getVersion(), "4.3") > 0) {
+            // Behavioral difference between 4.3 and earlier versions
+            tcpSplunkInput.setRestrictToHost("four.five.com");
+        }
         tcpSplunkInput.setSSL(false);
         tcpSplunkInput.update();
 
@@ -549,6 +557,7 @@ public class InputTest extends SplunkTestCase {
             assertFalse(inputCollection.containsKey(name));
 
             // CRUD Windows Registry Input
+            args.put("disabled", true);
             args.put("baseline", false);
             args.put("hive", "HKEY_USERS");
             args.put("proc", "*");

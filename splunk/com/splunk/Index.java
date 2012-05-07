@@ -627,7 +627,8 @@ public class Index extends Entity {
     /**
      * Sets the time, as annotated by a postfix {@code m, s, h} or {@code d},
      * that if a warm or cold bucket is older, do not create or rebuild its
-     * bloomfilter. An example would be {@code 30d}, for 30 days.
+     * bloomfilter. An example would be {@code 30d}, for 30 days.  This is new
+     * for 4.3.
      *
      * @param time The time, as annotated.
      */

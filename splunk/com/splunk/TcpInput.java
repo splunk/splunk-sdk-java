@@ -228,7 +228,8 @@ public class TcpInput extends Input {
      *
      *  If a connection over the port specified by name remains idle after
      *  receiving data for specified number of seconds, it adds a Done-key. This
-     *  implies the last event has been completely received.
+     *  implies the last event has been completely received. This is new for
+     *  4.3.
      *
      * @param rawTcpDoneTimeout timeout value for adding a Done-key.
      */

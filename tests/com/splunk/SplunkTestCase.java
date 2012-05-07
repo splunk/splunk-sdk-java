@@ -100,6 +100,37 @@ public class SplunkTestCase extends TestCase {
         catch (InterruptedException e) {}
     }
 
+    // returns -1, 0, 1 comparing left version string to right
+    // for less than, equal to or greater than
+    int versionCompare(String left, String right) {
+
+        // short cut for equality.
+        if (left.equals(right)) return 0;
+
+        // if not the same, break down into individual digits for comparison.
+        String[] leftDigits = left.split(".");
+        String[] rightDigits = right.split(".");
+        int i=0;
+
+        for (; i<leftDigits.length; i++) {
+            // No more right side, left side is bigger
+            if (i == rightDigits.length) return 1;
+            // left side smaller>?
+            if (Integer.parseInt(leftDigits[i]) <
+                Integer.parseInt(leftDigits[1])) {
+                return -1;
+            }
+            // left side bigger?
+            if (Integer.parseInt(leftDigits[i]) >
+                    Integer.parseInt(leftDigits[1])) {
+                return 1;
+            }
+        }
+        // we got to the end of the left side, and not equal, right side
+        // most be larger by having more digits.
+        return -1;
+    }
+
     // Wait for the given job to complete
     Job wait(Job job) {
 

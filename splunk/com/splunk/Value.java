@@ -71,8 +71,7 @@ class Value {
         return Long.parseLong(value) * multiplier;
     }
 
-    private static SimpleDateFormat dateFormat = null;
-    private static SimpleDateFormat dateFormat2 = null;
+    private static SimpleDateFormat[] dateFormat = null;
     private static Pattern datePattern = null;
 
     /**
@@ -81,45 +80,40 @@ class Value {
      * @param value Value to convert.
      * @return Date value.
      */
+
+//"Mon May 07 12:09:17 2012""
     static Date toDate(String value) {
         if (dateFormat == null) {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            dateFormat.setLenient(true);
-        }
-        if (dateFormat2 == null) {
-            dateFormat2 = new SimpleDateFormat("E MMM d HH:mm:ss z y");
-            dateFormat.setLenient(true);
+            dateFormat = new SimpleDateFormat[3];
+            dateFormat[0] = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            dateFormat[0].setLenient(true);
+            dateFormat[1] = new SimpleDateFormat("E MMM d HH:mm:ss z y");
+            dateFormat[1].setLenient(true);
+            dateFormat[2] = new SimpleDateFormat("EEE MMM dd HH:mm:ss y");
+            dateFormat[2].setLenient(true);
         }
         if (datePattern == null) {
             String pattern = "(.*)\\.\\d+([\\-+]\\d+):(\\d+)";
             datePattern = Pattern.compile(pattern);
         }
-        try {
+
+        for (SimpleDateFormat simpleDateFormat: dateFormat)  {
             // Must first remove the colon (':') from the timezone
             // field, or SimpleDataFormat will not parse correctly.
             // Eg: 2010-01-01T12:00:00+01:00 => 2010-01-01T12:00:00+0100
-            Matcher matcher = datePattern.matcher(value);
-            value = matcher.replaceAll("$1$2$3");
-            return dateFormat.parse(value);
+            try {
+
+                Matcher matcher = datePattern.matcher(value);
+                value = matcher.replaceAll("$1$2$3");
+                return simpleDateFormat.parse(value);
+            }
+            catch (ParseException e) {}
         }
-        catch (ParseException e) {}
-        // try another format
         try {
-            return dateFormat2.parse(value);
-        } catch (ParseException e) {
+            return new Date(Long.parseLong(value)*1000);
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-    }
-
-    /**
-     * Converts a {@code String}, representing a date from the epoch,
-     * to a {@code Date} value.
-     *
-     * @param value Value to convert.
-     * @return Date value.
-     */
-    static Date toDateFromEpoch(String value) {
-        return new Date(Long.parseLong(value)*1000);
     }
 
     /**
