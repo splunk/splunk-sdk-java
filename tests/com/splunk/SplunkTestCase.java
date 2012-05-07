@@ -102,11 +102,25 @@ public class SplunkTestCase extends TestCase {
 
     // Wait for the given job to complete
     Job wait(Job job) {
-        while (!job.isDone()) {
-            try { Thread.sleep(2000); }
-            catch (InterruptedException e) {}
-            job.refresh();
+
+        while (true) {
+            try {
+                if (!job.isDone()) {
+                    try { Thread.sleep(2000); }
+                    catch (InterruptedException e) {}
+                    job.refresh();
+                } else {
+                    return job;
+                }
+            }
+            catch (SplunkException splunkException) {
+                if (splunkException.getCode() == SplunkException.JOB_NOTREADY) {
+                    try { Thread.sleep(500); }
+                    catch (Exception e) {}
+                } else {
+                    throw splunkException;
+                }
+            }
         }
-        return job;
     }
 }
