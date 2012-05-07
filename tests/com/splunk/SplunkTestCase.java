@@ -17,7 +17,7 @@
 package com.splunk;
 
 import com.splunk.sdk.Command;
-
+import java.net.Socket;
 import junit.framework.TestCase;
 import org.junit.Before;
 
@@ -42,14 +42,16 @@ public class SplunkTestCase extends TestCase {
         apps = service.getApplications();
         if (apps.containsKey(name)) {
             apps.remove(name);
-            service = restart();
+            splunkRestart();
+            service = connect();
         }
 
         apps = service.getApplications();
         assertFalse(apps.containsKey(name));
 
         apps.create(name);
-        service = restart();
+        splunkRestart();
+        service = connect();
 
         apps = service.getApplications();
         assertTrue(apps.containsKey(name));
@@ -64,40 +66,83 @@ public class SplunkTestCase extends TestCase {
         apps = service.getApplications();
         if (apps.containsKey(name)) {
             apps.remove(name);
-            service = restart();
+            splunkRestart();
+            service = connect();
         }
 
         apps = service.getApplications();
         assertFalse(apps.containsKey(name));
     }
 
-    // Restart Splunk and return an updated service instance.
-    Service restart() {
-        Service service = connect();
-        service.restart();
-        sleep(5000);
-        int retry = 15;
-        while (retry > 0) {
-            try {
-                return connect();
-            }
-            catch (Exception e) {
-                sleep(2000);
-            }
-        }
-        fail("Splunk service failed to restart");
-        return null;
-    }
-
     @Before public void setUp() {
         command = Command.splunk(); // Pick up .splunkrc settings
     }
 
-    void sleep(int millis) {
+    void sleep(int milliseconds) {
         try {
-            Thread.sleep(millis);
+            Thread.sleep(milliseconds);
         }
         catch (InterruptedException e) {}
+    }
+
+    public void splunkRestart() {
+        // If not specified, use 3 minutes (in milliseconds) as default
+        // restart timeout.
+        splunkRestart(3*60*1000);
+    }
+
+    public void splunkRestart(int millisecondTimeout) {
+
+        boolean restarted = false;
+
+        Service service = connect();
+
+        ResponseMessage response = service.restart();
+        assertEquals(200, response.getStatus());
+
+        // Sniff the management port. We expect the port to be up for a short
+        // while, and then no conection
+
+        int totalTime = 0;
+        // Server is back up, wait until socket no longer accepted.
+        while (totalTime < millisecondTimeout) {
+            try {
+                Socket socket = new Socket(service.getHost(),service.getPort());
+			    socket.close();
+			    sleep(10);
+                totalTime += 10;
+    		}
+            catch (Exception e) {
+                break;
+		    }
+        }
+
+        // server down, wait until socket accepted.
+        while (totalTime < millisecondTimeout) {
+            try {
+                Socket socket = new Socket(service.getHost(),service.getPort());
+			    socket.close();
+                break;
+
+    		}
+            catch (Exception e) {
+                sleep(10);
+                totalTime += 10;
+		    }
+        }
+
+        while (totalTime < millisecondTimeout) {
+            try {
+                connect();
+                restarted = true;
+                break;
+            }
+            catch (Exception e) {
+                sleep(100);
+                totalTime += 100;
+            }
+        }
+        assertTrue(restarted);
     }
 
     // Wait for the given job to complete
