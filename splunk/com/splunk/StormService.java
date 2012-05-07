@@ -18,12 +18,12 @@ package com.splunk;
 
 import java.util.Map;
 
-public class Storm extends Service {
+public class StormService extends Service {
 
     /**
      * Creates a new {@code Storm} service instance.
      */
-    public Storm() {
+    public StormService() {
         super("api.splunkstorm.com", 443, "https");
         this.simpleReceiverEndPoint = "/1/inputs/http";
     }
@@ -36,8 +36,8 @@ public class Storm extends Service {
      * @param args The {@code args} map.
      * @return A new {@code Service} instance.
      */
-    public static Storm connect(Map<String, Object> args) {
-        Storm service = new Storm();
+    public static StormService connect(Map<String, Object> args) {
+        StormService service = new StormService();
         if (args.containsKey("StormToken")) {
             String username = (String)args.get("StormToken");
             String preToken = username + ":x";

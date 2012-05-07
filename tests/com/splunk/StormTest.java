@@ -25,7 +25,7 @@ public class StormTest {
         // the storm token provided by Splunk
         Args loginArgs = new Args("StormToken",
 "p-n8SwuWEqPlyOXdDU4PjxavFdAn1CnJea9LirgTvzmIhMEBys6w7UJUCtxp_7g7Q9XopR5dW0w=");
-        Storm service = Storm.connect(loginArgs);
+        StormService service = StormService.connect(loginArgs);
 
         // get the receiver object
         Receiver receiver = service.getReceiver();
