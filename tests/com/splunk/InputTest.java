@@ -246,6 +246,7 @@ public class InputTest extends SplunkTestCase {
             filename = "echo.bat";
         else
             filename = "echo.sh";
+
         Args args = new Args();
         args.clear();
         args.put("interval", "60");
@@ -281,9 +282,13 @@ public class InputTest extends SplunkTestCase {
     @Test public void testTcpInputCrud() {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
+        String port = "9999"; // test port
 
         // CRUD TCP (raw) input
-        String port = "9999"; // test port
+        if (inputCollection.containsKey(port)) {
+            inputCollection.remove(port);
+            inputCollection.refresh();
+        }
         assertFalse(inputCollection.containsKey(port));
 
         inputCollection.create(port, InputKind.Tcp);
@@ -318,9 +323,15 @@ public class InputTest extends SplunkTestCase {
     @Test public void testTcpSplunkInputCrud() {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
+        String port = "9998"; // test port
 
         // CRUD TCP (cooked) input
-        String port = "9998"; // test port
+        if (inputCollection.containsKey(port)) {
+            inputCollection.remove(port);
+            inputCollection.refresh();
+        }
+        assertFalse(inputCollection.containsKey(port));
+
         inputCollection.create(port, InputKind.TcpSplunk);
         assertTrue(inputCollection.containsKey(port));
         TcpSplunkInput tcpSplunkInput =
@@ -345,9 +356,15 @@ public class InputTest extends SplunkTestCase {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
         ServiceInfo info = service.getInfo();
+        String port = "9997"; // test port
 
         // CRUD UDP input
-        String port = "9997"; // test port
+        if (inputCollection.containsKey(port)) {
+            inputCollection.remove(port);
+            inputCollection.refresh();
+        }
+        assertFalse(inputCollection.containsKey(port));
+
         inputCollection.create(port, InputKind.Udp);
         assertTrue(inputCollection.containsKey(port));
         UdpInput udpInput =(UdpInput)inputCollection.get(port);
@@ -390,6 +407,12 @@ public class InputTest extends SplunkTestCase {
             String name = "sdk-input-wad";
             Args args = new Args();
 
+            if (inputCollection.containsKey(name)) {
+                inputCollection.remove(name);
+                inputCollection.refresh();
+            }
+            assertFalse(inputCollection.containsKey(name));
+
             args.put("monitorSubtree", false);
             inputCollection.create(
                     name, InputKind.WindowsActiveDirectory, args);
@@ -425,6 +448,12 @@ public class InputTest extends SplunkTestCase {
             String name = "sdk-input-wel";
             Args args = new Args();
 
+            if (inputCollection.containsKey(name)) {
+                inputCollection.remove(name);
+                inputCollection.refresh();
+            }
+            assertFalse(inputCollection.containsKey(name));
+
             // CRUD Windows Event Log Input
             args.put("lookup_host", "127.0.0.1");
             inputCollection.create(name, InputKind.WindowsEventLog, args);
@@ -457,6 +486,12 @@ public class InputTest extends SplunkTestCase {
         if (info.getOsName().equals("Windows")) {
             String name = "sdk-input-wp";
             Args args = new Args();
+
+            if (inputCollection.containsKey(name)) {
+                inputCollection.remove(name);
+                inputCollection.refresh();
+            }
+            assertFalse(inputCollection.containsKey(name));
 
             // CRUD Windows Perfmon Input
             args.put("interval", 600);
@@ -496,7 +531,6 @@ public class InputTest extends SplunkTestCase {
             assertFalse(inputCollection.containsKey(name));
 
         }
-
     }
 
     @Test public void testWindowsRegistryInputCrud() {
@@ -507,6 +541,12 @@ public class InputTest extends SplunkTestCase {
         if (info.getOsName().equals("Windows")) {
             String name = "sdk-input-wr";
             Args args = new Args();
+
+            if (inputCollection.containsKey(name)) {
+                inputCollection.remove(name);
+                inputCollection.refresh();
+            }
+            assertFalse(inputCollection.containsKey(name));
 
             // CRUD Windows Registry Input
             args.put("baseline", false);
@@ -553,6 +593,12 @@ public class InputTest extends SplunkTestCase {
             String name = "sdk-input-wmi";
             Args args = new Args();
 
+            if (inputCollection.containsKey(name)) {
+                inputCollection.remove(name);
+                inputCollection.refresh();
+            }
+            assertFalse(inputCollection.containsKey(name));
+
             // CRUD Windows Wmi Input
             args.put("classes", "PerfOS_Processor");
             args.put("interval", 600);
@@ -588,20 +634,15 @@ public class InputTest extends SplunkTestCase {
 
             // set list fields
             windowsWmiInput.setFields(new String[]{"Caption", "Description"});
-            windowsWmiInput.setInstances(new String[]{"1", "_Total"});
             windowsWmiInput.update();
 
             assertTrue(windowsWmiInput.getFields().length == 2);
             assertTrue(contains(windowsWmiInput.getFields(), "Caption"));
             assertTrue(contains(windowsWmiInput.getFields(), "Description"));
-            assertTrue(windowsWmiInput.getInstances().length == 2);
-            assertTrue(contains(windowsWmiInput.getInstances(), "1"));
-            assertTrue(contains(windowsWmiInput.getInstances(), "_Total"));
 
             windowsWmiInput.remove();
             inputCollection.refresh();
             assertFalse(inputCollection.containsKey(name));
         }
     }
-
 }
