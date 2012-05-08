@@ -202,7 +202,9 @@ public class InputTest extends SplunkTestCase {
         monitorInput.setBlacklist("phonyregex*1");
         monitorInput.setCheckIndex(true);
         monitorInput.setCheckPath(true);
-        monitorInput.setCrcSalt("ThisIsSalt");
+        if (versionCompare(info.getVersion(), "4.2") > 0) {
+            monitorInput.setCrcSalt("ThisIsSalt");
+        }
         monitorInput.setFollowTail(false);
         monitorInput.setHost("three.four.com");
         monitorInput.setHostRegex("host*regex*");
@@ -260,7 +262,9 @@ public class InputTest extends SplunkTestCase {
         scriptInput.setHost("three.four.com");
         scriptInput.setIndex("main");
         scriptInput.setInterval("120");
-        scriptInput.setPassAuth("admin");
+        if (versionCompare(info.getVersion(), "4.2.3") > 0) {
+            scriptInput.setPassAuth("admin");
+        }
         scriptInput.setRenameSource("renamedSource");
         scriptInput.setSource("source");
         scriptInput.setSourcetype("script");
@@ -269,7 +273,9 @@ public class InputTest extends SplunkTestCase {
         assertEquals(scriptInput.getHost(), "three.four.com");
         assertEquals(scriptInput.getIndex(), "main");
         assertEquals(scriptInput.getInterval(), "120");
-        assertEquals(scriptInput.getPassAuth(), "admin");
+        if (versionCompare(info.getVersion(), "4.2.3") > 0) {
+            assertEquals(scriptInput.getPassAuth(), "admin");
+        }
         assertEquals(scriptInput.getSource(), "renamedSource");
         assertEquals(scriptInput.getSourceType(), "script");
 

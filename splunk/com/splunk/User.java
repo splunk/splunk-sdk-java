@@ -157,7 +157,7 @@ public class User extends Entity {
      * restarts.
      *
      * If {@code true}, a background search job for this user that has not
-     * completed is restarted when Splunk restarts. This is new for 4.3.
+     * completed is restarted when Splunk restarts. Introduced in 4.3.
      *
      * @param restart_background_jobs whether or not to restart background
      * search jobs when Splunk restarts.

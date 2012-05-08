@@ -336,7 +336,7 @@ public class Index extends Entity {
      * @return The maximum number of concurrent helper processes.
      */
     public int getMaxRunningProcessGroups() {
-        return getInteger("maxRunningProcessGroups");
+        return getInteger("maxRunningProcessGroups", 0);
     }
 
     /**
@@ -604,7 +604,7 @@ public class Index extends Entity {
     /**
      * Sets whether or not asychronous "online fsck" bucket repair is enabled.
      * When enabled one does not have to wait until buckets are repaired before
-     * starting Splunk. This is new for 4.3.
+     * starting Splunk. Introduced in 4.3.
      *
      * @param value whether or not online bucket repair is enabled.
      */
@@ -627,8 +627,8 @@ public class Index extends Entity {
     /**
      * Sets the time, as annotated by a postfix {@code m, s, h} or {@code d},
      * that if a warm or cold bucket is older, do not create or rebuild its
-     * bloomfilter. An example would be {@code 30d}, for 30 days.  This is new
-     * for 4.3.
+     * bloomfilter. An example would be {@code 30d}, for 30 days.  Introduced
+     * in 4.3.
      *
      * @param time The time, as annotated.
      */

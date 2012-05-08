@@ -89,7 +89,8 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the value of the user this script runs under.
+     * Returns the value of the user this script runs under. Introduced in
+     * 4.2.3
      *
      * @return The user that executes this script.
      */
@@ -176,7 +177,7 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Sets the script to run as this user.
+     * Sets the script to run as this user.  Introduced in 4.2.3.
      *
      * @param passAuth the user.
      */

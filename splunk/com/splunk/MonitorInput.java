@@ -227,7 +227,7 @@ public class MonitorInput extends Input {
     /**
      * Sets a string that modifies the file tracking identity for files in
      * this input. The magic value @{code <SOURCE>} invokes special behavior
-     * (see admin documentation).
+     * (see admin documentation). Introduced in 4.2.
      *
      * @param salt The string that modifies the file tracking identity for files
      * in this input

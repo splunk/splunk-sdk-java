@@ -58,7 +58,10 @@ public class OutputDefaultTest extends SplunkTestCase {
         assertEquals(outputDefault.getSendCookedData(), !cookedData);
 
         // restore
-        outputDefault.setDefaultGroup(defaultGroup);
+        if (defaultGroup == null)
+            outputDefault.setDefaultGroup("");
+        else
+            outputDefault.setDefaultGroup(defaultGroup);
         outputDefault.setDropEventsOnQueueFull(onQueueFull);
         outputDefault.setHeartbeatFrequency(heartbeat);
         outputDefault.setIndexAndForward(forward);

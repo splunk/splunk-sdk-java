@@ -924,7 +924,7 @@ public class SavedSearch extends Entity {
      * this search, {@code false} if not.
      */
     public boolean getDispatchRtBackfill() {
-        return getBoolean("dispatch.rt_backfill");
+        return getBoolean("dispatch.rt_backfill", false);
     }
 
     /**
