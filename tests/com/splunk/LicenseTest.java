@@ -67,6 +67,11 @@ public class LicenseTest extends SplunkTestCase {
             assertTrue(types.contains(license.getType()));
         }
 
+        if (licenses.containsKey("sdk-test")) {
+            licenses.remove("sdk-test");
+        }
+        assertFalse(licenses.containsKey("sdk-test"));
+
         // create
         FileReader fileReader;
         char [] buffer = new char[2048];
