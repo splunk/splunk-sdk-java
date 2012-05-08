@@ -18,10 +18,15 @@ package com.splunk;
 
 import java.io.UnsupportedEncodingException;
 
+/*
+ * This module is used to turn binary date in to base64 (radix-64) encoding.
+ * Its primary use is a utility function to encode the StormService
+ * authorization token.
+ */
 public class Base64 {
 
     private static final String base64code =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     public static byte[] zeroPad(int length, byte[] bytes) {
         byte[] padded = new byte[length];
