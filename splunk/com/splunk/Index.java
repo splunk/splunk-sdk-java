@@ -542,12 +542,12 @@ public class Index extends Entity {
     /**
      * Submits an event to this index through HTTP POST.
      *
-     * @param data Event data posted.
      * @param args optional arguments for the simple receivers endpoint.
+     * @param data Event data posted.
      */
-    public void submit(String data, Args args) {
+    public void submit(Args args, String data) {
         Receiver receiver = service.getReceiver();
-        receiver.submit(getName(), data, args);
+        receiver.submit(getName(), args, data);
     }
 
     /**

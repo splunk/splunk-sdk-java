@@ -45,20 +45,7 @@ public class Receiver extends Entity {
      * @throws IOException
      */
     public Socket attach() throws IOException {
-        Socket socket = service.open();
-        OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
-        String header = String.format(
-            "POST /services/receivers/stream HTTP/1.1\r\n" +
-            "Host: %s:%d\r\n" +
-            "Accept-Encoding: identity\r\n" +
-            "Authorization: %s\r\n" +
-            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            service.getHost(), service.getPort(),
-            service.token);
-        out.write(header);
-        out.flush();
-        return socket;
+        return attach(null, null);
     }
 
     /**
@@ -69,21 +56,7 @@ public class Receiver extends Entity {
      * @throws IOException
      */
     public Socket attach(String indexName) throws IOException {
-        Socket socket = service.open();
-        OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
-        String header = String.format(
-            "POST /services/receivers/stream?index=%s HTTP/1.1\r\n" +
-            "Host: %s:%d\r\n" +
-            "Accept-Encoding: identity\r\n" +
-            "Authorization: %s\r\n" +
-            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            indexName,
-            service.getHost(), service.getPort(),
-            service.token);
-        out.write(header);
-        out.flush();
-        return socket;
+        return attach(indexName, null);
     }
 
     /**
@@ -94,21 +67,7 @@ public class Receiver extends Entity {
      * @throws IOException
      */
     public Socket attach(Args args) throws IOException {
-        Socket socket = service.open();
-        OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
-        String header = String.format(
-            "POST /services/receivers/stream?%s HTTP/1.1\r\n" +
-            "Host: %s:%d\r\n" +
-            "Accept-Encoding: identity\r\n" +
-            "Authorization: %s\r\n" +
-            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            args.encode(),
-            service.getHost(), service.getPort(),
-            service.token);
-        out.write(header);
-        out.flush();
-        return socket;
+        return attach(null, args);
     }
 
     /**
@@ -123,14 +82,21 @@ public class Receiver extends Entity {
         Socket socket = service.open();
         OutputStream ostream = socket.getOutputStream();
         Writer out = new OutputStreamWriter(ostream, "UTF8");
+        String postUrl = "POST /services/receivers/stream";
+        if (indexName != null) {
+            postUrl = postUrl + "?index=" + indexName;
+        }
+        if (args != null && args.size() > 0) {
+            postUrl = postUrl +  ((indexName == null) ? "?" : "&");
+            postUrl = postUrl + args.encode();
+        }
         String header = String.format(
-            "POST /services/receivers/stream?index=%s?%s HTTP/1.1\r\n" +
+            "%s HTTP/1.1\r\n" +
             "Host: %s:%d\r\n" +
             "Accept-Encoding: identity\r\n" +
             "Authorization: %s\r\n" +
             "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            indexName,
-            args.encode(),
+            postUrl,
             service.getHost(), service.getPort(),
             service.token);
         out.write(header);
@@ -144,9 +110,7 @@ public class Receiver extends Entity {
      * @param data Event data posted.
      */
     public void submit(String data) {
-        RequestMessage request = new RequestMessage("POST");
-        request.setContent(data);
-        service.send(service.simpleReceiverEndPoint, request);
+        submit(null, null, data);
     }
 
     /**
@@ -156,10 +120,7 @@ public class Receiver extends Entity {
      * @param data Event data posted.
      */
     public void submit(String indexName, String data) {
-        RequestMessage request = new RequestMessage("POST");
-        request.setContent(data);
-        service.send(
-              service.simpleReceiverEndPoint + "?index=" + indexName, request);
+        submit(indexName, null, data);
     }
 
     /**
@@ -168,11 +129,8 @@ public class Receiver extends Entity {
      * @param data Event data posted.
      * @param args optional arguments for the simple receivers endpoint.
      */
-    public void submit(String data, Args args) {
-        RequestMessage request = new RequestMessage("POST");
-        request.setContent(data);
-        String argString = String.format("%s", args.encode());
-        service.send(service.simpleReceiverEndPoint + "?" + argString, request);
+    public void submit(Args args, String data) {
+        submit(null, args, data);
     }
 
     /**
@@ -182,13 +140,19 @@ public class Receiver extends Entity {
      * @param data Event data posted.
      * @param args optional arguments for the simple receivers endpoint.
      */
-    public void submit(String indexName, String data, Args args) {
+    public void submit(String indexName, Args args, String data) {
+        String sendString = "";
         RequestMessage request = new RequestMessage("POST");
         request.setContent(data);
-        String argString = String.format(
-             "index=%s&%s", indexName, args.encode());
+        if (indexName !=null) {
+            sendString = String.format("?index=%s", indexName);
+        }
+        if (args != null && args.size() > 0) {
+            sendString = sendString +  ((indexName == null) ? "?" : "&");
+            sendString = sendString + args.encode();
+        }
         service.send(
-             service.simpleReceiverEndPoint + "?" + argString, request);
+             service.simpleReceiverEndPoint  + sendString, request);
     }
 
     /**
@@ -216,11 +180,11 @@ public class Receiver extends Entity {
      * Submits an event to this index through HTTP POST. This is an alias for
      * {@code submit()}.
      *
-     * @param data Event data posted.
      * @param args optional arguments for the simple receivers endpoint.
+     * @param data Event data posted.
      */
-    public void log(String data, Args args) {
-        submit(data, args);
+    public void log(Args args, String data) {
+        submit(args, data);
     }
 
     /**
@@ -228,10 +192,10 @@ public class Receiver extends Entity {
      * {@code submit()}.
      *
      * @param indexName The index to write to.
-     * @param data Event data posted.
      * @param args optional arguments for the simple receivers endpoint.
+     * @param data Event data posted.
      */
-    public void log(String indexName, String data, Args args) {
-        submit(indexName, data, args);
+    public void log(String indexName, Args args, String data) {
+        submit(indexName, args, data);
     }
 }
