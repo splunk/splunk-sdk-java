@@ -25,7 +25,9 @@ import java.net.Socket;
 /**
  * Representation of named index, and unnamed index receivers.
  */
-public class Receiver extends Entity {
+public class Receiver {
+
+    Service service = null;
 
     /**
      * Class Constructor.
@@ -33,9 +35,7 @@ public class Receiver extends Entity {
      * @param service The connected service instance.
      */
     Receiver(Service service) {
-        // we don't need a relative endpoint path, because all accesses
-        // are targeting explicit endpoints in-line.
-        super(service, "");
+        this.service = service;
     }
 
     /**
