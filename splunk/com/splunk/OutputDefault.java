@@ -72,18 +72,6 @@ public class OutputDefault extends Entity {
     }
 
     /**
-     * Returns the default indexer group that this forwarder sends all data to.
-     * <br/>
-     * Note: This attribute is not required after Splunk version 4.2.
-     *
-     * @return A comma-separated list that contains one or more target group
-     * names, or {@code null} if not specified.
-     */
-    public String getDefaultGroup() {
-        return getString("defaultGroup", null);
-    }
-
-    /**
      * Returns the amount of time this forwarder waits before dropping
      * events if the output queue is full. A setting of 0 or -1 causes this
      * forwarder to block.
@@ -193,23 +181,6 @@ public class OutputDefault extends Entity {
     }
 
     /**
-     * Sets the group names to forward to. Groups is a comma separated list of
-     * one or more target group names, specified later in
-     * @{code tcpout:<target_group>} stanzas of outputs.conf.spec file. The
-     * forwarder sends all data to the specified groups. If you don't want to
-     * forward data automatically, don't set this attribute. Can be overridden
-     * by an inputs.conf _TCP_ROUTING setting, which in turn can be overridden
-     * by a props.conf/transforms.conf modifier.
-     *
-     * Starting with 4.2, this attribute is no longer required.
-     *
-     * @param groups The comma separated list of target group names.
-     */
-    public void setDefaultGroup(String groups) {
-        setCacheValue("defaultGroup", groups);
-    }
-
-    /**
      * If set to a positive number, wait the specified number of seconds before
      * throwing out all new events until the output queue has space. Defaults
      * to -1 (do not drop events).
@@ -296,6 +267,13 @@ public class OutputDefault extends Entity {
     }
 
     /**
+     * Sets the name. Only tcpout is valid.
+     */
+    public void setName() {
+        setCacheValue("name", "tcpout");
+    }
+
+    /**
      * Sets whether or not to forward cooked data. {@code true} indicates events
      * have been processed by splunk. {@code false} indicates events are raw and
      * untouched prior to sending.
@@ -310,8 +288,10 @@ public class OutputDefault extends Entity {
      * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
-        if (!args.containsKey("name")) { // requires name
-            args = Args.create(args).add("name", "tcpout");
+        // Add required arguments if not already present
+        validateFromUpdate();
+        if (!args.containsKey("name")) {
+            args = Args.create(args).add("search", "tcpout");
         }
         super.update(args);
     }
@@ -320,8 +300,11 @@ public class OutputDefault extends Entity {
      * {@inheritDoc}
      */
     @Override public void update() {
-        if (!isUpdateKeyPresent("name")) {
-            setCacheValue("name", "tcpout"); // requires name
+        // If not present in the update keys, add required attribute as long
+        // as one pre-existing update pair exists
+        validateFromUpdate();
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("name")) {
+            setCacheValueFromUpdate("name", "tcpout");
         }
         super.update();
     }

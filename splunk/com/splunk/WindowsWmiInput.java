@@ -241,12 +241,15 @@ public class WindowsWmiInput extends Input {
      * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
-        if (!args.containsKey("classes")) // required
-            args = Args.create(args).add("classes", getClasses());
-        if (!args.containsKey("interval")) // required
-            args = Args.create(args).add("interval", getInterval());
-        if (!args.containsKey("lookup_host")) // required
-            args = Args.create(args).add("lookup_host", getLookupHost());
+        // If not present in the update keys, add required attributes
+        validateFromUpdate();
+        if (!args.containsKey("classes"))
+            args = Args.create(args).add("classes", getObjectForUpdate("classes"));
+        if (!args.containsKey("interval"))
+            args = Args.create(args).add("interval", getObjectForUpdate("interval"));
+        if (!args.containsKey("lookup_host"))
+            args = Args.create(args).add(
+                "lookup_host", getObjectForUpdate("lookup_host"));
         super.update(args);
     }
 
@@ -254,14 +257,17 @@ public class WindowsWmiInput extends Input {
      * {@inheritDoc}
      */
     @Override public void update() {
-        if (!isUpdateKeyPresent("classes")) {
-            setCacheValue("classes", getClasses()); // required
+        // If not present in the update keys, add required attributes as long
+        // as one pre-existing update pair exists
+        validateFromUpdate();
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("classes")) {
+            setCacheValueFromUpdate("classes", getObjectForUpdate("classes"));
         }
-        if (!isUpdateKeyPresent("interval")) {
-            setCacheValue("interval", getInterval()); // required
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("interval")) {
+            setCacheValueFromUpdate("interval", getObjectForUpdate("interval"));
         }
-        if (!isUpdateKeyPresent("lookup_host")) {
-            setCacheValue("lookup_host", getLookupHost()); // required
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("lookup_host")) {
+            setCacheValueFromUpdate("lookup_host", getObjectForUpdate("lookup_host"));
         }
         super.update();
     }

@@ -179,14 +179,20 @@ public class WindowsRegistryInput extends Input {
      * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
-        if (!args.containsKey("baseline")) // required
-            args = Args.create(args).add("baseline", getBaseline());
-        if (!args.containsKey("hive")) // required
-            args = Args.create(args).add("hive", getHive());
-        if (!args.containsKey("proc")) // required
-            args = Args.create(args).add("proc", getProc());
-        if (!args.containsKey("type")) // required
-            args = Args.create(args).add("type", getType());
+        // Add required arguments if not already present
+        validateFromUpdate();
+        if (!args.containsKey("baseline")) {
+            args = Args.create(args).add("baseline", getObjectForUpdate("baseline"));
+        }
+        if (!args.containsKey("hive")) {
+            args = Args.create(args).add("hive", getObjectForUpdate("hive"));
+        }
+        if (!args.containsKey("proc")) {
+            args = Args.create(args).add("proc", getObjectForUpdate("proc"));
+        }
+        if (!args.containsKey("type")) {
+            args = Args.create(args).add("type", getObjectForUpdate("type"));
+        }
         super.update(args);
     }
 
@@ -194,17 +200,20 @@ public class WindowsRegistryInput extends Input {
      * {@inheritDoc}
      */
     @Override public void update() {
-        if (!isUpdateKeyPresent("baseline")) {
-            setCacheValue("baseline", getBaseline()); // required
+        // If not present in the update keys, add required attributes as long
+        // as one pre-existing update pair exists
+        validateFromUpdate();
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("baseline")) {
+            setCacheValueFromUpdate("baseline", getObjectForUpdate("baseline"));
         }
-        if (!isUpdateKeyPresent("hive")) {
-            setCacheValue("hive", getHive()); // required
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("hive")) {
+            setCacheValueFromUpdate("hive", getObjectForUpdate("hive"));
         }
-        if (!isUpdateKeyPresent("proc")) {
-            setCacheValue("proc", getProc()); // required
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("proc")) {
+            setCacheValueFromUpdate("proc", getObjectForUpdate("proc"));
         }
-        if (!isUpdateKeyPresent("type")) {
-            setCacheValue("type", getType()); // required
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("type")) {
+            setCacheValueFromUpdate("type", getObjectForUpdate("type"));
         }
         super.update();
     }

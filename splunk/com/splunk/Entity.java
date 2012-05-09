@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
-    private HashMap<String, Object> toUpdate = new HashMap<String, Object>();
+    public HashMap<String, Object> toUpdate = new HashMap<String, Object>();
 
     /**
      * Class constructor.
@@ -68,13 +68,6 @@ public class Entity extends Resource implements Map<String, Object> {
     /** {@inheritDoc} */
     public boolean containsValue(Object value) {
         return getContent().containsValue(value);
-    }
-
-    /**
-     * Clear the update cache.
-     */
-    public void clearUpdate() {
-        toUpdate.clear();
     }
 
     /**
@@ -181,7 +174,6 @@ public class Entity extends Resource implements Map<String, Object> {
         return getContent().getDate(key, defaultValue);
     }
 
-
     /**
      * Returns the floating point value associated with the specified key.
      *
@@ -190,6 +182,17 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     float getFloat(String key) {
         return getContent().getFloat(key);
+    }
+
+    /**
+     * Returns the object without validating. This is called from in an update
+     * operation.
+     *
+     * @param key The key to look up.
+     * @return The object value associated with the specified key.
+     */
+    Object getObjectForUpdate(String key) {
+        return content.get(key);
     }
 
     /**
@@ -298,13 +301,6 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Return a copy of the toUpdate hash map.
-     */
-    public HashMap<String, Object> getToUpdate() {
-        return new HashMap<String, Object>(toUpdate);
-    }
-
-    /**
      * Indicates whether this entity is disabled. This method is 
      * available on almost every endpoint.
      *
@@ -313,16 +309,6 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     public boolean isDisabled() {
         return getBoolean("disabled", false);
-    }
-
-    /**
-     * Indicates whether or not an update key value is present
-     *
-     * @param key Key to look up in cached update hash map.
-     * @return {@code true} if update key is present, {@code false} otherwise.
-     */
-    public boolean isUpdateKeyPresent(String key) {
-        return toUpdate.containsKey(key);
     }
 
     /** {@inheritDoc} */
@@ -354,7 +340,24 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /** {@inheritDoc} */
     @Override public Entity refresh() {
-        toUpdate.clear(); // clear old updates if refreshing
+        // Update any attribute values set by a setter method that has not
+        // yet been written to the object.
+        update();
+        ResponseMessage response = service.get(path);
+        assert(response.getStatus() == 200);
+        AtomFeed feed = AtomFeed.parse(response.getContent());
+        int count = feed.entries.size();
+        assert(count == 0 || count == 1);
+        AtomEntry entry = count == 0 ? null : feed.entries.get(0);
+        load(entry);
+        return this;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override public Entity refreshFromUpdate() {
+        // Update any attribute values set by a setter method that has not
+        // yet been written to the object.
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -379,14 +382,25 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Sets the local cache update value. Deferred write until tupdate() without
-     * arguments is invoked.
+     * Sets the local cache update value. Deferred write until {@code update} is
+     * invoked.
      *
      * @param key The key to set.
      * @param value The default value.
      */
     void setCacheValue(String key, Object value) {
-        validate();
+        invalidate();
+        toUpdate.put(key, value);
+    }
+
+    /**
+     * Sets the local cache update value, but does not validate the existing
+     * entity. This is called from in an update operation.
+     *
+     * @param key The key to set.
+     * @param value The default value.
+     */
+    void setCacheValueFromUpdate(String key, Object value) {
         toUpdate.put(key, value);
     }
 
@@ -396,12 +410,19 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Updates the entity with the specified arguments.
+     * Update the entity with the values previously set via the setter
+     * methods, and the additional specified arguments. The specified arguments
+     * take precedents over the value set via the setter methods.
      *
      * @param args The arguments to update.
      */
     public void update(Map<String, Object> args) {
-        service.post(actionPath("edit"), args);
+        // Merge cached setters and live args together before updating.
+        HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
+        mergedArgs.putAll(toUpdate);
+        mergedArgs.putAll(args);
+        service.post(actionPath("edit"), mergedArgs);
+        toUpdate.clear();
         invalidate();
     }
 
@@ -413,8 +434,8 @@ public class Entity extends Resource implements Map<String, Object> {
         if (toUpdate.size() > 0) {
             service.post(actionPath("edit"), toUpdate);
             toUpdate.clear();
+            invalidate();
         }
-        invalidate();
     }
 
     /**

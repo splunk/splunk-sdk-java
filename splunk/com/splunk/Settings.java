@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -281,7 +282,12 @@ public class Settings extends Entity {
      * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
-        service.post(path + "/settings", args);
+        // Merge cached setters and live args together before updating.
+        HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
+        mergedArgs.putAll(toUpdate);
+        mergedArgs.putAll(args);
+        service.post(path + "/settings", mergedArgs);
+        toUpdate.clear();
         invalidate();
     }
 
@@ -289,8 +295,7 @@ public class Settings extends Entity {
      * {@inheritDoc}
      */
     @Override public void update() {
-        Map<String, Object>  args = getToUpdate();
-        service.post(path + "/settings", args);
+        service.post(path + "/settings", toUpdate);
         invalidate();
     }
 }

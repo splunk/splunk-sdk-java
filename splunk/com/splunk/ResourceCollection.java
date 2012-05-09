@@ -342,6 +342,16 @@ public class ResourceCollection<T extends Resource>
         return this;
     }
 
+    /**
+     * Refreshes the local state of this resource, from within an update
+     * operation.
+     *
+     * @return The current {@code Resource} instance.
+     */
+    public Resource refreshFromUpdate() {
+        throw new UnsupportedOperationException();
+    }
+
     /** {@inheritDoc} */
     public T remove(Object key) {
         throw new UnsupportedOperationException();

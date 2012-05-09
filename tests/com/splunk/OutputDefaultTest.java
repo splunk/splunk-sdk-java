@@ -27,7 +27,6 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.autoLb();
         outputDefault.blockOnQueueFull();
         outputDefault.getAutoLbFrequency();
-        String defaultGroup = outputDefault.getDefaultGroup();
         int onQueueFull = outputDefault.getDropEventsOnQueueFull();
         outputDefault.getForwardedIndex0Whitelist();
         outputDefault.getForwardedIndex1Blacklist();
@@ -42,7 +41,6 @@ public class OutputDefaultTest extends SplunkTestCase {
 
         // set-ables
 
-        outputDefault.setDefaultGroup("bad default group");
         outputDefault.setDropEventsOnQueueFull(0);
         outputDefault.setHeartbeatFrequency(heartbeat+1);
         outputDefault.setIndexAndForward(!forward);
@@ -51,17 +49,12 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.update();
 
         //check
-        assertEquals(outputDefault.getDefaultGroup(), "bad default group");
         assertEquals(outputDefault.getDropEventsOnQueueFull(), 0);
         assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat+1);
         assertEquals(outputDefault.indexAndForward(), !forward);
         assertEquals(outputDefault.getSendCookedData(), !cookedData);
 
         // restore
-        if (defaultGroup == null)
-            outputDefault.setDefaultGroup("");
-        else
-            outputDefault.setDefaultGroup(defaultGroup);
         outputDefault.setDropEventsOnQueueFull(onQueueFull);
         outputDefault.setHeartbeatFrequency(heartbeat);
         outputDefault.setIndexAndForward(forward);
@@ -70,11 +63,9 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.update();
 
         //check
-        assertEquals(outputDefault.getDefaultGroup(), defaultGroup);
         assertEquals(outputDefault.getDropEventsOnQueueFull(), onQueueFull);
         assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat);
         assertEquals(outputDefault.indexAndForward(), forward);
         assertEquals(outputDefault.getSendCookedData(), cookedData);
-
     }
 }

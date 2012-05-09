@@ -2180,6 +2180,15 @@ public class SavedSearch extends Entity {
     }
 
     /**
+     * Sets the search string.
+     *
+     * @param search The search string
+     */
+    public void setSearch(String search) {
+        setCacheValue("search", search);
+    }
+
+    /**
      * Sets the viewstate id associated with the UI view listed in
      * {@code displayview}.
      *
@@ -2196,8 +2205,11 @@ public class SavedSearch extends Entity {
      * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
-        if (!args.containsKey("search")) // requires search string
-            args = Args.create(args).add("search", getSearch());
+        // Add required arguments if not already present
+        validateFromUpdate();
+        if (!args.containsKey("search")) {
+            args = Args.create(args).add("search", getObjectForUpdate("search"));
+        }
         super.update(args);
     }
 
@@ -2205,8 +2217,11 @@ public class SavedSearch extends Entity {
      * {@inheritDoc}
      */
     @Override public void update() {
-        if (!isUpdateKeyPresent("search")) {
-            setCacheValue("search", getSearch()); // requires search string
+        // If not present in the update keys, add required attribute as long
+        // as one pre-existing update pair exists
+        validateFromUpdate();
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("search")) {
+            setCacheValueFromUpdate("search", getObjectForUpdate("search"));
         }
         super.update();
     }

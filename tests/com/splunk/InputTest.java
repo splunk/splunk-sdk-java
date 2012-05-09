@@ -204,17 +204,17 @@ public class InputTest extends SplunkTestCase {
         monitorInput.setCheckPath(true);
         if (versionCompare(info.getVersion(), "4.2") > 0) {
             monitorInput.setCrcSalt("ThisIsSalt");
+            monitorInput.setIgnoreOlderThan("1d");
+            monitorInput.setTimeBeforeClose(120);
         }
         monitorInput.setFollowTail(false);
         monitorInput.setHost("three.four.com");
         monitorInput.setHostRegex("host*regex*");
         monitorInput.setHostSegment("");
-        monitorInput.setIgnoreOlderThan("1d");
         monitorInput.setIndex("main");
         monitorInput.setRecursive(false);
         monitorInput.setRenameSource("renamedSource");
         monitorInput.setSourcetype("monitor");
-        monitorInput.setTimeBeforeClose(120);
         monitorInput.setWhitelist("phonyregex*2");
         monitorInput.update();
 
@@ -224,12 +224,14 @@ public class InputTest extends SplunkTestCase {
         assertEquals(monitorInput.getFollowTail(), false);
         assertEquals(monitorInput.getHost(), "three.four.com");
         assertEquals(monitorInput.getHostRegex(), "host*regex*");
-        assertEquals(monitorInput.getIgnoreOlderThan(), "1d");
+        if (versionCompare(info.getVersion(), "4.2") > 0) {
+            assertEquals(monitorInput.getIgnoreOlderThan(), "1d");
+            assertEquals(monitorInput.getTimeBeforeClose(), 120);
+        }
         assertEquals(monitorInput.getIndex(), "main");
         assertEquals(monitorInput.getRecursive(), false);
         assertEquals(monitorInput.getSource(), "renamedSource");
         assertEquals(monitorInput.getSourceType(), "monitor");
-        assertEquals(monitorInput.getTimeBeforeClose(), 120);
         assertEquals(monitorInput.getWhitelist(), "phonyregex*2");
 
         monitorInput.remove();
@@ -580,17 +582,14 @@ public class InputTest extends SplunkTestCase {
             assertEquals(windowsRegistryInput.getBaseline(), false);
             assertEquals(windowsRegistryInput.getIndex(), "main");
 
-            // set some of the rrequired fields directly
-            windowsRegistryInput.setHive("HKEY_CURRENT_CONFIG");
-            windowsRegistryInput.setProc("s*");
+            // adjust a few of the arguments
             windowsRegistryInput.setType("create,delete");
-            windowsRegistryInput.setBaseline(true);
+            windowsRegistryInput.setBaseline(false);
             windowsRegistryInput.update();
 
-            assertEquals(windowsRegistryInput.getHive(), "HKEY_CURRENT_CONFIG");
-            assertEquals(windowsRegistryInput.getProc(), "s*");
+            assertEquals(windowsRegistryInput.getProc(), "*");
             assertEquals(windowsRegistryInput.getType(), "[create,delete]");
-            assertEquals(windowsRegistryInput.getBaseline(), true);
+            assertEquals(windowsRegistryInput.getBaseline(), false);
 
             windowsRegistryInput.remove();
             inputCollection.refresh();

@@ -202,15 +202,23 @@ public class OutputGroup extends Entity {
      * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
-        if (!args.containsKey("servers")) { // requires servers
-            args = Args.create(args).add("servers", getServers());
+        // Add required arguments if not already present
+        validateFromUpdate();
+        if (!args.containsKey("servers")) {
+            args = Args.create(args).add("servers", getObjectForUpdate("servers"));
         }
         super.update(args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public void update() {
-        if (!isUpdateKeyPresent("servers")) {
-            setCacheValue("servers", getServers()); // requires servers
+        // If not present in the update keys, add required attribute as long
+        // as one pre-existing update pair exists
+        validateFromUpdate();
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("servers")) {
+            setCacheValueFromUpdate("servers", getObjectForUpdate("servers"));
         }
         super.update();
     }

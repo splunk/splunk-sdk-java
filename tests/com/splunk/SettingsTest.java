@@ -127,7 +127,6 @@ public class SettingsTest extends SplunkTestCase {
         assertEquals(settings.getSessionTimeout(), "2h");
         //assertEquals(settings.getStartWebServer(), !originalStartWeb);
 
-
         // restore original
         settings.setEnableSplunkWebSSL(originalSSL);
         settings.setHost(originalHost);

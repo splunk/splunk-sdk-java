@@ -149,7 +149,7 @@ public class SavedSearchTest extends SplunkTestCase {
         String search = "search index=sdk-tests * earliest=-1m";
 
         // Create a saved search
-        savedSearch = savedSearches.create("sdk-test1", search);
+        savedSearches.create("sdk-test1", search);
         assertTrue(savedSearches.containsKey("sdk-test1"));
 
         // Read the saved search
@@ -157,7 +157,8 @@ public class SavedSearchTest extends SplunkTestCase {
         assertEquals(savedSearch.isVisible(), true);
         // CONSIDER: Test some additinal default property values.
 
-        // Update search properties
+        // Update search properties, but don't specify required args to test
+        // pulling them from the existing object
         savedSearch.update(new Args("is_visible", false));
         savedSearch.refresh();
         assertEquals(savedSearch.isVisible(), false);
@@ -227,7 +228,10 @@ public class SavedSearchTest extends SplunkTestCase {
         savedSearch.setActionSummaryIndexMaxTime("50s");
         savedSearch.setActionSummaryIndexTrackAlert(false);
         savedSearch.setActionSummaryIndexTtl("65");
-        savedSearch.setActions("rss,email,populate_lookup,script,summary_index");
+        savedSearch.setActions(
+            "rss,email,populate_lookup,script,summary_index");
+        savedSearch.setSearch(search);
+
         savedSearch.update();
 
         // check
