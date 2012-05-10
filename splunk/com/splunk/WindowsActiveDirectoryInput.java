@@ -145,10 +145,9 @@ public class WindowsActiveDirectoryInput extends Input {
      */
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
-        validateFromUpdate();
         if (!args.containsKey("monitorSubtree")) {
             args = Args.create(args).add(
-                "monitorSubtree", getObjectForUpdate("monitorSubtree"));
+                "monitorSubtree", getMonitorSubtree());
         }
         super.update(args);
     }
@@ -159,10 +158,9 @@ public class WindowsActiveDirectoryInput extends Input {
     @Override public void update() {
         // If not present in the update keys, add required attribute as long
         // as one pre-existing update pair exists
-        validateFromUpdate();
         if (toUpdate.size() > 0 && !toUpdate.containsKey("monitorSubtree")) {
-            setCacheValueFromUpdate(
-                "monitorSubtree", getObjectForUpdate("monitorSubtree"));
+            setCacheValue(
+                "monitorSubtree", getMonitorSubtree());
         }
         super.update();
     }

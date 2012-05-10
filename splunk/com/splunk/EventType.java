@@ -120,9 +120,8 @@ public class EventType extends Entity {
      */
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
-        validateFromUpdate();
         if (!args.containsKey("search")) {
-            args = Args.create(args).add("search", getObjectForUpdate("search"));
+            args = Args.create(args).add("search", getSearch());
         }
         super.update(args);
     }
@@ -133,9 +132,8 @@ public class EventType extends Entity {
     @Override public void update() {
         // If not present in the update keys, add required attribute as long
         // as one pre-existing update pair exists
-        validateFromUpdate();
         if (toUpdate.size() > 0 && !toUpdate.containsKey("search")) {
-            setCacheValueFromUpdate("search", getObjectForUpdate("search"));
+            setCacheValue("search", getSearch());
         }
         super.update();
     }

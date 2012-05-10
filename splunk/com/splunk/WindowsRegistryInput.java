@@ -180,18 +180,17 @@ public class WindowsRegistryInput extends Input {
      */
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
-        validateFromUpdate();
         if (!args.containsKey("baseline")) {
-            args = Args.create(args).add("baseline", getObjectForUpdate("baseline"));
+            args = Args.create(args).add("baseline", getBaseline());
         }
         if (!args.containsKey("hive")) {
-            args = Args.create(args).add("hive", getObjectForUpdate("hive"));
+            args = Args.create(args).add("hive", getHive());
         }
         if (!args.containsKey("proc")) {
-            args = Args.create(args).add("proc", getObjectForUpdate("proc"));
+            args = Args.create(args).add("proc", getProc());
         }
         if (!args.containsKey("type")) {
-            args = Args.create(args).add("type", getObjectForUpdate("type"));
+            args = Args.create(args).add("type", getType());
         }
         super.update(args);
     }
@@ -202,18 +201,17 @@ public class WindowsRegistryInput extends Input {
     @Override public void update() {
         // If not present in the update keys, add required attributes as long
         // as one pre-existing update pair exists
-        validateFromUpdate();
         if (toUpdate.size() > 0 && !toUpdate.containsKey("baseline")) {
-            setCacheValueFromUpdate("baseline", getObjectForUpdate("baseline"));
+            setCacheValue("baseline", getBaseline());
         }
         if (toUpdate.size() > 0 && !toUpdate.containsKey("hive")) {
-            setCacheValueFromUpdate("hive", getObjectForUpdate("hive"));
+            setCacheValue("hive", getHive());
         }
         if (toUpdate.size() > 0 && !toUpdate.containsKey("proc")) {
-            setCacheValueFromUpdate("proc", getObjectForUpdate("proc"));
+            setCacheValue("proc", getProc());
         }
         if (toUpdate.size() > 0 && !toUpdate.containsKey("type")) {
-            setCacheValueFromUpdate("type", getObjectForUpdate("type"));
+            setCacheValue("type", getType());
         }
         super.update();
     }

@@ -140,10 +140,8 @@ public class WindowsEventLogInput extends Input {
      */
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
-        validateFromUpdate();
         if (!args.containsKey("lookup_host")) {
-            args = Args.create(args).add(
-                "lookup_host", getObjectForUpdate("lookup_host"));
+            args = Args.create(args).add("lookup_host", getLookupHost());
         }
         super.update(args);
     }
@@ -154,10 +152,8 @@ public class WindowsEventLogInput extends Input {
     @Override public void update() {
         // If not present in the update keys, add required attribute as long
         // as one pre-existing update pair exists
-        validateFromUpdate();
         if (toUpdate.size() > 0 && !toUpdate.containsKey("lookup_host")) {
-            setCacheValueFromUpdate(
-                "lookup_host", getObjectForUpdate("lookup_host"));
+            setCacheValue("lookup_host", getLookupHost());
         }
         super.update();
     }

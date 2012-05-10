@@ -242,14 +242,13 @@ public class WindowsWmiInput extends Input {
      */
     @Override public void update(Map<String, Object> args) {
         // If not present in the update keys, add required attributes
-        validateFromUpdate();
         if (!args.containsKey("classes"))
-            args = Args.create(args).add("classes", getObjectForUpdate("classes"));
+            args = Args.create(args).add("classes", getClasses());
         if (!args.containsKey("interval"))
-            args = Args.create(args).add("interval", getObjectForUpdate("interval"));
+            args = Args.create(args).add("interval", getInterval());
         if (!args.containsKey("lookup_host"))
             args = Args.create(args).add(
-                "lookup_host", getObjectForUpdate("lookup_host"));
+                "lookup_host", getLookupHost());
         super.update(args);
     }
 
@@ -259,15 +258,14 @@ public class WindowsWmiInput extends Input {
     @Override public void update() {
         // If not present in the update keys, add required attributes as long
         // as one pre-existing update pair exists
-        validateFromUpdate();
         if (toUpdate.size() > 0 && !toUpdate.containsKey("classes")) {
-            setCacheValueFromUpdate("classes", getObjectForUpdate("classes"));
+            setCacheValue("classes", getClasses());
         }
         if (toUpdate.size() > 0 && !toUpdate.containsKey("interval")) {
-            setCacheValueFromUpdate("interval", getObjectForUpdate("interval"));
+            setCacheValue("interval", getInterval());
         }
         if (toUpdate.size() > 0 && !toUpdate.containsKey("lookup_host")) {
-            setCacheValueFromUpdate("lookup_host", getObjectForUpdate("lookup_host"));
+            setCacheValue("lookup_host", getLookupHost());
         }
         super.update();
     }

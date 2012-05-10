@@ -162,21 +162,4 @@ public abstract class Resource {
         if (!this.maybeValid) refresh();
         return this;
     }
-
-    /**
-     * Refreshes the local state of this resource.
-     *
-     * @return The current {@code Resource} instance.
-     */
-    public abstract Resource refreshFromUpdate();
-
-    /**
-     * Refreshes the local state of this resource, but does not
-     *
-     * @return The current {@code Resource} instance.
-     */
-    public Resource validateFromUpdate() {
-        if (!this.maybeValid) refreshFromUpdate();
-        return this;
-    }
 }

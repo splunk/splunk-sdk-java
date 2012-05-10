@@ -289,7 +289,6 @@ public class OutputDefault extends Entity {
      */
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
-        validateFromUpdate();
         if (!args.containsKey("name")) {
             args = Args.create(args).add("search", "tcpout");
         }
@@ -302,9 +301,8 @@ public class OutputDefault extends Entity {
     @Override public void update() {
         // If not present in the update keys, add required attribute as long
         // as one pre-existing update pair exists
-        validateFromUpdate();
         if (toUpdate.size() > 0 && !toUpdate.containsKey("name")) {
-            setCacheValueFromUpdate("name", "tcpout");
+            setCacheValue("name", "tcpout");
         }
         super.update();
     }
