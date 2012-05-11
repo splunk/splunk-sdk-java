@@ -48,28 +48,6 @@ public class JobCollection extends EntityCollection<Job> {
     }
 
     /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param namespace This collection's namespace.
-     */
-    JobCollection(Service service, HashMap<String, String> namespace) {
-        super(service, "search/jobs", Job.class, namespace);
-    }
-
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    JobCollection(
-            Service service, Args args, HashMap<String, String> namespace) {
-        super(service, "search/jobs", Job.class, args, namespace);
-    }
-
-    /**
      * Creates a search with a UTF8 pre-encoded search request. </br/>
      * Note: A 'oneshot' request is invalid. To create a oneshot search, use
      * the {@code Service.oneshot()} method instead.

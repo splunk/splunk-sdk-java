@@ -26,7 +26,7 @@ public class NamespaceTest extends SplunkTestCase {
 
     @Test public void testStaticNamespace() {
         Service service = connect();
-        HashMap<String, String> namespace = new HashMap<String, String>();
+        Args namespace = new Args();
 
         // synctactic tests
         namespace.clear();
@@ -153,7 +153,7 @@ public class NamespaceTest extends SplunkTestCase {
         String searchString = "search index=main * | head 10";
 
         // Setup a namespace
-        HashMap<String, String> namespace = new HashMap<String, String>();
+        Args namespace = new Args();
         namespace.put("owner", username);
         namespace.put("app", "search");
 
@@ -203,13 +203,13 @@ public class NamespaceTest extends SplunkTestCase {
         String appname1 = "sdk-app1";
         String appname2 = "sdk-app2";
 
-        HashMap<String, String> namespace11 = new HashMap<String, String>();
-        HashMap<String, String> namespace12 = new HashMap<String, String>();
-        HashMap<String, String> namespace21 = new HashMap<String, String>();
-        HashMap<String, String> namespace22 = new HashMap<String, String>();
-        HashMap<String, String> namespacex1  = new HashMap<String, String>();
-        HashMap<String, String> namespaceNobody1 = new HashMap<String, String>();
-        HashMap<String, String> namespaceBad = new HashMap<String, String>();
+        Args namespace11 = new Args();
+        Args namespace12 = new Args();
+        Args namespace21 = new Args();
+        Args namespace22 = new Args();
+        Args namespacex1  = new Args();
+        Args namespaceNobody1 = new Args();
+        Args namespaceBad = new Args();
 
         namespace11.put("owner", username1);
         namespace11.put("app",  appname1);

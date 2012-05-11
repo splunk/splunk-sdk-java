@@ -44,28 +44,6 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     }
 
     /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param namespace This collection's namespace.
-     */
-    EventTypeCollection(Service service, HashMap<String, String> namespace) {
-        super(service, "saved/eventtypes", EventType.class, namespace);
-    }
-
-    /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    EventTypeCollection(
-            Service service, Args args, HashMap<String, String> namespace) {
-        super(service, "saved/eventtypes", EventType.class, args, namespace);
-    }
-
-    /**
      * Creates an event type.
      *
      * @param name The name of this new event type.

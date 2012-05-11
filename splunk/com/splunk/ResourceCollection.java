@@ -58,35 +58,6 @@ public class ResourceCollection<T extends Resource>
         this.itemClass = itemClass;
     }
 
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The target endpoint.
-     * @param itemClass The class of this resource item.
-     * @param namespace The namespace of this collection.
-     */
-    ResourceCollection(Service service, String path,
-                       Class itemClass, HashMap<String, String> namespace) {
-        super(service, service.fullpath(path, namespace));
-        this.itemClass = itemClass;
-    }
-
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The target endpoint.
-     * @param itemClass The class of this resource item.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace The namespace of this collection.
-     */
-    ResourceCollection(Service service, String path, Class itemClass,
-                       Args args, HashMap<String, String> namespace) {
-        super(service, service.fullpath(path, namespace), args);
-        this.itemClass = itemClass;
-    }
-
     /** {@inheritDoc} */
     public void clear() {
         throw new UnsupportedOperationException();
@@ -105,7 +76,7 @@ public class ResourceCollection<T extends Resource>
      * @param namespace The namespace to constrain the search to.
      * @return true if the constrained key exists, otherwise false.
      */
-    public boolean containsKey(Object key, HashMap<String, String> namespace) {
+    public boolean containsKey(Object key, Args namespace) {
         validate();
         LinkedList<T> entities = items.get(key);
         if (entities == null || entities.size() == 0) return false;
@@ -137,8 +108,7 @@ public class ResourceCollection<T extends Resource>
      * @param namespace The namespace.
      * @return The new member.
      */
-    protected T createItem(Class itemClass, String path,
-                           HashMap<String, String> namespace) {
+    protected T createItem(Class itemClass, String path, Args namespace) {
         Constructor ctor;
         try {
             ctor = itemClass.getDeclaredConstructor(itemSig);
@@ -215,7 +185,7 @@ public class ResourceCollection<T extends Resource>
      * @param namespace The namespace to constrain the search to.
      * @return The value indexed by the key, or null if it does not exist.
      */
-    public T get(Object key, HashMap<String, String> namespace) {
+    public T get(Object key, Args namespace) {
         validate();
         LinkedList<T> entities = items.get(key);
         if (entities == null || entities.size() == 0) return null;
@@ -263,8 +233,8 @@ public class ResourceCollection<T extends Resource>
         return entry.links.get("alternate");
     }
 
-    private HashMap<String, String> namespace(AtomEntry entry) {
-        HashMap<String, String>namespace = new HashMap<String, String>();
+    private Args namespace(AtomEntry entry) {
+        Args namespace = new Args();
 
         // no content? return an empty namespace.
         if (entry.content == null)

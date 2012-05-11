@@ -45,28 +45,6 @@ public class UserCollection extends EntityCollection<User> {
     }
 
     /**
-     * Constructs an instance of {@code UserCollection}.
-     *
-     * @param service This service instance this collection is affiliated with.
-     * @param namespace This collection's namespace.
-     */
-    UserCollection(Service service, HashMap<String, String> namespace) {
-        super(service, "authentication/users", User.class, namespace);
-    }
-
-    /**
-     * Constructs an instance of {@code UserCollection}.
-     *
-     * @param service This service instance this collection is affiliated with.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    UserCollection(
-            Service service, Args args, HashMap<String, String> namespace) {
-        super(service, "authentication/users", User.class, args, namespace);
-    }
-
-    /**
      * Creates a new user entity from a username, password, and role.
      * Usernames must be unique on the system, and are used by the user to log
      * in to Splunk.

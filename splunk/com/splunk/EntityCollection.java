@@ -53,33 +53,6 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param service The connected service instance.
      * @param path The entity's endpoint.
-     * @param namespace This collection's namespace.
-     */
-    EntityCollection(
-            Service service, String path, HashMap<String, String> namespace) {
-        super(service, path, Entity.class, namespace);
-    }
-
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The entity's endpoint.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    EntityCollection(Service service, String path, Args args,
-                     HashMap<String, String> namespace) {
-        super(service, path, Entity.class, args, namespace);
-    }
-
-
-
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The entity's endpoint.
      * @param itemClass This entity's class.
      */
     EntityCollection(Service service, String path, Class itemClass) {
@@ -96,33 +69,6 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      */
     EntityCollection(Service service, String path, Class itemClass, Args args) {
         super(service, path, itemClass, args);
-    }
-
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The entity's endpoint.
-     * @param itemClass This entity's class.
-     * @param namespace This collection's namespace.
-     */
-    EntityCollection(Service service, String path, Class itemClass,
-            HashMap<String, String> namespace) {
-        super(service, path, itemClass, namespace);
-    }
-
-    /**
-     * Class constructor.
-     *
-     * @param service The connected service instance.
-     * @param path The entity's endpoint.
-     * @param itemClass This entity's class.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    EntityCollection(Service service, String path, Class itemClass, Args args,
-                     HashMap<String, String> namespace) {
-        super(service, path, itemClass, args, namespace);
     }
 
     /**
@@ -182,7 +128,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @param namespace The namespace restriction within the collection.
      * @return This collection.
      */
-    public T remove(String key, HashMap<String, String> namespace) {
+    public T remove(String key, Args namespace) {
         validate();
         if (!containsKey(key)) return null;
         LinkedList<T> entities = items.get(key);

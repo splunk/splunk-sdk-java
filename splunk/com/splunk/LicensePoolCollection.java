@@ -44,28 +44,6 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
     }
 
     /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param namespace This collection's namespace.
-     */
-    LicensePoolCollection(Service service, HashMap<String, String> namespace) {
-        super(service, "licenser/pools", LicensePool.class, namespace);
-    }
-
-    /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    LicensePoolCollection(
-            Service service, Args args, HashMap<String, String> namespace) {
-        super(service, "licenser/pools", LicensePool.class, args, namespace);
-    }
-
-    /**
      * Creates a license pool.
      *
      * Quota can be one of the following: a number, a number followed by MB or

@@ -45,30 +45,6 @@ public class PasswordCollection extends EntityCollection<Password> {
     }
 
     /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param namespace This collection's namespace.
-     */
-    PasswordCollection(Service service, HashMap<String, String> namespace) {
-        // Starting with 4.3 this is available at "storage/passwords"
-        super(service, "admin/passwords", Password.class, namespace);
-    }
-
-    /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    PasswordCollection(
-            Service service, Args args, HashMap<String, String> namespace) {
-        // Starting with 4.3 this is available at "storage/passwords"
-        super(service, "admin/passwords", Password.class, args, namespace);
-    }
-
-    /**
      * Creates a credential with a username and password.
      *
      * @param name The username.

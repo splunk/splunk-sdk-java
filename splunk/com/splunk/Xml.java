@@ -38,8 +38,6 @@ public class Xml {
         try {
             DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();
-            // We are glossing namespaces for now as we can currently 
-            // disambiguate everything in the Splunk REST API via local name.
             factory.setNamespaceAware(false);
             DocumentBuilder builder = factory.newDocumentBuilder();
             InputSource inputSource = new InputSource();

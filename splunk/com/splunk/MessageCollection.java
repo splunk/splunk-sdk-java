@@ -45,28 +45,6 @@ public class MessageCollection extends EntityCollection<Message> {
     }
 
     /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param namespace This collection's namespace.
-     */
-    MessageCollection(Service service, HashMap<String, String> namespace) {
-        super(service, "messages", Message.class, namespace);
-    }
-
-    /**
-     * Class Constructor.
-     *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
-     * @param namespace This collection's namespace.
-     */
-    MessageCollection(
-            Service service, Args args, HashMap<String, String> namespace) {
-        super(service, "messages", Message.class, args, namespace);
-    }
-
-    /**
      * Creates a new message.
      *
      * @param name The name (primary key) of the new message.

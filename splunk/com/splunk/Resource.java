@@ -53,9 +53,26 @@ public abstract class Resource {
      * @param args Arguments use at instantiation, such as count and offset.
      */
     Resource(Service service, String path, Args args) {
-        this.path = service.fullpath(path);
         this.service = service;
-        this.refreshArgs = args;
+        // Pull out namespace items (app, owner, sharing) from the args, and
+        // then use to create the full path.
+        Args clonedArgs = new Args(args);
+        Args namespace = new Args();
+        if (args.containsKey("app")) {
+            namespace.put("app", args.get("app").toString());
+            clonedArgs.remove("app");
+        }
+        if (args.containsKey("owner")) {
+            namespace.put("owner", args.get("owner").toString());
+            clonedArgs.remove("owner");
+        }
+        if (args.containsKey("sharing")) {
+            namespace.put("sharing", args.get("sharing").toString());
+            clonedArgs.remove("sharing");
+        }
+        this.refreshArgs = clonedArgs;
+        this.path = service.fullpath(
+            path, namespace.size() == 0 ? null : namespace);
     }
 
     /**
