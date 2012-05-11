@@ -70,6 +70,9 @@ public abstract class Resource {
             namespace.put("sharing", args.get("sharing").toString());
             clonedArgs.remove("sharing");
         }
+        if (!clonedArgs.containsKey("count"))
+            clonedArgs.put("count", "-1");
+
         this.refreshArgs = clonedArgs;
         this.path = service.fullpath(
             path, namespace.size() == 0 ? null : namespace);
