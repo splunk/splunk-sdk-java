@@ -90,7 +90,6 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /** {@inheritDoc} */
     public Set<Map.Entry<String, Object>> entrySet() {
-        // CONSIDER: This may need to merge toUpdate and object sets.
         return getContent().entrySet();
     }
 
@@ -334,9 +333,7 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /** {@inheritDoc} */
     public Set<String> keySet() {
-        Set<String> keys = new HashSet<String>(toUpdate.keySet());
-        keys.addAll(getContent().keySet());
-        return keys;
+        return getContent().keySet();
     }
 
     @Override Entity load(AtomObject value) {
