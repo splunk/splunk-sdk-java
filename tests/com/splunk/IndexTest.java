@@ -147,7 +147,7 @@ public class IndexTest extends SplunkTestCase {
 
         // use setters to update most
         index.setBlockSignSize(index.getBlockSignSize()+1);
-        if (versionCompare(info.getVersion(), "4.3") > 0) {
+        if (service.versionCompare("4.3") > 0) {
             index.setEnableOnlineBucketRepair(!index.getEnableRealtimeSearch());
             index.setMaxBloomBackfillBucketAge("20d");
         }

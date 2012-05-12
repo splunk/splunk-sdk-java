@@ -29,8 +29,7 @@ public class PasswordCollection extends EntityCollection<Password> {
      * @param service The connected {@code Service} instance.
      */
     PasswordCollection(Service service) {
-        // Starting with 4.3 this is available at "storage/passwords"
-        super(service, "admin/passwords", Password.class);
+        super(service, service.passwordEndPoint, Password.class);
     }
 
     /**
@@ -40,8 +39,7 @@ public class PasswordCollection extends EntityCollection<Password> {
      * @param args Arguments use at instantiation, such as count and offset.
      */
     PasswordCollection(Service service, Args args) {
-        // Starting with 4.3 this is available at "storage/passwords"
-        super(service, "admin/passwords", Password.class, args);
+        super(service, service.passwordEndPoint, Password.class, args);
     }
 
     /**

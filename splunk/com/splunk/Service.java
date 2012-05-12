@@ -53,6 +53,12 @@ public class Service extends HttpService {
     /** The password, which is used to authenticate the Splunk instance. */
     protected String password = null;
 
+    /** The default password endpoint, can change over splunk versions */
+    protected String passwordEndPoint = "admin/passwords";
+
+    /** The version of this splunk instance, once logged in */
+    public String version = null;
+
     /** The default host name, which is used when a host name is not provided. */
     public static String DEFAULT_HOST = "localhost";
 
@@ -1540,6 +1546,9 @@ public class Service extends HttpService {
             .item(0)
             .getTextContent();
         this.token = "Splunk " + sessionKey;
+        this.version = this.getInfo().getVersion();
+        if (versionCompare("4.3") > 0)
+            this.passwordEndPoint = "storage/passwords";
 
         return this;
     }
@@ -1647,5 +1656,36 @@ public class Service extends HttpService {
      */
     public void setToken(String value) {
         this.token = value;
+    }
+
+    // returns -1, 0, 1 comparing current splunk version string to right version
+    // string for less than, equal to or greater than
+    public int versionCompare(String right) {
+
+        // short cut for equality.
+        if (this.version.equals(right)) return 0;
+
+        // if not the same, break down into individual digits for comparison.
+        String[] leftDigits = this.version.split(".");
+        String[] rightDigits = right.split(".");
+        int i=0;
+
+        for (; i<leftDigits.length; i++) {
+            // No more right side, left side is bigger
+            if (i == rightDigits.length) return 1;
+            // left side smaller>?
+            if (Integer.parseInt(leftDigits[i]) <
+                Integer.parseInt(leftDigits[1])) {
+                return -1;
+            }
+            // left side bigger?
+            if (Integer.parseInt(leftDigits[i]) >
+                    Integer.parseInt(leftDigits[1])) {
+                return 1;
+            }
+        }
+        // we got to the end of the left side, and not equal, right side
+        // most be larger by having more digits.
+        return -1;
     }
 }

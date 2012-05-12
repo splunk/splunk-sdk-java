@@ -327,7 +327,6 @@ public class ServiceTest extends SplunkTestCase {
         User user;
 
         Service service = connect();
-        ServiceInfo info = service.getInfo();
 
         String username = "sdk-user";
         String password = "changeme";
@@ -395,7 +394,7 @@ public class ServiceTest extends SplunkTestCase {
         user.setEmail("none@noway.com");
         user.setPassword("new-password");
         user.setRealName("SDK-name");
-        if (versionCompare(info.getVersion(), "4.3") > 0) {
+        if (service.versionCompare("4.3") > 0) {
             user.setRestartBackgroundJobs(false);
         }
         user.setRoles("power");
