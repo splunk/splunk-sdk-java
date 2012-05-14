@@ -25,5 +25,4 @@ cmdline = cmdline.split()
 cmdline.extend(sys.argv[2:])
 process = Popen(cmdline, env={})
 process.communicate()
-process.wait()
-
+sys.exit(process.wait())
