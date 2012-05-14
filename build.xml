@@ -320,7 +320,9 @@
 
     <target name="javadoc">
         <mkdir dir="${dir.dist.docs}"/>
-        <javadoc destdir="${dir.dist.docs}" sourcepath="${dir.splunk}"/>
+        <javadoc destdir="${dir.dist.docs}" 
+                 sourcepath="${dir.splunk}" 
+                 stylesheetfile="${dir.splunk}/staticdocs.css"/>
     </target>
 
     <!-- Execute unit tests -->
