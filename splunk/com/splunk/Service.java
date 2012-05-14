@@ -19,7 +19,6 @@ package com.splunk;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -422,9 +421,8 @@ public class Service extends HttpService {
      *
      * @return Collection of fired alerts.
      */
-    public EntityCollection<FiredAlert> getFiredAlerts() {
-        return new EntityCollection<FiredAlert>(
-            this, "alerts/fired_alerts", FiredAlert.class);
+    public FiredAlertGroupCollection getFiredAlerts() {
+        return new FiredAlertGroupCollection(this);
     }
 
     /**
@@ -433,9 +431,8 @@ public class Service extends HttpService {
      * @param args optional arguments, such as offset an count for pagination.
      * @return Collection of fired alerts.
      */
-    public EntityCollection<FiredAlert> getFiredAlerts(Args args) {
-        return new EntityCollection<FiredAlert>(
-            this, "alerts/fired_alerts", FiredAlert.class, args);
+    public FiredAlertGroupCollection getFiredAlerts(Args args) {
+        return new FiredAlertGroupCollection(this, args);
     }
 
     /**
