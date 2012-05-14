@@ -65,7 +65,7 @@ class TestCase(unittest.TestCase):
             "./run genevents --help",
             "./run index clean sdk-tests",
             "./run genevents index=sdk-tests",
-            #"./run genevents index=sdk-tests --itype=submit",
+            "./run genevents index=sdk-tests --itype=submit",
             "./run genevents index=sdk-tests --itype=tcp")
             
     def test_index(self):
@@ -86,19 +86,19 @@ class TestCase(unittest.TestCase):
             "./run input --help",
             "./run input")
         
-#    def test_oneshot(self):
-#        self.check_commands("./run search_oneshot", "search * | head 10"])
+    def test_oneshot(self):
+        self.check_commands(["./run", "search_oneshot", "search * | head 10"])
 
     def test_saved_searches(self):
         self.check_commands(
             "./run search_saved --help",
             "./run search_saved")
         
-#    def test_search(self):
-#        self.check_commands(
-#            "./run search --help",
-#            ["./run search", "search * | head 10"],
-#            ["./run search", "search * | head 10 | stats count", "--output_mode=csv"])
+    def test_search(self):
+        self.check_commands(
+            "./run search --help",
+            ["./run", "search", "search * | head 10"],
+            ["./run", "search", "search * | head 10 | stats count", "--output_mode=csv"])
 
     def test_spurl(self):
         self.check_commands(
