@@ -4,7 +4,7 @@
 
 ### Added Features
 
-* Add a Receiver class.
+* Add a `Receiver` class.
 
 * Add support for index-less (default index) and allow optional parameters for
   streaming connections. The Index class now uses the new Receiver class.
@@ -25,13 +25,23 @@
     confs = service.getConfs(args);
     // ... operate on the next 30 elements
 ```
-* Add namespacing feature. Added as overload collection creation methods, each
-  method supporting namespaces has a method variant to accept an optional
-  `app` and `owner` and `sharing` map. For a more detailed description of Splunk
-  namespaces in the Splunk REST API reference under the section on accessing
-  Splunk resources, see:
+* Add namespacing feature. Added as optional arguments to the collection
+  create and get methods, `app` and `owner` and `sharing` control the namespace.
+  For a more detailed description of Splunk namespaces in the Splunk REST API
+  reference under the section on accessing Splunk resources, see:
 
   http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTresources
+
+  An example of using the optional namespace to restrict the selection of saved
+  searches to the specific namespace where `owner` is set to "magilicuddy" and
+  the `app` is set to "oneMeanApp".
+```
+    args args = new Args();
+    args.put("owner", "magilicuddy");
+    args.put("app",  "oneMeanApp");
+    SavedSearchCollection
+        mySavedSearches = service.getSavedSearches(args);
+```
 
 * Add XML, JSON and CSV streaming results reader. This feature allows one to
   retrieve event data via an incremental streaming mechanism. Return data is in
@@ -50,13 +60,13 @@
 
 * Add support for Splunk Storm. Instead of connecting to `Service`, connect to
   `Storm`. The same semantics that `Service` uses, applies here. Get a
-  `Receiver` object and log events. `Storm` requires the `index` key and
+  `Receiver` object and log events. `StormService` requires the `index` key and
   `sourcetype` parameters when sending events:
 ```
     // the storm token provided by Splunk
     Args loginArgs = new Args("StormToken",
         "p-n8SwuWEqPlyOXdDU4PjxavFdAn1CnJea9LirgTvzmIhMEBys6w7UJUCtxp_7g7Q9XopR5dW0w=");
-    Storm service = Storm.connect(loginArgs);
+    Storm service = StormService.connect(loginArgs);
 
     // get the receiver object
     Receiver receiver = service.getReceiver();
@@ -71,14 +81,15 @@
 ```
 ### Minor Additions
 
-* Add genevents example, to generate events and push into splunk using various
+* Add `genevents` example, to generate events and push into splunk using various
   methods.
 * Add second time format when parsing time. A second time format is required to
   accommodate the `data/input/oneshot` endpoint that does not return a
   standard time-format and does not allow a time-format specifier.
 * Add streaming reader to search examples. The main search example `search`,
-  shows how to use all three result readers. Note that there are some build
-  modifications in build.xml to include the ancillary jar files.
+  shows how to use all three result readers. Note that there are  build
+  modifications in build.xml to include the ancillary jar files for JSON and
+  CSV.
 * Add a Input example to display splunk inputs and their attributes.
 * Add alias `log` for `submit` to the Receiver class.
 
@@ -87,7 +98,7 @@
 * Fix argument processing in tail example.
 * Fix timing window during search job creation;
   add splunk exception `JOB_NOT_READY`.
-* Fix index cleaning to require timeout value; add splunk exception `TIMEOUT`.
+* Fix `Index` cleaning to require timeout value; add splunk exception `TIMEOUT`.
 * Fix LicensePool creation to use string quota instead integer.
   Allows for `MAX` and `<number>[M|G|T]`
 * Fix `action` when trying to update `Settings`.
