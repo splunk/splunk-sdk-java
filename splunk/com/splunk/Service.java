@@ -956,7 +956,7 @@ public class Service extends HttpService {
         args = Args.create(args);
         args.put("search", query);
         args.put("exec_mode", "oneshot");
-        ResponseMessage response = post("search/jobs/", args);
+        ResponseMessage response = post("search/jobs", args);
         return response.getContent();
     }
 
@@ -1003,6 +1003,34 @@ public class Service extends HttpService {
      */
     public ResponseMessage restart() {
         return get("server/control/restart");
+    }
+
+    /**
+     * Creates a simplified synchronous search using search arguments. Use this
+     * method for simple searches. For output control arguments, use jobs.
+     *
+     * @param query The search query.
+     * @return The search results.
+     */
+    public InputStream search(String query) {
+       return search(query, null);
+    }
+
+    /**
+     * Creates a simplified synchronous search using search arguments. Use this
+     * method for simple searches. For output control arguments, use jobs.
+     *
+     * @param query The search query.
+     * @param args The search arguments.
+     * @return The search results.
+     */
+    public InputStream search(String query, Map args) {
+        args = Args.create(args);
+        args.put("search", query);
+        // always block until results are ready.
+        args.put("exec_mode", "blocking");
+        Job job = this.getJobs().create(query, args);
+        return job.getResults();
     }
 
     /**
