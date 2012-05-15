@@ -136,6 +136,10 @@
         <compile-example name="search_saved" classpath="classpath.examples"/>
     </target>
 
+    <target name="compile-example-search-simple" depends="compile-libs">
+        <compile-example name="search_simple" classpath="classpath.examples"/>
+    </target>
+
     <target name="compile-example-spurl" depends="dist-libs">
         <compile-example name="spurl" classpath="classpath.examples"/>
     </target>
@@ -209,6 +213,7 @@
         dist-example-search-oneshot,
         dist-example-search-realtime,
         dist-example-search-saved,
+        dist-example-search-simple,
         dist-example-spurl,
         dist-example-tail"/>
 
@@ -292,6 +297,11 @@
 
     <target name="dist-example-search-saved" depends="compile-example-search-saved">
         <dist-example name="search_saved" 
+         classpath="../splunk.jar ../splunk-sdk.jar"/>
+    </target>
+
+    <target name="dist-example-search-simple" depends="compile-example-search-simple">
+        <dist-example name="search_simple" 
          classpath="../splunk.jar ../splunk-sdk.jar"/>
     </target>
 

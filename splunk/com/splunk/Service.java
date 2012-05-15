@@ -942,21 +942,33 @@ public class Service extends HttpService {
      * @return The search results.
      */
     public InputStream oneshot(String query) {
-       return oneshot(query, null);
+       return oneshot(query, null, null);
     }
 
     /**
      * Creates a oneshot synchronous search using search arguments.
      *
      * @param query The search query.
-     * @param args The search arguments.
+     * @param inputArgs The search arguments.
      * @return The search results.
      */
-    public InputStream oneshot(String query, Map args) {
-        args = Args.create(args);
-        args.put("search", query);
-        args.put("exec_mode", "oneshot");
-        ResponseMessage response = post("search/jobs", args);
+    public InputStream oneshot(String query, Map inputArgs) {
+        return oneshot(query, inputArgs, null);
+    }
+
+    /**
+     * Creates a oneshot synchronous search using search arguments.
+     *
+     * @param query The search query.
+     * @param inputArgs The search arguments.
+     * @param outputArgs The output qualifier arguments.
+     * @return The search results.
+     */
+    public InputStream oneshot(String query, Map inputArgs, Map outputArgs) {
+        inputArgs = Args.create(inputArgs);
+        inputArgs.put("search", query);
+        inputArgs.put("exec_mode", "oneshot");
+        ResponseMessage response = post("search/jobs", inputArgs);
         return response.getContent();
     }
 
@@ -1013,7 +1025,7 @@ public class Service extends HttpService {
      * @return The search results.
      */
     public InputStream search(String query) {
-       return search(query, null);
+       return search(query, null, null);
     }
 
     /**
@@ -1021,16 +1033,29 @@ public class Service extends HttpService {
      * method for simple searches. For output control arguments, use jobs.
      *
      * @param query The search query.
-     * @param args The search arguments.
+     * @param inputArgs The search arguments.
      * @return The search results.
      */
-    public InputStream search(String query, Map args) {
-        args = Args.create(args);
-        args.put("search", query);
+    public InputStream search(String query, Map inputArgs) {
+        return search(query, inputArgs, null);
+    }
+
+    /**
+     * Creates a simplified synchronous search using search arguments. Use this
+     * method for simple searches. For output control arguments, use jobs.
+     *
+     * @param query The search query.
+     * @param inputArgs The search arguments.
+     * @param outputArgs The output qualifier arguments.
+     * @return The search results.
+     */
+    public InputStream search(String query, Map inputArgs, Map outputArgs) {
+        inputArgs = Args.create(inputArgs);
+        inputArgs.put("search", query);
         // always block until results are ready.
-        args.put("exec_mode", "blocking");
-        Job job = this.getJobs().create(query, args);
-        return job.getResults();
+        inputArgs.put("exec_mode", "blocking");
+        Job job = this.getJobs().create(query, inputArgs);
+        return job.getResults(outputArgs);
     }
 
     /**
