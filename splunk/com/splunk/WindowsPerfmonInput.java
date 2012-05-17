@@ -36,11 +36,11 @@ public class WindowsPerfmonInput extends Input {
      * Returns a list of monitored counters for this Windows Perfmon input. A
      * "*" is equivalent to all counters.
      *
-     * @return A comma-separated list of counters, or {@code null} if not
+     * @return A string array list of counters, or {@code null} if not
      * specified.
      */
-    public String getCounters() {
-        return getString("counters", null);
+    public String[] getCounters() {
+        return getStringArray("counters", null);
     }
 
     /**
@@ -56,10 +56,11 @@ public class WindowsPerfmonInput extends Input {
      * Returns the counter instances of this Windows Perfmon input. A "*" 
      * is equivalent to all instances.
      *
-     * @return The counter instances, or {@code null} if not specified.
+     * @return A string array of counter instances, or {@code null} if not
+     * specified.
      */
-    public String getInstances() {
-        return getString("instances", null);
+    public String[] getInstances() {
+        return getStringArray("instances", null);
     }
 
     /**

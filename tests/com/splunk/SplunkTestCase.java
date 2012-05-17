@@ -32,6 +32,12 @@ public class SplunkTestCase extends TestCase {
         return Service.connect(command.opts);
     }
 
+    boolean contains(String[] array, String value) {
+        for (int i = 0; i < array.length; ++i)
+            if (array[i].equals(value)) return true;
+        return false;
+    }
+
     // Create a fresh test app with the given name, delete the existing
     // test app and reboot Splunk if needed.
     void createApp(String name) {

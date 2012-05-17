@@ -92,12 +92,6 @@ public class ServiceTest extends SplunkTestCase {
         }
     }
 
-    boolean contains(String[] array, String value) {
-        for (int i = 0; i < array.length; ++i)
-            if (array[i].equals(value)) return true;
-        return false;
-    }
-
     @Test public void testCapabilities() throws Exception {
         Service service = connect();
 
@@ -371,7 +365,6 @@ public class ServiceTest extends SplunkTestCase {
         assertFalse(users.containsKey("SDK-user"));
         users.remove(username);
         assertFalse(users.containsKey(username));
-
     }
 }
 

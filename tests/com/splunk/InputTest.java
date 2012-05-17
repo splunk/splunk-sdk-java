@@ -23,12 +23,6 @@ import java.util.Set;
 
 public class InputTest extends SplunkTestCase {
 
-    private boolean contains(String[] array, String value) {
-        for (int i = 0; i < array.length; ++i)
-            if (array[i].equals(value)) return true;
-        return false;
-    }
-
     private void touchSpecificInput(Input input) {
         InputKind inputKind = input.getKind();
         TcpConnections tcpConnections = null;
@@ -525,23 +519,34 @@ public class InputTest extends SplunkTestCase {
             windowsPerfmonInput.setInterval(1200);
             windowsPerfmonInput.update();
 
-            assertEquals(
-                    windowsPerfmonInput.getCounters(), "[% Privileged Time]");
+            assertTrue(windowsPerfmonInput.getCounters().length == 1);
+            assertTrue(
+                contains(windowsPerfmonInput.getCounters(),
+                "% Privileged Time"));
             assertEquals(windowsPerfmonInput.getIndex(), "main");
-            assertEquals(windowsPerfmonInput.getInstances(), "[wininit]");
+            assertTrue(
+                contains(windowsPerfmonInput.getInstances(), "wininit"));
             assertEquals(windowsPerfmonInput.getInterval(), 1200);
             assertEquals(windowsPerfmonInput.getObject(), "Process");
 
             // set multi-series values and update.
             windowsPerfmonInput.setCounters(
-                    new String[] {"% Privileged Time","% User Time"});
+                new String[] {"% Privileged Time","% User Time"});
             windowsPerfmonInput.setInstances(new String[] {"smss","csrss"});
             windowsPerfmonInput.update();
 
-            assertEquals(
-                    windowsPerfmonInput.getCounters(),
-                    "[% Privileged Time, % User Time]");
-            assertEquals(windowsPerfmonInput.getInstances(), "[smss, csrss]");
+            assertTrue(windowsPerfmonInput.getCounters().length == 2);
+            assertTrue(
+                contains(windowsPerfmonInput.getCounters(),
+                "% Privileged Time"));
+            assertTrue(
+                contains(windowsPerfmonInput.getCounters(),  "% User Time"));
+
+            assertTrue(windowsPerfmonInput.getInstances().length == 2);
+            assertTrue(
+                contains(windowsPerfmonInput.getInstances(), "smss"));
+            assertTrue(
+                contains(windowsPerfmonInput.getInstances(), "csrss"));
 
             windowsPerfmonInput.remove();
             inputCollection.refresh();
@@ -589,7 +594,8 @@ public class InputTest extends SplunkTestCase {
             windowsRegistryInput.update();
 
             assertEquals(windowsRegistryInput.getProc(), "*");
-            assertEquals(windowsRegistryInput.getType(), "[create,delete]");
+            assertTrue(windowsRegistryInput.getType().contains("create"));
+            assertTrue(windowsRegistryInput.getType().contains("delete"));
             assertEquals(windowsRegistryInput.getBaseline(), false);
 
             windowsRegistryInput.remove();
