@@ -16,9 +16,11 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
- * The {@code OutputDefault} class represents the default TCP output configuration,
- * providing access to global TCP output properties.
+ * The {@code OutputDefault} class represents the default TCP output
+ * configuration, providing access to global TCP output properties.
  */
 public class OutputDefault extends Entity {
 
@@ -33,9 +35,9 @@ public class OutputDefault extends Entity {
 
     /**
      * Indicates whether this forwarder performs automatic load balancing.
-     * When {@code true}, this forwarder selects a new indexer using the frequency
-     * specified by {@code autoLBFrequency}, or immediately when an open connection
-     * to an indexer is lost.
+     * When {@code true}, this forwarder selects a new indexer using the
+     * frequency specified by {@code autoLBFrequency}, or immediately when an
+     * open connection to an indexer is lost.
      *
      * @see #getAutoLbFrequency
      *
@@ -48,8 +50,8 @@ public class OutputDefault extends Entity {
 
     /**
      * Indicates whether this forwarder blocks when the output queue is full. 
-     * Blocking causes further blocking up the processing chain--if any target group's queue
-     * is blocked, no more data reaches any other target group.
+     * Blocking causes further blocking up the processing chain--if any target
+     * group's queue is blocked, no more data reaches any other target group.
      * When {@code false}, events are dropped when indexers in the group 
      * can't be reached. 
      *
@@ -62,21 +64,11 @@ public class OutputDefault extends Entity {
     /**
      * Returns the frequency of automatic load balancing. 
      *
-     * @return The automatic load-balancing frequency in seconds, or -1 if not specified.
+     * @return The automatic load-balancing frequency in seconds, or -1 if not
+     * specified.
      */
     public int getAutoLbFrequency() {
         return getInteger("autoLBFrequency", -1);
-    }
-
-    /**
-     * Returns the default indexer group that this forwarder sends all data to. <br/>
-     * Note: This attribute is not required after Splunk version 4.2.
-     *
-     * @return A comma-separated list that contains one or more target group names,
-     * or {@code null} if not specified.
-     */
-    public String getDefaultGroup() {
-        return getString("defaultGroup", null);
     }
 
     /**
@@ -92,8 +84,8 @@ public class OutputDefault extends Entity {
 
     /**
      * Returns the inclusive set of indexes (whitelist 0) for this forwarder.
-     * This is an ordered list of whitelists and blacklists, which together decide
-     * if events should be forwarded to an index.
+     * This is an ordered list of whitelists and blacklists, which together
+     * decide if events should be forwarded to an index.
      *
      * @return The inclusive set of indexes.
      */
@@ -103,8 +95,8 @@ public class OutputDefault extends Entity {
 
     /**
      * Returns the exclusive set of indexes (blacklist 1) for this forwarder.
-     * This is an ordered list of whitelists and blacklists, which together decide
-     * if events should be forwarded to an index.
+     * This is an ordered list of whitelists and blacklists, which together
+     * decide if events should be forwarded to an index.
      *
      * @return The exclusive set of indexes.
      */
@@ -114,8 +106,8 @@ public class OutputDefault extends Entity {
 
     /**
      * Returns the inclusive set of indexes (whitelist 2) for this forwarder.
-     * This is an ordered list of whitelists and blacklists, which together decide
-     * if events should be forwarded to an index.
+     * This is an ordered list of whitelists and blacklists, which together
+     * decide if events should be forwarded to an index.
      *
      * @return The inclusive set of indexes.
      */
@@ -126,9 +118,10 @@ public class OutputDefault extends Entity {
     /**
      * Returns the frequency that specifies how often to send a heartbeat packet
      * to the receiving server.<br/>
-     * Note: This field is only used when {@code sendCookedData} is {@code true}.
+     * Note: This field is only used when {@code sendCookedData} is
+     * {@code true}.
      *
-     * @see #sendCookedData
+     * @see #getSendCookedData
      * @return The heartbeat frequency, in seconds.
      */
     public int getHeartbeatFrequency() {
@@ -146,11 +139,22 @@ public class OutputDefault extends Entity {
     }
 
     /**
-     * Indicates whether to index data locally in addition to forwarding it.<br/>
+     * Indicates whether Splunk has processed ("cooked") the event data.
+     *
+     * @return {@code true} if the event data has been processed, {@code false}
+     * if not.
+     */
+    public boolean getSendCookedData() {
+        return getBoolean("sendCookedData", true);
+    }
+
+    /**
+     * Indicates whether to index data locally in addition to forwarding it.
+     * <br/>
      * Note: This setting is not available for light forwarders.
      *
-     * @return {@code true} if data is indexed locally and forwarded, {@code false} 
-     * if not.
+     * @return {@code true} if data is indexed locally and forwarded,
+     * {@code false} if not.
      */
     public boolean indexAndForward() {
         return getBoolean("indexAndForward", false);
@@ -159,8 +163,8 @@ public class OutputDefault extends Entity {
     /**
      * Indicates whether this forwarder sends compressed data.
      *
-     * @return {@code true} if this forwarder sends compressed data, {@code false}
-     * if not.
+     * @return {@code true} if this forwarder sends compressed data,
+     * {@code false} if not.
      */
     public boolean isCompressed() {
         return getBoolean("compressed", false);
@@ -177,12 +181,129 @@ public class OutputDefault extends Entity {
     }
 
     /**
-     * Indicates whether Splunk has processed ("cooked") the event data.
+     * If set to a positive number, wait the specified number of seconds before
+     * throwing out all new events until the output queue has space. Defaults
+     * to -1 (do not drop events).
      *
-     * @return {@code true} if the event data has been processed, {@code false}
-     * if not.
+     * CAUTION: Do not set this value to a positive integer if you are
+     * monitoring files.
+     *
+     * Setting this to -1 or 0 causes the output queue to block when it gets
+     * full, which causes further blocking up the processing chain. If any
+     * target group's queue is blocked, no more data reaches any other target
+     * group.
+     *
+     * Using auto load-balancing is the best way to minimize this condition,
+     * because, in that case, multiple receivers must be down (or jammed up)
+     * before queue blocking can occur.
+     *
+     * @param dropEventsOnQueueFull The number of seconds before throwing events
+     * out when queue is full.
      */
-    public boolean sendCookedData() {
-        return getBoolean("sendCookedData", true);
+    public void setDropEventsOnQueueFull(int dropEventsOnQueueFull) {
+        setCacheValue("dropEventsOnQueueFull", dropEventsOnQueueFull);
+    }
+
+    /**
+     * Sets the frequency, in seconds, between heartbeat packets sent to the
+     * receiving server.
+     *
+     * Note that eartbeats are only sent if {@code sendCookedData=true}
+     *
+     * @param frequency The number of seconds between sending heartbeat packets.
+     */
+    public void setHeartbeatFrequency(int frequency) {
+        setCacheValue("heartbeatFrequency", frequency);
+    }
+
+    /**
+     * Sets whether to index all data locally, in addition to forwarding it.
+     *
+     * This is known as an "index-and-forward" configuration. This attribute is
+     * only available for heavy forwarders. It is available only at the top
+     * level [tcpout] stanza in outputs.conf. It cannot be overridden in a
+     * target group.
+     *
+     * @param indexAndForward whether to index and foward or, just forward.
+     */
+    public void setIndexAndForward(boolean indexAndForward) {
+        setCacheValue("indexAndForward", indexAndForward);
+    }
+
+    /**
+     * Sets the maximum size of the forwarder's output queue. It also has the
+     * side effect of setting the maximum size of the wait queue to 3x this
+     * value, if you have enabled indexer acknowledgment {@code useACK=true}.
+     *
+     * Values maybe in {@code number} or {@code number} followed by
+     * {@code MB, GB}.
+     *
+     * Although the wait queue and the output queues are both configured by
+     * this attribute, they are separate queues. The setting determines the
+     * maximum size of the queue's in-memory (RAM) buffer.
+     *
+     * For heavy forwarders sending parsed data, maxQueueSize is the maximum
+     * number of events. Since events are typically much shorter than data
+     * blocks, the memory consumed by the queue on a parsing forwarder will
+     * likely be much smaller than on a non-parsing forwarder, if you use this
+     * version of the setting.
+     *
+     * If specified as a lone integer (for example, maxQueueSize=100),
+     * maxQueueSize indicates the maximum number of queued events
+     * (for parsed data) or blocks of data (for unparsed data). A block of data
+     * is approximately 64KB. For non-parsing forwarders, such as universal
+     * forwarders, that send unparsed data, maxQueueSize is the maximum number
+     * of data blocks.
+     *
+     * If specified as an integer followed by KB, MB, or GB (for example,
+     * maxQueueSize=100MB), maxQueueSize indicates the maximum RAM allocated
+     * to the queue buffer. Defaults to 500KB (which means a maximum size of
+     * 500KB for the output queue and 1500KB for the wait queue, if any).
+     *
+     * @param maxQueueSize The maximum queue size.
+     */
+    public void setMaxQueueSize(String maxQueueSize) {
+        setCacheValue("maxQueueSize", maxQueueSize);
+    }
+
+    /**
+     * Sets the name. Only tcpout is valid.
+     */
+    public void setName() {
+        setCacheValue("name", "tcpout");
+    }
+
+    /**
+     * Sets whether or not to forward cooked data. {@code true} indicates events
+     * have been processed by splunk. {@code false} indicates events are raw and
+     * untouched prior to sending.
+     *
+     * @param sendCookedData whether to send cooked or raw data events.
+     */
+    public void setSendCookedData(boolean sendCookedData) {
+        setCacheValue("sendCookedData", sendCookedData);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        // Add required arguments if not already present
+        if (!args.containsKey("name")) {
+            args = Args.create(args).add("search", "tcpout");
+        }
+        super.update(args);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        // If not present in the update keys, add required attribute as long
+        // as one pre-existing update pair exists
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("name")) {
+            setCacheValue("name", "tcpout");
+        }
+        super.update();
     }
 }

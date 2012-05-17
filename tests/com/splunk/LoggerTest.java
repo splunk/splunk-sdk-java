@@ -36,13 +36,14 @@ public class LoggerTest extends SplunkTestCase {
         String saved = logger.getLevel();
         Args update = new Args();
 
+        // set with setters
         for (String level: expected) {
-            update.clear();
-            update.put("level", level);
-            logger.update(update);
+            logger.setLevel(level);
+            logger.update();
             assertEquals(level, logger.getLevel());
         }
 
+        // restore with map technique
         update.clear();
         update.put("level", saved);
         logger.update(update);

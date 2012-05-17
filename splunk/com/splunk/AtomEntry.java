@@ -134,8 +134,8 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Parses a {@code <dict>} content element and returns a {@code Record} object
-     * containing the parsed values.
+     * Parses a {@code <dict>} content element and returns a {@code Record}
+     * object containing the parsed values.
      *
      * @param element The {@code <dict>} element to parse.
      * @return A {@code Record} object containing the parsed values.
@@ -191,10 +191,10 @@ public class AtomEntry extends AtomObject {
      * is either text, a {@code <dict>} element, or a {@code <list>} element.
      *
      * @param element The XML element containing the values to parse.
-     * @return An object containing the parsed values. If the source was a text value, 
-     *         the object is a {@code String}. If the source was a {@code <dict>} element,
-     *         the object is a {@code Record}. If the source was a {@code <list>} element,
-     *         the object is a {@code List} object.
+     * @return An object containing the parsed values. If the source was a text
+     * value, the object is a {@code String}. If the source was a {@code <dict>}
+     * element, the object is a {@code Record}. If the source was a
+     * {@code <list>} element, the object is a {@code List} object.
      */
     Object parseValue(Element element) {
         String name = element.getTagName();

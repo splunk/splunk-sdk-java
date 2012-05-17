@@ -50,4 +50,40 @@ public class OutputSyslog extends Entity {
     public String getType() {
         return getString("type");
     }
+
+    /**
+     * Sets the syslog priority.
+     *
+     * @param priority The syslog priority.
+     */
+    public void setPriority(int priority) {
+        setCacheValue("priority", priority);
+    }
+
+    /**
+     * Sets the location, {@code host:port} where the syslog is sent.
+     *
+     * @param server The destination host and port to send the syslog.
+     */
+    public void setServer(String server) {
+        setCacheValue("server", server);
+    }
+
+    /**
+     * Sets the time stamp format that precedes each event sent.
+     *
+     * @param timestampformat the time stamp format.
+     */
+    public void setTimestampFormat(String timestampformat) {
+        setCacheValue("timestampformat", timestampformat);
+    }
+
+    /**
+     * Sets protocol type. Valid values are {@code tcp} or {@code udp}.
+     *
+     * @param type The protocol type for syslog transmission.
+     */
+    public void setType(String type) {
+        setCacheValue("type", type);
+    }
 }

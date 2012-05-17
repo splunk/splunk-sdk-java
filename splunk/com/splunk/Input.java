@@ -17,9 +17,9 @@
 package com.splunk;
 
 /**
- * The {@code Input} class represents a data input. This class is the base for all
- * typed {@code Input} classes and is also used when Splunk does not recognize an 
- * input type (<i>input kind</i>).
+ * The {@code Input} class represents a data input. This class is the base for
+ * all typed {@code Input} classes and is also used when Splunk does not
+ * recognize an input type (<i>input kind</i>).
  */
 public class Input extends Entity {
 

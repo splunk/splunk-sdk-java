@@ -33,6 +33,28 @@ public class MonitorInput extends Input {
     }
 
     /**
+     * returns a regular expression for a file path. The file path that matches
+     * this regular expression is not indexed.
+     *
+     * @return the blacklist The path regular expression for exclusion.
+     */
+    public String getBlacklist() {
+        return getString("blacklist", null);
+    }
+
+    /**
+     * Returns a string that modifies the file tracking identity for files in
+     * this input. The magic value @{code <SOURCE>} invokes special behavior
+     * (see admin documentation).
+     *
+     * @return The string that modifies the file tracking identity for files
+     * in this input
+     */
+    public String getCrcSalt() {
+        return getString("crcSalt", null);
+    }
+
+    /**
      * Returns the file count of this monitor input.
      *
      * @return The file count.
@@ -42,12 +64,46 @@ public class MonitorInput extends Input {
     }
 
     /**
+     * Sets whether files that are seen for the first time will be read from
+     * the end.
+     *
+     * @return whether files that are seen for the first time will
+     * be read from the end.
+     */
+    public boolean getFollowTail() {
+        return getBoolean("followTail", false);
+    }
+
+    /**
      * Returns the host for this monitor input.
      *
      * @return The host, or {@code null} if not specified.
      */
     public String getHost() {
         return getString("host", null);
+    }
+
+    /**
+     * Returns the regular expression for a file path. If the path for a file
+     * matches this regular expression, the captured value is used to populate
+     * the host field for events from this data input. The regular expression
+     * must have one capture group.
+     *
+     * @return The regular expression for a file path.
+     */
+    public String getHostRegex() {
+        return getString("host_regex", null);
+    }
+
+    /**
+     * Returns a time value. If the modification time of a file being monitored
+     * falls outside of this rolling time window, the file is no longer being
+     * monitored.
+     *
+     * @return The time value.
+     */
+    public String getIgnoreOlderThan() {
+        return getString("ignoreOlderThan", null);
     }
 
     /**
@@ -70,11 +126,228 @@ public class MonitorInput extends Input {
     }
 
     /**
+     * Returns the queue for this TCP input. Valid values are:
+     * {@code parsingQueue} and {@code indexQueue}.
+     *
+     * @return The queue, or {@code null} if not specified.
+     */
+    public String getQueue() {
+        return getString("queue", null);
+    }
+
+    /**
+     * Returns whether or not to monitor any sub-directories
+     * encountered within this data input.
+     *
+     * @return whether or not to monitor any sub-directories
+     * encountered within this data input.
+     */
+    public boolean getRecursive() {
+        return getBoolean("recursive", false);
+    }
+
+    /**
      * Returns value of the {@code _rcvbuf} attribute for this monitor input.
      *
      * @return The {@code _rcvbuf} value.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
+    }
+
+    /**
+     * Returns the source name.
+     *
+     * @return  the source name.
+     */
+    public String getSource() {
+        return getString("source", null);
+    }
+
+    /**
+     * Returns the source type.
+     *
+     * @return  the source type.
+     */
+    public String getSourceType() {
+        return getString("sourcetype", null);
+    }
+
+    /**
+     * Returns the period, in seconds, to keep a file open.
+     *
+     * @return  The time, in seconds, to keep a file open.
+     */
+    public int getTimeBeforeClose() {
+        return getInteger("time_before_close", -1);
+    }
+
+    /**
+     * Returns a regular expression for a file path. The file path that matches
+     * this regular expression is indexed.
+     *
+     * @return  The path regular expression for inclusion.
+     */
+    public String getWhitelist() {
+        return getString("whitelist", null);
+    }
+
+    /**
+     * Sets a regular expression for a file path. The file path that matches
+     * this regular expression is not indexed.
+     *
+     * @param blacklist The path regular expression for exclusion.
+     */
+    public void setBlacklist(String blacklist) {
+        setCacheValue("blacklist", blacklist);
+    }
+
+    /**
+     * Sets whether ot not the {@code index} value will be checked to ensure
+     * that it is the name of a valid index.
+     *
+     * @param index Whether ot not the {@code index} value will be checked to
+     * ensure that it is the name of a valid index.
+     */
+    public void setCheckIndex(boolean index) {
+        setCacheValue("check-index", index);
+    }
+
+    /**
+     * Sets whether ot not the {@code name} value will be checked to ensure its
+     * existence.
+     *
+     * @param path  whether ot not the {@code name} value will be checked to
+     * ensure its existence.
+     */
+    public void setCheckPath(boolean path) {
+        setCacheValue("check-path", path);
+    }
+
+    /**
+     * Sets a string that modifies the file tracking identity for files in
+     * this input. The magic value @{code <SOURCE>} invokes special behavior
+     * (see admin documentation). Introduced in 4.2.
+     *
+     * @param salt The string that modifies the file tracking identity for files
+     * in this input
+     */
+    public void setCrcSalt(String salt) {
+        setCacheValue("crc-salt", salt);
+    }
+
+    /**
+     * Sets whether files that are seen for the first time will be read from
+     * the end.
+     *
+     * @param followTail whether files that are seen for the first time will
+     * be read from the end.
+     */
+    public void setFollowTail(boolean followTail) {
+        setCacheValue("followTail", followTail);
+    }
+
+    /**
+     * Sets the value to populate in the host field for events from this data
+     * input.
+     *
+     * @param host the value to populate in the host field for events from this
+     * data input.
+     */
+    public void setHost(String host) {
+        setCacheValue("host", host);
+    }
+
+    /**
+     * Sets the regular expression for a file path. If the path for a file
+     * matches this regular expression, the captured value is used to populate
+     * the host field for events from this data input. The regular expression
+     * must have one capture group.
+     *
+     * @param regex The regular expression for a file path.
+     */
+    public void setHostRegex(String regex) {
+        setCacheValue("host_regex", regex);
+    }
+
+    /**
+     * Sets the specified slash-separate segment of the filepath as the host
+     * field value.
+     *
+     * @param segment the specified slash-separate segment of the filepath as
+     * the host field value.
+     */
+    public void setHostSegment(String segment) {
+        setCacheValue("host_segment", segment);
+    }
+
+    /**
+     * Sets a time value. If the modification time of a file being monitored
+     * falls outside of this rolling time window, the file is no longer being
+     * monitored.
+     *
+     * @param time The time value.
+     */
+    public void setIgnoreOlderThan(String time) {
+        setCacheValue("ignore-older-than", time);
+    }
+
+    /**
+     * Sets which index events from this input should be stored in.
+     *
+     * @param index The index name.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets whether or not to monitor any sub-directories
+     * encountered within this data input.
+     *
+     * @param recursive whether or not
+     */
+    public void setRecursive(boolean recursive) {
+        setCacheValue("recursive", recursive);
+    }
+
+    /**
+     * Sets the source name to populate in the source field for events from
+     * this data input. The same source should not be used for multiple data
+     * inputs.
+     *
+     * @param name the source name to populate in the source field.
+     */
+    public void setRenameSource(String name) {
+        setCacheValue("rename-source", name);
+    }
+
+    /**
+     * Sets the source type to populate in the source type for events from
+     * this data input.
+     *
+     * @param sourcetype the source name to populate in the source type field.
+     */
+    public void setSourcetype(String sourcetype) {
+        setCacheValue("sourcetype", sourcetype);
+    }
+
+    /**
+     * Sets the period, in seconds, to keep a file open.
+     *
+     * @param period The time, in seconds, to keep a file open.
+     */
+    public void setTimeBeforeClose(int period) {
+        setCacheValue("time-before-close", period);
+    }
+
+    /**
+     * Sets a regular expression for a file path. The file path that matches
+     * this regular expression is indexed.
+     *
+     * @param whitelist The path regular expression for inclusion.
+     */
+    public void setWhitelist(String whitelist) {
+        setCacheValue("whitelist", whitelist);
     }
 }

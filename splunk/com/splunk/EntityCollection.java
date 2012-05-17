@@ -137,7 +137,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
         for (T entity: entities) {
             if (entity.path.startsWith(pathMatcher)) {
                 entity.remove();
-                // by invalidating any access to items will get refreshed
+                // By invalidating, any access to items will get refreshed
                 invalidate();
                 return entity;
             }

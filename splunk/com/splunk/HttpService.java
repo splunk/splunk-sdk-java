@@ -39,7 +39,8 @@ import javax.net.ssl.SSLSocketFactory;
 
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
- * address ({@code host:port}), accessed using a given protocol scheme ({@code http} or {@code https}).
+ * address ({@code host:port}), accessed using a given protocol scheme
+ * ({@code http} or {@code https}).
  */
 public class HttpService {
     /** The scheme used to access the service. */

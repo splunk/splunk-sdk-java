@@ -82,7 +82,7 @@ public class Program {
         buildRules(command, argsIn);
         service = Service.connect(command.opts);
 
-        // determine ingest method and other input arguments
+        // Determine ingest method and other input arguments.
         iname = null;
         ingest = "stream";
         if (command.opts.containsKey("index")) {
@@ -94,7 +94,7 @@ public class Program {
             ingestPort = Integer.parseInt((String)command.opts.get("iport"));
         }
 
-        // validate
+        // Validate
         if (!ingestTypes.contains(ingest)) {
             Command.error("Method '"+ingest+"' must be in set: "+ingestTypes);
         }
@@ -109,12 +109,12 @@ public class Program {
         }
 
 
-        // for stream and tcp, they both require a socket, though setup
+        // For stream and tcp, they both require a socket, though setup
         // slightly differently.
         if (ingest.equals("stream") || ingest.equals("tcp")) {
             if (ingest.equals("stream"))
                 try {
-                    // a specific index or not?
+                    // A specific index or not?
                     if (iname != null)
                         stream = index.attach();
                     else
@@ -125,7 +125,7 @@ public class Program {
                     System.exit(3);
                 }
             else {
-                // create a tcp input if one does not already exist
+                // Create a tcp input if one does not already exist.
                 String inputName = String.format("%d", ingestPort);
                 if (!service.getInputs().containsKey(inputName)) {
                     service.getInputs().create(inputName, InputKind.Tcp);
@@ -136,7 +136,7 @@ public class Program {
             writerOut = new OutputStreamWriter(ostream, "UTF8");
         }
 
-        // generate 10 batches of 5000 events each.
+        // Generate 10 batches of 5000 events each.
         count = 0;
         for (int i=0; i<10; i++) {
             for (int j=0; j<5000; j++) {
@@ -154,7 +154,7 @@ public class Program {
             System.out.println("Submitted "+count+" events, using "+ingest);
         }
 
-        // flush and close stream on completion
+        // Flush and close stream on completion
         if (ingest.equals("stream") || ingest.equals("tcp")) {
             writerOut.flush();
             writerOut.close();

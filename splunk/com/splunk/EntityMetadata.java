@@ -118,7 +118,7 @@ public class EntityMetadata {
      * @return This entity's permissions map.
      */
     public Record getPermissions() {
-        return getEaiAcl().<Record>getValue("perms", null);
+        return getEaiAcl().getValue("perms", null);
     }
 
     /**

@@ -16,11 +16,11 @@
 
 package com.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@code SavedSearchCollection} class represents a collection of saved searches.
+ * The {@code SavedSearchCollection} class represents a collection of saved
+ * searches.
  */
 public class SavedSearchCollection extends EntityCollection<SavedSearch> {
 

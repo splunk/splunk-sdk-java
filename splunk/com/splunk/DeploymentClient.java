@@ -17,8 +17,8 @@
 package com.splunk;
 
 /**
- * The {@code DeploymentClient} class represents a Splunk deployment client, providing access
- * to deployment client configuration and status.
+ * The {@code DeploymentClient} class represents a Splunk deployment client,
+ * providing access to deployment client configuration and status.
  */
 public class DeploymentClient extends Entity {
 
@@ -42,29 +42,14 @@ public class DeploymentClient extends Entity {
             return path + "/deployment-client";
         return super.actionPath(action);
     }
-
-    /**
-     * Disables the deployment client.
-     */
+    /** {@inheritDoc} */
     @Override public void disable() {
-        /*
-         * {@code disable} is not handled through the standard enable/disable action
-         * paths; rather it is an edit (i.e. update) action path.
-         */
-        Args args = new Args("disabled", true);
-        update(args);
+        throw new UnsupportedOperationException();
     }
 
-    /**
-     * Enables the deployment client.
-     */
+    /** {@inheritDoc} */
     @Override public void enable() {
-        /*
-         * {@code enable} is not handled through the standard enable/disable action
-         * path; rather it is an edit (i.e. update) action path.
-         */
-        Args args = new Args("disabled", false);
-        update(args);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -93,6 +78,30 @@ public class DeploymentClient extends Entity {
     public void reload() {
         service.get(path + "/deployment-client/Reload");
         invalidate();
+    }
+
+    /**
+     * Sets whether the deployment client is enabled or disabled. Note that
+     * this effect is not immediate; Splunk must be restarted to take effect.
+     *
+     * Note that the supported disabled mechanism, is to use the
+     * @{code disable} and {@code enable} action.
+     *
+     * @param disabled {@code true} to disabled to deployment client,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets the deployment server's target URI for this deployment client. The
+     * form of this URI is deployment_server_uir:port.
+     *
+     * @param targetUri The URI of the deployment server.
+     */
+    public void setTargetUri(String targetUri) {
+        setCacheValue("targetUri", targetUri);
     }
 }
 

@@ -343,7 +343,8 @@ public class NamespaceTest extends SplunkTestCase {
         savedSearchesx1.refresh();
         assertTrue(savedSearchesx1.values().size() == 3);
 
-        assertFalse(savedSearchesx1.containsKey("sdk-test-search", namespaceBad));
+        assertFalse(
+            savedSearchesx1.containsKey("sdk-test-search", namespaceBad));
         assertTrue(savedSearchesx1.containsKey("sdk-test-search", namespace21));
         assertTrue(savedSearchesx1.get("sdk-test-search", namespace21) != null);
 

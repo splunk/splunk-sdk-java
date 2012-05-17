@@ -23,7 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * The {@code Args} class is a helper class for working with Splunk REST API arguments.
+ * The {@code Args} class is a helper class for working with Splunk REST API
+ * arguments.
  *
  * This extension is used mainly for encoding arguments for UTF8 transmission
  * to a Splunk instance in a key?value pairing for a string, or
@@ -40,7 +41,8 @@ public class Args extends HashMap<String, Object> {
      * Class constructor. Initializes a single key-value pair.
      *
      * @param key The key name.
-     * @param value The value, as a {@code String:String} or {@code String:String[]}.
+     * @param value The value, as a {@code String:String} or
+     * {@code String:String[]}.
      */
     public Args(String key, Object value) {
         super();
@@ -60,7 +62,8 @@ public class Args extends HashMap<String, Object> {
      * Adds an argument to an {@code Args} object.
      *
      * @param key The key name.
-     * @param value The value, as a {@code String:String} or {@code String:String[]}.
+     * @param value The value, as a {@code String:String} or
+     * {@code String:String[]}.
      * @return This {@code Args} set.
      */
     public Args add(String key, Object value) {
@@ -78,10 +81,12 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Creates a new {@code Args} instance and initializes it with a single key-value pair.
+     * Creates a new {@code Args} instance and initializes it with a single
+     * key-value pair.
      *
      * @param key The key name.
-     * @param value The value, as a {@code String:String} or {@code String:String[]}.
+     * @param value The value, as a {@code String:String} or
+     * {@code String:String[]}.
      * @return The {@code Args} instance.
      */
     public static Args create(String key, Object value) {
@@ -89,7 +94,8 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Creates a new {@code Args} instance and initializes it with a pre-existing hash map.
+     * Creates a new {@code Args} instance and initializes it with a
+     * pre-existing hash map.
      *
      * @param values The pre-existing hash map.
      * @return The {@code Args} instance.
@@ -115,7 +121,8 @@ public class Args extends HashMap<String, Object> {
     }
 
     /**
-     * Encodes a hash map of {@code String:String} or {@code String:String[]} into a single UTF8-encoded string.
+     * Encodes a hash map of {@code String:String} or {@code String:String[]}
+     * into a single UTF8-encoded string.
      *
      * @param args The hash map.
      * @return The string.

@@ -16,8 +16,11 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
- * The {@code WindowsActiveDirectoryInput} class represents a Windows Active Directory input.
+ * The {@code WindowsActiveDirectoryInput} class represents a Windows Active
+ * Directory input.
  */
 public class WindowsActiveDirectoryInput extends Input {
 
@@ -62,8 +65,9 @@ public class WindowsActiveDirectoryInput extends Input {
     }
 
     /**
-     * Returns the starting location in the directory path for this Windows Active
-     * Directory input. If not specified, the the root of the directory tree is used.
+     * Returns the starting location in the directory path for this Windows
+     * Active Directory input. If not specified, the the root of the directory
+     * tree is used.
      *
      * @return The starting location in the directory path, or {@code null} if 
      * not specified.
@@ -76,9 +80,88 @@ public class WindowsActiveDirectoryInput extends Input {
      * Returns the fully-qualified domain name of a valid, network-accessible
      * domain controller. If not specified, the local machine is used.
      *
-     * @return The fully-qualified domain name, or {@code null} if not specified.
+     * @return The fully-qualified domain name, or {@code null} if not
+     * specified.
      */
     public String getTargetDc() {
         return getString("targetDc", null);
+    }
+
+    /**
+     * Sets whether this input is enabled or disabled. Note that the
+     * supported disabled mechanism, is to use the @{code disable} action.
+     *
+     * @param disabled {@code true} to disabled to script input,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets index in which to store all generated events.
+     *
+     * @param index The index in which to store all generated events.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets whether or not to monitor the subtree(s) of the given directory tree
+     * path. {@code True} means to monitor, {@code false} mean not to monitor
+     * the subtree(s)
+     *
+     * @param monitorSubtree Whether or not to monitor the subtree(s).
+     */
+    public void setMonitorSubtree(boolean monitorSubtree) {
+        setCacheValue("monitorSubtree", monitorSubtree);
+    }
+
+    /**
+     * Sets the starting Active Directory directory to start monitoring. If not
+     * specified, splunk attempts to start at the root of the directory tree.
+     *
+     * @param startingNode The starting Active Directory directory to start
+     * monitoring.
+     */
+    public void setStartingNode(String startingNode) {
+        setCacheValue("startingNode", startingNode);
+    }
+
+    /**
+     * Sets the fully qualified domain name of a valid, network-accessible DC.
+     * If not specified, Splunk will obtain the local computer's domain
+     * controller.
+     *
+     * @param targetDc The fully qualified domain name.
+     */
+    public void setTargetDc(String targetDc) {
+        setCacheValue("targetDc", targetDc);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        // Add required arguments if not already present
+        if (!args.containsKey("monitorSubtree")) {
+            args = Args.create(args).add(
+                "monitorSubtree", getMonitorSubtree());
+        }
+        super.update(args);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        // If not present in the update keys, add required attribute as long
+        // as one pre-existing update pair exists
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("monitorSubtree")) {
+            setCacheValue(
+                "monitorSubtree", getMonitorSubtree());
+        }
+        super.update();
     }
 }

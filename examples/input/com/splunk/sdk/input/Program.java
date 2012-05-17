@@ -19,13 +19,6 @@ package com.splunk.sdk.input;
 import com.splunk.*;
 import com.splunk.sdk.Command;
 
-import java.io.*;
-import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 /**
  * Generate events into an index using either stream, submit or raw tcp
  * methods.
@@ -52,185 +45,187 @@ public class Program {
             case Monitor:
                 MonitorInput monitorInput = (MonitorInput) input;
                 System.out.println(
-                        "      file count:      " + monitorInput.getFileCount());
+                    "      file count:      " + monitorInput.getFileCount());
                 System.out.println(
-                        "      host:            " + monitorInput.getHost());
+                    "      host:            " + monitorInput.getHost());
                 System.out.println(
-                        "      index:           " + monitorInput.getIndex());
+                    "      index:           " + monitorInput.getIndex());
                 System.out.println(
-                        "      receive buffer:  " + monitorInput.getRcvBuf());
+                    "      receive buffer:  " + monitorInput.getRcvBuf());
                 break;
             case Script:
                 ScriptInput scriptInput = (ScriptInput) input;
                 System.out.println(
-                        "      group:           " + scriptInput.getGroup());
+                    "      group:           " + scriptInput.getGroup());
                 System.out.println(
-                        "      host:            " + scriptInput.getHost());
+                    "      host:            " + scriptInput.getHost());
                 System.out.println(
-                        "      index:           " + scriptInput.getIndex());
+                    "      index:           " + scriptInput.getIndex());
                 System.out.println(
-                        "      interval:        " + scriptInput.getInterval());
+                    "      interval:        " + scriptInput.getInterval());
                 System.out.println(
-                        "      receive buffer:  " + scriptInput.getRcvBuf());
+                    "      receive buffer:  " + scriptInput.getRcvBuf());
                 break;
             case Tcp:
                 TcpInput tcpInput = (TcpInput) input;
                 System.out.println(
-                      "      connection host: " + tcpInput.getConnectionHost());
+                    "      connection host: " + tcpInput.getConnectionHost());
                 System.out.println(
-                        "      group:           " + tcpInput.getGroup());
+                    "      group:           " + tcpInput.getGroup());
                 System.out.println(
-                        "      host:            " + tcpInput.getHost());
+                    "      host:            " + tcpInput.getHost());
                 System.out.println(
-                        "      index:           " + tcpInput.getIndex());
+                    "      index:           " + tcpInput.getIndex());
                 System.out.println(
-                        "      queue:           " + tcpInput.getQueue());
+                    "      queue:           " + tcpInput.getQueue());
                 System.out.println(
-                        "      receive buffer:  " + tcpInput.getRcvBuf());
+                    "      receive buffer:  " + tcpInput.getRcvBuf());
                 System.out.println(
-                     "      restrict to host:" + tcpInput.getRestrictToHost());
+                    "      restrict to host:" + tcpInput.getRestrictToHost());
                 System.out.println(
-                        "      source:          " + tcpInput.getSource());
+                    "      source:          " + tcpInput.getSource());
                 System.out.println(
-                        "      source type:     " + tcpInput.getSourceType());
+                    "      source type:     " + tcpInput.getSourceType());
                 System.out.println(
-                        "      SSL:             " + tcpInput.getSSL());
+                    "      SSL:             " + tcpInput.getSSL());
                 break;
             case TcpSplunk:
                 TcpSplunkInput tcpSplunkInput = (TcpSplunkInput) input;
                 System.out.println(
                 "      connection host: " + tcpSplunkInput.getConnectionHost());
                 System.out.println(
-                        "      group:           " + tcpSplunkInput.getGroup());
+                    "      group:           " + tcpSplunkInput.getGroup());
                 System.out.println(
-                        "      host:            " + tcpSplunkInput.getHost());
+                    "      host:            " + tcpSplunkInput.getHost());
                 System.out.println(
-                        "      index:           " + tcpSplunkInput.getIndex());
+                    "      index:           " + tcpSplunkInput.getIndex());
                 System.out.println(
-                        "      queue:           " + tcpSplunkInput.getQueue());
+                    "      queue:           " + tcpSplunkInput.getQueue());
                 System.out.println(
-                        "      receive buffer:  " + tcpSplunkInput.getRcvBuf());
+                    "      receive buffer:  " + tcpSplunkInput.getRcvBuf());
                 System.out.println(
-                        "      source:          " + tcpSplunkInput.getSource());
+                    "      source:          " + tcpSplunkInput.getSource());
                 System.out.println(
                     "      source type:     " + tcpSplunkInput.getSourceType());
                 System.out.println(
-                        "      SSL:             " + tcpSplunkInput.getSSL());
+                    "      SSL:             " + tcpSplunkInput.getSSL());
                 break;
             case Udp:
                 UdpInput udpInput = (UdpInput) input;
                 System.out.println(
-                      "      connection host: " + udpInput.getConnectionHost());
+                    "      connection host: " + udpInput.getConnectionHost());
                 System.out.println(
-                        "      group:           " + udpInput.getGroup());
+                    "      group:           " + udpInput.getGroup());
                 System.out.println(
-                        "      host:            " + udpInput.getHost());
+                    "      host:            " + udpInput.getHost());
                 System.out.println(
-                        "      index:           " + udpInput.getIndex());
+                    "      index:           " + udpInput.getIndex());
                 System.out.println(
-                        "      queue:           " + udpInput.getQueue());
+                    "      queue:           " + udpInput.getQueue());
                 System.out.println(
-                        "      receive buffer:  " + udpInput.getRcvBuf());
+                    "      receive buffer:  " + udpInput.getRcvBuf());
                 System.out.println(
-                        "      source:          " + udpInput.getSource());
+                    "      source:          " + udpInput.getSource());
                 System.out.println(
-                        "      source type:     " + udpInput.getSourceType());
+                    "      source type:     " + udpInput.getSourceType());
                 System.out.println(
-                "      no timestamp append:" + udpInput.noAppendingTimeStamp());
+                    "      no timestamp append:" +
+                    udpInput.getNoAppendingTimeStamp());
                 System.out.println(
-               "      no priority stripping:" + udpInput.noPriorityStripping());
+                    "      no priority stripping:" +
+                    udpInput.getNoPriorityStripping());
                 break;
             case WindowsActiveDirectory:
                 WindowsActiveDirectoryInput windowsActiveDirectoryInput =
                         (WindowsActiveDirectoryInput) input;
                 System.out.println(
-                        "      index:           " +
-                        windowsActiveDirectoryInput.getIndex());
+                    "      index:           " +
+                    windowsActiveDirectoryInput.getIndex());
                 System.out.println(
-                        "      monitor subtree: " +
-                        windowsActiveDirectoryInput.getMonitorSubtree());
+                    "      monitor subtree: " +
+                    windowsActiveDirectoryInput.getMonitorSubtree());
                 System.out.println(
-                        "      starting node:   " +
-                        windowsActiveDirectoryInput.getStartingNode());
+                    "      starting node:   " +
+                    windowsActiveDirectoryInput.getStartingNode());
                 System.out.println(
-                        "      target DC:       " +
-                        windowsActiveDirectoryInput.getTargetDc());
+                    "      target DC:       " +
+                    windowsActiveDirectoryInput.getTargetDc());
                 break;
             case WindowsEventLog:
                 WindowsEventLogInput windowsEventLogInput =
                         (WindowsEventLogInput) input;
                 System.out.println(
-                        "      hosts:           " +
-                        windowsEventLogInput.getHosts());
+                    "      hosts:           " +
+                    windowsEventLogInput.getHosts());
                 System.out.println(
-                        "      index:           " +
-                        windowsEventLogInput.getIndex());
+                    "      index:           " +
+                    windowsEventLogInput.getIndex());
                 System.out.println(
-                        "      local name:      " +
-                        windowsEventLogInput.getLocalName());
+                    "      local name:      " +
+                    windowsEventLogInput.getLocalName());
                 String[] logs = windowsEventLogInput.getLogs();
                 System.out.println("      logs:");
                 for (String log: logs) {
                     System.out.println("            " + log);
                 }
                 System.out.println(
-                        "      lookup host:     " +
-                        windowsEventLogInput.getLookupHost());
+                    "      lookup host:     " +
+                    windowsEventLogInput.getLookupHost());
                 break;
             case WindowsPerfmon:
                 WindowsPerfmonInput windowsPerfmonInput =
                         (WindowsPerfmonInput) input;
                 System.out.println(
-                        "      counters:        " +
-                        windowsPerfmonInput.getCounters());
+                    "      counters:        " +
+                    windowsPerfmonInput.getCounters());
                 System.out.println(
-                        "      index:           " +
-                        windowsPerfmonInput.getIndex());
+                    "      index:           " +
+                    windowsPerfmonInput.getIndex());
                 System.out.println(
-                        "      instances:       " +
-                                windowsPerfmonInput.getInstances());
+                    "      instances:       " +
+                    windowsPerfmonInput.getInstances());
                 System.out.println(
-                        "      interval:        " +
-                        windowsPerfmonInput.getInterval());
+                    "      interval:        " +
+                    windowsPerfmonInput.getInterval());
                 System.out.println(
-                        "      object:          " +
-                        windowsPerfmonInput.getObject());
+                    "      object:          " +
+                    windowsPerfmonInput.getObject());
                 break;
             case WindowsRegistry:
                 WindowsRegistryInput windowsRegistryInput =
                         (WindowsRegistryInput) input;
                 System.out.println(
-                        "      baseline:        " +
-                        windowsRegistryInput.getBaseline());
+                    "      baseline:        " +
+                    windowsRegistryInput.getBaseline());
                 System.out.println(
-                        "      hive:            " +
-                        windowsRegistryInput.getHive());
+                    "      hive:            " +
+                    windowsRegistryInput.getHive());
                 System.out.println(
-                        "      index:           " +
-                        windowsRegistryInput.getIndex());
+                    "      index:           " +
+                    windowsRegistryInput.getIndex());
                 System.out.println(
-                        "      monitor subnodes:" +
-                        windowsRegistryInput.getMonitorSubnodes());
+                    "      monitor subnodes:" +
+                    windowsRegistryInput.getMonitorSubnodes());
                 System.out.println(
-                        "      process:         " +
-                        windowsRegistryInput.getProc());
+                    "      process:         " +
+                    windowsRegistryInput.getProc());
                 System.out.println(
-                        "      type:            " +
-                        windowsRegistryInput.getType());
+                    "      type:            " +
+                    windowsRegistryInput.getType());
                 break;
             case WindowsWmi:
                 WindowsWmiInput windowsWmiInput = (WindowsWmiInput) input;
                 System.out.println(
-                        "      WMI input:       " +
-                        windowsWmiInput.getClasses());
+                    "      WMI input:       " +
+                    windowsWmiInput.getClasses());
                 String[] fields = windowsWmiInput.getFields();
                 System.out.println("      fields:");
                 for (String field: fields) {
                     System.out.println("            " + field);
                 }
                 System.out.println(
-                        "      index:           " +
-                        windowsWmiInput.getIndex());
+                    "      index:           " +
+                    windowsWmiInput.getIndex());
 
                 String[] instances = windowsWmiInput.getInstances();
                 System.out.println("      instances:");
@@ -238,19 +233,19 @@ public class Program {
                     System.out.println("            " + instance);
                 }
                 System.out.println(
-                        "      interval:        " +
-                        windowsWmiInput.getInterval());
+                    "      interval:        " +
+                    windowsWmiInput.getInterval());
                 System.out.println(
-                        "      local name:      " +
-                        windowsWmiInput.getLocalName());
+                    "      local name:      " +
+                    windowsWmiInput.getLocalName());
                 System.out.println(
-                        "      lookup host:     " +
-                        windowsWmiInput.getLookupHost());
+                    "      lookup host:     " +
+                    windowsWmiInput.getLookupHost());
                 System.out.println(
-                        "      server:          " +
-                        windowsWmiInput.getServer());
+                    "      server:          " +
+                    windowsWmiInput.getServers());
                 System.out.println(
-                        "      WQL:             " + windowsWmiInput.getWql());
+                    "      WQL:             " + windowsWmiInput.getWql());
                 break;
         }
     }
@@ -274,6 +269,5 @@ public class Program {
             DisplaySpecificInput(input);
             System.out.println("\n\n");
         }
-
     }
 }

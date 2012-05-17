@@ -16,32 +16,24 @@
 
 package com.splunk;
 
-/**
- * The {@code ApplicationSetup} class represents the setup information for a
- * Splunk app.
- */
-public class ApplicationSetup extends Entity {
+public class UdpConnections extends Entity {
 
     /**
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The full path of the parent endpoint.
+     * @param path The output server all-connections endpoint.
      */
-    ApplicationSetup(Service service, String path) {
-        super(service, path + "/setup");
+    UdpConnections(Service service, String path) {
+        super(service, path);
     }
 
     /**
-     * Returns the app's setup information in XML format.
+     * Return the server name.
      *
-     * @return The setup information for the app.
+     * @return The server name.
      */
-    public String getSetupXml() {
-        return getString("eai:setup");
+    public String getGroup() {
+        return getString("group", null);
     }
-
-     // Because all other keys are dynamic and context specific, they should
-     // be retrieved using standard Map access.
 }
-

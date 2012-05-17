@@ -43,8 +43,6 @@ public class DistributedConfigurationTest extends SplunkTestCase {
                 distributedConfiguration.getHeartbeatPort());
         savedSetup.put("removedTimedOutServers",
                 distributedConfiguration.getRemovedTimedOutServers());
-        savedSetup.put("serverTimeout",
-                distributedConfiguration.getServerTimeout());
         savedSetup.put("servers", distributedConfiguration.getServers());
         savedSetup.put("shareBundles",
                 distributedConfiguration.getShareBundles());
@@ -58,66 +56,45 @@ public class DistributedConfigurationTest extends SplunkTestCase {
                 savedSetup.put(key, "");
         }
 
-        Args updateArgs = new Args();
+        // use setters for update
+        distributedConfiguration.setAutoAddServers(false);
+        distributedConfiguration.setBlacklistNames("black1,black2,black3");
+        distributedConfiguration.setBlacklistURLs("black1.splunk.com:8089");
+        distributedConfiguration.setCheckTimedOutServersFrequency(120);
+        distributedConfiguration.setDisabled(true);
+        distributedConfiguration.setHeartbeatFrequency(120);
+        distributedConfiguration.setHeartbeatMcastAddr("224.0.1.37");
+        distributedConfiguration.setHeartbeatPort(8889);
+        distributedConfiguration.setRemoveTimedOutServers(false);
+        distributedConfiguration.setSendTimeout(120);
+        distributedConfiguration.setServers("good.splunk.com,good2.splunk.com");
+        distributedConfiguration.setShareBudles(false);
+        distributedConfiguration.setSkipOurselves(true);
+        distributedConfiguration.setStatusTimeout(100);
+        distributedConfiguration.setTTL(5);
+        distributedConfiguration.update();
 
-        updateArgs.put("autoAddServers", false);
-        updateArgs.put("blacklistNames", "black1,black2,black3");
-        updateArgs.put("blacklistURLs", "black1.splunk.com:8089");
-        updateArgs.put("checkTimedOutServersFrequency", 120);
-        updateArgs.put("disabled", true);
-        updateArgs.put("heartbeatFrequency", 120);
-        updateArgs.put("heartbeatMcastAddr", "224.0.1.37");
-        updateArgs.put("heartbeatPort", 8889);
-        updateArgs.put("removedTimedOutServers", false);
-        updateArgs.put("serverTimeout", 180);
-        updateArgs.put("servers", "good1.splunk.com,good2.splunk.com");
-        updateArgs.put("shareBundles", false);
-        updateArgs.put("skipOurselves", true);
-        updateArgs.put("statusTimeout", 100);
-        updateArgs.put("ttl", 5);
-
-        distributedConfiguration.update(updateArgs);
-        assertEquals(
-                distributedConfiguration.getAutoAddServers(),
-                updateArgs.get("autoAddServers"));
-        assertEquals(
-                distributedConfiguration.getBlacklistNames(),
-                updateArgs.get("blacklistNames"));
-        assertEquals(
-                distributedConfiguration.getBlacklistUrls(),
-                updateArgs.get("blacklistURLs"));
+        assertEquals(distributedConfiguration.getAutoAddServers(), false);
+        assertEquals(distributedConfiguration.getBlacklistNames(),
+                "black1,black2,black3");
+        assertEquals(distributedConfiguration.getBlacklistUrls(),
+                "black1.splunk.com:8089");
         assertEquals(
                 distributedConfiguration.getCheckTimedOutServersFrequency(),
-                updateArgs.get("checkTimedOutServersFrequency"));
-        assertEquals(distributedConfiguration.isDisabled(),
-                updateArgs.get("disabled"));
-        assertEquals(
-                distributedConfiguration.getHeartbeatFrequency(),
-                updateArgs.get("heartbeatFrequency"));
-        assertEquals(
-                distributedConfiguration.getHeartbeatMcastAddress(),
-                updateArgs.get("heartbeatMcastAddr"));
-        assertEquals(
-                distributedConfiguration.getHeartbeatPort(),
-                updateArgs.get("heartbeatPort"));
-        assertEquals(
-                distributedConfiguration.getRemovedTimedOutServers(),
-                updateArgs.get("removedTimedOutServers"));
-        assertEquals(
-                distributedConfiguration.getServerTimeout(),
-                updateArgs.get("serverTimeout"));
+                120);
+        assertEquals(distributedConfiguration.isDisabled(),true);
+        assertEquals(distributedConfiguration.getHeartbeatFrequency(), 120);
+        assertEquals(distributedConfiguration.getHeartbeatMcastAddress(),
+                "224.0.1.37");
+        assertEquals(distributedConfiguration.getHeartbeatPort(), 8889);
+        assertEquals(distributedConfiguration.getRemovedTimedOutServers(),
+                false);
         assertEquals(distributedConfiguration.getServers(),
-                updateArgs.get("servers"));
-        assertEquals(
-                distributedConfiguration.getShareBundles(),
-                updateArgs.get("shareBundles"));
-        assertEquals(
-                distributedConfiguration.getSkipOurselves(),
-                updateArgs.get("skipOurselves"));
-        assertEquals(
-                distributedConfiguration.getStatusTimeout(),
-                updateArgs.get("statusTimeout"));
-        assertEquals(distributedConfiguration.getTtl(), updateArgs.get("ttl"));
+                "good.splunk.com,good2.splunk.com");
+        assertEquals(distributedConfiguration.getShareBundles(), false);
+        assertEquals(distributedConfiguration.getSkipOurselves(), true);
+        assertEquals(distributedConfiguration.getStatusTimeout(), 100);
+        assertEquals(distributedConfiguration.getTtl(), 5);
 
         // handle nulls specially
         if (savedSetup.get("blacklistNames") == null)
@@ -125,6 +102,7 @@ public class DistributedConfigurationTest extends SplunkTestCase {
         if (savedSetup.get("blacklistURLs") == null)
             savedSetup.put("blacklistURLs", "");
 
+        // use map method for update.
         distributedConfiguration.update(savedSetup);
 
         assertEquals(
@@ -155,9 +133,6 @@ public class DistributedConfigurationTest extends SplunkTestCase {
         assertEquals(
                 distributedConfiguration.getRemovedTimedOutServers(),
                 savedSetup.get("removedTimedOutServers"));
-        assertEquals(
-                distributedConfiguration.getServerTimeout(),
-                savedSetup.get("serverTimeout"));
         assertEquals(
                 distributedConfiguration.getServers() == null ? "" :
                 distributedConfiguration.getServers(),

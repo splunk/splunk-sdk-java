@@ -27,17 +27,45 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.autoLb();
         outputDefault.blockOnQueueFull();
         outputDefault.getAutoLbFrequency();
-        outputDefault.getDefaultGroup();
-        outputDefault.getDropEventsOnQueueFull();
+        int onQueueFull = outputDefault.getDropEventsOnQueueFull();
         outputDefault.getForwardedIndex0Whitelist();
         outputDefault.getForwardedIndex1Blacklist();
         outputDefault.getForwardedIndex2Whitelist();
-        outputDefault.getHeartbeatFrequency();
+        int heartbeat = outputDefault.getHeartbeatFrequency();
         outputDefault.getMaxQueueSize();
-        outputDefault.indexAndForward();
+        boolean forward = outputDefault.indexAndForward();
         outputDefault.isCompressed();
         outputDefault.isDisabled();
         outputDefault.isForwardedIndexFilterDisable();
-        outputDefault.sendCookedData();
+        boolean cookedData = outputDefault.getSendCookedData();
+
+        // set-ables
+
+        outputDefault.setDropEventsOnQueueFull(0);
+        outputDefault.setHeartbeatFrequency(heartbeat+1);
+        outputDefault.setIndexAndForward(!forward);
+        outputDefault.setSendCookedData(!cookedData);
+
+        outputDefault.update();
+
+        //check
+        assertEquals(outputDefault.getDropEventsOnQueueFull(), 0);
+        assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat+1);
+        assertEquals(outputDefault.indexAndForward(), !forward);
+        assertEquals(outputDefault.getSendCookedData(), !cookedData);
+
+        // restore
+        outputDefault.setDropEventsOnQueueFull(onQueueFull);
+        outputDefault.setHeartbeatFrequency(heartbeat);
+        outputDefault.setIndexAndForward(forward);
+        outputDefault.setSendCookedData(cookedData);
+
+        outputDefault.update();
+
+        //check
+        assertEquals(outputDefault.getDropEventsOnQueueFull(), onQueueFull);
+        assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat);
+        assertEquals(outputDefault.indexAndForward(), forward);
+        assertEquals(outputDefault.getSendCookedData(), cookedData);
     }
 }

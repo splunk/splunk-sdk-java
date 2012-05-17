@@ -57,7 +57,8 @@ public class FiredAlert extends Entity {
      * Returns the rendered expiration time for this alert.
      * This method is available in Splunk 4.3 and later.
      *
-     * @return This alert's rendered expiration time, or {@code null} if not available.
+     * @return This alert's rendered expiration time, or {@code null} if not
+     * available.
      */
     public String getExpirationTime() {
         return getString("expiration_time_rendered", null);
@@ -107,24 +108,28 @@ public class FiredAlert extends Entity {
      * @return This alert's trigger time, or {@code null} if not available.
      */
     public Date getTriggerTime() {
-        return getDateFromEpoch("trigger_time", null);
+        return getDate("trigger_time", null);
     }
 
     /**
      * Returns this alert's rendered trigger time.
      * This method is available in Splunk 4.3 and later.
      *
-     * @return This alert's rendered trigger time, or {@code null} if not available.
+     * @return This alert's rendered trigger time, or {@code null} if not
+     * available.
      */
     public String getTriggerTimeRendered() {
         return getString("trigger_time_rendered", null);
     }
 
     /**
-     * Indicates whether the result is a set of events (digest) or a single event (per result).
+     * Indicates whether the result is a set of events (digest) or a single
+     * event (per result).
+     *
      * This method is available in Splunk 4.3 and later.
      *
-     * @return {@code true} if the result is a digest, {@code false} if per result.
+     * @return {@code true} if the result is a digest, {@code false} if per
+     * result.
      */
     public boolean isDigestMode() {
         return getBoolean("digest_mode", false);

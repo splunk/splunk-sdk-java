@@ -37,8 +37,8 @@ public class DeploymentTenant extends Entity {
      * should review its configuration and inform the deployment client if 
      * something is new or updated.
      *
-     * @return {@code true} if this deployment server notifies the deployment client for
-     * new or changed configurations, {@code false} if not.
+     * @return {@code true} if this deployment server notifies the deployment
+     * client for new or changed configurations, {@code false} if not.
      */
     public boolean getCheckNew() {
         return getBoolean("check-new", false);
@@ -46,13 +46,28 @@ public class DeploymentTenant extends Entity {
 
     /**
      * Returns inclusive criteria for determining deployment client access to
-     * this deployment server.
+     * this deployment server. The index is form 0 to 9 inclusive.
      *
+     * @param index The whitelist index.
      * @return Criteria for determining deployment client access to this
      * deployment server.
      */
-    public String getWhiteList0() {
-        return getString("whitelist.0");
+    public String getWhiteListByIndex(int index) {
+        return getString(String.format("whitelist.%d", index), null);
+    }
+
+    /**
+     * Sets whether the deployment tenant is enabled or disabled. Note that
+     * this effect is not immediate; Splunk must be restarted to take effect.
+     *
+     * Note that the supported disabled mechanism, is to use the
+     * @{code disable} and {@code enable} action.
+     *
+     * @param disabled {@code true} to disabled to deployment client,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
     }
 }
 

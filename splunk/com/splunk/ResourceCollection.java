@@ -21,7 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * The {@code ResourceCollection} class represents a collection of Splunk resources.
+ * The {@code ResourceCollection} class represents a collection of Splunk
+ * resources.
  *
  * @param <T> The type of members of the collection.
  */
@@ -136,12 +137,14 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Creates a collection member  (or <i>item</i>) corresponding to a given Atom entry.
-     * This base implementation uses the class object that was passed in when the generic
-     * {@code ResourceCollection} was created. Subclasses may override this method
-     * to provide alternative means of instantiating collection items.
+     * Creates a collection member  (or <i>item</i>) corresponding to a given
+     * Atom entry. This base implementation uses the class object that was
+     * passed in when the generic {@code ResourceCollection} was created.
+     * Subclasses may override this method to provide alternative means of
+     * instantiating collection items.
      *
-     * @param entry The {@code AtomEntry} corresponding to the member to instantiate.
+     * @param entry The {@code AtomEntry} corresponding to the member to
+     * instantiate.
      * @return The new member.
      */
     protected T createItem(AtomEntry entry) {

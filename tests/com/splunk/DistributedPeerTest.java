@@ -45,9 +45,10 @@ public class DistributedPeerTest extends SplunkTestCase {
         newDistributedPeer.enable();
         assertFalse(newDistributedPeer.isDisabled());
         // N.B. these are write only... so can't check if they take
-        args.put("remotePassword", command.password + "xx");
-        args.put("remoteUsername", command.username + "xx");
-        newDistributedPeer.update(args);
+        // setter method update.
+        newDistributedPeer.setRemotePassword(command.password + "xx");
+        newDistributedPeer.setRemoteUsername(command.username + "xx");
+        newDistributedPeer.update();
 
         for (DistributedPeer distributedPeer: distributedPeers.values()) {
             distributedPeer.getTitle();

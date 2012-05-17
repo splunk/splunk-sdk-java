@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Map;
+
 /**
  * The {@code EventType} class represents an event type.
  */
@@ -69,6 +71,71 @@ public class EventType extends Entity {
      */
     public String [] getTags() {
         return getStringArray("tags", null);
+    }
+
+    /**
+     * Sets the description of the event type.
+     *
+     * @param description The description of the event type.
+     */
+    public void setDescription(String description) {
+        setCacheValue("description", description);
+    }
+
+    /**
+     * Sets whether the event type  is enabled or disabled. Note that
+     * this effect is not immediate; Splunk must be restarted to take effect.
+     *
+     * Note that the supported disabled mechanism, is to use the
+     * @{code disable} and {@code enable} action.
+     *
+     * @param disabled {@code true} to disabled to deployment client,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets the priority of the event type. Valid values are from 1 to 10, with
+     * 1 being the highest priority.
+     *
+     * @param priority The priority of the event type.
+     */
+    public void setPriority(int priority) {
+        setCacheValue("priority", priority);
+    }
+
+    /**
+     * Sets the search string.
+     *
+     * @param search The search string.
+     */
+    public void setSearch(String search) {
+        setCacheValue("search", search);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update(Map<String, Object> args) {
+        // Add required arguments if not already present
+        if (!args.containsKey("search")) {
+            args = Args.create(args).add("search", getSearch());
+        }
+        super.update(args);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        // If not present in the update keys, add required attribute as long
+        // as one pre-existing update pair exists
+        if (toUpdate.size() > 0 && !toUpdate.containsKey("search")) {
+            setCacheValue("search", getSearch());
+        }
+        super.update();
     }
 }
 

@@ -36,9 +36,11 @@ public class Program {
         "A comma-separated list of the fields to return";
     static String latestTime = "Search latest time";
     static String offset =
-        "The first result (inclusive) from which to begin returning data. (default: 0)";
+        "The first result (inclusive) from which to begin returning data. " +
+        "(default: 0)";
     static String outputText =
-        "Which search results to output {events, results, preview, searchlog, summary, timeline} (default: results)";
+        "Which search results to output {events, results, preview, searchlog," +
+        " summary, timeline} (default: results)";
     static String outputModeText =
         "Search output format {csv, raw, json, xml} (default: xml)";
     static String resultsCount =

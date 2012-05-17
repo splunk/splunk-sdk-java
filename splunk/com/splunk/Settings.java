@@ -16,10 +16,12 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@code Settings} class represents configuration information for an instance of Splunk.
+ * The {@code Settings} class represents configuration information for an
+ * instance of Splunk.
  */
 public class Settings extends Entity {
     Settings(Service service) {
@@ -94,8 +96,8 @@ public class Settings extends Entity {
 
     /**
      * Returns the string that is prepended to the Splunk symmetric key to
-     * generate the final key that used to sign all traffic between master and slave
-     * licensers.
+     * generate the final key that used to sign all traffic between master and
+     * slave licensers.
      *
      * @return Licenser symmetric key.
      */
@@ -104,8 +106,8 @@ public class Settings extends Entity {
     }
 
     /**
-     * Returns the name that is used to identify this Splunk instance for features
-     * such as distributed search.
+     * Returns the name that is used to identify this Splunk instance for
+     * features such as distributed search.
      *
      * @return The name used to identify the Splunk instance.
      */
@@ -142,12 +144,158 @@ public class Settings extends Entity {
     }
 
     /**
-     * Updates the settings entity with the specified arguments.
+     * Sets the fully qualified local path to the default index.
      *
-     * @param args The arguments being updated.
+     * The default value is {@code $SPLUNK_HOME/var/lib/splunk/defaultdb/db/}
+     *
+     * @param path The local ath to the default index.
+     */
+    public void setSplunkDBPath(String path) {
+        setCacheValue("SPLUNK_DB", path);
+    }
+
+    /**
+     * Sets whether Splunk Web uses HTTP or HTTPS. If set to {@code true},
+     * Splunk Web uses SSL and HTTPS. Ff set to {@code false} Splunk Web uses
+     * HTTP.
+     *
+     * @param useHttps Whether Splunk Web uses HTTPS or HTTTP.
+     */
+    public void setEnableSplunkWebSSL(boolean useHttps) {
+        setCacheValue("enableSplunkWebSSL", useHttps);
+    }
+
+    /**
+     * Sets the default hostname to use for data inputs that do not override
+     * this setting.
+     *
+     * @param host The default hostname.
+     */
+    public void setHost(String host) {
+        setCacheValue("host", host);
+    }
+
+    /**
+     * Sets the Splunk Web listening port. If using SSL/HTTPS, this should be
+     * set to the HTTPS port number.
+     *
+     * The port must be present for SplunkWeb to start. If omitted or 0 the
+     * server will NOT start an http listener.
+     *
+     * @param port The Splunk Web listening port.
+     */
+    public void setHttpPort(int port) {
+        setCacheValue("httpport", port);
+    }
+
+    /**
+     * Sets the management host and port for splunkd.
+     *
+     * Default value is {@code 127.0.0.1:8089}.
+     *
+     * @param mgmtHostPort The hostname or IP and port for the management
+     * interface.
+     */
+    public void setMgmtHostPort(String mgmtHostPort) {
+        setCacheValue("mgmtHostPort", mgmtHostPort);
+    }
+
+    /**
+     * Sets in MB, the amount of disk space that must exist for splunkd to
+     * continue operating.
+     *
+     * minFreespace affects search and indexing:
+     * Before attempting to launch a search, splunk requires this amount of
+     * free space on the filesystem where the dispatch directory is stored
+     *  $SPLUNK_HOME/var/run/splunk/dispatch).
+     *
+     *  Applied similarly to the search quota values in authorize.conf and
+     *  limits.conf.
+     *
+     *  For indexing, periodically, the indexer checks space on all partitions
+     *  that contain splunk indexes as specified by indexes.conf. When you need
+     *  to clear more disk space, indexing is paused and Splunk posts a ui
+     *  banner + warning.
+     *
+     * @param minFreeSpace The free space, in MB, required for splunkd
+     * operation.
+     */
+    public void setMinimumFreeSpace(int minFreeSpace) {
+        setCacheValue("minFreeSpace", minFreeSpace);
+    }
+
+    /**
+     * Sets the password string that is prepended to the splunk symmetric key
+     * to generate the final key that is used to sign all traffic between
+     * master/slave licenser.
+     *
+     * @param pass4SymmKey The prepended password string.
+     */
+    public void setPasswordSymmKey(String pass4SymmKey) {
+        setCacheValue("pass4SymmKey", pass4SymmKey);
+    }
+
+    /**
+     * Sets the name used to identify this Splunk instance for features such
+     * as distributed search. Defaults to
+     * {@code <hostname>-<user running splunk>}.
+     *
+     * @param serverName The server name.
+     */
+    public void setServerName(String serverName) {
+        setCacheValue("serverName", serverName);
+    }
+
+    /**
+     * Sets the session timeout. Valid value are of the form {@code number}
+     * followed by a specifier of the set {@code s, h, d}.
+     *
+     * @param sessionTimeout The session timeout value.
+     */
+    public void setSessionTimeout(String sessionTimeout) {
+        setCacheValue("sessionTimeout", sessionTimeout);
+    }
+
+    /**
+     * Sets whether or not to start splunk web or not. {@code True} enables
+     * Splunk Wen, {@code false} disables Splunk Web.
+     *
+     * @param startwebserver Whether or not to start Splunk Web.
+     */
+    public void setStartWebServer(boolean startwebserver) {
+        setCacheValue("startwebserver", startwebserver);
+    }
+
+    /**
+     * Sets The IP address of the authenticating proxy. Set to a valid IP
+     * address to enable SSO.
+     *
+     * Disabled by default. Normal value is {@code 127.0.0.1}.
+     *
+     * @param trustedIP The authenticating proxy's IP address.
+     */
+    public void setTrustedIP(String trustedIP) {
+        setCacheValue("trustedIP", trustedIP);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override public void update(Map<String, Object> args) {
-        service.post(path + "/settings", args);
+        // Merge cached setters and live args together before updating.
+        HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
+        mergedArgs.putAll(toUpdate);
+        mergedArgs.putAll(args);
+        service.post(path + "/settings", mergedArgs);
+        toUpdate.clear();
+        invalidate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public void update() {
+        service.post(path + "/settings", toUpdate);
         invalidate();
     }
 }

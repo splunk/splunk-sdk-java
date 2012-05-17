@@ -60,15 +60,15 @@ public class Program {
         Args args = new Args();
 
         // search args
-        args.put("timeout", "60");              // don't keep search around
-        args.put("output_mode", outputMode);    // output in specific format
-        args.put("earliest_time", "rt");        // realtime
-        args.put("latest_time", "rt");          // realtime
-        args.put("search_mode", "realtime");    // realtime
+        args.put("timeout", "60");              // Don't keep search around
+        args.put("output_mode", outputMode);    // Output in specific format
+        args.put("earliest_time", "rt");        // Realtime
+        args.put("latest_time", "rt");          // Realtime
+        args.put("search_mode", "realtime");    // Realtime
 
         InputStream is = service.export(query, args);
 
-        // use UTF8 sensitive reader/writers
+        // Use UTF8 sensitive reader/writers
         InputStreamReader reader = new InputStreamReader(is, "UTF8");
         OutputStreamWriter writer = new OutputStreamWriter(System.out);
 

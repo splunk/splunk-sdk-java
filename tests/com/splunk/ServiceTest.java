@@ -230,6 +230,47 @@ public class ServiceTest extends SplunkTestCase {
         job.cancel();
     }
 
+    @Test public void testSettersAndGetters() {
+
+        // The individual classes test most of the set/get methods,
+        // but call out some specific cases here.
+
+        Service service = connect();
+        Settings settings = service.getSettings();
+        String originalHost = settings.getHost();
+        int originalMinSpace = settings.getMinFreeSpace();
+
+        // make sure set updates state before getting.
+        // entity.setMethod(value)
+        // entity.getMethod() --> gets value.
+        settings.setHost("sdk-host");
+        assertEquals(settings.getHost(), "sdk-host");
+
+        // make sure posts arguments are merged
+        // entity.setMethod(value)
+        // entity.update(args.create("key2", value2))
+        settings.setHost("sdk-host2");
+        settings.update(
+            new HashMap<String, Object>(Args.create("minFreeSpace", 500)));
+        assertEquals(settings.getHost(), "sdk-host2");
+        assertEquals(settings.getMinFreeSpace(), 500);
+
+        // make sure live posts argument take precedents over setters
+        // entity.setMethod(value)
+        // entity.update(args.create("samekey", value2))
+        settings.setMinimumFreeSpace(600);
+        settings.update(
+            new HashMap<String, Object>(Args.create("minFreeSpace", 700)));
+        assertEquals(settings.getMinFreeSpace(), 700);
+
+        // Restore original
+        settings.setHost(originalHost);
+        settings.setMinimumFreeSpace(originalMinSpace);
+        settings.update();
+        assertEquals(settings.getMinFreeSpace(), originalMinSpace);
+        assertEquals(settings.getHost(), originalHost);
+    }
+
     @Test public void testUsers() {
         Args args;
         User user;
@@ -296,6 +337,24 @@ public class ServiceTest extends SplunkTestCase {
         assertEquals(user.getEmail(), "email.me@now.com");
         assertEquals(user.getDefaultApp(), "search");
         user.getTz();
+
+        // update user using setters
+        user.setDefaultApp("search");
+        user.setEmail("none@noway.com");
+        user.setPassword("new-password");
+        user.setRealName("SDK-name");
+        if (service.versionCompare("4.3") > 0) {
+            user.setRestartBackgroundJobs(false);
+        }
+        user.setRoles("power");
+        user.update();
+        user.refresh();
+
+        assertTrue(user.getRoles().length == 1);
+        assertTrue(contains(user.getRoles(), "power"));
+        assertEquals(user.getRealName(), "SDK-name");
+        assertEquals(user.getEmail(), "none@noway.com");
+        assertEquals(user.getDefaultApp(), "search");
 
         users.remove(username);
         assertFalse(users.containsKey(username));

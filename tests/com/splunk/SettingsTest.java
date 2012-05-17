@@ -18,8 +18,12 @@ package com.splunk;
 
 import org.junit.Test;
 
+import java.net.Socket;
+
 public class SettingsTest extends SplunkTestCase {
-    @Test public void testSettings() {
+
+
+    @Test public void testSettings() throws Exception {
         Service service = connect();
         Settings settings = service.getSettings();
         settings.getSplunkDB();
@@ -31,19 +35,66 @@ public class SettingsTest extends SplunkTestCase {
         settings.getMinFreeSpace();
         settings.getPass4SymmKey();
         settings.getServerName();
-        String timeout = settings.getSessionTimeout(); // set aside original
+        settings.getSessionTimeout();
         settings.getStartWebServer();
         settings.getTrustedIP();
 
+        // set aside original settings
+        String originalTimeout = settings.getSessionTimeout();
+        boolean originalSSL = settings.getEnableSplunkWebSSL();
+        String originalHost = settings.getHost();
+        int originalHttpPort = settings.getHttpPort();
+        int originalMinSpace = settings.getMinFreeSpace();
+        //int originalMgmtPort = settings.getMgmtPort();
+        String originalServerName = settings.getServerName();
+        boolean originalStartWeb = settings.getStartWebServer();
+
         // test update
-        Args args = new Args("sessionTimeout", "2h");
-        settings.update(args);
-        String updatedTimeout = settings.getSessionTimeout();
-        assertEquals("Must be equal", updatedTimeout, "2h");
-        // restore original timeout
-        args.put("sessionTimeout", timeout);
-        settings.update(args);
-        updatedTimeout = settings.getSessionTimeout();
-        assertEquals("Must be equal", updatedTimeout, timeout);
+        settings.setEnableSplunkWebSSL(!originalSSL);
+        settings.setHost("sdk-host");
+        settings.setHttpPort(8001);
+        settings.setMinimumFreeSpace(originalMinSpace-100);
+        //settings.setMgmtHostPort(originalMgmtPort+1);
+        settings.setServerName("sdk-test-name");
+        settings.setSessionTimeout("2h");
+        //settings.setStartWebServer(!originalStartWeb);
+        settings.update();
+
+        // changing ports require a restart
+        splunkRestart();
+        service = connect();
+        settings = service.getSettings();
+
+        assertEquals(settings.getEnableSplunkWebSSL(), !originalSSL);
+        assertEquals(settings.getHost(), "sdk-host");
+        assertEquals(settings.getHttpPort(), 8001);
+        assertEquals(settings.getMinFreeSpace(), originalMinSpace-100);
+        assertEquals(settings.getServerName(), "sdk-test-name");
+        assertEquals(settings.getSessionTimeout(), "2h");
+        //assertEquals(settings.getStartWebServer(), !originalStartWeb);
+
+        // restore original
+        settings.setEnableSplunkWebSSL(originalSSL);
+        settings.setHost(originalHost);
+        settings.setHttpPort(originalHttpPort);
+        settings.setMinimumFreeSpace(originalMinSpace);
+        settings.setServerName(originalServerName);
+        settings.setSessionTimeout(originalTimeout);
+        settings.setStartWebServer(originalStartWeb);
+        settings.update();
+
+        // changing ports require a restart
+        splunkRestart();
+        service = connect();
+        settings = service.getSettings();
+
+        assertEquals(settings.getEnableSplunkWebSSL(), originalSSL);
+        assertEquals(settings.getHost(), originalHost);
+        assertEquals(settings.getHttpPort(), originalHttpPort);
+        assertEquals(settings.getMinFreeSpace(), originalMinSpace);
+        assertEquals(settings.getServerName(), originalServerName);
+        assertEquals(settings.getSessionTimeout(), originalTimeout);
+        assertEquals(settings.getStartWebServer(), originalStartWeb);
+
     }
 }

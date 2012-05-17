@@ -59,17 +59,17 @@ public class EventTypeTest extends SplunkTestCase {
         assertEquals(eventType.getSearch(), search);
         assertTrue(eventType.isDisabled());
 
-        args = new Args();
-        args.put("search", "index=_audit *");
-        args.put("description", "Dummy description a second time");
-        args.put("priority", 3);
-        eventType.update(args);
+        eventType.setDescription("Dummy description a second time");
+        eventType.setDisabled(true);
+        eventType.setPriority(3);
+        eventType.update();
         eventType.enable();
 
         assertEquals(eventType.getName(), "sdk-test");
-        assertEquals(eventType.getDescription(), args.get("description"));
-        assertEquals(eventType.getPriority(), args.get("priority"));
-        assertEquals(eventType.getSearch(), args.get("search"));
+        assertEquals(eventType.getDescription(),
+                "Dummy description a second time");
+        assertEquals(eventType.getPriority(), 3);
+        assertEquals(eventType.getSearch(), "index=_internal *");
         assertFalse(eventType.isDisabled());
 
         eventTypeCollection.remove("sdk-test");

@@ -32,7 +32,17 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the style of host connection. Valid values are: {@code ip}, {@code dns}, and {@code none}.
+     * Returns an object that contains the inbound raw TCP connections.
+     *
+     * @return The TCP connections object.
+     */
+    public UdpConnections connections() {
+        return new UdpConnections(service, path + "/connections");
+    }
+
+    /**
+     * Returns the style of host connection. Valid values are: {@code ip},
+     * {@code dns}, and {@code none}.
      *
      * @return The style of host connection, or {@code null} if not specified.
      */
@@ -50,7 +60,8 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the source host for this UDP input, where this indexer gets its data.
+     * Returns the source host for this UDP input, where this indexer gets its
+     * data.
      *
      * @return The source host, or {@code null} if not specified.
      */
@@ -78,7 +89,8 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the queue for this UDP input. Valid values are: {@code parsingQueue} and {@code indexQueue}.
+     * Returns the queue for this UDP input. Valid values are:
+     * {@code parsingQueue} and {@code indexQueue}.
      *
      * @return The queue, or {@code null} if not specified.
      */
@@ -111,17 +123,17 @@ public class UdpInput extends Input {
      * @return The event source type, or {@code null} if not specified.
      */
     public String getSourceType() {
-        return getString("sourceType", null);
+        return getString("sourcetype", null);
     }
 
     /**
      * Indicates whether Splunk prepends a timestamp and hostname to
      * incoming events.
      *
-     * @return {@code true} if Splunk does <i>not</i> prepend a timestamp and hostname to
-     * incoming events, {@code false} if it does.
+     * @return {@code true} if Splunk does <i>not</i> prepend a timestamp and
+     * hostname to incoming events, {@code false} if it does.
      */
-    public boolean noAppendingTimeStamp() {
+    public boolean getNoAppendingTimeStamp() {
         return getBoolean("no_appending_timestamp", false);
     }
 
@@ -132,7 +144,122 @@ public class UdpInput extends Input {
      * @return {@code true} if Splunk does <i>not</i> remove the priority field 
      * from incoming syslog events, {@code false} if it does.
      */
-    public boolean noPriorityStripping() {
+    public boolean getNoPriorityStripping() {
         return getBoolean("no_priority_stripping", false);
+    }
+
+    /**
+     * Sets the {@code from-host} for the remote server that is sending data.
+     * Valid values are {@code ip, dns} or {@code none}.
+     *
+     * {@code ip} sets the host to the IP address of the remote server sending
+     * data. {@code dns} sets the host to the reverse DNS entry for the IP
+     * address of the remote server sending data.
+     *
+     * {@code none} leaves the host as specified in inputs.conf, which is
+     * typically the Splunk system hostname.
+     *
+     * @param connection_host How to set the from-host information.
+     */
+    public void setConnectionHost(String connection_host) {
+        setCacheValue("connection_host", connection_host);
+    }
+
+    /**
+     * Sets the host from which the indexer gets data.
+     *
+     * @param host The host from which the indexer gets data.
+     */
+    public void setHost(String host) {
+        setCacheValue("host", host);
+    }
+
+    /**
+     * Sets index in which to store all generated events.
+     *
+     * @param index The index in which to store all generated events.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets whether or not splunk prepends a timestamp and hostname to incoming
+     * events.
+     *
+     * @param no_appending_timestamp whether or not splunk prepends a timestamp
+     * and hostname to incoming events.
+     */
+    public void setNoAppendingTimeStamp(boolean no_appending_timestamp) {
+        setCacheValue("no_appending_timestamp", no_appending_timestamp);
+    }
+
+    /**
+     * Sets whether or not splunk strips the priority field from incoming
+     * events.
+     *
+     * @param no_priority_stripping whether or not splunk strips the priority
+     * field from incoming events.
+     */
+    public void setNoPriorityStripping(boolean no_priority_stripping) {
+        setCacheValue("no_priority_stripping", no_priority_stripping);
+    }
+
+    /**
+     * Sets where the input processor should deposit the events it reads.
+     * Valid values are {code parsingQueue} or {@code indexQueue}.
+     *
+     * Defaults to {@code parsingQueue}.
+     *
+     * Set queue to parsingQueue to apply props.conf and other parsing rules
+     * to your data. For more information about props.conf and rules for
+     * timestamping and linebreaking.
+     *
+     * Set queue to {@code indexQueue} to send your data directly into the
+     * index.
+     *
+     * @param queue The queue processing type.
+     */
+    public void setQueue(String queue) {
+        setCacheValue("queue", queue);
+    }
+
+    /**
+     * Sets a restriction to accept inputs from only this host.
+     *
+     * @param restrictToHost Restrict to accept inputs only from this host.
+     */
+    public void setRestrictToHost(String restrictToHost) {
+        setCacheValue("restrictToHost", restrictToHost);
+    }
+
+    /**
+     * Sets the source key/field for events from this input. Defaults to the
+     * input file path.
+     *
+     * Sets the source key's initial value. The key is used during
+     * parsing/indexing, in particular to set the source field during indexing.
+     * It is also the source field used at search time. As a convenience,
+     * the chosen string is prepended with 'source::'.
+     *
+     * Note: Overriding the source key is generally not recommended. Typically,
+     * the input layer provides a more accurate string to aid in problem
+     * analysis and investigation, accurately recording the file from which
+     * the data was retreived. Consider use of source types, tagging, and search
+     * wildcards before overriding this value.
+     *
+     * @param source the source key/field for events from this input.
+     */
+    public void setSource(String source) {
+        setCacheValue("source", source);
+    }
+
+    /**
+     * Sets the source type for events from this input.
+     *
+     * @param sourcetype the for events from this input.
+     */
+    public void setSourceType(String sourcetype) {
+        setCacheValue("sourcetype", sourcetype);
     }
 }

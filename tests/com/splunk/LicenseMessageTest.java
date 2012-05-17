@@ -24,13 +24,13 @@ public class LicenseMessageTest extends SplunkTestCase {
         Service service = connect();
 
         EntityCollection<LicenseMessage> licenseMessages =
-                service.getLicenseMessages();
+            service.getLicenseMessages();
         if (licenseMessages.values().size() == 0) {
             System.out.println("WARNING: no license messages found");
             return;
         }
 
-        // test for sane data in licenses
+        // Test for sane data in licenses
         for (LicenseMessage licenseMessage: licenseMessages.values()) {
             assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
             licenseMessage.getCategory();

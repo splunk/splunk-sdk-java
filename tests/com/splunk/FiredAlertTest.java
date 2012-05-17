@@ -21,25 +21,30 @@ import org.junit.Test;
 public class FiredAlertTest extends SplunkTestCase {
     @Test public void testFiredAlerts() throws Exception {
         Service service = connect();
-        EntityCollection<FiredAlert> firedAlerts = service.getFiredAlerts();
+        EntityCollection<FiredAlertGroup>
+            firedAlertGroups = service.getFiredAlerts();
 
-        if (firedAlerts.values().size() == 0) {
+        if (firedAlertGroups.values().size() == 0) {
             System.out.println("WARNING: no fired alerts detected");
             return;
         }
 
         // N.B. cant create or modify, only read & delete. skipping delete.
-        for (FiredAlert firedAlert: firedAlerts.values()) {
-            firedAlert.getAction();
-            firedAlert.getAlertType();
-            firedAlert.getExpirationTime();
-            firedAlert.getSavedSearchName();
-            firedAlert.getSeverity();
-            firedAlert.getSid();
-            firedAlert.getTriggeredAlertCount();
-            firedAlert.getTriggerTime();
-            firedAlert.getTriggerTimeRendered();
-            firedAlert.isDigestMode();
+        for (FiredAlertGroup firedAlertGroup: firedAlertGroups.values()) {
+            EntityCollection<FiredAlert>
+                firedAlerts = firedAlertGroup.getAlerts();
+            for (FiredAlert firedAlert: firedAlerts.values()) {
+                firedAlert.getAction();
+                firedAlert.getAlertType();
+                firedAlert.getExpirationTime();
+                firedAlert.getSavedSearchName();
+                firedAlert.getSeverity();
+                firedAlert.getSid();
+                firedAlert.getTriggeredAlertCount();
+                firedAlert.getTriggerTime();
+                firedAlert.getTriggerTimeRendered();
+                firedAlert.isDigestMode();
+            }
         }
     }
 }

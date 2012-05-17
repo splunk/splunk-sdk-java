@@ -29,7 +29,8 @@ import org.xml.sax.InputSource;
 public class Xml {
 
     /**
-     * Parses the given input stream and returns it as an XML document object model (DOM).
+     * Parses the given input stream and returns it as an XML document object
+     * model (DOM).
      *
      * @param input The {@code InputStream} to parse.
      * @return The XML DOM.

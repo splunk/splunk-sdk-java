@@ -84,4 +84,14 @@ public class Password extends Entity {
     public String getUsername() {
         return getString("username");
     }
+
+
+    /**
+     * Sets the password for this entry.
+     *
+     * @param password The password.
+     */
+    public void setPassword(String password) {
+        setCacheValue("password", password);
+    }
 }

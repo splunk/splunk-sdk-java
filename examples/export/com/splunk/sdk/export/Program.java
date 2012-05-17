@@ -35,7 +35,7 @@ import java.util.Map;
  * return data is in strict descending time order.
  */
 
-// in recover mode, we will duplicate messages and meta data; however,
+// In recover mode, we will duplicate messages and meta data; however,
 // this is not necessarily incorrect, just redundant information.
 
 public class Program {
@@ -65,7 +65,7 @@ public class Program {
         while (eventEnd > 0) {
             String substring = str.substring(eventStart, eventEnd);
             String [] parts = substring.split(",");
-            // test parts 0 and 1 of the CSV, for <number> and time.qqq stamp
+            // Test parts 0 and 1 of the CSV, for <number> and time.qqq stamp
             try {
                 Integer.parseInt(parts[0]);
                 String timestamp = parts[1].replace("\"","");
@@ -77,7 +77,7 @@ public class Program {
                 return pair;
             }
             catch (Exception e) {
-                // if any of the fields accessed caused an exception, then
+                // If any of the fields accessed caused an exception, then
                 // we didn't have a valid start of event, so try again.
                 eventStart = str.indexOf("\n", eventEnd + 2);
                 eventEnd = str.indexOf("\"\n", eventStart + 1);
@@ -93,11 +93,11 @@ public class Program {
             return -1;
 
         lastTime = str.substring(pair.get("start"))
-                                    .split(",")[1]
-                                    .replace("\"","");
+                                     .split(",")[1]
+                                     .replace("\"","");
         nextEventOffset = pair.get("end");
 
-        // walk through events until time changes
+        // Walk through events until time changes.
         while (pair.get("end") > 0) {
             pair = getStartNextCSVEvent(pair.get("start"), str);
             if (pair.get("end") < 0)
@@ -121,10 +121,10 @@ public class Program {
         String timeEndPattern = "<";
         String eventEndPattern = "</result>";
 
-        // get first event in this buffer. If no event end kick back
+        // Get first event in this buffer. If no event end kick back
         int eventStart = str.indexOf(resultPattern);
         int eventEnd = str.indexOf(eventEndPattern, eventStart)
-                + eventEndPattern.length();
+            + eventEndPattern.length();
         if (eventEnd < 0)
             return -1;
         int timeKeyStart = str.indexOf(timeKeyPattern, eventStart);
@@ -135,7 +135,7 @@ public class Program {
 
         nextEventOffset = eventEnd;
 
-        // walk through events until time changes
+        // Walk through events until time changes
         eventStart = eventEnd;
         while (eventEnd > 0) {
             eventStart = str.indexOf(resultPattern, eventStart+1);
@@ -162,9 +162,9 @@ public class Program {
         String timeKeyPattern = "\"_time\":\"";
         String timeEndPattern = "\"";
         String eventEndPattern = "\"},\n";
-        String eventEndPattern2 = "\"}[]"; // old json output format bug
+        String eventEndPattern2 = "\"}[]"; // Old json output format bug
 
-        // get first event in this buffer. If no event end kick back
+        // Get first event in this buffer. If no event end kick back.
         int eventStart = str.indexOf("{\"_cd\":\"");
         int eventEnd = str.indexOf(eventEndPattern, eventStart)
                 + eventEndPattern.length();
@@ -180,7 +180,7 @@ public class Program {
         lastTime = str.substring(timeStart, timeEnd);
         nextEventOffset = eventEnd;
 
-        // walk through events until time changes
+        // Walk through events until time changes.
         eventStart = eventEnd;
         while (eventEnd > 0) {
             eventStart = str.indexOf("{\"_cd\":\"", eventStart+1);
@@ -273,7 +273,7 @@ public class Program {
             throw new Error("Export file exists, and no recover option");
 
         if (recover && file.exists() && file.isFile()) {
-            // chunk backwards through the file until we find valid
+            // Chunk backwards through the file until we find valid
             // start time. If we can't find one just start over.
             final int bufferSize = (64*1024);
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
@@ -293,7 +293,7 @@ public class Program {
             }
 
             if (fptr < 0)
-                fptrEof = 0; // didn't find a valid event, so start over.
+                fptrEof = 0; // We didn't find a valid event, so start over.
             else
                 args.put("latest_time", lastTime);
                 addEndOfLine = true;
@@ -304,11 +304,11 @@ public class Program {
         if (!file.createNewFile())
             throw new Error("Failed to create output file");
 
-        // search args
-        args.put("timeout", "60");          // don't keep search around
-        args.put("output_mode", format);    // output in specific format
-        args.put("earliest_time", "0.000"); // always to beginning of index
-        args.put("time_format", "%s.%Q");   // epoch time plus fraction
+        // Search args
+        args.put("timeout", "60");          // Don't keep search around
+        args.put("output_mode", format);    // Output in specific format
+        args.put("earliest_time", "0.000"); // Always to beginning of index
+        args.put("time_format", "%s.%Q");   // Epoch time plus fraction
         String search = null;
 
         if (command.opts.containsKey("search")) {
@@ -318,19 +318,18 @@ public class Program {
             search = String.format("search index=%s *", indexName);
         }
 
-        //System.out.println("search: " + search + ", args: " + args);
         InputStream is = service.export(search, args);
 
-        // use UTF8 sensitive reader/writers
+        // Use UTF8 sensitive reader/writers
         InputStreamReader isr = new InputStreamReader(is, "UTF8");
         FileOutputStream os = new FileOutputStream(file, true);
         Writer out = new OutputStreamWriter(os, "UTF8");
 
-        // read/write 8k at a time if possible
+        // Read/write 8k at a time if possible
         char [] xferBuffer = new char[8192];
         boolean once = true;
 
-        // if superfluous meta-data is not needed, or specifically
+        // If superfluous meta-data is not needed, or specifically
         // wants to be removed, one would clean up the first read
         // buffer on a format by format basis,
         while (true) {

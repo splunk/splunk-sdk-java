@@ -16,16 +16,14 @@
 
 package com.splunk;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The {@code Entity} class is a base class for all Splunk entity resources.
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
+    public HashMap<String, Object> toUpdate = new HashMap<String, Object>();
 
     /**
      * Class constructor.
@@ -97,6 +95,7 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /** {@inheritDoc} */
     public Object get(Object key) {
+        if (toUpdate.containsKey(key)) return toUpdate.get(key);
         return getContent().get(key);
     }
 
@@ -108,6 +107,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The Boolean value associated with the specified key.
      */
     boolean getBoolean(String key) {
+        if (toUpdate.containsKey(key))
+            return Value.toBoolean(toUpdate.get(key).toString());
         return getContent().getBoolean(key);
     }
 
@@ -121,6 +122,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The Boolean value associated with the specified key.
      */
     boolean getBoolean(String key, boolean defaultValue) {
+        if (toUpdate.containsKey(key))
+            return Value.toBoolean(toUpdate.get(key).toString());
         return getContent().getBoolean(key, defaultValue);
     }
 
@@ -132,6 +135,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The long value associated with the specified key.
      */
     long getByteCount(String key) {
+        if (toUpdate.containsKey(key))
+            return Value.toByteCount(toUpdate.get(key).toString());
         return getContent().getByteCount(key);
     }
 
@@ -145,6 +150,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The long value associated with the specified key.
      */
     long getByteCount(String key, long defaultValue) {
+        if (toUpdate.containsKey(key))
+            return Value.toByteCount(toUpdate.get(key).toString());
         return getContent().getByteCount(key, defaultValue);
     }
 
@@ -160,6 +167,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The date value associated with the specified key.
      */
     Date getDate(String key) {
+        if (toUpdate.containsKey(key))
+            return Value.toDate(toUpdate.get(key).toString());
         return getContent().getDate(key);
     }
 
@@ -173,31 +182,9 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The date value associated with the specified key.
      */
     Date getDate(String key, Date defaultValue) {
+        if (toUpdate.containsKey(key))
+            return Value.toDate(toUpdate.get(key).toString());
         return getContent().getDate(key, defaultValue);
-    }
-
-    /**
-     * Returns a date value associated with the specified key. Date values can
-     * be converted from epoch time formats.
-     *
-     * @param key The key to look up.
-     * @return The date value associated with the specified. key.
-     */
-    Date getDateFromEpoch(String key) {
-        return getContent().getDateFromEpoch(key);
-    }
-
-    /**
-     * Returns a date value associated with the specified key, or the default
-     * value if the key does not exist. Date values can be converted from epoch
-     * time formats.
-     *
-     * @param key The key to look up.
-     * @param defaultValue The default value.
-     * @return The date value associated with the specified key.
-     */
-    Date getDateFromEpoch(String key, Date defaultValue) {
-        return getContent().getDateFromEpoch(key, defaultValue);
     }
 
     /**
@@ -207,6 +194,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The floating point value associated with the specified key.
      */
     float getFloat(String key) {
+        if (toUpdate.containsKey(key))
+            return Value.toFloat(toUpdate.get(key).toString());
         return getContent().getFloat(key);
     }
 
@@ -217,6 +206,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The integer point value associated with the specified key.
      */
     int getInteger(String key) {
+        if (toUpdate.containsKey(key))
+            return Value.toInteger(toUpdate.get(key).toString());
         return getContent().getInteger(key);
     }
 
@@ -228,6 +219,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The integer value associated with the specified key.
      */
     int getInteger(String key, int defaultValue) {
+        if (toUpdate.containsKey(key))
+            return Value.toInteger(toUpdate.get(key).toString());
         return getContent().getInteger(key, defaultValue);
     }
 
@@ -238,6 +231,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The long value associated with the specified key.
      */
     long getLong(String key) {
+        if (toUpdate.containsKey(key))
+            return Value.toLong(toUpdate.get(key).toString());
         return getContent().getLong(key);
     }
 
@@ -249,6 +244,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The long value associated with the specified key.
      */
     long getLong(String key, int defaultValue) {
+        if (toUpdate.containsKey(key))
+            return Value.toLong(toUpdate.get(key).toString());
         return getContent().getLong(key, defaultValue);
     }
 
@@ -273,6 +270,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The string value associated with the specified key.
      */
     String getString(String key) {
+        if (toUpdate.containsKey(key))
+            return toUpdate.get(key).toString();
         return getContent().getString(key);
     }
 
@@ -285,6 +284,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The string value associated with the specified key.
      */
     String getString(String key, String defaultValue) {
+        if (toUpdate.containsKey(key))
+            return toUpdate.get(key).toString();
         return getContent().getString(key, defaultValue);
     }
 
@@ -295,6 +296,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The string array value associated with the specified key.
      */
     String[] getStringArray(String key) {
+        if (toUpdate.containsKey(key))
+            return getStringArray(toUpdate.get(key).toString());
         return getContent().getStringArray(key);
     }
 
@@ -307,6 +310,8 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The string array value associated with the specified key.
      */
     String[] getStringArray(String key, String[] defaultValue) {
+        if (toUpdate.containsKey(key))
+            return getStringArray(toUpdate.get(key).toString());
         return getContent().getStringArray(key, defaultValue);
     }
 
@@ -355,6 +360,8 @@ public class Entity extends Resource implements Map<String, Object> {
 
     /** {@inheritDoc} */
     @Override public Entity refresh() {
+        // Update any attribute values set by a setter method that has not
+        // yet been written to the object.
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200);
         AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -378,19 +385,49 @@ public class Entity extends Resource implements Map<String, Object> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Sets the local cache update value. Deferred write until {@code update} is
+     * invoked.
+     *
+     * @param key The key to set.
+     * @param value The default value.
+     */
+    void setCacheValue(String key, Object value) {
+        toUpdate.put(key, value);
+    }
+
     /** {@inheritDoc} */
     public int size() {
         return getContent().size();
     }
 
     /**
-     * Updates the entity with the specified arguments.
+     * Update the entity with the values previously set via the setter
+     * methods, and the additional specified arguments. The specified arguments
+     * take precedents over the value set via the setter methods.
      *
      * @param args The arguments to update.
      */
     public void update(Map<String, Object> args) {
-        service.post(actionPath("edit"), args);
+        // Merge cached setters and live args together before updating.
+        HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
+        mergedArgs.putAll(toUpdate);
+        mergedArgs.putAll(args);
+        service.post(actionPath("edit"), mergedArgs);
+        toUpdate.clear();
         invalidate();
+    }
+
+    /**
+     * Update the entity with the accumulated arguments, established by the
+     * individual setter methods for each specific entity class.
+     */
+    public void update() {
+        if (toUpdate.size() > 0) {
+            service.post(actionPath("edit"), toUpdate);
+            toUpdate.clear();
+            invalidate();
+        }
     }
 
     /**

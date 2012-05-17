@@ -17,8 +17,8 @@
 package com.splunk;
 
 /**
- * The {@code DeploymentServer} class represents a Splunk deployment server, and provides
- * access to the configurations of all deployment servers.
+ * The {@code DeploymentServer} class represents a Splunk deployment server,
+ * and provides access to the configurations of all deployment servers.
  */
 public class DeploymentServer extends Entity {
 
@@ -48,10 +48,23 @@ public class DeploymentServer extends Entity {
      * Returns inclusive criteria for determining deployment client access to
      * this deployment server.
      *
-     * @return Criteria for determining deployment client access to this
-     * deployment server.
+     * @param index The index of the whitelist entry to return.
+     * @return A list of included client addresses, or {@code null} if not
+     * specified.
      */
-    public String getWhiteList0() {
-        return getString("whitelist.0");
+    public String getWhiteListByIndex(int index) {
+        return getString(String.format("whitelist.%d", index), null);
+    }
+
+    /**
+     * Sets whether the deployment server is enabled or disabled. Note that
+     * this effect is not immediate; Splunk must be restarted to take effect.
+     * The
+     *
+     * @param disabled {@code true} to disabled to deployment client,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
     }
 }

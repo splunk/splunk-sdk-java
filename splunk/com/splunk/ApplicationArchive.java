@@ -41,8 +41,8 @@ public class ApplicationArchive extends Entity {
     }
 
     /**
-     * Returns a path indicating where the app archive file is stored on the server, 
-     * for direct file access. 
+     * Returns a path indicating where the app archive file is stored on the
+     * server, for direct file access.
      *
      * @return The path to the archive file.
      */
@@ -51,7 +51,8 @@ public class ApplicationArchive extends Entity {
     }
 
     /**
-     * Returns a URL to the app archive file on the server, for web browser access.
+     * Returns a URL to the app archive file on the server, for web browser
+     * access.
      *
      * @return The URL to the archive file.
      */

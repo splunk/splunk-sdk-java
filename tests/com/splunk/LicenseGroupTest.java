@@ -28,12 +28,13 @@ public class LicenseGroupTest extends SplunkTestCase {
                 service.getLicenseGroups();
 
         // list of stackids, empirically created
-        List<String> stacks = Arrays.asList("download-trial",
-                                            "enterprise",
-                                            "forwarder",
-                                            "free",
-                                            "trial",
-                                            "");
+        List<String> stacks = Arrays.asList(
+            "download-trial",
+            "enterprise",
+            "forwarder",
+            "free",
+            "trial",
+            "");
         for (LicenseGroup licenseGroup: licenseGroups.values()) {
             // enterprise, forwarder, free, download-trial and empty
             for (String id: licenseGroup.getStackIds()) {

@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -105,7 +104,8 @@ public class JobCollection extends EntityCollection<Job> {
     }
 
     /**
-     * Returns the job's unique search identifier (SID), which is used as this item's key.
+     * Returns the job's unique search identifier (SID), which is used as this
+     * item's key.
      *
      * @param entry The {@code AtomEntry} response.
      * @return This job's SID.

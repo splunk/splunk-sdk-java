@@ -119,8 +119,8 @@ public abstract class Resource {
     }
 
     /**
-     * Return the title of this resource, which corresponds to the Atom {@code <title>}
-     * element.
+     * Return the title of this resource, which corresponds to the Atom
+     * {@code <title>} element.
      *
      * @return The resource title.
      */
@@ -150,7 +150,8 @@ public abstract class Resource {
     /**
      * Loads the state of this resource from a given Atom object.
      *
-     * @param value The {@code AtomObject} from which to load the resource state.
+     * @param value The {@code AtomObject} from which to load the resource
+     * state.
      * @return The current {@code Resource} instance.
      */
     Resource load(AtomObject value) {

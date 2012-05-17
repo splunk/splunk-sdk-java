@@ -167,7 +167,7 @@ public class ServiceInfo extends Entity {
      * @return {@code true} if real time search is enabled.
      */
     public boolean isRtSearchEnabled() {
-        return getBoolean("rtsearch_enabled");
+        return getBoolean("rtsearch_enabled", false);
     }
 
     /**

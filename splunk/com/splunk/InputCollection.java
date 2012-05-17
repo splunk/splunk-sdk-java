@@ -16,13 +16,14 @@
 
 package com.splunk;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The {@code InputCollection} class represents a collection of inputs. The 
- * collection is heterogeneous and each member contains an {@code InputKind} property
- * that indicates the specific type of input (<i>input kind</i>).
+ * collection is heterogeneous and each member contains an {@code InputKind}
+ * property that indicates the specific type of input (<i>input kind</i>).
  */
 public class InputCollection extends EntityCollection<Input> {
     // CONSIDER: We can probably initialize the following based on platform and
@@ -57,6 +58,12 @@ public class InputCollection extends EntityCollection<Input> {
      */
     InputCollection(Service service, Args args) {
         super(service, "data/inputs", args);
+    }
+
+    /** {@inheritDoc} */
+    @Override public boolean containsKey(Object key) {
+        Input input = retrieveInput((String)key);
+        return (input != null);
     }
 
     /**
@@ -128,6 +135,28 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override public Input get(Object key) {
+        return retrieveInput((String)key);
+
+    }
+
+    /**
+     * Gets a the value of a scoped (i.e. namespace constrained) key if it
+     * exists within this collection.
+     *
+     * @param key The key to lookup.
+     * @param namespace The namespace to constrain the search to.
+     * @return The value indexed by the key, or null if it does not exist.
+     */
+
+
+   public Input get(Object key, Args namespace) {
+       return retrieveInput((String)key, namespace);
+   }
+
+    /**
      * Returns the path's {@code InputKind} value.
      *
      * @param path The input path.
@@ -169,6 +198,96 @@ public class InputCollection extends EntityCollection<Input> {
         }
 
         return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Input remove(String key) {
+        Input input = retrieveInput(key);
+        if (input != null) {
+            input.remove();
+        }
+        return input;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override public Input remove(
+            String key, Args namespace) {
+        Input input = retrieveInput(key, namespace);
+        if (input != null) {
+            input.remove();
+        }
+        return input;
+    }
+
+    private Input retrieveInput(String key) {
+        validate();
+        // Because scripted input names are not 1:1 with the original name
+        // (they are the absolute path on the splunk instance followed by
+        // the original name), we will iterate over the entities in the list,
+        // and if we find one that matches, return it.
+        Set<Entry<String, LinkedList<Input>>> set =  items.entrySet();
+        for (Entry<String, LinkedList<Input>> entry: set) {
+            String entryKey = entry.getKey();
+            LinkedList<Input> entryValue = entry.getValue();
+
+            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
+                if (entryKey.endsWith("/" + key)||
+                    entryKey.endsWith("\\" + key)) {
+                    if (entryValue.size() > 1) {
+                        throw new SplunkException(SplunkException.AMBIGUOUS,
+                                "Key has multiple values, specify a namespace");
+                    }
+                    return entryValue.get(0);
+                }
+            } else {
+                LinkedList<Input> entities = items.get(key);
+                if (entities != null && entities.size() > 1) {
+                    throw new SplunkException(SplunkException.AMBIGUOUS,
+                            "Key has multiple values, specify a namespace");
+                }
+                if (entities == null || entities.size() == 0) continue;
+                return entities.get(0);
+            }
+        }
+        return null;
+    }
+
+    private Input retrieveInput(String key, Args namespace) {
+        validate();
+        // because scripted input names are not 1:1 with the original name
+        // (they are the absolute path on the splunk instance followed by
+        // the original name), we will iterate over the entities in the list,
+        // and if we find one that matches, return it.
+        String pathMatcher = service.fullpath("", namespace);
+        Set<Entry<String, LinkedList<Input>>> set =  items.entrySet();
+        for (Entry<String, LinkedList<Input>> entry: set) {
+            String entryKey = entry.getKey();
+            LinkedList<Input> entryValue = entry.getValue();
+
+            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
+                if (entryKey.endsWith("/" + key)||
+                    entryKey.endsWith("\\" + key)) {
+                    for (Input entity: entryValue) {
+                        if (entity.path.startsWith(pathMatcher)) {
+                            return entity;
+                        }
+                    }
+                }
+            } else {
+                LinkedList<Input> entities = items.get(key);
+                if (entities == null || entities.size() == 0) continue;
+                for (Input entity: entities) {
+                    if (entity.path.startsWith(pathMatcher)) {
+                        return entity;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
 

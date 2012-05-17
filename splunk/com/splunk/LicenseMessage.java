@@ -51,7 +51,7 @@ public class LicenseMessage extends Entity {
      * @return The creation time and date.
      */
     public Date getCreationTime() {
-        return getDateFromEpoch("create_time");
+        return getDate("create_time");
     }
 
     /**

@@ -65,7 +65,7 @@ public class Program {
             Command.error("Index '" + name + "' does not exists");
 
         if (action.equals("clean"))
-            index.clean(30); // 30 seconds before timeout
+            index.clean(180); // Timeout after 3 minutes.
         else if (action.equals("disable"))
             index.disable();
         else if (action.equals("enable"))

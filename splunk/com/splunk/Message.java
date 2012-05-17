@@ -18,8 +18,8 @@ package com.splunk;
 
 /**
  * The {@code Message} class represents a message. Most messages are created by 
- * Splunkd to inform the user of system problems, such as license quotas, license
- * expirations, misconfigured indexes, and disk space.
+ * Splunkd to inform the user of system problems, such as license quotas,
+ * license expirations, misconfigured indexes, and disk space.
  */
 public class Message extends Entity {
 

@@ -22,7 +22,8 @@ import java.util.Map;
 
 /**
  * The {@code Job} class represents a job, which is an individual 
- * instance of a running or completed search or report, along with its related output.
+ * instance of a running or completed search or report, along with its related
+ * output.
  */
 public class Job extends Entity {
 
@@ -91,7 +92,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Enables preview for this job (although it might slow search considerably).
+     * Enables preview for this job (although it might slow search
+     * considerably).
      *
      * @return The job.
      */
@@ -118,8 +120,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time from which we are sure no events later than this time
-     * will be scanned later. (Use this as a progress indicator.)
+     * Returns the earliest time from which we are sure no events later than
+     * this time will be scanned later. (Use this as a progress indicator.)
      * @see #getLatestTime
      * @see #getEarliestTime
      * @see #getDoneProgress
@@ -131,7 +133,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns a value that indicates jobs how were started (such as the scheduler).
+     * Returns a value that indicates jobs how were started (such as the
+     * scheduler).
      *
      * @return The delegate, or {@code null} if not specified.
      */
@@ -150,7 +153,8 @@ public class Job extends Entity {
 
     /**
      * Returns the dispatch state for this job. </br>
-     * Valid values are: QUEUED, PARSING, RUNNING, PAUSED, FINALIZING, FAILED, or DONE.
+     * Valid values are: QUEUED, PARSING, RUNNING, PAUSED, FINALIZING, FAILED,
+     * or DONE.
      *
      * @return This job's dispatch state.
      */
@@ -160,7 +164,7 @@ public class Job extends Entity {
 
     /**
      * Returns the approximate progress of the job, in the range of 0.0 to 1.0.
-     * </br>doneProgress = (latestTime - cursorTime) / (latestTime - earliestTime)
+     * </br>doneProgress = (latestTime-cursorTime) / (latestTime-earliestTime)
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getEarliestTime
@@ -173,8 +177,8 @@ public class Job extends Entity {
 
     /**
      * Returns the number of possible events that were dropped due to the
-     * {@code rt_queue_size} (the number of events that the indexer should use for this 
-     * search). For real-time searches only. 
+     * {@code rt_queue_size} (the number of events that the indexer should use
+     * for this search). For real-time searches only.
      *
      * @return The number of dropped events.
      */
@@ -233,7 +237,8 @@ public class Job extends Entity {
 
     /**
      * Indicates whether any events from this job have not been stored. 
-     * @return {@code true} if the event return is truncated, {@code false} if not.
+     * @return {@code true} if the event return is truncated, {@code false} if
+     * not.
      */
     public boolean getEventIsTruncated() {
         return getBoolean("eventIsTruncated");
@@ -321,7 +326,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the number of previews that have been generated so far for this job.
+     * Returns the number of previews that have been generated so far for this
+     * job.
      *
      * @return The number of previews.
      */
@@ -358,8 +364,8 @@ public class Job extends Entity {
 
     /**
      * Returns the reporting subset of this search, which is the streaming part
-     * of the search that is send to remote providers if reporting commands are used. 
-     * The original search should be the eventSearch + reportSearch.
+     * of the search that is send to remote providers if reporting commands are
+     * used. The original search should be the eventSearch + reportSearch.
      * @see #getEventSearch
      *
      * @return The reporting search query.
@@ -370,7 +376,8 @@ public class Job extends Entity {
 
     /**
      * Returns the total count of results returned for this search job.
-     * This is the subset of scanned events that actually matches the search terms. 
+     * This is the subset of scanned events that actually matches the search
+     * terms.
      *
      * @return The number of results.
      */
@@ -388,7 +395,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the number of result rows in the latest preview results for this job.
+     * Returns the number of result rows in the latest preview results for this
+     * job.
      *
      * @return The number of result rows.
      */
@@ -635,7 +643,8 @@ public class Job extends Entity {
     /**
      * Indicates whether the job is a real-time search.
      *
-     * @return {@code true} if the job is a real-time search, {@code false} if not.
+     * @return {@code true} if the job is a real-time search, {@code false} if
+     * not.
      */
     public boolean isRealTimeSearch() {
         return getBoolean("isRealTimeSearch");
@@ -644,7 +653,8 @@ public class Job extends Entity {
     /**
      * Indicates whether the job has a remote timeline component.
      *
-     * @return {@code true} if the job has a remote timeline component, {@code false} if not.
+     * @return {@code true} if the job has a remote timeline component,
+     * {@code false} if not.
      */
     public boolean isRemoteTimeline() {
         return getBoolean("isRemoteTimeline");
@@ -662,15 +672,16 @@ public class Job extends Entity {
     /**
      * Indicates whether this job was run as a saved search (via scheduler).
      *
-     * @return {@code true} if the job is from a saved search, {@code false} if not.
+     * @return {@code true} if the job is from a saved search, {@code false}
+     * if not.
      */
     public boolean isSavedSearch() {
         return getBoolean("isSavedSearch");
     }
 
     /**
-     * Indicates whether the process running the search is dead but with the search 
-     * not finished. 
+     * Indicates whether the process running the search is dead but with the
+     * search not finished.
      *
      * @return {@code true} if the job is a zombie, {@code false} if not.
      */
@@ -686,9 +697,10 @@ public class Job extends Entity {
      * @return This job.
      */
     @Override public Job refresh() {
+        update();
         ResponseMessage response = service.get(path);
         if (response.getStatus() == 204) {
-            // empty response from server means the job has not yet been
+            // Empty response from server means the job has not yet been
             // scheduled; so throw an exception up to the caller.
             throw new SplunkException(SplunkException.JOB_NOTREADY,
                                       "Job not yet scheduled by server");
@@ -700,7 +712,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Unsupported. Removes this job. This method is unsupported and will throw an exception.
+     * Unsupported. Removes this job. This method is unsupported and will throw
+     * an exception.
      */
     public void remove() {
         throw new UnsupportedOperationException();

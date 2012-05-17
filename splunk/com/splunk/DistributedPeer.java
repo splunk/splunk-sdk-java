@@ -121,5 +121,25 @@ public class DistributedPeer extends Entity {
     public boolean isHttps() {
         return getBoolean("is_https", true);
     }
+
+    /**
+     * Sets remote password. Note: username and password need to both be set
+     * at the same time.
+     *
+     * @param password The remote password.
+     */
+    public void setRemotePassword(String password) {
+        setCacheValue("remotePassword", password);
+    }
+
+    /**
+     * Sets remote username. Note: username and password need to both be set
+     * at the same time.
+     *
+     * @param username The remote username.
+     */
+    public void setRemoteUsername(String username) {
+        setCacheValue("remoteUsername", username);
+    }
 }
 

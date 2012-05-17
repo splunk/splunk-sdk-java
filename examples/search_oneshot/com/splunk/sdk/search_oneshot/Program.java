@@ -97,7 +97,7 @@ public class Program {
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
 
-        // execute the oneshot query, which returns the stream (i.e. there is
+        // Execute the oneshot query, which returns the stream (i.e. there is
         // no search job created, just a one time search)
         InputStream stream = service.oneshot(query, queryArgs);
 

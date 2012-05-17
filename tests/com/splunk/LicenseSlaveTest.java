@@ -28,8 +28,10 @@ public class LicenseSlaveTest extends SplunkTestCase {
                 service.getLicenseSlaves();
 
         // list of pools
-        List<String> pools = Arrays.asList("auto_generated_pool_download-trial",
-            "auto_generated_pool_enterprise", "auto_generated_pool_forwarder",
+        List<String> pools = Arrays.asList(
+            "auto_generated_pool_download-trial",
+            "auto_generated_pool_enterprise",
+            "auto_generated_pool_forwarder",
             "auto_generated_pool_free");
 
         List<String> stacks = Arrays.asList(
@@ -38,7 +40,7 @@ public class LicenseSlaveTest extends SplunkTestCase {
         for (LicenseSlave licenseSlave: licenseSlaves.values()) {
             assertTrue(licenseSlave.getLabel().length() > 0);
             for (String pool: licenseSlave.getPoolIds()) {
-                // special-case, fixed sourcetype has a hash at the end; so
+                // Special-case, fixed sourcetype has a hash at the end; so
                 // no fixed value will match. Thus only check versus known
                 // fixed values from list.
                 if (!pool.startsWith("auto_generated_pool_fixed-sourcetype_")) {

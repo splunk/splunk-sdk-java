@@ -16,11 +16,11 @@
 
 package com.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@code LicensePoolCollection} class represents a collection of license pools.
+ * The {@code LicensePoolCollection} class represents a collection of license
+ * pools.
  */
 public class LicensePoolCollection extends EntityCollection<LicensePool> {
 

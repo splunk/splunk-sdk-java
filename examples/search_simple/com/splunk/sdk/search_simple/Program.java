@@ -59,9 +59,8 @@ public class Program {
             Command.error("query '%s' is invalid: %s", query, detail);
         }
 
-
         // This is the simplest form of searching splunk. Note that input and
-        // output args are allowed, they are not shown in this example.
+        // output args are allowed, but they are not shown in this example.
         InputStream stream = service.search(query);
 
         InputStreamReader reader = new InputStreamReader(stream);

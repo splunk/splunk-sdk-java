@@ -22,17 +22,18 @@ import java.net.Socket;
 import java.util.Map;
 
 /**
- * The {@code Service} class represents a Splunk service instance at a given address
- * (host:port), accessed using the {@code http} or {@code https} protocol scheme.
+ * The {@code Service} class represents a Splunk service instance at a given
+ * address (host:port), accessed using the {@code http} or {@code https}
+ * protocol scheme.
  * </br></br>
- * A {@code Service} instance also captures an optional namespace context consisting of
- * an optional owner name (or "-" wildcard) and optional app name (or "-"
- * wildcard). 
+ * A {@code Service} instance also captures an optional namespace context
+ * consisting of an optional owner name (or "-" wildcard) and optional app name
+ * (or "-" wildcard).
  * </br></br>
- * To access {@code Service} members, the {@code Service} instance must be authenticated
- * by presenting credentials using the {@code login} method, or by constructing the 
- * {@code Service} instance using the {@code connect} method, which both creates and 
- * authenticates the instance.
+ * To access {@code Service} members, the {@code Service} instance must be
+ * authenticated by presenting credentials using the {@code login} method, or
+ * by constructing the {@code Service} instance using the {@code connect}
+ * method, which both creates and authenticates the instance.
  */
 public class Service extends HttpService {
     /** The current app context. */
@@ -41,12 +42,13 @@ public class Service extends HttpService {
     /** The current session token. */
     protected String token = null;
 
-    /** The current owner context. A value of "nobody" means that all users have access 
-     * to the resource. 
+    /** The current owner context. A value of "nobody" means that all users
+     * have access to the resource.
      */
     protected String owner = null;
 
-    /** The Splunk account username, which is used to authenticate the Splunk instance. */
+    /** The Splunk account username, which is used to authenticate the Splunk
+     * instance. */
     protected String username = null;
 
     /** The password, which is used to authenticate the Splunk instance. */
@@ -55,16 +57,22 @@ public class Service extends HttpService {
     /** The default simple receiver endpoint */
     protected String simpleReceiverEndPoint = "receivers/simple";
 
-    /** The default host name, which is used when a host name is not provided. */
+    /** The default password endpoint, can change over splunk versions */
+    protected String passwordEndPoint = "admin/passwords";
+
+    /** The version of this splunk instance, once logged in */
+    public String version = null;
+
+    /** The default host name, which is used when a host name is not
+     * provided. */
     public static String DEFAULT_HOST = "localhost";
 
-    /** The default port number, which is used when a port number is not provided. */
+    /** The default port number, which is used when a port number is not
+     * provided. */
     public static int DEFAULT_PORT = 8089;
 
     /** The default scheme, which is used when a scheme is not provided. */
     public static String DEFAULT_SCHEME = "https";
-
-
 
     /**
      * Creates a new {@code Service} instance using a host.
@@ -146,8 +154,8 @@ public class Service extends HttpService {
     }
 
     /**
-     * Runs a search using the {@code search/jobs/export} endpoint, which streams 
-     * results back in an input stream.
+     * Runs a search using the {@code search/jobs/export} endpoint, which
+     * streams results back in an input stream.
      *
      * @param search The search query to run.
      * @return The {@code InputStream} object that contains the search results.
@@ -157,8 +165,8 @@ public class Service extends HttpService {
     }
 
     /**
-     * Runs a search with arguments using the {@code search/jobs/export} endpoint, 
-     * which streams results back in an input stream.
+     * Runs a search with arguments using the {@code search/jobs/export}
+     * endpoint, which streams results back in an input stream.
      *
      * @param search The search query to run.
      * @param args Additional search arguments.
@@ -370,10 +378,10 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns a collection of distributed search peers. A <i>search peer</i> is a
-     * Splunk server to which another Splunk server distributes searches. The
-     * Splunk server where the search originates is referred to as the <i>search
-     * head</i>.
+     * Returns a collection of distributed search peers. A <i>search peer</i>
+     * is a Splunk server to which another Splunk server distributes searches.
+     * The Splunk server where the search originates is referred to as the
+     * <i>search head</i>.
      *
      * @return A collection of search peers.
      */
@@ -921,6 +929,9 @@ public class Service extends HttpService {
             .item(0)
             .getTextContent();
         this.token = "Splunk " + sessionKey;
+        this.version = this.getInfo().getVersion();
+        if (versionCompare("4.3") > 0)
+            this.passwordEndPoint = "storage/passwords";
 
         return this;
     }
@@ -1081,5 +1092,36 @@ public class Service extends HttpService {
      */
     public void setToken(String value) {
         this.token = value;
+    }
+
+    // returns -1, 0, 1 comparing current splunk version string to right version
+    // string for less than, equal to or greater than
+    public int versionCompare(String right) {
+
+        // short cut for equality.
+        if (this.version.equals(right)) return 0;
+
+        // if not the same, break down into individual digits for comparison.
+        String[] leftDigits = this.version.split(".");
+        String[] rightDigits = right.split(".");
+        int i=0;
+
+        for (; i<leftDigits.length; i++) {
+            // No more right side, left side is bigger
+            if (i == rightDigits.length) return 1;
+            // left side smaller>?
+            if (Integer.parseInt(leftDigits[i]) <
+                Integer.parseInt(leftDigits[1])) {
+                return -1;
+            }
+            // left side bigger?
+            if (Integer.parseInt(leftDigits[i]) >
+                    Integer.parseInt(leftDigits[1])) {
+                return 1;
+            }
+        }
+        // we got to the end of the left side, and not equal, right side
+        // most be larger by having more digits.
+        return -1;
     }
 }

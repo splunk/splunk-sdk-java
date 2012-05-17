@@ -28,10 +28,13 @@ public class DeploymentTenantTest extends SplunkTestCase {
             System.out.println("WARNING: Deployment Tenant not configured");
             return;
         }
-        
+
         for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
-            assertTrue(deploymentTenant.getWhiteList0().length() > 0);
+            assertTrue(deploymentTenant.getWhiteListByIndex(0).length() > 0);
             deploymentTenant.getCheckNew();
+            deploymentTenant.isDisabled();
+            for (int i=0; i<10; i++)
+                deploymentTenant.getWhiteListByIndex(i);
         }
     }
 }

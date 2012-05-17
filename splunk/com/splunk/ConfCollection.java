@@ -16,11 +16,11 @@
 
 package com.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@code ConfCollection} class represents a collection of configuration files.
+ * The {@code ConfCollection} class represents a collection of configuration
+ * files.
  */
 public class ConfCollection 
     extends ResourceCollection<EntityCollection<Entity>> 
@@ -58,7 +58,8 @@ public class ConfCollection
      * Creates a new stanza in the current configuration file with attributes.
      *
      * @param name The name of the stanza to create.
-     * @param args Optional. A set of attributes as key-value pairs to put in the new stanza.
+     * @param args Optional. A set of attributes as key-value pairs to put in
+     * the new stanza.
      * @return The name of the new stanza.
      */
     public EntityCollection<Entity> create(String name, Map args) {

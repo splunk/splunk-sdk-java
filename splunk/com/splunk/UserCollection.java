@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -61,8 +60,8 @@ public class UserCollection extends EntityCollection<User> {
     /**
      * Creates a new user entity from a username, password, and array of
      * roles.
-     * Usernames must be unique on the system, and are used by the user to log in
-     * to Splunk. 
+     * Usernames must be unique on the system, and are used by the user to log
+     * in to Splunk.
      *
      * @param name The username for the new user entity.
      * @param password The password for the new user entity.
@@ -76,8 +75,8 @@ public class UserCollection extends EntityCollection<User> {
     /**
      * Creates a new user entity from a username, password, role, and
      * additional arguments.
-     * Usernames must be unique on the system, and are used by the user to log in
-     * to Splunk. 
+     * Usernames must be unique on the system, and are used by the user to log
+     * in to Splunk.
      *
      * @param name The username for the new user entity.
      * @param password The password for the new user entity.
@@ -95,8 +94,8 @@ public class UserCollection extends EntityCollection<User> {
     /**
      * Creates a new user entity from a username, password, array of
      * roles, and additional arguments.
-     * Usernames must be unique on the system, and are used by the user to log in
-     * to Splunk. 
+     * Usernames must be unique on the system, and are used by the user to log
+     * in to Splunk.
      *
      * @param name The username for the new user entity.
      * @param password The password for the new user entity.

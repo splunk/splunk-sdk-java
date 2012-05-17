@@ -18,8 +18,8 @@ package com.splunk;
 
 /**
  * The {@code LicenseSlave} class represents a license slave, which is a member 
- * of one or more license pools. The access a license slave has to license volume
- * is controlled by its license master.
+ * of one or more license pools. The access a license slave has to license
+ * volume is controlled by its license master.
  */
 public class LicenseSlave extends Entity {
 

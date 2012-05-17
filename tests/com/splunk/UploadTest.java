@@ -28,7 +28,7 @@ public class UploadTest extends SplunkTestCase {
         if (info.getOsName().equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
         else if (info.getOsName().equals("Linux"))
-            filename = "/var/log/syslog";
+            filename = "/var/log/messages";
         else if (info.getOsName().equals("Darwin")) {
             filename = "/var/log/system.log";
         } else {

@@ -17,8 +17,8 @@
 package com.splunk;
 
 /**
- * The {@code WindowsPerfmonInput} class represents a Windows Performance Monitor 
- * (Perfmon) input.
+ * The {@code WindowsPerfmonInput} class represents a Windows Performance
+ * Monitor (Perfmon) input.
  */
 public class WindowsPerfmonInput extends Input {
 
@@ -33,10 +33,11 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns a list of monitored counters for this Windows Perfmon input. A "*" 
-     * is equivalent to all counters.
+     * Returns a list of monitored counters for this Windows Perfmon input. A
+     * "*" is equivalent to all counters.
      *
-     * @return A comma-separated list of counters, or {@code null} if not specified.
+     * @return A comma-separated list of counters, or {@code null} if not
+     * specified.
      */
     public String getCounters() {
         return getString("counters", null);
@@ -89,5 +90,85 @@ public class WindowsPerfmonInput extends Input {
      */
     public String getObject() {
         return getString("object");
+    }
+
+    /**
+     * Sets the counters to monitor. A wildcard value of {@code *} means all
+     * counters.
+     *
+     * @param counters The counters to monitor.
+     */
+    public void setCounters(String[] counters) {
+        setCacheValue("counters", counters);
+    }
+
+    /**
+     * Sets the counters to monitor. A wildcard value of {@code *} means all
+     * counters. This is a short cut for setting a single counter, instead of
+     * a set of counters.
+     *
+     * @param counter The counters to monitor.
+     */
+    public void setCounters(String counter) {
+        setCacheValue("counters", new String [] { counter });
+    }
+
+    /**
+     * Sets whether this input is enabled or disabled. Note that the
+     * supported disabled mechanism, is to use the @{code disable} action.
+     *
+     * @param disabled {@code true} to disabled to script input,
+     * {@code false} to enable.
+     */
+    public void setDisabled(boolean disabled) {
+        setCacheValue("disabled", disabled);
+    }
+
+    /**
+     * Sets index in which to store all generated events.
+     *
+     * @param index The index in which to store all generated events.
+     */
+    public void setIndex(String index) {
+        setCacheValue("index", index);
+    }
+
+    /**
+     * Sets the counter instances to monitor. A wildcard value of {@code *}
+     * means all instances.
+     *
+     * @param instances the counter instances to monitor.
+     */
+    public void setInstances(String[] instances) {
+        setCacheValue("instances", instances);
+    }
+
+    /**
+     * Sets the counter instances to monitor. A wildcard value of {@code *}
+     * means all instances. This is a short cut for setting a single instance,
+     * instead of a set of instances.
+     *
+     * @param instance the counter instances to monitor.
+     */
+    public void setInstances(String instance) {
+        setCacheValue("instances", new String [] { instance });
+    }
+
+    /**
+     * Sets the frequency, in seconds, to poll the performance counters.
+     *
+     * @param interval The polling frequency, in seconds.
+     */
+    public void setInterval(int interval) {
+        setCacheValue("interval", interval);
+    }
+
+    /**
+     * Sets the performance monitor object.
+     *
+     * @param object The performance monitor object.
+     */
+    public void setObject(String object) {
+        setCacheValue("object", object);
     }
 }

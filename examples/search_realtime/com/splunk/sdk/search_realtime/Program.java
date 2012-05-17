@@ -41,9 +41,11 @@ public class Program {
     static String latestTime =
         "Search latest time (default: 'rt' (i.e. now))";
     static String offset =
-        "The first result (inclusive) from which to begin returning data. (default: 0)";
+        "The first result (inclusive) from which to begin returning data. " +
+        "(default: 0)";
     static String outputText =
-        "Which search results to output {events, results, preview, searchlog, summary, timeline} (default: preview)";
+        "Which search results to output {events, results, preview, searchlog," +
+        " summary, timeline} (default: preview)";
     static String outputModeText =
         "Search output format {csv, raw, json, xml} (default: xml)";
     static String resultsCount =
@@ -131,7 +133,7 @@ public class Program {
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
 
-        // always set real time search mode
+        // Always set real time search mode
         queryArgs.put("search_mode", "realtime");
         queryArgs.put("earliest_time", earliestTime);
         queryArgs.put("latest_time", latestTime);
