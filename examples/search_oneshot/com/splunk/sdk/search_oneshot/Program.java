@@ -18,6 +18,7 @@ package com.splunk.sdk.search_oneshot;
 
 import com.splunk.Args;
 import com.splunk.HttpException;
+import com.splunk.ResultsReaderXml;
 import com.splunk.sdk.Command;
 import com.splunk.Service;
 
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 
 // Note: not all search parameters are exposed to the CLI for this example.
 public class Program {
@@ -33,6 +35,9 @@ public class Program {
     static String fieldListText =
          "A comma-separated list of the fields to return";
     static String latestTime = "Search latest time";
+    static String outputModeText =
+        "Search output format {csv, raw, json, xml} (default: xml)";
+    static String rawText = "Set to 1 if raw events are displayed";
     static String statusBucketsText =
         "Number of status buckets to use for search (default: 0)";
 
@@ -51,6 +56,8 @@ public class Program {
         command.addRule("earliest_time", String.class, earliestTime);
         command.addRule("field_list", String.class, fieldListText);
         command.addRule("latest_time", String.class, latestTime);
+        command.addRule("output_mode", String.class, outputModeText);
+        command.addRule("raw", Integer.class, rawText);
         command.addRule("status_buckets", Integer.class, statusBucketsText);
         command.parse(args);
 
@@ -69,6 +76,10 @@ public class Program {
         String latestTime = null;
         if (command.opts.containsKey("latest_time"))
             earliestTime = (String)command.opts.get("latest_time");
+
+        String outputMode = "xml";
+        if (command.opts.containsKey("output_mode"))
+            outputMode = (String)command.opts.get("output_mode");
 
         int statusBuckets = 0;
         if (command.opts.containsKey("status_buckets"))
@@ -101,19 +112,40 @@ public class Program {
         // no search job created, just a one time search)
         InputStream stream = service.oneshot(query, queryArgs);
 
-        InputStreamReader reader = new InputStreamReader(stream);
-        OutputStreamWriter writer = new OutputStreamWriter(System.out);
-
-        int size = 1024;
-        char[] buffer = new char[size];
-        while (true) {
-            int count = reader.read(buffer);
-            if (count == -1) break;
-            writer.write(buffer, 0, count);
+        boolean rawData = true;
+        if (command.opts.containsKey("raw")) {
+            int tmp  = (Integer)command.opts.get("raw");
+            if (tmp == 0 ) rawData = false;
         }
 
-        writer.write("\n");
-        writer.close();
-        reader.close();
+        if (!rawData) {
+            HashMap<String, String> map;
+            try {
+                ResultsReaderXml resultsReader = new ResultsReaderXml(stream);
+                while ((map = resultsReader.getNextEvent()) != null) {
+                    System.out.println("EVENT:********");
+                    System.out.println("   " + map);
+                }
+                resultsReader.close();
+            } catch (Exception e) {
+                System.out.println("Xml exception: " + e);
+            }
+        }
+        else {
+            InputStreamReader reader = new InputStreamReader(stream);
+            OutputStreamWriter writer = new OutputStreamWriter(System.out);
+
+            int size = 1024;
+            char[] buffer = new char[size];
+            while (true) {
+                int count = reader.read(buffer);
+                if (count == -1) break;
+                writer.write(buffer, 0, count);
+            }
+
+            writer.write("\n");
+            writer.close();
+            reader.close();
+        }
     }
 }

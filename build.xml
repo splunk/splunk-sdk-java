@@ -28,6 +28,12 @@
         <pathelement location="${dist.splunk-sdk}"/>
     </path>
 
+    <path id="classpath.splunk-external">
+        <pathelement location="${dist.splunk}"/>
+        <pathelement location="${dist.splunk-sdk}"/>
+        <pathelement location="${dist.splunk-external}"/>
+    </path>
+
     <path id="classpath.examples-gui">
         <pathelement location="${dist.splunk}"/>
         <pathelement location="${dist.splunk-sdk}"/>
@@ -35,6 +41,14 @@
         <pathelement location="${lib.org-openide-nodes}"/>
         <pathelement location="${lib.org-openide-util}"/>
         <pathelement location="${lib.org-openide-util-lookup}"/>
+    </path>
+
+    <path id="classpath.gson">
+        <pathelement location="${lib.gson}"/>
+    </path>
+
+    <path id="classpath.opencsv">
+        <pathelement location="${lib.opencsv}"/>
     </path>
 
     <!-- Classpaath for building tests -->
@@ -66,7 +80,19 @@
         <mkdir dir="${dir.build.splunk}"/>
         <javac includeantruntime="false"
          srcdir="${dir.splunk}"
-         destdir="${dir.build.splunk}"/>
+         destdir="${dir.build.splunk}">
+        </javac>
+    </target>
+
+    <target name="compile-splunk-external">
+        <mkdir dir="${dir.build.splunk-external}"/>
+        <javac includeantruntime="false"
+         srcdir="${dir.splunk-external}"
+         destdir="${dir.build.splunk-external}">
+            <classpath refid="classpath.splunk-external"/>
+            <classpath refid="classpath.gson"/>
+            <classpath refid="classpath.opencsv"/>
+        </javac>
     </target>
 
     <target name="compile-splunk-sdk">
@@ -116,8 +142,9 @@
         <compile-example name="input" classpath="classpath.examples"/>
     </target>
 
-    <target name="compile-example-search" depends="dist-libs">
-        <compile-example name="search" classpath="classpath.examples"/>
+    <target name="compile-example-search" 
+        depends="dist-libs,dist-splunk-external">
+        <compile-example name="search" classpath="classpath.splunk-external"/>
     </target>
 
     <target name="compile-example-search-blocking" depends="dist-libs">
@@ -172,6 +199,26 @@
             <manifest>
                 <attribute 
                  name="Implementation-Title" value="com.splunk"/>
+                <attribute 
+                 name="Implementation-Vendor" value="Splunk, Inc."/>
+                <attribute 
+                 name="Implementation-Version" value="${version.number}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist-splunk-external" 
+            depends="compile-splunk-sdk,compile-splunk-external">
+        <mkdir dir="${dir.dist}"/>
+        <jar 
+         basedir="${dir.build.splunk-external}"
+         destfile="${dist.splunk-external}"
+         includes="**/*.class">
+            <manifest>
+                <attribute 
+                 name="Class-Path" value="../lib/splunk-external.jar"/>
+                <attribute 
+                 name="Implementation-Title" value="com.splunk.splunk-external"/>
                 <attribute 
                  name="Implementation-Vendor" value="Splunk, Inc."/>
                 <attribute 
@@ -277,22 +324,29 @@
 
     <target name="dist-example-search" depends="compile-example-search">
         <dist-example name="search" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar
+                    ../splunk-external.jar
+                    ../../lib/opencsv-2.3.jar
+                    ../../lib/gson-2.1.jar"/>
     </target>
 
     <target name="dist-example-search-blocking" depends="compile-example-search-blocking">
         <dist-example name="search_blocking" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar"/>
     </target>
 
     <target name="dist-example-search-oneshot" depends="compile-example-search-oneshot">
         <dist-example name="search_oneshot" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar"/>
     </target>
 
     <target name="dist-example-search-realtime" depends="compile-example-search-realtime">
         <dist-example name="search_realtime" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
+         classpath="../splunk.jar 
+                    ../splunk-sdk.jar"/>
     </target>
 
     <target name="dist-example-search-saved" depends="compile-example-search-saved">

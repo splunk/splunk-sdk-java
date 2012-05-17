@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/itay/Work/splunk-sdk-java/lib/commons-cli-1.2.jar"/>
-	<classpathentry kind="lib" path="/Users/itay/Work/splunk-sdk-java/lib/junit-4.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
