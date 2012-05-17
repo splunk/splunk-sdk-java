@@ -91,7 +91,7 @@ public class SavedSearchTest extends SplunkTestCase {
         String search = "search index=sdk-tests * earliest=-1m";
 
         // Create a saved search
-        savedSearch = savedSearches.create("sdk-test1", search);
+        savedSearches.create("sdk-test1", search);
         assertTrue(savedSearches.containsKey("sdk-test1"));
 
         // Read the saved search
