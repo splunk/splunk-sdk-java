@@ -63,7 +63,7 @@ public class Program {
         }
     }
 
-    static void run(String[] args) throws IOException {
+    static void run(String[] args) throws Exception  {
         Command command = Command.splunk("search");
         command.addRule("count", Integer.class, resultsCount);
         command.addRule("earliest_time", String.class, earliestTime);
@@ -145,7 +145,7 @@ public class Program {
         // Wait until results are available.
         boolean status = false;
         while (true) {
-            // first touch of job may result in an exception that the job
+            // First touch of job may result in an exception that the job
             // is not ready. Catch it here, wait a short time and we'll try
             // again.
             try {
@@ -154,8 +154,9 @@ public class Program {
             }
             catch (SplunkException splunkException) {
                 if (splunkException.getCode() == SplunkException.JOB_NOTREADY) {
-                    try { Thread.sleep(500); continue; }
-                    catch (Exception e) {}
+                    Thread.sleep(500);
+                    job.refresh();
+                    continue;
                 } else {
                     throw splunkException;
                 }
@@ -173,8 +174,7 @@ public class Program {
                 status = true;
             }
 
-            try { Thread.sleep(2000); }
-            catch (InterruptedException e) {}
+            Thread.sleep(2000);
 
             job.refresh();
         }
