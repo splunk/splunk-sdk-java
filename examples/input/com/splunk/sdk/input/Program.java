@@ -165,9 +165,10 @@ public class Program {
                     windowsEventLogInput.getLocalName());
                 String[] logs = windowsEventLogInput.getLogs();
                 System.out.println("      logs:");
-                for (String log: logs) {
-                    System.out.println("            " + log);
-                }
+                if (logs != null)
+                    for (String log: logs) {
+                        System.out.println("            " + log);
+                    }
                 System.out.println(
                     "      lookup host:     " +
                     windowsEventLogInput.getLookupHost());
