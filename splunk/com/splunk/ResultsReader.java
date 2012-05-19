@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public abstract  class ResultsReader {
     InputStreamReader inputStreamReader = null;
-    Reader reader = null;
+    PushbackReader reader = null;
 
     /**
      * Class constructor.

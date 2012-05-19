@@ -16,13 +16,13 @@
 
 package com.splunk;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
+import java.io.PushbackReader;
 
 public class ResultsReaderXml extends ResultsReader {
 
@@ -35,30 +35,41 @@ public class ResultsReaderXml extends ResultsReader {
      * attempt to parse an XML stream with the XML reader. Using a non-XML
      * stream will yield unpredictable results.
      *
+     * Note we use the pushback reader to tweak export streams which generates
+     * non-strict XML at the beginning of the stream.
+     *
      * @param inputStream The stream to be parsed.
      * @throws Exception On exception.
      */
     public ResultsReaderXml(InputStream inputStream) throws Exception {
         super(inputStream);
-        reader = new BufferedReader(inputStreamReader);
+        reader = new PushbackReader(inputStreamReader, 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
-        xmlReader = inputFactory.createXMLEventReader(reader);
+
         // at initialization, skip everything in the start until we get to the
-        // end of the meta header and the beginning of raw event data
-        while (xmlReader.hasNext()){
-            XMLEvent xmlEvent = xmlReader.nextEvent();
-            if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT) {
-                EndElement endElement = xmlEvent.asEndElement();
-                if (endElement.getName().getLocalPart().equals("meta")) {
-                    // at the end of the meta data, eat everything until start.
-                    while (xmlReader.peek().getEventType()
-                            != XMLStreamConstants.START_ELEMENT)
-                        xmlReader.nextEvent();
-                    return;
-                }
+        // the start of real event data which starts as "<result offset='0'>"
+        // add opening <doc> and parse the file, we need to be careful to handle
+        // the end of the stream exception of a missing </doc> tag.
+
+        String find = "<result offset='0'>";
+        String accumulator = "";
+        while (true) {
+            int data = reader.read();
+            if (data < 0) throw new RuntimeException("End of XML data");
+            accumulator = accumulator + (char)data;
+            if (find.equals(accumulator)) {
+                String putBackString = "<doc>" + find;
+                char putBackBytes[] = putBackString.toCharArray();
+                reader.unread(putBackBytes);
+                break;
+            } else if (!find.startsWith(accumulator)) {
+                accumulator = "";
             }
         }
+
+        // now attach the XML reader to the stream
+        inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
+        xmlReader = inputFactory.createXMLEventReader(reader);
     }
 
     /** {@inheritDoc} */
@@ -72,22 +83,34 @@ public class ResultsReaderXml extends ResultsReader {
         XMLEvent xmlEvent;
         int eType;
 
-        while (xmlReader.hasNext()) {
-            xmlEvent = xmlReader.nextEvent();
-            eType = xmlEvent.getEventType();
-            while (eType != XMLStreamConstants.END_DOCUMENT) {
-                if (eType == XMLStreamConstants.START_ELEMENT &&
-                    xmlEvent.asStartElement()
-                            .getName()
-                            .getLocalPart()
-                            .equals("result")) {
-                    return getResultKVPairs();
-                }
-                if (xmlReader.hasNext()) {
-                    xmlEvent = xmlReader.nextEvent();
-                    eType = xmlEvent.getEventType();
+        try {
+            while (xmlReader.hasNext()) {
+                xmlEvent = xmlReader.nextEvent();
+                eType = xmlEvent.getEventType();
+                while (eType != XMLStreamConstants.END_DOCUMENT) {
+                    if (eType == XMLStreamConstants.START_ELEMENT &&
+                            xmlEvent.asStartElement()
+                                    .getName()
+                                    .getLocalPart()
+                                    .equals("result")) {
+                        return getResultKVPairs();
+                    }
+                    if (xmlReader.hasNext()) {
+                        xmlEvent = xmlReader.nextEvent();
+                        eType = xmlEvent.getEventType();
+                    }
                 }
             }
+        }
+        catch (XMLStreamException exception) {
+            // Because we cannot stuff trailing information into the stream,
+            // we expect an XMLStreamingException that contains our
+            // corresponding end-of-document </doc> that we injected into the
+            // front of the stream. Any other exception we rethrow.
+            if (exception.getMessage().contains("</doc>")) {
+                return null;
+            }
+            throw exception;
         }
         return null;
     }
@@ -118,9 +141,10 @@ public class ResultsReaderXml extends ResultsReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     if (xmlEvent.asEndElement()
-                            .getName()
-                            .getLocalPart()
-                            .equals("result"))
+                        .getName()
+                        .getLocalPart()
+                        .equals("result"))
+
                         return returnData;
                     if (--level == 0) {
                         returnData.put(key, value.toString());
