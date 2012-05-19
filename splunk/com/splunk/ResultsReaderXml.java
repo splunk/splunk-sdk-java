@@ -90,9 +90,9 @@ public class ResultsReaderXml extends ResultsReader {
                 while (eType != XMLStreamConstants.END_DOCUMENT) {
                     if (eType == XMLStreamConstants.START_ELEMENT &&
                             xmlEvent.asStartElement()
-                                    .getName()
-                                    .getLocalPart()
-                                    .equals("result")) {
+                                .getName()
+                                .getLocalPart()
+                                .equals("result")) {
                         return getResultKVPairs();
                     }
                     if (xmlReader.hasNext()) {
@@ -132,7 +132,7 @@ public class ResultsReaderXml extends ResultsReader {
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
                     Iterator<Attribute> attrIttr =
-                                xmlEvent.asStartElement().getAttributes();
+                        xmlEvent.asStartElement().getAttributes();
                     if (level == 0) {
                         if (attrIttr.hasNext())
                             key =  attrIttr.next().getValue();
