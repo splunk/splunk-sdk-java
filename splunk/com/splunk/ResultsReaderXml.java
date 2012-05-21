@@ -18,6 +18,7 @@ package com.splunk;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.xml.stream.*;
@@ -36,7 +37,8 @@ public class ResultsReaderXml extends ResultsReader {
      * stream will yield unpredictable results.
      *
      * Note we use the pushback reader to tweak export streams which generates
-     * non-strict XML at the beginning of the stream.
+     * non-strict XML at the beginning of the stream. The streaming reader
+     * ignores preview data, and only extracts finalized data.
      *
      * @param inputStream The stream to be parsed.
      * @throws Exception On exception.
@@ -47,22 +49,31 @@ public class ResultsReaderXml extends ResultsReader {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         // at initialization, skip everything in the start until we get to the
-        // the start of real event data which starts as "<result offset='0'>"
+        // first-non preview data "<results preview='0'>", and then the first
+        // real event data which starts as "<result offset='0'>"
         // add opening <doc> and parse the file, we need to be careful to handle
         // the end of the stream exception of a missing </doc> tag.
 
-        String find = "<result offset='0'>";
+        ArrayList<String> findInOrder = new ArrayList<String>();
+        findInOrder.add(0, "<results preview='0'>");
+        findInOrder.add(1, "<result offset='0'>");
         String accumulator = "";
+        int index = 0;
         while (true) {
             int data = reader.read();
             if (data < 0) throw new RuntimeException("End of XML data");
             accumulator = accumulator + (char)data;
-            if (find.equals(accumulator)) {
-                String putBackString = "<doc>" + find;
-                char putBackBytes[] = putBackString.toCharArray();
-                reader.unread(putBackBytes);
-                break;
-            } else if (!find.startsWith(accumulator)) {
+            if (findInOrder.get(index).equals(accumulator)) {
+                if (index == findInOrder.size()-1) {
+                    String putBackString = "<doc>" + findInOrder.get(index);
+                    char putBackBytes[] = putBackString.toCharArray();
+                    reader.unread(putBackBytes);
+                    break;
+                }
+                else {
+                    index += 1;
+                }
+            } else if (!findInOrder.get(index).startsWith(accumulator)) {
                 accumulator = "";
             }
         }
