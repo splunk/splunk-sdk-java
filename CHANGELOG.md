@@ -51,6 +51,21 @@
   results reader, are contained in a separate splunk jar file named,
   splunk-external.jar.
 
+  The example here is using the built-in XML streaming reader:
+```
+
+    Job job = service.getJobs().create(query, queryArgs);
+    ...
+
+    HashMap<String, String> map;
+    stream = job.getResults(outputArgs);
+    ResultsReader resultsReader = new ResultsReaderXml(stream);
+    while ((map = resultsReader.getNextEvent()) != null) {
+        for (String key: map.keySet())
+            System.out.println(key + " --> " + map.get(key));
+    }
+```
+
 * Add an Upload class. This class is available to query in-progress file
   uploads.
 
