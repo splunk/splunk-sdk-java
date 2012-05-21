@@ -19,7 +19,8 @@ package com.splunk.external;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.splunk.ResultsReader;
-import java.io.IOException;
+
+import java.io.EOFException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -41,13 +42,21 @@ public class ResultsReaderJson extends ResultsReader {
     public ResultsReaderJson(InputStream inputStream) throws Exception {
         super(inputStream);
         jsonReader = new JsonReader(new InputStreamReader(inputStream));
-        jsonReader.beginArray();
+        // if stream is empty, return a null reader.
+        try {
+            jsonReader.beginArray();
+        }
+        catch (EOFException e) {
+            jsonReader =  null;
+            return;
+        }
     }
 
     /** {@inheritDoc} */
     @Override public void close() throws Exception {
         super.close();
-        jsonReader.close();
+        if (jsonReader != null)
+            jsonReader.close();
         jsonReader = null;
     }
 
@@ -56,6 +65,9 @@ public class ResultsReaderJson extends ResultsReader {
         HashMap<String, String> returnData = null;
         int level = 0;
         String name = "";
+
+        if (jsonReader == null)
+            return null;
 
         // events are almost flat and names and strings, so no need for a true
         // general parser solution. But the Gson parser is a little unintuitive

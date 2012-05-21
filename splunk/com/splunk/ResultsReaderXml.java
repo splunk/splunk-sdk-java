@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +60,7 @@ public class ResultsReaderXml extends ResultsReader {
         int index = 0;
         while (true) {
             int data = reader.read();
-            if (data < 0) throw new RuntimeException("End of XML data");
+            if (data < 0) return;
             accumulator = accumulator + (char)data;
             if (findInOrder.get(index).equals(accumulator)) {
                 if (index == findInOrder.size()-1) {
@@ -94,6 +93,9 @@ public class ResultsReaderXml extends ResultsReader {
     @Override public HashMap<String, String> getNextEvent() throws Exception {
         XMLEvent xmlEvent;
         int eType;
+
+        if (xmlReader == null)
+            return null;
 
         try {
             while (xmlReader.hasNext()) {
