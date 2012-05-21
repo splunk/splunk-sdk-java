@@ -96,7 +96,6 @@ public class WindowsWmiInput extends Input {
     /**
      * Returns the main host for this WMI input. Secondary hosts are specified
      * in the {@code server} attribute.
-     * @see #getServer
      *
      * @return The main host.
      */

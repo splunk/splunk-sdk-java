@@ -298,7 +298,7 @@ public class DistributedConfiguration extends Entity {
      * effect.
      *
      * Note that the supported disabled mechanism, is to use the
-     * @{code disable} and {@code enable} action.
+     * {@code disable} and {@code enable} action.
      *
      * @param disabled {@code true} to disabled to deployment client,
      * {@code false} to enable.
@@ -352,8 +352,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Sets whether or not to remove a server connection that cannot be made
      * within the timeout period specified by {@code connectionTimeout},
-     * @{code sendTimeout}, or {@code receiveTimeout}.
-     * If set to {@codefalse}, every call to that server attempts to connect.
+     * {@code sendTimeout}, or {@code receiveTimeout}.
+     * If set to {@code false}, every call to that server attempts to connect.
      * This may result in a slow user interface.
      *
      * @param removeTimedOutServers whether or not to remove timed out servers.

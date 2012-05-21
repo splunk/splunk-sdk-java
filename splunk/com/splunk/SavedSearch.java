@@ -1855,7 +1855,7 @@ public class SavedSearch extends Entity {
     /**
      * Sets the alert comparator. Valid values are from the set
      * {@code greater than, less than, equal to, rises by, drops by,}
-     * @{code rises by perc, drops by perc}.
+     * {@code rises by perc, drops by perc}.
      *
      * @param comparator The alert comparator
      */

@@ -75,7 +75,7 @@ public class OutputGroup extends Entity {
     /**
      * Sets whether or not this forwarder performs automatic load balancing.
      *
-     * If set to {@codetrue}, forwarder performs automatic load balancing.
+     * If set to {@code true}, forwarder performs automatic load balancing.
      * In automatic mode, the forwarder selects a new indexer every
      * {@code autoLBFrequency} seconds. If the connection to the current
      * indexer is lost, the forwarder selects a new live indexer to forward
