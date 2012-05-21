@@ -46,10 +46,10 @@
 * Add XML, JSON and CSV streaming results reader. This feature allows one to
   retrieve event data via an incremental streaming mechanism. Return data is in
   key/value pairs. The XML form uses built-in JDK XML parsing support. The JSON
-  and CSV form requires third party JSON and CSV parsers which are included as
-  ancillary jar files in the SDK. For clarity, the JSON and CSV streaming
-  results reader, are contained in a separate splunk jar file named,
-  splunk-external.jar.
+  and CSV form requires third party JSON and CSV tokenizers which are included
+  as ancillary jar files in the SDK. For clarity, the JSON and CSV streaming
+  results reader, which require the external tokenizers, are contained in a
+  separate splunk jar file named, splunk-external.jar.
 
   The example here is using the built-in XML streaming reader:
 ```
