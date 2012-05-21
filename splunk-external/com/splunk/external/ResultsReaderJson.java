@@ -55,24 +55,48 @@ public class ResultsReaderJson extends ResultsReader {
     @Override public HashMap<String, String> getNextEvent() throws Exception {
         HashMap<String, String> returnData = null;
         int level = 0;
+        String name = "";
 
+        // events are almost flat and names and strings, so no need for a true
+        // general parser solution. But the Gson parser is a little unintuitive
+        // here. Nested objects, have their own relative notion of hasNext. This
+        // means that for every object or array start, hasNext() returns false
+        // and one must consume the closing (END) object to get back to the
+        // previous object.
         while (jsonReader.hasNext()) {
             if (returnData == null) {
                 returnData = new HashMap<String, String>();
             }
             if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
                 jsonReader.beginObject();
-                level++;
             }
-            returnData.put(jsonReader.nextName(), jsonReader.nextString());
+            if (jsonReader.peek() == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                // The Gson parser is a little unintuitive here. Nested objects,
+                // have their own relative notion of hasNext.
+                String data = "";
+                while (jsonReader.hasNext()) {
+                    JsonToken jsonToken2 = jsonReader.peek();
+                    if (jsonToken2 == JsonToken.STRING) {
+                        data = data + (data.equals("") ? "" : ",") +
+                                jsonReader.nextString();
+                    }
+                }
+                jsonReader.endArray();
+                returnData.put(name, data);
+            }
+            if (jsonReader.peek() == JsonToken.NAME) {
+                name = jsonReader.nextName();
+            }
+            if (jsonReader.peek() == JsonToken.STRING) {
+                returnData.put(name, jsonReader.nextString());
+            }
             if (jsonReader.peek() == JsonToken.END_OBJECT) {
                 jsonReader.endObject();
-                if (--level == 0)
-                    break;
+                break;
             }
             if (jsonReader.peek() == JsonToken.END_ARRAY) {
                 jsonReader.endArray();
-                break;
             }
         }
         return returnData;
