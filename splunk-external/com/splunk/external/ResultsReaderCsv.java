@@ -46,13 +46,14 @@ public class ResultsReaderCsv extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    public void close() throws IOException {
+    @Override public void close() throws Exception {
+        super.close();
         csvReader.close();
         csvReader = null;
     }
 
     /** {@inheritDoc} */
-    public HashMap<String, String> getNextEvent() throws Exception {
+    @Override public HashMap<String, String> getNextEvent() throws Exception {
         HashMap<String, String> returnData = null;
         String[] line;
 

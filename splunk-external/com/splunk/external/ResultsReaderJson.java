@@ -45,13 +45,14 @@ public class ResultsReaderJson extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    public void close() throws IOException {
+    @Override public void close() throws Exception {
+        super.close();
         jsonReader.close();
         jsonReader = null;
     }
 
     /** {@inheritDoc} */
-    public HashMap<String, String> getNextEvent() throws Exception {
+    @Override public HashMap<String, String> getNextEvent() throws Exception {
         HashMap<String, String> returnData = null;
         int level = 0;
 

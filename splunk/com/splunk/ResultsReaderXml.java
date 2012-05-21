@@ -73,13 +73,14 @@ public class ResultsReaderXml extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    public void close() throws IOException {
+    @Override public void close() throws Exception {
+        super.close();
         inputStreamReader.close();
         inputStreamReader = null;
     }
 
     /** {@inheritDoc} */
-    public HashMap<String, String> getNextEvent() throws Exception {
+    @Override public HashMap<String, String> getNextEvent() throws Exception {
         XMLEvent xmlEvent;
         int eType;
 

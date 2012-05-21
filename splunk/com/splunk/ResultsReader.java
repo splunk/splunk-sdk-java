@@ -44,6 +44,8 @@ public abstract  class ResultsReader {
      * @throws Exception on Exception
      */
     public void close() throws Exception {
+        if (reader != null) reader.close();
+        reader = null;
     }
 
     /**
@@ -55,6 +57,4 @@ public abstract  class ResultsReader {
     public HashMap<String, String> getNextEvent() throws Exception {
         return null;
     }
-
-
 }
