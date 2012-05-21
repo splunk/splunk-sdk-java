@@ -33,20 +33,8 @@ public class DeploymentTenant extends Entity {
     }
 
     /**
-     * Indicates whether this deployment server in a multi-tenant configuration
-     * should review its configuration and inform the deployment client if 
-     * something is new or updated.
-     *
-     * @return {@code true} if this deployment server notifies the deployment
-     * client for new or changed configurations, {@code false} if not.
-     */
-    public boolean getCheckNew() {
-        return getBoolean("check-new", false);
-    }
-
-    /**
      * Returns inclusive criteria for determining deployment client access to
-     * this deployment server. The index is form 0 to 9 inclusive.
+     * this deployment server. The only valid index is 0.
      *
      * @param index The whitelist index.
      * @return Criteria for determining deployment client access to this
@@ -61,7 +49,7 @@ public class DeploymentTenant extends Entity {
      * this effect is not immediate; Splunk must be restarted to take effect.
      *
      * Note that the supported disabled mechanism, is to use the
-     * @{code disable} and {@code enable} action.
+     * {@code disable} and {@code enable} action.
      *
      * @param disabled {@code true} to disabled to deployment client,
      * {@code false} to enable.

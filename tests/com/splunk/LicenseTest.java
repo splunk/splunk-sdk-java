@@ -32,7 +32,7 @@ public class LicenseTest extends SplunkTestCase {
         EntityCollection<License> licenses =
                 service.getLicenses();
 
-        // list of features, empirically created
+        // List of features, empirically created
         List<String> features = Arrays.asList(
             "Auth", "FwdData", "RcvData", "DeployClient", "SplunkWeb",
             "SyslogOutputProcessor", "SigningProcessor", "LocalSearch",
@@ -40,18 +40,18 @@ public class LicenseTest extends SplunkTestCase {
             "DeployServer", "SigningProcessor", "SyslogOutputProcessor",
             "AllowDuplicateKeys", "CanBeRemoteMaster");
 
-        // list of groupids, empirically created
+        // List of groupids, empirically created
         List<String> groups = Arrays.asList(
             "Forwarder", "Enterprise", "Free", "Trial");
 
-        // list of statuses, empirically created
+        // List of statuses, empirically created
         List<String> stati = Arrays.asList("VALID", "EXPIRED");
 
-        // list of types, empirically created
+        // List of types, empirically created
         List<String> types = Arrays.asList(
             "forwarder", "enterprise", "free", "download-trial");
 
-        // test for sane data in licenses
+        // Test for sane data in licenses
         for (License license: licenses.values()) {
             assertTrue(license.getCreationTime().after(new Date(0)));
             assertTrue(license.getExpirationTime().after(new Date(0)));
@@ -65,6 +65,9 @@ public class LicenseTest extends SplunkTestCase {
             assertTrue(license.getMaxViolations() != 0);
             assertTrue(stati.contains(license.getStatus()));
             assertTrue(types.contains(license.getType()));
+            license.getSourceTypes();
+            license.getStackId();
+            license.getWindowPeriod();
         }
 
         if (licenses.containsKey("sdk-test")) {
@@ -72,7 +75,7 @@ public class LicenseTest extends SplunkTestCase {
         }
         assertFalse(licenses.containsKey("sdk-test"));
 
-        // create
+        // Create
         FileReader fileReader;
         char [] buffer = new char[2048];
         try {

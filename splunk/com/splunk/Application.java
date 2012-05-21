@@ -71,6 +71,17 @@ public class Application extends Entity {
     }
 
     /**
+     * Returns whether or not to reload objects contains in the locally
+     * installed app.
+     *
+     * @return  Whether or not to reload objects contains in the locally
+     * installed app.
+     */
+    public boolean getRefresh() {
+        return getBoolean("refresh", false);
+    }
+
+    /**
      * Returns the version of the app.
      *
      * @return The version, or {@code null} if not specified.
@@ -132,6 +143,16 @@ public class Application extends Entity {
     }
 
     /**
+     * Sets whether or not Splunk checks Splunkbase for updates to this app.
+     *
+     * @param value {@code true} if the app is checked for updates
+     * {@code false} if it is not to be checked.
+     */
+    public void setCheckForUpdates(boolean value) {
+        setCacheValue("check_for_updates", value);
+    }
+
+    /**
      * Sets whether the app's custom setup has been
      * performed. This field is available in Splunk version 4.2.4 and later.
      *
@@ -170,7 +191,7 @@ public class Application extends Entity {
      * {@code false} if not.
      */
     public void setManageable(boolean value) {
-        setCacheValue("manageable", false);
+        setCacheValue("manageable", value);
     }
 
     /**

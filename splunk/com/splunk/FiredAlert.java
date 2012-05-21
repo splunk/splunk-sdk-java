@@ -61,7 +61,7 @@ public class FiredAlert extends Entity {
      * available.
      */
     public String getExpirationTime() {
-        return getString("expiration_time_rendered", null);
+        return getString("expiration_time", null);
     }
 
     /**
@@ -109,17 +109,6 @@ public class FiredAlert extends Entity {
      */
     public Date getTriggerTime() {
         return getDate("trigger_time", null);
-    }
-
-    /**
-     * Returns this alert's rendered trigger time.
-     * This method is available in Splunk 4.3 and later.
-     *
-     * @return This alert's rendered trigger time, or {@code null} if not
-     * available.
-     */
-    public String getTriggerTimeRendered() {
-        return getString("trigger_time_rendered", null);
     }
 
     /**

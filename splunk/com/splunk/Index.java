@@ -126,6 +126,15 @@ public class Index extends Entity {
     }
 
     /**
+     * Returns the total size of all bloom filter files, in KB.
+     *
+     * @return The total size of all bloom filter files, in KB.
+     */
+    public int getBloomfilterTotalSizeKB() {
+        return getInteger("bloomfilterTotalSizeKB", 0);
+    }
+
+    /**
      * Returns the absolute file path to the cold database for this index. 
      * This value may contain shell expansion terms.
      *
@@ -402,6 +411,33 @@ public class Index extends Entity {
     }
 
     /**
+     * Returns the number of hot buckets created for this index.
+     *
+     * @return The number of hot buckets created for this index.
+     */
+    public int getNumHotBuckets() {
+        return getInteger("numHotBuckets", 0);
+    }
+
+    /**
+     * Returns the number of hot buckets created for this index.
+     *
+     * @return The number of hot buckets created for this index.
+     */
+    public int getNumWarmBuckets() {
+        return getInteger("numWarmBuckets", 0);
+    }
+
+    /**
+     * Returns the number of bloom filters created for this index.
+     *
+     * @return The number of bloom filters created for this index.
+     */
+    public int getNumBloomfilters() {
+        return getInteger("numBloomfilters", 0);
+    }
+
+    /**
      * Returns the frequency at which metadata is for partially synced (synced
      * in-place) for this index. A value of 0 disables partial syncing, so
      * metadata is only synced on the ServiceMetaPeriod interval.
@@ -649,7 +685,7 @@ public class Index extends Entity {
     /**
      * Sets the size, in MB, for a hot DB to reach before a roll to
      * warm is triggered. Note, allowable values are also, @{code auto} and
-     * @{code auto_high_volume}, which are recommended.
+     * {@code auto_high_volume}, which are recommended.
      *
      * @param size The size, in MB, for a hot DB to reach before a roll to
      * warm is triggered.

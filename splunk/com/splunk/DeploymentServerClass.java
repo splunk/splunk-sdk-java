@@ -43,7 +43,8 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns a list of excluded client addresses, by index.
+     * Returns a list of excluded client addresses, by index. Only valid
+     * index is 0.
      *
      * @param index The index of the blacklist entry to return.
      * @return A list of excluded client addresses, or {@code null} if not
@@ -63,7 +64,7 @@ public class DeploymentServerClass extends Entity {
      * is used.
      */
     public boolean getContinueMatching() {
-        return getBoolean("continueMatching");
+        return getBoolean("continueMatching", false);
     }
 
     /**
@@ -132,7 +133,8 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns a list of included client addresses, by index.
+     * Returns a list of included client addresses, by index. Only indeces
+     * 0 and 1 are valid.
      *
      * @param index The index of the whitelist entry to return.
      * @return A list of included client addresses, or {@code null} if not

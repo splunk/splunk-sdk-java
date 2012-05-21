@@ -23,7 +23,6 @@ import com.splunk.external.ResultsReaderJson;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -140,6 +139,7 @@ public class Program {
             queryArgs.put("latest_time", latestTime);
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
+
         Job job = service.getJobs().create(query, queryArgs);
 
         // Wait until results are available.

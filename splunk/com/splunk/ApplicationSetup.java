@@ -33,6 +33,17 @@ public class ApplicationSetup extends Entity {
     }
 
     /**
+     * Returns whether to reload the objects contained in the locally
+     * installed app.
+     *
+     * @return Whether to reload the objects contained in the locally
+     * installed app.
+     */
+    public boolean getRefresh() {
+        return getBoolean("refresh", false);
+    }
+
+    /**
      * Returns the app's setup information in XML format.
      *
      * @return The setup information for the app.
@@ -42,6 +53,6 @@ public class ApplicationSetup extends Entity {
     }
 
      // Because all other keys are dynamic and context specific, they should
-     // be retrieved using standard Map access.
+     // be retrieved using Map (dictionary) get access.
 }
 

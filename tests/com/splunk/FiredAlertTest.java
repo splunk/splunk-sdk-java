@@ -42,7 +42,6 @@ public class FiredAlertTest extends SplunkTestCase {
                 firedAlert.getSid();
                 firedAlert.getTriggeredAlertCount();
                 firedAlert.getTriggerTime();
-                firedAlert.getTriggerTimeRendered();
                 firedAlert.isDigestMode();
             }
         }

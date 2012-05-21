@@ -54,6 +54,7 @@ public class IndexTest extends SplunkTestCase {
             index.getAssureUTF8();
             index.getBlockSignatureDatabase();
             index.getBlockSignSize();
+            index.getBloomfilterTotalSizeKB();
             index.getColdPath();
             index.getColdPathExpanded();
             index.getColdToFrozenDir();
@@ -81,6 +82,9 @@ public class IndexTest extends SplunkTestCase {
             index.getMemPoolMB();
             index.getMinRawFileSyncSecs();
             index.getMinTime();
+            index.getNumBloomfilters();
+            index.getNumHotBuckets();
+            index.getNumWarmBuckets();
             index.getPartialServiceMetaPeriod();
             index.getQuarantineFutureSecs();
             index.getQuarantinePastSecs();

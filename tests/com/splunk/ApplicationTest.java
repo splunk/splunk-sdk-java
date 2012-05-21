@@ -53,6 +53,7 @@ public class ApplicationTest extends SplunkTestCase {
             app.getCheckForUpdates();
             app.getDescription();
             app.getLabel();
+            app.getRefresh();
             app.getVersion();
             app.isConfigured();
             app.isManageable();

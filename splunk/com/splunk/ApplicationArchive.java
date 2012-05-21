@@ -51,6 +51,17 @@ public class ApplicationArchive extends Entity {
     }
 
     /**
+     * Returns whether to reload the objects contained in the locally
+     * installed app.
+     *
+     * @return Whether to reload the objects contained in the locally
+     * installed app.
+     */
+    public boolean getRefresh() {
+        return getBoolean("refresh", false);
+    }
+
+    /**
      * Returns a URL to the app archive file on the server, for web browser
      * access.
      *

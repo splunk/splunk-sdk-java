@@ -33,18 +33,6 @@ public class DeploymentServer extends Entity {
     }
 
     /**
-     * Indicates whether this deployment server reviews its configuration
-     * information and informs the deployment client if something is new or
-     * updated.
-     *
-     * @return {@code true} if this deployment server notifies the deployment
-     * client of new or changed configurations, {@code false} if not.
-     */
-    public boolean getCheckNew() {
-        return getBoolean("check-new", false);
-    }
-
-    /**
      * Returns inclusive criteria for determining deployment client access to
      * this deployment server.
      *

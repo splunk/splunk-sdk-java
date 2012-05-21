@@ -227,4 +227,19 @@ public class SearchTest extends SplunkTestCase {
         job.getTimeline().close();
         job.cancel();
     }
+
+    // Check retrieval of search job timeline.
+    @Test public void testAttributes() throws IOException {
+        Service service = connect();
+
+        String query = "search index=sdk-tests * earliest=-1h";
+
+        Job job = runWait(service, query, new Args("status_buckets", 100));
+        job.getSearchProviders();
+
+        job.getTimeline().close();
+        job.cancel();
+    }
+
+
 }

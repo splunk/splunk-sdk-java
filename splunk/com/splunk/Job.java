@@ -278,8 +278,9 @@ public class Job extends Entity {
     /**
      * Returns a value that indicates how events are sorted. 
      *
-     * @return "desc" if events are sorted in inverse time order (latest first),
-     * otherwise "none".
+     * @return {@code desc} if events are sorted in inverse time order (latest
+     * first). {@code asc} if events are sorted in time order (oldest first),
+     * or {@code none} if events are not sorted.
      */
     public String getEventSorting() {
         return getString("eventSorting");
@@ -515,6 +516,9 @@ public class Job extends Entity {
         return response.getContent();
     }
 
+    public String[] getSearchProviders() {
+        return getStringArray("searchProviders", null);
+    }
     /**
      * Returns the unique search identifier (SID) for this job.
      *
@@ -532,7 +536,9 @@ public class Job extends Entity {
      */
     static String getSid(ResponseMessage response) {
         return Xml.parse(response.getContent())
-            .getElementsByTagName("sid").item(0).getTextContent();
+            .getElementsByTagName("sid")
+            .item(0)
+            .getTextContent();
     }
 
     /**

@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class JobCollection extends EntityCollection<Job> {
     static String oneShotNotAllowed = String.format(
-         "Oneshot not allowed, use service oneShotSearch method");
+         "Oneshot not allowed, use service oneshot search method");
 
     /**
      * Class constructor.

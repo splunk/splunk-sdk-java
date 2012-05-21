@@ -34,115 +34,134 @@ public class NamespaceTest extends SplunkTestCase {
 
         namespace.clear();
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/Bob/-/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/Bob/-/"));
 
         namespace.clear();
         namespace.put("app", "search");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/-/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/-/search/"));
 
         namespace.clear();
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/Bob/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/Bob/search/"));
 
         namespace.clear();
         namespace.put("sharing", "user");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/-/-/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/-/-/"));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/Bob/-/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/Bob/-/"));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("app", "search");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/-/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/-/search/"));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/Bob/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/Bob/search/"));
 
         namespace.clear();
         namespace.put("sharing", "app");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/-/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/-/"));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/-/"));
-
-        namespace.clear();
-        namespace.put("sharing", "app");
-        namespace.put("app", "search");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/-/"));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("app", "search");
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/search/"));
+
+        namespace.clear();
+        namespace.put("sharing", "app");
+        namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/search/"));
 
         namespace.clear();
         namespace.put("sharing", "global");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/-/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/-/"));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/-/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/-/"));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("app", "search");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/search/"));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/search/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/search/"));
 
         namespace.clear();
         namespace.put("sharing", "system");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/system/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/system/"));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/system/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/system/"));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("app", "search");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/system/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/system/"));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service.fullpath("", namespace)
-                .equals("/servicesNS/nobody/system/"));
+        assertTrue(service
+            .fullpath("", namespace)
+            .equals("/servicesNS/nobody/system/"));
     }
 
     @Test public void testLiveNamespace1() throws Exception {
@@ -170,7 +189,7 @@ public class NamespaceTest extends SplunkTestCase {
         // get saved searches for our new namespace, clean to make sure
         // we remove, before we create one.
         SavedSearchCollection savedSearches =
-                service.getSavedSearches(namespace);
+            service.getSavedSearches(namespace);
 
         if (savedSearches.containsKey(savedSearch))
             savedSearches.remove(savedSearch);
@@ -268,15 +287,15 @@ public class NamespaceTest extends SplunkTestCase {
 
         /* create namespace specfic UNIQUE searches */
         SavedSearchCollection
-                savedSearches11 = service.getSavedSearches(namespace11);
+            savedSearches11 = service.getSavedSearches(namespace11);
         SavedSearchCollection
-                savedSearches12 = service.getSavedSearches(namespace12);
+            savedSearches12 = service.getSavedSearches(namespace12);
         SavedSearchCollection
-                savedSearches21 = service.getSavedSearches(namespace21);
+            savedSearches21 = service.getSavedSearches(namespace21);
         SavedSearchCollection
-                savedSearches22 = service.getSavedSearches(namespace22);
+            savedSearches22 = service.getSavedSearches(namespace22);
         SavedSearchCollection
-                savedSearchesx1 = service.getSavedSearches(namespacex1);
+            savedSearchesx1 = service.getSavedSearches(namespacex1);
         SavedSearchCollection
             savedSearchesNobody1 = service.getSavedSearches(namespaceNobody1);
 
