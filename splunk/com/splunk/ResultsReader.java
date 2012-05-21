@@ -21,7 +21,6 @@ import java.util.HashMap;
 
 public abstract  class ResultsReader {
     InputStreamReader inputStreamReader = null;
-    PushbackReader reader = null;
 
     /**
      * Class constructor.
@@ -44,8 +43,9 @@ public abstract  class ResultsReader {
      * @throws Exception on Exception
      */
     public void close() throws Exception {
-        if (reader != null) reader.close();
-        reader = null;
+        if (inputStreamReader != null)
+            inputStreamReader.close();
+        inputStreamReader = null;
     }
 
     /**

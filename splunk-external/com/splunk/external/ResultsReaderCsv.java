@@ -48,7 +48,8 @@ public class ResultsReaderCsv extends ResultsReader {
     /** {@inheritDoc} */
     @Override public void close() throws Exception {
         super.close();
-        csvReader.close();
+        if (csvReader != null)
+            csvReader.close();
         csvReader = null;
     }
 

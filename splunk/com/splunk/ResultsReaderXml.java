@@ -44,7 +44,8 @@ public class ResultsReaderXml extends ResultsReader {
      */
     public ResultsReaderXml(InputStream inputStream) throws Exception {
         super(inputStream);
-        reader = new PushbackReader(inputStreamReader, 256);
+        PushbackReader pushbackReader =
+            new PushbackReader(inputStreamReader, 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         // at initialization, skip everything in the start until we get to the
@@ -59,14 +60,14 @@ public class ResultsReaderXml extends ResultsReader {
         String accumulator = "";
         int index = 0;
         while (true) {
-            int data = reader.read();
+            int data = pushbackReader.read();
             if (data < 0) return;
             accumulator = accumulator + (char)data;
             if (findInOrder.get(index).equals(accumulator)) {
                 if (index == findInOrder.size()-1) {
                     String putBackString = "<doc>" + findInOrder.get(index);
                     char putBackBytes[] = putBackString.toCharArray();
-                    reader.unread(putBackBytes);
+                    pushbackReader.unread(putBackBytes);
                     break;
                 }
                 else {
@@ -79,14 +80,14 @@ public class ResultsReaderXml extends ResultsReader {
 
         // now attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
-        xmlReader = inputFactory.createXMLEventReader(reader);
+        xmlReader = inputFactory.createXMLEventReader(pushbackReader);
     }
 
     /** {@inheritDoc} */
     @Override public void close() throws Exception {
         super.close();
-        inputStreamReader.close();
-        inputStreamReader = null;
+        if (xmlReader != null) xmlReader.close();
+        xmlReader = null;
     }
 
     /** {@inheritDoc} */
