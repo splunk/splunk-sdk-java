@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class OutputDefaultTest extends SplunkTestCase {
+    final static String assertRoot = "Output Default assert: ";
+
     @Test public void testOutputDefault() throws Exception {
         Service service = connect();
 
@@ -49,10 +51,14 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.update();
 
         //check
-        assertEquals(outputDefault.getDropEventsOnQueueFull(), 0);
-        assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat+1);
-        assertEquals(outputDefault.indexAndForward(), !forward);
-        assertEquals(outputDefault.getSendCookedData(), !cookedData);
+        assertEquals(assertRoot + "#1", 0,
+            outputDefault.getDropEventsOnQueueFull());
+        assertEquals(assertRoot + "#2", heartbeat+1,
+            outputDefault.getHeartbeatFrequency());
+        assertEquals(assertRoot + "#3", !forward,
+            outputDefault.indexAndForward());
+        assertEquals(assertRoot + "#4", !cookedData,
+            outputDefault.getSendCookedData());
 
         // restore
         outputDefault.setDropEventsOnQueueFull(onQueueFull);
@@ -63,9 +69,13 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.update();
 
         //check
-        assertEquals(outputDefault.getDropEventsOnQueueFull(), onQueueFull);
-        assertEquals(outputDefault.getHeartbeatFrequency(), heartbeat);
-        assertEquals(outputDefault.indexAndForward(), forward);
-        assertEquals(outputDefault.getSendCookedData(), cookedData);
+        assertEquals(assertRoot + "#5", onQueueFull,
+            outputDefault.getDropEventsOnQueueFull());
+        assertEquals(assertRoot + "#6", heartbeat,
+            outputDefault.getHeartbeatFrequency());
+        assertEquals(assertRoot + "#7", forward,
+            outputDefault.indexAndForward());
+        assertEquals(assertRoot + "#8", cookedData,
+            outputDefault.getSendCookedData());
     }
 }

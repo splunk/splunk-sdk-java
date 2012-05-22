@@ -21,6 +21,8 @@ import java.util.List;
 import org.junit.Test;
 
 public class LicenseSlaveTest extends SplunkTestCase {
+    final static String assertRoot = "License Slave assert: ";
+
     @Test public void testLicenseSlave() throws Exception {
         Service service = connect();
 
@@ -38,17 +40,17 @@ public class LicenseSlaveTest extends SplunkTestCase {
              "download-trial", "enterprise", "forwarder", "free");
 
         for (LicenseSlave licenseSlave: licenseSlaves.values()) {
-            assertTrue(licenseSlave.getLabel().length() > 0);
+            assertTrue(assertRoot + "#1", licenseSlave.getLabel().length() > 0);
             for (String pool: licenseSlave.getPoolIds()) {
                 // Special-case, fixed sourcetype has a hash at the end; so
                 // no fixed value will match. Thus only check versus known
                 // fixed values from list.
                 if (!pool.startsWith("auto_generated_pool_fixed-sourcetype_")) {
-                    assertTrue(pools.contains(pool));
+                    assertTrue(assertRoot + "#2", pools.contains(pool));
                 }
             }
             for (String stack: licenseSlave.getStackIds()) {
-                assertTrue(stacks.contains(stack));
+                assertTrue(assertRoot + "#3", stacks.contains(stack));
             }
         }
     }

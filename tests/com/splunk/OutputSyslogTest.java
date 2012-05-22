@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class OutputSyslogTest extends SplunkTestCase {
+    final static String assertRoot = "Output Syslog assert: ";
+
     @Test public void testOutputSyslog() throws Exception {
         Service service = connect();
 
@@ -43,8 +45,8 @@ public class OutputSyslogTest extends SplunkTestCase {
             entity.update();
 
             // check
-            assertEquals(entity.getServer(), "1.1.1.1:514");
-            assertEquals(entity.getType(), otherType);
+            assertEquals(assertRoot + "#1", "1.1.1.1:514", entity.getServer());
+            assertEquals(assertRoot + "#2", otherType, entity.getType());
 
             // restore
             entity.setServer(server);
@@ -52,8 +54,8 @@ public class OutputSyslogTest extends SplunkTestCase {
             entity.update();
 
             // re-check
-            assertEquals(entity.getServer(), server);
-            assertEquals(entity.getType(), type);
+            assertEquals(assertRoot + "#3", server, entity.getServer());
+            assertEquals(assertRoot + "#4", type, entity.getType());
         }
     }
 }

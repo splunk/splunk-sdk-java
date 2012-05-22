@@ -40,8 +40,8 @@ public class FiredAlert extends Entity {
      *
      * @return The alert actions, or {@code null} if not available.
      */
-    public String getAction() {
-        return getString("actions", null);
+    public String[] getAction() {
+        return getStringArray("actions", null);
     }
 
     /**
@@ -61,7 +61,7 @@ public class FiredAlert extends Entity {
      * available.
      */
     public String getExpirationTime() {
-        return getString("expiration_time", null);
+        return getString("expiration_time_rendered", null);
     }
 
     /**
@@ -109,6 +109,16 @@ public class FiredAlert extends Entity {
      */
     public Date getTriggerTime() {
         return getDate("trigger_time", null);
+    }
+
+    /**
+     * Returns this alert's redered trigger time.
+     * This method is available in Splunk 4.3 and later.
+     *
+     * @return This alert's trigger time, or {@code null} if not available.
+     */
+    public Date getTriggerTimeRendered() {
+        return getDate("trigger_time_rendered", null);
     }
 
     /**

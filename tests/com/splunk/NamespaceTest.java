@@ -16,13 +16,11 @@
 
 package com.splunk;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.net.Socket;
 import org.junit.Test;
 
 
 public class NamespaceTest extends SplunkTestCase {
+    final static String assertRoot = "Namespace assert: ";
 
     @Test public void testStaticNamespace() {
         Service service = connect();
@@ -30,138 +28,120 @@ public class NamespaceTest extends SplunkTestCase {
 
         // synctactic tests
         namespace.clear();
-        assertTrue(service.fullpath("", null).equals("/services/"));
+        assertEquals(assertRoot + "#1", "/services/",
+            service.fullpath("", null));
 
         namespace.clear();
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/Bob/-/"));
+        assertEquals(assertRoot + "#2", "/servicesNS/Bob/-/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("app", "search");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/-/search/"));
+        assertEquals(assertRoot + "#3", "/servicesNS/-/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/Bob/search/"));
+        assertEquals(assertRoot + "#4",  "/servicesNS/Bob/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "user");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/-/-/"));
+        assertEquals(assertRoot + "#5", "/servicesNS/-/-/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/Bob/-/"));
+        assertEquals(assertRoot + "#6", "/servicesNS/Bob/-/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("app", "search");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/-/search/"));
+        assertEquals(assertRoot + "#7", "/servicesNS/-/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/Bob/search/"));
+        assertEquals(assertRoot + "#8", "/servicesNS/Bob/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/-/"));
+        assertEquals(assertRoot + "#9", "/servicesNS/nobody/-/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/-/"));
+        assertEquals(assertRoot + "#10", "/servicesNS/nobody/-/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("app", "search");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/search/"));
+        assertEquals(assertRoot + "#11", "/servicesNS/nobody/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/search/"));
+        assertEquals(assertRoot + "#12", "/servicesNS/nobody/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/-/"));
+        assertEquals(assertRoot + "#13", "/servicesNS/nobody/-/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/-/"));
+        assertEquals(assertRoot + "#14", "/servicesNS/nobody/-/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("app", "search");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/search/"));
+        assertEquals(assertRoot + "#15", "/servicesNS/nobody/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/search/"));
+        assertEquals(assertRoot + "#16", "/servicesNS/nobody/search/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/system/"));
+        assertEquals(assertRoot + "#17", "/servicesNS/nobody/system/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/system/"));
+        assertEquals(assertRoot + "#18", "/servicesNS/nobody/system/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("app", "search");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/system/"));
+        assertEquals(assertRoot + "#19", "/servicesNS/nobody/system/",
+            service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertTrue(service
-            .fullpath("", namespace)
-            .equals("/servicesNS/nobody/system/"));
+        assertEquals(assertRoot + "#20", "/servicesNS/nobody/system/",
+            service.fullpath("", namespace));
     }
 
     @Test public void testLiveNamespace1() throws Exception {
@@ -182,9 +162,9 @@ public class NamespaceTest extends SplunkTestCase {
         UserCollection users = service.getUsers();
         if (users.containsKey(username))
             users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#21", users.containsKey(username));
         users.create(username, password, "user");
-        assertTrue(users.containsKey(username));
+        assertTrue(assertRoot + "#22", users.containsKey(username));
 
         // get saved searches for our new namespace, clean to make sure
         // we remove, before we create one.
@@ -193,18 +173,18 @@ public class NamespaceTest extends SplunkTestCase {
 
         if (savedSearches.containsKey(savedSearch))
             savedSearches.remove(savedSearch);
-        assertFalse(savedSearches.containsKey(savedSearch));
+        assertFalse(assertRoot + "#23", savedSearches.containsKey(savedSearch));
 
         savedSearches.create(savedSearch, searchString);
-        assertTrue(savedSearches.containsKey(savedSearch));
+        assertTrue(assertRoot + "#24", savedSearches.containsKey(savedSearch));
 
         // remove saved search
         savedSearches.remove(savedSearch);
-        assertFalse(savedSearches.containsKey(savedSearch));
+        assertFalse(assertRoot + "#25", savedSearches.containsKey(savedSearch));
 
         // remove user
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#26", users.containsKey(username));
     }
 
     @Test public void testLiveNamespace2() throws Exception {
@@ -261,8 +241,8 @@ public class NamespaceTest extends SplunkTestCase {
             service = connect(); // using default name space
             apps = service.getApplications();
         }
-        assertFalse(apps.containsKey(appname1));
-        assertFalse(apps.containsKey(appname2));
+        assertFalse(assertRoot + "#27", apps.containsKey(appname1));
+        assertFalse(assertRoot + "#28", apps.containsKey(appname2));
 
         /* scrub to make sure users don't already exist */
         UserCollection users = service.getUsers();
@@ -270,20 +250,20 @@ public class NamespaceTest extends SplunkTestCase {
             users.remove(username1);
         if (users.containsKey(username2))
             users.remove(username2);
-        assertFalse(users.containsKey(username1));
-        assertFalse(users.containsKey(username2));
+        assertFalse(assertRoot + "#29", users.containsKey(username1));
+        assertFalse(assertRoot + "#30", users.containsKey(username2));
 
         /* create users */
         users.create(username1, "abc", "user");
         users.create(username2, "abc", "user");
-        assertTrue(users.containsKey(username1));
-        assertTrue(users.containsKey(username2));
+        assertTrue(assertRoot + "#31", users.containsKey(username1));
+        assertTrue(assertRoot + "#32", users.containsKey(username2));
 
         /* create apps */
         apps.create(appname1);
         apps.create(appname2);
-        assertTrue(apps.containsKey(appname1));
-        assertTrue(apps.containsKey(appname2));
+        assertTrue(assertRoot + "#33", apps.containsKey(appname1));
+        assertTrue(assertRoot + "#34", apps.containsKey(appname2));
 
         /* create namespace specfic UNIQUE searches */
         SavedSearchCollection
@@ -301,80 +281,108 @@ public class NamespaceTest extends SplunkTestCase {
 
         // create in 11 namespace, make sure there, but not in others
         savedSearches11.create(searchName11, search);
-        assertTrue(savedSearches11.containsKey(searchName11));
+        assertTrue(assertRoot + "#35",
+            savedSearches11.containsKey(searchName11));
         savedSearches12.refresh();
-        assertFalse(savedSearches12.containsKey(searchName11));
+        assertFalse(assertRoot + "#36",
+            savedSearches12.containsKey(searchName11));
         savedSearches21.refresh();
-        assertFalse(savedSearches21.containsKey(searchName11));
+        assertFalse(assertRoot + "#37",
+            savedSearches21.containsKey(searchName11));
         savedSearches22.refresh();
-        assertFalse(savedSearches22.containsKey(searchName11));
+        assertFalse(assertRoot + "#38",
+            savedSearches22.containsKey(searchName11));
 
         // create in 12 namespace, make sure there, but not in others
         savedSearches12.create(searchName12, search);
-        assertTrue(savedSearches12.containsKey(searchName12));
+        assertTrue(assertRoot + "#39",
+            savedSearches12.containsKey(searchName12));
         savedSearches11.refresh();
-        assertFalse(savedSearches11.containsKey(searchName12));
+        assertFalse(assertRoot + "#40",
+            savedSearches11.containsKey(searchName12));
         savedSearches12.refresh();
-        assertFalse(savedSearches21.containsKey(searchName12));
+        assertFalse(assertRoot + "#42",
+            savedSearches21.containsKey(searchName12));
         savedSearches22.refresh();
-        assertFalse(savedSearches22.containsKey(searchName12));
+        assertFalse(assertRoot + "#43",
+            savedSearches22.containsKey(searchName12));
 
         // create in 21 namespace, make sure there, but not in others
         savedSearches21.create(searchName21, search);
-        assertTrue(savedSearches21.containsKey(searchName21));
+        assertTrue(assertRoot + "#44",
+            savedSearches21.containsKey(searchName21));
         savedSearches11.refresh();
-        assertFalse(savedSearches11.containsKey(searchName21));
+        assertFalse(assertRoot + "#45",
+            savedSearches11.containsKey(searchName21));
         savedSearches12.refresh();
-        assertFalse(savedSearches12.containsKey(searchName21));
+        assertFalse(assertRoot + "#46",
+            savedSearches12.containsKey(searchName21));
         savedSearches22.refresh();
-        assertFalse(savedSearches22.containsKey(searchName21));
+        assertFalse(assertRoot + "#47",
+            savedSearches22.containsKey(searchName21));
 
         // create in 22 namespace, make sure there, but not in others
         savedSearches22.create(searchName22, search);
-        assertTrue(savedSearches22.containsKey(searchName22));
+        assertTrue(assertRoot + "#48",
+            savedSearches22.containsKey(searchName22));
         savedSearches11.refresh();
-        assertFalse(savedSearches11.containsKey(searchName22));
+        assertFalse(assertRoot + "#49",
+            savedSearches11.containsKey(searchName22));
         savedSearches12.refresh();
-        assertFalse(savedSearches12.containsKey(searchName22));
+        assertFalse(assertRoot + "#50",
+            savedSearches12.containsKey(searchName22));
         savedSearches21.refresh();
-        assertFalse(savedSearches21.containsKey(searchName22));
+        assertFalse(assertRoot + "#51",
+            savedSearches21.containsKey(searchName22));
 
         /* now remove the UNIQUE saved searches */
         savedSearches11.remove(searchName11);
         savedSearches12.remove(searchName12);
         savedSearches21.remove(searchName21);
         savedSearches22.remove(searchName22);
-        assertFalse(savedSearches11.containsKey(searchName11));
-        assertFalse(savedSearches12.containsKey(searchName12));
-        assertFalse(savedSearches21.containsKey(searchName21));
-        assertFalse(savedSearches22.containsKey(searchName22));
+        assertFalse(assertRoot + "#52",
+            savedSearches11.containsKey(searchName11));
+        assertFalse(assertRoot + "#53",
+            savedSearches12.containsKey(searchName12));
+        assertFalse(assertRoot + "#54",
+            savedSearches21.containsKey(searchName21));
+        assertFalse(assertRoot + "#55",
+            savedSearches22.containsKey(searchName22));
 
         /* create same search name in different namespaces */
         savedSearches11.create("sdk-test-search", search + " | head 1");
         savedSearches21.create("sdk-test-search", search + " | head 2");
         savedSearchesNobody1.create("sdk-test-search", search + " | head 4");
-        assertTrue(savedSearches11.containsKey("sdk-test-search"));
-        assertTrue(savedSearches21.containsKey("sdk-test-search"));
-        assertTrue(savedSearchesNobody1.containsKey("sdk-test-search"));
+        assertTrue(assertRoot + "#56",
+            savedSearches11.containsKey("sdk-test-search"));
+        assertTrue(assertRoot + "#57",
+            savedSearches21.containsKey("sdk-test-search"));
+        assertTrue(assertRoot + "#58",
+            savedSearchesNobody1.containsKey("sdk-test-search"));
 
         // we have created three saved searches with the same name, make sure we
         // can see all three with a wild-carded get.
         savedSearchesx1.refresh();
-        assertTrue(savedSearchesx1.values().size() == 3);
+        assertEquals(assertRoot + "#59", 3, savedSearchesx1.values().size());
 
-        assertFalse(
+        assertFalse(assertRoot + "#60",
             savedSearchesx1.containsKey("sdk-test-search", namespaceBad));
-        assertTrue(savedSearchesx1.containsKey("sdk-test-search", namespace21));
-        assertTrue(savedSearchesx1.get("sdk-test-search", namespace21) != null);
+        assertTrue(assertRoot + "#61",
+            savedSearchesx1.containsKey("sdk-test-search", namespace21));
+        assertTrue(assertRoot + "#62",
+            savedSearchesx1.get("sdk-test-search", namespace21) != null);
 
         // remove one of the saved searches through a specific namespace path
         savedSearchesx1.remove("sdk-test-search", namespace21);
         savedSearches11.remove("sdk-test-search");
         savedSearchesNobody1.remove("sdk-test-search");
-        assertFalse(savedSearches11.containsKey("sdk-test-search"));
+        assertFalse(assertRoot + "#63",
+            savedSearches11.containsKey("sdk-test-search"));
         savedSearches21.refresh();
-        assertFalse(savedSearches21.containsKey("sdk-test-search"));
-        assertFalse(savedSearchesNobody1.containsKey("sdk-test-search"));
+        assertFalse(assertRoot + "#64",
+            savedSearches21.containsKey("sdk-test-search"));
+        assertFalse(assertRoot + "#65",
+            savedSearchesNobody1.containsKey("sdk-test-search"));
 
         /* cleanup apps */
         apps.refresh();
@@ -390,8 +398,8 @@ public class NamespaceTest extends SplunkTestCase {
             service = connect(); // using default name space
             apps = service.getApplications();
         }
-        assertFalse(apps.containsKey(appname1));
-        assertFalse(apps.containsKey(appname2));
+        assertFalse(assertRoot + "#66", apps.containsKey(appname1));
+        assertFalse(assertRoot + "#67", apps.containsKey(appname2));
 
         /* cleanup users */
         users = service.getUsers(); // need to re-establish, because of restart
@@ -399,8 +407,8 @@ public class NamespaceTest extends SplunkTestCase {
             users.remove(username1);
         if (users.containsKey(username2))
             users.remove(username2);
-        assertFalse(users.containsKey(username1));
-        assertFalse(users.containsKey(username2));
+        assertFalse(assertRoot + "#68", users.containsKey(username1));
+        assertFalse(assertRoot + "#69", users.containsKey(username2));
     }
 }
 

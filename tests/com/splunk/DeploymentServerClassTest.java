@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class DeploymentServerClassTest extends SplunkTestCase {
+    final static String assertRoot = "Deployment Server Class assert: ";
+
     @Test public void testDeploymentServerClass() throws Exception {
         Service service = connect();
 
@@ -47,15 +49,18 @@ public class DeploymentServerClassTest extends SplunkTestCase {
 
         // check for sanity
         for (int i=0; i< 10; i++)
-            assertEquals(deploymentServerClass.getBlackListByIndex(i),
-                         String.format("bad%d.splunk.com", i));
-        assertEquals(deploymentServerClass.getContinueMatching(),
-                args.get("continueMatching"));
-        assertEquals(deploymentServerClass.getFilterType(),
-                args.get("filterType"));
+            assertEquals(assertRoot + "#1",
+                String.format("bad%d.splunk.com", i),
+                deploymentServerClass.getBlackListByIndex(i));
+        assertEquals(assertRoot + "#2",
+            args.get("continueMatching"),
+            deploymentServerClass.getContinueMatching());
+        assertEquals(assertRoot + "#3",
+            args.get("filterType"), deploymentServerClass.getFilterType());
         for (int i=0; i< 10; i++)
-            assertEquals(deploymentServerClass.getWhiteListByIndex(i),
-                         String.format("good%d.splunk.com", i));
+            assertEquals(assertRoot + "#4",
+                String.format("good%d.splunk.com", i),
+                deploymentServerClass.getWhiteListByIndex(i));
         String filter = deploymentServerClass.getFilterType();
 
         // modify
@@ -73,13 +78,17 @@ public class DeploymentServerClassTest extends SplunkTestCase {
 
         // check update
         for (int i=0; i< 10; i++)
-            assertEquals(deploymentServerClass.getBlackListByIndex(i),
-                         String.format("maybe%d.splunk.com", i));
-        assertTrue(deploymentServerClass.getContinueMatching());
-        assertEquals(deploymentServerClass.getFilterType(), "blacklist");
+            assertEquals(assertRoot + "#5",
+                String.format("maybe%d.splunk.com", i),
+                deploymentServerClass.getBlackListByIndex(i));
+        assertTrue(assertRoot + "#6",
+            deploymentServerClass.getContinueMatching());
+        assertEquals(assertRoot + "#7",
+            "blacklist", deploymentServerClass.getFilterType());
         for (int i=0; i< 10; i++)
-            assertEquals(deploymentServerClass.getWhiteListByIndex(i),
-                         String.format("maybe%d.splunk.com", i));
+            assertEquals(assertRoot + "#8",
+                String.format("maybe%d.splunk.com", i),
+                deploymentServerClass.getWhiteListByIndex(i));
 
         // cleanup & restore sane values
         for (int i=0; i< 10; i++)
@@ -93,7 +102,7 @@ public class DeploymentServerClassTest extends SplunkTestCase {
 
         for (DeploymentServerClass deploymentServerClass1:
                 deploymentServerClasses.values()) {
-            assertTrue(
+            assertTrue(assertRoot + "#9",
                 deploymentServerClass1.getRepositoryLocation().length() > 0);
             deploymentServerClass1.getBlackList();
             deploymentServerClass1.getEndpoint();

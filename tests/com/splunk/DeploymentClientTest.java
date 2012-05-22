@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class DeploymentClientTest extends SplunkTestCase {
+    final static String assertRoot = "Deployment Client assert: ";
+
     @Test public void testDeploymentClient() throws Exception {
         Service service = connect();
 
@@ -43,11 +45,13 @@ public class DeploymentClientTest extends SplunkTestCase {
             // use both setters and map update techniques
             deploymentClient.setTargetUri("1.2.3.4:8080");
             deploymentClient.update();
-            assertEquals(deploymentClient.getTargetUri(), "1.2.3.4:8080");
+            assertEquals(assertRoot + "#1",
+                "1.2.3.4:8080", deploymentClient.getTargetUri());
             Args args = new Args();
             args.put("targetUri", uri);
             deploymentClient.update(args);
-            assertEquals(deploymentClient.getTargetUri(), uri);
+            assertEquals(assertRoot + "#2",
+                uri, deploymentClient.getTargetUri());
             deploymentClient.getServerClasses();
             deploymentClient.reload();
         }

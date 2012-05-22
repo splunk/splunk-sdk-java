@@ -21,6 +21,8 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class SearchTest extends SplunkTestCase {
+    final static String assertRoot = "Search assert: ";
+
     // Run the given query.
     Job run(Service service, String query) {
         return run(service, query, null);
@@ -92,14 +94,14 @@ public class SearchTest extends SplunkTestCase {
 
         // Check simple parse.
         ResponseMessage response = service.parse(query);
-        assertEquals(response.getStatus(), 200);
+        assertEquals(assertRoot + "#1", 200, response.getStatus());
 
         Args parseArgs;
 
         // Check parse with parse_only argument.
         parseArgs = new Args("parse_only", true);
         service.parse(query, parseArgs); 
-        assertEquals(response.getStatus(), 200);
+        assertEquals(assertRoot + "#2", 200, response.getStatus());
 
         // Check parse with multiple arguments.
         parseArgs = new Args();
@@ -108,7 +110,7 @@ public class SearchTest extends SplunkTestCase {
         parseArgs.put("enable_lookups", true);
         parseArgs.put("reload_macros", true);
         service.parse(query, parseArgs); 
-        assertEquals(response.getStatus(), 200);
+        assertEquals(assertRoot + "#3", 200, response.getStatus());
     }
 
     @Test public void testParseFail() {
@@ -122,7 +124,7 @@ public class SearchTest extends SplunkTestCase {
             fail("Expected a parse error");
         }
         catch (HttpException e) { 
-            assertEquals(e.getStatus(), 400);
+            assertEquals(assertRoot + "#4", 400, e.getStatus());
         }
 
         // Check for parse error with args.
@@ -136,7 +138,7 @@ public class SearchTest extends SplunkTestCase {
             fail("Expected a parse error");
         }
         catch (HttpException e) {
-            assertEquals(e.getStatus(), 400);
+            assertEquals(assertRoot + "#5", 400, e.getStatus());
         }
 
         // Check for argument error.
@@ -145,7 +147,7 @@ public class SearchTest extends SplunkTestCase {
             service.parse(query, parseArgs);
         }
         catch (HttpException e) {
-            assertEquals(e.getStatus(), 400);
+            assertEquals(assertRoot + "#6", 400, e.getStatus());
         }
     }
 

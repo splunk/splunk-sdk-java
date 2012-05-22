@@ -22,6 +22,8 @@ import java.net.Socket;
 
 public class ApplicationTest extends SplunkTestCase {
 
+    final static String assertRoot = "Application assert: ";
+
     private Service cleanApp(String appName, Service service) throws Exception {
         splunkRestart();
         service = connect();
@@ -75,7 +77,7 @@ public class ApplicationTest extends SplunkTestCase {
         }
 
         apps = service.getApplications();
-        assertEquals(false, apps.containsKey("sdk-tests"));
+        assertFalse(assertRoot + "#1", apps.containsKey("sdk-tests"));
 
         Args createArgs = new Args();
         createArgs.put("author", "me");
@@ -87,15 +89,15 @@ public class ApplicationTest extends SplunkTestCase {
         createArgs.put("template", "barebones");
         createArgs.put("visible", false);
         apps.create("sdk-tests", createArgs);
-        assertEquals(true, apps.containsKey("sdk-tests"));
+        assertTrue(assertRoot + "#2", apps.containsKey("sdk-tests"));
         Application app = apps.get("sdk-tests");
 
         app.getCheckForUpdates();
-        assertEquals(app.getLabel(), "SDKTEST");
-        assertEquals(app.getAuthor(), "me");
-        assertFalse(app.isConfigured());
-        assertFalse(app.isManageable());
-        assertFalse(app.isVisible());
+        assertEquals(assertRoot + "#3", "SDKTEST", app.getLabel());
+        assertEquals(assertRoot + "#4", "me", app.getAuthor());
+        assertFalse(assertRoot + "#5", app.isConfigured());
+        assertFalse(assertRoot + "#6", app.isManageable());
+        assertFalse(assertRoot + "#7", app.isVisible());
 
         // update the app
         app.setAuthor("not me");
@@ -107,23 +109,24 @@ public class ApplicationTest extends SplunkTestCase {
         app.update();
 
         // check to see if args took.
-        assertEquals(app.getAuthor(), "not me");
-        assertEquals(app.getDescription(), "new description");
-        assertEquals(app.getLabel(), "new label");
-        assertFalse(app.isVisible());
-        assertEquals(app.getVersion(), "5.0.0");
+        assertEquals(assertRoot + "#8", "not me", app.getAuthor());
+        assertEquals(
+            assertRoot + "#9", "new description", app.getDescription());
+        assertEquals(assertRoot + "#10", "new label", app.getLabel());
+        assertFalse(assertRoot + "#11", app.isVisible());
+        assertEquals(assertRoot + "#12", "5.0.0", app.getVersion());
 
         // archive (package) the application
         ApplicationArchive appArchive = app.archive();
-        assertTrue(appArchive.getAppName().length() > 0);
-        assertTrue(appArchive.getFilePath().length() > 0);
-        assertTrue(appArchive.getUrl().length() > 0);
+        assertTrue(assertRoot + "#13", appArchive.getAppName().length() > 0);
+        assertTrue(assertRoot + "#14", appArchive.getFilePath().length() > 0);
+        assertTrue(assertRoot + "#15", appArchive.getUrl().length() > 0);
 
         ApplicationUpdate appUpdate = app.getUpdate();
-        assertTrue(appUpdate.containsKey("eai:acl"));
+        assertTrue(assertRoot + "#16", appUpdate.containsKey("eai:acl"));
 
         service = cleanApp("sdk-tests", service);
         apps = service.getApplications();
-        assertEquals(false, apps.containsKey("sdk-tests"));
+        assertFalse(assertRoot + "#17", apps.containsKey("sdk-tests"));
     }
 }

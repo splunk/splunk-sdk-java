@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class OutputGroupTest extends SplunkTestCase {
+    final static String assertRoot = "Output Group assert: ";
+
     @Test public void testOutputGroup() throws Exception {
         Service service = connect();
 
@@ -39,8 +41,8 @@ public class OutputGroupTest extends SplunkTestCase {
             outputGroup.update();
 
             String[] updatedServers = outputGroup.getServers();
-            String server1 = updatedServers[0];
-            assertEquals(server1, "1.1.1.1:9997");
+            assertTrue(assertRoot + "#1",
+                contains(updatedServers, "1.1.1.1:9997"));
 
             // restore originals
             StringBuilder serverList = new StringBuilder();
@@ -52,7 +54,7 @@ public class OutputGroupTest extends SplunkTestCase {
             }
             outputGroup.setServers(serverList.toString());
             outputGroup.update();
-            updatedServers = outputGroup.getServers();
+            outputGroup.getServers();
         }
     }
 }

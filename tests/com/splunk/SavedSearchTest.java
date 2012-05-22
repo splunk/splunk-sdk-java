@@ -23,6 +23,8 @@ import java.util.Set;
 import org.junit.Test;
 
 public class SavedSearchTest extends SplunkTestCase {
+    final static String assertRoot = "Saved Search assert: ";
+
     @Test public void testSavedSearches() {
         Service service = connect();
 
@@ -143,34 +145,34 @@ public class SavedSearchTest extends SplunkTestCase {
         // Ensure test starts in a known good state
         if (savedSearches.containsKey("sdk-test1"))
             savedSearches.remove("sdk-test1");
-        assertFalse(savedSearches.containsKey("sdk-test1"));
+        assertFalse(assertRoot + "#1", savedSearches.containsKey("sdk-test1"));
 
         SavedSearch savedSearch;
         String search = "search index=sdk-tests * earliest=-1m";
 
         // Create a saved search
         savedSearches.create("sdk-test1", search);
-        assertTrue(savedSearches.containsKey("sdk-test1"));
+        assertTrue(assertRoot + "#2", savedSearches.containsKey("sdk-test1"));
 
         // Read the saved search
         savedSearch = savedSearches.get("sdk-test1");
-        assertEquals(savedSearch.isVisible(), true);
+        assertTrue(assertRoot + "#3", savedSearch.isVisible());
         // CONSIDER: Test some additinal default property values.
 
         // Update search properties, but don't specify required args to test
         // pulling them from the existing object
         savedSearch.update(new Args("is_visible", false));
         savedSearch.refresh();
-        assertEquals(savedSearch.isVisible(), false);
+        assertFalse(assertRoot + "#4", savedSearch.isVisible());
 
         // Delete the saved search
         savedSearches.remove("sdk-test1");
-        assertFalse(savedSearches.containsKey("sdk-test1"));
+        assertFalse(assertRoot + "#5", savedSearches.containsKey("sdk-test1"));
 
         // Create a saved search with some additional arguments
         savedSearch = savedSearches.create(
             "sdk-test1", search, new Args("is_visible", false));
-        assertEquals(savedSearch.isVisible(), false);
+        assertFalse(assertRoot + "#6", savedSearch.isVisible());
 
         // set email params
         savedSearch.setActionEmailAuthPassword("sdk-password");
@@ -235,76 +237,119 @@ public class SavedSearchTest extends SplunkTestCase {
         savedSearch.update();
 
         // check
-        assertTrue(savedSearch.isActionEmail());
-        assertTrue(savedSearch.isActionPopulateLookup());
-        assertTrue(savedSearch.isActionRss());
-        assertTrue(savedSearch.isActioncScript());
-        assertTrue(savedSearch.isActionSummaryIndex());
-        assertTrue(savedSearch.isDigestMode());
+        assertTrue(assertRoot + "#7", savedSearch.isActionEmail());
+        assertTrue(assertRoot + "#8", savedSearch.isActionPopulateLookup());
+        assertTrue(assertRoot + "#9", savedSearch.isActionRss());
+        assertTrue(assertRoot + "#10", savedSearch.isActioncScript());
+        assertTrue(assertRoot + "#11", savedSearch.isActionSummaryIndex());
+        assertTrue(assertRoot + "#12", savedSearch.isDigestMode());
 
-        assertEquals(savedSearch.getActionEmailAuthPassword(), "sdk-password");
-        assertEquals(savedSearch.getActionEmailAuthUsername(), "sdk-username");
-        assertEquals(savedSearch.getActionEmailBcc(), "sdk-bcc@splunk.com");
-        assertEquals(savedSearch.getActionEmailCc(), "sdk-cc@splunk.com");
-        assertEquals(savedSearch.getActionEmailCommand(), "$name1$");
-        assertEquals(savedSearch.getActionEmailFormat(), "text");
-        assertEquals(savedSearch.getActionEmailFrom(), "sdk@splunk.com");
-        assertEquals(savedSearch.getActionEmailHostname(), "dummy1.host.com");
-        assertEquals(savedSearch.getActionEmailInline(), true);
-        assertEquals(savedSearch.getActionEmailMailServer(), "splunk.com");
-        assertEquals(savedSearch.getActionEmailMaxResults(), 101);
-        assertEquals(savedSearch.getActionEmailMaxTime(), "10s");
-        assertEquals(savedSearch.getActionEmailPdfView(), "dummy");
-        assertEquals(savedSearch.getActionEmailPreProcessResults(), "*");
-        assertEquals(savedSearch.getActionEmailReportPaperOrientation(),
-                "landscape");
-        assertEquals(savedSearch.getActionEmailReportPaperSize(), "letter");
-        assertEquals(savedSearch.getActionEmailReportServerEnabled(), false);
-        assertEquals(savedSearch.getActionEmailReportServerUrl(), "splunk.com");
-        assertEquals(savedSearch.getActionEmailSendPdf(), false);
-        assertEquals(savedSearch.getActionEmailSendResults(), false);
-        assertEquals(savedSearch.getActionEmailSubject(), "sdk-subject");
-        assertEquals(savedSearch.getActionEmailTo(), "sdk-to@splunk.com");
-        assertEquals(savedSearch.getActionEmailTrackAlert(), false);
-        assertEquals(savedSearch.getActionEmailTtl(), "61");
-        assertEquals(savedSearch.getActionEmailUseSsl(), false);
-        assertEquals(savedSearch.getActionEmailUseTls(), false);
-        assertEquals(savedSearch.getActionEmailWidthSortColumns(), false);
-        assertEquals(savedSearch.getActionPopulateLookupCommand(), "$name2$");
-        assertEquals(savedSearch.getActionPopulateLookupDest(), "dummypath");
-        assertEquals(savedSearch.getActionPopulateLookupHostname(),
-                "dummy2.host.com");
-        assertEquals(savedSearch.getActionPopulateLookupMaxResults(), 102);
-        assertEquals(savedSearch.getActionPopulateLookupMaxTime(), "20s");
-        assertEquals(savedSearch.getActionPopulateLookupTrackAlert(), false);
-        assertEquals(savedSearch.getActionPopulateLookupTtl(), "62");
-        assertEquals(savedSearch.getActionRssCommand(), "$name3$");
-        assertEquals(savedSearch.getActionRssHostname(), "dummy3.host.com");
-        assertEquals(savedSearch.getActionRssMaxResults(), 103);
-        assertEquals(savedSearch.getActionRssMaxTime(), "30s");
-        assertEquals(savedSearch.getActionRssTrackAlert(), false);
-        assertEquals(savedSearch.getActionRssTtl(), "63");
-        assertEquals(savedSearch.getActionScriptCommand(), "$name4$");
+        assertEquals(assertRoot + "#12", "sdk-password",
+            savedSearch.getActionEmailAuthPassword());
+        assertEquals(assertRoot + "#13", "sdk-username",
+            savedSearch.getActionEmailAuthUsername());
+        assertEquals(assertRoot + "#14", "sdk-bcc@splunk.com",
+            savedSearch.getActionEmailBcc());
+        assertEquals(assertRoot + "#15", "sdk-cc@splunk.com",
+            savedSearch.getActionEmailCc());
+        assertEquals(assertRoot + "#16", "$name1$",
+            savedSearch.getActionEmailCommand());
+        assertEquals(assertRoot + "#17", "text",
+            savedSearch.getActionEmailFormat());
+        assertEquals(assertRoot + "#18", "sdk@splunk.com",
+            savedSearch.getActionEmailFrom());
+        assertEquals(assertRoot + "#19", "dummy1.host.com",
+            savedSearch.getActionEmailHostname());
+        assertTrue(assertRoot + "#20", savedSearch.getActionEmailInline());
+        assertEquals(assertRoot + "#21", "splunk.com",
+            savedSearch.getActionEmailMailServer());
+        assertEquals(assertRoot + "#22", 101,
+            savedSearch.getActionEmailMaxResults());
+        assertEquals(assertRoot + "#23", "10s",
+            savedSearch.getActionEmailMaxTime());
+        assertEquals(assertRoot + "#24", "dummy",
+            savedSearch.getActionEmailPdfView());
+        assertEquals(assertRoot + "#25", "*",
+            savedSearch.getActionEmailPreProcessResults());
+        assertEquals(assertRoot + "#26", "landscape",
+            savedSearch.getActionEmailReportPaperOrientation());
+        assertEquals(assertRoot + "#27", "letter",
+            savedSearch.getActionEmailReportPaperSize());
+        assertFalse(assertRoot + "#28",
+            savedSearch.getActionEmailReportServerEnabled());
+        assertEquals(assertRoot + "#29", "splunk.com",
+            savedSearch.getActionEmailReportServerUrl());
+        assertFalse(assertRoot + "#30", savedSearch.getActionEmailSendPdf());
+        assertFalse(assertRoot + "#31",
+            savedSearch.getActionEmailSendResults());
+        assertEquals(assertRoot + "#32", "sdk-subject",
+            savedSearch.getActionEmailSubject());
+        assertEquals(assertRoot + "#33", "sdk-to@splunk.com",
+            savedSearch.getActionEmailTo());
+        assertFalse(assertRoot + "#34", savedSearch.getActionEmailTrackAlert());
+        assertEquals(assertRoot + "#35", "61", savedSearch.getActionEmailTtl());
+        assertFalse(assertRoot + "#36", savedSearch.getActionEmailUseSsl());
+        assertFalse(assertRoot + "#37", savedSearch.getActionEmailUseTls());
+        assertFalse(assertRoot + "#38",
+            savedSearch.getActionEmailWidthSortColumns());
+        assertEquals(assertRoot + "#39", "$name2$",
+            savedSearch.getActionPopulateLookupCommand());
+        assertEquals(assertRoot + "#40", "dummypath",
+            savedSearch.getActionPopulateLookupDest());
+        assertEquals(assertRoot + "#41", "dummy2.host.com",
+            savedSearch.getActionPopulateLookupHostname());
+        assertEquals(assertRoot + "#42", 102,
+            savedSearch.getActionPopulateLookupMaxResults());
+        assertEquals(assertRoot + "#43", "20s",
+            savedSearch.getActionPopulateLookupMaxTime());
+        assertFalse(assertRoot + "#44",
+            savedSearch.getActionPopulateLookupTrackAlert());
+        assertEquals(assertRoot + "#45", "62",
+            savedSearch.getActionPopulateLookupTtl());
+        assertEquals(assertRoot + "#46", "$name3$",
+            savedSearch.getActionRssCommand());
+        assertEquals(assertRoot + "#47", "dummy3.host.com",
+            savedSearch.getActionRssHostname());
+        assertEquals(assertRoot + "#48", 103,
+            savedSearch.getActionRssMaxResults());
+        assertEquals(assertRoot + "#49", "30s",
+            savedSearch.getActionRssMaxTime());
+        assertFalse(assertRoot + "#50", savedSearch.getActionRssTrackAlert());
+        assertEquals(assertRoot + "#51", "63", savedSearch.getActionRssTtl());
+        assertEquals(assertRoot + "#52", "$name4$",
+            savedSearch.getActionScriptCommand());
         //savedSearch.setActionScriptFilename(String  filename);
-        assertEquals(savedSearch.getActionScriptHostname(), "dummy4.host.com");
-        assertEquals(savedSearch.getActionScriptMaxResults(), 104);
-        assertEquals(savedSearch.getActionScriptMaxTime(), "40s");
-        assertEquals(savedSearch.getActionScriptTrackAlert(), false);
-        assertEquals(savedSearch.getActionScriptTtl(), "64");
-        assertEquals(savedSearch.getActionSummaryIndexName(), "default");
-        assertEquals(savedSearch.getActionSummaryIndexCommand(), "$name5$");
-        assertEquals(savedSearch.getActionSummaryIndexHostname(),
-                "dummy5.host.com");
-        assertEquals(savedSearch.getActionSummaryIndexInline(), false);
-        assertEquals(savedSearch.getActionSummaryIndexMaxResults(), 105);
-        assertEquals(savedSearch.getActionSummaryIndexMaxTime(), "50s");
-        assertEquals(savedSearch.getActionSummaryIndexTrackAlert(), false);
-        assertEquals(savedSearch.getActionSummaryIndexTtl(), "65");
+        assertEquals(assertRoot + "#53", "dummy4.host.com",
+            savedSearch.getActionScriptHostname());
+        assertEquals(assertRoot + "#54", 104,
+            savedSearch.getActionScriptMaxResults());
+        assertEquals(assertRoot + "#55", "40s",
+            savedSearch.getActionScriptMaxTime());
+        assertFalse(assertRoot + "#56",
+            savedSearch.getActionScriptTrackAlert());
+        assertEquals(assertRoot + "#57", "64",
+            savedSearch.getActionScriptTtl());
+        assertEquals(assertRoot + "#58", "default",
+            savedSearch.getActionSummaryIndexName());
+        assertEquals(assertRoot + "#59", "$name5$",
+            savedSearch.getActionSummaryIndexCommand());
+        assertEquals(assertRoot + "#60", "dummy5.host.com",
+            savedSearch.getActionSummaryIndexHostname());
+        assertFalse(assertRoot + "#61",
+            savedSearch.getActionSummaryIndexInline());
+        assertEquals(assertRoot + "#62", 105,
+            savedSearch.getActionSummaryIndexMaxResults());
+        assertEquals(assertRoot + "#63", "50s",
+            savedSearch.getActionSummaryIndexMaxTime());
+        assertFalse(assertRoot + "#64",
+            savedSearch.getActionSummaryIndexTrackAlert());
+        assertEquals(assertRoot + "#65", "65",
+            savedSearch.getActionSummaryIndexTtl());
 
         // Delete the saved search - using alternative method
         savedSearch.remove();
         savedSearches.refresh();
-        assertFalse(savedSearches.containsKey("sdk-test1"));
+        assertFalse(assertRoot + "#66", savedSearches.containsKey("sdk-test1"));
     }
 
     @Test public void testDispatch() throws IOException, InterruptedException {
@@ -315,7 +360,7 @@ public class SavedSearchTest extends SplunkTestCase {
         // Ensure test starts in a known good state
         if (savedSearches.containsKey("sdk-test1"))
             savedSearches.remove("sdk-test1");
-        assertFalse(savedSearches.containsKey("sdk-test1"));
+        assertFalse(assertRoot + "#67", savedSearches.containsKey("sdk-test1"));
 
         String search = "search index=sdk-tests * earliest=-1m";
 
@@ -338,7 +383,7 @@ public class SavedSearchTest extends SplunkTestCase {
 
         // Delete the saved search
         savedSearches.remove("sdk-test1");
-        assertFalse(savedSearches.containsKey("sdk-test1"));
+        assertFalse(assertRoot + "#68", savedSearches.containsKey("sdk-test1"));
     }
 
     boolean contains(Job[] history, String sid) {
@@ -356,7 +401,7 @@ public class SavedSearchTest extends SplunkTestCase {
         // Ensure test starts in a known good state
         if (savedSearches.containsKey("sdk-test1"))
             savedSearches.remove("sdk-test1");
-        assertFalse(savedSearches.containsKey("sdk-test1"));
+        assertFalse(assertRoot + "#69", savedSearches.containsKey("sdk-test1"));
 
         String search = "search index=sdk-tests * earliest=-1m";
 
@@ -370,31 +415,31 @@ public class SavedSearchTest extends SplunkTestCase {
         for (Job job : history) job.cancel();
 
         history = savedSearch.history();
-        assertEquals(history.length, 0);
+        assertEquals(assertRoot + "#70", 0, history.length);
 
         Job job1 = savedSearch.dispatch();
         history = savedSearch.history();
-        assertEquals(history.length, 1);
+        assertEquals(assertRoot + "#71", 1, history.length);
         assertTrue(contains(history, job1.getSid()));
 
         Job job2 = savedSearch.dispatch();
         history = savedSearch.history();
-        assertEquals(history.length, 2);
-        assertTrue(contains(history, job1.getSid()));
-        assertTrue(contains(history, job2.getSid()));
+        assertEquals(assertRoot + "#72", 2, history.length);
+        assertTrue(assertRoot + "#73", contains(history, job1.getSid()));
+        assertTrue(assertRoot + "#74", contains(history, job2.getSid()));
 
         job1.cancel();
         history = savedSearch.history();
-        assertEquals(history.length, 1);
-        assertTrue(contains(history, job2.getSid()));
+        assertEquals(assertRoot + "#75", 1, history.length);
+        assertTrue(assertRoot + "#76", contains(history, job2.getSid()));
 
         job2.cancel();
         history = savedSearch.history();
-        assertEquals(history.length, 0);
+        assertEquals(assertRoot + "#77", 0, history.length);
 
         // Delete the saved search
         savedSearches.remove("sdk test1");
-        assertFalse(savedSearches.containsKey("sdk test1"));
+        assertFalse(assertRoot + "#78", savedSearches.containsKey("sdk test1"));
     }
 }
 

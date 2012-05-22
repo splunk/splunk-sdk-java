@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class InputTest extends SplunkTestCase {
+    final static String assertRoot = "Input assert: ";
 
     private void touchSpecificInput(Input input) {
         InputKind inputKind = input.getKind();
@@ -214,24 +215,32 @@ public class InputTest extends SplunkTestCase {
 
         monitorInput.disable();
         // some attributes are write only; check what we can.
-        assertEquals(monitorInput.getBlacklist(), "phonyregex*1");
-        assertEquals(monitorInput.getFollowTail(), false);
-        assertEquals(monitorInput.getHost(), "three.four.com");
-        assertEquals(monitorInput.getHostRegex(), "host*regex*");
+        assertEquals(assertRoot + "#1", "phonyregex*1",
+            monitorInput.getBlacklist());
+        assertFalse(assertRoot + "#2", monitorInput.getFollowTail());
+        assertEquals(assertRoot + "#3", "three.four.com",
+            monitorInput.getHost());
+        assertEquals(assertRoot + "#4", "host*regex*",
+            monitorInput.getHostRegex());
         if (service.versionCompare("4.2") > 0) {
-            assertEquals(monitorInput.getIgnoreOlderThan(), "1d");
-            assertEquals(monitorInput.getTimeBeforeClose(), 120);
+            assertEquals(assertRoot + "#4", "1d",
+                monitorInput.getIgnoreOlderThan());
+            assertEquals(assertRoot + "#4", 120,
+                monitorInput.getTimeBeforeClose());
         }
-        assertEquals(monitorInput.getIndex(), "main");
-        assertEquals(monitorInput.getRecursive(), false);
-        assertEquals(monitorInput.getSource(), "renamedSource");
-        assertEquals(monitorInput.getSourceType(), "monitor");
-        assertEquals(monitorInput.getWhitelist(), "phonyregex*2");
+        assertEquals(assertRoot + "#5", "main", monitorInput.getIndex());
+        assertFalse(assertRoot + "#6", monitorInput.getRecursive());
+        assertEquals(assertRoot + "#7", "renamedSource",
+            monitorInput.getSource());
+        assertEquals(assertRoot + "#8", "monitor",
+            monitorInput.getSourceType());
+        assertEquals(assertRoot + "#9", "phonyregex*2",
+            monitorInput.getWhitelist());
 
         monitorInput.remove();
         inputCollection.refresh();
         inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(filename));
+        assertFalse(assertRoot + "#10", inputCollection.containsKey(filename));
     }
 
     @Test public void testScriptInputCrud() {
@@ -253,7 +262,7 @@ public class InputTest extends SplunkTestCase {
             inputCollection.remove(filename);
         }
         inputCollection.create(filename, InputKind.Script, args);
-        assertTrue(inputCollection.containsKey(filename));
+        assertTrue(assertRoot + "#11", inputCollection.containsKey(filename));
         ScriptInput scriptInput = (ScriptInput)inputCollection.get(filename);
 
         scriptInput.setHost("three.four.com");
@@ -267,18 +276,21 @@ public class InputTest extends SplunkTestCase {
         scriptInput.setSourcetype("script");
         scriptInput.update();
 
-        assertEquals(scriptInput.getHost(), "three.four.com");
-        assertEquals(scriptInput.getIndex(), "main");
-        assertEquals(scriptInput.getInterval(), "120");
+        assertEquals(assertRoot + "#12", "three.four.com",
+            scriptInput.getHost());
+        assertEquals(assertRoot + "#13", "main", scriptInput.getIndex());
+        assertEquals(assertRoot + "#14", "120", scriptInput.getInterval());
         if (service.versionCompare("4.2.3") > 0) {
-            assertEquals(scriptInput.getPassAuth(), "admin");
+            assertEquals(assertRoot + "#15", "admin",
+                scriptInput.getPassAuth());
         }
-        assertEquals(scriptInput.getSource(), "renamedSource");
-        assertEquals(scriptInput.getSourceType(), "script");
+        assertEquals(assertRoot + "#16", "renamedSource",
+            scriptInput.getSource());
+        assertEquals(assertRoot + "#17", "script", scriptInput.getSourceType());
 
         scriptInput.remove();
         inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(filename));
+        assertFalse(assertRoot + "#18", inputCollection.containsKey(filename));
 
     }
 
@@ -293,10 +305,10 @@ public class InputTest extends SplunkTestCase {
             inputCollection.remove(port);
             inputCollection.refresh();
         }
-        assertFalse(inputCollection.containsKey(port));
+        assertFalse(assertRoot + "#19", inputCollection.containsKey(port));
 
         inputCollection.create(port, InputKind.Tcp);
-        assertTrue(inputCollection.containsKey(port));
+        assertTrue(assertRoot + "#20", inputCollection.containsKey(port));
         TcpInput tcpInput = (TcpInput)inputCollection.get(port);
 
         tcpInput.setConnectionHost("one.two.three");
@@ -313,18 +325,18 @@ public class InputTest extends SplunkTestCase {
         tcpInput.setSSL(false);
         tcpInput.update();
 
-        assertEquals(tcpInput.getConnectionHost(), "one.two.three");
-        assertEquals(tcpInput.getHost(), "myhost");
-        assertEquals(tcpInput.getIndex(), "main");
-        assertEquals(tcpInput.getQueue(), "indexQueue");
-        assertEquals(tcpInput.getSource(), "tcp");
-        assertEquals(tcpInput.getSourceType(), "sdk-tests");
-        assertFalse(tcpInput.getSSL());
-        assertEquals(tcpInput.getSource(), "tcp");
+        assertEquals(assertRoot + "#21", "one.two.three",
+            tcpInput.getConnectionHost());
+        assertEquals(assertRoot + "#22", "myhost", tcpInput.getHost());
+        assertEquals(assertRoot + "#23", "main", tcpInput.getIndex());
+        assertEquals(assertRoot + "#24", "indexQueue", tcpInput.getQueue());
+        assertEquals(assertRoot + "#25", "tcp", tcpInput.getSource());
+        assertEquals(assertRoot + "#26", "sdk-tests", tcpInput.getSourceType());
+        assertFalse(assertRoot + "#27", tcpInput.getSSL());
 
         tcpInput.remove();
         inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(port));
+        assertFalse(assertRoot + "#28", inputCollection.containsKey(port));
     }
 
     @Test public void testTcpSplunkInputCrud() {
@@ -338,10 +350,10 @@ public class InputTest extends SplunkTestCase {
             inputCollection.remove(port);
             inputCollection.refresh();
         }
-        assertFalse(inputCollection.containsKey(port));
+        assertFalse(assertRoot + "#29", inputCollection.containsKey(port));
 
         inputCollection.create(port, InputKind.TcpSplunk);
-        assertTrue(inputCollection.containsKey(port));
+        assertTrue(assertRoot + "#30", inputCollection.containsKey(port));
         TcpSplunkInput tcpSplunkInput =
                 (TcpSplunkInput)inputCollection.get(port);
 
@@ -354,13 +366,14 @@ public class InputTest extends SplunkTestCase {
         tcpSplunkInput.setSSL(false);
         tcpSplunkInput.update();
 
-        assertEquals(tcpSplunkInput.getConnectionHost(), "one.two.three");
-        assertEquals(tcpSplunkInput.getHost(), "myhost");
+        assertEquals(assertRoot + "#31", "one.two.three",
+            tcpSplunkInput.getConnectionHost());
+        assertEquals(assertRoot + "#32", "myhost", tcpSplunkInput.getHost());
         assertFalse(tcpSplunkInput.getSSL());
 
         tcpSplunkInput.remove();
         inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(port));
+        assertFalse(assertRoot + "#33", inputCollection.containsKey(port));
     }
 
     @Test public void testUdpInputCrud() {
@@ -374,10 +387,10 @@ public class InputTest extends SplunkTestCase {
             inputCollection.remove(port);
             inputCollection.refresh();
         }
-        assertFalse(inputCollection.containsKey(port));
+        assertFalse(assertRoot + "#34", inputCollection.containsKey(port));
 
         inputCollection.create(port, InputKind.Udp);
-        assertTrue(inputCollection.containsKey(port));
+        assertTrue(assertRoot + "#35", inputCollection.containsKey(port));
         UdpInput udpInput =(UdpInput)inputCollection.get(port);
 
         udpInput.setConnectionHost("connectionHost.com");
@@ -390,18 +403,20 @@ public class InputTest extends SplunkTestCase {
         udpInput.setSourceType("mysourcetype");
         udpInput.update();
 
-        assertEquals(udpInput.getConnectionHost(), "connectionHost.com");
-        assertEquals(udpInput.getHost(), "myhost");
-        assertEquals(udpInput.getIndex(), "main");
-        assertTrue(udpInput.getNoAppendingTimeStamp());
-        assertTrue(udpInput.getNoPriorityStripping());
-        assertEquals(udpInput.getQueue(), "indexQueue");
-        assertEquals(udpInput.getSource(), "mysource");
-        assertEquals(udpInput.getSourceType(), "mysourcetype");
+        assertEquals(assertRoot + "#36", "connectionHost.com",
+            udpInput.getConnectionHost());
+        assertEquals(assertRoot + "#37", "myhost", udpInput.getHost());
+        assertEquals(assertRoot + "#38", "main", udpInput.getIndex());
+        assertTrue(assertRoot + "#39", udpInput.getNoAppendingTimeStamp());
+        assertTrue(assertRoot + "#40", udpInput.getNoPriorityStripping());
+        assertEquals(assertRoot + "#41", "indexQueue", udpInput.getQueue());
+        assertEquals(assertRoot + "#42", "mysource",udpInput.getSource());
+        assertEquals(assertRoot + "#43", "mysourcetype",
+            udpInput.getSourceType());
 
         udpInput.remove();
         inputCollection.refresh();
-        assertFalse(inputCollection.containsKey(port));
+        assertFalse(assertRoot + "#44", inputCollection.containsKey(port));
 
     }
 
@@ -422,12 +437,12 @@ public class InputTest extends SplunkTestCase {
                 inputCollection.remove(name);
                 inputCollection.refresh();
             }
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#45", inputCollection.containsKey(name));
 
             args.put("monitorSubtree", false);
             inputCollection.create(
                     name, InputKind.WindowsActiveDirectory, args);
-            assertTrue(inputCollection.containsKey(name));
+            assertTrue(assertRoot + "#46", inputCollection.containsKey(name));
             WindowsActiveDirectoryInput windowsActiveDirectoryInput =
                     (WindowsActiveDirectoryInput)inputCollection.get(name);
 
@@ -437,16 +452,18 @@ public class InputTest extends SplunkTestCase {
             windowsActiveDirectoryInput.setTargetDc("otherDC");
             windowsActiveDirectoryInput.update();
 
-            assertEquals(windowsActiveDirectoryInput.getIndex(), "main");
-            assertEquals(
-                    windowsActiveDirectoryInput.getMonitorSubtree(), false);
-            assertEquals(
-                    windowsActiveDirectoryInput.getStartingNode(), "startnode");
-            assertEquals(windowsActiveDirectoryInput.getIndex(), "main");
+            assertEquals(assertRoot + "#47", "main",
+                windowsActiveDirectoryInput.getIndex());
+            assertFalse(assertRoot + "#48",
+                windowsActiveDirectoryInput.getMonitorSubtree());
+            assertEquals(assertRoot + "#49", "startnode",
+                windowsActiveDirectoryInput.getStartingNode());
+            assertEquals(assertRoot + "#50", "main",
+                windowsActiveDirectoryInput.getIndex());
 
             windowsActiveDirectoryInput.remove();
             inputCollection.refresh();
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#51", inputCollection.containsKey(name));
     */
     }
 
@@ -463,12 +480,12 @@ public class InputTest extends SplunkTestCase {
                 inputCollection.remove(name);
                 inputCollection.refresh();
             }
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#52", inputCollection.containsKey(name));
 
             // CRUD Windows Event Log Input
             args.put("lookup_host", "127.0.0.1");
             inputCollection.create(name, InputKind.WindowsEventLog, args);
-            assertTrue(inputCollection.containsKey(name));
+            assertTrue(assertRoot + "#53", inputCollection.containsKey(name));
             WindowsEventLogInput windowsEventLogInput =
                      (WindowsEventLogInput)inputCollection.get(name);
 
@@ -477,14 +494,16 @@ public class InputTest extends SplunkTestCase {
             windowsEventLogInput.setHosts("one.two.three,four.five.six");
             windowsEventLogInput.update();
 
-            assertEquals(windowsEventLogInput.getLookupHost(), "127.0.0.1");
-            assertEquals(
-                windowsEventLogInput.getHosts(), "one.two.three,four.five.six");
-            assertEquals(windowsEventLogInput.getIndex(), "main");
+            assertEquals(assertRoot + "#54", "127.0.0.1",
+                windowsEventLogInput.getLookupHost());
+            assertEquals(assertRoot + "#55", "one.two.three,four.five.six",
+                windowsEventLogInput.getHosts());
+            assertEquals(assertRoot + "#55", "main",
+                windowsEventLogInput.getIndex());
 
             windowsEventLogInput.remove();
             inputCollection.refresh();
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#56", inputCollection.containsKey(name));
         }
     }
 
@@ -502,13 +521,13 @@ public class InputTest extends SplunkTestCase {
                 inputCollection.remove(name);
                 inputCollection.refresh();
             }
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#57", inputCollection.containsKey(name));
 
             // CRUD Windows Perfmon Input
             args.put("interval", 600);
             args.put("object", "Server");
             inputCollection.create(name, InputKind.WindowsPerfmon, args);
-            assertTrue(inputCollection.containsKey(name));
+            assertTrue(assertRoot + "#58", inputCollection.containsKey(name));
             WindowsPerfmonInput windowsPerfmonInput =
                     (WindowsPerfmonInput)inputCollection.get(name);
 
@@ -519,15 +538,18 @@ public class InputTest extends SplunkTestCase {
             windowsPerfmonInput.setInterval(1200);
             windowsPerfmonInput.update();
 
-            assertTrue(windowsPerfmonInput.getCounters().length == 1);
-            assertTrue(
+            assertEquals(assertRoot + "#59", 1,
+                windowsPerfmonInput.getCounters().length);
+            assertTrue(assertRoot + "#60",
                 contains(windowsPerfmonInput.getCounters(),
                 "% Privileged Time"));
             assertEquals(windowsPerfmonInput.getIndex(), "main");
-            assertTrue(
+            assertTrue(assertRoot + "#61",
                 contains(windowsPerfmonInput.getInstances(), "wininit"));
-            assertEquals(windowsPerfmonInput.getInterval(), 1200);
-            assertEquals(windowsPerfmonInput.getObject(), "Process");
+            assertEquals(assertRoot + "#62", 1200,
+                windowsPerfmonInput.getInterval());
+            assertEquals(assertRoot + "#63", "Process",
+                windowsPerfmonInput.getObject());
 
             // set multi-series values and update.
             windowsPerfmonInput.setCounters(
@@ -535,22 +557,24 @@ public class InputTest extends SplunkTestCase {
             windowsPerfmonInput.setInstances(new String[] {"smss","csrss"});
             windowsPerfmonInput.update();
 
-            assertTrue(windowsPerfmonInput.getCounters().length == 2);
-            assertTrue(
+            assertEquals(assertRoot + "#64", 2,
+                windowsPerfmonInput.getCounters().length);
+            assertTrue(assertRoot + "#65",
                 contains(windowsPerfmonInput.getCounters(),
                 "% Privileged Time"));
-            assertTrue(
+            assertTrue(assertRoot + "#66",
                 contains(windowsPerfmonInput.getCounters(),  "% User Time"));
 
-            assertTrue(windowsPerfmonInput.getInstances().length == 2);
-            assertTrue(
+            assertEquals(assertRoot + "#67", 2,
+                windowsPerfmonInput.getInstances().length);
+            assertTrue(assertRoot + "#68",
                 contains(windowsPerfmonInput.getInstances(), "smss"));
-            assertTrue(
+            assertTrue(assertRoot + "#69",
                 contains(windowsPerfmonInput.getInstances(), "csrss"));
 
             windowsPerfmonInput.remove();
             inputCollection.refresh();
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#70", inputCollection.containsKey(name));
 
         }
     }
@@ -568,7 +592,7 @@ public class InputTest extends SplunkTestCase {
                 inputCollection.remove(name);
                 inputCollection.refresh();
             }
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#71", inputCollection.containsKey(name));
 
             // CRUD Windows Registry Input
             args.put("disabled", true);
@@ -577,7 +601,7 @@ public class InputTest extends SplunkTestCase {
             args.put("proc", "*");
             args.put("type", "*");
             inputCollection.create(name, InputKind.WindowsRegistry, args);
-            assertTrue(inputCollection.containsKey(name));
+            assertTrue(assertRoot + "#72", inputCollection.containsKey(name));
             WindowsRegistryInput windowsRegistryInput =
                     (WindowsRegistryInput)inputCollection.get(name);
 
@@ -585,22 +609,26 @@ public class InputTest extends SplunkTestCase {
             windowsRegistryInput.setMonitorSubnodes(true);
             windowsRegistryInput.update();
 
-            assertEquals(windowsRegistryInput.getBaseline(), false);
-            assertEquals(windowsRegistryInput.getIndex(), "main");
+            assertFalse(assertRoot + "#73", windowsRegistryInput.getBaseline());
+            assertEquals(assertRoot + "#74", "main",
+                windowsRegistryInput.getIndex());
 
             // adjust a few of the arguments
             windowsRegistryInput.setType("create,delete");
             windowsRegistryInput.setBaseline(false);
             windowsRegistryInput.update();
 
-            assertEquals(windowsRegistryInput.getProc(), "*");
-            assertTrue(windowsRegistryInput.getType().contains("create"));
-            assertTrue(windowsRegistryInput.getType().contains("delete"));
-            assertEquals(windowsRegistryInput.getBaseline(), false);
+            assertEquals(assertRoot + "#75", "*",
+                windowsRegistryInput.getProc());
+            assertTrue(assertRoot + "#76",
+                windowsRegistryInput.getType().contains("create"));
+            assertTrue(assertRoot + "#77",
+                windowsRegistryInput.getType().contains("delete"));
+            assertFalse(assertRoot + "#78", windowsRegistryInput.getBaseline());
 
             windowsRegistryInput.remove();
             inputCollection.refresh();
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#79", inputCollection.containsKey(name));
         }
     }
 
@@ -618,21 +646,24 @@ public class InputTest extends SplunkTestCase {
                 inputCollection.remove(name);
                 inputCollection.refresh();
             }
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#80", inputCollection.containsKey(name));
 
             // CRUD Windows Wmi Input
             args.put("classes", "PerfOS_Processor");
             args.put("interval", 600);
             args.put("lookup_host", "127.0.0.1");
             inputCollection.create(name, InputKind.WindowsWmi, args);
-            assertTrue(inputCollection.containsKey(name));
+            assertTrue(assertRoot + "#81", inputCollection.containsKey(name));
             WindowsWmiInput windowsWmiInput =
                     (WindowsWmiInput)inputCollection.get(name);
 
-            assertEquals(windowsWmiInput.getClasses(),
-                    "Win32_PerfFormattedData_PerfOS_Processor");
-            assertEquals(windowsWmiInput.getInterval(), 600);
-            assertEquals(windowsWmiInput.getLookupHost(), "127.0.0.1");
+            assertEquals(assertRoot + "#82",
+                "Win32_PerfFormattedData_PerfOS_Processor",
+                windowsWmiInput.getClasses());
+            assertEquals(assertRoot + "#83", 600,
+                windowsWmiInput.getInterval());
+            assertEquals(assertRoot + "#84", "127.0.0.1",
+                windowsWmiInput.getLookupHost());
 
             windowsWmiInput.setClasses("PerfDisk_LogicalDisk");
             windowsWmiInput.setFields("Caption");
@@ -642,28 +673,39 @@ public class InputTest extends SplunkTestCase {
             windowsWmiInput.setServers("host1.splunk.com,host2.splunk.com");
             windowsWmiInput.update();
 
-            assertEquals(windowsWmiInput.getClasses(),
-                    "Win32_PerfFormattedData_PerfDisk_LogicalDisk");
-            assertTrue(windowsWmiInput.getFields().length == 1);
-            assertTrue(contains(windowsWmiInput.getFields(), "Caption"));
-            assertEquals(windowsWmiInput.getIndex(), "main");
-            assertEquals(windowsWmiInput.getInterval(), 1200);
-            assertTrue(windowsWmiInput.getInstances().length == 1);
-            assertTrue(contains(windowsWmiInput.getInstances(), "_Total"));
-            assertEquals(windowsWmiInput.getServers(),
-                    "host1.splunk.com,host2.splunk.com");
+            assertEquals(assertRoot + "#85",
+                "Win32_PerfFormattedData_PerfDisk_LogicalDisk",
+                windowsWmiInput.getClasses());
+            assertEquals(assertRoot + "#86", 1,
+                windowsWmiInput.getFields().length);
+            assertTrue(assertRoot + "#87",
+                contains(windowsWmiInput.getFields(), "Caption"));
+            assertEquals(assertRoot + "#88", "main",
+                windowsWmiInput.getIndex());
+            assertEquals(assertRoot + "#89", 1200,
+                windowsWmiInput.getInterval());
+            assertEquals(assertRoot + "#90", 1,
+                windowsWmiInput.getInstances().length);
+            assertTrue(assertRoot + "#91",
+                contains(windowsWmiInput.getInstances(), "_Total"));
+            assertEquals(assertRoot + "#92",
+                "host1.splunk.com,host2.splunk.com",
+                windowsWmiInput.getServers());
 
             // set list fields
             windowsWmiInput.setFields(new String[]{"Caption", "Description"});
             windowsWmiInput.update();
 
-            assertTrue(windowsWmiInput.getFields().length == 2);
-            assertTrue(contains(windowsWmiInput.getFields(), "Caption"));
-            assertTrue(contains(windowsWmiInput.getFields(), "Description"));
+            assertEquals(assertRoot + "#93", 2,
+                windowsWmiInput.getFields().length);
+            assertTrue(assertRoot + "#94",
+                contains(windowsWmiInput.getFields(), "Caption"));
+            assertTrue(assertRoot + "#95",
+                contains(windowsWmiInput.getFields(), "Description"));
 
             windowsWmiInput.remove();
             inputCollection.refresh();
-            assertFalse(inputCollection.containsKey(name));
+            assertFalse(assertRoot + "#96", inputCollection.containsKey(name));
         }
     }
 }

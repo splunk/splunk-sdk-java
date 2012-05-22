@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class LicensePoolTest extends SplunkTestCase {
+    final static String assertRoot = "License Pool assert: ";
+
     void checkLicensePool(LicensePool licensePool) {
         licensePool.getDescription();
         licensePool.getQuota();
@@ -46,7 +48,7 @@ public class LicensePoolTest extends SplunkTestCase {
             fail("Expected pool create to fail");
         }
         catch (HttpException e) {
-            assertEquals(e.getStatus(), 400);
+            assertEquals(assertRoot + "#1", 400, e.getStatus());
         }
       
         // Try updating some pools ..
@@ -66,13 +68,14 @@ public class LicensePoolTest extends SplunkTestCase {
             licensePool.setQuota("1048576");
             licensePool.update();
 
-            assertEquals(
-                    (int)Integer.valueOf(licensePool.getQuota()), 1024*1024);
+            assertEquals(assertRoot + "#2", 1024*1024,
+                    (int)Integer.valueOf(licensePool.getQuota()));
 
             // use map technique for restore
             saved.put("quota", "MAX");
             licensePool.update(saved);
-            assertEquals(licensePool.getDescription(),saved.get("description"));
+            assertEquals(assertRoot + "#3", saved.get("description"),
+                licensePool.getDescription());
         }
     }
 }

@@ -24,6 +24,8 @@ import org.junit.Test;
 
 
 public class ServiceTest extends SplunkTestCase {
+    final static String assertRoot = "Service assert: ";
+
     // Perform some non-intrusive inspection of the given Job object.
     void checkJob(Job job) {
         // There may be a race condition between a job creation and job being
@@ -78,11 +80,11 @@ public class ServiceTest extends SplunkTestCase {
         job.isSaved();
         job.isSavedSearch();
         job.isZombie();
-        assertEquals(job.getName(), job.getSid());
+        assertEquals(assertRoot + "#1", job.getName(), job.getSid());
     }
 
     void checkResponse(ResponseMessage response) {
-        assertEquals(200, response.getStatus());
+        assertEquals(assertRoot + "#2", 200, response.getStatus());
         try {
             // Make sure we can at least load the Atom response
             AtomFeed feed = AtomFeed.parse(response.getContent());
@@ -113,7 +115,7 @@ public class ServiceTest extends SplunkTestCase {
 
         String[] caps = service.getCapabilities();
         for (String name : expected)
-            assertTrue(contains(caps, name));
+            assertTrue(assertRoot + "#3", contains(caps, name));
     }
 
     // Make a few simple requests and make sure the results look ok.
@@ -138,7 +140,7 @@ public class ServiceTest extends SplunkTestCase {
             fail("Expected HttpException");
         }
         catch (HttpException e) {
-            assertEquals(e.getStatus(), 404);
+            assertEquals(assertRoot + "#4", 404, e.getStatus());
         }
     }
 
@@ -152,7 +154,7 @@ public class ServiceTest extends SplunkTestCase {
 
         ServiceInfo info = service.getInfo();
         for (String name : expected)
-            assertTrue(info.containsKey(name));
+            assertTrue(assertRoot + "#5", info.containsKey(name));
 
         info.getBuild();
         info.getCpuArch();
@@ -187,7 +189,7 @@ public class ServiceTest extends SplunkTestCase {
             fail("Expected HttpException");
         }
         catch (HttpException e) {
-            assertEquals(e.getStatus(), 401);
+            assertEquals(assertRoot + "#6", 401, e.getStatus());
         }
 
         // Logged in, request should succeed
@@ -202,7 +204,7 @@ public class ServiceTest extends SplunkTestCase {
             fail("Expected HttpException");
         }
         catch (HttpException e) {
-            assertEquals(e.getStatus(), 401);
+            assertEquals(assertRoot + "#7", 401, e.getStatus());
         }
     }
 
@@ -238,7 +240,7 @@ public class ServiceTest extends SplunkTestCase {
         // entity.setMethod(value)
         // entity.getMethod() --> gets value.
         settings.setHost("sdk-host");
-        assertEquals(settings.getHost(), "sdk-host");
+        assertEquals(assertRoot + "#8", "sdk-host", settings.getHost());
 
         // make sure posts arguments are merged
         // entity.setMethod(value)
@@ -246,8 +248,8 @@ public class ServiceTest extends SplunkTestCase {
         settings.setHost("sdk-host2");
         settings.update(
             new HashMap<String, Object>(Args.create("minFreeSpace", 500)));
-        assertEquals(settings.getHost(), "sdk-host2");
-        assertEquals(settings.getMinFreeSpace(), 500);
+        assertEquals(assertRoot + "#9", "sdk-host2", settings.getHost());
+        assertEquals(assertRoot + "#10", 500, settings.getMinFreeSpace());
 
         // make sure live posts argument take precedents over setters
         // entity.setMethod(value)
@@ -255,14 +257,15 @@ public class ServiceTest extends SplunkTestCase {
         settings.setMinimumFreeSpace(600);
         settings.update(
             new HashMap<String, Object>(Args.create("minFreeSpace", 700)));
-        assertEquals(settings.getMinFreeSpace(), 700);
+        assertEquals(assertRoot + "#11", 700, settings.getMinFreeSpace());
 
         // Restore original
         settings.setHost(originalHost);
         settings.setMinimumFreeSpace(originalMinSpace);
         settings.update();
-        assertEquals(settings.getMinFreeSpace(), originalMinSpace);
-        assertEquals(settings.getHost(), originalHost);
+        assertEquals(assertRoot + "#12", settings.getMinFreeSpace(),
+            originalMinSpace);
+        assertEquals(assertRoot + "#13", settings.getHost(), originalHost);
     }
 
     @Test public void testUsers() {
@@ -278,42 +281,42 @@ public class ServiceTest extends SplunkTestCase {
 
         // Cleanup potential prior failed test run.
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#14", users.containsKey(username));
 
         // Create user using base create method
         args = new Args();
         args.put("password", password);
         args.put("roles", "power");
         user = users.create(username, args);
-        assertTrue(users.containsKey(username));
-        assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().length == 1);
-        assertTrue(contains(user.getRoles(), "power"));
+        assertTrue(assertRoot + "#15", users.containsKey(username));
+        assertEquals(assertRoot + "#16", username, user.getName());
+        assertEquals(assertRoot + "#17", 1, user.getRoles().length);
+        assertTrue(assertRoot + "#18", contains(user.getRoles(), "power"));
 
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#19", users.containsKey(username));
 
         // Create user using derived create method 
         user = users.create(username, password, "power");
-        assertTrue(users.containsKey(username));
-        assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().length == 1);
-        assertTrue(contains(user.getRoles(), "power"));
+        assertTrue(assertRoot + "#21", users.containsKey(username));
+        assertEquals(assertRoot + "#22", username, user.getName());
+        assertEquals(assertRoot + "#23", 1, user.getRoles().length);
+        assertTrue(assertRoot + "#24", contains(user.getRoles(), "power"));
 
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#25", users.containsKey(username));
 
         // Create using derived method with multiple roles
         user = users.create(
             username, password, new String[] { "power", "user" });
-        assertTrue(users.containsKey(username));
-        assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().length == 2);
-        assertTrue(contains(user.getRoles(), "power"));
-        assertTrue(contains(user.getRoles(), "user"));
+        assertTrue(assertRoot + "#26", users.containsKey(username));
+        assertEquals(assertRoot + "#27", username, user.getName());
+        assertEquals(assertRoot + "#28", 2, user.getRoles().length);
+        assertTrue(assertRoot + "#29", contains(user.getRoles(), "power"));
+        assertTrue(assertRoot + "#30", contains(user.getRoles(), "user"));
 
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#31", users.containsKey(username));
 
         // Create using drived method with multiple roles and extra properties
         args = new Args();
@@ -322,14 +325,14 @@ public class ServiceTest extends SplunkTestCase {
         args.put("defaultApp", "search");
         user = users.create(
             username, password, new String[] { "power", "user" }, args);
-        assertTrue(users.containsKey(username));
-        assertEquals(user.getName(), username);
-        assertTrue(user.getRoles().length == 2);
-        assertTrue(contains(user.getRoles(), "power"));
-        assertTrue(contains(user.getRoles(), "user"));
-        assertEquals(user.getRealName(), "Renzo");
-        assertEquals(user.getEmail(), "email.me@now.com");
-        assertEquals(user.getDefaultApp(), "search");
+        assertTrue(assertRoot + "#32", users.containsKey(username));
+        assertEquals(assertRoot + "#33", username, user.getName());
+        assertEquals(assertRoot + "#34", 2, user.getRoles().length);
+        assertTrue(assertRoot + "#35", contains(user.getRoles(), "power"));
+        assertTrue(assertRoot + "#36", contains(user.getRoles(), "user"));
+        assertEquals(assertRoot + "#37", "Renzo", user.getRealName());
+        assertEquals(assertRoot + "#38", "email.me@now.com", user.getEmail());
+        assertEquals(assertRoot + "#39", "search", user.getDefaultApp());
         user.getTz();
 
         // update user using setters
@@ -344,27 +347,27 @@ public class ServiceTest extends SplunkTestCase {
         user.update();
         user.refresh();
 
-        assertTrue(user.getRoles().length == 1);
-        assertTrue(contains(user.getRoles(), "power"));
-        assertEquals(user.getRealName(), "SDK-name");
-        assertEquals(user.getEmail(), "none@noway.com");
-        assertEquals(user.getDefaultApp(), "search");
+        assertEquals(assertRoot + "#40", 1, user.getRoles().length);
+        assertTrue(assertRoot + "#41", contains(user.getRoles(), "power"));
+        assertEquals(assertRoot + "#42", "SDK-name", user.getRealName());
+        assertEquals(assertRoot + "#43", "none@noway.com", user.getEmail());
+        assertEquals(assertRoot + "#44", "search", user.getDefaultApp());
 
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#45", users.containsKey(username));
 
-        assertFalse(users.containsKey("sdk-user"));
+        assertFalse(assertRoot + "#46", users.containsKey("sdk-user"));
         if (users.containsKey("SDK-user"))
             users.remove("SDK-user");
-        assertFalse(users.containsKey("SDK-user"));
+        assertFalse(assertRoot + "#47", users.containsKey("SDK-user"));
 
         args = new Args();
         args.put("password", password);
         args.put("roles", "power");
-        assertTrue(user.getName().equals(username));
-        assertFalse(users.containsKey("SDK-user"));
+        assertEquals(assertRoot + "#48",username,  user.getName());
+        assertFalse(assertRoot + "#49", users.containsKey("SDK-user"));
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        assertFalse(assertRoot + "#50", users.containsKey(username));
     }
 }
 

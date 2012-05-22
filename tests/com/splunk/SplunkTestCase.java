@@ -24,6 +24,8 @@ import org.junit.Before;
 // Shared base class for Splunk SDK unit tests, contains common unit setup
 // and a collection of helper functions.
 public class SplunkTestCase extends TestCase {
+    final static String assertRoot = "Test Support assert: ";
+
     Command command;
 
     public SplunkTestCase() {}
@@ -53,14 +55,14 @@ public class SplunkTestCase extends TestCase {
         }
 
         apps = service.getApplications();
-        assertFalse(apps.containsKey(name));
+        assertFalse(assertRoot + "#1", apps.containsKey(name));
 
         apps.create(name);
         splunkRestart();
         service = connect();
 
         apps = service.getApplications();
-        assertTrue(apps.containsKey(name));
+        assertTrue(assertRoot + "#2", apps.containsKey(name));
     }
 
     // Remove the given app and reboot Splunk if needed.
@@ -77,7 +79,7 @@ public class SplunkTestCase extends TestCase {
         }
 
         apps = service.getApplications();
-        assertFalse(apps.containsKey(name));
+        assertFalse(assertRoot + "#3", apps.containsKey(name));
     }
 
     @Before public void setUp() {
@@ -104,7 +106,7 @@ public class SplunkTestCase extends TestCase {
         Service service = connect();
 
         ResponseMessage response = service.restart();
-        assertEquals(200, response.getStatus());
+        assertEquals(assertRoot + "#4", 200, response.getStatus());
 
         // Sniff the management port. We expect the port to be up for a short
         // while, and then no conection
@@ -148,7 +150,7 @@ public class SplunkTestCase extends TestCase {
                 totalTime += 100;
             }
         }
-        assertTrue(restarted);
+        assertTrue(assertRoot + "#5", restarted);
     }
 
     // Wait for the given job to complete

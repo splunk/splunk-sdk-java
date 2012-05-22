@@ -21,6 +21,8 @@ import java.util.List;
 import org.junit.Test;
 
 public class LoggerTest extends SplunkTestCase {
+    final static String assertRoot = "Logger assert: ";
+
     @Test public void testLogger() throws Exception {
         Service service = connect();
 
@@ -29,7 +31,7 @@ public class LoggerTest extends SplunkTestCase {
 
         EntityCollection<Logger> serviceLoggers = service.getLoggers();
         for (Logger ent: serviceLoggers.values()) {
-            assertTrue(expected.contains(ent.getLevel()));
+            assertTrue(assertRoot + "#1", expected.contains(ent.getLevel()));
         }
 
         Logger logger = serviceLoggers.get("AuditLogger");
@@ -40,13 +42,13 @@ public class LoggerTest extends SplunkTestCase {
         for (String level: expected) {
             logger.setLevel(level);
             logger.update();
-            assertEquals(level, logger.getLevel());
+            assertEquals(assertRoot + "#2", level, logger.getLevel());
         }
 
         // restore with map technique
         update.clear();
         update.put("level", saved);
         logger.update(update);
-        assertEquals(saved, logger.getLevel());
+        assertEquals(assertRoot + "#3", saved, logger.getLevel());
     }
 }

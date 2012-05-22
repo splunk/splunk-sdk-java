@@ -24,6 +24,8 @@ import java.util.Date;
 import org.junit.Test;
 
 public class IndexTest extends SplunkTestCase {
+    final static String assertRoot = "Index assert: ";
+
     private void wait_event_count(Index index, int value, int seconds) {
         while (seconds > 0) {
             try {
@@ -107,7 +109,7 @@ public class IndexTest extends SplunkTestCase {
             indexes.refresh();
         }
 
-        assertTrue(indexes.containsKey("sdk-tests"));
+        assertTrue(assertRoot + "#1", indexes.containsKey("sdk-tests"));
 
         Index index = indexes.get("sdk-tests");
 
@@ -183,7 +185,7 @@ public class IndexTest extends SplunkTestCase {
         index.refresh();
 
         index.clean(180);
-        assertEquals(index.getTotalEventCount(), 0);
+        assertEquals(assertRoot + "#2", 0, index.getTotalEventCount());
 
         index.disable();
         assertTrue(index.isDisabled());
@@ -195,11 +197,11 @@ public class IndexTest extends SplunkTestCase {
         index.submit(date + "Hello World. \u0150");
         index.submit(date + "Goodbye world. \u0150");
         wait_event_count(index, 2, 30);
-        assertEquals(index.getTotalEventCount(), 2);
+        assertEquals(assertRoot + "#3", 2, index.getTotalEventCount());
 
         // clean
         index.clean(180);
-        assertEquals(index.getTotalEventCount(), 0);
+        assertEquals(assertRoot + "#4", 0, index.getTotalEventCount());
 
         // stream events to index
         Socket socket = index.attach();
@@ -212,11 +214,11 @@ public class IndexTest extends SplunkTestCase {
         socket.close();
 
         wait_event_count(index, 2, 30);
-        assertEquals(index.getTotalEventCount(), 2);
+        assertEquals(assertRoot + "#5", 2, index.getTotalEventCount());
 
         // clean
         index.clean(180);
-        assertEquals(index.getTotalEventCount(), 0);
+        assertEquals(assertRoot + "#6", 0, index.getTotalEventCount());
 
         String filename;
         if (info.getOsName().equals("Windows"))

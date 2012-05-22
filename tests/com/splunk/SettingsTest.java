@@ -21,7 +21,7 @@ import org.junit.Test;
 import java.net.Socket;
 
 public class SettingsTest extends SplunkTestCase {
-
+    final static String assertRoot = "Settings assert: ";
 
     @Test public void testSettings() throws Exception {
         Service service = connect();
@@ -65,12 +65,15 @@ public class SettingsTest extends SplunkTestCase {
         service = connect();
         settings = service.getSettings();
 
-        assertEquals(settings.getEnableSplunkWebSSL(), !originalSSL);
-        assertEquals(settings.getHost(), "sdk-host");
-        assertEquals(settings.getHttpPort(), 8001);
-        assertEquals(settings.getMinFreeSpace(), originalMinSpace-100);
-        assertEquals(settings.getServerName(), "sdk-test-name");
-        assertEquals(settings.getSessionTimeout(), "2h");
+        assertEquals(assertRoot + "#1", !originalSSL,
+            settings.getEnableSplunkWebSSL());
+        assertEquals(assertRoot + "#2", "sdk-host", settings.getHost());
+        assertEquals(assertRoot + "#3", 8001, settings.getHttpPort());
+        assertEquals(assertRoot + "#4", originalMinSpace-100,
+            settings.getMinFreeSpace());
+        assertEquals(assertRoot + "#5", "sdk-test-name",
+            settings.getServerName());
+        assertEquals(assertRoot + "#6", "2h", settings.getSessionTimeout());
         //assertEquals(settings.getStartWebServer(), !originalStartWeb);
 
         // restore original
@@ -88,13 +91,19 @@ public class SettingsTest extends SplunkTestCase {
         service = connect();
         settings = service.getSettings();
 
-        assertEquals(settings.getEnableSplunkWebSSL(), originalSSL);
-        assertEquals(settings.getHost(), originalHost);
-        assertEquals(settings.getHttpPort(), originalHttpPort);
-        assertEquals(settings.getMinFreeSpace(), originalMinSpace);
-        assertEquals(settings.getServerName(), originalServerName);
-        assertEquals(settings.getSessionTimeout(), originalTimeout);
-        assertEquals(settings.getStartWebServer(), originalStartWeb);
+        assertEquals(assertRoot + "#7", originalSSL,
+            settings.getEnableSplunkWebSSL());
+        assertEquals(assertRoot + "#8", originalHost, settings.getHost());
+        assertEquals(assertRoot + "#9", originalHttpPort,
+            settings.getHttpPort());
+        assertEquals(assertRoot + "#10", originalMinSpace,
+            settings.getMinFreeSpace());
+        assertEquals(assertRoot + "#11", originalServerName,
+            settings.getServerName());
+        assertEquals(assertRoot + "#12", originalTimeout,
+            settings.getSessionTimeout());
+        assertEquals(assertRoot + "#13", originalStartWeb,
+            settings.getStartWebServer());
 
     }
 }

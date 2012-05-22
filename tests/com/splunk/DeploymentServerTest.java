@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class DeploymentServerTest extends SplunkTestCase {
+    final static String assertRoot = "Deployment Server assert: ";
+
     @Test public void testDeploymentServer() throws Exception {
         Service service = connect();
 
@@ -30,7 +32,8 @@ public class DeploymentServerTest extends SplunkTestCase {
         }
 
         for (DeploymentServer deploymentServer: deploymentServers.values()) {
-            assertTrue(deploymentServer.getWhiteListByIndex(0).length() > 0);
+            assertTrue(assertRoot + "#1",
+                deploymentServer.getWhiteListByIndex(0).length() > 0);
             for (int i=0; i<10; i++)
                 deploymentServer.getWhiteListByIndex(i);
         }

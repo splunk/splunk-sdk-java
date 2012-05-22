@@ -20,11 +20,13 @@ import java.util.HashMap;
 import org.junit.Test;
 
 public class HttpServiceTest extends SplunkTestCase {
+    final static String assertRoot = "Event Type assert: ";
+
     @Test public void testGet() {
         HttpService service = new HttpService(
             command.host, command.port, command.scheme);
         ResponseMessage response = service.get("/");
-        assertEquals(200, response.getStatus());
+        assertEquals(assertRoot + "#1", 200, response.getStatus());
     }
 
     @Test public void testPost() {
@@ -39,7 +41,7 @@ public class HttpServiceTest extends SplunkTestCase {
         // test because we can't distinguish between a GET & POST result ..
         // But I dont have a better idea for how to excercise this code path
         // at this layer (without authenticating against Splunk).
-        assertEquals(200, response.getStatus());
+        assertEquals(assertRoot + "#2", 200, response.getStatus());
     }
 
     @Test public void testSend() {
@@ -47,7 +49,7 @@ public class HttpServiceTest extends SplunkTestCase {
             command.host, command.port, command.scheme);
         RequestMessage request = new RequestMessage("GET");
         ResponseMessage response = service.send("/", request);
-        assertEquals(200, response.getStatus());
+        assertEquals(assertRoot + "#3", 200, response.getStatus());
     }
 }
 

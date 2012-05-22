@@ -19,6 +19,7 @@ package com.splunk;
 import org.junit.Test;
 
 public class EventTypeTest extends SplunkTestCase {
+    final static String assertRoot = "Event Type assert: ";
 
     void checkEventType(EventType eventType) {
         eventType.getDescription();
@@ -38,7 +39,8 @@ public class EventTypeTest extends SplunkTestCase {
 
         if (eventTypeCollection.containsKey("sdk-test"))
             eventTypeCollection.remove("sdk-test");
-        assertFalse(eventTypeCollection.containsKey("sdk-test"));
+        assertFalse(assertRoot + "#1",
+            eventTypeCollection.containsKey("sdk-test"));
 
         checkEventTypes(eventTypeCollection);
 
@@ -51,13 +53,16 @@ public class EventTypeTest extends SplunkTestCase {
         EventType eventType =
                 eventTypeCollection.create("sdk-test", search, args);
 
-        assertTrue(eventTypeCollection.containsKey("sdk-test"));
+        assertTrue(assertRoot + "#2",
+            eventTypeCollection.containsKey("sdk-test"));
 
-        assertEquals(eventType.getName(), "sdk-test");
-        assertEquals(eventType.getDescription(), args.get("description"));
-        assertEquals(eventType.getPriority(), args.get("priority"));
-        assertEquals(eventType.getSearch(), search);
-        assertTrue(eventType.isDisabled());
+        assertEquals(assertRoot + "#3", "sdk-test", eventType.getName());
+        assertEquals(assertRoot + "#4",
+            args.get("description"), eventType.getDescription());
+        assertEquals(assertRoot + "#5",
+            args.get("priority"), eventType.getPriority());
+        assertEquals(assertRoot + "#6", search, eventType.getSearch());
+        assertTrue(assertRoot + "#7", eventType.isDisabled());
 
         eventType.setDescription("Dummy description a second time");
         eventType.setDisabled(true);
@@ -65,14 +70,16 @@ public class EventTypeTest extends SplunkTestCase {
         eventType.update();
         eventType.enable();
 
-        assertEquals(eventType.getName(), "sdk-test");
-        assertEquals(eventType.getDescription(),
-                "Dummy description a second time");
-        assertEquals(eventType.getPriority(), 3);
-        assertEquals(eventType.getSearch(), "index=_internal *");
-        assertFalse(eventType.isDisabled());
+        assertEquals(assertRoot + "#8", "sdk-test", eventType.getName());
+        assertEquals(assertRoot + "#9", "Dummy description a second time",
+            eventType.getDescription());
+        assertEquals(assertRoot + "#10", 3, eventType.getPriority());
+        assertEquals(assertRoot + "#11", "index=_internal *",
+            eventType.getSearch());
+        assertFalse(assertRoot + "#12", eventType.isDisabled());
 
         eventTypeCollection.remove("sdk-test");
-        assertFalse(eventTypeCollection.containsKey("sdk-test"));
+        assertFalse(assertRoot + "#13",
+            eventTypeCollection.containsKey("sdk-test"));
     }
 }

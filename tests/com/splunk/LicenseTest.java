@@ -26,6 +26,8 @@ import java.util.List;
 import org.junit.Test;
 
 public class LicenseTest extends SplunkTestCase {
+    final static String assertRoot = "License assert: ";
+
     @Test public void testLicense() throws Exception {
         Service service = connect();
 
@@ -53,18 +55,21 @@ public class LicenseTest extends SplunkTestCase {
 
         // Test for sane data in licenses
         for (License license: licenses.values()) {
-            assertTrue(license.getCreationTime().after(new Date(0)));
-            assertTrue(license.getExpirationTime().after(new Date(0)));
-            assertTrue(license.getQuota() > 0);
-            assertTrue(license.getLicenseHash().length() == 64);
+            assertTrue(assertRoot + "#1",
+                license.getCreationTime().after(new Date(0)));
+            assertTrue(assertRoot + "#2",
+                license.getExpirationTime().after(new Date(0)));
+            assertTrue(assertRoot + "#3", license.getQuota() > 0);
+            assertEquals(assertRoot + "#4", 64,
+                license.getLicenseHash().length());
             for (String feature: license.getFeatures()) {
-                assertTrue(features.contains(feature));
+                assertTrue(assertRoot + "#5", features.contains(feature));
             }
-            assertTrue(groups.contains(license.getGroupId()));
-            assertTrue(license.getLabel().length() > 0);
-            assertTrue(license.getMaxViolations() != 0);
-            assertTrue(stati.contains(license.getStatus()));
-            assertTrue(types.contains(license.getType()));
+            assertTrue(assertRoot + "#6", groups.contains(license.getGroupId()));
+            assertTrue(assertRoot + "#7", license.getLabel().length() > 0);
+            assertNotSame(assertRoot + "#8", 0, license.getMaxViolations());
+            assertTrue(assertRoot + "#9", stati.contains(license.getStatus()));
+            assertTrue(assertRoot + "#10", types.contains(license.getType()));
             license.getSourceTypes();
             license.getStackId();
             license.getWindowPeriod();
@@ -73,7 +78,7 @@ public class LicenseTest extends SplunkTestCase {
         if (licenses.containsKey("sdk-test")) {
             licenses.remove("sdk-test");
         }
-        assertFalse(licenses.containsKey("sdk-test"));
+        assertFalse(assertRoot + "#11", licenses.containsKey("sdk-test"));
 
         // Create
         FileReader fileReader;
@@ -93,11 +98,11 @@ public class LicenseTest extends SplunkTestCase {
         reader.read(buffer);
         Args args = new Args("payload", new String(buffer));
         licenses.create("sdk-test", args);
-        assertTrue(licenses.containsKey(
+        assertTrue(assertRoot + "#12", licenses.containsKey(
            "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
         licenses.remove(
            "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101");
-        assertFalse(licenses.containsKey(
+        assertFalse(assertRoot + "#13", licenses.containsKey(
            "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
     }
 }

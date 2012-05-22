@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Test;
 
 public class DistributedPeerTest extends SplunkTestCase {
+    final static String assertRoot = "Distributed Peer assert: ";
+
     @Test public void testDistributedPeer() throws Exception {
         Service service = connect();
 
@@ -31,19 +33,19 @@ public class DistributedPeerTest extends SplunkTestCase {
             distributedPeers.remove(name);
         }
 
-        assertFalse(distributedPeers.containsKey(name));
+        assertFalse(assertRoot + "#1", distributedPeers.containsKey(name));
         Args args = new Args();
         args.put("remotePassword", command.password);
         args.put("remoteUsername", command.username);
         DistributedPeer newDistributedPeer =
                 distributedPeers.create(name, args);
-        assertTrue(distributedPeers.containsKey(name));
+        assertTrue(assertRoot + "#2", distributedPeers.containsKey(name));
 
         // created as enabled
         newDistributedPeer.disable();
-        assertTrue(newDistributedPeer.isDisabled());
+        assertTrue(assertRoot + "#3", newDistributedPeer.isDisabled());
         newDistributedPeer.enable();
-        assertFalse(newDistributedPeer.isDisabled());
+        assertFalse(assertRoot + "#4", newDistributedPeer.isDisabled());
         // N.B. these are write only... so can't check if they take
         // setter method update.
         newDistributedPeer.setRemotePassword(command.password + "xx");
@@ -67,6 +69,6 @@ public class DistributedPeerTest extends SplunkTestCase {
 
         newDistributedPeer.remove();
         distributedPeers.refresh();
-        assertFalse(distributedPeers.containsKey(name));
+        assertFalse(assertRoot + "#5", distributedPeers.containsKey(name));
     }
 }

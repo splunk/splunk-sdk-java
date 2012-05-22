@@ -21,6 +21,8 @@ import java.util.List;
 import org.junit.Test;
 
 public class LicenseGroupTest extends SplunkTestCase {
+    final static String assertRoot = "License Group assert: ";
+
     @Test public void testLicenseGroup() throws Exception {
         Service service = connect();
 
@@ -38,7 +40,7 @@ public class LicenseGroupTest extends SplunkTestCase {
         for (LicenseGroup licenseGroup: licenseGroups.values()) {
             // enterprise, forwarder, free, download-trial and empty
             for (String id: licenseGroup.getStackIds()) {
-                assertTrue(stacks.contains(id));
+                assertTrue(assertRoot + "#1", stacks.contains(id));
             }
             licenseGroup.isActive();
         }

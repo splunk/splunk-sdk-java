@@ -20,6 +20,8 @@ import java.util.Date;
 import org.junit.Test;
 
 public class LicenseMessageTest extends SplunkTestCase {
+    final static String assertRoot = "License Message assert: ";
+
     @Test public void testLicenseMessage() throws Exception {
         Service service = connect();
 
@@ -32,7 +34,8 @@ public class LicenseMessageTest extends SplunkTestCase {
 
         // Test for sane data in licenses
         for (LicenseMessage licenseMessage: licenseMessages.values()) {
-            assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
+            assertTrue(assertRoot + "#1",
+                licenseMessage.getCreationTime().after(new Date(0)));
             licenseMessage.getCategory();
             licenseMessage.getDescription();
             licenseMessage.getPoolId();
