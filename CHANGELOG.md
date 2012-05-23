@@ -32,9 +32,24 @@
 
   http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTresources
 
-  An example of using the optional namespace to restrict the selection of saved
-  searches to the specific namespace where `owner` is set to "magilicuddy" and
-  the `app` is set to "oneMeanApp".
+  An example of using the optional namespace to restrict the creation and
+  selection of saved searches to the specific namespace where `owner` is set to
+  "magilicuddy" and the `app` is set to "oneMeanApp".
+```
+    String searchName = "My scoped search";
+    String search = "index=main * | head 10";
+    args args = new Args();
+    args.put("owner", "magilicuddy");
+    args.put("app",  "oneMeanApp");
+
+    // ... other creation arguments also get set into the args map
+
+    savedSearches.create(searchName, search, args);
+```
+
+  And the subsequent usage elsewhere, will return all the saved searches within
+  the scoped namespace.
+
 ```
     args args = new Args();
     args.put("owner", "magilicuddy");
