@@ -105,12 +105,13 @@ public class FiredAlertTest extends SplunkTestCase {
 
             // After all that setup, check the fired alerts.
             FiredAlertGroupCollection
-                firedAlertGroupCollection = service.getFiredAlerts();
+                firedAlertGroupCollection = service.getFiredAlertGroups();
 
             assertTrue(assertRoot + "#8",
                 firedAlertGroupCollection.containsKey(searchName));
             FiredAlertGroup
                 firedAlertGroup = firedAlertGroupCollection.get(searchName);
+
             assertEquals(assertRoot + "#9", count,
                 firedAlertGroup.getAlerts().size());
         }
@@ -119,7 +120,7 @@ public class FiredAlertTest extends SplunkTestCase {
         savedSearches.refresh();
         assertFalse(assertRoot + "#10", savedSearches.containsKey(searchName));
         FiredAlertGroupCollection
-            firedAlertGroupCollection = service.getFiredAlerts();
+            firedAlertGroupCollection = service.getFiredAlertGroups();
         assertFalse(assertRoot + "#11",
             firedAlertGroupCollection.containsKey(searchName));
     }

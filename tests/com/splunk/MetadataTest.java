@@ -50,7 +50,7 @@ public class MetadataTest extends SplunkTestCase {
         checkMetadata(service.getDistributedConfiguration());
         checkMetadata(service.getDistributedPeers());
         checkMetadata(service.getEventTypes());
-        checkMetadata(service.getFiredAlerts());
+        checkMetadata(service.getFiredAlertGroups());
         checkMetadata(service.getIndexes());
         checkMetadata(service.getInfo());
         checkMetadata(service.getInputs());

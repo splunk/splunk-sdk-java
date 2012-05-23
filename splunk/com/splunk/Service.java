@@ -429,7 +429,7 @@ public class Service extends HttpService {
      *
      * @return Collection of fired alerts.
      */
-    public FiredAlertGroupCollection getFiredAlerts() {
+    public FiredAlertGroupCollection getFiredAlertGroups() {
         return new FiredAlertGroupCollection(this);
     }
 
