@@ -34,9 +34,9 @@ public class DeploymentTenant extends Entity {
 
     /**
      * Returns inclusive criteria for determining deployment client access to
-     * this deployment server. The only valid index is 0.
+     * this deployment server.
      *
-     * @param index The whitelist index.
+     * @param index The whitelist index. The only valid index is 0.
      * @return Criteria for determining deployment client access to this
      * deployment server.
      */
@@ -45,11 +45,14 @@ public class DeploymentTenant extends Entity {
     }
 
     /**
-     * Sets whether the deployment tenant is enabled or disabled. Note that
-     * this effect is not immediate; Splunk must be restarted to take effect.
-     *
-     * Note that the supported disabled mechanism, is to use the
-     * {@code disable} and {@code enable} action.
+     * Sets whether the deployment tenant is enabled or disabled.
+     * <p>
+     * <b>Note:</b> You must restart Splunk for this setting to take effect.
+     * However, to avoid restarting Splunk, you can use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to deployment client,
      * {@code false} to enable.

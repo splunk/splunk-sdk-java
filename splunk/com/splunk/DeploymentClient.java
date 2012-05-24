@@ -81,14 +81,17 @@ public class DeploymentClient extends Entity {
     }
 
     /**
-     * Sets whether the deployment client is enabled or disabled. Note that
-     * this effect is not immediate; Splunk must be restarted to take effect.
+     * Sets whether to enable or disable the deployment client.
+     * <p>
+     * <b>Note:</b> You must restart Splunk for this setting to take effect.
+     * However, to avoid restarting Splunk, you can use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
-     * Note that the supported disabled mechanism, is to use the
-     * {@code disable} and {@code enable} action.
-     *
-     * @param disabled {@code true} to disabled to deployment client,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable the deployment client,
+     * {@code false} to enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
@@ -96,9 +99,9 @@ public class DeploymentClient extends Entity {
 
     /**
      * Sets the deployment server's target URI for this deployment client. The
-     * form of this URI is deployment_server_uir:port.
+     * form of this URI is "deployment_server_uir:port".
      *
-     * @param targetUri The URI of the deployment server.
+     * @param targetUri The target URI of the deployment server.
      */
     public void setTargetUri(String targetUri) {
         setCacheValue("targetUri", targetUri);

@@ -39,18 +39,20 @@ public class JobCollection extends EntityCollection<Job> {
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     JobCollection(Service service, Args args) {
         super(service, "search/jobs", Job.class, args);
     }
 
     /**
-     * Creates a search with a UTF8 pre-encoded search request. </br/>
-     * Note: A 'oneshot' request is invalid. To create a oneshot search, use
-     * the {@code Service.oneshot()} method instead.
-     * @see Service#oneshot Service.oneshot
+     * Creates a search with a UTF8 pre-encoded search request.
+     * <p>
+     * <b>Note:</b> A 'oneshot' request is invalid. To create a oneshot search,
+     * use the {@code Service.oneshot} method instead.
+     * @see Service#oneshot
      *
      * @param query The search query string.
      * @return The unique search identifier (SID).
@@ -60,10 +62,11 @@ public class JobCollection extends EntityCollection<Job> {
     }
 
     /**
-     * Creates a search. </br/>
-     * Note: A 'oneshot' request is invalid. To create a oneshot search, use
-     * the {@code Service.oneshot()} method instead.
-     * @see Service#oneshot Service.oneshot
+     * Creates a search.
+     * <p>
+     * <b>Note:</b> A 'oneshot' request is invalid. To create a oneshot search,
+     * use the {@code Service.oneshot} method instead.
+     * @see Service#oneshot
      *
      * @param query The search query string.
      * @param args Additional arguments for this job.

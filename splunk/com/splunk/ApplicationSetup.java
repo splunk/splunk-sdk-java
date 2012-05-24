@@ -33,11 +33,10 @@ public class ApplicationSetup extends Entity {
     }
 
     /**
-     * Returns whether to reload the objects contained in the locally
-     * installed app.
+     * Indicates whether to reload the objects contained in the 
+     * locally-installed app.
      *
-     * @return Whether to reload the objects contained in the locally
-     * installed app.
+     * @return {@code true} if objects are reloaded, {@code false} if not.
      */
     public boolean getRefresh() {
         return getBoolean("refresh", false);

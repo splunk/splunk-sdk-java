@@ -55,8 +55,7 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns a list of server names that are excluded from
-     * being peers.
+     * Returns a list of server names that are excluded from being peers.
      *
      * @return A comma-separated list of excluded servers by name, or
      * {@code null} if not available.
@@ -107,10 +106,10 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns the multi-cast address where each Splunk server sends and 
+     * Returns the multicast address where each Splunk server sends and 
      * listens for heartbeat messages.
      *
-     * @return The multi-cast address for discovery and heartbeat messages, 
+     * @return The multicast address for discovery and heartbeat messages, 
      * or {@code null} if not available.
      */
     public String getHeartbeatMcastAddress() {
@@ -184,7 +183,8 @@ public class DistributedConfiguration extends Entity {
      * Indicates whether this server uses bundle replication to share
      * search-time configuration with search peers. 
      * 
-     * Note: If set to {@code false}, the search head assumes that the
+     * <p>
+     * <b>Note:</b> If set to {@code false}, the search head assumes that the
      * search peers can access the correct bundles using an NFS share.
      *
      * @return {@code true} if this server uses bundle replication,
@@ -195,10 +195,10 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Indicates whether this server participates in a search. If set to
-     * true, this server does NOT participate as a server in any search or other
-     * call. This setting is used for building a node that does nothing but
-     * merge the results from other servers.
+     * Indicates whether this server participates in a search or call. If set to
+     * {@code true}, this server is skipped and does not participate. This 
+     * setting is used for building a node that only merges the results from 
+     * other servers.
      *
      * @return {@code true} if the server does not participate as a server in
      * any search, {@code false} if it does.
@@ -237,68 +237,67 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Sets whether or not to add automatically add discovered servers. Set
-     * to {@code true} will add servers automatically. Set to {@code false} will
-     * not add servers automatically.
+     * Sets whether to automatically add discovered servers. 
      *
-     * @param autoAdd Whether or not to automatically add discovered servers.
+     * @param autoAdd {@code true} to add servers automatically, {@code false} 
+     * if not. 
      */
     public void setAutoAddServers(boolean autoAdd) {
         setCacheValue("autoAddServers", autoAdd);
     }
 
     /**
-     * Sets the blacklist server names that you do not want to peer with.
+     * Sets the blacklist server names that are excluded from being peers.
      *
-     * @param names A comma separated list of server names that you
-     * do not want to peer with.
+     * @param names A comma-separated list of server names.
      */
     public void setBlacklistNames(String names) {
         setCacheValue("blacklistNames", names);
     }
 
     /**
-     * Sets the blacklist server names or URI's that you do not want to peer
-     * with. A URI is of the form {@code x.x.x.x:port}
+     * Sets the blacklist server names or URIs that are excluded from being 
+     * peers. The format for a URI is "x.x.x.x:port". 
      *
-     *
-     * @param names A comma separated list of server names or URI's that you
-     * do not want to peer with.
+     * @param names A comma-separated list of server names or URIs.
      */
     public void setBlacklistURLs(String names) {
         setCacheValue("blacklistURLs", names);
     }
 
     /**
-     * Sets the server recheck frequency in seconds. If set to 0, no recheck
-     * occurs. This attribute is ONLY relevant if removeTimedOutServers is set
-     * to {@code true}. If removeTimedOutServers is {@code false}, this
-     * attribute is ignored.
+     * Sets the server recheck frequency. 
+     * <p>
+     * <b>Note:</b> This attribute is only relevant when 
+     * {@code removeTimedOutServers} is set to {@code true}--otherwise, this 
+     * attribute is ignored. 
+     * @see #getRemovedTimedOutServers
      *
-     * @param frequency The time, in seconds, for server recheck frequency.
+     * @param frequency The server recheck frequency, in seconds. If set to 0, a
+     * recheck does not occur.
      */
     public void setCheckTimedOutServersFrequency(int frequency) {
         setCacheValue("checkTimedOutServersFrequency", frequency);
     }
 
     /**
-     * Sets the amount of time, in seconds, to use as the timeout value
-     * during search peer connection establishment.
+     * Sets the time-out period for establishing a search peer connection.
      *
-     *
-     * @param seconds The time, in seconds, for peer connection establishment.
+     * @param seconds The connection time-out period, in seconds.
      */
     public void setConnectionTimeout(int seconds) {
         setCacheValue("connectionTimeout", seconds);
     }
 
     /**
-     * Sets whether the distributed configuration is enabled or disabled. Note
-     * that this effect is not immediate; Splunk must be restarted to take
-     * effect.
-     *
-     * Note that the supported disabled mechanism, is to use the
-     * {@code disable} and {@code enable} action.
+     * Sets whether the distributed configuration is enabled or disabled. 
+     * <p>
+     * <b>Note:</b> You must restart Splunk for this setting to take effect.
+     * However, to avoid restarting Splunk, you can use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to deployment client,
      * {@code false} to enable.
@@ -308,10 +307,10 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Sets the heartbeat frequency between peers, in seconds. A setting of 0
-     * disables heartbeat messages.
+     * Sets the heartbeat frequency between peers.
      *
-     * @param seconds The time, in seconds, for peer heartbeats.
+     * @param seconds The time for peer heartbeats, in seconds. If set to 0,
+     * heartbeat messages are disabled.
      */
     public void setHeartbeatFrequency(int seconds) {
         setCacheValue("heartbeatFrequency", seconds);
@@ -319,121 +318,118 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Sets the heartbeat multicast address. This address is used for server
-     * auto discovery. The default address is {@code 224.0.0.37}.
+     * auto discovery. The default address is "224.0.0.37".
      *
-     * @param mCastAddress The multicast address to use for server
-     * auto discovery.
+     * @param mCastAddress The multicast address for server auto discovery.
      */
     public void setHeartbeatMcastAddr(String mCastAddress) {
         setCacheValue("heartbeatMcastAddr", mCastAddress);
     }
 
     /**
-     * Sets the heartbeat port where splunk sends and listens for heartbeat
-     * messages.
+     * Sets the port where Splunk sends and listens for heartbeat messages.
      *
-     * @param port The port used for heartbeat messages.
+     * @param port The heartbeat port.
      */
     public void setHeartbeatPort(int port) {
         setCacheValue("heartbeatPort", port);
     }
 
     /**
-     * Sets the timeout, in seconds, when trying to receive data from a search
+     * Sets the time-out period for reading and receiving data from a search 
      * peer.
      *
-     * @param seconds The number of seconds used for timeout calculations when
-     * receiving data from a peer.
+     * @param seconds The receive time-out period, in seconds.
      */
     public void setReceiveTimeout(int seconds) {
         setCacheValue("receiveTimeout", seconds);
     }
 
     /**
-     * Sets whether or not to remove a server connection that cannot be made
-     * within the timeout period specified by {@code connectionTimeout},
+     * Sets whether to remove a server connection that cannot be made within the
+     * time-out period specified by {@code connectionTimeout},
      * {@code sendTimeout}, or {@code receiveTimeout}.
-     * If set to {@code false}, every call to that server attempts to connect.
-     * This may result in a slow user interface.
+     * If {@code false}, every call to that server attempts to connect, which 
+     * might result in a slow user interface.
+     * @see #setConnectionTimeout
+     * @see #setSendTimeout
+     * @see #setReceiveTimeout
      *
-     * @param removeTimedOutServers whether or not to remove timed out servers.
+     * @param removeTimedOutServers {@code true} to remove timed-out server 
+     * connections, {@code false} to attempt every call to the server.
      */
     public void setRemoveTimedOutServers(boolean removeTimedOutServers) {
         setCacheValue("removedTimedOutServers", removeTimedOutServers);
     }
 
     /**
-     * Sets the timeout, in seconds, when trying to send data to a search
-     * peer.
+     * Sets the time-out period for writing and sending data to a search peer.
      *
-     * @param seconds The number of seconds used for timeout calculations when
-     * sending data to a peer.
+     * @param seconds The send time-out period, in seconds.
      */
     public void setSendTimeout(int seconds) {
         setCacheValue("sendTimeout", seconds);
     }
 
     /**
-     * Sets the initial peer server list as a comma separated list. If operating
-     * completely in autoAddServers mode (discovering all servers), there is
-     * no need to set any servers here.
+     * Sets the initial peer server list. You don't need to set servers here
+     * if you are operating completely in {@code autoAddServers} mode
+     * (discovered servers are automatically added).
+     * @see #getAutoAddServers
+     * @see #setAutoAddServers
      *
-     * @param servers A comma separated list of servers considered peers.
+     * @param servers A comma-separated list of peer servers.
      */
     public void setServers(String servers) {
         setCacheValue("servers", servers);
     }
 
     /**
-     * Sets whether or not this server uses bundle replication to share search
-     * time configuration with search peers.
+     * Sets whether this server uses bundle replication to share search-time 
+     * configuration with search peers.
      *
      * If set to {@code false}, the search head assumes that the search peers
      * can access the correct bundles using an NFS share and have correctly
-     * configured the options listed under:
+     * configured the options listed under "SEARCH HEAD BUNDLE MOUNTING 
+     * OPTIONS".
      *
-     * "SEARCH HEAD BUNDLE MOUNTING OPTIONS."
-     *
-     * @param shareBundles whether or not to share search time configuration
-     * with peers.
+     * @param shareBundles {@code true} to share search-time configuration
+     * with peers, {@code false} if not.
      */
-    public void setShareBudles(boolean shareBundles) {
+    public void setShareBundles(boolean shareBundles) {
         setCacheValue("shareBundles", shareBundles);
     }
 
     /**
-     * Sets whether or not this server participates as a server in any search
-     * or other call.
+     * Sets whether this server skips participation as a server in any search or
+     * other call. This setting is used for building a node that only merges the
+     * results from other servers.
      *
-     * If set to {@code true}, this server does NOT participate as a server in
-     * any search or other call. This is used for building a node that does
-     * nothing but merge the results from other servers
-     *
-     * @param skipOurselves whether or not to participate as a server in any
-     * search or other call.
+     * @param skipOurselves {@code true} to skip participation, {@code false} to
+     * participate as a server in searches and calls.
      */
     public void setSkipOurselves(boolean skipOurselves) {
         setCacheValue("skipOurselves", skipOurselves);
     }
 
     /**
-     * Sets the timeout, in seconds, when trying to connect to search peer's
-     * when getting their basic info.
+     * Sets the time-out period for connecting to a search peer for getting its
+     * basic info (/services/server/info).
      *
-     * @param seconds The number of seconds used for timeout calculations when
-     * connecting to a peer.
+     * @param seconds The connection time-out period, in seconds.
      */
     public void setStatusTimeout(int seconds) {
         setCacheValue("statusTimeout", seconds);
     }
 
     /**
-     * Sets the time-to-live of heartbeat messages. Increasing this number
+     * Sets the time-to-live (ttl) of heartbeat messages. Increasing this number
      * allows UDP packets to spread beyond the current sub-net to the specified
      * number of hops.
      *
-     * NOTE: This only works if routers along the way are configured to pass
-     * UDP multicast packets.
+     * <p>
+     * <b>Note:</b> This feature only works when routers along the way are 
+     * configured to pass UDP multicast packets.
      *
      * @param value The time-to-live value of heartbeat messages.
      */

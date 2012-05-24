@@ -29,10 +29,11 @@ public class FiredAlertGroupCollection
     }
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     FiredAlertGroupCollection(Service service, Args args) {
         super(service, "alerts/fired_alerts", FiredAlertGroup.class, args);

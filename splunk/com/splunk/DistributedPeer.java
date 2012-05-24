@@ -123,8 +123,10 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Sets remote password. Note: username and password need to both be set
-     * at the same time.
+     * Sets the remote password. 
+     * <p>
+     * <b>Note:</b> The username and password must be set at the same time.
+     * @see #setRemoteUsername
      *
      * @param password The remote password.
      */
@@ -133,8 +135,10 @@ public class DistributedPeer extends Entity {
     }
 
     /**
-     * Sets remote username. Note: username and password need to both be set
-     * at the same time.
+     * Sets the remote username. 
+     * <p>
+     * <b>Note:</b> The username and password must be set at the same time.
+     * @see #setRemotePassword
      *
      * @param username The remote username.
      */

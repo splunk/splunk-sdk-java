@@ -71,11 +71,10 @@ public class Application extends Entity {
     }
 
     /**
-     * Returns whether or not to reload objects contains in the locally
-     * installed app.
+     * Indicates whether to reload objects contained in the locally-installed 
+     * app.
      *
-     * @return  Whether or not to reload objects contains in the locally
-     * installed app.
+     * @return {@code true} if objects are reloaded, {@code false} if not.
      */
     public boolean getRefresh() {
         return getBoolean("refresh", false);
@@ -112,7 +111,7 @@ public class Application extends Entity {
     }
 
     /**
-     * Indicates whether an app is visible and navigable from Splunk Web.
+     * Indicates whether the app is visible and navigable from Splunk Web.
      *
      * @return {@code true} if the app is visible and navigable from Splunk
      * Web, {@code false} if not.
@@ -136,49 +135,48 @@ public class Application extends Entity {
      * apps, this value is the username of the Splunk.com account. For internal
      * apps, this value is the full name.
      *
-     * @param author the author name for this splunk application
+     * @param author The author name.
      */
     public void setAuthor(String author) {
         setCacheValue("author", author);
     }
 
     /**
-     * Sets whether or not Splunk checks Splunkbase for updates to this app.
+     * Sets whether Splunk checks Splunkbase for updates to the app.
      *
-     * @param value {@code true} if the app is checked for updates
-     * {@code false} if it is not to be checked.
+     * @param value {@code true} if the app is checked for updates, 
+     * {@code false} if not.
      */
     public void setCheckForUpdates(boolean value) {
         setCacheValue("check_for_updates", value);
     }
 
     /**
-     * Sets whether the app's custom setup has been
-     * performed. This field is available in Splunk version 4.2.4 and later.
+     * Sets whether the app's custom setup has been performed. This field 
+     * is available in Splunk 4.2.4 and later.
      *
-     * @param value {@code true} if the app has executed its custom setup or
-     * {@code false} if it has not.
+     * @param value {@code true} if the app has run its custom setup, 
+     * {@code false} if not.
      */
     public void setConfigured(boolean value) {
         setCacheValue("configured", value);
     }
 
     /**
-     * Sets a short description of the application that is displayed underneath
-     * the app's title in Launcher.
+     * Sets a short description of the application, which is displayed below
+     * the app's title on the Splunk Home tab in Splunk Web.
      *
-     * @param description The short description of the application
+     * @param description The short description of the app.
      */
     public void setDescription(String description) {
         setCacheValue("description", description);
     }
 
     /**
-     * Sets the app's name that is shown in the Splunk GUI and Launcher. Note
-     * that the name should be between 5 and 80 characters and not include the
-     * "Splunk For" prefix.
+     * Sets the app's name, which is displayed in Splunk Web. The name should be
+     * between 5-80 characters and should not include the prefix "Splunk For".
      *
-     * @param label The label of this app.
+     * @param label The label (name) of the app.
      */
     public void setLabel(String label) {
         setCacheValue("label", label);
@@ -195,18 +193,18 @@ public class Application extends Entity {
     }
 
     /**
-     * Sets the app's version string.
+     * Sets the version of the app.
      *
-     * @param version The version string.
+     * @param version The version.
      */
     public void setVersion(String version) {
         setCacheValue("version", version);
     }
 
     /**
-     * Sets whether an app is visible and navigable from Splunk Web.
+     * Sets whether the app is visible and navigable from Splunk Web.
      *
-     * @param visible {@code true} if the app is made visible and navigable
+     * @param visible {@code true} if the app can be visible and navigable
      * from Splunk Web, {@code false} if not.
      */
     public void setVisible(boolean visible) {

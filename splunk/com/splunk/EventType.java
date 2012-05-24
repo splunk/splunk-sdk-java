@@ -83,14 +83,14 @@ public class EventType extends Entity {
     }
 
     /**
-     * Sets whether the event type  is enabled or disabled. Note that
-     * this effect is not immediate; Splunk must be restarted to take effect.
-     *
-     * Note that the supported disabled mechanism, is to use the
-     * {@code disable} and {@code enable} action.
-     *
-     * @param disabled {@code true} to disabled to deployment client,
-     * {@code false} to enable.
+     * Sets whether the event type is enabled or disabled. 
+     * <p>
+     * <b>Note:</b> You must restart Splunk for this setting to take effect.
+     * However, to avoid restarting Splunk, you can use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
+     * @see Entity#disable
+     * @see Entity#enable
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);

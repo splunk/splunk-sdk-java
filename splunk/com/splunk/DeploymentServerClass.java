@@ -43,10 +43,10 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns a list of excluded client addresses, by index. Only valid
-     * index is 0.
+     * Returns a list of excluded client addresses, by index. 
      *
-     * @param index The index of the blacklist entry to return.
+     * @param index The index of the blacklist entry to return. The only valid
+     * index is 0.
      * @return A list of excluded client addresses, or {@code null} if not
      * specified.
      */
@@ -93,7 +93,8 @@ public class DeploymentServerClass extends Entity {
     /**
      * Returns the location on the deployment server to store the content 
      * that is to be deployed for this server class. 
-     * Note: The path may contain macro expansions or substitutions.
+     * <p>
+     * <b>Note:</b> The path may contain macro expansions or substitutions.
      *
      * @return The file path for content storage on the deployment server.
      */
@@ -104,7 +105,8 @@ public class DeploymentServerClass extends Entity {
     /**
      * Returns the location on the deployment client where the content to be
      * deployed for this server class should be installed.
-     * Note: The path may contain macro expansions or substitutions.
+     * <p>
+     * <b>Note:</b> The path may contain macro expansions or substitutions.
      *
      * @return The file path for content storage on the deployment client.
      */
@@ -114,7 +116,8 @@ public class DeploymentServerClass extends Entity {
 
     /**
      * Returns the location of the working folder used by the deployment server. 
-     * Note: The path may contain macro expansions or substitutions.
+     * <p>
+     * <b>Note:</b> The path may contain macro expansions or substitutions.
      *
      * @return The path to the deployment server's working folder, or
      * {@code null} if not specified.
@@ -133,10 +136,10 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Returns a list of included client addresses, by index. Only indeces
-     * 0 and 1 are valid.
+     * Returns a list of included client addresses, by index.
      *
-     * @param index The index of the whitelist entry to return.
+     * @param index The index of the whitelist entry to return. Valid indexes
+     * are 0 and 1.
      * @return A list of included client addresses, or {@code null} if not
      * specified.
      */
@@ -156,27 +159,28 @@ public class DeploymentServerClass extends Entity {
 
     /**
      * Sets how this deployment server class controls its configurations
-     * across classes and server specific settings. If set to {@code true},
-     * configuration lookups continue matching server classes beyond the first
+     * across classes and server-specific settings. If set to {@code true},
+     * configuration look-ups continue matching server classes after the first
      * match. If set to {@code false}, only the first match is used. Matching
      * is done in the order that server classes are defined.
      *
-     * @param matching Continue matching or not.
+     * @param matching {@code true} to continue matching, {@code false} to use 
+     * the first match. 
      */
     public void setContinueMatching(boolean matching) {
         setCacheValue("continueMatching", matching);
     }
 
     /**
-     * Sets a URL template string which specifies the endpoint from which
+     * Sets a URL template string that specifies the endpoint from which
      * content can be downloaded by a deployment client. The deployment client
      * knows how to substitute the values of the variables in the URL. Any
-     * custom URL can also be supplied here as long as it uses the specified
+     * custom URL can be provided here as long as it uses the specified
      * variables.
      *
-     * This attribute does not need to be specified unless you have a very
-     * specific need, for example: to acquire deployment application files from
-     * a third-party httpd, for extremely large environments.
+     * You don't have to set this URL template string unless you have a very
+     * specific need--for example, you need to acquire deployment application 
+     * files from a third-party httpd for extremely large environments.
      *
      * @param endPoint The endpoint URL.
      */
@@ -185,32 +189,34 @@ public class DeploymentServerClass extends Entity {
     }
 
     /**
-     * Sets the order of filter execution. If set to {@code whitelist}, then
-     * the whitelist filters are applied first, followed by the blacklist
-     * filters. if set to {@code blacklist}, then the blacklist filter is
-     * applied first, followed by the whitelist filters.
+     * Sets the order to apply filters:
+     * <ul><li>"whitelist" applies the whitelist filters first, followed by 
+     * blacklist filters.</li>
+     * <li>"blacklist" applies the blacklist filters first, followed by 
+     * whitelist filters. </li></ul>
      *
-     * @param filterType Either whitelist or blacklist.
+     * @param filterType The filter type to apply first ("whitelist" or 
+     * "blacklist").
      */
     public void setFilterType(String filterType) {
         setCacheValue("filterType", filterType);
     }
 
     /**
-     * Sets the local location where the deployment server stores the content
-     * that is to be deployed for this server class.
+     * Sets the location on the deployment server to store the content that is 
+     * to be deployed for this server class.
      *
-     * @param location The local location for content.
+     * @param location The location (path) for storing content.
      */
     public void setRepositoryLocation(String location) {
         setCacheValue("repositoryLocation", location);
     }
 
     /**
-     * Sets the local location where the deployment client installs the content
-     * that is being deployed.
+     * Sets the location on the deployment client where the content that is 
+     * being deployed should be installed. 
      *
-     * @param location The local location for content.
+     * @param location The location (path) for installing content.
      */
     public void setTargetRepositoryLocation(String location) {
         setCacheValue("targetRepositoryLocation", location);

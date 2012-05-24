@@ -32,7 +32,7 @@ public class FiredAlertGroup extends Entity {
      * Return the collection of fired alerts for this specific fired alert
      * group.
      *
-     * @return The fired alerts for this group
+     * @return The fired alerts for this group.
      */
     public EntityCollection<FiredAlert> getAlerts() {
         return new EntityCollection<FiredAlert>(

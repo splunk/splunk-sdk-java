@@ -53,8 +53,9 @@ public class InputCollection extends EntityCollection<Input> {
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     InputCollection(Service service, Args args) {
         super(service, "data/inputs", args);
@@ -67,7 +68,7 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Creates stub.
+     * Creates a stub.
      *
      * @param name The name of the input.
      * @return No return value.
@@ -79,7 +80,7 @@ public class InputCollection extends EntityCollection<Input> {
 
     /**
      * Creates a stub by providing additional arguments.
-     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">For valid arguments, see the POST requests for the /data/inputs/ endpoints in the Splunk REST API documentation.</a>
+     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">POST request arguments for the data/inputs/* endpoints</a> in the Splunk REST API documentation
      *
      * @param name The name of the input.
      * @param args Optional arguments.
@@ -104,7 +105,7 @@ public class InputCollection extends EntityCollection<Input> {
 
     /**
      * Creates a specific kind of input by providing arguments.
-     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">For valid arguments, see the POST requests for the /data/inputs/ endpoints in the Splunk REST API documentation.</a>
+     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">POST request arguments for the data/inputs/* endpoints</a> in the Splunk REST API documentation
      *
      * @param name The name of the input.
      * @param kind The specific kind of input.
@@ -143,15 +144,16 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Gets a the value of a scoped (i.e. namespace constrained) key if it
-     * exists within this collection.
+     * Returns the value of a scoped, namespace-constrained key if it exists 
+     * within this collection.
      *
-     * @param key The key to lookup.
+     * @param key The key to look up.
      * @param namespace The namespace to constrain the search to.
-     * @return The value indexed by the key, or null if it does not exist.
+     * @return The value indexed by the key, or {@code null} if it doesn't 
+     * exist.
      */
 
-
+    
    public Input get(Object key, Args namespace) {
        return retrieveInput((String)key, namespace);
    }

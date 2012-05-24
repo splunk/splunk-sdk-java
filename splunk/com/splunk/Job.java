@@ -278,8 +278,8 @@ public class Job extends Entity {
     /**
      * Returns a value that indicates how events are sorted. 
      *
-     * @return {@code desc} if events are sorted in inverse time order (latest
-     * first). {@code asc} if events are sorted in time order (oldest first),
+     * @return {@code asc} if events are sorted in time order (oldest first),
+     * {@code desc} if events are sorted in inverse time order (latest first), 
      * or {@code none} if events are not sorted.
      */
     public String getEventSorting() {

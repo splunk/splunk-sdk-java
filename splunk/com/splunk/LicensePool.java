@@ -75,7 +75,11 @@ public class LicensePool extends Entity {
 
     /**
      * Returns the stack ID for this license pool. Valid values are:
-     * download-trial, enterprise, forwarder, and free.
+     * <p><ul>
+     * <li>"download-trial"</li>
+     * <li>"enterprise"</li>
+     * <li>"forwarder"</li>
+     * <li>"free"</li></ul>
      *
      * @return The license pool stack ID, or {@code null} if not specified.
      */
@@ -93,18 +97,17 @@ public class LicensePool extends Entity {
     }
 
     /**
-     * Sets whether or not to append slaves. The alternative to being appended
-     * is being overwritten.
+     * Sets whether to append or overwrite slaves to this license pool.
      *
-     * @param appendSlaves A value of {@code true} appends slaves, a value of
-     * {@code false} overwrites slaves.
+     * @param appendSlaves {@code true} to append slaves, {@code false} to 
+     * overwrite slaves.
      */
     public void setAppendSlaves(boolean appendSlaves) {
         setCacheValue("append_slaves", appendSlaves);
     }
 
     /**
-     * Sets the description.
+     * Sets the description of this license pool.
      *
      * @param description The description.
      */
@@ -113,23 +116,23 @@ public class LicensePool extends Entity {
     }
 
     /**
-     * Sets the byte quota of this pool. Note that values may be specified as:
+     * Sets the byte quota of this license pool.
      *
-     * {@code number}, {@code number} followed by {@code MB} or {@code GB}, or
-     * finally {@code MAX}. Note that one can only have one pool with MAX size
-     * in a stack.
-     *
-     * @param quota The description.
+     * @param quota The indexing quota of this license pool, specified as:
+     * <ul><li><i>number</i></li>
+     * <li><i>number</i> followed by "MB" or "GB" (for example, "10GB")</li>
+     * <li>"MAX" (Only one license pool can have "MAX" size in a stack.)</li>
+     * </ul>
      */
     public void setQuota(String quota) {
         setCacheValue("quota", quota);
     }
 
     /**
-     * Sets the list of slaves that are members of this pool. One can specify
-     * {@code *} to accept all slaves.
+     * Sets the list of slaves that are members of this license pool.
      *
-     * @param slaves The comma separated list of slaves.
+     * @param slaves The comma-separated list of slaves. Use an asterisk ("*") 
+     * to accept all slaves.
      */
     public void setSlaves(String slaves) {
         setCacheValue("slaves", slaves);

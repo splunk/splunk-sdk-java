@@ -250,9 +250,11 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Returns the meta data (eai:acl) of this entity.
+     * Returns the metadata (eai:acl) of this entity. This data includes
+     * permissions for accessing the resource, and values that indicate 
+     * which resource fields are wildcards, required, and optional.
      *
-     * @return The meta data of this entity, or {@code null} if none exist.
+     * @return The metadata of this entity, or {@code null} if none exist.
      */
     public EntityMetadata getMetadata() {
         // CONSIDER: For entities that don't have an eai:acl field, which is
@@ -386,8 +388,8 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Sets the local cache update value. Deferred write until {@code update} is
-     * invoked.
+     * Sets the local cache update value. Writing is deferred until 
+     * {@code update} has been called.
      *
      * @param key The key to set.
      * @param value The default value.
@@ -402,9 +404,9 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Update the entity with the values previously set via the setter
-     * methods, and the additional specified arguments. The specified arguments
-     * take precedents over the value set via the setter methods.
+     * Updates the entity with the values you previously set using the setter
+     * methods, and any additional specified arguments. The specified arguments
+     * take precedent over the values that were set using the setter methods. 
      *
      * @param args The arguments to update.
      */
@@ -419,7 +421,7 @@ public class Entity extends Resource implements Map<String, Object> {
     }
 
     /**
-     * Update the entity with the accumulated arguments, established by the
+     * Updates the entity with the accumulated arguments, established by the
      * individual setter methods for each specific entity class.
      */
     public void update() {

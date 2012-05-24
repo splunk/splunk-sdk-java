@@ -34,10 +34,11 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
     }
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     LicensePoolCollection(Service service, Args args) {
         super(service, "licenser/pools", LicensePool.class, args);
@@ -46,14 +47,12 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
     /**
      * Creates a license pool.
      *
-     * Quota can be one of the following: a number, a number followed by MB or
-     * GB, or "MAX" (only one license pool in a license stack can be set
-     * to "MAX").
-     *
      * @param name The name of the new license pool.
-     * @param quota The indexing quota of this license pool. This can also be
-     *              a literal MAX or number followed by MB or GB. For example
-     *              10GB.
+     * @param quota The indexing quota of this license pool, specified as:
+     * <ul><li><i>number</i></li>
+     * <li><i>number</i> followed by "MB" or "GB" (for example, "10GB")</li>
+     * <li>"MAX" (Only one license pool can have "MAX" size in a stack.)</li>
+     * </ul>
      * @param stackId The stack ID corresponding to this license pool.
      * @return The new license pool.
      */
@@ -64,14 +63,12 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
     /**
      * Creates a license pool.
      *
-     * Quota can be one of the following: a number, a number followed by MB or
-     * GB, or "MAX" (only one license pool in a license stack can be set
-     * to "MAX").
-     *
      * @param name The name of the new license pool.
-     * @param quota The indexing quota of this license pool. This can also be
-     *              a literal MAX or number followed by MB or GB. For example
-     *              10GB.
+     * @param quota The indexing quota of this license pool, specified as:
+     * <ul><li><i>number</i></li>
+     * <li><i>number</i> followed by "MB" or "GB" (for example, "10GB")</li>
+     * <li>"MAX" (Only one license pool can have "MAX" size in a stack.)</li>
+     * </ul>
      * @param stackId The stack ID corresponding to this license pool.
      * @param args Optional arguments.
      * @return The new license pool.

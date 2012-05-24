@@ -45,12 +45,17 @@ public class DeploymentServer extends Entity {
     }
 
     /**
-     * Sets whether the deployment server is enabled or disabled. Note that
-     * this effect is not immediate; Splunk must be restarted to take effect.
-     * The
+     * Sets whether the deployment server is enabled or disabled.
+     * <p>
+     * <b>Note:</b> You must restart Splunk for this setting to take effect.
+     * However, to avoid restarting Splunk, you can use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
-     * @param disabled {@code true} to disabled to deployment client,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable the deployment client,
+     * {@code false} to enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);

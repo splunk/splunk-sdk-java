@@ -33,10 +33,11 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     }
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     EventTypeCollection(Service service, Args args) {
         super(service, "saved/eventtypes", EventType.class, args);
@@ -45,8 +46,8 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     /**
      * Creates an event type.
      *
-     * @param name The name of this new event type.
-     * @param search The search string of this new event type.
+     * @param name The name of the event type.
+     * @param search The search string of the event type.
      *
      * @return The event type.
      */
@@ -57,8 +58,8 @@ public class EventTypeCollection extends EntityCollection<EventType> {
     /**
      * Creates an event type.
      *
-     * @param name The name of this new event type.
-     * @param search The search string of this new event type.
+     * @param name The name of the event type.
+     * @param search The search string of the event type.
      * @param args Optional arguments.
      * @return The event type.
      */
