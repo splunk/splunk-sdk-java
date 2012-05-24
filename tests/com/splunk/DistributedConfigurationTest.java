@@ -70,7 +70,7 @@ public class DistributedConfigurationTest extends SplunkTestCase {
         distributedConfiguration.setRemoveTimedOutServers(false);
         distributedConfiguration.setSendTimeout(120);
         distributedConfiguration.setServers("good.splunk.com,good2.splunk.com");
-        distributedConfiguration.setShareBudles(false);
+        distributedConfiguration.setShareBundles(false);
         distributedConfiguration.setSkipOurselves(true);
         distributedConfiguration.setStatusTimeout(100);
         distributedConfiguration.setTTL(5);
