@@ -25,7 +25,7 @@ public abstract  class ResultsReader {
     /**
      * Class constructor.
      *
-     * @param inputStream The input stream (unread) return stream from a splunk
+     * @param inputStream The input stream (unread) return stream from a Splunk
      * query or export.
      * @throws IOException If an IO exception occurs.
      */
@@ -38,7 +38,7 @@ public abstract  class ResultsReader {
     }
 
     /**
-     * Close the reader and return resources.
+     * Closes the reader and returns resources.
      *
      * @throws Exception on Exception
      */
@@ -49,9 +49,9 @@ public abstract  class ResultsReader {
     }
 
     /**
-     * Get the Next event in the event stream
+     * Returns the next event in the event stream.
      *
-     * @return The HashMap of key/value pairs for an entire event.
+     * @return The hash map of key-value pairs for an entire event.
      * @throws Exception on Exception.
      */
     public HashMap<String, String> getNextEvent() throws Exception {

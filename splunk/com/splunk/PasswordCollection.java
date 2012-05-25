@@ -33,10 +33,11 @@ public class PasswordCollection extends EntityCollection<Password> {
     }
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     PasswordCollection(Service service, Args args) {
         super(service, service.passwordEndPoint, Password.class, args);
@@ -73,7 +74,7 @@ public class PasswordCollection extends EntityCollection<Password> {
     /**
      * Returns the username for a credential.
      *
-     * @param entry The Atom object describing the credential.
+     * @param entry The {@code AtomEntry} object describing the credential.
      * @return The username.
      */
     @Override protected String itemKey(AtomEntry entry) {

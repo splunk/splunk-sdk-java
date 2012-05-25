@@ -79,8 +79,11 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Creates a stub by providing additional arguments.
-     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">POST request arguments for the data/inputs/* endpoints</a> in the Splunk REST API documentation
+     * Creates a stub by providing additional arguments. For details, see the
+     * POST request arguments for the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" 
+     * target="_blank">data/inputs/* endpoints</a> in the Splunk REST API 
+     * documentation.
      *
      * @param name The name of the input.
      * @param args Optional arguments.
@@ -104,8 +107,11 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Creates a specific kind of input by providing arguments.
-     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" target="_blank">POST request arguments for the data/inputs/* endpoints</a> in the Splunk REST API documentation
+     * Creates a specific kind of input by providing arguments.For details, see the
+     * POST request arguments for the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" 
+     * target="_blank">data/inputs/* endpoints</a> in the Splunk REST API 
+     * documentation.
      *
      * @param name The name of the input.
      * @param kind The specific kind of input.
