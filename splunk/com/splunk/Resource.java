@@ -46,11 +46,12 @@ public abstract class Resource {
     }
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The target endpoint.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     Resource(Service service, String path, Args args) {
         this.service = service;
@@ -175,7 +176,7 @@ public abstract class Resource {
 
     /**
      * Ensures that the local state of the resource is current,
-     * invoking {@code refresh} if necessary.
+     * calling {@code refresh} if necessary.
      *
      * @return The current {@code Resource} instance.
      */

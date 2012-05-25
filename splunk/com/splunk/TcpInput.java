@@ -101,7 +101,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the value of the {@code _rcvbuf} attribute for this TCP input.
+     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this TCP input.
      *
      * @return The {@code _rcvbuf} value.
      */

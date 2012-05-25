@@ -87,7 +87,7 @@ public class Password extends Entity {
 
 
     /**
-     * Sets the password for this entry.
+     * Sets the password for this credential.
      *
      * @param password The password.
      */

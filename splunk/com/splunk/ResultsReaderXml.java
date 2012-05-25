@@ -29,15 +29,15 @@ public class ResultsReaderXml extends ResultsReader {
     private XMLEventReader xmlReader = null;
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * Construct a streaming XML reader for the event stream. One should only
-     * attempt to parse an XML stream with the XML reader. Using a non-XML
-     * stream will yield unpredictable results.
+     * Constructs a streaming XML reader for the event stream. You should only
+     * attempt to parse an XML stream with the XML reader. Unpredictable results
+     * may occur if you use a non-XML stream.
      *
-     * Note we use the pushback reader to tweak export streams which can
-     * generate non-strict XML at the beginning of the stream. The streaming
-     * reader ignores preview data, and only extracts finalized data.
+     * The pushback reader tweaks export streams, which generates non-strict XML 
+     * at the beginning of the stream. The streaming reader ignores preview 
+     * data, and only extracts finalized data.
      *
      * @param inputStream The stream to be parsed.
      * @throws Exception On exception.

@@ -99,7 +99,7 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the value of the {@code _rcvbuf} attribute for this UDP input.
+     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this UDP input.
      *
      * @return The {@code _rcvbuf} value.
      */

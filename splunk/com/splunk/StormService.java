@@ -17,11 +17,20 @@
 package com.splunk;
 
 import java.util.Map;
-
+/**
+ * The {@code StormService} class represents a Splunk service instance at a
+ * given address (host:port), accessed using the {@code http} or {@code https}
+ * protocol scheme.
+ * <p>
+ * Using the {@code StormService} class, you can get a {@code Receiver} object
+ * and log events to it. For more information, see 
+ * <a href="http://dev.splunk.com/view/java-sdk/SP-CAAAECN" 
+ * target="_blank">Overview of the Splunk Java SDK</a> on the Developer Portal. 
+ */
 public class StormService extends Service {
 
     /**
-     * Creates a new {@code Storm} service instance.
+     * Creates a new {@code StormService} instance.
      */
     public StormService() {
         super("api.splunkstorm.com", 443, "https");
@@ -29,12 +38,13 @@ public class StormService extends Service {
     }
 
     /**
-     * Establishes a connection to a Splunk service using a map of arguments.
-     * This member creates a new {@code Service} instance and authenticates
-     * the session using credentials passed in from the {@code args} map.
+     * Establishes a connection to a Splunk Storm service using a map of 
+     * arguments. This member creates a new {@code StormService} instance and 
+     * authenticates the session using credentials passed in from the 
+     * {@code args} map.
      *
      * @param args The {@code args} map.
-     * @return A new {@code Service} instance.
+     * @return A new {@code StormService} instance.
      */
     public static StormService connect(Map<String, Object> args) {
         StormService service = new StormService();

@@ -35,10 +35,11 @@ public class MessageCollection extends EntityCollection<Message> {
     }
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     MessageCollection(Service service, Args args) {
         super(service, "messages", Message.class, args);
@@ -49,7 +50,7 @@ public class MessageCollection extends EntityCollection<Message> {
      *
      * @param name The name (primary key) of the new message.
      * @param value The message text.
-     * @return The created message.
+     * @return The new message.
      */
     public Message create(String name, String value) {
         Args args = new Args("value", value);

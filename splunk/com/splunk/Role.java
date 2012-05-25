@@ -95,7 +95,7 @@ public class Role extends Entity {
      * Returns a search string that restricts the scope of searches run by this
      * role. Only those events that also match this search string are shown to
      * the user. If a user has multiple roles with different search filters,
-     * they are combined with an OR.
+     * they are combined with an {@code OR}.
      *
      * @return The imported search filter.
      */
@@ -206,17 +206,25 @@ public class Role extends Entity {
     }
 
     /**
-     * Sets the capabilities for the role.
+     * Sets a list of capabilities assigned to this role. For a list of possible 
+     * capabilities, see the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTaccess#POST_authorization.2Froles"
+     * target="_blank">POST authorization/roles endpoint</a> in the REST API 
+     * documentation.
      *
-     * @param capabilities The capabilities to set.
+     * @param capabilities An array of capabilities.
      */
     public void setCapabilities(String[] capabilities) {
         setCacheValue("capabilities", capabilities);
     }
 
     /**
-     * Sets the capability for the role. This is a short cut when only setting
-     * one capability instead of a set of capabilities.
+     * Sets a capability assigned to this role. Use this method to set a single
+     * capability. For a list of possible 
+     * capabilities, see the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTaccess#POST_authorization.2Froles"
+     * target="_blank">POST authorization/roles endpoint</a> in the REST API 
+     * documentation.
      *
      * @param capability The capability to set.
      */
@@ -225,50 +233,72 @@ public class Role extends Entity {
     }
 
     /**
-     * Sets the default app for the role.
+     * Sets the default app for this role.
      *
-     * @param defaultApp The name of the default app.
+     * @param defaultApp The default app (the name of the folder that contains
+     * the app).
      */
     public void setDefaultApp(String defaultApp) {
         setCacheValue("defaultApp", defaultApp);
     }
 
     /**
-     * Sets the imported roles for the role.
+     * Sets a list of roles to import attributes from, such as capabilities and 
+     * allowed indexes to search. In combining multiple roles, the effective 
+     * value for each attribute is value with the broadest permissions. 
+     * <p>
+     * Default Splunk roles are:
+     * <p><ul>
+     * <li>admin</li>
+     * <li>can_delete</li>
+     * <li>power</li>
+     * <li>user</li>
+     * </ul><p>
+     * You also can specify additional roles that have been created. 
      *
-     * @param importedRoles The name of the default app.
+     * @param importedRoles An array of roles from which to import attributes.
      */
     public void setImportedRoles(String[] importedRoles) {
         setCacheValue("imported_roles", importedRoles);
     }
 
     /**
-     * Sets the imported role for the role. This is a short cut when only
-     * setting one imported tole instead of a set of imported roles.
+     * Sets a role to import attributes from, such as capabilities and allowed 
+     * indexes to search. Use this method to set a single role.
+     * <p>Importing other roles imports all aspects of that role, such as 
+     * capabilities and allowed indexes to search. 
+     * <p>
+     * Default Splunk roles are:
+     * <p><ul>
+     * <li>admin</li>
+     * <li>can_delete</li>
+     * <li>power</li>
+     * <li>user</li>
+     * </ul><p>
+     * You also can specify additional roles that have been created. 
      *
-     * @param importedRole The name of the default app.
+     * @param importedRole A role from which to import attributes.
      */
     public void setImportedRoles(String importedRole) {
         setCacheValue("imported_roles", new String [] { importedRole });
     }
 
     /**
-     * Sets the maximum number of concurrent real time search jobs for this
-     * role. This count is independent from the normal search jobs limit.
+     * Sets the maximum number of concurrent real-time search jobs a user with
+     * this role is allowed to run. This count is independent from the normal 
+     * search jobs limit.
      *
-     * @param numJobs The maximum number of jobs for real-time searches under
-     * this role.
+     * @param numJobs The maximum number of real-time search jobs.
      */
     public void setRealTimeSearchJobsQuota(int numJobs) {
         setCacheValue("rtSrchJobsQuota", numJobs);
     }
 
     /**
-     * Sets the maximum disk space in MB that can be used by this roles search
-     * jobs.
+     * Sets the maximum disk space that can be used for search jobs by a user 
+     * with this role.
      *
-     * @param srchDiskQuota The maximum disk space allocated, in MB, used for
-     * this roles search jobs.
+     * @param srchDiskQuota The maximum disk space to allocate, in megabytes.
      */
     public void setSearchDiskQuota(int srchDiskQuota) {
         setCacheValue("srchDiskQuota", srchDiskQuota);
@@ -278,7 +308,7 @@ public class Role extends Entity {
      * Sets a search string that restricts the scope of searches run by this
      * role. Search results for this role only show events that also match the
      * search string you specify. In the case that a user has multiple roles
-     * with different search filters, they are combined with an OR.
+     * with different search filters, they are combined with an {@code OR}.
      *
      * @param srchFilter The restrictive search string.
      */
@@ -287,37 +317,37 @@ public class Role extends Entity {
     }
 
     /**
-     * Sets the indexes that this role has permissions to search.
+     * Sets the indexes that a user with this role has permissions to search.
      *
-     * @param indexesAllowed The indexes this role is allowed to search.
+     * @param indexesAllowed An array of allowed indexes.
      */
     public void setSearchIndexesAllowed(String[] indexesAllowed) {
         setCacheValue("srchIndexesAllowed", indexesAllowed);
     }
 
     /**
-     * Sets the index that this role has permissions to search. This is a
-     * short cut to a single search-able index instead of a set of
-     * search-able indexes.
+     * Sets the index that a user with this role has permissions to search. Use 
+     * this method to set a single index.
      *
-     * @param indexAllowed The indexes this role is allowed to search.
+     * @param indexAllowed The allowed index.
      */
     public void setSearchIndexesAllowed(String indexAllowed) {
         setCacheValue("srchIndexesAllowed", new String [] { indexAllowed });
     }
 
     /**
-     * Sets the the default search indexes, when no index is specified.
+     * Sets the indexes to search by default when no index is specified for a 
+     * user with this role.
      *
-     * @param srchIndexesDefault The default index.
+     * @param srchIndexesDefault An array of default indexes.
      */
     public void setSearchIndexesDefault(String[] srchIndexesDefault) {
         setCacheValue("srchIndexesDefault", srchIndexesDefault);
     }
 
     /**
-     * Sets the the default search indexes, when no index is specified. This is
-     * a short cut to set a single default index instead of a set of indexes.
+     * Sets the index to search by default when no index is specified for a 
+     * user with this role. Use this method to set a single default index.
      *
      * @param srchIndexDefault The default index.
      */
@@ -330,16 +360,17 @@ public class Role extends Entity {
      * allowed to run. In the event of many roles per user, the maximum of
      * these quotas is applied.
      *
-     * @param srchJobsQuota The maximum concurrent jobs.
+     * @param srchJobsQuota The maximum number of concurrent jobs.
      */
     public void setSearchJobsQuota(int srchJobsQuota) {
         setCacheValue("srchJobsQuota", srchJobsQuota);
     }
 
     /**
-     * Sets the maximum time span of a search, in seconds.
+     * Sets the maximum time span of a search that is allowed for users in this 
+     * role.
      *
-     * @param srchTimeWin The maximum search time span.
+     * @param srchTimeWin The maximum time span of a search, in seconds.
      */
     public void setSearchTimeWindow(int srchTimeWin) {
         setCacheValue("srchTimeWin", srchTimeWin);

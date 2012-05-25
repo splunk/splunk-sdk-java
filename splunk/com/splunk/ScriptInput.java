@@ -99,7 +99,7 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the value of the {@code _rcvbuf} attribute for this script input.
+     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this script input.
      *
      * @return The {@code _rcvbuf} value.
      */

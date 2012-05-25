@@ -34,9 +34,9 @@ public class OutputSyslog extends Entity {
     }
 
     /**
-     * Returns the destination host:port of this server.
+     * Returns the destination {@code host:port} of this server.
      *
-     * @return The destination host:port.
+     * @return The destination {@code host:port}.
      */
     public String getServer() {
         return getString("server");
@@ -61,27 +61,28 @@ public class OutputSyslog extends Entity {
     }
 
     /**
-     * Sets the location, {@code host:port} where the syslog is sent.
+     * Sets the {@code host:port} where the syslog data is sent.
      *
-     * @param server The destination host and port to send the syslog.
+     * @param server The destination {@code host:port}.
      */
     public void setServer(String server) {
         setCacheValue("server", server);
     }
 
     /**
-     * Sets the time stamp format that precedes each event sent.
+     * Sets the timestamp format that precedes each event that is sent.
      *
-     * @param timestampformat the time stamp format.
+     * @param timestampformat The timestamp format.
      */
     public void setTimestampFormat(String timestampformat) {
         setCacheValue("timestampformat", timestampformat);
     }
 
     /**
-     * Sets protocol type. Valid values are {@code tcp} or {@code udp}.
+     * Sets the protocol to use to send syslog data. Valid values are "tcp" and 
+     * "udp". 
      *
-     * @param type The protocol type for syslog transmission.
+     * @param type The protocol type.
      */
     public void setType(String type) {
         setCacheValue("type", type);

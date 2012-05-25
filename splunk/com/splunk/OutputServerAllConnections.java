@@ -33,7 +33,7 @@ public class OutputServerAllConnections extends Entity {
     }
 
     /**
-     * Returns the destination host name for this connection.
+     * Returns the DNS name of the destination server.
      *
      * @return The destination host name.
      */
@@ -42,16 +42,16 @@ public class OutputServerAllConnections extends Entity {
     }
 
     /**
-     * Returns the IP address of the destination host for this connection.
+     * Returns the IP address of the destination server for this connection.
      *
-     * @return The IP address of the destination host.
+     * @return The IP address of the destination server.
      */
     public String getDestIp() {
         return getString("destIp");
     }
 
     /**
-     * Return the destination port for this connection.
+     * Return the port on which the destination server is listening.
      *
      * @return The destination port.
      */
@@ -60,7 +60,7 @@ public class OutputServerAllConnections extends Entity {
     }
 
     /**
-     * Returns the source port for this connection.
+     * Returns the port on the destination server where data is forwarded.
      *
      * @return The source port.
      */

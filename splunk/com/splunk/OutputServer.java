@@ -33,7 +33,7 @@ public class OutputServer extends Entity {
     }
 
      /**
-     * Returns the destination host name for this connection.
+     * Returns the DNS name of the destination server for this connection.
      *
      * @return The destination host name.
      */
@@ -42,16 +42,16 @@ public class OutputServer extends Entity {
     }
 
     /**
-     * Returns the IP address of the destination host for this connection.
+     * Returns the IP address of the destination server for this connection.
      *
-     * @return The IP address of the destination host.
+     * @return The IP address of the destination server.
      */
     public String getDestIp() {
         return getString("destIp", null);
     }
 
     /**
-     * Return the destination port for this connection.
+     * Return the port on which the destination server is listening.
      *
      * @return The destination port.
      */
@@ -60,16 +60,18 @@ public class OutputServer extends Entity {
     }
 
     /**
-     * Return the destination port for this connection.
+     * Returns the data distribution method used when two or more servers exist 
+     * in the same forwarder group. Valid values are: "clone", "balance", and 
+     * "autobalance". 
      *
-     * @return The destination port.
+     * @return The data distribution method.
      */
     public String getMethod() {
         return getString("method");
     }
 
     /**
-     * Returns the source port for this connection.
+     * Returns the port on the destination server where data is forwarded.
      *
      * @return The source port.
      */
@@ -78,8 +80,8 @@ public class OutputServer extends Entity {
     }
 
     /**
-     * Returns the connection status. This is normally {@code connect_done}, or
-     * {@code connect_fail} or {@code connect_try}.
+     * Returns the server connection status (usually "connect_done", 
+     * "connect_fail", or "connect_try").
      *
      * @return The connection status.
      */
@@ -89,63 +91,61 @@ public class OutputServer extends Entity {
 
     /**
      * Sets the type of data distribution method when two or more servers
-     * exist in the same forwarder group. Valid values are {@code clone},
-     * {@code balance} or {@code autobalance}.
+     * exist in the same forwarder group. Valid values are: "clone", "balance", 
+     * and "autobalance".
      *
-     * @param method the distribution method.
+     * @param method The data distribution method.
      */
     public void setMethod(String method) {
         setCacheValue("method", method);
     }
 
     /**
-     * Sets the alternate name to match in the remote server's SSL
-     * certificate.
+     * Sets the alternate name to match in the remote server's SSL certificate.
      *
-     * @param sslAltNameToCheck the alternate name to match in the remote
-     * server's SSL certificate.
+     * @param sslAltNameToCheck The alternate name.
      */
     public void setSslAltNameToCheck(String sslAltNameToCheck) {
         setCacheValue("sslAltNameToCheck", sslAltNameToCheck);
     }
 
     /**
-     * Sets the Path to the client certificate. If specified, connection
-     * uses SSL.
+     * Sets the path to the client certificate. If a path is specified, the 
+     * connection uses SSL. 
      *
-     * @param sslCertPath the Path to the client certificate. If specified,
-     * connection uses SSL.
+     * @param sslCertPath The path to the client certificate. 
      */
     public void setSslCertPath(String sslCertPath) {
         setCacheValue("sslCertPath", sslCertPath);
     }
 
     /**
-     * Sets the SSL Cipher in the form:
+     * Sets the SSL cipher in the form:
      * {@code ALL:!aNULL:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM}
      *
-     * @param sslCipher the SSL Cipher.
+     * @param sslCipher The SSL cipher.
      */
     public void setSslCipher(String sslCipher) {
         setCacheValue("sslCipher", sslCipher);
     }
 
     /**
-     * Check the common name of the server's certificate against this name.
-     * If there is no match, assume that Splunk is not authenticated against
-     * this server. You must specify this setting if sslVerifyServerCert is
-     * true.
+     * Sets the name against which to check the common name of the server's 
+     * certificate. If there is no match, you can assume that Splunk is not 
+     * authenticated against this server. You must set a value for this property 
+     * if {@code SslVerifyServerCert} is {@code true}.
+     * @see #setSslVerifyServerCert
      *
-     * @param sslCommonNameToCheck the SSL Cipher.
+     * @param sslCommonNameToCheck The SSL common name.
      */
     public void setSslCommonNameToCheck(String sslCommonNameToCheck) {
         setCacheValue("sslCommonNameToCheck", sslCommonNameToCheck);
     }
 
     /**
-     * Stets the password associated with the CAcert.
+     * Sets the password associated with the PEM file store. 
      *
-     * @param sslPassword the password associated with the CAcert.
+     * @param sslPassword The password.
      */
     public void setSslPassword(String sslPassword) {
         setCacheValue("sslPassword", sslPassword);
@@ -154,21 +154,21 @@ public class OutputServer extends Entity {
     /**
      * Sets the path to the root certificate authority file.
      *
-     * @param sslRootCAPath the path to the root certificate authority file
+     * @param sslRootCAPath The path to the root certificate authority file.
      */
     public void setsslRootCAPath(String sslRootCAPath) {
         setCacheValue("sslRootCAPath", sslRootCAPath);
     }
 
     /**
-     * Sets whether or not the server being connected to is authenticated.
+     * Sets whether the server being connected to is authenticated.
      * Both the common name and the alternate name of the server are checked
      * for a match.
      *
-     * @param sslVerifyServerCert whether or not the server being connected to
-     * is authenticated.
+     * @param sslVerifyServerCert {@code true} to determine whether the server 
+     * is authenticated, {@code false} if not.
      */
-    public void setSslVerifyServerCert(String sslVerifyServerCert) {
+    public void setSslVerifyServerCert(boolean sslVerifyServerCert) {
         setCacheValue("sslVerifyServerCert", sslVerifyServerCert);
     }
 
@@ -176,7 +176,7 @@ public class OutputServer extends Entity {
      * Returns an object that contains all current connections to the output
      * server.
      *
-     * @return The all-connections object.
+     * @return The {@code OutputServerAllConnections} object.
      */
     public OutputServerAllConnections allConnections() {
         return new OutputServerAllConnections(

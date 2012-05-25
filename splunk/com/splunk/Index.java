@@ -168,7 +168,10 @@ public class Index extends Entity {
 
     /**
      * Returns the path to the archiving script. 
-     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes" target="_blank">POST data/indexes</a> endpoint in the REST API documentation
+     * <p>For more info about archiving scripts, see the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes" 
+     * target="_blank">POST data/indexes endpoint</a> in the REST API 
+     * documentation.
      * @see #getColdToFrozenDir
      *
      * @return The archiving script, or {@code null} if not specified.
@@ -634,7 +637,10 @@ public class Index extends Entity {
 
     /**
      * Sets the path to the archiving script. 
-     * @see <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes" target="_blank">POST data/indexes</a> endpoint in the REST API documentation
+     * <p>For more info about archiving scripts, see the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes" 
+     * target="_blank">POST data/indexes endpoint</a> in the REST API 
+     * documentation.
      * @see #setColdToFrozenDir
      * @see #getColdToFrozenDir
      *
