@@ -69,9 +69,9 @@ public class ResultsReaderJson extends ResultsReader {
         if (jsonReader == null)
             return null;
 
-        // events are almost flat and names and strings, so no need for a true
-        // general parser solution. But the Gson parser is a little unintuitive
-        // here. Nested objects, have their own relative notion of hasNext. This
+        // Events are almost flat, so no need for a true general parser
+        // solution. But the Gson parser is a little unintuitive here. Nested
+        // objects, have their own relative notion of hasNext. This
         // means that for every object or array start, hasNext() returns false
         // and one must consume the closing (END) object to get back to the
         // previous object.
@@ -85,7 +85,8 @@ public class ResultsReaderJson extends ResultsReader {
             if (jsonReader.peek() == JsonToken.BEGIN_ARRAY) {
                 jsonReader.beginArray();
                 // The Gson parser is a little unintuitive here. Nested objects,
-                // have their own relative notion of hasNext.
+                // have their own relative notion of hasNext; when hasNext()
+                // is done, it is only for this array.
                 String data = "";
                 while (jsonReader.hasNext()) {
                     JsonToken jsonToken2 = jsonReader.peek();

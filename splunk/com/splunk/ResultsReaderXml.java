@@ -35,9 +35,9 @@ public class ResultsReaderXml extends ResultsReader {
      * attempt to parse an XML stream with the XML reader. Using a non-XML
      * stream will yield unpredictable results.
      *
-     * Note we use the pushback reader to tweak export streams which generates
-     * non-strict XML at the beginning of the stream. The streaming reader
-     * ignores preview data, and only extracts finalized data.
+     * Note we use the pushback reader to tweak export streams which can
+     * generate non-strict XML at the beginning of the stream. The streaming
+     * reader ignores preview data, and only extracts finalized data.
      *
      * @param inputStream The stream to be parsed.
      * @throws Exception On exception.
@@ -48,11 +48,10 @@ public class ResultsReaderXml extends ResultsReader {
             new PushbackReader(inputStreamReader, 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-        // at initialization, skip everything in the start until we get to the
+        // At initialization, skip everything in the start until we get to the
         // first-non preview data "<results preview='0'>", and then the first
-        // real event data which starts as "<result offset='0'>"
-        // add opening <doc> and parse the file, we need to be careful to handle
-        // the end of the stream exception of a missing </doc> tag.
+        // real event data which starts as "<result offset='0'>". Push back
+        // into the stream an opening <doc> tag, and parse the file.
 
         ArrayList<String> findInOrder = new ArrayList<String>();
         findInOrder.add(0, "<results preview='0'>");
@@ -78,7 +77,7 @@ public class ResultsReaderXml extends ResultsReader {
             }
         }
 
-        // now attach the XML reader to the stream
+        // Attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         xmlReader = inputFactory.createXMLEventReader(pushbackReader);
     }
@@ -138,7 +137,7 @@ public class ResultsReaderXml extends ResultsReader {
         StringBuilder value = new StringBuilder();
         int level = 0;
 
-        // event results are flat, extract k/v pairs based on XML indentation
+        // Event results are flat, so extract k/v pairs based on XML indentation
         // level throwing away the uninteresting non-data.
 
         while (xmlReader.hasNext()) {
@@ -169,7 +168,8 @@ public class ResultsReaderXml extends ResultsReader {
                     break;
                 case XMLStreamConstants.CHARACTERS:
                     if (level > 1) {
-                        if (value.length() > 0) value.append("\n");
+                        // Multi-values delimeter is comma.
+                        if (value.length() > 0) value.append(",");
                         value.append(xmlEvent.asCharacters().getData());
                     }
                     break;
