@@ -197,7 +197,7 @@ public class InputTest extends SplunkTestCase {
         monitorInput.setBlacklist("phonyregex*1");
         monitorInput.setCheckIndex(true);
         monitorInput.setCheckPath(true);
-        if (service.versionCompare("4.2") > 0) {
+        if (service.versionCompare("4.2.1") >= 0) {
             monitorInput.setCrcSalt("ThisIsSalt");
             monitorInput.setIgnoreOlderThan("1d");
             monitorInput.setTimeBeforeClose(120);
@@ -222,7 +222,7 @@ public class InputTest extends SplunkTestCase {
             monitorInput.getHost());
         assertEquals(assertRoot + "#4", "host*regex*",
             monitorInput.getHostRegex());
-        if (service.versionCompare("4.2") > 0) {
+        if (service.versionCompare("4.2.1") >= 0) {
             assertEquals(assertRoot + "#4", "1d",
                 monitorInput.getIgnoreOlderThan());
             assertEquals(assertRoot + "#4", 120,
@@ -268,7 +268,7 @@ public class InputTest extends SplunkTestCase {
         scriptInput.setHost("three.four.com");
         scriptInput.setIndex("main");
         scriptInput.setInterval("120");
-        if (service.versionCompare("4.2.3") > 0) {
+        if (service.versionCompare("4.2.4") >= 0) {
             scriptInput.setPassAuth("admin");
         }
         scriptInput.setRenameSource("renamedSource");
@@ -280,7 +280,7 @@ public class InputTest extends SplunkTestCase {
             scriptInput.getHost());
         assertEquals(assertRoot + "#13", "main", scriptInput.getIndex());
         assertEquals(assertRoot + "#14", "120", scriptInput.getInterval());
-        if (service.versionCompare("4.2.3") > 0) {
+        if (service.versionCompare("4.2.4") >= 0) {
             assertEquals(assertRoot + "#15", "admin",
                 scriptInput.getPassAuth());
         }
@@ -315,9 +315,9 @@ public class InputTest extends SplunkTestCase {
         tcpInput.setHost("myhost");
         tcpInput.setIndex("main");
         tcpInput.setQueue("indexQueue");
-        if (service.versionCompare("4.3") > 0) {
-            tcpInput.setRawTcpDoneTimeout(120);
+        if (service.versionCompare("4.3") >= 0) {
             // Behavioral difference between 4.3 and earlier versions
+            tcpInput.setRawTcpDoneTimeout(120);
             tcpInput.setRestrictToHost("four.five.com");
         }
         tcpInput.setSource("tcp");
@@ -359,7 +359,7 @@ public class InputTest extends SplunkTestCase {
 
         tcpSplunkInput.setConnectionHost("one.two.three");
         tcpSplunkInput.setHost("myhost");
-        if (service.versionCompare("4.3") > 0) {
+        if (service.versionCompare("4.3") >= 0) {
             // Behavioral difference between 4.3 and earlier versions
             tcpSplunkInput.setRestrictToHost("four.five.com");
         }
@@ -587,6 +587,9 @@ public class InputTest extends SplunkTestCase {
         if (info.getOsName().equals("Windows")) {
             String name = "sdk-input-wr";
             Args args = new Args();
+
+            if (service.versionCompare("4.3") < 0)
+                return;
 
             if (inputCollection.containsKey(name)) {
                 inputCollection.remove(name);

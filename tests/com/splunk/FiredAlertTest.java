@@ -24,6 +24,9 @@ public class FiredAlertTest extends SplunkTestCase {
     @Test public void testFiredAlerts() throws Exception {
         Service service = connect();
 
+        if (service.versionCompare("4.3") < 0)
+            return;
+
         // Create an index if one is not present.
         EntityCollection<Index> indexes = service.getIndexes();
         if (!indexes.containsKey("sdk-tests")) {

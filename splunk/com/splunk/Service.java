@@ -930,7 +930,7 @@ public class Service extends HttpService {
             .getTextContent();
         this.token = "Splunk " + sessionKey;
         this.version = this.getInfo().getVersion();
-        if (versionCompare("4.3") > 0)
+        if (versionCompare("4.3") >= 0)
             this.passwordEndPoint = "storage/passwords";
 
         return this;

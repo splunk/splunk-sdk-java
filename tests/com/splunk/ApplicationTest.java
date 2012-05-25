@@ -81,8 +81,9 @@ public class ApplicationTest extends SplunkTestCase {
 
         Args createArgs = new Args();
         createArgs.put("author", "me");
-        // 4.2.4+ only
-        //createArgs.put("configured", false);
+        if (service.versionCompare("4.2.4") >= 0) {
+            createArgs.put("configured", false);
+        }
         createArgs.put("description", "this is a description");
         createArgs.put("label", "SDKTEST");
         createArgs.put("manageable", false);

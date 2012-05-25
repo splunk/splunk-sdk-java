@@ -340,7 +340,7 @@ public class ServiceTest extends SplunkTestCase {
         user.setEmail("none@noway.com");
         user.setPassword("new-password");
         user.setRealName("SDK-name");
-        if (service.versionCompare("4.3") > 0) {
+        if (service.versionCompare("4.3") >= 0) {
             user.setRestartBackgroundJobs(false);
         }
         user.setRoles("power");
