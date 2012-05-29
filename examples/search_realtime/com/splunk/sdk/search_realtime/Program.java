@@ -32,11 +32,11 @@ public class Program {
         "events", "results", "preview", "searchlog", "summary", "timeline"
     };
 
-    static String earliestTime =
+    static String earliestTimeText =
         "Search earliest time (default: 'rt-5m')";
     static String fieldListText =
         "A comma-separated list of the fields to return";
-    static String latestTime =
+    static String latestTimeText =
         "Search latest time (default: 'rt' (i.e. now))";
     static String offset =
         "The first result (inclusive) from which to begin returning data. " +
@@ -65,9 +65,9 @@ public class Program {
     static void run(String[] args) throws IOException {
         Command command = Command.splunk("search");
         command.addRule("count", Integer.class, resultsCount);
-        command.addRule("earliest_time", String.class, earliestTime);
+        command.addRule("earliest_time", String.class, earliestTimeText);
         command.addRule("field_list", String.class, fieldListText);
-        command.addRule("latest_time", String.class, latestTime);
+        command.addRule("latest_time", String.class, latestTimeText);
         command.addRule("offset", Integer.class, offset);
         command.addRule("output", String.class, outputText);
         command.addRule("output_mode", String.class, outputModeText);
@@ -93,7 +93,7 @@ public class Program {
 
         String latestTime = "rt";
         if (command.opts.containsKey("latest_time"))
-            earliestTime = (String)command.opts.get("latest_time");
+            latestTime = (String)command.opts.get("latest_time");
 
         int offset = 0;
         if (command.opts.containsKey("offset"))

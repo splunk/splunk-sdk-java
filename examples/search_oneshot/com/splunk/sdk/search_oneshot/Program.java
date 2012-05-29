@@ -31,10 +31,10 @@ import java.util.HashMap;
 // Note: not all search parameters are exposed to the CLI for this example.
 public class Program {
 
-    static String earliestTime = "Search earliest time";
+    static String earliestTimeText = "Search earliest time";
     static String fieldListText =
          "A comma-separated list of the fields to return";
-    static String latestTime = "Search latest time";
+    static String latestTimeText = "Search latest time";
     static String outputModeText =
         "Search output format {csv, raw, json, xml} (default: xml)";
     static String rawText = "Set to 1 if raw events are displayed";
@@ -53,9 +53,9 @@ public class Program {
 
     static void run(String[] args) throws IOException {
         Command command = Command.splunk("search");
-        command.addRule("earliest_time", String.class, earliestTime);
+        command.addRule("earliest_time", String.class, earliestTimeText);
         command.addRule("field_list", String.class, fieldListText);
-        command.addRule("latest_time", String.class, latestTime);
+        command.addRule("latest_time", String.class, latestTimeText);
         command.addRule("output_mode", String.class, outputModeText);
         command.addRule("raw", Integer.class, rawText);
         command.addRule("status_buckets", Integer.class, statusBucketsText);
@@ -75,11 +75,7 @@ public class Program {
 
         String latestTime = null;
         if (command.opts.containsKey("latest_time"))
-            earliestTime = (String)command.opts.get("latest_time");
-
-        String outputMode = "xml";
-        if (command.opts.containsKey("output_mode"))
-            outputMode = (String)command.opts.get("output_mode");
+            latestTime = (String)command.opts.get("latest_time");
 
         int statusBuckets = 0;
         if (command.opts.containsKey("status_buckets"))
