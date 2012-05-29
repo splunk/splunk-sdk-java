@@ -63,7 +63,6 @@ public class ResultsReaderJson extends ResultsReader {
     /** {@inheritDoc} */
     @Override public HashMap<String, String> getNextEvent() throws Exception {
         HashMap<String, String> returnData = null;
-        int level = 0;
         String name = "";
 
         if (jsonReader == null)

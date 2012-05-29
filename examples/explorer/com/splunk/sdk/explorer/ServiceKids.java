@@ -18,7 +18,6 @@ package com.splunk.sdk.explorer;
 
 import com.splunk.Service;
 
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 

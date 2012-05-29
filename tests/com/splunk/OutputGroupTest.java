@@ -32,10 +32,10 @@ public class OutputGroupTest extends SplunkTestCase {
         }
 
         for (OutputGroup outputGroup: outputGroups.values()) {
-            String method = outputGroup.getMethod();
+            outputGroup.getMethod();
             String[] servers = outputGroup.getServers();
-            boolean disabled = outputGroup.isDisabled();
-            boolean autoLB = outputGroup.getAutoLB();
+            outputGroup.isDisabled();
+            outputGroup.getAutoLB();
 
             outputGroup.setServers("1.1.1.1:9997");
             outputGroup.update();

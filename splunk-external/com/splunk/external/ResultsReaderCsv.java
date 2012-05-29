@@ -19,7 +19,6 @@ package com.splunk.external;
 import au.com.bytecode.opencsv.CSVReader;
 import com.splunk.ResultsReader;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 

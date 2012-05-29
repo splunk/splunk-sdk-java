@@ -17,8 +17,6 @@
 package com.splunk;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
 
 import org.junit.Test;
 

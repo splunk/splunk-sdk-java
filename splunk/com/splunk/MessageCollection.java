@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.HashMap;
-
 /**
  * The {@code MessageCollection} class represents a collection of messages, 
  * providing access to Splunk system messages. Most messages are created by 

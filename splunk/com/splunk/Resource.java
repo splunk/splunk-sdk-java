@@ -18,7 +18,6 @@ package com.splunk;
 
 
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * The {@code Resource} class represents a Splunk resource.

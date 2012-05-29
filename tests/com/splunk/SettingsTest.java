@@ -18,8 +18,6 @@ package com.splunk;
 
 import org.junit.Test;
 
-import java.net.Socket;
-
 public class SettingsTest extends SplunkTestCase {
     final static String assertRoot = "Settings assert: ";
 

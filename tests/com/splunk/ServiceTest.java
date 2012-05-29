@@ -19,7 +19,6 @@ package com.splunk;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.net.Socket;
 import org.junit.Test;
 
 
@@ -87,7 +86,7 @@ public class ServiceTest extends SplunkTestCase {
         assertEquals(assertRoot + "#2", 200, response.getStatus());
         try {
             // Make sure we can at least load the Atom response
-            AtomFeed feed = AtomFeed.parse(response.getContent());
+            AtomFeed.parse(response.getContent());
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -136,7 +135,7 @@ public class ServiceTest extends SplunkTestCase {
 
         // And make sure we get the expected 404
         try {
-            ResponseMessage response = service.get("/zippy");
+            service.get("/zippy");
             fail("Expected HttpException");
         }
         catch (HttpException e) {

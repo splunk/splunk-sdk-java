@@ -47,8 +47,6 @@ class NamespacesKids extends Children.Keys<String> {
     }
 
     private Node createNode(String name) {
-        String app;
-        String owner;
 
         if (name.equals("<all>"))
             return createNode("<all>", "-");

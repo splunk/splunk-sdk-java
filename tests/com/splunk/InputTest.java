@@ -18,9 +18,6 @@ package com.splunk;
 
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.Set;
-
 public class InputTest extends SplunkTestCase {
     final static String assertRoot = "Input assert: ";
 
@@ -297,7 +294,6 @@ public class InputTest extends SplunkTestCase {
     @Test public void testTcpInputCrud() {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
-        ServiceInfo info = service.getInfo();
         String port = "9999"; // test port
 
         // CRUD TCP (raw) input
@@ -342,7 +338,6 @@ public class InputTest extends SplunkTestCase {
     @Test public void testTcpSplunkInputCrud() {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
-        ServiceInfo info = service.getInfo();
         String port = "9998"; // test port
 
         // CRUD TCP (cooked) input
@@ -379,7 +374,6 @@ public class InputTest extends SplunkTestCase {
     @Test public void testUdpInputCrud() {
         Service service = connect();
         InputCollection inputCollection = service.getInputs();
-        ServiceInfo info = service.getInfo();
         String port = "9997"; // test port
 
         // CRUD UDP input
