@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="splunk"/>
+	<classpathentry kind="src" path="examples/search_saved"/>
+	<classpathentry kind="src" path="examples/search_simple"/>
+	<classpathentry kind="src" path="examples/input"/>
+	<classpathentry kind="src" path="examples/genevents"/>
+	<classpathentry kind="src" path="splunk-external"/>
 	<classpathentry kind="src" path="splunk-sdk"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="src" path="examples/explorer"/>
@@ -33,5 +38,7 @@
 	<classpathentry kind="lib" path="lib/org-openide-util.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-windows.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/opencsv-2.3.jar"/>
 	<classpathentry kind="output" path="out/production/tests"/>
 </classpath>
