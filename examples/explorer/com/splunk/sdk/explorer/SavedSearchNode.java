@@ -62,7 +62,7 @@ class SavedSearchNode extends EntityNode {
         list.add(boolean.class, "isActionEmail");
         list.add(boolean.class, "isActionPopulateLookup");
         list.add(boolean.class, "isActionRss");
-        list.add(boolean.class, "isActioncScript");
+        list.add(boolean.class, "isActionScript");
         list.add(boolean.class, "isActionSummaryIndex");
         list.add(boolean.class, "isDigestMode");
         list.add(boolean.class, "isDisabled");

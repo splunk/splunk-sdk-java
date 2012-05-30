@@ -126,7 +126,7 @@ public class SavedSearchTest extends SplunkTestCase {
             savedSearch.isActionEmail();
             savedSearch.isActionPopulateLookup();
             savedSearch.isActionRss();
-            savedSearch.isActioncScript();
+            savedSearch.isActionScript();
             savedSearch.isActionSummaryIndex();
             savedSearch.isDigestMode();
             savedSearch.isDisabled();
@@ -238,7 +238,7 @@ public class SavedSearchTest extends SplunkTestCase {
         assertTrue(assertRoot + "#7", savedSearch.isActionEmail());
         assertTrue(assertRoot + "#8", savedSearch.isActionPopulateLookup());
         assertTrue(assertRoot + "#9", savedSearch.isActionRss());
-        assertTrue(assertRoot + "#10", savedSearch.isActioncScript());
+        assertTrue(assertRoot + "#10", savedSearch.isActionScript());
         assertTrue(assertRoot + "#11", savedSearch.isActionSummaryIndex());
         assertTrue(assertRoot + "#12", savedSearch.isDigestMode());
 
