@@ -33,8 +33,8 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns a list of monitored counters for this Windows Perfmon input. A
-     * "*" is equivalent to all counters.
+     * Returns a list of monitored counters for this Windows Perfmon input. 
+     * An asterisk (*) is equivalent to all counters.
      *
      * @return A string array list of counters, or {@code null} if not
      * specified.
@@ -53,8 +53,8 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns the counter instances of this Windows Perfmon input. A "*" 
-     * is equivalent to all instances.
+     * Returns the counter instances of this Windows Perfmon input. An asterisk 
+     * (*) is equivalent to all instances.
      *
      * @return A string array of counter instances, or {@code null} if not
      * specified.
@@ -74,7 +74,7 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns the input type of this Windows Perfmon input.
+     * Returns the input kind of this Windows Perfmon input.
      * @see InputKind
      *
      * @return The input kind.
@@ -84,7 +84,7 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns the performance monitior object for this Windows Perfmon input
+     * Returns the performance monitor object for this Windows Perfmon input
      * (for example, "Process", "Server", or "PhysicalDisk".)
      *
      * @return The Windows performance object.
@@ -94,29 +94,31 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Sets the counters to monitor. A wildcard value of {@code *} means all
-     * counters.
+     * Sets the counters to monitor.
      *
-     * @param counters The counters to monitor.
+     * @param counters An array of counters to monitor.
      */
     public void setCounters(String[] counters) {
         setCacheValue("counters", counters);
     }
 
     /**
-     * Sets the counters to monitor. A wildcard value of {@code *} means all
-     * counters. This is a short cut for setting a single counter, instead of
-     * a set of counters.
+     * Sets a counter to monitor. A wildcard value of an asterisk (*) means 
+     * all counters. Use this method to set a single counter rather than an 
+     * array.
      *
-     * @param counter The counters to monitor.
+     * @param counter The counter to monitor.
      */
     public void setCounters(String counter) {
         setCacheValue("counters", new String [] { counter });
     }
 
     /**
-     * Sets whether this input is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether this input is enabled or disabled. 
+     * You can also do this using the {@code Entity.disable} and 
+     * {@code Entity.enable} methods. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to script input,
      * {@code false} to enable.
@@ -126,37 +128,36 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Sets index in which to store all generated events.
+     * Sets the index in which to store all generated events.
      *
-     * @param index The index in which to store all generated events.
+     * @param index The index name.
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
     }
 
     /**
-     * Sets the counter instances to monitor. A wildcard value of {@code *}
-     * means all instances.
+     * Sets the counter instances to monitor.
      *
-     * @param instances the counter instances to monitor.
+     * @param instances The counter instances to monitor.
      */
     public void setInstances(String[] instances) {
         setCacheValue("instances", instances);
     }
 
     /**
-     * Sets the counter instances to monitor. A wildcard value of {@code *}
-     * means all instances. This is a short cut for setting a single instance,
-     * instead of a set of instances.
+     * Sets a counter instance to monitor. A wildcard value of an asterisk (*)
+     * means all instances. Use this method to set a single instance rather than
+     * an array.
      *
-     * @param instance the counter instances to monitor.
+     * @param instance A counter instance to monitor.
      */
     public void setInstances(String instance) {
         setCacheValue("instances", new String [] { instance });
     }
 
     /**
-     * Sets the frequency, in seconds, to poll the performance counters.
+     * Sets the frequency to poll the performance counters.
      *
      * @param interval The polling frequency, in seconds.
      */

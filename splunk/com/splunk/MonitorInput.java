@@ -36,7 +36,7 @@ public class MonitorInput extends Input {
      * Returns a regular expression for a file path that when matched is not 
      * indexed.
      *
-     * @return The regular expression for a file path.
+     * @return The regex for a file path.
      */
     public String getBlacklist() {
         return getString("blacklist", null);
@@ -131,7 +131,7 @@ public class MonitorInput extends Input {
     }
 
     /**
-     * Returns the queue for this TCP input. Valid values are "parsingQueue" and
+     * Returns the queue for this monitor input. Valid values are "parsingQueue" and
      * "indexQueue".
      *
      * @return The queue, or {@code null} if not specified.
@@ -162,7 +162,7 @@ public class MonitorInput extends Input {
     }
 
     /**
-     * Returns the source name.
+     * Returns the source of events from this monitor input.
      *
      * @return The source name.
      */
@@ -171,7 +171,7 @@ public class MonitorInput extends Input {
     }
 
     /**
-     * Returns the source type.
+     * Returns the source type of events from this monitor input.
      *
      * @return The source type.
      */

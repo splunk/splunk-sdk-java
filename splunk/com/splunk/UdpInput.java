@@ -41,8 +41,8 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the style of host connection. Valid values are: {@code ip},
-     * {@code dns}, and {@code none}.
+     * Returns the style of host connection. Valid values are: "ip", "dns", and
+     * "none".
      *
      * @return The style of host connection, or {@code null} if not specified.
      */
@@ -79,7 +79,7 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the input type for this UDP input.
+     * Returns the input kind for this UDP input.
      * @see InputKind
      *
      * @return The input kind.
@@ -90,7 +90,7 @@ public class UdpInput extends Input {
 
     /**
      * Returns the queue for this UDP input. Valid values are:
-     * {@code parsingQueue} and {@code indexQueue}.
+     * "parsingQueue" and "indexQueue".
      *
      * @return The queue, or {@code null} if not specified.
      */
@@ -99,7 +99,8 @@ public class UdpInput extends Input {
     }
 
     /**
-     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this UDP input.
+     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this 
+     * UDP input.
      *
      * @return The {@code _rcvbuf} value.
      */
@@ -150,16 +151,15 @@ public class UdpInput extends Input {
 
     /**
      * Sets the {@code from-host} for the remote server that is sending data.
-     * Valid values are {@code ip, dns} or {@code none}.
+     * Valid values are: <ul>
+     * <li>"ip": Sets the host to the IP address of the remote server sending 
+     * data.</li>
+     * <li>"dns": Sets the host to the reverse DNS entry for the IP address of 
+     * the remote server sending data.</li>
+     * <li>"none": Leaves the host as specified in inputs.conf, which is 
+     * typically the Splunk system host name.</li></ul>
      *
-     * {@code ip} sets the host to the IP address of the remote server sending
-     * data. {@code dns} sets the host to the reverse DNS entry for the IP
-     * address of the remote server sending data.
-     *
-     * {@code none} leaves the host as specified in inputs.conf, which is
-     * typically the Splunk system hostname.
-     *
-     * @param connection_host How to set the from-host information.
+     * @param connection_host The connection host information.
      */
     public void setConnectionHost(String connection_host) {
         setCacheValue("connection_host", connection_host);
@@ -168,87 +168,80 @@ public class UdpInput extends Input {
     /**
      * Sets the host from which the indexer gets data.
      *
-     * @param host The host from which the indexer gets data.
+     * @param host The host.
      */
     public void setHost(String host) {
         setCacheValue("host", host);
     }
 
     /**
-     * Sets index in which to store all generated events.
+     * Sets the index in which to store all generated events.
      *
-     * @param index The index in which to store all generated events.
+     * @param index The index.
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
     }
 
     /**
-     * Sets whether or not splunk prepends a timestamp and hostname to incoming
+     * Sets whether Splunk should prepend a timestamp and hostname to incoming
      * events.
      *
-     * @param no_appending_timestamp whether or not splunk prepends a timestamp
-     * and hostname to incoming events.
+     * @param no_appending_timestamp {@code true} to <i>not</i> prepend a 
+     * timestamp and hostname to incoming events, {@code false} to prepend that
+     * information.
      */
     public void setNoAppendingTimeStamp(boolean no_appending_timestamp) {
         setCacheValue("no_appending_timestamp", no_appending_timestamp);
     }
 
     /**
-     * Sets whether or not splunk strips the priority field from incoming
+     * Sets whether Splunk should strip the <b>priority</b> field from incoming
      * events.
      *
-     * @param no_priority_stripping whether or not splunk strips the priority
-     * field from incoming events.
+     * @param no_priority_stripping {@code true} to <i>not</i> strip the 
+     * <b>priority</b> field, {@code false} to remove it.
      */
     public void setNoPriorityStripping(boolean no_priority_stripping) {
         setCacheValue("no_priority_stripping", no_priority_stripping);
     }
 
     /**
-     * Sets where the input processor should deposit the events it reads.
-     * Valid values are {code parsingQueue} or {@code indexQueue}.
+     * Sets how the input processor should deposit the events it reads. Valid 
+     * values are:<ul>
+     * <li>{@code parsingQueue}: Applies props.conf and other parsing rules to 
+     * your data.</li>
+     * <li>{@code indexQueue}: Sends your data directly into the index.</li>
+     * </ul>
      *
-     * Defaults to {@code parsingQueue}.
-     *
-     * Set queue to parsingQueue to apply props.conf and other parsing rules
-     * to your data. For more information about props.conf and rules for
-     * timestamping and linebreaking.
-     *
-     * Set queue to {@code indexQueue} to send your data directly into the
-     * index.
-     *
-     * @param queue The queue processing type.
+     * @param queue The queue-processing type.
      */
     public void setQueue(String queue) {
         setCacheValue("queue", queue);
     }
 
     /**
-     * Sets a restriction to accept inputs from only this host.
+     * Sets a restriction to accept inputs from the specified host only.
      *
-     * @param restrictToHost Restrict to accept inputs only from this host.
+     * @param restrictToHost The host.
      */
     public void setRestrictToHost(String restrictToHost) {
         setCacheValue("restrictToHost", restrictToHost);
     }
 
     /**
-     * Sets the source key/field for events from this input. Defaults to the
-     * input file path.
+     * Sets the initial value for the source key for events from this 
+     * input. The source key is used during parsing and indexing. The 
+     * <b>source</b> field is used for searches. As a convenience, the source 
+     * string is prepended with "source::".
+     * <p>
+     * <b>Note:</b> Overriding the source key is generally not recommended. 
+     * Typically, the input layer provides a more accurate string to aid in 
+     * problem analysis and investigation, accurately recording the file from 
+     * which the data was retrieved. Consider the use of source types, tagging, 
+     * and search wildcards before overriding this value.
      *
-     * Sets the source key's initial value. The key is used during
-     * parsing/indexing, in particular to set the source field during indexing.
-     * It is also the source field used at search time. As a convenience,
-     * the chosen string is prepended with 'source::'.
-     *
-     * Note: Overriding the source key is generally not recommended. Typically,
-     * the input layer provides a more accurate string to aid in problem
-     * analysis and investigation, accurately recording the file from which
-     * the data was retreived. Consider use of source types, tagging, and search
-     * wildcards before overriding this value.
-     *
-     * @param source the source key/field for events from this input.
+     * @param source The source.
      */
     public void setSource(String source) {
         setCacheValue("source", source);
@@ -257,7 +250,7 @@ public class UdpInput extends Input {
     /**
      * Sets the source type for events from this input.
      *
-     * @param sourcetype the for events from this input.
+     * @param sourcetype The source type.
      */
     public void setSourceType(String sourcetype) {
         setCacheValue("sourcetype", sourcetype);

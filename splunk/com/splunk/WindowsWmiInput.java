@@ -84,7 +84,7 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Returns the input type of this WMI input.
+     * Returns the input kind of this WMI input.
      * @see InputKind
      *
      * @return The input kind.
@@ -105,8 +105,7 @@ public class WindowsWmiInput extends Input {
 
     /**
      * Returns the collection name for this WMI input. This name appears in
-     * configuration file, the source, and the sourcetype of the
-     * indexed data.
+     * configuration file, the source, and the sourcetype of the indexed data.
      *
      * @return The collection name.
      */
@@ -144,8 +143,11 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Sets whether this input is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether this input is enabled or disabled. 
+     * You can also do this using the {@code Entity.disable} and 
+     * {@code Entity.enable} methods. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to script input,
      * {@code false} to enable.
@@ -155,32 +157,29 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Sets the Properties (fields) that you want to gather from the given
+     * Sets the properties (fields) that you want to gather from the given
      * class.
      *
-     * @param fields The properties (fields) that you want to gather from the
-     * given class.
+     * @param fields An array of properties (fields) to gather.
      */
     public void setFields(String[] fields) {
         setCacheValue("fields", fields);
     }
 
     /**
-     * Sets the Properties (field) that you want to gather from the given
-     * class. This is a short cut for setting a single field,
-     * instead of a set of fields.
+     * Sets a property (field) that you want to gather from the given
+     * class. Use this method to set a single field rather than an array.
      *
-     * @param field The properties (fields) that you want to gather from the
-     * given class.
+     * @param field A property (field) to gather.
      */
     public void setFields(String field) {
         setCacheValue("fields", new String [] { field });
     }
 
     /**
-     * Sets index in which to store all generated events.
+     * Sets the index in which to store all generated events.
      *
-     * @param index The index in which to store all generated events.
+     * @param index The index name.
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
@@ -189,25 +188,24 @@ public class WindowsWmiInput extends Input {
     /**
      * Sets the counter instances to monitor.
      *
-     * @param instances the counter instances to monitor.
+     * @param instances The counter instances to monitor.
      */
     public void setInstances(String[] instances) {
         setCacheValue("instances", instances);
     }
 
     /**
-     * Sets the counter instance to monitor. This is a short cut for setting a
-     * single instance, instead of a set of instances.
+     * Sets a counter instance to monitor. Use this method to set a single
+     * instance rather than an array.
      *
-     * @param instance the counter instances to monitor.
+     * @param instance A counter instance to monitor.
      */
     public void setInstances(String instance) {
         setCacheValue("instances", new String [] { instance });
     }
 
     /**
-     * Sets the frequency, in seconds, at which the WMI provider(s) will be
-     * queried.
+     * Sets the frequency at which the WMI providers are queried.
      *
      * @param interval The polling frequency, in seconds.
      */
@@ -216,10 +214,10 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Sets the host from which we will monitor log events. To specify
-     * additional hosts to be monitored via WMI, use the "server" parameter.
+     * Sets the host from which to monitor log events. To specify
+     * additional hosts to monitor using WMI, use the {@code server} parameter.
      *
-     * @param lookup_host The host from which we will monitor log events.
+     * @param lookup_host The host.
      */
     public void setLookupHost(String lookup_host) {
         setCacheValue("lookup_host", lookup_host);
@@ -227,10 +225,9 @@ public class WindowsWmiInput extends Input {
 
     /**
      * Sets the additional servers that you want to gather data from. Use this
-     * attribute if you need to gather more than a single machine.  This value
-     * is a comma-separated list.
+     * property if you need to gather more than a single server.
      *
-     * @param servers The host from which we will monitor log events.
+     * @param servers A comma-separated list of hosts.
      */
     public void setServers(String servers) {
         setCacheValue("server", servers);

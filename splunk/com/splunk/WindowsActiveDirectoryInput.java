@@ -44,7 +44,7 @@ public class WindowsActiveDirectoryInput extends Input {
     }
 
     /**
-     * Returns the input type of this Windows Active Directory input.
+     * Returns the input kind of this Windows Active Directory input.
      * @see InputKind
      *
      * @return The input kind.
@@ -88,8 +88,11 @@ public class WindowsActiveDirectoryInput extends Input {
     }
 
     /**
-     * Sets whether this input is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether this input is enabled or disabled. 
+     * You can also do this using the {@code Entity.disable} and 
+     * {@code Entity.enable} methods. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to script input,
      * {@code false} to enable.
@@ -99,42 +102,42 @@ public class WindowsActiveDirectoryInput extends Input {
     }
 
     /**
-     * Sets index in which to store all generated events.
+     * Sets the index in which to store all generated events.
      *
-     * @param index The index in which to store all generated events.
+     * @param index The index name.
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
     }
 
     /**
-     * Sets whether or not to monitor the subtree(s) of the given directory tree
-     * path. {@code True} means to monitor, {@code false} mean not to monitor
-     * the subtree(s)
+     * Sets whether to monitor the subtrees of the given directory tree
+     * path. 
      *
-     * @param monitorSubtree Whether or not to monitor the subtree(s).
+     * @param monitorSubtree {@code true} to monitor subtrees, {@code false} 
+     * if not.
      */
     public void setMonitorSubtree(boolean monitorSubtree) {
         setCacheValue("monitorSubtree", monitorSubtree);
     }
 
     /**
-     * Sets the starting Active Directory directory to start monitoring. If not
-     * specified, splunk attempts to start at the root of the directory tree.
+     * Sets the starting Active Directory directory to start monitoring. If this
+     * value is not specified, Splunk attempts to start monitoring at the root
+     * of the directory tree.
      *
-     * @param startingNode The starting Active Directory directory to start
-     * monitoring.
+     * @param startingNode The starting Active Directory directory.
      */
     public void setStartingNode(String startingNode) {
         setCacheValue("startingNode", startingNode);
     }
 
     /**
-     * Sets the fully qualified domain name of a valid, network-accessible DC.
-     * If not specified, Splunk will obtain the local computer's domain
-     * controller.
+     * Sets the fully-qualified domain name of a valid, network-accessible 
+     * domain controller. If this value is not specified, Splunk obtains the 
+     * local computer's domain controller.
      *
-     * @param targetDc The fully qualified domain name.
+     * @param targetDc The fully-qualified domain name.
      */
     public void setTargetDc(String targetDc) {
         setCacheValue("targetDc", targetDc);

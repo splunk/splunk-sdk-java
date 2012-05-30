@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * The {@code ScriptInput} class represents a script input.
+ * The {@code ScriptInput} class represents a scripted input.
  */
 public class ScriptInput extends Input {
 
@@ -27,23 +27,23 @@ public class ScriptInput extends Input {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The script input endpoint.
+     * @param path The scripted input endpoint.
      */
     ScriptInput(Service service, String path) {
         super(service, path);
     }
 
     /**
-     * Returns the end-time.
+     * Returns the time when the scripted input stopped running.
      *
-     * @return The end-time, or {@code null if not specified}
+     * @return The ending time, or {@code null} if not specified.
      */
     public Date getEndTime() {
         return getDate("endtime", null);
     }
 
     /**
-     * Returns the group for this script input.
+     * Returns the OS group of commands for this scripted input.
      *
      * @return The group, or {@code null} if not specified.
      */
@@ -52,7 +52,7 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the source host for this script input.
+     * Returns the source host for this scripted input.
      *
      * @return The source host, or {@code null} if not specified.
      */
@@ -61,7 +61,7 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the index name for this script input.
+     * Returns the index name for this scripted input.
      *
      * @return The index name.
      */
@@ -70,16 +70,16 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the execution frequency for this script input.
+     * Returns the frequency for running this scripted input.
      *
-     * @return The execution frequency in seconds or a cron schedule.
+     * @return The frequency, in seconds or a cron schedule.
      */
     public String getInterval() {
         return getString("interval");
     }
 
     /**
-     * Returns the input type for this script input.
+     * Returns the input kind for this scripted input.
      * @see InputKind
      *
      * @return The input kind.
@@ -89,17 +89,17 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the value of the user this script runs under. Introduced in
-     * 4.2.3
+     * Returns the username that this scripted input runs under.
      *
-     * @return The user that executes this script.
+     * @return The username.
      */
     public String getPassAuth() {
         return getString("passAuth", null);
     }
 
     /**
-     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this script input.
+     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this 
+     * scripted input.
      *
      * @return The {@code _rcvbuf} value.
      */
@@ -108,7 +108,7 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the source.
+     * Returns the source of events from this scripted input.
      *
      * @return The source.
      */
@@ -117,7 +117,7 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the source type.
+     * Returns the source type of events from this scripted input.
      *
      * @return The source type.
      */
@@ -126,38 +126,40 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Returns the start-time.
+     * Returns the time when the script was started.
      *
-     * @return The start-time, or {@code null if not specified}
+     * @return The start time, or {@code null if not specified}.
      */
     public Date getStartTime() {
         return getDate("starttime", null);
     }
 
     /**
-     * Sets whether the script input is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether the scripted input is enabled or disabled. 
+     * You can also do this using the {@code Entity.disable} and 
+     * {@code Entity.enable} methods. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
-     * @param disabled {@code true} to disabled to script input,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable the scripted input, {@code false}
+     * to enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
     }
 
     /**
-     * Sets the value to populate in the host field for events from this data
+     * Sets the value for the <b>host</b> field for events from this scripted
      * input.
      *
-     * @param host the value to populate in the host field for events from this
-     * data input.
+     * @param host The host.
      */
     public void setHost(String host) {
         setCacheValue("host", host);
     }
 
     /**
-     * Sets which index events from this input should be stored in.
+     * Sets the index in which to store events from this scripted input.
      *
      * @param index The index name.
      */
@@ -166,60 +168,57 @@ public class ScriptInput extends Input {
     }
 
     /**
-     * Sets either an interval, in seconds, or cron schedule for how often to
-     * execute the specified script. If a cron schedule is set, the script is
-     * not ececuted on start-up.
+     * Sets an interval or a cron schedule that determines when to run the 
+     * script. If a cron schedule is used, the script doesn't run at startup.
      *
-     * @param interval an interval, in seconds, or cron schedule.
+     * @param interval An interval, in seconds or cron schedule.
      */
     public void setInterval(String interval) {
         setCacheValue("interval", interval);
     }
 
     /**
-     * Sets the script to run as this user.  Introduced in 4.2.3.
+     * Sets a username to run the script under. Splunk generates an 
+     * authorization token for the username and passes it to the script. 
      *
-     * @param passAuth the user.
+     * @param passAuth The username.
      */
     public void setPassAuth(String passAuth) {
         setCacheValue("passAuth", passAuth);
     }
 
     /**
-     * Sets the source name to populate in the source field for events from
-     * this data input. The same source should not be used for multiple data
-     * inputs.
+     * Sets the source name for events from this scripted input. The same source
+     * should not be used for multiple data inputs.
      *
-     * @param name the source name to populate in the source field.
+     * @param name The source name.
      */
     public void setRenameSource(String name) {
         setCacheValue("rename-source", name);
     }
 
     /**
-     * Sets the source key/field for events from this input.
+     * Sets the initial value for the source key for events from this 
+     * input. The source key is used during parsing and indexing. The 
+     * <b>source</b> field is used for searches. As a convenience, the source 
+     * string is prepended with "source::".
+     * <p>
+     * <b>Note:</b> Overriding the source key is generally not recommended. 
+     * Typically, the input layer provides a more accurate string to aid in 
+     * problem analysis and investigation, accurately recording the file from 
+     * which the data was retrieved. Consider the use of source types, tagging, 
+     * and search wildcards before overriding this value.
      *
-     * The key is used during parsing/indexing, in particular to set the source
-     * field during indexing. It is also the source field used at search time.
-     * As a convenience, the chosen string is prepended with 'source::'.
-     *
-     * Note: Overriding the source key is generally not recommended. Typically,
-     * the input layer provides a more accurate string to aid in problem
-     * analysis and investigation, accurately recording the file from which
-     * the data was retreived. Consider use of source types, tagging, and search
-     * wildcards before overriding this value.
-     *
-     * @param source The source key/field for events from this input.
+     * @param source The source.
      */
     public void setSource(String source) {
         setCacheValue("source", source);
     }
 
     /**
-     * Sets the source type to populate in the source type for events from
-     * this data input.
+     * Sets the source type for events from this scripted input.
      *
-     * @param sourcetype the source name to populate in the source type field.
+     * @param sourcetype The source type.
      */
     public void setSourcetype(String sourcetype) {
         setCacheValue("sourcetype", sourcetype);

@@ -43,8 +43,8 @@ public class TcpSplunkInput extends Input {
     }
 
     /**
-     * Returns the style of host connection. Valid values are: {@code ip},
-     * {@code dns}, and {@code none}.
+     * Returns the style of host connection. Valid values are: "ip", "dns", and
+     * "none".
      *
      * @return The style of host connection, or {@code null} if not specified.
      */
@@ -81,7 +81,7 @@ public class TcpSplunkInput extends Input {
     }
 
     /**
-     * Returns the input type for this TCP cooked input.
+     * Returns the input kind for this TCP cooked input.
      * @see InputKind
      *
      * @return The input kind.
@@ -91,8 +91,8 @@ public class TcpSplunkInput extends Input {
     }
 
     /**
-     * Returns the queue for this TCP cooked input. Valid
-     * values are: {@code parsingQueue} and {@code indexQueue}.
+     * Returns the queue for this TCP cooked input. Valid values are:
+     * "parsingQueue" and "indexQueue".
      *
      * @return The queue, or {@code null} if not specified.
      */
@@ -101,7 +101,8 @@ public class TcpSplunkInput extends Input {
     }
 
     /**
-     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this TCP cooked
+     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this 
+     * TCP cooked
      * input.
      *
      * @return The {@code _rcvbuf} value.
@@ -139,7 +140,8 @@ public class TcpSplunkInput extends Input {
     }
 
     /**
-     * Indicates whether this TCP cooked input is using SSL.
+     * Indicates whether this TCP cooked input is using secure socket layer 
+     * (SSL).
      *
      * @return {@code true} if this TCP cooked input is using SSL,
      * {@code false} if not.
@@ -149,9 +151,9 @@ public class TcpSplunkInput extends Input {
     }
 
     /**
-     * Sets Whether or not SSL is used.
+     * Sets whether to use secure socket layer (SSL).
      *
-     * @param SSL Whether or not SSL is used.
+     * @param SSL {@code true} to use SSL, {@code false} if not.
      */
     public void setSSL(boolean SSL) {
         setCacheValue("SSL", SSL);
@@ -159,24 +161,26 @@ public class TcpSplunkInput extends Input {
 
     /**
      * Sets the {@code from-host} for the remote server that is sending data.
-     * Valid values are {@code ip, dns} or {@code none}.
+     * Valid values are: <ul>
+     * <li>"ip": Sets the host to the IP address of the remote server sending 
+     * data.</li>
+     * <li>"dns": Sets the host to the reverse DNS entry for the IP address of 
+     * the remote server sending data.</li>
+     * <li>"none": Leaves the host as specified in inputs.conf, which is 
+     * typically the Splunk system host name.</li></ul>
      *
-     * {@code ip} sets the host to the IP address of the remote server sending
-     * data. {@code dns} sets the host to the reverse DNS entry for the IP
-     * address of the remote server sending data.
-     *
-     * {@code none} leaves the host as specified in inputs.conf, which is
-     * typically the Splunk system hostname.
-     *
-     * @param connection_host How to set the from-host information.
+     * @param connection_host The connection host information.
      */
     public void setConnectionHost(String connection_host) {
         setCacheValue("connection_host", connection_host);
     }
 
     /**
-     * Sets whether this input is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether this input is enabled or disabled.
+     * You can also do this using the {@code Entity.disable} and 
+     * {@code Entity.enable} methods. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to script input,
      * {@code false} to enable.
@@ -188,16 +192,16 @@ public class TcpSplunkInput extends Input {
     /**
      * Sets the host from which the indexer gets data.
      *
-     * @param host The host from which the indexer gets data.
+     * @param host The host.
      */
     public void setHost(String host) {
         setCacheValue("host", host);
     }
 
     /**
-     * Sets a restriction to accept inputs from only this host.
+     * Sets a restriction to accept inputs from the specified host only.
      *
-     * @param restrictToHost Restrict to accept inputs only from this host.
+     * @param restrictToHost The host.
      */
     public void setRestrictToHost(String restrictToHost) {
         setCacheValue("restrictToHost", restrictToHost);

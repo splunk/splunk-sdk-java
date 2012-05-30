@@ -53,7 +53,7 @@ public class WindowsEventLogInput extends Input {
     }
 
     /**
-     * Returns the input type of this Windows Event Log input.
+     * Returns the input kind of this Windows Event Log input.
      * @see InputKind
      *
      * @return The input kind.
@@ -101,17 +101,16 @@ public class WindowsEventLogInput extends Input {
      * The first host should be specified with "lookup_host", and the additional
      * ones using this parameter.
      *
-     * @param hosts The comma-separated list of additional hosts to be
-     * monitored.
+     * @param hosts The comma-separated list of additional hosts.
      */
     public void setHosts(String hosts) {
         setCacheValue("hosts", hosts);
     }
 
     /**
-     * Sets index in which to store all generated events.
+     * Sets the index in which to store all generated events.
      *
-     * @param index The index in which to store all generated events.
+     * @param index The index name.
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
@@ -120,17 +119,18 @@ public class WindowsEventLogInput extends Input {
     /**
      * Sets the list of event log names to gather data from.
      *
-     * @param logs The list of event log names to gather data from.
+     * @param logs The list of event log names.
      */
     public void setLogs(String logs) {
         setCacheValue("logs", logs);
     }
 
     /**
-     * Sets the host from which we will monitor log events. To specify
-     * additional hosts to be monitored via WMI, use the "hosts" parameter.
+     * Sets the host from which to monitor log events. To specify additional 
+     * hosts to be monitored using WMI, use the {@code hosts} parameter.
+     * @see #getHosts
      *
-     * @param lookup_host The host from which we will monitor log events.
+     * @param lookup_host The host.
      */
     public void setLookupHost(String lookup_host) {
         setCacheValue("lookup_host", lookup_host);

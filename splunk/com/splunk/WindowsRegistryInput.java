@@ -45,7 +45,7 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns the regular expression (regex) that is executed against process 
+     * Returns the regular expression (regex) that is compared to process 
      * names when including or excluding events for this Windows Registry input.
      * Changes are only collected if a process name matches this regex. 
      *
@@ -74,7 +74,7 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns the input type for this Windows Registry input.
+     * Returns the input kind for this Windows Registry input.
      * @see InputKind
      *
      * @return The input kind.
@@ -95,7 +95,7 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns the regular expression (regex) that is executed against registry
+     * Returns the regular expression (regex) that is compared to registry
      * event types for this Windows Registry input. Only types that match
      * this regex are monitored.
      *
@@ -106,19 +106,21 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Sets whether or not to establish a baseline value for the registry keys.
-     * {@code True} means yes, {@code False} means no.
+     * Sets whether to establish a baseline value for the registry keys.
      *
-     * @param baseline Whether or not to establish a baseline value for the
-     * registry keys.
+     * @param baseline {@code true} to establish a baseline value, {@code false}
+     * if not.
      */
     public void setBaseline(boolean baseline) {
         setCacheValue("baseline", baseline);
     }
 
     /**
-     * Sets whether this input is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether this input is enabled or disabled.
+     * You can also do this using the {@code Entity.disable} and 
+     * {@code Entity.enable} methods. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to script input,
      * {@code false} to enable.
@@ -130,47 +132,48 @@ public class WindowsRegistryInput extends Input {
     /**
      * Sets the registry hive under which to monitor for changes.
      *
-     * @param hive The registry hive under which to monitor for changes.
+     * @param hive The registry hive.
      */
     public void setHive(String hive) {
         setCacheValue("hive", hive);
     }
 
     /**
-     * Sets index in which to store all generated events.
+     * Sets the index in which to store all generated events.
      *
-     * @param index The index in which to store all generated events.
+     * @param index The index name.
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
     }
 
     /**
-     * Sets whether or not to monitor the subnodes of the given registry hive.
-     * {@code True} means to monitor, {@code false} mean not to monitor
-     * the subnodes.
+     * Sets whether to monitor the subnodes of the given registry hive.
      *
-     * @param monitorSubnodes Whether or not to monitor the subnodes.
+     * @param monitorSubnodes {@code true} for this Windows Registry input to 
+     * monitor all sub-nodes, {@code false} if not.
      */
     public void setMonitorSubnodes(boolean monitorSubnodes) {
         setCacheValue("monitorSubnodes", monitorSubnodes);
     }
 
     /**
-     * Sets the process regular expression. If specified, will only collect
-     * changes if a process name matches that regex.
+     * Sets the process regular expression (regex) that is compared to process 
+     * names when including or excluding events for this Windows Registry input.
+     * Changes are only collected if a process name matches this regex. 
      *
-     * @param proc The process regular expression.
+     * @param proc The process regex.
      */
     public void setProc(String proc) {
         setCacheValue("proc", proc);
     }
 
     /**
-     * Sets the type regular expression. If specified, will only collect
-     * changes if a type name matches that regex.
+     * Sets the regular expression (regex) that is compared to registry
+     * event types for this Windows Registry input. Only types that match
+     * this regex are monitored.
      *
-     * @param type The type regular expression.
+     * @param type The type regex.
      */
     public void setType(String type) {
         setCacheValue("type", type);

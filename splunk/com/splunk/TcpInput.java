@@ -27,7 +27,7 @@ public class TcpInput extends Input {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The TCP input endpoint.
+     * @param path The TCP raw input endpoint.
      */
     TcpInput(Service service, String path) {
         super(service, path);
@@ -43,8 +43,8 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the style of host connection. Valid values are: {@code ip},
-     * {@code dns}, and {@code none}.
+     * Returns the style of host connection. Valid values are: "ip", "dns", and
+     * "none".
      *
      * @return The style of host connection, or {@code null} if not specified.
      */
@@ -81,7 +81,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the input type of this TCP input.
+     * Returns the input kind of this TCP input.
      * @see InputKind
      *
      * @return The input kind.
@@ -92,7 +92,7 @@ public class TcpInput extends Input {
 
     /**
      * Returns the queue for this TCP input. Valid values are:
-     * {@code parsingQueue} and {@code indexQueue}.
+     * "parsingQueue" and "indexQueue".
      *
      * @return The queue, or {@code null} if not specified.
      */
@@ -101,7 +101,8 @@ public class TcpInput extends Input {
     }
 
     /**
-     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this TCP input.
+     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this 
+     * TCP input.
      *
      * @return The {@code _rcvbuf} value.
      */
@@ -111,7 +112,7 @@ public class TcpInput extends Input {
 
     /**
      * Returns the incoming host restriction for this TCP input. When specified, 
-     * this inputonly accepts data from the specified host. 
+     * this input only accepts data from the specified host. 
      *
      * @return The incoming host restriction, or {@code null} if not specified.
      */
@@ -120,8 +121,8 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the initial source key for this TCP input.
-     * Typically this value is the input file path.
+     * Returns the initial source key for this TCP input. Typically this value 
+     * is the input file path.
      *
      * @return The source key, or {@code null} if not specified.
      */
@@ -130,16 +131,16 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the event source type for this TCP input.
+     * Returns the source type for events from this TCP input.
      *
-     * @return The event source type, or {@code null} if not specified.
+     * @return The source type, or {@code null} if not specified.
      */
     public String getSourceType() {
         return getString("sourcetype", null);
     }
 
     /**
-     * Indicates whether this TCP input is using SSL.
+     * Indicates whether this TCP input is using secure socket layer (SSL).
      *
      * @return {@code true} if this TCP input is using SSL, {@code false} if
      * not.
@@ -149,9 +150,9 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Sets Whether or not SSL is used.
+     * Sets whether to use secure socket layer (SSL).
      *
-     * @param SSL Whether or not SSL is used.
+     * @param SSL {@code true} to use SSL, {@code false} if not.
      */
     public void setSSL(boolean SSL) {
         setCacheValue("SSL", SSL);
@@ -159,24 +160,26 @@ public class TcpInput extends Input {
 
     /**
      * Sets the {@code from-host} for the remote server that is sending data.
-     * Valid values are {@code ip, dns} or {@code none}.
+     * Valid values are: <ul>
+     * <li>"ip": Sets the host to the IP address of the remote server sending 
+     * data.</li>
+     * <li>"dns": Sets the host to the reverse DNS entry for the IP address of 
+     * the remote server sending data.</li>
+     * <li>"none": Leaves the host as specified in inputs.conf, which is 
+     * typically the Splunk system host name.</li></ul>
      *
-     * {@code ip} sets the host to the IP address of the remote server sending
-     * data. {@code dns} sets the host to the reverse DNS entry for the IP
-     * address of the remote server sending data.
-     *
-     * {@code none} leaves the host as specified in inputs.conf, which is
-     * typically the Splunk system hostname.
-     *
-     * @param connection_host How to set the from-host information.
+     * @param connection_host The connection host information.
      */
     public void setConnectionHost(String connection_host) {
         setCacheValue("connection_host", connection_host);
     }
 
     /**
-     * Sets whether this input is enabled or disabled. Note that the
-     * supported disabled mechanism, is to use the @{code disable} action.
+     * Sets whether this input is enabled or disabled.
+     * You can also do this using the {@code Entity.disable} and 
+     * {@code Entity.enable} methods. 
+     * @see Entity#disable
+     * @see Entity#enable
      *
      * @param disabled {@code true} to disabled to script input,
      * {@code false} to enable.
@@ -188,80 +191,70 @@ public class TcpInput extends Input {
     /**
      * Sets the host from which the indexer gets data.
      *
-     * @param host The host from which the indexer gets data.
+     * @param host The host name.
      */
     public void setHost(String host) {
         setCacheValue("host", host);
     }
 
     /**
-     * Sets index in which to store all generated events.
+     * Sets the index in which to store all generated events.
      *
-     * @param index The index in which to store all generated events.
+     * @param index The index name.
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
     }
 
     /**
-     * Sets where the input processor should deposit the events it reads.
-     * Valid values are {code parsingQueue} or {@code indexQueue}.
+     * Sets how the input processor should deposit the events it reads. Valid 
+     * values are:<ul>
+     * <li>{@code parsingQueue}: Applies props.conf and other parsing rules to 
+     * your data.</li>
+     * <li>{@code indexQueue}: Sends your data directly into the index.</li>
+     * </ul>
      *
-     * Defaults to {@code parsingQueue}.
-     *
-     * Set queue to parsingQueue to apply props.conf and other parsing rules
-     * to your data. For more information about props.conf and rules for
-     * timestamping and linebreaking.
-     *
-     * Set queue to {@code indexQueue} to send your data directly into the
-     * index.
-     *
-     * @param queue The queue processing type.
+     * @param queue The queue-processing type.
      */
     public void setQueue(String queue) {
         setCacheValue("queue", queue);
     }
 
     /**
-     * Sets the timeout value for adding a Done-key, in seconds. The default
-     * value is 10 seconds.
+     * Sets the timeout value for adding a Done key. 
      *
-     *  If a connection over the port specified by name remains idle after
-     *  receiving data for specified number of seconds, it adds a Done-key. This
-     *  implies the last event has been completely received. Introduced in
-     *  4.3.
+     * If a connection over the input port specified by {@code name} remains 
+     * idle after receiving data for this specified number of seconds, it adds 
+     * a Done key, implying that the last event has been completely received.
      *
-     * @param rawTcpDoneTimeout timeout value for adding a Done-key.
+     * @param rawTcpDoneTimeout The timeout value, in seconds.
      */
     public void setRawTcpDoneTimeout(int rawTcpDoneTimeout) {
         setCacheValue("rawTcpDoneTimeout", rawTcpDoneTimeout);
     }
 
     /**
-     * Sets a restriction to accept inputs from only this host.
+     * Sets a restriction to accept inputs from the specified host only.
      *
-     * @param restrictToHost Restrict to accept inputs only from this host.
+     * @param restrictToHost The host.
      */
     public void setRestrictToHost(String restrictToHost) {
         setCacheValue("restrictToHost", restrictToHost);
     }
 
     /**
-     * Sets the source key/field for events from this input. Defaults to the
-     * input file path.
+     * Sets the initial value for the source key for events from this 
+     * input. The source key is used during parsing and indexing. The 
+     * <b>source</b> field is used for searches. As a convenience, the source 
+     * string is prepended with "source::".
+     * <p>
+     * <b>Note:</b> Overriding the source key is generally not recommended. 
+     * Typically, the input layer provides a more accurate string to aid in 
+     * problem analysis and investigation, accurately recording the file from 
+     * which the data was retrieved. Consider the use of source types, tagging, 
+     * and search wildcards before overriding this value.
      *
-     * Sets the source key's initial value. The key is used during
-     * parsing/indexing, in particular to set the source field during indexing.
-     * It is also the source field used at search time. As a convenience,
-     * the chosen string is prepended with 'source::'.
-     *
-     * Note: Overriding the source key is generally not recommended. Typically,
-     * the input layer provides a more accurate string to aid in problem
-     * analysis and investigation, accurately recording the file from which
-     * the data was retreived. Consider use of source types, tagging, and search
-     * wildcards before overriding this value.
-     *
-     * @param source the source key/field for events from this input.
+     * @param source The source.
      */
     public void setSource(String source) {
         setCacheValue("source", source);
@@ -270,7 +263,7 @@ public class TcpInput extends Input {
     /**
      * Sets the source type for events from this input.
      *
-     * @param sourcetype the for events from this input.
+     * @param sourcetype The source type.
      */
     public void setSourceType(String sourcetype) {
         setCacheValue("sourcetype", sourcetype);

@@ -34,10 +34,11 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
     }
 
     /**
-     * Constructs an instance of the {@code SavedSearchCollection}.
+     * Class constructor.
      *
-     * @param service The service the entity is affiliated with.
-     * @param args Arguments use at instantiation, such as count and offset.
+     * @param service The connected {@code Service} instance.
+     * @param args Arguments to use when you instantiate the entity, such as 
+     * "count" and "offset".
      */
     SavedSearchCollection(Service service, Args args) {
         super(service, "saved/searches", SavedSearch.class, args);
