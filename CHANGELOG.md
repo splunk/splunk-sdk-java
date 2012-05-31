@@ -2,16 +2,21 @@
 
 ## develop
 
-### Added Features
+### New APIs
+* `StormService` class
+* `Receiver` class
+* `Upload` class
+* New setter methods for all classes
+* New getter methods for various classes
 
-* Add a `Receiver` class.
+### New features
+* Added support for a default index, allowing optional parameters
+  for streaming connections. The `Index` class now uses the new `Receiver` 
+  class.
 
-* Add support for index-less (default index) and allow optional parameters for
-  streaming connections. The Index class now uses the new Receiver class.
-
-* Add paginate feature for splunk return data. This allows for count/offset
-  method to page through splunk meta data instead of retrieving all the data
-  at once:
+* Added a paginate feature for Splunk return data. This feature allows for 
+  count and offset methods to page through Splunk meta data instead of 
+  retrieving all the data at once:
 ```
     ConfCollection confs;
     Args args = new Args();
@@ -25,16 +30,15 @@
     confs = service.getConfs(args);
     // ... operate on the next 30 elements
 ```
-* Add namespacing feature. Added as optional arguments to the collection
-  create and get methods, `app` and `owner` and `sharing` control the namespace.
-  For a more detailed description of Splunk namespaces in the Splunk REST API
-  reference under the section on accessing Splunk resources, see:
+* Added a namespacing feature as optional arguments (`app`, `owner`, `sharing`)
+  to the collection's create and get methods. For more information, see the 
+  ["Overview of the Splunk Java SDK"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN) 
+  page on the Developer Portal.
 
-  http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTresources
+  The following example shows how to use the optional namespace to restrict
+  creating and selecting saved searches to the namespace `owner=magilicuddy`, 
+  `app=oneMeanApp`: 
 
-  An example of using the optional namespace to restrict the creation and
-  selection of saved searches to the specific namespace where `owner` is set to
-  "magilicuddy" and the `app` is set to "oneMeanApp".
 ```
     String searchName = "My scoped search";
     String search = "index=main * | head 10";
@@ -47,8 +51,8 @@
     savedSearches.create(searchName, search, args);
 ```
 
-  And the subsequent usage elsewhere, will return all the saved searches within
-  the scoped namespace.
+  This example shows how to returns all saved searches within that scoped 
+  namespace:
 
 ```
     args args = new Args();
@@ -58,17 +62,17 @@
         mySavedSearches = service.getSavedSearches(args);
 ```
 
-* Add XML, JSON and CSV streaming results reader. This feature allows one to
-  retrieve event data via an incremental streaming mechanism. Return data is in
-  key/value pairs. The XML form uses built-in JDK XML parsing support. The JSON
-  and CSV form requires third party JSON and CSV tokenizers which are included
-  as ancillary jar files in the SDK. For clarity, the JSON and CSV streaming
-  results reader, which require the external tokenizers, are contained in a
-  separate splunk jar file named, splunk-external.jar.
+* Added an XML, JSON, and CSV streaming results reader. This feature allows you
+  to retrieve event data using an incremental streaming mechanism. Return data 
+  is in key-value pairs. The XML form uses built-in JDK XML parsing support. The
+  JSON and CSV form requires third-party JSON and CSV tokenizers, which are 
+  included as ancillary .jar files in the SDK. The JSON and CSV streaming
+  results reader, which requires the external tokenizers, are contained in a
+  separate Splunk .jar file named `splunk-external.jar`.
 
-  The example here is using the built-in XML streaming reader:
+  The following example uses the built-in XML streaming reader:
+
 ```
-
     Job job = service.getJobs().create(query, queryArgs);
     ...
 
@@ -81,17 +85,11 @@
     }
 ```
 
-* Add an Upload class. This class is available to query in-progress file
-  uploads.
-
-* Add class setter methods.
-
-* Add missing getter methods.
-
-* Add support for Splunk Storm. Instead of connecting to `Service`, connect to
-  `Storm`. The same semantics that `Service` uses, applies here. Get a
+* Added support for Splunk Storm. Instead of connecting to `Service`, you 
+  connect to the new `StormService` class using similar parameters. Then, get a
   `Receiver` object and log events. `StormService` requires the `index` key and
   `sourcetype` parameters when sending events:
+  
 ```
     // the storm token provided by Splunk
     Args loginArgs = new Args("StormToken",
@@ -109,29 +107,29 @@
     // log an event.
     receiver.log("This is a test event from the SDK", logArgs);
 ```
-### Minor Additions
+### Minor additions
 
-* Add `genevents` example, to generate events and push into splunk using various
-  methods.
-* Add second time format when parsing time. A second time format is required to
-  accommodate the `data/input/oneshot` endpoint that does not return a
-  standard time-format and does not allow a time-format specifier.
-* Add streaming reader to search examples. The main search example `search`,
-  shows how to use all three result readers. Note that there are  build
-  modifications in build.xml to include the ancillary jar files for JSON and
+* Added a `genevents` example to generate events and push into Splunk using 
+  various methods.
+* Added a second time format when parsing time. A second time format is required
+  to accommodate the `data/input/oneshot` endpoint that does not return a
+  standard time format and does not allow a time-format specifier.
+* Added a streaming reader to search examples. The main search example `search`
+  shows how to use all three result readers. Note: There are build
+  modifications in build.xml to include the ancillary .jar files for JSON and
   CSV.
-* Add a Input example to display splunk inputs and their attributes.
-* Add alias `log` for `submit` to the Receiver class.
+* Added an `Input` example to display Splunk inputs and their attributes.
+* Added an alias `log` for `submit` to the `Receiver` class.
 
 ### Bug fixes
 
-* Fix argument processing in tail example.
-* Fix timing window during search job creation;
-  add splunk exception `JOB_NOT_READY`.
-* Fix `Index` cleaning to require timeout value; add splunk exception `TIMEOUT`.
-* Fix LicensePool creation to use string quota instead integer.
-  Allows for `MAX` and `<number>[M|G|T]`
-* Fix `action` when trying to update `Settings`.
-* Fix user creation to force lowercase usernames.
-* Fix ServiceInfo missing get methods.
-* Fix a number of getter methods.
+* Fixed argument processing in the tail example.
+* Fixed timing window during search job creation; added `JOB_NOT_READY` 
+  exception.
+* Fixed `Index` cleaning to require a timeout value; added `TIMEOUT` exception.
+* Fixed `LicensePool` type to use string quota instead of integer. This change
+  allows for `MAX` and `<number>[M|G|T]`.
+* Fixed `action` when trying to update `Settings`.
+* Fixed user creation to force lowercase usernames.
+* Fixed the missing get methods for `ServiceInfo`.
+* Fixed a number of getter methods.
