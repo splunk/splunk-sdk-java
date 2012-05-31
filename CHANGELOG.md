@@ -15,7 +15,7 @@
   class.
 
 * Added a paginate feature for Splunk return data. This feature allows for 
-  count and offset methods to page through Splunk meta data instead of 
+  `count` and `offset` methods to page through Splunk meta data instead of 
   retrieving all the data at once:
 ```
     ConfCollection confs;
@@ -31,13 +31,14 @@
     // ... operate on the next 30 elements
 ```
 * Added a namespacing feature as optional arguments (`app`, `owner`, `sharing`)
-  to the collection's create and get methods. For more information, see the 
+  to the collection's `create` and `get` methods. For more information about 
+  namespaces, see 
   ["Overview of the Splunk Java SDK"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN) 
-  page on the Developer Portal.
+  on the Developer Portal.
 
   The following example shows how to use the optional namespace to restrict
-  creating and selecting saved searches to the namespace `owner=magilicuddy`, 
-  `app=oneMeanApp`: 
+  creating and selecting saved searches to the namespace "owner = magilicuddy, 
+  app = oneMeanApp": 
 
 ```
     String searchName = "My scoped search";
@@ -51,7 +52,7 @@
     savedSearches.create(searchName, search, args);
 ```
 
-  This example shows how to returns all saved searches within that scoped 
+  This example shows how to returns all saved searches within the same scoped 
   namespace:
 
 ```
@@ -86,10 +87,10 @@
 ```
 
 * Added support for Splunk Storm. Instead of connecting to `Service`, you 
-  connect to the new `StormService` class using similar parameters. Then, get a
+  connect to the new `StormService` class using similar arguments. Then, get a
   `Receiver` object and log events. `StormService` requires the `index` key and
   `sourcetype` parameters when sending events:
-  
+
 ```
     // the storm token provided by Splunk
     Args loginArgs = new Args("StormToken",
@@ -115,7 +116,7 @@
   to accommodate the `data/input/oneshot` endpoint that does not return a
   standard time format and does not allow a time-format specifier.
 * Added a streaming reader to search examples. The main search example `search`
-  shows how to use all three result readers. Note: There are build
+  shows how to use all three result readers. There are build
   modifications in build.xml to include the ancillary .jar files for JSON and
   CSV.
 * Added an `Input` example to display Splunk inputs and their attributes.
