@@ -33,10 +33,10 @@ public class DeploymentTenantTest extends SplunkTestCase {
 
         for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
             assertTrue(assertRoot + "#1",
-                deploymentTenant.getWhiteListByIndex(0).length() > 0);
+                deploymentTenant.getWhitelistByIndex(0).length() > 0);
             deploymentTenant.isDisabled();
             for (int i=0; i<10; i++)
-                deploymentTenant.getWhiteListByIndex(i);
+                deploymentTenant.getWhitelistByIndex(i);
         }
     }
 }

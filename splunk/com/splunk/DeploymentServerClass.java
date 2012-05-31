@@ -38,7 +38,7 @@ public class DeploymentServerClass extends Entity {
      * @return A comma-separated list of excluded hosts, or {@code null} if not
      * specified.
      */
-    public String getBlackList() {
+    public String getBlacklist() {
         return getString("blacklist", null);
     }
 
@@ -50,7 +50,7 @@ public class DeploymentServerClass extends Entity {
      * @return A list of excluded client addresses, or {@code null} if not
      * specified.
      */
-    public String getBlackListByIndex(int index) {
+    public String getBlacklistByIndex(int index) {
         return getString(String.format("blacklist.%d", index), null);
     }
 
@@ -131,7 +131,7 @@ public class DeploymentServerClass extends Entity {
      * @return A comma-separated list of included hosts, or {@code null} if not
      * specified.
      */
-    public String getWhiteList() {
+    public String getWhitelist() {
         return getString("whitelist", null);
     }
 
@@ -143,7 +143,7 @@ public class DeploymentServerClass extends Entity {
      * @return A list of included client addresses, or {@code null} if not
      * specified.
      */
-    public String getWhiteListByIndex(int index) {
+    public String getWhitelistByIndex(int index) {
         return getString(String.format("whitelist.%d", index), null);
     }
 
@@ -153,7 +153,7 @@ public class DeploymentServerClass extends Entity {
      * @param index The index of the blacklist entry to set.
      * @param blacklist The blacklist entry.
      */
-    public void setBlackListByIndex(int index, String blacklist) {
+    public void setBlacklistByIndex(int index, String blacklist) {
         setCacheValue(String.format("blacklist.%d", index), blacklist);
     }
 
@@ -237,7 +237,7 @@ public class DeploymentServerClass extends Entity {
      * @param index The index of the whitelist entry to set.
      * @param whitelist The whitelist entry.
      */
-    public void setWhiteListByIndex(int index, String whitelist) {
+    public void setWhitelistByIndex(int index, String whitelist) {
         setCacheValue(String.format("whitelist.%d", index), whitelist);
     }
 }

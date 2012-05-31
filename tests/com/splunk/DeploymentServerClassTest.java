@@ -51,7 +51,7 @@ public class DeploymentServerClassTest extends SplunkTestCase {
         for (int i=0; i< 10; i++)
             assertEquals(assertRoot + "#1",
                 String.format("bad%d.splunk.com", i),
-                deploymentServerClass.getBlackListByIndex(i));
+                deploymentServerClass.getBlacklistByIndex(i));
         assertEquals(assertRoot + "#2",
             args.get("continueMatching"),
             deploymentServerClass.getContinueMatching());
@@ -60,19 +60,19 @@ public class DeploymentServerClassTest extends SplunkTestCase {
         for (int i=0; i< 10; i++)
             assertEquals(assertRoot + "#4",
                 String.format("good%d.splunk.com", i),
-                deploymentServerClass.getWhiteListByIndex(i));
+                deploymentServerClass.getWhitelistByIndex(i));
         String filter = deploymentServerClass.getFilterType();
 
         // modify
         // N.B. paths are OS specific, and not tested here.
         // and updates to black and whitelist are all or nothing.
         for (int i=0; i< 10; i++)
-            deploymentServerClass.setBlackListByIndex(i,
+            deploymentServerClass.setBlacklistByIndex(i,
                     String.format("maybe%d.splunk.com", i));
         deploymentServerClass.setContinueMatching(true);
         deploymentServerClass.setFilterType("blacklist");
         for (int i=0; i< 10; i++)
-            deploymentServerClass.setWhiteListByIndex(i,
+            deploymentServerClass.setWhitelistByIndex(i,
                     String.format("maybe%d.splunk.com", i));
         deploymentServerClass.update();
 
@@ -80,7 +80,7 @@ public class DeploymentServerClassTest extends SplunkTestCase {
         for (int i=0; i< 10; i++)
             assertEquals(assertRoot + "#5",
                 String.format("maybe%d.splunk.com", i),
-                deploymentServerClass.getBlackListByIndex(i));
+                deploymentServerClass.getBlacklistByIndex(i));
         assertTrue(assertRoot + "#6",
             deploymentServerClass.getContinueMatching());
         assertEquals(assertRoot + "#7",
@@ -88,27 +88,27 @@ public class DeploymentServerClassTest extends SplunkTestCase {
         for (int i=0; i< 10; i++)
             assertEquals(assertRoot + "#8",
                 String.format("maybe%d.splunk.com", i),
-                deploymentServerClass.getWhiteListByIndex(i));
+                deploymentServerClass.getWhitelistByIndex(i));
 
         // cleanup & restore sane values
         for (int i=0; i< 10; i++)
-            deploymentServerClass.setBlackListByIndex(i,
+            deploymentServerClass.setBlacklistByIndex(i,
                     String.format("bad%d.splunk.com", i));
         deploymentServerClass.setContinueMatching(false);
         deploymentServerClass.setFilterType(filter);
         for (int i=0; i< 10; i++)
-            deploymentServerClass.setWhiteListByIndex(i,
+            deploymentServerClass.setWhitelistByIndex(i,
                     String.format("good%d.splunk.com", i));
 
         for (DeploymentServerClass deploymentServerClass1:
                 deploymentServerClasses.values()) {
             assertTrue(assertRoot + "#9",
                 deploymentServerClass1.getRepositoryLocation().length() > 0);
-            deploymentServerClass1.getBlackList();
+            deploymentServerClass1.getBlacklist();
             deploymentServerClass1.getEndpoint();
             deploymentServerClass1.getTargetRepositoryLocation();
             deploymentServerClass1.getTmpFolder();
-            deploymentServerClass1.getWhiteList();
+            deploymentServerClass1.getWhitelist();
         }
 
         // N.B. No REST endpoint to delete a deployment server class.

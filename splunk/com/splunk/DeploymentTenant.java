@@ -40,7 +40,7 @@ public class DeploymentTenant extends Entity {
      * @return Criteria for determining deployment client access to this
      * deployment server.
      */
-    public String getWhiteListByIndex(int index) {
+    public String getWhitelistByIndex(int index) {
         return getString(String.format("whitelist.%d", index), null);
     }
 

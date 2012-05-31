@@ -33,9 +33,9 @@ public class DeploymentServerTest extends SplunkTestCase {
 
         for (DeploymentServer deploymentServer: deploymentServers.values()) {
             assertTrue(assertRoot + "#1",
-                deploymentServer.getWhiteListByIndex(0).length() > 0);
+                deploymentServer.getWhitelistByIndex(0).length() > 0);
             for (int i=0; i<10; i++)
-                deploymentServer.getWhiteListByIndex(i);
+                deploymentServer.getWhitelistByIndex(i);
         }
     }
 }

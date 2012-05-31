@@ -40,7 +40,7 @@ public class DeploymentServer extends Entity {
      * @return A list of included client addresses, or {@code null} if not
      * specified.
      */
-    public String getWhiteListByIndex(int index) {
+    public String getWhitelistByIndex(int index) {
         return getString(String.format("whitelist.%d", index), null);
     }
 
