@@ -18,23 +18,25 @@ that are enabled by Splunk's unique capabilities.
 
 ## License
 
-The Splunk Software Development Kit for Java is licensed under the Apache
-License 2.0. Details can be found in the file LICENSE.
+The Splunk Java SDK is licensed under the Apache License 2.0. Details can be 
+found in the LICENSE file.
 
-## This SDK is a Preview Release
+## The Splunk Java SDK is a Preview release
 
-1.  This Preview release is a pre-beta release.  There will also be a beta 
-    release prior to a general release. It is incomplete and may have bugs.
+1.  This Preview is a pre-Beta release that is incomplete and may have
+    bugs. There will be a Beta release prior to a general release.
 
-2.  The Apache license only applies to the SDK and no other Software provided 
-    by Splunk.
+2.  The Apache License only applies to the Splunk Java SDK and no other Software
+    provided by Splunk.
 
-3.  Splunk in using the Apache license is not providing any warranties, 
-    indemnification or accepting any liabilities  with the Preview SDK.
+3.  Splunk, in using the Apache License, does not provide any warranties or 
+    indemnification, and does not accept any liabilities with the Preview 
+    release of the SDK.
 
-4.  Splunk is not accepting any Contributions to the Preview release of 
-    the SDK.  
-    All Contributions during the Preview SDK will be returned without review.
+4.  We are now accepting contributions from individuals and companies to our 
+    Splunk open source projects. See the 
+    [Open Source](http://dev.splunk.com/view/opensource/SP-CAAAEDM) page for 
+    more information.
 
 ## Getting started with the Splunk Java SDK
 
@@ -42,6 +44,9 @@ The Splunk Java SDK contains library code and examples that show how to
 programmatically interact with Splunk for a variety of scenarios including 
 searching, saved searches, data inputs, and many more, along with building 
 complete applications. 
+
+For more information about the Splunk Java SDK, see the 
+[Developer Portal](http://dev.splunk.com/view/java-sdk/SP-CAAAECN). 
 
 ### Requirements
 
@@ -209,156 +214,7 @@ Eclipse. For example, to open the Splunk Java SDK project in Eclipse:
 3.  In Select root directory, type the path to the Splunk Java SDK root
     directory (or click Browse to locate it), then click Finish. 
 
-## The Splunk Java SDK components
 
-The Splunk developer platform consists of three primary components: splunkd, 
-the engine; splunkweb, the app framework that sits on top of the engine; and 
-the Splunk SDKs that interface with the REST API and extension points.
-
-The Splunk Java SDK lets you target splunkd by making calls against the 
-engine's REST API and accessing the various splunkd extension points such as 
-custom search commands, lookup functions, scripted inputs, and custom REST 
-handlers.
-
-For more information about the API, see the Splunk Java SDK documentation 
-(http://splunk.github.com/splunk-sdk-java/docs/0.1.0/index.html).
-
-### Service
-
-The Service class is the primary entry point for the client library. 
-Construct an instance of the Service class and provide any arguments that are 
-required to connect to an available Splunk server. Once the Service instance 
-is created, call the login() method and provide login credentials. Once you 
-have an authenticated Service instance, you can use it to navigate, 
-enumerate, and operate on a wide variety of Splunk resources. You can also 
-use it to issue searches and make REST API calls. 
-
-The following example creates a Service instance and prints the Splunk 
-version number:
-
-    import com.splunk.Service;
-    
-    public class Program {
-        public static void run(String[] args) {
-            Service service = new Service("localhost", 8089);
-            service.login("admin", "changeme");
-            ServiceInfo serviceInfo = service.getInfo();
-            System.out.println(serviceInfo.getVersion());
-        }
-    }
-
-The Service class provides a variety of constructor overloads to handle 
-various scenarios that require different combinations of arguments. In the 
-most general case, the Service class takes a map of arguments, which 
-simplifies passing large and varying combinations of arguments, as shown in 
-the following example:
-
-    Map<String, Object> args = new HashMap<String, Object>();
-    args.put("host", "localhost");
-    args.put("port", 8089);
-    Service service = new Service(args);
-    service.login("admin", "changeme");
-
-The Service class also provides a static helper method that takes a map and 
-combines the construction and authentication of the instance into a single 
-call. Because of its flexibility, it is the method that is used most often in 
-the SDK examples and unit tests. The following example shows how to use this 
-helper method:
-
-    Map<String, Object> args = new HashMap<String, Object>();
-    args.put("host", "localhost");
-    args.put("port", 8089);
-    args.put("scheme", "https");
-    args.put("app", "MyApp");
-    args.put("owner", "nobody");
-    args.put("username", "admin");
-    args.put("password", "changeme");
-    Service service = Service.connect(args);
-
-### Entities and collections
-
-The Splunk REST API consists of over 160 endpoints that provide access to 
-almost every feature of Splunk. The majority of the Splunk Java SDK API 
-follows a convention of exposing resources as collections of entities, where 
-an entity is a resource that has properties, actions, and metadata that 
-describes the entity. The entity/collection pattern provides a consistent 
-approach to interacting with resources and collections of resources. 
-
-For example, the following code prints all Splunk users:
-
-    Service service = Service.connect(...);
-    for (User user : service.getUsers().values())
-        System.out.println(user.getName());
-
-Similarly, the following code prints all the Splunk apps:
-
-    Service service = Service.connect(...);
-    for (Application app : service.getApplications().values())
-    System.out.println(app.getName());
-
-Collections use a common mechanism to create and remove entities. Entities 
-use a common mechanism to retrieve and update property values, and access 
-entity metadata. Once you're familiar with this pattern, you'll have a 
-reasonable understanding of how the SDK and underlying REST API work. 
-
-The SDK contains the base classes Entity and EntityCollection, both of which 
-derive from the common base class Resource. Note that Service is not a 
-Resource, but is a container that provides access to all features associated 
-with a Splunk instance. 
-
-The class hierarchy for the core SDK library is as follows:
-
-    Service
-    Resource
-        Entity
-        ResourceCollection
-            EntityCollection
-
-### Client state
-
-Instances of the Resource class maintain a client-side copy of the state of 
-the corresponding Splunk resource. For example, an entity will have a copy of 
-its properties, and a collection will have a copy of its members. When you 
-request a property (or collection member), the local copy is returned if it's 
-available. Otherwise, a new copy is requested from the server if it's not 
-available or if the local copy is known to be out of date (for example, when 
-the update method was just called).
-
-Note: In general, there is no way to determine whether your local client 
-state is in sync with the server other than forcing a refresh of the 
-corresponding Resource instance.
-
-The Resource class provides the following methods for managing client-side 
-state:
-
-*   The `refresh` method unconditionally refreshes the client state for the 
-    object.
-
-*   The `invalidate` method marks the local state as invalid, and it is 
-    refreshed the next time the object's state is accessed. 
-
-*   The `validate` method checks whether the local state has been marked 
-    invalid and calls the refresh method if necessary.
-
-
-### Search
-
-One of the primary features of Splunk is running searches and retrieving 
-search results. The following code example shows how to create a search job, 
-poll for completion, and retrieve the result stream:
-
-    Service service = Service.connect(...);
-    Job job = service.getJobs().create("search * | head 10")
-    while (!job.isDone()) {
-        Thread.sleep(2000);
-        job.refresh();
-    }
-    InputStream stream = job.getResults();
-
-The SDK API has many features such as real-time search, numerous search 
-options, various types of search results, and the ability to execute 
-synchronous and asynchronous search requests. To explore core search 
-features, see the Search example included in the SDK. 
 
 ## Repository
 
@@ -431,7 +287,7 @@ developer portal:
 
 For Splunk Java SDK reference documentation, see: 
 
-* http://splunk.github.com/splunk-sdk-java/docs/0.1.0/index.html
+* http://docs.splunk.com/Documentation/JavaSDK
 
 You can also find reference documentation for the REST API:
 
@@ -478,17 +334,18 @@ Stay connected with other developers building on Splunk.
 
 </table>
 
-### How to contribute
+### Contributions
 
-We aren't ready to accept code contributions yet, but will be shortly. Check 
-this README for more updates soon.
+If you want to make a code contribution, go to the 
+[Open Source](http://dev.splunk.com/view/opensource/SP-CAAAEDM)) 
+page for more information.
 
 ### Support
 
-* SDKs in Preview will not be Splunk supported. Once the Java SDK moves to an
-  Open Beta we will provide more detail on support.  
+* The Preview release of the SDK is not supported by Splunk. Once the Beta 
+  version has been released, we will provide more details about support.  
 
-* Issues should be filed here: 
+* File any issues here: 
   https://github.com/splunk/splunk-sdk-java/issues
 
 ### Contact Us
