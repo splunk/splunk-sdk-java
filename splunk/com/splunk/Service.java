@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.Splunk;
+package com.splunk;
 
 import java.io.IOException;
 import java.io.InputStream;
