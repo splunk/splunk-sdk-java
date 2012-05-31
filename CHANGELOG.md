@@ -39,7 +39,6 @@
   The following example shows how to use the optional namespace to restrict
   creating and selecting saved searches to the namespace "owner = magilicuddy, 
   app = oneMeanApp": 
-
 ```
     String searchName = "My scoped search";
     String search = "index=main * | head 10";
@@ -54,7 +53,6 @@
 
   This example shows how to returns all saved searches within the same scoped 
   namespace:
-
 ```
     args args = new Args();
     args.put("owner", "magilicuddy");
@@ -72,7 +70,6 @@
   separate Splunk .jar file named `splunk-external.jar`.
 
   The following example uses the built-in XML streaming reader:
-
 ```
     Job job = service.getJobs().create(query, queryArgs);
     ...
@@ -90,7 +87,6 @@
   connect to the new `StormService` class using similar arguments. Then, get a
   `Receiver` object and log events. `StormService` requires the `index` key and
   `sourcetype` parameters when sending events:
-
 ```
     // the storm token provided by Splunk
     Args loginArgs = new Args("StormToken",
