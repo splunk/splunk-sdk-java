@@ -26,9 +26,9 @@ public class OutputDefaultTest extends SplunkTestCase {
 
         OutputDefault outputDefault = service.getOutputDefault();
 
-        outputDefault.autoLb();
+        outputDefault.getAutoLB();
         outputDefault.blockOnQueueFull();
-        outputDefault.getAutoLbFrequency();
+        outputDefault.getAutoLBFrequency();
         int onQueueFull = outputDefault.getDropEventsOnQueueFull();
         outputDefault.getForwardedIndex0Whitelist();
         outputDefault.getForwardedIndex1Blacklist();

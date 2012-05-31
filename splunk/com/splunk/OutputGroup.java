@@ -89,7 +89,7 @@ public class OutputGroup extends Entity {
      * load balancing has been deprecated, and the default has been changed to 
      * automatic load balancing ({@code autoLB} is {@code true}).
      * @see #getAutoLB
-     * @see OutputDefault#getAutoLbFrequency
+     * @see OutputDefault#getAutoLBFrequency
      *
      * @param autoLB {@code true} to perform automatic load balancing on this 
      * forwarder, {@code false} if not.

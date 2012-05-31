@@ -39,12 +39,12 @@ public class OutputDefault extends Entity {
      * frequency specified by {@code autoLBFrequency}, or immediately when an
      * open connection to an indexer is lost.
      *
-     * @see #getAutoLbFrequency
+     * @see #getAutoLBFrequency
      *
      * @return {@code true} if this forwarder performs automatic load balancing,
      * {@code false} if not.
      */
-    public boolean autoLb() {
+    public boolean getAutoLB() {
         return getBoolean("autoLB", false);
     }
 
@@ -67,7 +67,7 @@ public class OutputDefault extends Entity {
      * @return The automatic load-balancing frequency in seconds, or -1 if not
      * specified.
      */
-    public int getAutoLbFrequency() {
+    public int getAutoLBFrequency() {
         return getInteger("autoLBFrequency", -1);
     }
 
@@ -196,7 +196,7 @@ public class OutputDefault extends Entity {
      * Using auto load-balancing is the best way to minimize this condition,
      * because, in that case, multiple receivers must be down or jammed before 
      * queue blocking can occur.
-     * @see #autoLb
+     * @see #getAutoLB
      *
      * @param dropEventsOnQueueFull The time to wait before throwing out events,
      * in seconds, or -1 to not drop events.
