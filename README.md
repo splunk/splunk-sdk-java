@@ -46,7 +46,7 @@ searching, saved searches, data inputs, and many more, along with building
 complete applications. 
 
 The information in this Readme provides steps to get going quickly, but for more
-in-depth information, be sure to visit the 
+in-depth information be sure to visit the 
 [Developer Portal](http://dev.splunk.com/view/java-sdk/SP-CAAAECN). 
 
 ### Requirements
@@ -338,7 +338,7 @@ Stay connected with other developers building on Splunk.
 ### Contributions
 
 If you want to make a code contribution, go to the 
-[Open Source](http://dev.splunk.com/view/opensource/SP-CAAAEDM)) 
+[Open Source](http://dev.splunk.com/view/opensource/SP-CAAAEDM)
 page for more information.
 
 ### Support
@@ -347,7 +347,7 @@ page for more information.
   version has been released, we will provide more details about support.  
 
 * File any issues here: 
-  https://github.com/splunk/splunk-sdk-java/issues
+  https://github.com/splunk/splunk-sdk-java/issues.
 
 ### Contact Us
 
