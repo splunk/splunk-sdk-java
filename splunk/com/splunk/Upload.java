@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -19,14 +19,14 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * Representation of a Splunk application, commonly referred to as an 'app'.
+ * The {@code Upload} class represents a Splunk app.
  */
 public class Upload extends Entity {
 
     /**
      * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      * @param path The application endpoint.
      */
     Upload(Service service, String path) {
@@ -34,9 +34,9 @@ public class Upload extends Entity {
     }
 
     /**
-     * Returns the number of bytes currently indexed.
+     * Returns the number of bytes that are currently indexed.
      *
-     * @return The number of bytes currently indexed.
+     * @return The number of bytes.
      */
     public int getBytesIndexed() {
         return getInteger("Bytes Indexed");
@@ -45,7 +45,7 @@ public class Upload extends Entity {
     /**
      * Returns the current offset.
      *
-     * @return The current offset.
+     * @return The offset.
      */
     public int getOffset() {
         return getInteger("Offset");
@@ -54,25 +54,25 @@ public class Upload extends Entity {
     /**
      * Returns the current size.
      *
-     * @return The current size.
+     * @return The size.
      */
     public int getSize() {
         return getInteger("Size");
     }
 
     /**
-     * Returns the number of sources indexed.
+     * Returns the number of sources that are indexed.
      *
-     * @return The number of sources indexed.
+     * @return The number of sources.
      */
     public int getSourcesIndexed() {
         return getInteger("Sources Indexed");
     }
 
     /**
-     * Returns the start time of the upload being indexed.
+     * Returns the start time of the upload that is being indexed.
      *
-     * @return The start time of the upload being indexed.
+     * @return The start time.
      */
     public Date getSpoolTime() {
         return getDate("Spool Time", null);

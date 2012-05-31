@@ -118,7 +118,7 @@ public class ServiceInfo extends Entity {
     /**
      * Returns the service's OS name (type).
      *
-     * @return OS build.
+     * @return The OS name.
      */
     public String getOsName() {
         return getString("os_name");
@@ -162,9 +162,10 @@ public class ServiceInfo extends Entity {
     }
 
     /**
-     * Answers if the service has real time search enabled.
+     * Indicates whether real-time search is enabled for the service.
      *
-     * @return {@code true} if real time search is enabled.
+     * @return {@code true} if real-time search is enabled, {@code false} if 
+     * not.
      */
     public boolean isRtSearchEnabled() {
         return getBoolean("rtsearch_enabled", false);

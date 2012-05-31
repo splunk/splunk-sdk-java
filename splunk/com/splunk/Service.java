@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk;
+package com.Splunk;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,11 +25,11 @@ import java.util.Map;
  * The {@code Service} class represents a Splunk service instance at a given
  * address (host:port), accessed using the {@code http} or {@code https}
  * protocol scheme.
- * </br></br>
+ * <p>
  * A {@code Service} instance also captures an optional namespace context
  * consisting of an optional owner name (or "-" wildcard) and optional app name
  * (or "-" wildcard).
- * </br></br>
+ * <p>
  * To access {@code Service} members, the {@code Service} instance must be
  * authenticated by presenting credentials using the {@code login} method, or
  * by constructing the {@code Service} instance using the {@code connect}
@@ -54,17 +54,16 @@ public class Service extends HttpService {
     /** The password, which is used to authenticate the Splunk instance. */
     protected String password = null;
 
-    /** The default simple receiver endpoint */
+    /** The default simple receiver endpoint. */
     protected String simpleReceiverEndPoint = "receivers/simple";
 
-    /** The default password endpoint, can change over splunk versions */
+    /** The default password endpoint, can change over Splunk versions. */
     protected String passwordEndPoint = "admin/passwords";
 
-    /** The version of this splunk instance, once logged in */
+    /** The version of this Splunk instance, once logged in. */
     public String version = null;
 
-    /** The default host name, which is used when a host name is not
-     * provided. */
+    /** The default host name, which is used when a host name is not provided.*/
     public static String DEFAULT_HOST = "localhost";
 
     /** The default port number, which is used when a port number is not
@@ -180,8 +179,8 @@ public class Service extends HttpService {
 
     /**
      * Ensures that the given path is fully qualified, prepending a path
-     * prefix if necessary. The path prefix is constructed using the
-     * current owner and app context if available.
+     * prefix if necessary. The path prefix is constructed using the current 
+     * owner and app context when available.
      *
      * @param path The path to verify.
      * @return A fully-qualified resource path.
@@ -192,12 +191,12 @@ public class Service extends HttpService {
 
     /**
      * Ensures that the given path is fully qualified, prepending a path
-     * prefix if necessarry. The path prefix will be constructed using the
-     * current owner & app context if available.
+     * prefix if necessarry. The path prefix is constructed using the
+     * current owner and app context when available.
      *
      * @param path The path to verify.
-     * @param namespace the name space dictionary w/ keys app, owner, sharing.
-     * @return A fully qualified resource path.
+     * @param namespace The name space dictionary (<i>app, owner, sharing</i>).
+     * @return A fully-qualified resource path.
      */
     public String fullpath(String path, Args namespace) {
 
@@ -278,8 +277,9 @@ public class Service extends HttpService {
     /**
      * Returns the collection of configurations.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Configurations collection.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return The configurations collection.
      */
     public ConfCollection getConfs(Args args) {
         return new ConfCollection(this, args);
@@ -298,7 +298,7 @@ public class Service extends HttpService {
     /**
      * Returns the configuration and status of a deployment client.
      *
-     * @return The configuration and status of a deployment client.
+     * @return The configuration and status.
      */
     public DeploymentClient getDeploymentClient() {
         return new DeploymentClient(this);
@@ -317,8 +317,9 @@ public class Service extends HttpService {
     /**
      * Returns the configuration of all deployment servers.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Configuration of deployment servers.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return The configuration of deployment servers.
      */
     public EntityCollection<DeploymentServer> getDeploymentServers(Args args) {
         return new EntityCollection<DeploymentServer>(
@@ -328,7 +329,7 @@ public class Service extends HttpService {
     /**
      * Returns a collection of class configurations for a deployment server.
      *
-     * @return A collection of class configurations for a deployment server.
+     * @return A collection of class configurations.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(){
         return new EntityCollection<DeploymentServerClass>(
@@ -336,10 +337,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of deployment server class configurations.
+     * Returns a collection of class configurations for a deployment server.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of server class configurations.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of server class configurations.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(
             Args args){
@@ -358,10 +360,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of multi-tenant configurations.
+     * Returns a collection of multi-tenant configurations.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Colleciton of multi-tenant configurations.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of multi-tenant configurations.
      */
     public EntityCollection<DeploymentTenant> getDeploymentTenants(Args args) {
         return new EntityCollection<DeploymentTenant>(
@@ -391,13 +394,14 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of distributed search peers. A search peer is a
-     * Splunk server to which another Splunk server distributes searches. The
-     * Splunk server where the search originates is referred to as the search
-     * head.
+     * Returns a collection of distributed search peers. A <i>search peer</i>
+     * is a Splunk server to which another Splunk server distributes searches.
+     * The Splunk server where the search originates is referred to as the
+     * <i>search head</i>.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of search peers.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of search peers.
      */
     public EntityCollection<DistributedPeer> getDistributedPeers(Args args) {
         return new EntityCollection<DistributedPeer>(
@@ -406,57 +410,60 @@ public class Service extends HttpService {
 
 
     /**
-     * Returns collection of saved event types.
+     * Returns a collection of saved event types.
      *
-     * @return Collection of saved event types.
+     * @return A collection of saved event types.
      */
     public EventTypeCollection getEventTypes() {
         return new EventTypeCollection(this);
     }
 
     /**
-     * Returns collection of saved event types.
+     * Returns a collection of saved event types.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of saved event types.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of saved event types.
      */
     public EventTypeCollection getEventTypes(Args args) {
         return new EventTypeCollection(this, args);
     }
 
     /**
-     * Returns collection of alerts that have been fired by the service.
+     * Returns a collection of alerts that have been fired by the service.
      *
-     * @return Collection of fired alerts.
+     * @return A collection of fired alerts.
      */
     public FiredAlertGroupCollection getFiredAlertGroups() {
         return new FiredAlertGroupCollection(this);
     }
 
     /**
-     * Returns collection of alerts that have been fired by the service.
+     * Returns a collection of alerts that have been fired by the service.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of fired alerts.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of fired alerts.
      */
     public FiredAlertGroupCollection getFiredAlerts(Args args) {
         return new FiredAlertGroupCollection(this, args);
     }
 
     /**
-     * Returns collection of Splunk indexes.
+     * Returns a collection of Splunk indexes.
      *
-     * @return Collection of indexes.
+     * @return A collection of indexes.
      */
     public EntityCollection<Index> getIndexes() {
         return new EntityCollection<Index>(this, "data/indexes", Index.class);
     }
 
     /**
-     * Returns collection of Splunk indexes.
+     * Returns a collection of Splunk indexes.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of indexes.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of indexes.
      */
     public EntityCollection<Index> getIndexes(Args args) {
         return new EntityCollection<Index>(
@@ -475,7 +482,7 @@ public class Service extends HttpService {
     /**
      * Returns a collection of configured inputs.
      *
-     * @return Collection of inputs.
+     * @return A collection of inputs.
      */
     public InputCollection getInputs() {
         return new InputCollection(this);
@@ -484,8 +491,9 @@ public class Service extends HttpService {
     /**
      * Returns a collection of configured inputs.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of inputs.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of inputs.
      */
     public InputCollection getInputs(Args args) {
         return new InputCollection(this, args);
@@ -494,7 +502,7 @@ public class Service extends HttpService {
     /**
      * Returns a collection of current search jobs.
      *
-     * @return Collection of search jobs.
+     * @return A collection of search jobs.
      */
     public JobCollection getJobs() {
         return new JobCollection(this);
@@ -503,17 +511,18 @@ public class Service extends HttpService {
     /**
      * Returns a collection of current search jobs.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of search jobs.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of search jobs.
      */
     public JobCollection getJobs(Args args) {
         return new JobCollection(this, args);
     }
 
     /**
-     * Returns collection of license group configurations.
+     * Returns a collection of license group configurations.
      *
-     * @return Collectio nof license group configurations.
+     * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups() {
         return new EntityCollection<LicenseGroup>(
@@ -521,10 +530,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of license group configurations.
+     * Returns a collection of license group configurations.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collectio nof license group configurations.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups(Args args) {
         return new EntityCollection<LicenseGroup>(
@@ -532,9 +542,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of messages from the licenser.
+     * Returns a collection of messages from the licenser.
      *
-     * @return Collection of licenser messages.
+     * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages() {
         return new EntityCollection<LicenseMessage>(
@@ -542,10 +552,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of messages from the licenser.
+     * Returns a collection of messages from the licenser.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of licenser messages.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages(Args args) {
         return new EntityCollection<LicenseMessage>(
@@ -553,39 +564,40 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns the current owner context for this service instance. A value of
-     * {@code "-"} indicates a wildcard, and a {@code null} value indicates
-     * no owner context.
+     * Returns the current owner context for this {@code Service} instance. 
+     * A value of {@code "-"} indicates a wildcard, and a {@code null} value 
+     * indicates no owner context.
      *
-     * @return Current owner context.
+     * @return The current owner context.
      */
     public String getOwner() {
         return this.owner;
     }
 
     /**
-     * Returns collection of licenser pool configurations.
+     * Returns a collection of licenser pool configurations.
      *
-     * @return Collection of licenser pool configurations.
+     * @return A collection of licenser pool configurations.
      */
     public LicensePoolCollection getLicensePools() {
         return new LicensePoolCollection(this);
     }
 
     /**
-     * Returns collection of licenser pool configurations.
+     * Returns a collection of licenser pool configurations.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of licenser pool configurations.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of licenser pool configurations.
      */
     public LicensePoolCollection getLicensePools(Args args) {
         return new LicensePoolCollection(this, args);
     }
 
     /**
-     * Returns collection of slaves reporting to this license master.
+     * Returns a collection of slaves reporting to this license master.
      *
-     * @return Collection of licenser slaves.
+     * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
         return new EntityCollection<LicenseSlave>(
@@ -593,10 +605,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of slaves reporting to this license master.
+     * Returns a collection of slaves reporting to this license master.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of licenser slaves.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves(Args args) {
         return new EntityCollection<LicenseSlave>(
@@ -604,9 +617,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of license stack configurations.
+     * Returns a collection of license stack configurations.
      *
-     * @return Collection of license stack configurations.
+     * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks() {
         return new EntityCollection<LicenseStack>(
@@ -614,10 +627,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of license stack configurations.
+     * Returns a collection of license stack configurations.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of license stack configurations.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks(Args args) {
         return new EntityCollection<LicenseStack>(
@@ -625,9 +639,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of licenses for this service.
+     * Returns a collection of licenses for this service.
      *
-     * @return Collection of licenses.
+     * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses() {
         return new EntityCollection<License>(
@@ -635,10 +649,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of licenses for this service.
+     * Returns a collection of licenses for this service.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of licenses.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses(Args args) {
         return new EntityCollection<License>(
@@ -646,9 +661,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of service logging categories and their status.
+     * Returns a collection of service logging categories and their status.
      *
-     * @return Collection of logging categories.
+     * @return A collection of logging categories.
      */
     public EntityCollection<Logger> getLoggers() {
         return new EntityCollection<Logger>(
@@ -656,10 +671,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of service logging categories and their status.
+     * Returns a collection of service logging categories and their status.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of logging categories.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of logging categories.
      */
     public EntityCollection<Logger> getLoggers(Args args) {
         return new EntityCollection<Logger>(
@@ -667,19 +683,20 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of system messages.
+     * Returns a collection of system messages.
      *
-     * @return Collection of system messages.
+     * @return A collection of system messages.
      */
     public MessageCollection getMessages() {
         return new MessageCollection(this);
     }
 
     /**
-     * Returns collection of system messages.
+     * Returns a collection of system messages.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of system messages.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of system messages.
      */
     public MessageCollection getMessages(Args args) {
         return new MessageCollection(this, args);
@@ -695,9 +712,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of output group configurations.
+     * Returns a collection of output group configurations.
      *
-     * @return Collection of output group configurations.
+     * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups() {
         return new EntityCollection<OutputGroup>(
@@ -705,10 +722,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of output group configurations.
+     * Returns a collection of output group configurations.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of output group configurations.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups(Args args) {
         return new EntityCollection<OutputGroup>(
@@ -726,10 +744,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of data forwarding configurations.
+     * Returns a collection of data-forwarding configurations.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of data forwarding configurations.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of data-forwarding configurations.
      */
     public EntityCollection<OutputServer> getOutputServers(Args args) {
         return new EntityCollection<OutputServer>(
@@ -748,11 +767,12 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of configurations for forwarding data in standard
+     * Returns a collection of configurations for forwarding data in standard
      * syslog format.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of syslog forwarders.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of syslog forwarders.
      */
     public EntityCollection<OutputSyslog> getOutputSyslogs(Args args) {
         return new EntityCollection<OutputSyslog>(
@@ -769,7 +789,7 @@ public class Service extends HttpService {
     }
 
     /**
-     * Return a collection of passwords. This collection is used for managing
+     * Returns a collection of passwords. This collection is used for managing
      * secure credentials.
      *
      * @return A collection of passwords.
@@ -779,20 +799,21 @@ public class Service extends HttpService {
     }
 
     /**
-     * Return collection of passwords, this collection is used for the
-     * management of secure credentials.
+     * Returns a collection of passwords. This collection is used for managing
+     * secure credentials.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of passwords.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of passwords.
      */
     public PasswordCollection getPasswords(Args args) {
         return new PasswordCollection(this, args);
     }
 
     /**
-     * Returns information about the Splunk service.
+     * Returns the receiver object for the Splunk service.
      *
-     * @return Splunk receiver object.
+     * @return A Splunk receiver object.
      */
     public Receiver getReceiver() {
         return new Receiver(this);
@@ -811,8 +832,9 @@ public class Service extends HttpService {
     /**
      * Returns a collection of Splunk user roles.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of user roles.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of user roles.
      */
     public EntityCollection<Role> getRoles(Args args) {
         return new EntityCollection<Role>(
@@ -831,8 +853,9 @@ public class Service extends HttpService {
     /**
      * Returns a collection of saved searches.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of saved searches.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches(Args args) {
         return new SavedSearchCollection(this, args);
@@ -858,9 +881,9 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of in progress oneshot uploads.
+     * Returns a collection of in-progress oneshot uploads.
      *
-     * @return Collection of in progress oneshot uploads
+     * @return A collection of in-progress oneshot uploads
      */
     public EntityCollection<Upload> getUploads() {
         return new EntityCollection<Upload>(
@@ -868,11 +891,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of in progress oneshot uploads.
+     * Returns a collection of in-progress oneshot uploads.
      *
      * @param namespace This collection's namespace; there are no other
      * optional arguments for this endpoint.
-     * @return Collection of in progress oneshot uploads
+     * @return A collection of in-progress oneshot uploads
      */
     public EntityCollection<Upload>
     getUploads(Args namespace) {
@@ -900,10 +923,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns collection of Splunk users.
+     * Returns a collection of Splunk users.
      *
-     * @param args optional arguments, such as offset an count for pagination.
-     * @return Collection of users.
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of users.
      */
     public UserCollection getUsers(Args args) {
         return new UserCollection(this, args);
@@ -996,7 +1020,8 @@ public class Service extends HttpService {
     }
 
     /**
-     * Parses a search query and returns a semantic map for the search in JSON format.
+     * Parses a search query and returns a semantic map for the search in JSON 
+     * format.
      *
      * @param query The search query.
      * @return The parse response message.
@@ -1070,10 +1095,11 @@ public class Service extends HttpService {
     }
 
     /**
-     * Issues an HTTP request against the service using a request path and message. 
+     * Issues an HTTP request against the service using a request path and 
+     * message. 
      * This method overrides the base {@code HttpService.send} method
-     * and applies the Splunk authorization header, which is required for authenticated
-     * interactions with the Splunk service.
+     * and applies the Splunk authorization header, which is required for 
+     * authenticated interactions with the Splunk service.
      *
      * @param path The request path.
      * @param request The request message.
@@ -1094,7 +1120,7 @@ public class Service extends HttpService {
         this.token = value;
     }
 
-    // returns -1, 0, 1 comparing current splunk version string to right version
+    // returns -1, 0, 1 comparing current Splunk version string to right version
     // string for less than, equal to or greater than
     public int versionCompare(String right) {
 

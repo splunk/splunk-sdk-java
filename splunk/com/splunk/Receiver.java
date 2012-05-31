@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -23,16 +23,17 @@ import java.io.Writer;
 import java.net.Socket;
 
 /**
- * Representation of named index, and unnamed index receivers.
+ * The {@code Receiver} class represents a named index and unnamed index 
+ * receivers.
  */
 public class Receiver {
 
     Service service = null;
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * @param service The connected service instance.
+     * @param service The connected {@code Service} instance.
      */
     Receiver(Service service) {
         this.service = service;
@@ -41,7 +42,7 @@ public class Receiver {
     /**
      * Creates a writable socket to this index.
      *
-     * @return The Socket.
+     * @return The socket.
      * @throws IOException
      */
     public Socket attach() throws IOException {
@@ -52,7 +53,7 @@ public class Receiver {
      * Creates a writable socket to this index.
      *
      * @param indexName The index to write to.
-     * @return The Socket.
+     * @return The socket.
      * @throws IOException
      */
     public Socket attach(String indexName) throws IOException {
@@ -63,7 +64,7 @@ public class Receiver {
      * Creates a writable socket to this index.
      *
      * @param args The optional arguments to the streaming endpoint.
-     * @return The Socket.
+     * @return The socket.
      * @throws IOException
      */
     public Socket attach(Args args) throws IOException {
@@ -75,7 +76,7 @@ public class Receiver {
      *
      * @param indexName The index to write to.
      * @param args The optional arguments to the streaming endpoint.
-     * @return The Socket.
+     * @return The socket.
      * @throws IOException
      */
     public Socket attach(String indexName, Args args) throws IOException {
@@ -107,7 +108,7 @@ public class Receiver {
     /**
      * Submits an event to this index through HTTP POST.
      *
-     * @param data Event data posted.
+     * @param data Posted event data.
      */
     public void submit(String data) {
         submit(null, null, data);
@@ -117,7 +118,7 @@ public class Receiver {
      * Submits an event to this index through HTTP POST.
      *
      * @param indexName The index to write to.
-     * @param data Event data posted.
+     * @param data Posted event data.
      */
     public void submit(String indexName, String data) {
         submit(indexName, null, data);
@@ -126,8 +127,8 @@ public class Receiver {
     /**
      * Submits an event to this index through HTTP POST.
      *
-     * @param data Event data posted.
-     * @param args optional arguments for the simple receivers endpoint.
+     * @param data Posted event data.
+     * @param args Optional arguments for the simple receivers endpoint.
      */
     public void submit(Args args, String data) {
         submit(null, args, data);
@@ -137,8 +138,8 @@ public class Receiver {
      * Logs an event to this index through HTTP POST.
      *
      * @param indexName The index to write to.
-     * @param data Event data posted.
-     * @param args optional arguments for the simple receivers endpoint.
+     * @param data Posted event data.
+     * @param args Optional arguments for the simple receivers endpoint.
      */
     public void submit(String indexName, Args args, String data) {
         String sendString = "";
@@ -156,44 +157,44 @@ public class Receiver {
     }
 
     /**
-     * Submits an event to this index through HTTP POST. This is an alias for
-     * {@code submit()}.
+     * Submits an event to this index through HTTP POST. This method is an alias
+     * for {@code submit()}.
      *
-     * @param data Event data posted.
+     * @param data Posted event data.
      */
     public void log(String data) {
         submit(data);
     }
 
     /**
-     * Submits an event to this index through HTTP POST. This is an alias for
-     * {@code submit()}.
+     * Submits an event to this index through HTTP POST. This method is an alias
+     * for {@code submit()}.
      *
      * @param indexName The index to write to.
-     * @param data Event data posted.
+     * @param data Posted event data.
      */
     public void log(String indexName, String data) {
         submit(indexName, data);
     }
 
     /**
-     * Submits an event to this index through HTTP POST. This is an alias for
-     * {@code submit()}.
+     * Submits an event to this index through HTTP POST. This method is an alias
+     * for {@code submit()}.
      *
-     * @param args optional arguments for the simple receivers endpoint.
-     * @param data Event data posted.
+     * @param args Optional arguments for the simple receivers endpoint.
+     * @param data Posted event data.
      */
     public void log(Args args, String data) {
         submit(args, data);
     }
 
     /**
-     * Logs an event to this index through HTTP POST. This is an alias for
-     * {@code submit()}.
+     * Logs an event to this index through HTTP POST. This method is an alias
+     * for {@code submit()}.
      *
      * @param indexName The index to write to.
-     * @param args optional arguments for the simple receivers endpoint.
-     * @param data Event data posted.
+     * @param args Optional arguments for the simple receivers endpoint.
+     * @param data Posted event data.
      */
     public void log(String indexName, Args args, String data) {
         submit(indexName, args, data);

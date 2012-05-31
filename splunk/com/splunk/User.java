@@ -121,7 +121,7 @@ public class User extends Entity {
     /**
      * Sets the default app for this user.
      *
-     * @param defaultApp The default app for this user.
+     * @param defaultApp The default app.
      */
     public void setDefaultApp(String defaultApp) {
         setCacheValue("defaultApp", defaultApp);
@@ -130,7 +130,7 @@ public class User extends Entity {
     /**
      * Sets the email address for this user.
      *
-     * @param email The email address for this user.
+     * @param email The email address.
      */
     public void setEmail(String email) {
         setCacheValue("email", email);
@@ -139,7 +139,7 @@ public class User extends Entity {
     /**
      * Sets this user's password.
      *
-     * @param password This user's password.
+     * @param password The password.
      */
     public void setPassword(String password) {
         setCacheValue("password", password);
@@ -148,51 +148,49 @@ public class User extends Entity {
     /**
      * Sets this user's real name.
      *
-     * @param realname This user's real name.
+     * @param realname The real name.
      */
     public void setRealName(String realname) {
         setCacheValue("realname", realname);
     }
 
     /**
-     * Sets whether or not to restart  background search jobs when Splunk
-     * restarts.
+     * Sets whether to restart background search jobs when Splunk restarts.
+     * When {@code true}, a background search job for this user that has not
+     * completed is restarted when Splunk restarts. 
      *
-     * If {@code true}, a background search job for this user that has not
-     * completed is restarted when Splunk restarts. Introduced in 4.3.
-     *
-     * @param restart_background_jobs whether or not to restart background
-     * search jobs when Splunk restarts.
+     * @param restart_background_jobs {@code true} to restart background
+     * search jobs, {@code false} if not.
      */
     public void setRestartBackgroundJobs(boolean restart_background_jobs) {
         setCacheValue("restart_background_jobs", restart_background_jobs);
     }
 
     /**
-     * Sets this user's roles.
+     * Sets the roles for this user.
      *
-     * @param roles This user's roles.
+     * @param roles An array of roles.
      */
     public void setRoles(String[] roles) {
         setCacheValue("roles", roles);
     }
 
     /**
-     * Sets this user's roles. This only sets one role and is a short-cut
-     * when only one role is needed.
+     * Sets this user's role. Use this method to set a single role rather than 
+     * an array. 
      *
-     * @param role This user's roles.
+     * @param role The role.
      */
     public void setRoles(String role) {
         setCacheValue("roles", new String [] { role });
     }
 
     /**
-     * Sets this user's time zone, for display purposes.
+     * Sets this user's time zone, which is used for display purposes.
+     * <p>
+     * <b>Note:</b> This property is valid in Splunk 4.3 and later.
      *
-     * Note this is valid for splunk 4.3+ only.
-     *
-     * @param tz This user's timezone.
+     * @param tz The timezone.
      */
     public void setTz(String tz) {
         setCacheValue("tz", tz);
