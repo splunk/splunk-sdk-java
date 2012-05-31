@@ -1,6 +1,6 @@
-# Splunk Java SDK Changelog
+# Splunk Java SDK Changelog, Preview Refresh
 
-## develop
+## Version 0.5.0
 
 ### New APIs
 * `StormService` class

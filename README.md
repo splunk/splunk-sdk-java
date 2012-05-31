@@ -1,4 +1,4 @@
-# The Splunk Software Development Kit for Java (Preview Release)
+# The Splunk Software Development Kit for Java (Preview Release Refresh) 0.5.0
 
 This SDK contains library code and examples designed to enable developers to
 build applications using Splunk.
@@ -21,7 +21,7 @@ that are enabled by Splunk's unique capabilities.
 The Splunk Java SDK is licensed under the Apache License 2.0. Details can be 
 found in the LICENSE file.
 
-## The Splunk Java SDK is a Preview release
+## The Splunk Java SDK is a Preview release refresh
 
 1.  This Preview is a pre-Beta release that is incomplete and may have
     bugs. There will be a Beta release prior to a general release.
