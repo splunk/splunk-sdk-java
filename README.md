@@ -45,7 +45,8 @@ programmatically interact with Splunk for a variety of scenarios including
 searching, saved searches, data inputs, and many more, along with building 
 complete applications. 
 
-For more information about the Splunk Java SDK, see the 
+The information in this Readme provides steps to get going quickly, but for more
+in-depth information, be sure to visit the 
 [Developer Portal](http://dev.splunk.com/view/java-sdk/SP-CAAAECN). 
 
 ### Requirements
@@ -350,5 +351,5 @@ page for more information.
 
 ### Contact Us
 
-You can reach the Dev Platform team at devinfo@splunk.com
+You can reach the Dev Platform team at devinfo@splunk.com.
 
