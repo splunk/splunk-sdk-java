@@ -117,6 +117,7 @@
   CSV.
 * Added an `Input` example to display Splunk inputs and their attributes.
 * Added an alias `log` for `submit` to the `Receiver` class.
+* Updated eclipse .classpath file, accounting for new additions.
 
 ### Bug fixes
 
