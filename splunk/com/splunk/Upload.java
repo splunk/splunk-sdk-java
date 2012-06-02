@@ -19,7 +19,8 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * The {@code Upload} class represents a Splunk app.
+ * The {@code Upload} class represents an in-progress oneshot upload. Use this 
+ * class to query the state of the upload.
  */
 public class Upload extends Entity {
 
@@ -27,7 +28,7 @@ public class Upload extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The application endpoint.
+     * @param path The oneshot input endpoint.
      */
     Upload(Service service, String path) {
         super(service, path);
