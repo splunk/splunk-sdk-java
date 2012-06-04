@@ -256,10 +256,10 @@ public class Settings extends Entity {
     }
 
     /**
-     * Sets The IP address of the authenticating proxy. Set this value to a 
+     * Sets the IP address of the authenticating proxy. Set this value to a 
      * valid IP address to enable SSO.
      *
-     * This property is disabled by default. The normal value is "127.0.0.1".
+     * This attribute is disabled by default. The normal value is "127.0.0.1".
      *
      * @param trustedIP The authenticating proxy's IP address.
      */

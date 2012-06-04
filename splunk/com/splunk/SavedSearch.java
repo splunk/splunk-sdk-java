@@ -205,7 +205,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the address of the MTA server that is used to send the emails. If
-     * this property is not set, this value defaults to the setting in the
+     * this attribute is not set, this value defaults to the setting in the
      * alert_actions.conf file.
      *
      * @return The address of the MTA server.
@@ -903,7 +903,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Indicates whether to back fill the real-time window for this search.
-     * This property is only valid for real-time searches.
+     * This attribute is only valid for real-time searches.
      *
      * @return {@code true} if Splunk back fills the real-time window,
      * {@code false} if not.
@@ -1046,7 +1046,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the view state ID that is associated with the view specified in
-     * the {@code DisplayView} property. This ID corresponds to a stanza in the
+     * the {@code DisplayView} attribute. This ID corresponds to a stanza in the
      * viewstates.conf configuration file.
      * @see #getDisplayView
      *
@@ -1234,7 +1234,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the address of the MTA server that is used to send the emails. If
-     * this property is not set, this value defaults to the setting in the
+     * this parameter is not set, the value defaults to the setting in the
      * alert_actions.conf file.
      *
      * @param mailServer The address of the MTA server.
@@ -1794,7 +1794,7 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Specifies a list of fields to use for alert suppression. This property
+     * Specifies a list of fields to use for alert suppression. This attribute
      * is required when alert supression and per-result alerting are enabled.
      * @see #setAlertSuppress
      * @see #isDigestMode
@@ -1806,7 +1806,7 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Sets the period for alert suppression. This property is only valid when
+     * Sets the period for alert suppression. This attribute is only valid when
      * {@code AlertSuppress} is enabled.
      * The valid format is <i>number</i> followed by a time unit ("s", "m", "h",
      * or "d").
@@ -1989,7 +1989,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets whether to back fill the real-time window for this search.
-     * This property is only valid for real-time searches.
+     * This attribute is only valid for real-time searches.
      *
      * @param backfill {@code true} if Splunk back fills the real-time window,
      * {@code false} if not.
@@ -2159,7 +2159,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the view state ID that is associated with the view specified in
-     * the {@code DisplayView} property.
+     * the {@code DisplayView} attribute.
      * <p>
      * <b>Note:</b> This ID must match a stanza in the from the viewstates.conf
      * configuration file.

@@ -15,7 +15,7 @@
   class.
 
 * Added a paginate feature for Splunk return data. This feature allows for 
-  `count` and `offset` methods to page through Splunk meta data instead of 
+  `count` and `offset` parameters to page through Splunk meta data instead of 
   retrieving all the data at once:
 ```
     ConfCollection confs;

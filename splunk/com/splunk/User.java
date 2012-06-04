@@ -188,7 +188,7 @@ public class User extends Entity {
     /**
      * Sets this user's time zone, which is used for display purposes.
      * <p>
-     * <b>Note:</b> This property is valid in Splunk 4.3 and later.
+     * <b>Note:</b> This attribute is valid in Splunk 4.3 and later.
      *
      * @param tz The timezone.
      */

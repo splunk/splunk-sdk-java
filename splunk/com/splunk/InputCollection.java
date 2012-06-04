@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * The {@code InputCollection} class represents a collection of inputs. The 
  * collection is heterogeneous and each member contains an {@code InputKind}
- * property that indicates the specific type of input (<i>input kind</i>).
+ * value that indicates the specific type of input (<i>input kind</i>).
  */
 public class InputCollection extends EntityCollection<Input> {
     // CONSIDER: We can probably initialize the following based on platform and

@@ -132,8 +132,8 @@ public class OutputServer extends Entity {
     /**
      * Sets the name against which to check the common name of the server's 
      * certificate. If there is no match, you can assume that Splunk is not 
-     * authenticated against this server. You must set a value for this property 
-     * if {@code SslVerifyServerCert} is {@code true}.
+     * authenticated against this server. You must set a value for this 
+     * parameter if {@code SslVerifyServerCert} is {@code true}.
      * @see #setSslVerifyServerCert
      *
      * @param sslCommonNameToCheck The SSL common name.

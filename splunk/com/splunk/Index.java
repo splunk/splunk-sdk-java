@@ -593,7 +593,7 @@ public class Index extends Entity {
     /**
      * Sets whether the data retrieved from this index is UTF8-encoded. 
      * <p>
-     * <b>Note:</b> Indexing performance degrades when this property is set to
+     * <b>Note:</b> Indexing performance degrades when this parameter is set to
      * {@code true}.
      *
      * @param assure {@code true} to ensure UTF8 encoding, {@code false} if not.
@@ -865,7 +865,7 @@ public class Index extends Entity {
      * Sets the target uncompressed size of individual raw slices in the rawdata
      * journal for this index. 
      * <p>
-     * This property only specifies a target chunk size. The actual chunk size 
+     * This parameter only specifies a target chunk size. The actual chunk size 
      * might be slightly larger by an amount proportional to an individual event
      * size.
      * <blockquote>
@@ -873,7 +873,7 @@ public class Index extends Entity {
      * instructed to do so by Splunk Support.
      * </blockquote>
      * @param size The target uncompressed size, in bytes. (0 is not a valid 
-     * value--if 0 is used, this property is set to the default value.)
+     * value--if 0 is used, this parameter is set to the default value.)
      */
     public void setRawChunkSizeBytes(int size) {
         setCacheValue("rawChunkSizeBytes", size);

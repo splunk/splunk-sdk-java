@@ -215,7 +215,7 @@ public class WindowsWmiInput extends Input {
 
     /**
      * Sets the host from which to monitor log events. To specify
-     * additional hosts to monitor using WMI, use the {@code server} parameter.
+     * additional hosts to monitor using WMI, use the {@code setServers} method.
      *
      * @param lookup_host The host.
      */
@@ -225,7 +225,7 @@ public class WindowsWmiInput extends Input {
 
     /**
      * Sets the additional servers that you want to gather data from. Use this
-     * property if you need to gather more than a single server.
+     * method if you need to gather more than a single server.
      *
      * @param servers A comma-separated list of hosts.
      */
