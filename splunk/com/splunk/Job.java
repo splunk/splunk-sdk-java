@@ -50,7 +50,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Performs the requested action on this job.
+     * Performs the requested action on this job. Valid values are: "pause", 
+     * "unpause", "finalize", "cancel", "touch", "setttl", "setpriority", 
+     * "enablepreview", and "disablepreview".
      *
      * @param action The action to perform.
      * @return The job.
@@ -60,10 +62,12 @@ public class Job extends Entity {
     }
 
     /**
-     * Performs the requested action on this job.
+     * Performs the requested action on this job. Valid values are: "pause", 
+     * "unpause", "finalize", "cancel", "touch", "setttl", "setpriority", 
+     * "enablepreview", and "disablepreview".
      *
      * @param action The action to perform.
-     * @param args Optional arguments for this action.
+     * @param args Optional arguments for this action ("ttl" and "priority").
      * @return The job.
      */
     public Job control(String action, Map args) {
