@@ -29,8 +29,8 @@ import java.util.*;
 public class ResourceCollection<T extends Resource> 
     extends Resource implements Map<String, T>
 {
-    protected Map<String, LinkedList<T>>
-            items = new HashMap<String, LinkedList<T>>();
+    protected LinkedHashMap<String, LinkedList<T>>
+            items = new LinkedHashMap<String, LinkedList<T>>();
     protected Class itemClass;
 
     /**
