@@ -124,8 +124,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time from which we are sure no events later than
-     * this time will be scanned later. (Use this as a progress indicator.)
+     * Returns the earliest time from which no events are later scanned.
+     * (Use this as a progress indicator.)
      * @see #getLatestTime
      * @see #getEarliestTime
      * @see #getDoneProgress
@@ -191,7 +191,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time a search job is configured to start.
+     * Returns the earliest time from which to search. 
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getDoneProgress
@@ -310,7 +310,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the latest time a search job is configured to start.
+     * Returns the latest time from which to search. 
      * @see #getCursorTime
      * @see #getEarliestTime
      * @see #getDoneProgress
@@ -477,7 +477,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time a search job is configured to start.
+     * Returns the earliest time from which to search. 
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getDoneProgress
@@ -489,7 +489,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the latest time a search job is configured to start.
+     * Returns the latest time from which to search. 
      * @see #getEarliestTime
      * @see #getCursorTime
      * @see #getDoneProgress
