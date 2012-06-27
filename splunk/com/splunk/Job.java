@@ -191,7 +191,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time from which to search. 
+     * Returns the earliest time in the time range to search. 
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getDoneProgress
@@ -310,7 +310,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the latest time from which to search. 
+     * Returns the latest time in the time range to search. 
      * @see #getCursorTime
      * @see #getEarliestTime
      * @see #getDoneProgress
@@ -477,7 +477,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time from which to search. 
+     * Returns the earliest time in the time range to search. 
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getDoneProgress
@@ -489,7 +489,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the latest time from which to search. 
+     * Returns the latest time in the time range to search. 
      * @see #getEarliestTime
      * @see #getCursorTime
      * @see #getDoneProgress
