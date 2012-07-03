@@ -668,8 +668,7 @@ public class Job extends Entity {
      * @return {@code true} if the job is done, {@code false} if not.
      */
     public boolean isDone() {
-        this.refresh();
-        if (!isReady)
+        if (!isReady())
             return false;
         return getBoolean("isDone");
     }
@@ -796,11 +795,11 @@ public class Job extends Entity {
         }
 
         isReady = true;
-        AtomEntry entry;     // wkcfix exception path
+        AtomEntry entry;
         try {
             entry = AtomEntry.parseStream(response.getContent());
         } catch (Exception e) {
-            return this;
+            throw new RuntimeException(e);
         }
         load(entry);
         return this;
