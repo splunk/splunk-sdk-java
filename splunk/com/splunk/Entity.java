@@ -366,7 +366,12 @@ public class Entity extends Resource implements Map<String, Object> {
         // yet been written to the object.
         ResponseMessage response = service.get(path);
         assert(response.getStatus() == 200);
-        AtomFeed feed = AtomFeed.parse(response.getContent());
+        AtomFeed feed;
+        try {
+            feed = AtomFeed.parseStream(response.getContent());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         int count = feed.entries.size();
         assert(count == 0 || count == 1);
         AtomEntry entry = count == 0 ? null : feed.entries.get(0);

@@ -17,8 +17,12 @@
 package com.splunk;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import org.w3c.dom.Element;
+import java.util.*;
+
+import javax.xml.stream.events.*;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 
 /**
  * The {@code AtomFeed} class represents an Atom feed.
@@ -50,54 +54,80 @@ public class AtomFeed extends AtomObject {
      *
      * @param input The input stream.
      * @return An {@code AtomFeed} instance representing the parsed stream.
+     * @throws Exception if a streaming error occurs
      */
-    public static AtomFeed parse(InputStream input) {
-        Element root = Xml.parse(input).getDocumentElement();
-        String rname = root.getTagName();
-        String xmlns = root.getAttribute("xmlns");
-        if (!rname.equals("feed") ||
-            !xmlns.equals("http://www.w3.org/2005/Atom"))
+    public static AtomFeed parseStream(InputStream input) throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLEventReader xmlReader = inputFactory.createXMLEventReader(input);
+        if (xmlReader.nextEvent().getEventType() !=
+            XMLStreamConstants.START_DOCUMENT) {
             throw new RuntimeException("Unrecognized format");
-        return AtomFeed.parse(root);
+        }
+        // skip to feed start element
+        XMLEvent xmlEvent;
+        while ((xmlEvent = xmlReader.peek()).getEventType() !=
+            XMLStreamConstants.START_ELEMENT) {
+            xmlReader.nextEvent();
+        }
+
+        // sanity check we have an Atom feed
+        if (!xmlEvent
+                .asStartElement()
+                .getName()
+                .getLocalPart()
+                .equals("feed")  &&
+            !xmlEvent
+                .asStartElement()
+                .getNamespaceURI("")
+                .equals("http://www.w3.org/2005/Atom")) {
+            throw new RuntimeException("Unrecognized format");
+        }
+
+        return AtomFeed.parse(xmlReader);
     }
 
     /**
      * Create a new {@code AtomFeed} instance based on a given XML element.
      *
-     * @param element The XML element.
+     * @param input The XML stream
      * @return An {@code AtomFeed} instance representing the parsed element.
+     * @throws Exception if a streaming error occurs
      */
-    static AtomFeed parse(Element element) {
+    static AtomFeed parse(XMLEventReader input) throws Exception {
         AtomFeed feed = AtomFeed.create();
-        feed.load(element);
+        feed.load(input);
         return feed;
     }
 
     /**
      * Initializes the current instance from a given XML element.
      *
-     * @param element The XML element.
+     * @param xmlEventReader The XML element.
      */
-    @Override void init(Element element) {
-        String name = element.getTagName();
+    @Override void init(XMLEventReader xmlEventReader) throws Exception {
+        XMLEvent xmlEvent = xmlEventReader.peek();
+
+        String name = xmlEvent.asStartElement().getName().getLocalPart();
         if (name.equals("entry")) {
-            AtomEntry entry = AtomEntry.parse(element);
+            AtomEntry entry = AtomEntry.parse(xmlEventReader);
             this.entries.add(entry);
         }
-        else if (name.equals("s:messages")) {
-            // Ignore
+        else if (name.equals("messages")) {
+            getXmlSimpleText(xmlEventReader); // ignore messages
         }
-        else if (name.equals("opensearch:totalResults")) {
-            this.totalResults = element.getTextContent().trim();
+        else if (name.equals("totalResults")) {
+            this.totalResults =
+                getXmlSimpleText(xmlEventReader);
         }
-        else if (name.equals("opensearch:itemsPerPage")) {
-            this.itemsPerPage = element.getTextContent().trim();
+        else if (name.equals("itemsPerPage")) {
+            this.itemsPerPage =
+                getXmlSimpleText(xmlEventReader);
         }
-        else if (name.equals("opensearch:startIndex")) {
-            this.startIndex = element.getTextContent().trim();
+        else if (name.equals("startIndex")) {
+            this.startIndex = getXmlSimpleText(xmlEventReader);
         }
         else {
-            super.init(element);
+            super.init(xmlEventReader);
         }
     }
 }

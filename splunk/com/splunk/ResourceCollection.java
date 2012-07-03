@@ -313,7 +313,13 @@ public class ResourceCollection<T extends Resource>
         items.clear();
         ResponseMessage response = list();
         assert(response.getStatus() == 200);
-        AtomFeed feed = AtomFeed.parse(response.getContent());
+
+        AtomFeed feed = null;
+        try {
+            feed = AtomFeed.parseStream(response.getContent());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         load(feed);
         return this;
     }

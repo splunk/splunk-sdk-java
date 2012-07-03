@@ -201,7 +201,12 @@ public class InputCollection extends EntityCollection<Input> {
                 if (e.getStatus() == 404) continue;
                 throw e;
             }
-            AtomFeed feed = AtomFeed.parse(response.getContent());
+            AtomFeed feed;
+            try {
+                feed = AtomFeed.parseStream(response.getContent());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             load(feed);
         }
 

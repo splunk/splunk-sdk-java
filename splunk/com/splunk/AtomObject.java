@@ -18,8 +18,11 @@ package com.splunk;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.events.*;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLStreamConstants;
 
 /**
  * The {@code AtomObject}  class represents a generic Atom object. This is a
@@ -39,32 +42,111 @@ public class AtomObject {
     public String updated;
 
     /**
+     * Returns the text pointed to be the start XML element,
+     * and updates the xml stream pointer to the next start XML element.
+     * @param xmlEventReader the xml event stream reader
+     * @return the text found herein.
+     * @throws Exception if a streaming error occurs
+     */
+    protected String
+    getXmlSimpleText(XMLEventReader xmlEventReader)
+        throws Exception {
+
+        // Skip all XML objects until we get the simple text.
+        XMLEvent xmlEvent = xmlEventReader.peek();
+        while (xmlEvent.getEventType() != XMLStreamConstants.CHARACTERS) {
+            // if we get to and end element before we find text, then
+            // the text value is empty.
+            if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT)
+                return null;
+            xmlEvent = xmlEventReader.nextEvent();
+        }
+        String returnData = xmlEvent.asCharacters().getData();
+
+        // skip to the XML next start element.
+        setXmlToNextStart(xmlEventReader);
+        return returnData;
+    }
+
+    protected XMLEvent
+    setXmlToNextStart(XMLEventReader xmlEventReader) throws Exception {
+
+        XMLEvent xmlEvent;
+        while (
+            (xmlEvent = xmlEventReader.peek()).getEventType() !=
+             XMLStreamConstants.START_ELEMENT) {
+            if (xmlEvent.getEventType() == XMLStreamConstants.END_DOCUMENT)
+                break;
+            xmlEventReader.nextEvent();
+        }
+        return xmlEventReader.peek();
+    }
+
+    /**
      * Initialize a property of the current instance based on the given XML
      * element.
      *
-     * @param element The XML element.
+     * @param xmlEventReader The XML element.
      */
-    void init(Element element) {
-        String name = element.getTagName();
+
+    void init(XMLEventReader xmlEventReader) throws Exception {
+
+        XMLEvent xmlEvent = xmlEventReader.peek();
+        if (xmlEvent.getEventType() != XMLStreamConstants.START_ELEMENT)
+            return;
+
+        String name = xmlEvent.asStartElement().getName().getLocalPart();
         if (name.equals("id")) {
-            this.id = element.getTextContent().trim();
-        } 
+            this.id = getXmlSimpleText(xmlEventReader);
+        }
         else if (name.equals("link")) {
-            String rel = element.getAttribute("rel");
-            String href = element.getAttribute("href");
-            this.links.put(rel, href);
+            QName rel = new QName("rel");
+            QName href = new QName("href");
+            String relValue = xmlEvent
+                .asStartElement()
+                .getAttributeByName(rel)
+                .getValue();
+            String hrefValue = xmlEvent
+                .asStartElement()
+                .getAttributeByName(href)
+                .getValue();
+            this.links.put(relValue, hrefValue);
+            xmlEventReader.nextEvent();
         }
         else if (name.equals("title")) {
-            this.title = element.getTextContent().trim();
+            this.title = getXmlSimpleText(xmlEventReader);
         }
         else if (name.equals("updated")) {
-            this.updated = element.getTextContent().trim();
+            this.updated = getXmlSimpleText(xmlEventReader);
         }
-        else if (name.equals("author") || name.equals("generator")) {
-            // Ignore
+        else if (name.equals("author")) {
+            xmlEvent = xmlEventReader.nextEvent();
+            while (xmlEvent.getEventType() != XMLStreamConstants.CHARACTERS) {
+                xmlEvent = xmlEventReader.nextEvent();
+            }
+            // ignore results but still processed to end of author.
+            while (true) {
+                while ((xmlEvent = xmlEventReader.peek()).getEventType() !=
+                    XMLStreamConstants.END_ELEMENT) {
+                    xmlEventReader.nextEvent();
+                }
+
+                if (xmlEvent
+                        .asEndElement()
+                        .getName()
+                        .getLocalPart()
+                        .equals("author")) {
+                    break;
+                }
+                xmlEventReader.nextEvent();
+            }
+        }
+        else if (name.equals("entry")) {
+            // eat entry start
+            xmlEventReader.nextEvent();
         }
         else {
-            // Ignore
+            getXmlSimpleText(xmlEventReader); // ignore any other key
         }
     }
 
@@ -72,16 +154,28 @@ public class AtomObject {
      * Initializes the current instance from the given XML element by calling
      * {@code init} on each child of the XML element.
      *
-     * @param element The XML element.
+     * @param xmlEventReader The XML element.
      */
-    void load(Element element) {
-        for (Node child = element.getFirstChild();
-             child != null;
-             child = child.getNextSibling()) 
-        {
-            if (child.getNodeType() != Node.ELEMENT_NODE) 
-                continue;
-            init((Element)child);
+    void load(XMLEventReader xmlEventReader) throws Exception {
+
+        XMLEvent xmlEvent = xmlEventReader.peek();
+        String name = xmlEvent.asStartElement().getName().getLocalPart();
+
+        do {
+            // Process the start elements, everything else but the document
+            // end is whitespace
+            if (xmlEvent.getEventType() == XMLStreamConstants.START_ELEMENT)  {
+                init(xmlEventReader);
+            } else {
+                xmlEventReader.next();
+            }
+            xmlEvent = xmlEventReader.peek();
+            if (xmlEvent.getEventType() == XMLStreamConstants.END_DOCUMENT)
+                break;
+            if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT &&
+                xmlEvent.asEndElement().getName().getLocalPart().equals(name))
+                break;
         }
+        while (true);
     }
 }

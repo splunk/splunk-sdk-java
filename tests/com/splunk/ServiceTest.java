@@ -86,7 +86,7 @@ public class ServiceTest extends SplunkTestCase {
         assertEquals(assertRoot + "#2", 200, response.getStatus());
         try {
             // Make sure we can at least load the Atom response
-            AtomFeed.parse(response.getContent());
+            AtomFeed.parseStream(response.getContent());
         }
         catch (Exception e) {
             fail(e.getMessage());

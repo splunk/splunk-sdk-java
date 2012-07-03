@@ -19,8 +19,10 @@ package com.splunk;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.*;
+import javax.xml.stream.events.XMLEvent;
 
 /**
  * The {@code AtomEntry} class represents an Atom {@code <entry>} element.
@@ -35,7 +37,7 @@ public class AtomEntry extends AtomObject {
     /**
      * Creates a new {@code AtomEntry} instance.
      *
-     * @return A new {@code AtomEntry} instance.                  ––
+     * @return A new {@code AtomEntry} instance.
      */
     static AtomEntry create() {
         return new AtomEntry();
@@ -48,15 +50,37 @@ public class AtomEntry extends AtomObject {
      *
      * @param input The input stream.
      * @return An {@code AtomEntry} instance representing the parsed stream.
+     * @throws Exception on a streaming error.
      */
-    public static AtomEntry parse(InputStream input) {
-        Element root = Xml.parse(input).getDocumentElement();
-        String rname = root.getTagName();
-        String xmlns = root.getAttribute("xmlns");
-        if (!rname.equals("entry") ||
-            !xmlns.equals("http://www.w3.org/2005/Atom"))
+
+    public static AtomEntry parseStream(InputStream input) throws Exception {
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLEventReader xmlReader = inputFactory.createXMLEventReader(input);
+        if (xmlReader.nextEvent().getEventType() !=
+            XMLStreamConstants.START_DOCUMENT) {
             throw new RuntimeException("Unrecognized format");
-        return AtomEntry.parse(root);
+        }
+        // skip to start element
+        XMLEvent xmlEvent;
+        while ((xmlEvent = xmlReader.peek()).getEventType() !=
+                XMLStreamConstants.START_ELEMENT) {
+            xmlReader.nextEvent();
+        }
+
+        if (!xmlEvent
+                .asStartElement()
+                .getName()
+                .getLocalPart()
+                .equals("feed") &&
+            !xmlEvent
+                .asStartElement()
+                .getNamespaceURI("")
+                .equals("http://www.w3.org/2005/Atom")) {
+            throw new RuntimeException("Unrecognized format");
+        }
+
+        return AtomEntry.parse(xmlReader);
+
     }
 
     /**
@@ -64,8 +88,9 @@ public class AtomEntry extends AtomObject {
      *
      * @param element The XML element.
      * @return An {@code AtomEntry} instance representing the parsed element.
+     * @throws Exception on a streaming error.
      */
-    static AtomEntry parse(Element element) {
+    static AtomEntry parse(XMLEventReader element) throws Exception {
         AtomEntry entry = AtomEntry.create();
         entry.load(element);
         return entry;
@@ -74,61 +99,65 @@ public class AtomEntry extends AtomObject {
     /**
      * Initializes the current instance with a given XML element.
      *
-     * @param element The XML element.
+     * @param xmlEventReader The XML element.
      */
-    @Override void init(Element element) {
-        String name = element.getTagName();
+    @Override void init(XMLEventReader xmlEventReader) throws Exception {
+        XMLEvent xmlEvent = xmlEventReader.peek();
+
+        String name = xmlEvent.asStartElement().getName().getLocalPart();
         if (name.equals("published")) {
-            this.published = element.getTextContent().trim();
+            xmlEvent = xmlEventReader.nextEvent();
+            while (xmlEvent.getEventType() != XMLStreamConstants.CHARACTERS) {
+                xmlEvent = xmlEventReader.nextEvent();
+            }
+            this.published = xmlEvent.asCharacters().getData();
+            while (xmlEventReader.peek().getEventType() !=
+                   XMLStreamConstants.START_ELEMENT) {
+                xmlEventReader.nextEvent();
+            }
         }
         else if (name.equals("content")) {
-            this.content = parseContent(element);
+            this.content = parseContent(xmlEventReader);
         }
         else {
-            super.init(element);
+            super.init(xmlEventReader);
         }
-    }
-
-    /**
-     * Returns a filtered list of child XML element nodes. This helper
-     * function makes it easier to retrieve only the element children
-     * of a given XML element.
-     *
-     * @param element The XML element.
-     * @return A list of child element nodes.
-     */
-    static ArrayList<Element> getChildElements(Element element) {
-        ArrayList<Element> result = new ArrayList<Element>();
-        for (Node child = element.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
-            if (child.getNodeType() == Node.ELEMENT_NODE)
-                result.add((Element)child);
-        return result;
     }
 
     /**
      * Parses the {@code <content>} element of an Atom entry.
      *
-     * @param element The XML element to parse.
+     * @param xmlEventReader The XML element to parse.
      * @return A {@code Record} object containing the parsed values.
      */
-    Record parseContent(Element element) {
-        assert(element.getTagName().equals("content"));
+    private Record
+    parseContent(XMLEventReader xmlEventReader) throws Exception {
+
+        // Skip the content XML start element and move the next
+        // XML start element
+        XMLEvent xmlEvent = setXmlToNextStart(xmlEventReader);
 
         Record content = null;
-
-        List<Element> children = getChildElements(element);
-
-        int count = children.size();
-
-        // Expect content to be empty or a single <dict> element
-        assert(count == 0 || count == 1);
-
-        if (count == 1) {
-            Element child = children.get(0);
-            content = parseDict(child);
-        }
+        do {
+            if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT) {
+                if (xmlEvent
+                        .asEndElement()
+                        .getName()
+                        .getLocalPart()
+                        .equals("content"))
+                    break;
+            }
+            if (xmlEvent.getEventType() == XMLStreamConstants.START_ELEMENT) {
+                if (xmlEvent
+                        .asStartElement()
+                        .getName()
+                        .getLocalPart()
+                        .equals("dict")) {
+                    content = parseDict(xmlEventReader);
+                }
+            }
+            xmlEvent = xmlEventReader.nextEvent();
+        } while (true);
 
         return content;
     }
@@ -137,93 +166,136 @@ public class AtomEntry extends AtomObject {
      * Parses a {@code <dict>} content element and returns a {@code Record}
      * object containing the parsed values.
      *
-     * @param element The {@code <dict>} element to parse.
+     * @param xmlEventReader The {@code <dict>} element to parse.
      * @return A {@code Record} object containing the parsed values.
      */
-    Record parseDict(Element element) {
-        assert(element.getTagName().equals("s:dict"));
-
-        if (!element.hasChildNodes()) return null;
-
-        List<Element> children = getChildElements(element);
-
-        int count = children.size();
-        if (count == 0) return null;
+    private Record parseDict(XMLEventReader xmlEventReader) throws Exception {
+        XMLEvent xmlEvent = xmlEventReader.peek();
 
         Record result = new Record();
-        for (Element child : children) {
-            assert(child.getTagName().equals("s:key"));
-            String key = child.getAttribute("name");
-            Object value = parseValue(child);
-            if (value != null) result.put(key, value);
-        }
-        return result;
+        do {
+            if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT) {
+                if (xmlEvent
+                        .asEndElement()
+                        .getName()
+                        .getLocalPart()
+                        .equals("dict"))
+                    break;
+            }
+
+            if (xmlEvent.getEventType() == XMLStreamConstants.START_ELEMENT) {
+                if (xmlEvent
+                        .asStartElement()
+                        .getName()
+                        .getLocalPart()
+                        .equals("key")) {
+                    QName name = new QName("name");
+                    String key = xmlEvent
+                                    .asStartElement()
+                                    .getAttributeByName(name)
+                                    .getValue();
+                    Object value = parseValue(xmlEventReader);
+                    if (value != null) result.put(key, value);
+                }
+            }
+
+            xmlEvent = xmlEventReader.nextEvent();
+
+        } while (true);
+
+        if (result.size() == 0) xmlEventReader.nextEvent();
+
+        return result.size() == 0 ? null : result;
     }
 
     /**
      * Parse a {@code <list>} element and return a {@code List} object
      * containing the parsed values.
      *
-     * @param element The {@code <list>} element to parse.
+     * @param xmlEventReader The {@code <list>} element to parse.
      * @return A {@code List} object containing the parsed values.
      */
-    List parseList(Element element) {
-        assert(element.getTagName().equals("s:list"));
+    private List parseList(XMLEventReader xmlEventReader) throws Exception {
+        XMLEvent xmlEvent = xmlEventReader.peek();
 
-        if (!element.hasChildNodes()) return null;
+        List result = new ArrayList();
 
-        List<Element> children = getChildElements(element);
+        do {
+            int type = xmlEvent.getEventType();
+            if (type == XMLStreamConstants.END_ELEMENT) {
+                if (xmlEvent
+                        .asEndElement()
+                        .getName()
+                        .getLocalPart()
+                        .equals("list"))
+                    break;
+            }
+            if (type == XMLStreamConstants.START_ELEMENT) {
+                if (xmlEvent
+                        .asStartElement()
+                        .getName()
+                        .getLocalPart()
+                        .equals("item")) {
+                    Object value = parseValue(xmlEventReader);
+                    if (value != null) result.add(value);
+                }
+            }
+            xmlEvent = xmlEventReader.nextEvent();
+        } while (true);
 
-        int count = children.size();
-        if (count == 0) return null;
+        if (result.size() == 0) xmlEventReader.nextEvent();
 
-        List result = new ArrayList(count);
-        for (Element child : children) {
-            assert(child.getTagName().equals("s:item"));
-            Object value = parseValue(child);
-            if (value != null) result.add(value);
-        }
-        return result;
+        return result.size() == 0 ? null : result;
     }
 
     /**
      * Parses the value content of a dict/key or a list/item element. The value
      * is either text, a {@code <dict>} element, or a {@code <list>} element.
      *
-     * @param element The XML element containing the values to parse.
+     * @param xmlEventReader The XML element containing the values to parse.
      * @return An object containing the parsed values. If the source was a text
      * value, the object is a {@code String}. If the source was a {@code <dict>}
      * element, the object is a {@code Record}. If the source was a
      * {@code <list>} element, the object is a {@code List} object.
+     * @throws Exception on a streaming error.
      */
-    Object parseValue(Element element) {
-        String name = element.getTagName();
+    Object parseValue(XMLEventReader xmlEventReader) throws Exception {
 
-        assert(name.equals("s:key") || name.equals("s:item"));
+        // If the value is a single element (i.e. no dict or list following,
+        // then we can grab just the text, otherwise we will crawl down
+        // the element, essentially doing a depth first build up of the object
+        XMLEvent xmlEvent = xmlEventReader.nextEvent();
 
-        if (!element.hasChildNodes()) return null;
+        if (xmlEvent.getEventType() == XMLStreamConstants.START_ELEMENT) {
+            String type = xmlEvent.asStartElement().getName().getLocalPart();
+            if (type.equals("dict"))
+                return parseDict(xmlEventReader);
+            else if (type.equals("list"))
+                return parseList(xmlEventReader);
+            else if (type.equals("key")) {
+                return parseValue(xmlEventReader);
+            }
+            else if (type.equals("item")) { // must be text item of a list
+                xmlEvent = xmlEventReader.nextEvent();
+                return xmlEvent.asCharacters().getData();
+            }
+        } else if (xmlEvent.getEventType() == XMLStreamConstants.CHARACTERS) {
+            String text = xmlEvent.asCharacters().getData();
 
-        List<Element> children = getChildElements(element);
+            if (text.startsWith("\n  ")) {
+                XMLEvent xmlEvent2 = xmlEventReader.peek();
+                if (xmlEvent2.getEventType() ==
+                    XMLStreamConstants.END_ELEMENT) {
+                    return text.length() == 0 ? null: text;
+                }
+                return parseValue(xmlEventReader);
+            } else {
+                return text;
+            }
+        } else {
+            xmlEventReader.nextEvent(); // whitespace or syntactical ends
+        }
 
-        int count = children.size();
-
-        // If no element children, then it must be a text value
-        if (count == 0) return element.getTextContent();
-
-        // If its not a text value, then expect a single child element.
-        assert(children.size() == 1);
-
-        Element child = children.get(0);
-
-        name = child.getTagName();
-
-        if (name.equals("s:dict"))
-            return parseDict(child);
-
-        if (name.equals("s:list"))
-            return parseList(child);
-
-        assert(false); // Unreached
         return null;
     }
 }
