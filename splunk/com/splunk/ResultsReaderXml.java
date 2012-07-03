@@ -55,7 +55,7 @@ public class ResultsReaderXml extends ResultsReader {
 
         ArrayList<String> findInOrder = new ArrayList<String>();
         findInOrder.add(0, "<results preview='0'>");
-        findInOrder.add(1, "<result offset='0'>");
+        findInOrder.add(1, "<result offset=");
         String accumulator = "";
         int index = 0;
         while (true) {
@@ -168,7 +168,7 @@ public class ResultsReaderXml extends ResultsReader {
                     break;
                 case XMLStreamConstants.CHARACTERS:
                     if (level > 1) {
-                        // Multi-values delimeter is comma.
+                        // Multi-values delimiter is comma.
                         if (value.length() > 0) value.append(",");
                         value.append(xmlEvent.asCharacters().getData());
                     }
