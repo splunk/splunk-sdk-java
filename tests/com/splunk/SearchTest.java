@@ -30,7 +30,8 @@ public class SearchTest extends SplunkTestCase {
 
     // Run the given query with the given query args.
     Job run(Service service, String query, Args args) {
-        return service.getJobs().create(query, args);
+        Job job = service.getJobs().create(query, args);
+        return ready(job); // wait until job is query-able.
     }
 
     // Run the given query and wait for the job to complete.
@@ -134,7 +135,7 @@ public class SearchTest extends SplunkTestCase {
             parseArgs.put("output_mode", "json");
             parseArgs.put("enable_lookups", true);
             parseArgs.put("reload_macros", true);
-            service.parse(query, parseArgs); 
+            service.parse(query, parseArgs);
             fail("Expected a parse error");
         }
         catch (HttpException e) {

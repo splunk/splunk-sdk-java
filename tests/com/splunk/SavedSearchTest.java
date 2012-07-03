@@ -416,11 +416,13 @@ public class SavedSearchTest extends SplunkTestCase {
         assertEquals(assertRoot + "#70", 0, history.length);
 
         Job job1 = savedSearch.dispatch();
+        ready(job1);
         history = savedSearch.history();
         assertEquals(assertRoot + "#71", 1, history.length);
         assertTrue(contains(history, job1.getSid()));
 
         Job job2 = savedSearch.dispatch();
+        ready(job2);
         history = savedSearch.history();
         assertEquals(assertRoot + "#72", 2, history.length);
         assertTrue(assertRoot + "#73", contains(history, job1.getSid()));

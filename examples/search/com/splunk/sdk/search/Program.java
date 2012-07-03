@@ -144,26 +144,10 @@ public class Program {
 
         // Wait until results are available.
         boolean status = false;
-        while (true) {
-            // First touch of job may result in an exception that the job
-            // is not ready. Catch it here, wait a short time and we'll try
-            // again.
-            try {
-                if (job.isDone())
-                    break;
-            }
-            catch (SplunkException splunkException) {
-                if (splunkException.getCode() == SplunkException.JOB_NOTREADY) {
-                    Thread.sleep(500);
-                    job.refresh();
-                    continue;
-                } else {
-                    throw splunkException;
-                }
-            }
+        while (!job.isDone()) {
 
-            // If no outputs are available, optionally print status and wait.
-            if (verbose) {
+            // If no outputs are available, optionally print status
+            if (verbose && job.isReady()) {
                 float progress = job.getDoneProgress() * 100.0f;
                 int scanned = job.getScanCount();
                 int matched = job.getEventCount();
@@ -174,10 +158,9 @@ public class Program {
                 status = true;
             }
 
-            Thread.sleep(2000);
-
-            job.refresh();
+            Thread.sleep(1000);
         }
+
         if (status) System.out.println("");
 
         InputStream stream = null;
@@ -215,7 +198,7 @@ public class Program {
                 // are found in the "com.splunk.external" module. If you include
                 // the splunk-external.jar and the both gson-2.1.jar and
                 // opencsv-2.3.jar, you can use any -- just like this sample.
-                ResultsReader resultsReader = null;
+                ResultsReader resultsReader;
                 if (outputMode.equals("xml"))
                     resultsReader = new ResultsReaderXml(stream);
                 else if (outputMode.equals("json")) {
@@ -226,7 +209,7 @@ public class Program {
                 while ((map = resultsReader.getNextEvent()) != null) {
                     System.out.println("EVENT:********");
                     for (String key: map.keySet())
-                        System.out.println("   " + key + " --> " + map.get(key));
+                        System.out.println("  " + key + " --> " + map.get(key));
                 }
                 resultsReader.close();
             } catch (Exception e) {

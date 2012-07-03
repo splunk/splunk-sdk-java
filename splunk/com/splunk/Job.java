@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class Job extends Entity {
 
+    private boolean isReady = false;
+
     /**
      * Class constructor.
      *
@@ -83,6 +85,14 @@ public class Job extends Entity {
     }
 
     /**
+     * Checks if the job is ready to be accessed, throw an exception if not.
+     */
+    private void checkReady() {
+        if (!isReady()) throw new SplunkException(SplunkException.JOB_NOTREADY,
+            "Job not yet scheduled by server");
+    }
+
+    /**
      * Disables preview for this job.
      *
      * @return The job.
@@ -129,6 +139,7 @@ public class Job extends Entity {
      * @return The earliest time.
      */
     public Date getCursorTime() {
+        checkReady();
         return getDate("cursorTime");
     }
 
@@ -139,6 +150,7 @@ public class Job extends Entity {
      * @return The delegate, or {@code null} if not specified.
      */
     public String getDelegate() {
+        checkReady();
         return getString("delegate", null);
     }
 
@@ -148,6 +160,7 @@ public class Job extends Entity {
      * @return The disk usage, in bytes.
      */
     public int getDiskUsage() {
+        checkReady();
         return getInteger("diskUsage");
     }
 
@@ -159,6 +172,7 @@ public class Job extends Entity {
      * @return This job's dispatch state.
      */
     public String getDispatchState() {
+        checkReady();
         return getString("dispatchState");
     }
 
@@ -172,6 +186,7 @@ public class Job extends Entity {
      * @return This job's progress.
      */
     public float getDoneProgress() {
+        checkReady();
         return getFloat("doneProgress");
     }
 
@@ -183,6 +198,7 @@ public class Job extends Entity {
      * @return The number of dropped events.
      */
     public int getDropCount() {
+        checkReady();
         return getInteger("dropCount");
     }
 
@@ -195,6 +211,7 @@ public class Job extends Entity {
      * @return The earliest time, in UTC format.
      */
     public Date getEarliestTime() {
+        checkReady();
         return getDate("earliestTime");
     }
 
@@ -205,6 +222,7 @@ public class Job extends Entity {
      * @return The count of available events.
      */
     public int getEventAvailableCount() {
+        checkReady();
         return getInteger("eventAvailableCount");
     }
 
@@ -214,6 +232,7 @@ public class Job extends Entity {
      * @return The number of events.
      */
     public int getEventCount() {
+        checkReady();
         return getInteger("eventCount");
     }
 
@@ -223,6 +242,7 @@ public class Job extends Entity {
      * @return The number of event fields.
      */
     public int getEventFieldCount() {
+        checkReady();
         return getInteger("eventFieldCount");
     }
 
@@ -232,6 +252,7 @@ public class Job extends Entity {
      * @return {@code true} if events can be streamed, {@code false} if not. 
      */
     public boolean getEventIsStreaming() {
+        checkReady();
         return getBoolean("eventIsStreaming");
     }
 
@@ -241,6 +262,7 @@ public class Job extends Entity {
      * not.
      */
     public boolean getEventIsTruncated() {
+        checkReady();
         return getBoolean("eventIsTruncated");
     }
 
@@ -250,6 +272,7 @@ public class Job extends Entity {
      * @return The event InputStream IO handle.
      */
     public InputStream getEvents() {
+        checkReady();
         return getEvents(null);
     }
 
@@ -261,6 +284,7 @@ public class Job extends Entity {
      * @return The event InputStream IO handle.
      */
     public InputStream getEvents(Map args) {
+        checkReady();
         ResponseMessage response = service.get(path + "/events", args);
         return response.getContent();
     }
@@ -272,6 +296,7 @@ public class Job extends Entity {
      * @return The event search query.
      */
     public String getEventSearch() {
+        checkReady();
         return getString("eventSearch", null);
     }
 
@@ -283,6 +308,7 @@ public class Job extends Entity {
      * or {@code none} if events are not sorted.
      */
     public String getEventSorting() {
+        checkReady();
         return getString("eventSorting");
     }
 
@@ -293,6 +319,7 @@ public class Job extends Entity {
      * @return The job keywords.
      */
     public String getKeywords() {
+        checkReady();
         return getString("keywords", null);
     }
 
@@ -302,6 +329,7 @@ public class Job extends Entity {
      * @return The job label.
      */
     public String getLabel() {
+        checkReady();
         return getString("label", null);
     }
 
@@ -314,6 +342,7 @@ public class Job extends Entity {
      * @return The latest time, in UTC format.
      */
     public Date getLatestTime() {
+        checkReady();
         return getDate("latestTime");
     }
 
@@ -323,6 +352,7 @@ public class Job extends Entity {
      * @return The job name.
      */
     @Override public String getName() {
+        checkReady();
         return getSid();
     }
 
@@ -333,6 +363,7 @@ public class Job extends Entity {
      * @return The number of previews.
      */
     public int getNumPreviews() {
+        checkReady();
         return getInteger("numPreviews");
     }
 
@@ -342,6 +373,7 @@ public class Job extends Entity {
      * @return The job priority.
      */
     public int getPriority() {
+        checkReady();
         return getInteger("priority");
     }
 
@@ -351,6 +383,7 @@ public class Job extends Entity {
      * @param value The new priority.
      */
     public void setPriority(int value) {
+        checkReady();
         control("setpriority", new Args("priority", value));
     }
 
@@ -360,6 +393,7 @@ public class Job extends Entity {
      * @return The remote search query string.
      */
     public String getRemoteSearch() {
+        checkReady();
         return getString("remoteSearch", null);
     }
 
@@ -372,6 +406,7 @@ public class Job extends Entity {
      * @return The reporting search query.
      */
     public String getReportSearch() {
+        checkReady();
         return getString("reportSearch", null);
     }
 
@@ -383,6 +418,7 @@ public class Job extends Entity {
      * @return The number of results.
      */
     public int getResultCount() {
+        checkReady();
         return getInteger("resultCount");
     }
 
@@ -392,6 +428,7 @@ public class Job extends Entity {
      * @return {@code true} if results can be streamed, {@code false} if not.
      */
     public boolean getResultIsStreaming() {
+        checkReady();
         return getBoolean("resultIsStreaming");
     }
 
@@ -402,6 +439,7 @@ public class Job extends Entity {
      * @return The number of result rows.
      */
     public int getResultPreviewCount() {
+        checkReady();
         return getInteger("resultPreviewCount");
     }
 
@@ -411,6 +449,7 @@ public class Job extends Entity {
      * @return The results InputStream IO handle.
      */
     public InputStream getResults() {
+        checkReady();
         return getResults(null);
     }
 
@@ -421,6 +460,7 @@ public class Job extends Entity {
      * @return The results InputStream IO handle.
      */
     public InputStream getResults(Map args) {
+        checkReady();
         ResponseMessage response = service.get(path + "/results", args);
         return response.getContent();
     }
@@ -431,6 +471,7 @@ public class Job extends Entity {
      * @return The preview results InputStream IO handle.
      */
     public InputStream getResultsPreview() {
+        checkReady();
         return getResultsPreview(null);
     }
 
@@ -441,6 +482,7 @@ public class Job extends Entity {
      * @return The preview results InputStream IO handle.
      */
     public InputStream getResultsPreview(Map args) {
+        checkReady();
         ResponseMessage response = service.get(path + "/results_preview", args);
         return response.getContent();
     }
@@ -451,6 +493,7 @@ public class Job extends Entity {
      * @return The run-time duration, in seconds.
      */
     public float getRunDuration() {
+        checkReady();
         return getFloat("runDuration");
     }
 
@@ -460,6 +503,7 @@ public class Job extends Entity {
      * @return The number of events.
      */
     public int getScanCount() {
+        checkReady();
         return getInteger("scanCount");
     }
 
@@ -469,6 +513,7 @@ public class Job extends Entity {
      * @return The search title.
      */
     public String getSearch() {
+        checkReady();
         return getTitle();
     }
 
@@ -481,6 +526,7 @@ public class Job extends Entity {
      * @return This earliest search time, in epoch format.
      */
     public String getSearchEarliestTime() {
+        checkReady();
         return getString("searchEarliestTime", null);
     }
 
@@ -493,6 +539,7 @@ public class Job extends Entity {
      * @return The latest search time, in epoch format.
      */
     public String getSearchLatestTime() {
+        checkReady();
         return getString("searchLatestTime", null);
     }
 
@@ -502,6 +549,7 @@ public class Job extends Entity {
      * @return The search log InputStream IO handle.
      */
     public InputStream getSearchLog() {
+        checkReady();
         return getSearchLog(null);
     }
 
@@ -512,11 +560,13 @@ public class Job extends Entity {
      * @return The search log InputStream IO handle.
      */
     public InputStream getSearchLog(Map args) {
+        checkReady();
         ResponseMessage response = service.get(path + "/search.log", args);
         return response.getContent();
     }
 
     public String[] getSearchProviders() {
+        checkReady();
         return getStringArray("searchProviders", null);
     }
     /**
@@ -525,6 +575,7 @@ public class Job extends Entity {
      * @return The job's SID.
      */
     public String getSid() {
+        checkReady();
         return getString("sid");
     }
 
@@ -547,6 +598,7 @@ public class Job extends Entity {
      * @return The summary InputStream IO handle.
      */
     public InputStream getSummary() {
+        checkReady();
         return getSummary(null);
     }
 
@@ -557,6 +609,7 @@ public class Job extends Entity {
      * @return The summary InputStream IO handle.
      */
     public InputStream getSummary(Map args) {
+        checkReady();
         ResponseMessage response = service.get(path + "/summary", args);
         return response.getContent();
     }
@@ -567,6 +620,7 @@ public class Job extends Entity {
      * @return The number of timeline buckets.
      */
     public int getStatusBuckets() {
+        checkReady();
         return getInteger("statusBuckets");
     }
 
@@ -576,6 +630,7 @@ public class Job extends Entity {
      * @return The timeline InputStream IO handle.
      */
     public InputStream getTimeline() {
+        checkReady();
         return getTimeline(null);
     }
 
@@ -586,6 +641,7 @@ public class Job extends Entity {
      * @return The timeline InputStream IO handle.
      */
     public InputStream getTimeline(Map args) {
+        checkReady();
         ResponseMessage response = service.get(path + "/timeline", args);
         return response.getContent();
     }
@@ -598,6 +654,7 @@ public class Job extends Entity {
      * @return The time to live, in seconds. 
      */
     public int getTtl() {
+        checkReady();
         return getInteger("ttl");
     }
 
@@ -607,6 +664,9 @@ public class Job extends Entity {
      * @return {@code true} if the job is done, {@code false} if not.
      */
     public boolean isDone() {
+        this.refresh();
+        if (!isReady)
+            return false;
         return getBoolean("isDone");
     }
 
@@ -616,6 +676,7 @@ public class Job extends Entity {
      * @return {@code true} if the job failed, {@code false} if not.
      */
     public boolean isFailed() {
+        checkReady();
         return getBoolean("isFailed");
     }
 
@@ -625,6 +686,7 @@ public class Job extends Entity {
      * @return {@code true} if the job is finalized, {@code false} if not.
      */
     public boolean isFinalized() {
+        checkReady();
         return getBoolean("isFinalized");
     }
 
@@ -634,6 +696,7 @@ public class Job extends Entity {
      * @return {@code true} if the job is paused, {@code false} if not.
      */
     public boolean isPaused() {
+        checkReady();
         return getBoolean("isPaused");
     }
 
@@ -643,7 +706,20 @@ public class Job extends Entity {
      * @return {@code true} if preview is enabled, {@code false} if not.
      */
     public boolean isPreviewEnabled() {
+        checkReady();
         return getBoolean("isPreviewEnabled");
+    }
+
+    /**
+     * Indicates whether the job has been scheduled and is ready to
+     * return data.
+     *
+     * @return {@code true} if the job is a real-time search, {@code false} if
+     * not.
+     */
+    public boolean isReady() {
+        this.refresh();
+        return isReady;
     }
 
     /**
@@ -653,6 +729,7 @@ public class Job extends Entity {
      * not.
      */
     public boolean isRealTimeSearch() {
+        checkReady();
         return getBoolean("isRealTimeSearch");
     }
 
@@ -663,6 +740,7 @@ public class Job extends Entity {
      * {@code false} if not.
      */
     public boolean isRemoteTimeline() {
+        checkReady();
         return getBoolean("isRemoteTimeline");
     }
 
@@ -672,6 +750,7 @@ public class Job extends Entity {
      * @return {@code true} if the job has been saved, {@code false} if not.
      */
     public boolean isSaved() {
+        checkReady();
         return getBoolean("isSaved");
     }
 
@@ -682,6 +761,7 @@ public class Job extends Entity {
      * if not.
      */
     public boolean isSavedSearch() {
+        checkReady();
         return getBoolean("isSavedSearch");
     }
 
@@ -692,6 +772,7 @@ public class Job extends Entity {
      * @return {@code true} if the job is a zombie, {@code false} if not.
      */
     public boolean isZombie() {
+        checkReady();
         return getBoolean("isZombie");
     }
 
@@ -706,13 +787,17 @@ public class Job extends Entity {
         update();
         ResponseMessage response = service.get(path);
         if (response.getStatus() == 204) {
-            // Empty response from server means the job has not yet been
-            // scheduled; so throw an exception up to the caller.
-            throw new SplunkException(SplunkException.JOB_NOTREADY,
-                                      "Job not yet scheduled by server");
+            isReady = false;
+            return null;
         }
 
-        AtomEntry entry = AtomEntry.parse(response.getContent());
+        isReady = true;
+        AtomEntry entry;     // wkcfix exception path
+        try {
+            entry = AtomEntry.parseStream(response.getContent());
+        } catch (Exception e) {
+            return this;
+        }
         load(entry);
         return this;
     }

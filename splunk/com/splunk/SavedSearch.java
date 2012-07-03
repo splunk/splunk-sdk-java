@@ -69,26 +69,18 @@ public class SavedSearch extends Entity {
      * @param args Dispatch arguments.
      * @return The search job.
      */
-    // CONSIDER: We should take an optional maxWait argument
-    // CONSIDER: Another alternative is to return a MaybeJob object that
-    // has an "exists" property, so the user can call maybeJob.refresh()
-    // until exists == true.
     public Job dispatch(Map args) throws InterruptedException {
         ResponseMessage response = service.post(actionPath("dispatch"), args);
         invalidate();
         String sid = Job.getSid(response);
 
-        // The sad fact here is that the search job does not immediately show
-        // up once the saved search is dispatched, and we may therefore have
-        // to wait a while in order to return the search job.
-
-        Job job = null;
+        Job job;
         JobCollection jobs = service.getJobs();
-        for (int retry = 5; retry > 0; --retry) {
-            jobs.refresh();
-            job = jobs.get(sid);
-            if (job != null) break;
-            Thread.sleep(1000);
+        job = jobs.get(sid);
+
+        // if job not yet scheduled, create an empty job object
+        if (job == null) {
+            job = new Job(service, "search/jobs/" + sid);
         }
 
         return job;
@@ -101,7 +93,12 @@ public class SavedSearch extends Entity {
      */
     public Job[] history() {
         ResponseMessage response = service.get(actionPath("history"));
-        AtomFeed feed = AtomFeed.parse(response.getContent());
+        AtomFeed feed;
+        try {
+            feed = AtomFeed.parseStream(response.getContent());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         int count = feed.entries.size();
         Job[] result = new Job[count];
         for (int i = 0; i < count; ++i) {

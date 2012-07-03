@@ -153,27 +153,20 @@ public class SplunkTestCase extends TestCase {
         assertTrue(assertRoot + "#5", restarted);
     }
 
+    // Wait for the given job to be ready
+    Job ready(Job job) {
+        while (!job.isReady()) {
+            sleep(10);
+        }
+        return job;
+    }
+
     // Wait for the given job to complete
     Job wait(Job job) {
 
-        while (true) {
-            try {
-                if (!job.isDone()) {
-                    try { Thread.sleep(2000); }
-                    catch (InterruptedException e) {}
-                    job.refresh();
-                } else {
-                    return job;
-                }
-            }
-            catch (SplunkException splunkException) {
-                if (splunkException.getCode() == SplunkException.JOB_NOTREADY) {
-                    try { Thread.sleep(500); }
-                    catch (Exception e) {}
-                } else {
-                    throw splunkException;
-                }
-            }
+        while (!job.isDone()) {
+            sleep(500);
         }
+        return job;
     }
 }
