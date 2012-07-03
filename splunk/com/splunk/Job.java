@@ -52,7 +52,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Performs the requested action on this job.
+     * Performs the requested action on this job. Valid values are: "pause", 
+     * "unpause", "finalize", "cancel", "touch", "setttl", "setpriority", 
+     * "enablepreview", and "disablepreview".
      *
      * @param action The action to perform.
      * @return The job.
@@ -62,10 +64,12 @@ public class Job extends Entity {
     }
 
     /**
-     * Performs the requested action on this job.
+     * Performs the requested action on this job. Valid values are: "pause", 
+     * "unpause", "finalize", "cancel", "touch", "setttl", "setpriority", 
+     * "enablepreview", and "disablepreview".
      *
      * @param action The action to perform.
-     * @param args Optional arguments for this action.
+     * @param args Optional arguments for this action ("ttl" and "priority").
      * @return The job.
      */
     public Job control(String action, Map args) {
@@ -130,8 +134,8 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time from which we are sure no events later than
-     * this time will be scanned later. (Use this as a progress indicator.)
+     * Returns the earliest time from which no events are later scanned.
+     * (Use this as a progress indicator.)
      * @see #getLatestTime
      * @see #getEarliestTime
      * @see #getDoneProgress
@@ -203,7 +207,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time a search job is configured to start.
+     * Returns the earliest time in the time range to search. 
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getDoneProgress
@@ -334,7 +338,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the latest time a search job is configured to start.
+     * Returns the latest time in the time range to search. 
      * @see #getCursorTime
      * @see #getEarliestTime
      * @see #getDoneProgress
@@ -518,7 +522,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the earliest time a search job is configured to start.
+     * Returns the earliest time in the time range to search. 
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getDoneProgress
@@ -531,7 +535,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the latest time a search job is configured to start.
+     * Returns the latest time in the time range to search. 
      * @see #getEarliestTime
      * @see #getCursorTime
      * @see #getDoneProgress
