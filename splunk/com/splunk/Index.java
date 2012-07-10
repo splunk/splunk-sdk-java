@@ -61,7 +61,7 @@ public class Index extends Entity {
     /**
      * Cleans this index, removing all events.
      *
-     * @param maxSeconds The maximum number of seconds to wait before returning. 
+     * @param maxSeconds The maximum number of seconds to wait before returning.
      * -1 means to wait forever.
      * @return This index.
      */
@@ -135,7 +135,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the absolute file path to the cold database for this index. 
+     * Returns the absolute file path to the cold database for this index.
      * This value may contain shell expansion terms.
      *
      * @return The colddbs's absolute file path, or {@code null} if not
@@ -167,10 +167,10 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the path to the archiving script. 
-     * <p>For more info about archiving scripts, see the 
-     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes" 
-     * target="_blank">POST data/indexes endpoint</a> in the REST API 
+     * Returns the path to the archiving script.
+     * <p>For more info about archiving scripts, see the
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes"
+     * target="_blank">POST data/indexes endpoint</a> in the REST API
      * documentation.
      * @see #getColdToFrozenDir
      *
@@ -206,6 +206,20 @@ public class Index extends Entity {
      */
     public String getDefaultDatabase() {
         return getString("defaultDatabase");
+    }
+
+    /**
+     * Returns whether asynchronous "online fsck" bucket repair is enabled.
+     * <p>
+     * When this feature is enabled, you don't have to wait for buckets to be
+     * repaired before starting Splunk, but you might notice a slight
+     * degradation in performance as a result.
+     * @return {@code true} if bucket repair is enabled, {@code false} if
+     * not.
+     */
+    public boolean getEnableOnlineBucketRepair() {
+
+        return getBoolean("enableOnlineBucketRepair");
     }
 
     /**
@@ -270,6 +284,16 @@ public class Index extends Entity {
     }
 
     /**
+     * Returns the time (as annotated by a postfix {@code m, s, h}, or
+     * {@code d}) that if a warm or cold bucket is older, do not create or
+     * rebuild its bloomfilter. An example would be {@code 30d}, for 30 days.
+     *
+     */
+    public String getMaxBloomBackfillBucketAge() {
+        return getString("maxBloomBackfillBucketAge", null);
+    }
+
+    /**
      * Returns the maximum number of concurrent optimize processes that
      * can run against a hot bucket for this index.
      *
@@ -302,8 +326,8 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the maximum lifetime of a hot bucket for this index. 
-     * If a hot bucket exceeds this value, Splunk rolls it to warm. 
+     * Returns the maximum lifetime of a hot bucket for this index.
+     * If a hot bucket exceeds this value, Splunk rolls it to warm.
      * A value of 0 means an infinite lifetime.
      *
      * @return The hot bucket's maximum lifetime, in seconds.
@@ -313,7 +337,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the upper bound of the target maximum timespan of 
+     * Returns the upper bound of the target maximum timespan of
      * hot and warm buckets for this index.
      *
      * @return The upper bound of the target maximum timespan, in seconds.
@@ -323,8 +347,8 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the amount of memory to allocate for buffering 
-     * a single .tsidx file into memory before flushing to disk. 
+     * Returns the amount of memory to allocate for buffering
+     * a single .tsidx file into memory before flushing to disk.
      *
      * @return The amount of memory, in MB.
      */
@@ -333,7 +357,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the maximum number of unique lines that are allowed 
+     * Returns the maximum number of unique lines that are allowed
      * in a bucket's .data files for this index. A value of 0 means infinite
      * lines.
      *
@@ -372,8 +396,8 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the maximum number of warm buckets for this index. If this 
-     * value is exceeded, the warm buckets with the lowest value for their 
+     * Returns the maximum number of warm buckets for this index. If this
+     * value is exceeded, the warm buckets with the lowest value for their
      * latest times are moved to cold.
      *
      * @return The maximum number of warm buckets.
@@ -392,7 +416,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the frequency at which Splunkd forces a filesystem sync while 
+     * Returns the frequency at which Splunkd forces a filesystem sync while
      * compressing journal slices for this index.
      *
      * A value of "disable" disables this feature completely, while a value of 0
@@ -513,12 +537,14 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the sync attribute for this index.
+     * Returns a value that specifies the number of events that trigger the
+     * indexer to sync events.  This is a global value, not an index by index
+     * value.
      *
      * @return The sync attribute.
      */
-    public boolean getSync() {
-        return getBoolean("sync");
+    public int getSync() {
+        return getInteger("sync");
     }
 
     /**
@@ -591,7 +617,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets whether the data retrieved from this index is UTF8-encoded. 
+     * Sets whether the data retrieved from this index is UTF8-encoded.
      * <p>
      * <b>Note:</b> Indexing performance degrades when this parameter is set to
      * {@code true}.
@@ -605,7 +631,7 @@ public class Index extends Entity {
     /**
      * Sets the number of events that make up a block for block signatures.
      *
-     * @param value The event count for block signing. A value of 100 is 
+     * @param value The event count for block signing. A value of 100 is
      * recommended. A value of 0 disables block signing for this index.
      */
     public void setBlockSignSize(int value) {
@@ -613,18 +639,18 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the destination path for the frozen archive, where Splunk 
-     * automatically puts frozen buckets. The bucket freezing policy is as 
+     * Sets the destination path for the frozen archive, where Splunk
+     * automatically puts frozen buckets. The bucket freezing policy is as
      *follows:
      * <p>
-     * <ul><li><b>New-style buckets (4.2 and later):</b> All files are removed 
-     * except the raw data. To thaw frozen buckets, run {@code Splunk rebuild 
-     * <bucket dir>} on the bucket, then move the buckets to the thawed 
+     * <ul><li><b>New-style buckets (4.2 and later):</b> All files are removed
+     * except the raw data. To thaw frozen buckets, run {@code Splunk rebuild
+     * <bucket dir>} on the bucket, then move the buckets to the thawed
      * directory.</li>
-     * <li><b>Old-style buckets (4.1 and earlier):</b> gzip all the .data and 
-     * .tsidx files. To thaw frozen buckets, gunzip the zipped files and move 
+     * <li><b>Old-style buckets (4.1 and earlier):</b> gzip all the .data and
+     * .tsidx files. To thaw frozen buckets, gunzip the zipped files and move
      * the buckets to  the thawed directory.</li></ul>
-     * If both {@code coldToFrozenDir} and {@code coldToFrozenScript} are 
+     * If both {@code coldToFrozenDir} and {@code coldToFrozenScript} are
      * specified, {@code coldToFrozenDir} takes precedence.
      * @see #setColdToFrozenScript
      * @see #getColdToFrozenScript
@@ -636,10 +662,10 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the path to the archiving script. 
-     * <p>For more info about archiving scripts, see the 
-     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes" 
-     * target="_blank">POST data/indexes endpoint</a> in the REST API 
+     * Sets the path to the archiving script.
+     * <p>For more info about archiving scripts, see the
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTindex#POST_data.2Findexes"
+     * target="_blank">POST data/indexes endpoint</a> in the REST API
      * documentation.
      * @see #setColdToFrozenDir
      * @see #getColdToFrozenDir
@@ -651,13 +677,13 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets whether asychronous "online fsck" bucket repair is enabled.
+     * Sets whether asynchronous "online fsck" bucket repair is enabled.
      * <p>
-     * When this feature is enabled, you don't have to wait for buckets to be 
-     * repaired before starting Splunk, but you might notice a slight 
+     * When this feature is enabled, you don't have to wait for buckets to be
+     * repaired before starting Splunk, but you might notice a slight
      * degradation in performance as a result.
      *
-     * @param value {@code true} to enable online bucket repair, {@code false} 
+     * @param value {@code true} to enable online bucket repair, {@code false}
      * if not.
      */
     public void setEnableOnlineBucketRepair(boolean value) {
@@ -665,8 +691,8 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the maximum age for a bucket, after which the data in this index 
-     * rolls to frozen. Freezing data removes it from the index. To archive 
+     * Sets the maximum age for a bucket, after which the data in this index
+     * rolls to frozen. Freezing data removes it from the index. To archive
      * data, see {@code coldToFrozenDir} and {@code coldToFrozenScript}.
      * @see #setColdToFrozenDir
      * @see #setColdToFrozenScript
@@ -681,7 +707,7 @@ public class Index extends Entity {
     /**
      * Sets the time (as annotated by a postfix {@code m, s, h}, or {@code d})
      * that if a warm or cold bucket is older, do not create or rebuild its
-     * bloomfilter. An example would be {@code 30d}, for 30 days. 
+     * bloomfilter. An example would be {@code 30d}, for 30 days.
      *
      * @param time The time, as annotated.
      */
@@ -700,10 +726,10 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the maximum data size before triggering a roll from hot to warm 
-     * buckets for this index. You can also specify a value to let Splunk 
-     * autotune this parameter: use "auto_high_volume" for high-volume indexes 
-     * (such as the main index, or one that gets over 10GB of data per day); 
+     * Sets the maximum data size before triggering a roll from hot to warm
+     * buckets for this index. You can also specify a value to let Splunk
+     * autotune this parameter: use "auto_high_volume" for high-volume indexes
+     * (such as the main index, or one that gets over 10GB of data per day);
      * otherwise, use "auto".
      * @see #getMaxDataSize
      *
@@ -714,10 +740,10 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the maximum number of hot buckets that can exist per index. 
+     * Sets the maximum number of hot buckets that can exist per index.
      * <p>
      * When {@code maxHotBuckets} is exceeded, Splunk rolls the least recently
-     * used (LRU) hot bucket to warm. Both normal hot buckets and quarantined 
+     * used (LRU) hot bucket to warm. Both normal hot buckets and quarantined
      * hot buckets count towards this total. This setting operates independently
      * of {@code MaxHotIdleSecs}, which can also cause hot buckets to roll.
      * @see #setMaxHotIdleSecs
@@ -733,12 +759,12 @@ public class Index extends Entity {
      * Sets the maximum lifetime of a hot bucket for this index.
      * <p>
      * If a hot bucket exceeds this value, Splunk rolls it to warm.
-     * This setting operates independently of {@code MaxHotBuckets}, which can 
-     * also cause hot buckets to roll. 
+     * This setting operates independently of {@code MaxHotBuckets}, which can
+     * also cause hot buckets to roll.
      * @see #setMaxHotBuckets
      * @see #getMaxHotBuckets
      *
-     * @param seconds The hot bucket's maximum lifetime, in seconds. A value of 
+     * @param seconds The hot bucket's maximum lifetime, in seconds. A value of
      * 0 means an infinite lifetime.
      */
     public void setMaxHotIdleSecs(int seconds) {
@@ -746,15 +772,15 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the upper bound of the target maximum timespan of hot and warm 
-     * buckets for this index. 
+     * Sets the upper bound of the target maximum timespan of hot and warm
+     * buckets for this index.
      * <p>
-     * <b>Note:</b> If you set this too small, you can get an explosion of 
-     * hot and warm buckets in the file system. The system sets a lower bound 
+     * <b>Note:</b> If you set this too small, you can get an explosion of
+     * hot and warm buckets in the file system. The system sets a lower bound
      * implicitly for this parameter at 3600, but this advanced parameter should
      * be set with care and understanding of the characteristics of your data.
      *
-     * @param seconds The upper bound of the target maximum timespan, in 
+     * @param seconds The upper bound of the target maximum timespan, in
      * seconds.
      */
     public void setMaxHotSpanSecs(int seconds) {
@@ -775,13 +801,13 @@ public class Index extends Entity {
      * Sets the maximum number of unique lines in .data files in a bucket, which
      * may help to reduce memory consumption.
      * <p>
-     * If this value is exceeded, a hot bucket is rolled to prevent a further 
-     * increase. If your buckets are rolling due to Strings.data hitting this 
-     * limit, the culprit might be the "punct" field in your data. If you don't 
-     * use that field, it might be better to just disable this (see the 
+     * If this value is exceeded, a hot bucket is rolled to prevent a further
+     * increase. If your buckets are rolling due to Strings.data hitting this
+     * limit, the culprit might be the "punct" field in your data. If you don't
+     * use that field, it might be better to just disable this (see the
      * props.conf.spec in $SPLUNK_HOME/etc/system/README).
      *
-     * @param entries The maximum number of unique lines. A value of 0 means 
+     * @param entries The maximum number of unique lines. A value of 0 means
      * infinite lines.
      */
     public void setMaxMetaEntries(int entries) {
@@ -789,7 +815,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the maximum size for this index. If an index grows larger than this 
+     * Sets the maximum size for this index. If an index grows larger than this
      * value, the oldest data is frozen.
      *
      * @param size The maximum index size, in MB.
@@ -810,12 +836,12 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the frequency at which Splunkd forces a file system sync while 
-     * compressing journal slices for this index. A value of "disable" disables 
-     * this feature completely, while a value of 0 forces a file-system sync 
+     * Sets the frequency at which Splunkd forces a file system sync while
+     * compressing journal slices for this index. A value of "disable" disables
+     * this feature completely, while a value of 0 forces a file-system sync
      * after completing compression of every journal slice.
      *
-     * @param frequency The file-system sync frequency, as an integer or 
+     * @param frequency The file-system sync frequency, as an integer or
      * "disable".
      */
     public void setMinRawFileSyncSecs(String frequency) {
@@ -823,9 +849,9 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the frequency at which metadata is for partially synced (synced 
-     * in-place) for this index. A value of 0 disables partial syncing, so 
-     * metadata is only synced on the {@code ServiceMetaPeriod} interval.  
+     * Sets the frequency at which metadata is for partially synced (synced
+     * in-place) for this index. A value of 0 disables partial syncing, so
+     * metadata is only synced on the {@code ServiceMetaPeriod} interval.
      * @see #setServiceMetaPeriod
      * @see #getServiceMetaPeriod
      *
@@ -836,7 +862,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the future event-time quarantine for this index. Events that are 
+     * Sets the future event-time quarantine for this index. Events that are
      * newer than now plus this value are quarantined.
      * <p>
      * This mechanism helps to prevent main hot buckets from being polluted with
@@ -863,16 +889,16 @@ public class Index extends Entity {
 
     /**
      * Sets the target uncompressed size of individual raw slices in the rawdata
-     * journal for this index. 
+     * journal for this index.
      * <p>
-     * This parameter only specifies a target chunk size. The actual chunk size 
+     * This parameter only specifies a target chunk size. The actual chunk size
      * might be slightly larger by an amount proportional to an individual event
      * size.
      * <blockquote>
      * <b>WARNING:</b> This is an advanced parameter. Only change it if you are
      * instructed to do so by Splunk Support.
      * </blockquote>
-     * @param size The target uncompressed size, in bytes. (0 is not a valid 
+     * @param size The target uncompressed size, in bytes. (0 is not a valid
      * value--if 0 is used, this parameter is set to the default value.)
      */
     public void setRawChunkSizeBytes(int size) {
@@ -880,7 +906,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the frequency to check for the need to create a new hot bucket and 
+     * Sets the frequency to check for the need to create a new hot bucket and
      * the need to roll or freeze any warm or cold buckets for this index.
      *
      * @param frequency The check frequency, in seconds.
@@ -899,16 +925,16 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets whether the sync operation is invoked before the file descriptor is 
+     * Sets whether the sync operation is invoked before the file descriptor is
      * closed on metadata updates.
      * <p>
-     * This functionality improves the integrity of metadata files, especially 
+     * This functionality improves the integrity of metadata files, especially
      * with regard to operating system crashes and machine failures.
      * <blockquote>
      * <b>WARNING:</b> This is an advanced parameter. Only change it if you are
      * instructed to do so by Splunk Support.
      * </blockquote>
-     * @param sync {@code true} to invoke the sync operation before the file 
+     * @param sync {@code true} to invoke the sync operation before the file
      * descriptor is closed on metadata updates, {@code false} if not.
      */
     public void setSyncMeta(boolean sync) {
@@ -916,7 +942,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the frequency at which Splunk checks for an index throttling 
+     * Sets the frequency at which Splunk checks for an index throttling
      * condition.
      *
      * @param frequency The frequency of the throttling check, in seconds.
@@ -947,7 +973,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Uploads a file to this index as an event stream. 
+     * Uploads a file to this index as an event stream.
      * <p>
      * <b>Note:</b> This file must be directly accessible by the Splunk server.
      *

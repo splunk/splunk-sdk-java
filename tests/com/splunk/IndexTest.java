@@ -70,6 +70,7 @@ public class IndexTest extends SplunkTestCase {
             index.getHomePathExpanded();
             index.getIndexThreads();
             index.getLastInitTime();
+            index.getMaxBloomBackfillBucketAge();
             index.getMaxConcurrentOptimizes();
             index.getMaxDataSize();
             index.getMaxHotBuckets();
@@ -156,7 +157,8 @@ public class IndexTest extends SplunkTestCase {
         // use setters to update most
         index.setBlockSignSize(index.getBlockSignSize()+1);
         if (service.versionCompare("4.3") > 0) {
-            index.setEnableOnlineBucketRepair(!index.getEnableRealtimeSearch());
+            index.setEnableOnlineBucketRepair(
+                !index.getEnableOnlineBucketRepair());
             index.setMaxBloomBackfillBucketAge("20d");
         }
         index.setFrozenTimePeriodInSecs(index.getFrozenTimePeriodInSecs()+1);
@@ -189,6 +191,13 @@ public class IndexTest extends SplunkTestCase {
 
         index.disable();
         assertTrue(index.isDisabled());
+
+        // with 4.3.2+ disabling and re-enabling an index causes an HTTP
+        // 500 return.
+        splunkRestart();
+
+        service = connect();
+        index = service.getIndexes().get("sdk-tests");
 
         index.enable();
         assertFalse(index.isDisabled());

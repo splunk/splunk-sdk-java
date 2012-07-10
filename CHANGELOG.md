@@ -41,3 +41,9 @@
 
 * Large collections can cause a default JVM to run out of memory: The Atom
   parsing uses the streaming XML parser as opposed to a DOM parser.
+
+* Fixed Index class getSync() method to return an integer instead of a boolean.
+
+* Added Index class get method getEnableOnlineBucketRepair().
+
+* Added Index class get method getMaxBloomBackfillBucketAge().

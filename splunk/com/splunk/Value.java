@@ -80,8 +80,6 @@ class Value {
      * @param value Value to convert.
      * @return Date value.
      */
-
-//"Mon May 07 12:09:17 2012""
     static Date toDate(String value) {
         if (dateFormat == null) {
             dateFormat = new SimpleDateFormat[4];
