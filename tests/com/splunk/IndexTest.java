@@ -50,6 +50,7 @@ public class IndexTest extends SplunkTestCase {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         String date = sdf.format(new Date());
         ServiceInfo info = service.getInfo();
+        String indexName = "sdk-tests";
 
         EntityCollection<Index> indexes = service.getIndexes();
         for (Index index: indexes.values()) {
@@ -105,14 +106,14 @@ public class IndexTest extends SplunkTestCase {
             index.isInternal();
         }
 
-        if (!indexes.containsKey("sdk-tests")) {
-            indexes.create("sdk-tests");
+        if (!indexes.containsKey(indexName)) {
+            indexes.create(indexName);
             indexes.refresh();
         }
 
-        assertTrue(assertRoot + "#1", indexes.containsKey("sdk-tests"));
+        assertTrue(assertRoot + "#1", indexes.containsKey(indexName));
 
-        Index index = indexes.get("sdk-tests");
+        Index index = indexes.get(indexName);
 
         // get old values, skip saving paths and things we cannot write
         Args restore = new Args();
@@ -197,7 +198,7 @@ public class IndexTest extends SplunkTestCase {
         splunkRestart();
 
         service = connect();
-        index = service.getIndexes().get("sdk-tests");
+        index = service.getIndexes().get(indexName);
 
         index.enable();
         assertFalse(index.isDisabled());
