@@ -791,7 +791,7 @@ public class Job extends Entity {
         ResponseMessage response = service.get(path);
         if (response.getStatus() == 204) {
             isReady = false;
-            return null;
+            return this;
         }
 
         isReady = true;
