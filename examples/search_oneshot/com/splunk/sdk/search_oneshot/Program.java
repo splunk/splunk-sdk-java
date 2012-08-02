@@ -81,6 +81,10 @@ public class Program {
         if (command.opts.containsKey("status_buckets"))
             statusBuckets = (Integer)command.opts.get("status_buckets");
 
+        String outputMode = "xml";
+        if (command.opts.containsKey("output_mode"))
+            outputMode = (String)command.opts.get("output_mode");
+
         Service service = Service.connect(command.opts);
 
         // Check the syntax of the query.
@@ -103,6 +107,7 @@ public class Program {
             queryArgs.put("latest_time", latestTime);
         if (statusBuckets > 0)
             queryArgs.put("status_buckets", statusBuckets);
+        queryArgs.put("output_mode", outputMode);
 
         // Execute the oneshot query, which returns the stream (i.e. there is
         // no search job created, just a one time search)

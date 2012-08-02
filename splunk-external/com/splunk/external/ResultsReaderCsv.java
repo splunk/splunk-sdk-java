@@ -40,8 +40,12 @@ public class ResultsReaderCsv extends ResultsReader {
     public ResultsReaderCsv(InputStream inputStream) throws Exception {
         super(inputStream);
         csvReader = new CSVReader(new InputStreamReader(inputStream));
-        // initial line contains the keys
+        // initial line contains the keys, except for oneshot -- which contains
+        // a blank line, and then the key list.
         keys = csvReader.readNext();
+        if (keys.length == 1 && keys[0].equals("")) {
+            keys = csvReader.readNext();
+        }
     }
 
     /** {@inheritDoc} */
