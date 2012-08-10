@@ -16,26 +16,16 @@
 
 package com.splunk;
 
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.*;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.net.Socket;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
 
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
@@ -43,6 +33,15 @@ import javax.net.ssl.SSLSocketFactory;
  * ({@code http} or {@code https}).
  */
 public class HttpService {
+
+    private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
+
+    private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
+        public boolean verify(String s, SSLSession sslSession) {
+            return true;
+        }
+    };
+
     /** The scheme used to access the service. */
     protected String scheme = "https";
 
@@ -59,19 +58,8 @@ public class HttpService {
         put("Accept", "*/*");
     }};
 
-    TrustManager[] trustAll = new TrustManager[] {
-        new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() { return null; }
-            public void checkClientTrusted(
-                X509Certificate[] certs, String authType) { }
-            public void checkServerTrusted(
-                X509Certificate[] certs, String authType) { }
-        }
-    };
-
     /** Constructs a new {@code HttpService} instance. */
     public HttpService() {
-        setTrustPolicy();
     }
 
     /**
@@ -81,7 +69,6 @@ public class HttpService {
      */
     public HttpService(String host) {
         this.host = host;
-        setTrustPolicy();
     }
 
     /**
@@ -93,11 +80,10 @@ public class HttpService {
     public HttpService(String host, int port) {
         this.host = host;
         this.port = port;
-        setTrustPolicy();
     }
 
     /**
-     * Constructs a new {@code HttpService} instance using the given host, 
+     * Constructs a new {@code HttpService} instance using the given host,
      * port, and scheme.
      *
      * @param host The host name of the service.
@@ -109,7 +95,6 @@ public class HttpService {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
-        setTrustPolicy();
     }
 
     // Returns the count of arguments in the given {@code args} map.
@@ -148,8 +133,8 @@ public class HttpService {
      *
      * @return The host name.
      */
-    public String getHost() { 
-        return this.host; 
+    public String getHost() {
+        return this.host;
     }
 
     /**
@@ -220,7 +205,7 @@ public class HttpService {
         RequestMessage request = new RequestMessage("POST");
         request.getHeader().put(
             "Content-Type", "application/x-www-form-urlencoded");
-        if (count(args) > 0) 
+        if (count(args) > 0)
             request.setContent(Args.encode(args));
         return send(path, request);
     }
@@ -245,7 +230,7 @@ public class HttpService {
      * @return The HTTP response.
      */
     public ResponseMessage delete(String path, Map<String, Object> args) {
-        if (count(args) > 0) 
+        if (count(args) > 0)
             path = path + "?" + Args.encode(args);
         RequestMessage request = new RequestMessage("DELETE");
         return send(path, request);
@@ -259,17 +244,8 @@ public class HttpService {
      */
     Socket open() throws IOException {
         if (this.scheme.equals("https")) {
-            SSLSocketFactory sslsocketfactory;
-            try {
-                SSLContext context = SSLContext.getInstance("SSL");
-                context.init(null, trustAll, new java.security.SecureRandom());
-                sslsocketfactory = context.getSocketFactory();
-            }
-            catch (Exception e) {
-                throw new RuntimeException("Error installing trust manager.");
-            }
-            return sslsocketfactory.createSocket(this.host, this.port);
-        } 
+            return SSL_SOCKET_FACTORY.createSocket(this.host, this.port);
+        }
         return new Socket(this.host, this.port);
     }
 
@@ -292,6 +268,10 @@ public class HttpService {
         }
         catch (IOException e) {
             throw new RuntimeException(e.getMessage());
+        }
+        if(cn instanceof HttpsURLConnection) {
+            ((HttpsURLConnection)cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
+            ((HttpsURLConnection)cn).setHostnameVerifier(HOSTNAME_VERIFIER);
         }
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
@@ -352,8 +332,8 @@ public class HttpService {
 
         InputStream input = null;
         try {
-            input = status >= 400 
-                ? cn.getErrorStream() 
+            input = status >= 400
+                ? cn.getErrorStream()
                 : cn.getInputStream();
         }
         catch (IOException e) { assert(false); }
@@ -368,24 +348,79 @@ public class HttpService {
         return response;
     }
 
-    /**
-     * Sets the trust policy used by this {@code Service} instance.
-     */
-    void setTrustPolicy() {
+    private static SSLSocketFactory createSSLFactory() {
+        TrustManager[] trustAll = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() { return null; }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) { }
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+                }
+        };
         try {
             SSLContext context = SSLContext.getInstance("SSL");
             context.init(null, trustAll, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                context.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(
-                new HostnameVerifier() {
-                    public boolean verify(
-                        String urlHostName, SSLSession session) { return true; }
-                });
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Error installing trust manager.");
+            return new SSLv3SocketFactory(context.getSocketFactory());
+        } catch (Exception e) {
+            throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
         }
     }
+
+    private static final class SSLv3SocketFactory extends SSLSocketFactory {
+        private final SSLSocketFactory delegate;
+
+        public static final String[] PROTOCOLS = {"SSLv3"};
+
+        private SSLv3SocketFactory(SSLSocketFactory delegate) {
+            this.delegate = delegate;
+        }
+
+        private Socket configure(Socket socket) {
+            if (socket instanceof SSLSocket) {
+                ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+            }
+            return socket;
+        }
+
+        @Override
+        public String[] getDefaultCipherSuites() {
+            return delegate.getDefaultCipherSuites();
+        }
+
+        @Override
+        public String[] getSupportedCipherSuites() {
+            return delegate.getSupportedCipherSuites();
+        }
+
+        @Override
+        public Socket createSocket(Socket socket, String s, int i, boolean b) throws IOException {
+            return configure(delegate.createSocket(socket, s, i, b));
+        }
+
+        @Override
+        public Socket createSocket() throws IOException {
+            return configure(delegate.createSocket());
+        }
+
+        @Override
+        public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
+            return configure(delegate.createSocket(s, i));
+        }
+
+        @Override
+        public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
+            return configure(delegate.createSocket(s, i, inetAddress, i1));
+        }
+
+        @Override
+        public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
+            return configure(delegate.createSocket(inetAddress, i));
+        }
+
+        @Override
+        public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
+            return configure(delegate.createSocket(inetAddress, i, inetAddress1, i1));
+        }
+    }
+
 }
 
