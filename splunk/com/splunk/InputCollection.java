@@ -70,7 +70,10 @@ public class InputCollection extends EntityCollection<Input> {
     /**
      * Creates a stub.
      *
-     * @param name The name of the input.
+     * @param name The name of the input based on the type: the filename or
+     * directory and path (monitor, oneshot), the script name (script), the port
+     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
+     * (Windows Registry), or the name of the configuration (AD).
      * @return No return value.
      * @throws UnsupportedOperationException
      */
@@ -85,7 +88,10 @@ public class InputCollection extends EntityCollection<Input> {
      * target="_blank">data/inputs/* endpoints</a> in the Splunk REST API 
      * documentation.
      *
-     * @param name The name of the input.
+     * @param name The name of the input based on the type: the filename or
+     * directory and path (monitor, oneshot), the script name (script), the port
+     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
+     * (Windows Registry), or the name of the configuration (AD).
      * @param args Optional arguments.
      * @return No return value.
      * @throws UnsupportedOperationException
@@ -97,7 +103,10 @@ public class InputCollection extends EntityCollection<Input> {
     /**
      * Creates a specific kind of input.
      *
-     * @param name The name of the input.
+     * @param name The name of the input based on the type: the filename or
+     * directory and path (monitor, oneshot), the script name (script), the port
+     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
+     * (Windows Registry), or the name of the configuration (AD).
      * @param kind The specific kind of input.
      * @param <T> The implicit type of the input.
      * @return The input that was created.
@@ -113,7 +122,10 @@ public class InputCollection extends EntityCollection<Input> {
      * target="_blank">data/inputs/* endpoints</a> in the Splunk REST API 
      * documentation.
      *
-     * @param name The name of the input.
+     * @param name The name of the input based on the type: the filename or
+     * directory and path (monitor, oneshot), the script name (script), the port
+     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
+     * (Windows Registry), or the name of the configuration (AD).
      * @param kind The specific kind of input.
      * @param args Optional arguments.
      * @param <T> The implicit type of the input.
