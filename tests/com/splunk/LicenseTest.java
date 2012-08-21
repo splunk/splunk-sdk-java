@@ -31,8 +31,7 @@ public class LicenseTest extends SplunkTestCase {
     @Test public void testLicense() throws Exception {
         Service service = connect();
 
-        EntityCollection<License> licenses =
-                service.getLicenses();
+        EntityCollection<License> licenses = service.getLicenses();
 
         // List of features, empirically created
         List<String> features = Arrays.asList(
@@ -80,6 +79,12 @@ public class LicenseTest extends SplunkTestCase {
         }
         assertFalse(assertRoot + "#11", licenses.containsKey("sdk-test"));
 
+        String licenseKey = "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101";
+        if (licenses.containsKey(licenseKey)) {
+            licenses.remove(licenseKey);
+        }
+        assertFalse(licenses.containsKey(licenseKey));
+
         // Create
         FileReader fileReader;
         char [] buffer = new char[2048];
@@ -98,11 +103,8 @@ public class LicenseTest extends SplunkTestCase {
         reader.read(buffer);
         Args args = new Args("payload", new String(buffer));
         licenses.create("sdk-test", args);
-        assertTrue(assertRoot + "#12", licenses.containsKey(
-           "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
-        licenses.remove(
-           "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101");
-        assertFalse(assertRoot + "#13", licenses.containsKey(
-           "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101"));
+        assertTrue(assertRoot + "#12", licenses.containsKey(licenseKey));
+        licenses.remove(licenseKey);
+        assertFalse(assertRoot + "#13", licenses.containsKey(licenseKey));
     }
 }

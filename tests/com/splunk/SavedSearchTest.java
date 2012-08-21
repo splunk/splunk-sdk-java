@@ -404,7 +404,7 @@ public class SavedSearchTest extends SplunkTestCase {
         String search = "search index=sdk-tests * earliest=-1m";
 
         // Create a saved search
-        SavedSearch savedSearch = savedSearches.create("sdk test1", search);
+        SavedSearch savedSearch = savedSearches.create("sdk-test1", search);
 
         // Clear the history - even though we have a newly create saved search
         // its possible there was a previous saved search with the same name
@@ -438,8 +438,8 @@ public class SavedSearchTest extends SplunkTestCase {
         assertEquals(assertRoot + "#77", 0, history.length);
 
         // Delete the saved search
-        savedSearches.remove("sdk test1");
-        assertFalse(assertRoot + "#78", savedSearches.containsKey("sdk test1"));
+        savedSearches.remove("sdk-test1");
+        assertFalse(assertRoot + "#78", savedSearches.containsKey("sdk-test1"));
     }
 }
 
