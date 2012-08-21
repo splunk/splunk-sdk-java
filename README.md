@@ -1,4 +1,5 @@
-# The Splunk Software Development Kit for Java (Preview Release Refresh) 0.5.0
+# The Splunk Software Development Kit for Java
+### Version 0.8.0 (Beta Release)
 
 This SDK contains library code and examples designed to enable developers to
 build applications using Splunk.
@@ -21,19 +22,14 @@ that are enabled by Splunk's unique capabilities.
 The Splunk Java SDK is licensed under the Apache License 2.0. Details can be 
 found in the LICENSE file.
 
-## The Splunk Java SDK is a Preview release refresh
-
-1.  This Preview is a pre-Beta release that is incomplete and may have
-    bugs. There will be a Beta release prior to a general release.
-
-2.  The Apache License only applies to the Splunk Java SDK and no other Software
+1.  The Apache License only applies to the Splunk Java SDK and no other Software
     provided by Splunk.
 
-3.  Splunk, in using the Apache License, does not provide any warranties or 
-    indemnification, and does not accept any liabilities with the Preview 
-    release of the SDK.
+2.  Splunk, in using the Apache License, does not provide any warranties or 
+    indemnification, and does not accept any liabilities with the release of 
+    the SDK.
 
-4.  We are now accepting contributions from individuals and companies to our 
+3.  We are accepting contributions from individuals and companies to our 
     Splunk open source projects. See the 
     [Open Source](http://dev.splunk.com/view/opensource/SP-CAAAEDM) page for 
     more information.
@@ -215,8 +211,6 @@ Eclipse. For example, to open the Splunk Java SDK project in Eclipse:
 3.  In Select root directory, type the path to the Splunk Java SDK root
     directory (or click Browse to locate it), then click Finish. 
 
-
-
 ## Repository
 
 <table>
@@ -343,11 +337,22 @@ page for more information.
 
 ### Support
 
-* The Preview release of the SDK is not supported by Splunk. Once the Beta 
-  version has been released, we will provide more details about support.  
+1. You will be granted support if you or your company are already covered 
+   under an existing maintenance/support agreement. Send an email to 
+   support@splunk.com and please include the SDK you are referring to in the 
+   subject. 
 
-* File any issues here: 
-  https://github.com/splunk/splunk-sdk-java/issues.
+2. If you are not covered under an existing maintenance/support agreement you 
+   can find help through the broader community at:
+
+    * Splunk answers - http://splunk-base.splunk.com/answers/ Specific tags (SDK, java, python, javascript) are available to identify your questions
+    * Splunk dev google group - http://groups.google.com/group/splunkdev
+
+3. Splunk will NOT provide support for SDKs if the core library (this is the 
+   code in the `splunk` directory) has been modified. If you modify an SDK and 
+   want support, you can find help through the broader community and Splunk 
+   answers (see above). We also want to know about why you modified the core 
+   library. You can send feedback to: devinfo@splunk.com
 
 ### Contact Us
 
