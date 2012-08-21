@@ -215,45 +215,45 @@ Eclipse. For example, to open the Splunk Java SDK project in Eclipse:
 
 <table>
 <tr>
-<td><em>build</em><td>
+<td><em>build</em></td>
 <td>This directory is created by the build and contains intermediate build 
 ouputs</td>
 </tr>
 
 <tr>
-<td><em>dist</em><td>
+<td><em>dist</em></td>
 <td>This directory is created by the build and contains final build 
 outputs</td>
 </tr>
 
 <tr>
-<td><em>docs</em><td>
+<td><em>docs</em></td>
 <td>Documentation</td>
 </tr>
 
 <tr>
-<td><em>examples</em><td>
+<td><em>examples</em></td>
 <td>Examples demonstrating various SDK features</td>
 </tr>
 
 <tr>
-<td><em>lib</em><td>
+<td><em>lib</em></td>
 <td>3rd party libraries used by examples and unit tests</td>
 </tr>
 
 <tr>
-<td><em>splunk</em><td>
+<td><em>splunk</em></td>
 <td>Source for <code>com.splunk</code></td>
 </tr>
 
 <tr>
-<td><em>splunk-sdk</em><td>
+<td><em><nobr>splunk-sdk</nobr></em></td>
 <td>Source for <code>com.splunk.sdk</code>, utilities shared by examples and 
 units</td>
 </tr>
 
 <tr>
-<td><em>tests</em><td>
+<td><em>tests</em></td>
 <td>Source for unit tests</td>
 </tr>
 </table>
