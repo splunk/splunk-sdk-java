@@ -23,6 +23,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.*;
 import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 /**
@@ -170,6 +171,7 @@ public class AtomEntry extends AtomObject {
      * @param xmlEventReader The {@code <dict>} element to parse.
      * @return A {@code Record} object containing the parsed values.
      */
+    private static final QName nameQName = new QName("name");
     private Record parseDict(XMLEventReader xmlEventReader) throws Exception {
         XMLEvent xmlEvent = xmlEventReader.peek();
 
@@ -185,18 +187,20 @@ public class AtomEntry extends AtomObject {
             }
 
             if (xmlEvent.getEventType() == XMLStreamConstants.START_ELEMENT) {
-                if (xmlEvent
-                        .asStartElement()
-                        .getName()
-                        .getLocalPart()
-                        .equals("key")) {
-                    QName name = new QName("name");
-                    String key = xmlEvent
-                                    .asStartElement()
-                                    .getAttributeByName(name)
-                                    .getValue();
-                    Object value = parseValue(xmlEventReader);
-                    if (value != null) result.put(key, value);
+                StartElement startElement = xmlEvent.asStartElement();
+                if (startElement.getName().getLocalPart().equals("key")) {
+                    String key = startElement
+                        .getAttributeByName(nameQName)
+                        .getValue();
+                    if (xmlEventReader.peek().isEndElement()) {
+                        // HACK: to handle to empty values -- parseValue 
+                        // consumes two tokens!
+                        xmlEventReader.nextEvent();
+                    }
+                    else {
+                        Object value = parseValue(xmlEventReader);
+                        if (value != null) result.put(key, value);
+                    }
                 }
             }
 
