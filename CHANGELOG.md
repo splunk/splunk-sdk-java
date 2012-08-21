@@ -18,10 +18,11 @@
         }
 ```
 
-* Added isReady() method to the Job class. This method detects whether or not 
-  the job is ready to return data (i.e. be queried). It also implicitly invokes
-  job.refresh(). This allows for jobs with previews, but not necessarily
-  completed can be accessed: (with a 500 millisecond polling interval)
+* Added isReady() method to the Job class. This method detects whether or 
+  not the job is ready to return data (i.e. be queried). It also implicitly 
+  invokes job.refresh(). This allows for jobs with previews but that have not 
+  necessarily completed to be accessed: (with a 500 millisecond polling 
+  interval)
 
 ```
         while (!job.isReady()) {
