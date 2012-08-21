@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.*;
+import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 
 /**
@@ -280,18 +281,12 @@ public class AtomEntry extends AtomObject {
                 return xmlEvent.asCharacters().getData();
             }
         } else if (xmlEvent.getEventType() == XMLStreamConstants.CHARACTERS) {
-            String text = xmlEvent.asCharacters().getData();
+            Characters characters = xmlEvent.asCharacters();
 
-            if (text.startsWith("\n  ")) {
-                XMLEvent xmlEvent2 = xmlEventReader.peek();
-                if (xmlEvent2.getEventType() ==
-                    XMLStreamConstants.END_ELEMENT) {
-                    return text.length() == 0 ? null: text;
-                }
+            if (characters.isWhiteSpace())
                 return parseValue(xmlEventReader);
-            } else {
-                return text;
-            }
+
+            return characters.getData();
         } else {
             xmlEventReader.nextEvent(); // whitespace or syntactical ends
         }
