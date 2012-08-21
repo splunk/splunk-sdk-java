@@ -345,8 +345,10 @@ page for more information.
 2. If you are not covered under an existing maintenance/support agreement you 
    can find help through the broader community at:
 
-    * Splunk answers - http://splunk-base.splunk.com/answers/ Specific tags (SDK, java, python, javascript) are available to identify your questions
-    * Splunk dev google group - http://groups.google.com/group/splunkdev
+   <ul>
+<li><a href='http://splunk-base.splunk.com/answers/'>Splunk Answers</a> - tags SDK, java, python, javascript are available to identify your questions</li>
+<li><a href='http://groups.google.com/group/splunkdev'>Splunkdev Google Group</a></li>
+</ul>
 
 3. Splunk will NOT provide support for SDKs if the core library (this is the 
    code in the `splunk` directory) has been modified. If you modify an SDK and 
