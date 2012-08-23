@@ -18,10 +18,8 @@ package com.splunk;
 
 import java.io.InputStream;
 import java.util.*;
-
-import javax.xml.stream.events.*;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamConstants;
 
 /**
@@ -54,36 +52,20 @@ public class AtomFeed extends AtomObject {
      *
      * @param input The input stream.
      * @return An {@code AtomFeed} instance representing the parsed stream.
-     * @throws Exception if a streaming error occurs
      */
-    public static AtomFeed parseStream(InputStream input) throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLEventReader xmlReader = inputFactory.createXMLEventReader(input);
-        if (xmlReader.nextEvent().getEventType() !=
-            XMLStreamConstants.START_DOCUMENT) {
-            throw new RuntimeException("Unrecognized format");
+    public static AtomFeed parseStream(InputStream input) {
+        XMLStreamReader reader = createReader(input);
+
+        AtomFeed result = AtomFeed.parse(reader);
+
+        try {
+            reader.close();
         }
-        // skip to feed start element
-        XMLEvent xmlEvent;
-        while ((xmlEvent = xmlReader.peek()).getEventType() !=
-            XMLStreamConstants.START_ELEMENT) {
-            xmlReader.nextEvent();
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e.getMessage());
         }
 
-        // sanity check we have an Atom feed
-        if (!xmlEvent
-                .asStartElement()
-                .getName()
-                .getLocalPart()
-                .equals("feed")  &&
-            !xmlEvent
-                .asStartElement()
-                .getNamespaceURI("")
-                .equals("http://www.w3.org/2005/Atom")) {
-            throw new RuntimeException("Unrecognized format");
-        }
-
-        return AtomFeed.parse(xmlReader);
+        return result;
     }
 
     /**
@@ -91,43 +73,42 @@ public class AtomFeed extends AtomObject {
      *
      * @param input The XML stream
      * @return An {@code AtomFeed} instance representing the parsed element.
-     * @throws Exception if a streaming error occurs
+     * @throws RuntimeException if a parse error occurs
      */
-    static AtomFeed parse(XMLEventReader input) throws Exception {
+    static AtomFeed parse(XMLStreamReader input) {
         AtomFeed feed = AtomFeed.create();
-        feed.load(input);
+        feed.load(input, "feed");
         return feed;
     }
 
     /**
      * Initializes the current instance from a given XML element.
      *
-     * @param xmlEventReader The XML element.
+     * @param reader The XML reader.
      */
-    @Override void init(XMLEventReader xmlEventReader) throws Exception {
-        XMLEvent xmlEvent = xmlEventReader.peek();
+    @Override void init(XMLStreamReader reader) {
+        assert reader.isStartElement();
 
-        String name = xmlEvent.asStartElement().getName().getLocalPart();
+        String name = reader.getLocalName();
+
         if (name.equals("entry")) {
-            AtomEntry entry = AtomEntry.parse(xmlEventReader);
+            AtomEntry entry = AtomEntry.parse(reader);
             this.entries.add(entry);
         }
         else if (name.equals("messages")) {
-            getXmlSimpleText(xmlEventReader); // ignore messages
+            parseEnd(reader);
         }
         else if (name.equals("totalResults")) {
-            this.totalResults =
-                getXmlSimpleText(xmlEventReader);
+            this.totalResults = parseText(reader);
         }
         else if (name.equals("itemsPerPage")) {
-            this.itemsPerPage =
-                getXmlSimpleText(xmlEventReader);
+            this.itemsPerPage = parseText(reader);
         }
         else if (name.equals("startIndex")) {
-            this.startIndex = getXmlSimpleText(xmlEventReader);
+            this.startIndex = parseText(reader);
         }
         else {
-            super.init(xmlEventReader);
+            super.init(reader);
         }
     }
 }

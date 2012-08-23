@@ -16,16 +16,17 @@
 
 package com.splunk;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.events.*;
-import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamConstants;
 
 /**
- * The {@code AtomObject}  class represents a generic Atom object. This is a
+ * The {@code AtomObject} class represents a generic Atom object. This is a
  * common base class shared by {@code AtomFeed} and {@code AtomEntry}.
  */
 public class AtomObject {
@@ -42,111 +43,65 @@ public class AtomObject {
     public String updated;
 
     /**
-     * Returns the text pointed to be the start XML element,
-     * and updates the xml stream pointer to the next start XML element.
-     * @param xmlEventReader the xml event stream reader
-     * @return the text found herein.
-     * @throws Exception if a streaming error occurs
+     * Instantiates the XMLStreamReader, advances to root element and 
+     * validates root document structure. This is shared initialization code 
+     * for both the AtomFeed and AtomEntry parsers.
+     *
+     * @param input The input stream
+     * @return An {@code XMLStreamReader} initialized reader advances to first
+     *         element of the document.
      */
-    protected String
-    getXmlSimpleText(XMLEventReader xmlEventReader)
-        throws Exception {
+    protected static XMLStreamReader createReader(InputStream input) {
+        XMLInputFactory factory = XMLInputFactory.newInstance();
 
-        // Skip all XML objects until we get the simple text.
-        XMLEvent xmlEvent = xmlEventReader.peek();
-        while (xmlEvent.getEventType() != XMLStreamConstants.CHARACTERS) {
-            // if we get to and end element before we find text, then
-            // the text value is empty.
-            if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT)
-                return null;
-            xmlEvent = xmlEventReader.nextEvent();
+        // The Atom parser assumes that all adjacent text nodes are coalesced
+        factory.setProperty(XMLInputFactory.IS_COALESCING, true);
+        factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, true);
+
+        XMLStreamReader reader;
+        try {
+            reader = factory.createXMLStreamReader(input);
         }
-        String returnData = xmlEvent.asCharacters().getData();
-
-        // skip to the XML next start element.
-        setXmlToNextStart(xmlEventReader);
-        return returnData;
-    }
-
-    protected XMLEvent
-    setXmlToNextStart(XMLEventReader xmlEventReader) throws Exception {
-
-        XMLEvent xmlEvent;
-        while (
-            (xmlEvent = xmlEventReader.peek()).getEventType() !=
-             XMLStreamConstants.START_ELEMENT) {
-            if (xmlEvent.getEventType() == XMLStreamConstants.END_DOCUMENT)
-                break;
-            xmlEventReader.nextEvent();
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e.getMessage());
         }
-        return xmlEventReader.peek();
+
+        assert reader.getEventType() == XMLStreamConstants.START_DOCUMENT;
+
+        // Scan ahead to first element
+        scanTag(reader);
+
+        return reader;
     }
 
     /**
      * Initialize a property of the current instance based on the given XML
      * element.
      *
-     * @param xmlEventReader The XML element.
+     * @param reader The XML reader.
      */
+    void init(XMLStreamReader reader) {
+        assert reader.isStartElement();
 
-    void init(XMLEventReader xmlEventReader) throws Exception {
+        String name = reader.getLocalName();
 
-        XMLEvent xmlEvent = xmlEventReader.peek();
-        if (xmlEvent.getEventType() != XMLStreamConstants.START_ELEMENT)
-            return;
-
-        String name = xmlEvent.asStartElement().getName().getLocalPart();
         if (name.equals("id")) {
-            this.id = getXmlSimpleText(xmlEventReader);
+            this.id = parseText(reader);
         }
         else if (name.equals("link")) {
-            QName rel = new QName("rel");
-            QName href = new QName("href");
-            String relValue = xmlEvent
-                .asStartElement()
-                .getAttributeByName(rel)
-                .getValue();
-            String hrefValue = xmlEvent
-                .asStartElement()
-                .getAttributeByName(href)
-                .getValue();
-            this.links.put(relValue, hrefValue);
-            xmlEventReader.nextEvent();
+            String rel = reader.getAttributeValue(null, "rel");
+            String href = reader.getAttributeValue(null, "href");
+            this.links.put(rel, href);
+            parseEnd(reader);
         }
         else if (name.equals("title")) {
-            this.title = getXmlSimpleText(xmlEventReader);
+            this.title = parseText(reader);
         }
         else if (name.equals("updated")) {
-            this.updated = getXmlSimpleText(xmlEventReader);
-        }
-        else if (name.equals("author")) {
-            xmlEvent = xmlEventReader.nextEvent();
-            while (xmlEvent.getEventType() != XMLStreamConstants.CHARACTERS) {
-                xmlEvent = xmlEventReader.nextEvent();
-            }
-            // ignore results but still processed to end of author.
-            while (true) {
-                while ((xmlEvent = xmlEventReader.peek()).getEventType() !=
-                    XMLStreamConstants.END_ELEMENT) {
-                    xmlEventReader.nextEvent();
-                }
-
-                if (xmlEvent
-                        .asEndElement()
-                        .getName()
-                        .getLocalPart()
-                        .equals("author")) {
-                    break;
-                }
-                xmlEventReader.nextEvent();
-            }
-        }
-        else if (name.equals("entry")) {
-            // eat entry start
-            xmlEventReader.nextEvent();
+            this.updated = parseText(reader);
         }
         else {
-            getXmlSimpleText(xmlEventReader); // ignore any other key
+            parseEnd(reader); // Ignore
         }
     }
 
@@ -154,28 +109,140 @@ public class AtomObject {
      * Initializes the current instance from the given XML element by calling
      * {@code init} on each child of the XML element.
      *
-     * @param xmlEventReader The XML element.
+     * @param reader The XML reader
      */
-    void load(XMLEventReader xmlEventReader) throws Exception {
+    void load(XMLStreamReader reader, String localName) {
+        assert isStartElement(reader, localName);
 
-        XMLEvent xmlEvent = xmlEventReader.peek();
-        String name = xmlEvent.asStartElement().getName().getLocalPart();
+        String name = reader.getLocalName();
 
-        do {
-            // Process the start elements, everything else but the document
-            // end is whitespace
-            if (xmlEvent.getEventType() == XMLStreamConstants.START_ELEMENT)  {
-                init(xmlEventReader);
-            } else {
-                xmlEventReader.next();
-            }
-            xmlEvent = xmlEventReader.peek();
-            if (xmlEvent.getEventType() == XMLStreamConstants.END_DOCUMENT)
-                break;
-            if (xmlEvent.getEventType() == XMLStreamConstants.END_ELEMENT &&
-                xmlEvent.asEndElement().getName().getLocalPart().equals(name))
-                break;
+        scan(reader);
+        while (reader.isStartElement()) {
+            init(reader);
         }
-        while (true);
+
+        if (!isEndElement(reader, name))
+            syntaxError(reader);
+
+        scan(reader); // Consume the end element
+    }
+
+    /**
+     * Parse the element at the current cursor position and consume the
+     * corresponding end element.
+     *
+     * @param reader The XML reader.
+     */
+    protected void parseEnd(XMLStreamReader reader) {
+        scanEnd(reader); // Scan ahead to the end element
+        scan(reader);    // Consume the end element
+    }
+
+    /**
+     * Parse and return the text value for the element at the current cursor
+     * position and consume the corresponding end element.
+     *
+     * @param reader The XML reader.
+     * @return the element's text value.
+     */
+    protected String parseText(XMLStreamReader reader) {
+        assert reader.isStartElement();
+
+        String name = reader.getLocalName();
+
+        String value = getElementText(reader);
+
+        if (!isEndElement(reader, name))
+            syntaxError(reader);
+
+        scan(reader); // Consume the end element
+
+        return value;
+    }
+
+    //
+    // Lexical helpers
+    //
+
+    protected static String getElementText(XMLStreamReader reader) {
+        try {
+            return reader.getElementText();
+        }
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    protected static boolean
+    isEndElement(XMLStreamReader reader, String localName) {
+        return reader.isEndElement() 
+            && reader.getLocalName().equals(localName);
+    }
+
+    protected static boolean
+    isStartElement(XMLStreamReader reader, String localName) {
+        return reader.isStartElement()
+            && reader.getLocalName().equals(localName);
+    }
+
+    // Scan ahead to the next token, skipping whitespace 
+    protected static void scan(XMLStreamReader reader) {
+        assert !reader.isWhiteSpace(); // current should never be white
+        try {
+            do {
+                reader.next();
+            }
+            while (reader.isWhiteSpace()); // Ignore whitespace
+        }
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    // Scan ahead to the end element that matches the current start element.
+    // Note: function returns cursor located at matching end element.
+    protected static void scanEnd(XMLStreamReader reader) {
+        assert reader.isStartElement();
+
+        String name = reader.getLocalName();
+
+        while (true) {
+            scan(reader);
+
+            switch (reader.getEventType()) {
+            case XMLStreamConstants.CHARACTERS:
+                continue;
+
+            case XMLStreamConstants.START_ELEMENT:
+                scanEnd(reader);
+                continue;
+
+            case XMLStreamConstants.END_ELEMENT:
+                if (!reader.getLocalName().equals(name))
+                    syntaxError(reader);
+                return;
+
+            default:
+                syntaxError(reader);
+            }
+        }
+    }
+
+    // Scan ahead until the next start tag.
+    protected static void scanTag(XMLStreamReader reader) {
+        try {
+            reader.nextTag();
+        }
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    // Raises a Syntax error runtime exception 
+    protected static void syntaxError(XMLStreamReader reader) {
+        Location location = reader.getLocation();
+        String where = location.toString();
+        String message = String.format("Syntax error @ %s", where);
+        throw new RuntimeException(message);
     }
 }
