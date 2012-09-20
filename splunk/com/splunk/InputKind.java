@@ -52,8 +52,12 @@ public enum InputKind {
     WindowsRegistry("registry", WindowsRegistryInput.class),
 
     /** {@code Windows WMI} input kind. */
-    WindowsWmi("win-wmi-collections", WindowsWmiInput.class);
+    WindowsWmi("win-wmi-collections", WindowsWmiInput.class),
 
+    /** {@code modular} input kind */
+    Modular("modular", ModularInput.class) {
+        String inputTypeName;
+    };
     /**
      * Sets the relative path and input class for the active object.
      *
@@ -61,6 +65,11 @@ public enum InputKind {
      * @param inputClass The input class.
      */
     InputKind(String relpath, Class inputClass) {
+        this.relpath = relpath;
+        this.inputClass = inputClass;
+    }
+
+    InputKind(String relpath, Class inputClass, String inputType) {
         this.relpath = relpath;
         this.inputClass = inputClass;
     }

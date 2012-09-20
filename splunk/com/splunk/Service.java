@@ -703,6 +703,16 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns a collection of modular inputs.
+     *
+     * @param args Optional arguments, such as "count" and "offset" for pagination.
+     * @return A collection of modular inputs.
+     */
+    public EntityCollection<ModularInputKind> getModularInputKinds(Args args) {
+        return new EntityCollection<ModularInputKind>(this, "data/modular-inputs", ModularInputKind.class);
+    }
+
+    /**
      * Returns global TCP output properties.
      *
      * @return Global TCP output properties.
