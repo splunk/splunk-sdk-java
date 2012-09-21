@@ -708,8 +708,8 @@ public class Service extends HttpService {
      * @param args Optional arguments, such as "count" and "offset" for pagination.
      * @return A collection of modular inputs.
      */
-    public EntityCollection<ModularInputKind> getModularInputKinds(Args args) {
-        return new EntityCollection<ModularInputKind>(this, "data/modular-inputs", ModularInputKind.class);
+    public ResourceCollection<ModularInputKind> getModularInputKinds(Args args) {
+        return new ResourceCollection<ModularInputKind>(this, "data/modular-inputs", ModularInputKind.class);
     }
 
     /**

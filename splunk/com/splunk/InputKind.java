@@ -55,9 +55,7 @@ public enum InputKind {
     WindowsWmi("win-wmi-collections", WindowsWmiInput.class),
 
     /** {@code modular} input kind */
-    Modular("modular", ModularInput.class) {
-        String inputTypeName;
-    };
+    Modular("modular", ModularInput.class);
     /**
      * Sets the relative path and input class for the active object.
      *
