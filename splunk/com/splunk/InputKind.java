@@ -67,11 +67,6 @@ public enum InputKind {
         this.inputClass = inputClass;
     }
 
-    InputKind(String relpath, Class inputClass, String inputType) {
-        this.relpath = relpath;
-        this.inputClass = inputClass;
-    }
-
     String relpath;
     Class inputClass;
 }

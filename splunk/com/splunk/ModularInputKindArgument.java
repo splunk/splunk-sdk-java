@@ -18,15 +18,28 @@ package com.splunk;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A {@code Map}-like object specialized to represent arguments to modular input kinds.
+ */
 public class ModularInputKindArgument extends HashMap<String,String> {
     public enum ModularInputKindArgumentType { Number, String, Boolean };
 
+    /**
+     * Class constructor.
+     *
+     * @param template A {@code Map&lt;String,String&gt;} which will be copied into the
+     *                 new object.
+     */
     ModularInputKindArgument(Map<String,String> template) {
+        super();
         for (String key : template.keySet()) {
             put(key, template.get(key));
         }
     }
 
+    /**
+     * Return the description of this field.
+     */
     public String getDescription() {
         String description = get("description");
         if (description != null) {
@@ -36,6 +49,9 @@ public class ModularInputKindArgument extends HashMap<String,String> {
         }
     }
 
+    /**
+     * Return whether this argument is required when creating a modular input of this kind.
+     */
     public boolean getRequiredOnCreate() {
         String r = get("required_on_create");
         if (r.equals("1")) {
@@ -47,6 +63,9 @@ public class ModularInputKindArgument extends HashMap<String,String> {
         }
     }
 
+    /**
+     * Return whether this argument is required when editing a modular input of this kind.
+     */
     public boolean getRequiredOnEdit() {
         String r = get("required_on_edit");
         if (r.equals("1")) {
@@ -58,6 +77,12 @@ public class ModularInputKindArgument extends HashMap<String,String> {
         }
     }
 
+    /**
+     * Return the type of this argument to the modular input.
+     *
+     * @return One of the elements of the {@code ModularInputKindArgumentType}
+     *         enumeration ({@code Number}, {@code Boolean}, or {@code String}).
+     */
     public ModularInputKindArgumentType getType() {
         String type = get("data_type");
         if (type.equals("number")) {
