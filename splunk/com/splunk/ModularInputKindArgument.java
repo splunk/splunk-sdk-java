@@ -32,9 +32,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      */
     ModularInputKindArgument(Map<String,String> template) {
         super();
-        for (String key : template.keySet()) {
-            put(key, template.get(key));
-        }
+        putAll(template);
     }
 
     /**
