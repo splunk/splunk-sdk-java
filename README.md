@@ -348,8 +348,7 @@ page for more information.
    <ul>
 <li><a href='http://splunk-base.splunk.com/answers/'>Splunk Answers</a> - tags SDK, java, python, javascript are available to identify your questions</li>
 <li><a href='http://groups.google.com/group/splunkdev'>Splunkdev Google Group</a></li>
-</ul>
-
+</ul><br>
 3. Splunk will NOT provide support for SDKs if the core library (this is the 
    code in the `splunk` directory) has been modified. If you modify an SDK and 
    want support, you can find help through the broader community and Splunk 
