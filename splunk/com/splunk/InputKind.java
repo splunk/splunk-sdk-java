@@ -52,8 +52,10 @@ public enum InputKind {
     WindowsRegistry("registry", WindowsRegistryInput.class),
 
     /** {@code Windows WMI} input kind. */
-    WindowsWmi("win-wmi-collections", WindowsWmiInput.class);
+    WindowsWmi("win-wmi-collections", WindowsWmiInput.class),
 
+    /** {@code modular} input kind */
+    Modular("modular", ModularInput.class);
     /**
      * Sets the relative path and input class for the active object.
      *
