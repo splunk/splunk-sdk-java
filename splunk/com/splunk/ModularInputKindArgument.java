@@ -48,10 +48,10 @@ public class ModularInputKindArgument extends HashMap<String,String> {
     }
 
     /**
-     * Return whether this argument is required when creating a modular input of this kind.
+     * Return a boolean extracted from the specified field.
      */
-    public boolean getRequiredOnCreate() {
-        String r = get("required_on_create");
+    protected boolean getBoolean(String fieldName) {
+        String r = get(fieldName);
         if (r.equals("1")) {
             return true;
         } else if (r.equals("0")) {
@@ -62,17 +62,17 @@ public class ModularInputKindArgument extends HashMap<String,String> {
     }
 
     /**
+     * Return whether this argument is required when creating a modular input of this kind.
+     */
+    public boolean getRequiredOnCreate() {
+        return getBoolean("required_on_create");
+    }
+
+    /**
      * Return whether this argument is required when editing a modular input of this kind.
      */
     public boolean getRequiredOnEdit() {
-        String r = get("required_on_edit");
-        if (r.equals("1")) {
-            return true;
-        } else if (r.equals("0")) {
-            return false;
-        } else {
-            throw new IllegalArgumentException("Expected 1 or 0; found: " + r);
-        }
+        return getBoolean("required_on_edit");
     }
 
     /**
