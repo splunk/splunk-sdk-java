@@ -24,7 +24,7 @@ import java.util.List;
  * accessed from the InputCollection.
  */
 public class ModularInputKind extends Entity {
-    Map<String, Map<String,String>> args;
+    protected Map<String, Map<String,String>> args;
 
     /**
      * Class constructor.
