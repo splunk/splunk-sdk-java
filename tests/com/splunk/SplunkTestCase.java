@@ -20,11 +20,20 @@ import com.splunk.sdk.Command;
 import java.net.Socket;
 import junit.framework.TestCase;
 import org.junit.Before;
+import org.junit.Test;
+
+import java.util.UUID;
 
 // Shared base class for Splunk SDK unit tests, contains common unit setup
 // and a collection of helper functions.
 public class SplunkTestCase extends TestCase {
     final static String assertRoot = "Test Support assert: ";
+
+    protected String temporaryName() {
+        UUID u = UUID.randomUUID();
+        String name = "delete-me-" + u.toString();
+        return name;
+    }
 
     Command command;
 

@@ -454,8 +454,8 @@ public class Service extends HttpService {
      *
      * @return A collection of indexes.
      */
-    public EntityCollection<Index> getIndexes() {
-        return new EntityCollection<Index>(this, "data/indexes", Index.class);
+    public IndexCollection getIndexes() {
+        return new IndexCollection(this);
     }
 
     /**
