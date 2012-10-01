@@ -106,6 +106,7 @@ public class Application extends Entity {
      * @return {@code true} if the app can be managed by Splunk Manager,
      * {@code false} if not.
      */
+    @Deprecated
     public boolean isManageable() {
         return getBoolean("manageable", false);
     }
@@ -188,6 +189,7 @@ public class Application extends Entity {
      * @param value {@code true} if the app can be managed by Splunk Manager,
      * {@code false} if not.
      */
+    @Deprecated
     public void setManageable(boolean value) {
         setCacheValue("manageable", value);
     }
