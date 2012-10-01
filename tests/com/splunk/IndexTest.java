@@ -22,8 +22,34 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Test;
+import java.lang.Thread;
 
 public class IndexTest extends SplunkTestCase {
+    @Test
+    public void testDeleteIndex() throws Exception {
+        Service service = connect();
+
+        if (service.versionCompare("5.0") < 0) {
+
+        }
+
+        String indexName = temporaryName();
+        EntityCollection<Index> indexes = service.getIndexes();
+        Index index = indexes.create(indexName);
+        SplunkTestCase.assertTrue(indexes.containsKey(indexName));
+        indexes.remove(indexName);
+
+        int nTries = 10;
+        while (nTries > 0) {
+            if (indexes.containsKey(indexName)) {
+                Thread.sleep(300);
+            } else {
+                return;
+            }
+        }
+        SplunkTestCase.fail("Index not deleted within allotted time.");
+    }
+
     final static String assertRoot = "Index assert: ";
 
     private void wait_event_count(Index index, int value, int seconds) {
