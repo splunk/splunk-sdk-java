@@ -39,7 +39,7 @@ public class InputTest extends SplunkTestCase {
     public void testTcpAttachAndWrite() throws Exception {
         Service service = connect();
         String indexName = temporaryName();
-        Integer tcpPort = findNextUnusedPort(10000);
+        Integer tcpPort = findNextUnusedTcpPort(service, 10000);
 
         Index index = null;
         TcpInput input = null;
@@ -85,7 +85,7 @@ public class InputTest extends SplunkTestCase {
     public void testSubmit() throws Exception {
         Service service = connect();
         String indexName = temporaryName();
-        Integer tcpPort = findNextUnusedPort(10000);
+        Integer tcpPort = findNextUnusedTcpPort(service, 10000);
 
         Index index = null;
         TcpInput input = null;
@@ -126,7 +126,7 @@ public class InputTest extends SplunkTestCase {
     public void testAttachWith() throws Exception {
         Service service = connect();
         String indexName = temporaryName();
-        Integer tcpPort = findNextUnusedPort(10000);
+        Integer tcpPort = findNextUnusedTcpPort(service, 10000);
 
         Index index = null;
         TcpInput input = null;
@@ -185,7 +185,7 @@ public class InputTest extends SplunkTestCase {
             args.add("index", indexName);
             input = service.getInputs().create(udpPort.toString(), InputKind.Udp, args);
             int nEvents = index.getTotalEventCount();
-            input.submit(getTimestamp() + " Boris the mad baboon!\r\n");
+            input.submit(createTimestamp() + " Boris the mad baboon!\r\n");
 
             int nTries = 50;
             while (nTries > 0) {
