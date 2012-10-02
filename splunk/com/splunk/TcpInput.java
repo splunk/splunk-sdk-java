@@ -258,16 +258,15 @@ public class TcpInput extends Input {
      * Opens a connection, submits, and closes the connection. If you need to
      * submit many events, use attachWith, which will open a single connection.
      *
-     * @param eventBody String containing the event to submit (without newlines at the end).
+     * @param eventBody String containing the event to submit.
      */
     public void submit(String eventBody) throws IOException {
         Socket socket = null;
         OutputStream output = null;
-        String bodyPlusNewline = eventBody + "\r\n";
         try {
             socket = attach();
             output = socket.getOutputStream();
-            output.write(bodyPlusNewline.getBytes());
+            output.write(eventBody.getBytes("UTF8"));
             output.flush();
             output.close();
             socket.close();
