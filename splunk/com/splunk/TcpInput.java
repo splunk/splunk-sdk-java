@@ -17,7 +17,7 @@
 package com.splunk;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -26,7 +26,7 @@ import java.net.Socket;
  * processed (or "cooked").
  */
 public class TcpInput extends Input {
-    public interface TcpInputReceiverBehavior { public void run(PrintStream stream); }
+    public static interface ReceiverBehavior { public void run(OutputStream stream) throws IOException; }
 
     /**
      * Class constructor.
@@ -51,26 +51,26 @@ public class TcpInput extends Input {
     /**
      * Submit events to this TCP input, reusing the connection.
      *
-     * attachWith passes a {@code PrintStream} connected to the TCP input
-     * to a {@code TcpInputReceiverBehavior}'s {@code run} method, and handles all
+     * attachWith passes a {@code OutputStream} connected to the TCP input
+     * to a {@code TcpInput.ReceiverBehavior}'s {@code run} method, and handles all
      * the set up and tear down of the socket.
      *
      * Example:
      *
      *     Service service = Service.connect(...);
-     *     TcpInput input = service.getInputs().get('10000');
+     *     TcpInput input = service.getInputs().get('10000', InputKind.Tcp);
      *     input.attachWith(new TcpInput.TcpInputReceiverBehavior() {
-     *         public void run(PrintStream stream) {
+     *         public void run(OutputStream stream) {
      *             stream.print(getTimestamp() + " Boris the mad baboon!\r\n");
      *         }
      *     });
      */
-    public void attachWith(TcpInputReceiverBehavior behavior) throws IOException {
+    public void attachWith(ReceiverBehavior behavior) throws IOException {
         Socket socket = null;
-        PrintStream output = null;
+        OutputStream output = null;
         try {
             socket = attach();
-            output = new PrintStream(socket.getOutputStream());
+            output = socket.getOutputStream();
             behavior.run(output);
             output.flush();
         } finally {
@@ -262,11 +262,12 @@ public class TcpInput extends Input {
      */
     public void submit(String eventBody) throws IOException {
         Socket socket = null;
-        PrintStream output = null;
+        OutputStream output = null;
+        String bodyPlusNewline = eventBody + "\r\n";
         try {
             socket = attach();
-            output = new PrintStream(socket.getOutputStream());
-            output.print(eventBody + "\r\n");
+            output = socket.getOutputStream();
+            output.write(bodyPlusNewline.getBytes());
             output.flush();
             output.close();
             socket.close();

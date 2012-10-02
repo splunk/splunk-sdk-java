@@ -32,7 +32,7 @@ import java.util.UUID;
 public class SplunkTestCase extends TestCase {
     final static String assertRoot = "Test Support assert: ";
 
-    public String getTimestamp() {
+    protected String createTimestamp() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);

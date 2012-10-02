@@ -16,23 +16,30 @@
 
 package com.splunk;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 
 
 
 public class InputTest extends SplunkTestCase {
+    public static Integer findNextUnusedTcpPort(Service service, Integer startingPort) {
+        Integer port = startingPort;
+        while (service.getInputs().containsKey(port.toString())) {
+            port += 1;
+        }
+        return port;
+    }
+
+
     @Test
     public void testTcpAttachAndWrite() throws Exception {
         Service service = connect();
         String indexName = temporaryName();
-        Integer tcpPort = 10000;
-        while (service.getInputs().containsKey(tcpPort.toString())) {
-            tcpPort += 1;
-        }
+        Integer tcpPort = findNextUnusedPort(10000);
 
         Index index = null;
         TcpInput input = null;
@@ -47,7 +54,7 @@ public class InputTest extends SplunkTestCase {
             Socket socket = input.attach();
 
             PrintStream output = new PrintStream(socket.getOutputStream());
-            output.print(getTimestamp() + " Boris the mad baboon!\r\n");
+            output.print(createTimestamp() + " Boris the mad baboon!\r\n");
             output.flush();
             socket.close();
 
@@ -78,10 +85,7 @@ public class InputTest extends SplunkTestCase {
     public void testSubmit() throws Exception {
         Service service = connect();
         String indexName = temporaryName();
-        Integer tcpPort = 10000;
-        while (service.getInputs().containsKey(tcpPort.toString())) {
-            tcpPort += 1;
-        }
+        Integer tcpPort = findNextUnusedPort(10000);
 
         Index index = null;
         TcpInput input = null;
@@ -93,7 +97,7 @@ public class InputTest extends SplunkTestCase {
             input = service.getInputs().create(tcpPort.toString(), InputKind.Tcp, args);
 
             int nEvents = index.getTotalEventCount();
-            input.submit(getTimestamp() + " Boris the mad baboon!\r\n");
+            input.submit(createTimestamp() + " Boris the mad baboon!\r\n");
 
             int nTries = 50;
             while (nTries > 0) {
@@ -122,10 +126,7 @@ public class InputTest extends SplunkTestCase {
     public void testAttachWith() throws Exception {
         Service service = connect();
         String indexName = temporaryName();
-        Integer tcpPort = 10000;
-        while (service.getInputs().containsKey(tcpPort.toString())) {
-            tcpPort += 1;
-        }
+        Integer tcpPort = findNextUnusedPort(10000);
 
         Index index = null;
         TcpInput input = null;
@@ -136,9 +137,10 @@ public class InputTest extends SplunkTestCase {
             args.add("index", indexName);
             input = service.getInputs().create(tcpPort.toString(), InputKind.Tcp, args);
             int nEvents = index.getTotalEventCount();
-            input.attachWith(new TcpInput.TcpInputReceiverBehavior() {
-                public void run(PrintStream stream) {
-                    stream.print(getTimestamp() + " Boris the mad baboon!\r\n");
+            input.attachWith(new TcpInput.ReceiverBehavior() {
+                public void run(OutputStream stream) throws IOException {
+                    String s = createTimestamp() + " Boris the mad baboon!\r\n";
+                    stream.write(s.getBytes());
                 }
             });
 
