@@ -872,6 +872,17 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns a collection of saved searches.
+     *
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of saved searches.
+     */
+    public SavedSearchCollection getSavedSearches(SavedSearchCollectionArgs args) {
+        return new SavedSearchCollection(this, args);
+    }
+
+    /**
      * Returns service configuration information for an instance of Splunk.
      *
      * @return Service configuration information.

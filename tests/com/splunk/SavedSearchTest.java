@@ -17,6 +17,9 @@
 package com.splunk;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -440,6 +443,27 @@ public class SavedSearchTest extends SplunkTestCase {
         // Delete the saved search
         savedSearches.remove("sdk-test1");
         assertFalse(assertRoot + "#78", savedSearches.containsKey("sdk-test1"));
+    }
+    
+    @Test public void testListSavedSearches() {
+    	Service service = connect();
+
+    	SavedSearchCollectionArgs ascArgs = new SavedSearchCollectionArgs();
+    	ascArgs.setSortDir(SortDir.ASC);
+    	
+        SavedSearchCollection savedSearchesAsc = service.getSavedSearches(ascArgs);
+        List<String> savedSearchNamesAsc = new ArrayList<String>(savedSearchesAsc.keySet());
+        
+        SavedSearchCollectionArgs descArgs = new SavedSearchCollectionArgs();
+    	descArgs.setSortDir(SortDir.DESC);
+    	
+        SavedSearchCollection savedSearchesDesc = service.getSavedSearches(descArgs);
+        List<String> savedSearchNamesDesc = new ArrayList<String>(savedSearchesDesc.keySet());
+        
+        List<String> savedSearchNamesDescReversed = savedSearchNamesDesc;
+        Collections.reverse(savedSearchNamesDescReversed);
+        
+        assertEquals(savedSearchNamesAsc, savedSearchNamesDescReversed);
     }
 }
 
