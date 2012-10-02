@@ -165,6 +165,49 @@ public class InputTest extends SplunkTestCase {
         }
     }
 
+    @Test
+    public void testSubmitToUdpInput() throws Exception {
+        Service service = connect();
+        String indexName = temporaryName();
+        Integer udpPort = 10000;
+        while (service.getInputs().containsKey(udpPort.toString())) {
+            udpPort += 1;
+        }
+
+        Index index = null;
+        UdpInput input = null;
+
+        try {
+            index = service.getIndexes().create(indexName);
+            Args args = new Args();
+            args.add("index", indexName);
+            input = service.getInputs().create(udpPort.toString(), InputKind.Udp, args);
+            int nEvents = index.getTotalEventCount();
+            input.submit(getTimestamp() + " Boris the mad baboon!\r\n");
+
+            int nTries = 50;
+            while (nTries > 0) {
+                index.refresh();
+                if (index.getTotalEventCount() == nEvents + 1) {
+                    break;
+                } else {
+                    nTries -= 1;
+                    Thread.sleep(1000);
+                }
+            }
+            if (nTries == 0) {
+                SplunkTestCase.fail("Timed out before new events were found in index.");
+            }
+        } finally {
+            if (index != null && service.versionCompare("5.0") >= 0) {
+                index.remove();
+            }
+            if (input != null) {
+                input.remove();
+            }
+        }
+    }
+
 
 
     final static String assertRoot = "Input assert: ";

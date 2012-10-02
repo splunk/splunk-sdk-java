@@ -16,6 +16,11 @@
 
 package com.splunk;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
 /**
  * The {@code UdpInput} class represents a UDP input.
  */
@@ -254,5 +259,20 @@ public class UdpInput extends Input {
      */
     public void setSourceType(String sourcetype) {
         setCacheValue("sourcetype", sourcetype);
+    }
+
+    /**
+     * Send a string to this UDP input.
+     *
+     * @param eventBody The text to send.
+     */
+    public void submit(String eventBody) throws IOException {
+        DatagramSocket socket = new DatagramSocket();
+        InetAddress address = InetAddress.getByName(this.getHost());
+        int port = java.lang.Integer.parseInt(this.getName());
+        byte[] buffer = eventBody.getBytes();
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
+        socket.send(packet);
+        socket.close();
     }
 }
