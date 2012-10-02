@@ -16,12 +16,17 @@
 
 package com.splunk;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
+
 /**
  * The {@code TcpInput} class represents a TCP raw input. This differs from a
  * TCP <i>cooked</i> input in that this TCP input is in raw form, and is not
  * processed (or "cooked").
  */
 public class TcpInput extends Input {
+    public interface TcpInputReceiverBehavior { public void run(PrintStream stream); }
 
     /**
      * Class constructor.
@@ -31,6 +36,47 @@ public class TcpInput extends Input {
      */
     TcpInput(Service service, String path) {
         super(service, path);
+    }
+
+    /**
+     * Return a socket attached to this TCP raw input.
+     */
+    public Socket attach() throws IOException {
+        String hostname = this.service.getHost();
+        int port = java.lang.Integer.parseInt(this.getName());
+        Socket socket = new Socket(hostname, port);
+        return socket;
+    }
+
+    /**
+     * Submit events to this TCP input, reusing the connection.
+     *
+     * attachWith passes a {@code PrintStream} connected to the TCP input
+     * to a {@code TcpInputReceiverBehavior}'s {@code run} method, and handles all
+     * the set up and tear down of the socket.
+     *
+     * Example:
+     *
+     *     Service service = Service.connect(...);
+     *     TcpInput input = service.getInputs().get('10000');
+     *     input.attachWith(new TcpInput.TcpInputReceiverBehavior() {
+     *         public void run(PrintStream stream) {
+     *             stream.print(getTimestamp() + " Boris the mad baboon!\r\n");
+     *         }
+     *     });
+     */
+    public void attachWith(TcpInputReceiverBehavior behavior) throws IOException {
+        Socket socket = null;
+        PrintStream output = null;
+        try {
+            socket = attach();
+            output = new PrintStream(socket.getOutputStream());
+            behavior.run(output);
+            output.flush();
+        } finally {
+            if (output != null) { output.close(); }
+            if (socket != null) { socket.close(); }
+        }
     }
 
     /**
@@ -204,6 +250,30 @@ public class TcpInput extends Input {
      */
     public void setIndex(String index) {
         setCacheValue("index", index);
+    }
+
+    /**
+     * Submit a single event to this input.
+     *
+     * Opens a connection, submits, and closes the connection. If you need to
+     * submit many events, use attachWith, which will open a single connection.
+     *
+     * @param eventBody String containing the event to submit (without newlines at the end).
+     */
+    public void submit(String eventBody) throws IOException {
+        Socket socket = null;
+        PrintStream output = null;
+        try {
+            socket = attach();
+            output = new PrintStream(socket.getOutputStream());
+            output.print(eventBody + "\r\n");
+            output.flush();
+            output.close();
+            socket.close();
+        } finally {
+            if (output != null) { output.close(); }
+            if (socket != null) { socket.close(); }
+        }
     }
 
     /**

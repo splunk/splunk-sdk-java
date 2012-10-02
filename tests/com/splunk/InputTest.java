@@ -16,9 +16,157 @@
 
 package com.splunk;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.PrintStream;
+import java.net.Socket;
+
+
+
 public class InputTest extends SplunkTestCase {
+    @Test
+    public void testTcpAttachAndWrite() throws Exception {
+        Service service = connect();
+        String indexName = temporaryName();
+        Integer tcpPort = 10000;
+        while (service.getInputs().containsKey(tcpPort.toString())) {
+            tcpPort += 1;
+        }
+
+        Index index = null;
+        TcpInput input = null;
+
+        try {
+            index = service.getIndexes().create(indexName);
+            Args args = new Args();
+            args.add("index", indexName);
+            input = service.getInputs().create(tcpPort.toString(), InputKind.Tcp, args);
+
+            int nEvents = index.getTotalEventCount();
+            Socket socket = input.attach();
+
+            PrintStream output = new PrintStream(socket.getOutputStream());
+            output.print(getTimestamp() + " Boris the mad baboon!\r\n");
+            output.flush();
+            socket.close();
+
+            int nTries = 50;
+            while (nTries > 0) {
+                index.refresh();
+                if (index.getTotalEventCount() == nEvents + 1) {
+                    break;
+                } else {
+                    nTries -= 1;
+                    Thread.sleep(1000);
+                }
+            }
+            if (nTries == 0) {
+                SplunkTestCase.fail("Timed out before new events were found in index.");
+            }
+        } finally {
+            if (index != null && service.versionCompare("5.0") >= 0) {
+                index.remove();
+            }
+            if (input != null) {
+                input.remove();
+            }
+        }
+    }
+
+    @Test
+    public void testSubmit() throws Exception {
+        Service service = connect();
+        String indexName = temporaryName();
+        Integer tcpPort = 10000;
+        while (service.getInputs().containsKey(tcpPort.toString())) {
+            tcpPort += 1;
+        }
+
+        Index index = null;
+        TcpInput input = null;
+
+        try {
+            index = service.getIndexes().create(indexName);
+            Args args = new Args();
+            args.add("index", indexName);
+            input = service.getInputs().create(tcpPort.toString(), InputKind.Tcp, args);
+
+            int nEvents = index.getTotalEventCount();
+            input.submit(getTimestamp() + " Boris the mad baboon!\r\n");
+
+            int nTries = 50;
+            while (nTries > 0) {
+                index.refresh();
+                if (index.getTotalEventCount() == nEvents + 1) {
+                    break;
+                } else {
+                    nTries -= 1;
+                    Thread.sleep(1000);
+                }
+            }
+            if (nTries == 0) {
+                SplunkTestCase.fail("Timed out before new events were found in index.");
+            }
+        } finally {
+            if (index != null && service.versionCompare("5.0") >= 0) {
+                index.remove();
+            }
+            if (input != null) {
+                input.remove();
+            }
+        }
+    }
+
+    @Test
+    public void testAttachWith() throws Exception {
+        Service service = connect();
+        String indexName = temporaryName();
+        Integer tcpPort = 10000;
+        while (service.getInputs().containsKey(tcpPort.toString())) {
+            tcpPort += 1;
+        }
+
+        Index index = null;
+        TcpInput input = null;
+
+        try {
+            index = service.getIndexes().create(indexName);
+            Args args = new Args();
+            args.add("index", indexName);
+            input = service.getInputs().create(tcpPort.toString(), InputKind.Tcp, args);
+            int nEvents = index.getTotalEventCount();
+            input.attachWith(new TcpInput.TcpInputReceiverBehavior() {
+                public void run(PrintStream stream) {
+                    stream.print(getTimestamp() + " Boris the mad baboon!\r\n");
+                }
+            });
+
+            int nTries = 50;
+            while (nTries > 0) {
+                index.refresh();
+                if (index.getTotalEventCount() == nEvents + 1) {
+                    break;
+                } else {
+                    nTries -= 1;
+                    Thread.sleep(1000);
+                }
+            }
+            if (nTries == 0) {
+                SplunkTestCase.fail("Timed out before new events were found in index.");
+            }
+        } finally {
+            if (index != null && service.versionCompare("5.0") >= 0) {
+                index.remove();
+            }
+            if (input != null) {
+                input.remove();
+            }
+        }
+    }
+
+
+
     final static String assertRoot = "Input assert: ";
 
     private void touchSpecificInput(Input input) {

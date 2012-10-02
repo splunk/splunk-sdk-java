@@ -22,12 +22,21 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 // Shared base class for Splunk SDK unit tests, contains common unit setup
 // and a collection of helper functions.
 public class SplunkTestCase extends TestCase {
     final static String assertRoot = "Test Support assert: ";
+
+    public String getTimestamp() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 
     protected String temporaryName() {
         UUID u = UUID.randomUUID();
