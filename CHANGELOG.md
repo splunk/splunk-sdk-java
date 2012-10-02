@@ -1,5 +1,13 @@
 # Splunk Java SDK Changelog
 
+## Version 1.0
+
+* Added submit method to UdpInput to send events to that input.
+* Added attach method to TcpInput to get an open socket to the input, and
+  convenience methods submit (to send a single event) and attachWith (to
+  stream data to the input with deterministic creation and cleanup of the
+  socket).
+
 ## Version 0.8.0 (beta)
 
 ### Behavior changes
