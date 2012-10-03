@@ -75,4 +75,52 @@ public class CollectionArgs extends Args {
     public void setSortMode(SortMode sort_mode) {
         this.put("sort_mode", String.valueOf(sort_mode));
     }
+    
+    /**
+     * Indicates whether to sort returned entries in ascending or descending order.
+     */
+    public static enum SortDir {
+        ASC("asc"),
+        DESC("desc");
+        
+        private String value;
+        
+        private SortDir(String value) {
+            this.value = value;
+        }
+        
+        /**
+         * @return The REST API value for this enumerated constant.
+         */
+        public String toString() {
+            return this.value;
+        }
+    }
+    
+    /**
+     * Indicates the collating sequence for sorting the returned entries.
+     */
+    public static enum SortMode {
+        /** If all values of the field are numbers, collate numerically. Otherwise, collate alphabetically. */
+        AUTO("auto"),
+        /** Collate alphabetically. */
+        ALPHA("alpha"),
+        /** Collate alphabetically, case-sensitive. */
+        ALPHA_CASE("alpha_case"),
+        /** Collate numerically. */
+        NUM("num");
+        
+        private String value;
+        
+        private SortMode(String value) {
+            this.value = value;
+        }
+        
+        /**
+         * @return The REST API value for this enumerated constant.
+         */
+        public String toString() {
+            return this.value;
+        }
+    }
 }
