@@ -244,5 +244,16 @@ public class SearchTest extends SplunkTestCase {
         job.cancel();
     }
 
-
+    // Check creation of Job, using JobArgs.
+    @Test public void testCreateWithArgs() throws IOException {
+        Service service = connect();
+        
+        String query = "search index=_internal | head 1";
+        
+        JobArgs args = new JobArgs();
+        args.setTimeout(1);
+        
+        Job job = service.getJobs().create(query, args);
+        ready(job).cancel();
+    }
 }
