@@ -56,7 +56,7 @@ public class CollectionArgs extends Args {
      * @param sort_dir
      *      Indicates whether to sort returned entries in ascending or descending order.
      */
-    public void setSortDir(SortDir sort_dir) {
+    public void setSortDirection(SortDirection sort_dir) {
         this.put("sort_dir", String.valueOf(sort_dir));
     }
     
@@ -79,13 +79,13 @@ public class CollectionArgs extends Args {
     /**
      * Indicates whether to sort returned entries in ascending or descending order.
      */
-    public static enum SortDir {
+    public static enum SortDirection {
         ASC("asc"),
         DESC("desc");
         
         private String value;
         
-        private SortDir(String value) {
+        private SortDirection(String value) {
             this.value = value;
         }
         
