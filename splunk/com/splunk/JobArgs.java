@@ -191,8 +191,6 @@ public class JobArgs extends Args {
      *      Required fields for the search.
      *      
      *      These fields, even if not referenced or used directly by the search, are still included by the events and summary endpoints. Splunk Web uses these fields to prepopulate panels in the Search view.
-     *      
-     *      Consider using this form of passing the required fields to the search instead of the deprecated required_field_list. If both rf and required_field_list are supplied, the union of the two lists is used.
      */
     public void setRequiredFieldList(String[] rf) {
         this.put("rf", rf);
