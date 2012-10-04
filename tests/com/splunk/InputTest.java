@@ -137,7 +137,7 @@ public class InputTest extends SplunkTestCase {
             args.add("index", indexName);
             input = service.getInputs().create(String.valueOf(tcpPort), InputKind.Tcp, args);
             int nEvents = index.getTotalEventCount();
-            input.attachWith(new TcpInput.ReceiverBehavior() {
+            input.attachWith(new ReceiverBehavior() {
                 public void run(OutputStream stream) throws IOException {
                     String s = createTimestamp() + " Boris the mad baboon!\r\n";
                     stream.write(s.getBytes("UTF8"));

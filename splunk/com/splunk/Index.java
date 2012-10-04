@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
@@ -44,6 +45,27 @@ public class Index extends Entity {
     public Socket attach() throws IOException {
         Receiver receiver = service.getReceiver();
         return receiver.attach(getName());
+    }
+
+    /**
+     * Write events to this index, reusing the connection.
+     *
+     * attachWith passes an {@code OutputStream} connected to the index
+     * to a {@code ReceiverBehavior}, and handles all the set up and
+     * tear down of the socket.
+     */
+    public void attachWith(ReceiverBehavior behavior) throws IOException {
+        Socket socket = null;
+        OutputStream output = null;
+        try {
+            socket = attach();
+            output = socket.getOutputStream();
+            behavior.run(output);
+            output.flush();
+        } finally {
+            if (output != null) { output.close(); }
+            if (socket != null) { socket.close(); }
+        }
     }
 
     /**
