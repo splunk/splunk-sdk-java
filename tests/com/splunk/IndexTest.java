@@ -168,6 +168,13 @@ public class IndexTest extends SplunkTestCase {
             index.getTotalEventCount();
             index.isDisabled();
             index.isInternal();
+
+            if (service.versionCompare("5.0") >= 0) {
+                index.getBucketRebuildMemoryHint();
+                index.getMaxTimeUnreplicatedNoAcks();
+                index.getMaxTimeUnreplicatedWithAcks();
+                index.getRepFactor();
+            }
         }
 
         if (!indexes.containsKey(indexName)) {
@@ -245,6 +252,12 @@ public class IndexTest extends SplunkTestCase {
         index.setServiceMetaPeriod(index.getServiceMetaPeriod()+1);
         index.setSyncMeta(!index.getSyncMeta());
         index.setThrottleCheckPeriod(index.getThrottleCheckPeriod()+1);
+        if (service.versionCompare("5.0") >= 0) {
+            index.setBucketRebuildMemoryHint("auto");
+            index.setMaxTimeUnreplicatedNoAcks(300);
+            index.setMaxTimeUnreplicatedWithAcks(60);
+            index.setRepFactor(0);
+        }
         index.update();
 
         // check, then restore using map method

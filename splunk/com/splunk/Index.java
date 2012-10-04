@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -154,6 +155,21 @@ public class Index extends Entity {
      */
     public int getBloomfilterTotalSizeKB() {
         return getInteger("bloomfilterTotalSizeKB", 0);
+    }
+
+    /**
+     * Returns the positive integer of bucketRebuildMemoryHint,
+     * or -1 if that field is set to "auto".
+     *
+     * @return A positive integer, or -1 for "auto".
+     */
+    public String getBucketRebuildMemoryHint() throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            // We're on 4.x, which doesn't support this.
+            throw new OperationNotSupportedException("bucketRebuildMemoryHint unavailable before Splunk 5.0");
+        } else {
+            return getString("bucketRebuildMemoryHint");
+        }
     }
 
     /**
@@ -418,6 +434,30 @@ public class Index extends Entity {
     }
 
     /**
+     * [undocumented in REST API so far]
+     */
+    public int getMaxTimeUnreplicatedNoAcks() throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            // We're on 4.x, which doesn't support this.
+            throw new OperationNotSupportedException("maxTimeUnreplicatedNoAcks unavailable before Splunk 5.0");
+        } else {
+            return getInteger("maxTimeUnreplicatedNoAcks");
+        }
+    }
+
+    /**
+     * [undocumented in REST API so far]
+     */
+    public int getMaxTimeUnreplicatedWithAcks() throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            // We're on 4.x, which doesn't support this.
+            throw new OperationNotSupportedException("maxTimeUnreplicatedWithAcks unavailable before Splunk 5.0");
+        } else {
+            return getInteger("maxTimeUnreplicatedWithAcks");
+        }
+    }
+
+    /**
      * Returns the maximum number of warm buckets for this index. If this
      * value is exceeded, the warm buckets with the lowest value for their
      * latest times are moved to cold.
@@ -528,6 +568,18 @@ public class Index extends Entity {
      */
     public int getRawChunkSizeBytes() {
         return getInteger("rawChunkSizeBytes");
+    }
+
+    /**
+     * Get the number of replicates this index should have if this
+     * is part of a Splunk cluster.
+     */
+    public int getRepFactor() throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            throw new OperationNotSupportedException("repFactor unavailable before Splunk 5.0");
+        } else {
+            return getInteger("repFactor", 0);
+        }
     }
 
     /**
@@ -644,10 +696,19 @@ public class Index extends Entity {
      * <b>Note:</b> Indexing performance degrades when this parameter is set to
      * {@code true}.
      *
+     * On Splunk 5.0 and later, this is a global property, and cannot be set on
+     * a per index basis. If you try to invoke this method against Splunk 5.0 or later
+     * it will throw an OperationNotSupportedException.
+     *
      * @param assure {@code true} to ensure UTF8 encoding, {@code false} if not.
      */
-    public void setAssureUTF8(boolean assure) {
-        setCacheValue("assureUTF8", assure);
+    public void setAssureUTF8(boolean assure) throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") >= 0) {
+            // We're on 5.0 or later, where this is only available as global parameter.
+            throw new OperationNotSupportedException("assureUTF8 not settable on particular indexes in Splunk >= 5.0");
+        } else {
+            setCacheValue("assureUTF8", assure);
+        }
     }
 
     /**
@@ -658,6 +719,15 @@ public class Index extends Entity {
      */
     public void setBlockSignSize(int value) {
         setCacheValue("blockSignSize", value);
+    }
+
+
+    public void setBucketRebuildMemoryHint(String value) throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            throw new OperationNotSupportedException("bucketRebuildMemoryHint unavailable before Splunk 5.0");
+        } else {
+            setCacheValue("bucketRebuildMemoryHint", value);
+        }
     }
 
     /**
@@ -836,6 +906,29 @@ public class Index extends Entity {
         setCacheValue("maxMetaEntries", entries);
     }
 
+
+    /**
+     * [undocumented in REST API]
+     */
+    public void setMaxTimeUnreplicatedNoAcks(int value) throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            throw new OperationNotSupportedException("maxTimeUnreplicatedNoAcks unavailable before Splunk 5.0");
+        } else {
+            setCacheValue("maxTimeUnreplicatedNoAcks", value);
+        }
+    }
+
+    /**
+     * [undocumented in REST API]
+     */
+    public void setMaxTimeUnreplicatedWithAcks(int value) throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            throw new OperationNotSupportedException("maxTimeUnreplicatedWithAcks unavailable before Splunk 5.0");
+        } else {
+            setCacheValue("maxTimeUnreplicatedWithAcks", value);
+        }
+    }
+
     /**
      * Sets the maximum size for this index. If an index grows larger than this
      * value, the oldest data is frozen.
@@ -925,6 +1018,17 @@ public class Index extends Entity {
      */
     public void setRawChunkSizeBytes(int size) {
         setCacheValue("rawChunkSizeBytes", size);
+    }
+
+    /**
+     * Set the number of replicates of this index to have in a Splunk cluster.
+     */
+    public void setRepFactor(int value) throws OperationNotSupportedException {
+        if (this.service.versionCompare("5.0") < 0) {
+            throw new OperationNotSupportedException("repFactor unavailable before Splunk 5.0");
+        } else {
+            setCacheValue("repFactor", value);
+        }
     }
 
     /**
