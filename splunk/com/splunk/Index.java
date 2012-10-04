@@ -571,18 +571,6 @@ public class Index extends Entity {
     }
 
     /**
-     * Get the number of replicates this index should have if this
-     * is part of a Splunk cluster.
-     */
-    public int getRepFactor() throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            throw new OperationNotSupportedException("repFactor unavailable before Splunk 5.0");
-        } else {
-            return getInteger("repFactor", 0);
-        }
-    }
-
-    /**
      * Returns the frequency to check for the need to create a new hot bucket
      * and the need to roll or freeze any warm or cold buckets for this index.
      *
@@ -1018,17 +1006,6 @@ public class Index extends Entity {
      */
     public void setRawChunkSizeBytes(int size) {
         setCacheValue("rawChunkSizeBytes", size);
-    }
-
-    /**
-     * Set the number of replicates of this index to have in a Splunk cluster.
-     */
-    public void setRepFactor(int value) throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            throw new OperationNotSupportedException("repFactor unavailable before Splunk 5.0");
-        } else {
-            setCacheValue("repFactor", value);
-        }
     }
 
     /**

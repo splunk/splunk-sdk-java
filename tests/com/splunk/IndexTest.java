@@ -173,7 +173,6 @@ public class IndexTest extends SplunkTestCase {
                 index.getBucketRebuildMemoryHint();
                 index.getMaxTimeUnreplicatedNoAcks();
                 index.getMaxTimeUnreplicatedWithAcks();
-                index.getRepFactor();
             }
         }
 
@@ -256,7 +255,6 @@ public class IndexTest extends SplunkTestCase {
             index.setBucketRebuildMemoryHint("auto");
             index.setMaxTimeUnreplicatedNoAcks(300);
             index.setMaxTimeUnreplicatedWithAcks(60);
-            index.setRepFactor(0);
         }
         index.update();
 
