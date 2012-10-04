@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import java.util.Set;
  * value that indicates the specific type of input (<i>input kind</i>).
  */
 public class InputCollection extends EntityCollection<Input> {
+    protected Set<InputKind> inputKinds;
     // CONSIDER: We can probably initialize the following based on platform and
     // avoid adding the Windows inputs to the list on non-Windows platforms.
     static InputKind[] kinds = new InputKind[] {
@@ -191,11 +193,67 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
+     * Matches a string to an input name.
+     *
+     * In most cases this is the same as string equality, but for scripted inputs,
+     * which are listed by their full path, we want to match the final component
+     * of the filename instead.
+     */
+    public static boolean matchInputName(InputKind kind, String searchFor, String searchIn) {
+        if (kind == InputKind.Script) {
+            return searchIn.endsWith("/" + searchFor) || searchIn.endsWith("\\" + searchFor);
+        } else {
+            return searchFor.equals(searchIn);
+        }
+    }
+
+    public static String join(String joiner, List<String> joinees) {
+        if (joinees.isEmpty()) {
+            return "";
+        } else {
+            String joined = joinees.get(0);
+            for (String s : joinees.subList(1, joinees.size())) {
+                joined = joined + joiner + s;
+            }
+            return joined;
+        }
+    }
+
+    public void addInputKindList(List<String> subPath) {
+        String inputPath
+//        String inputPath = path;
+//        if (subPath != null) { inputPath += "/" + subPath + "?count=-1"; }
+//
+//        ResponseMessage inputKindResponse = service.get(inputPath);
+//        AtomFeed inputKindFeed = AtomFeed.parseStream(inputKindResponse.getContent());
+//        for (AtomEntry entry : inputKindFeed.entries) {
+//            String key = itemKey(entry);
+//            if (entry.links.containsKey("create")) {
+//                // There are subkinds of inputs that we need to add.
+//                addInputKindList();
+//                inputKinds.add(InputKind.makeInputKind(itemKey(entry)));
+//
+//            } else {
+//                ResponseMessage subInputKindResponse = service.get(String.format("%s/%s?count=-1", path, key));
+//                AtomFeed subInputKindFeed =
+//
+//            }
+//            // inputKinds.add(key);
+//        }
+    }
+
+    /**
      * Refreshes this input collection.
      *
      * @return The refreshed input collection.
      */
     @Override public InputCollection refresh() {
+        ResponseMessage inputKindResponse = service.get(String.format("%s?count=-1", path));
+        AtomFeed inputKindFeed = AtomFeed.parseStream(inputKindResponse.getContent());
+        for (AtomEntry entry : inputKindFeed.entries) {
+
+        }
+
         items.clear();
 
         // Iterate over all input kinds and collect all instances.
@@ -258,25 +316,16 @@ public class InputCollection extends EntityCollection<Input> {
         for (Entry<String, LinkedList<Input>> entry: set) {
             String entryKey = entry.getKey();
             LinkedList<Input> entryValue = entry.getValue();
+            InputKind kind = entryValue.get(0).getKind();
 
-            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith("/" + key)||
-                    entryKey.endsWith("\\" + key)) {
+            if (InputCollection.matchInputName(kind, key, entryKey)) {
                     if (entryValue.size() > 1) {
                         throw new SplunkException(SplunkException.AMBIGUOUS,
                                 "Key has multiple values, specify a namespace");
+                    } else {
+                        return entryValue.get(0);
                     }
-                    return entryValue.get(0);
                 }
-            } else {
-                LinkedList<Input> entities = items.get(key);
-                if (entities != null && entities.size() > 1) {
-                    throw new SplunkException(SplunkException.AMBIGUOUS,
-                            "Key has multiple values, specify a namespace");
-                }
-                if (entities == null || entities.size() == 0) continue;
-                return entities.get(0);
-            }
         }
         return null;
     }
@@ -292,20 +341,10 @@ public class InputCollection extends EntityCollection<Input> {
         for (Entry<String, LinkedList<Input>> entry: set) {
             String entryKey = entry.getKey();
             LinkedList<Input> entryValue = entry.getValue();
+            InputKind kind = entryValue.get(0).getKind();
 
-            if (entryValue.get(0).getKind().equals(InputKind.Script)) {
-                if (entryKey.endsWith("/" + key)||
-                    entryKey.endsWith("\\" + key)) {
-                    for (Input entity: entryValue) {
-                        if (entity.path.startsWith(pathMatcher)) {
-                            return entity;
-                        }
-                    }
-                }
-            } else {
-                LinkedList<Input> entities = items.get(key);
-                if (entities == null || entities.size() == 0) continue;
-                for (Input entity: entities) {
+            if (InputCollection.matchInputName(kind, key, entryKey)) {
+                for (Input entity: entryValue) {
                     if (entity.path.startsWith(pathMatcher)) {
                         return entity;
                     }

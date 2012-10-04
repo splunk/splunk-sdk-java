@@ -29,60 +29,51 @@ class InputNode extends EntityNode {
         PropertyList list = super.getMetadata();
         list.add(InputKind.class, "getKind");
         Input input = (Input)value;
-        switch (input.getKind()) {
-        case Monitor:
+        InputKind kind = input.getKind();
+        if (kind == InputKind.Monitor) {
             list.add(int.class, "getFileCount");
             list.add(String.class, "getHost");
             list.add(String.class, "getIndex");
             list.add(int.class, "getRcvBuf");
-            break;
-        case Script:
+        } else if (kind == InputKind.Script) {
             list.add(String.class, "getGroup");
             list.add(String.class, "getHost");
             list.add(String.class, "getIndex");
             list.add(int.class, "getInterval");
             list.add(int.class, "getRcvBuf");
-            break;
-        case Tcp:
+        } else if (kind == InputKind.Tcp) {
             list.add(String.class, "getGroup");
             list.add(String.class, "getHost");
             list.add(String.class, "getIndex");
             list.add(int.class, "getRcvBuf");
             list.add(String.class, "getRestrictToHost");
-            break;
-        case TcpSplunk:
-        case Udp:
+        } else if (kind == InputKind.TcpSplunk || kind == InputKind.Udp) {
             list.add(String.class, "getGroup");
             list.add(String.class, "getHost");
             list.add(String.class, "getIndex");
             list.add(int.class, "getRcvBuf");
-            break;
-        case WindowsActiveDirectory:
+        } else if (kind == InputKind.WindowsActiveDirectory) {
             list.add(String.class, "getIndex");
             list.add(boolean.class, "getMonitorSubtree");
-            break;
-        case WindowsEventLog:
+        } else if (kind == InputKind.WindowsEventLog) {
             list.add(String.class, "getHosts");
             list.add(String.class, "getIndex");
             list.add(String[].class, "getLogs");
             list.add(String.class, "getLocalName");
             list.add(String.class, "getLookupHost");
-            break;
-        case WindowsPerfmon:
+        } else if (kind == InputKind.WindowsPerfmon) {
             list.add(String.class, "getIndex");
             list.add(String[].class, "getInstances");
             list.add(int.class, "getInterval");
             list.add(String.class, "getObject");
-            break;
-        case WindowsRegistry:
+        } else if (kind == InputKind.WindowsRegistry) {
             list.add(boolean.class, "getBaseline");
             list.add(String.class, "getProc");
             list.add(String.class, "getHive");
             list.add(String.class, "getIndex");
             list.add(boolean.class, "getMonitorSubnoes");
             list.add(String.class, "getType");
-            break;
-        case WindowsWmi:
+        } else if (kind == InputKind.WindowsWmi) {
             list.add(String.class, "getClasses");
             list.add(String[].class, "getFields");
             list.add(String.class, "getIndex");
@@ -92,7 +83,6 @@ class InputNode extends EntityNode {
             list.add(String.class, "getLocalName");
             list.add(String.class, "getServer");
             list.add(String.class, "getWq1");
-            break;
         }
         return list;
     }
