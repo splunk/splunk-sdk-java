@@ -446,17 +446,17 @@ public class SavedSearchTest extends SplunkTestCase {
     }
     
     @Test public void testListSavedSearches() {
-    	Service service = connect();
+        Service service = connect();
 
-    	SavedSearchCollectionArgs ascArgs = new SavedSearchCollectionArgs();
-    	ascArgs.setSortDirection(CollectionArgs.SortDirection.ASC);
-    	
+        SavedSearchCollectionArgs ascArgs = new SavedSearchCollectionArgs();
+        ascArgs.setSortDirection(CollectionArgs.SortDirection.ASC);
+        
         SavedSearchCollection savedSearchesAsc = service.getSavedSearches(ascArgs);
         List<String> savedSearchNamesAsc = new ArrayList<String>(savedSearchesAsc.keySet());
         
         SavedSearchCollectionArgs descArgs = new SavedSearchCollectionArgs();
-    	descArgs.setSortDirection(CollectionArgs.SortDirection.DESC);
-    	
+        descArgs.setSortDirection(CollectionArgs.SortDirection.DESC);
+        
         SavedSearchCollection savedSearchesDesc = service.getSavedSearches(descArgs);
         List<String> savedSearchNamesDesc = new ArrayList<String>(savedSearchesDesc.keySet());
         

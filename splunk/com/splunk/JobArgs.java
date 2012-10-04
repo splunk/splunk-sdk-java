@@ -20,6 +20,60 @@ package com.splunk;
  * Contains arguments used to create a {@link Job}.
  */
 public class JobArgs extends Args {
+    
+    /**
+     * Affects how a call to {@link JobCollection#create} operates.
+     */
+    public static enum ExecutionMode {
+        /** Runs an asynchronous search. */
+        NORMAL("normal"),
+        /** Returns the sid when the job is complete. */
+        BLOCKING("blocking"),
+        /** Returns results in the same call. */
+        ONESHOT("oneshot");
+        
+        private String value;
+        
+        private ExecutionMode(String value) {
+            this.value = value;
+        }
+        
+        /**
+         * @return The REST API value for this enumerated constant.
+         */
+        public String toString() {
+            return this.value;
+        }
+    }
+    
+    /**
+     * Affects how a call to {@link JobCollection#create} operates.
+     */
+    public static enum SearchMode {
+        /**
+         * Search runs over historical data.
+         */
+        NORMAL("normal"),
+        /**
+         * Search runs over live data. A realtime search may also be indicated by earliest_time and latest_time variables starting with 'rt' even if the search_mode is set to normal or is unset. For a real-time search, if both earliest_time and latest_time are both exactly 'rt', the search represents all appropriate live data received since the start of the search.
+         * 
+         * Additionally, if earliest_time and/or latest_time are 'rt' followed by a relative time specifiers then a sliding window is used where the time bounds of the window are determined by the relative time specifiers and are continuously updated based on the wall-clock time.
+         */
+        REALTIME("realtime");
+        
+        private String value;
+        
+        private SearchMode(String value) {
+            this.value = value;
+        }
+        
+        /**
+         * @return The REST API value for this enumerated constant.
+         */
+        public String toString() {
+            return this.value;
+        }
+    }
 
     /**
      * Class constructor.
@@ -298,59 +352,5 @@ public class JobArgs extends Args {
      */
     public void setTimeout(int timeout) {
         this.put("timeout", String.valueOf(timeout));
-    }
-    
-    /**
-     * Affects how a call to {@link JobCollection#create} operates.
-     */
-    public static enum ExecutionMode {
-        /** Runs an asynchronous search. */
-        NORMAL("normal"),
-        /** Returns the sid when the job is complete. */
-        BLOCKING("blocking"),
-        /** Returns results in the same call. */
-        ONESHOT("oneshot");
-        
-        private String value;
-        
-        private ExecutionMode(String value) {
-            this.value = value;
-        }
-        
-        /**
-         * @return The REST API value for this enumerated constant.
-         */
-        public String toString() {
-            return this.value;
-        }
-    }
-    
-    /**
-     * Affects how a call to {@link JobCollection#create} operates.
-     */
-    public static enum SearchMode {
-        /**
-         * Search runs over historical data.
-         */
-        NORMAL("normal"),
-        /**
-         * Search runs over live data. A realtime search may also be indicated by earliest_time and latest_time variables starting with 'rt' even if the search_mode is set to normal or is unset. For a real-time search, if both earliest_time and latest_time are both exactly 'rt', the search represents all appropriate live data received since the start of the search.
-         * 
-         * Additionally, if earliest_time and/or latest_time are 'rt' followed by a relative time specifiers then a sliding window is used where the time bounds of the window are determined by the relative time specifiers and are continuously updated based on the wall-clock time.
-         */
-        REALTIME("realtime");
-        
-        private String value;
-        
-        private SearchMode(String value) {
-            this.value = value;
-        }
-        
-        /**
-         * @return The REST API value for this enumerated constant.
-         */
-        public String toString() {
-            return this.value;
-        }
     }
 }
