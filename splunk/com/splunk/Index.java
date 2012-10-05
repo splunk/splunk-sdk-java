@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import javax.naming.OperationNotSupportedException;
+import java.lang.UnsupportedOperationException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -158,18 +158,15 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the positive integer of bucketRebuildMemoryHint,
-     * or -1 if that field is set to "auto".
+     * Returns the value of bucketRebuildMemoryHint.
      *
-     * @return A positive integer, or -1 for "auto".
+     * This can be {@code "auto"}, or a positive integer, possibly
+     * with a suffix like MB or GB (i.e., "1234", "16MB", "2GB").
+     *
+     * @return A string representing the field value.
      */
-    public String getBucketRebuildMemoryHint() throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            // We're on 4.x, which doesn't support this.
-            throw new OperationNotSupportedException("bucketRebuildMemoryHint unavailable before Splunk 5.0");
-        } else {
-            return getString("bucketRebuildMemoryHint");
-        }
+    public String getBucketRebuildMemoryHint() {
+        return getString("bucketRebuildMemoryHint");
     }
 
     /**
@@ -436,25 +433,15 @@ public class Index extends Entity {
     /**
      * [undocumented in REST API so far]
      */
-    public int getMaxTimeUnreplicatedNoAcks() throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            // We're on 4.x, which doesn't support this.
-            throw new OperationNotSupportedException("maxTimeUnreplicatedNoAcks unavailable before Splunk 5.0");
-        } else {
-            return getInteger("maxTimeUnreplicatedNoAcks");
-        }
+    public int getMaxTimeUnreplicatedNoAcks() {
+        return getInteger("maxTimeUnreplicatedNoAcks");
     }
 
     /**
      * [undocumented in REST API so far]
      */
-    public int getMaxTimeUnreplicatedWithAcks() throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            // We're on 4.x, which doesn't support this.
-            throw new OperationNotSupportedException("maxTimeUnreplicatedWithAcks unavailable before Splunk 5.0");
-        } else {
-            return getInteger("maxTimeUnreplicatedWithAcks");
-        }
+    public int getMaxTimeUnreplicatedWithAcks() {
+        return getInteger("maxTimeUnreplicatedWithAcks");
     }
 
     /**
@@ -685,18 +672,12 @@ public class Index extends Entity {
      * {@code true}.
      *
      * On Splunk 5.0 and later, this is a global property, and cannot be set on
-     * a per index basis. If you try to invoke this method against Splunk 5.0 or later
-     * it will throw an OperationNotSupportedException.
+     * a per index basis.
      *
      * @param assure {@code true} to ensure UTF8 encoding, {@code false} if not.
      */
-    public void setAssureUTF8(boolean assure) throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") >= 0) {
-            // We're on 5.0 or later, where this is only available as global parameter.
-            throw new OperationNotSupportedException("assureUTF8 not settable on particular indexes in Splunk >= 5.0");
-        } else {
-            setCacheValue("assureUTF8", assure);
-        }
+    public void setAssureUTF8(boolean assure) {
+        setCacheValue("assureUTF8", assure);
     }
 
     /**
@@ -710,12 +691,17 @@ public class Index extends Entity {
     }
 
 
-    public void setBucketRebuildMemoryHint(String value) throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            throw new OperationNotSupportedException("bucketRebuildMemoryHint unavailable before Splunk 5.0");
-        } else {
-            setCacheValue("bucketRebuildMemoryHint", value);
-        }
+    /**
+     * Set the bucketRebuildMemoryHint field on this index.
+     *
+     * The value can be {@code "auto"}, or a number specifying
+     * memory size, with optional MB and GB suffixes to specify
+     * megabytes and gigabytes (i.e., "1234", "16MB", "2GB").
+     *
+     * @param value The memory hint value to set.
+     */
+    public void setBucketRebuildMemoryHint(String value) {
+        setCacheValue("bucketRebuildMemoryHint", value);
     }
 
     /**
@@ -898,23 +884,15 @@ public class Index extends Entity {
     /**
      * [undocumented in REST API]
      */
-    public void setMaxTimeUnreplicatedNoAcks(int value) throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            throw new OperationNotSupportedException("maxTimeUnreplicatedNoAcks unavailable before Splunk 5.0");
-        } else {
-            setCacheValue("maxTimeUnreplicatedNoAcks", value);
-        }
+    public void setMaxTimeUnreplicatedNoAcks(int value) {
+        setCacheValue("maxTimeUnreplicatedNoAcks", value);
     }
 
     /**
      * [undocumented in REST API]
      */
-    public void setMaxTimeUnreplicatedWithAcks(int value) throws OperationNotSupportedException {
-        if (this.service.versionCompare("5.0") < 0) {
-            throw new OperationNotSupportedException("maxTimeUnreplicatedWithAcks unavailable before Splunk 5.0");
-        } else {
-            setCacheValue("maxTimeUnreplicatedWithAcks", value);
-        }
+    public void setMaxTimeUnreplicatedWithAcks(int value) {
+        setCacheValue("maxTimeUnreplicatedWithAcks", value);
     }
 
     /**

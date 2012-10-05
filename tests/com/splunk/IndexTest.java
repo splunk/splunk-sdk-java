@@ -58,8 +58,6 @@ public class IndexTest extends SplunkTestCase {
                 index.remove();
             }
         }
-
-
     }
 
 
