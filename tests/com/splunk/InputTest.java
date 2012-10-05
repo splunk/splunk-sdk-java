@@ -31,8 +31,10 @@ import java.util.Set;
 public class InputTest extends SplunkTestCase {
     @Test
     public void testMatchNonscriptInputName() {
-        SplunkTestCase.assertFalse(InputCollection.matchInputName(InputKind.Tcp, "1-[]bc", "def"));
-        SplunkTestCase.assertTrue(InputCollection.matchInputName(InputKind.Tcp, "1-[]bc", "1-[]bc"));
+        boolean matches = InputCollection.matchInputName(InputKind.Tcp, "1-[]bc", "def");
+        SplunkTestCase.assertFalse(matches);
+        matches = InputCollection.matchInputName(InputKind.Tcp, "1-[]bc", "1-[]bc");
+        SplunkTestCase.assertTrue(matches);
     }
 
     @Test

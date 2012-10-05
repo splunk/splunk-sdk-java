@@ -32,7 +32,13 @@ public class InputKind {
     }
 
     public InputKind(String relpath, Class inputClass) {
-        this(relpath, inputClass, relpath.substring(relpath.lastIndexOf("/") + 1));
+        this(
+                relpath,
+                inputClass,
+                relpath.contains("data/inputs") ?
+                        relpath.substring(relpath.indexOf("data/inputs") + 12) :
+                        relpath
+        );
     }
 
     /** Unknown input kind. */
@@ -69,25 +75,25 @@ public class InputKind {
     public static InputKind WindowsWmi = new InputKind("win-wmi-collections", WindowsWmiInput.class);
 
     public static InputKind makeInputKind(String kind) {
-        if (kind == "monitor") {
+        if (kind.equals("monitor")) {
             return Monitor;
-        } else if (kind == "script") {
+        } else if (kind.equals("script")) {
             return Script;
-        } else if (kind == "tcp/raw" || kind == "tcp") {
+        } else if (kind.equals("tcp/raw") || kind.equals("tcp")) {
             return Tcp;
-        } else if (kind == "tcp/cooked"|| kind == "splunktcp") {
+        } else if (kind.equals("tcp/cooked")|| kind.equals("splunktcp")) {
             return TcpSplunk;
-        } else if (kind == "udp") {
+        } else if (kind.equals("udp")) {
             return Udp;
-        } else if (kind == "ad") {
+        } else if (kind.equals("ad")) {
             return WindowsActiveDirectory;
-        } else if (kind == "win-event-log-collections") {
+        } else if (kind.equals("win-event-log-collections")) {
             return WindowsEventLog;
-        } else if (kind == "win-perfmon") {
+        } else if (kind.equals("win-perfmon")) {
             return WindowsPerfmon;
-        } else if (kind == "registry") {
+        } else if (kind.equals("registry")) {
             return WindowsRegistry;
-        } else if (kind == "win-wmi-collections") {
+        } else if (kind.equals("win-wmi-collections")) {
             return WindowsWmi;
         } else {
             return new InputKind(kind, Input.class);
