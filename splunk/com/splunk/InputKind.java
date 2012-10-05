@@ -73,9 +73,9 @@ public class InputKind {
             return Monitor;
         } else if (kind == "script") {
             return Script;
-        } else if (kind == "tcp/raw") {
+        } else if (kind == "tcp/raw" || kind == "tcp") {
             return Tcp;
-        } else if (kind == "tcp/cooked") {
+        } else if (kind == "tcp/cooked"|| kind == "splunktcp") {
             return TcpSplunk;
         } else if (kind == "udp") {
             return Udp;
@@ -90,7 +90,7 @@ public class InputKind {
         } else if (kind == "win-wmi-collections") {
             return WindowsWmi;
         } else {
-            return new InputKind("data/inputs/" + kind, Input.class);
+            return new InputKind(kind, Input.class);
         }
     }
 }

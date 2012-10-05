@@ -16,6 +16,9 @@
 
 package com.splunk;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The {@code Input} class represents a data input. This class is the base for
  * all typed {@code Input} classes and is also used when Splunk does not
@@ -39,6 +42,20 @@ public class Input extends Entity {
      * @return Unknown input kind.
      */
     public InputKind getKind() {
-        return InputKind.Unknown;
+        String[] pathComponents = this.path.split("/");
+        int offset = 0;
+        while (true) {
+            if (pathComponents[offset].equals("inputs")) {
+                break;
+            } else {
+                offset += 1;
+            }
+        }
+        List<String> toJoin = new ArrayList<String>();
+        for (int i = offset+1; i < pathComponents.length; i++) {
+            toJoin.add(pathComponents[i]);
+        }
+        String relpath = InputCollection.join("/", toJoin);
+        return InputKind.makeInputKind(relpath);
     }
 }

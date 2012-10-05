@@ -23,7 +23,9 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 
 public class InputTest extends SplunkTestCase {
@@ -61,6 +63,41 @@ public class InputTest extends SplunkTestCase {
         );
     }
 
+    @Test
+    public void testInputKinds() {
+        Service service = connect();
+        InputCollection inputs = service.getInputs();
+
+        Set<InputKind> kinds = inputs.getInputKinds();
+        boolean hasTest2 = false;
+        for (InputKind ik : kinds) {
+            if (ik.kind == "test2") {
+                hasTest2 = true;
+            }
+        }
+    }
+
+    @Test
+    public void testListInputs() {
+        Service service = connect();
+        InputCollection inputs = service.getInputs();
+
+        SplunkTestCase.assertFalse(inputs.isEmpty());
+        boolean hasAbcd = inputs.containsKey("abcd");
+        if (!hasAbcd) {
+            Args args = new Args();
+            args.add("field1", "boris");
+            inputs.create("abcd", InputKind.makeInputKind("test2"), args);
+        }
+
+        boolean abcdFound = false;
+        for (Input input : inputs.values()) {
+            if (input.getName().equals("abcd") && input.getKind().kind.equals("test2")) {
+                abcdFound = true;
+            }
+        }
+        SplunkTestCase.assertTrue("Modular input did not show up in list.", abcdFound);
+    }
 
     final static String assertRoot = "Input assert: ";
 

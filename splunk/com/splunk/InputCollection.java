@@ -16,10 +16,7 @@
 
 package com.splunk;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The {@code InputCollection} class represents a collection of inputs. The 
@@ -27,21 +24,7 @@ import java.util.Set;
  * value that indicates the specific type of input (<i>input kind</i>).
  */
 public class InputCollection extends EntityCollection<Input> {
-    protected Set<InputKind> inputKinds;
-    // CONSIDER: We can probably initialize the following based on platform and
-    // avoid adding the Windows inputs to the list on non-Windows platforms.
-    static InputKind[] kinds = new InputKind[] {
-        InputKind.Monitor,
-        InputKind.Script,
-        InputKind.Tcp,
-        InputKind.TcpSplunk,
-        InputKind.Udp,
-        InputKind.WindowsActiveDirectory,
-        InputKind.WindowsEventLog,
-        InputKind.WindowsPerfmon,
-        InputKind.WindowsRegistry,
-        InputKind.WindowsWmi
-    };
+    protected Set<InputKind> inputKinds = new HashSet<InputKind>();
 
     /**
      * Class constructor.
@@ -185,11 +168,15 @@ public class InputCollection extends EntityCollection<Input> {
      * @return The kind of input.
      */
     protected InputKind itemKind(String path) {
-        for (InputKind kind : kinds) {
+        for (InputKind kind : this.inputKinds) {
             if (path.indexOf("data/inputs/" + kind.relpath) > 0)
                 return kind;
         }
         return InputKind.Unknown; // Didn't recognize the input kind
+    }
+
+    public Set<InputKind> getInputKinds() {
+        return this.inputKinds;
     }
 
     /**
@@ -207,6 +194,16 @@ public class InputCollection extends EntityCollection<Input> {
         }
     }
 
+    /**
+     * Join the strings in {@code joinees}, separated by {@code joiner}.
+     *
+     * For example, {@code join("/", list)} where {@code list} contains the strings {@code "a"},
+     * {@code "b"}, and {@code "c"} returns "a/b/c";
+     *
+     * @param joiner String to interpolate between each element of {@code joinees}.
+     * @param joinees List of strings to join.
+     * @return The strines in {@code joinees} concatenated with a copy of {@code joiner} between each.
+     */
     public static String join(String joiner, List<String> joinees) {
         if (joinees.isEmpty()) {
             return "";
@@ -219,27 +216,51 @@ public class InputCollection extends EntityCollection<Input> {
         }
     }
 
-    public void addInputKindList(List<String> subPath) {
-        String inputPath
-//        String inputPath = path;
-//        if (subPath != null) { inputPath += "/" + subPath + "?count=-1"; }
-//
-//        ResponseMessage inputKindResponse = service.get(inputPath);
-//        AtomFeed inputKindFeed = AtomFeed.parseStream(inputKindResponse.getContent());
-//        for (AtomEntry entry : inputKindFeed.entries) {
-//            String key = itemKey(entry);
-//            if (entry.links.containsKey("create")) {
-//                // There are subkinds of inputs that we need to add.
-//                addInputKindList();
-//                inputKinds.add(InputKind.makeInputKind(itemKey(entry)));
-//
-//            } else {
-//                ResponseMessage subInputKindResponse = service.get(String.format("%s/%s?count=-1", path, key));
-//                AtomFeed subInputKindFeed =
-//
-//            }
-//            // inputKinds.add(key);
-//        }
+    /**
+     * Recursively assemble a set of all the {@code InputKind}s available on this Splunk
+     * instance.
+     *
+     * @param subPath A list of strings giving the components of the URL.
+     * @return A set of {@code InputKind} objects.
+     */
+    protected Set<InputKind> assembleInputKindSet(List<String> subPath) {
+        Set<InputKind> kinds = new HashSet<InputKind>();
+        ResponseMessage response = service.get(this.path + "/" + join("/", subPath));
+        AtomFeed feed = AtomFeed.parseStream(response.getContent());
+        for (AtomEntry entry : feed.entries) {
+            String relpath = itemKey(entry);
+
+            boolean hasCreateLink = false;
+            for (String linkName : entry.links.keySet()) {
+                if (linkName.equals("create")) {
+                    hasCreateLink = true;
+                }
+            }
+
+            List<String> thisSubPath = new ArrayList<String>(subPath);
+            thisSubPath.add(relpath);
+
+            if (entry.title.equals("all") || join("/", thisSubPath).equals("tcp/ssl")) {
+                continue;
+            } else if (hasCreateLink) {
+                InputKind newKind = InputKind.makeInputKind(relpath);
+                kinds.add(newKind);
+            } else {
+                Set<InputKind> subKinds = assembleInputKindSet(thisSubPath);
+                kinds.addAll(subKinds);
+            }
+        }
+        return kinds;
+    }
+
+    /**
+     * Refresh the {@code inputKinds} field on this object.
+     */
+    protected void refreshInputKinds() {
+        List<String> basePath = new ArrayList<String>();
+        Set<InputKind> kinds = assembleInputKindSet(basePath);
+        this.inputKinds.clear();
+        this.inputKinds.addAll(kinds);
     }
 
     /**
@@ -248,16 +269,12 @@ public class InputCollection extends EntityCollection<Input> {
      * @return The refreshed input collection.
      */
     @Override public InputCollection refresh() {
-        ResponseMessage inputKindResponse = service.get(String.format("%s?count=-1", path));
-        AtomFeed inputKindFeed = AtomFeed.parseStream(inputKindResponse.getContent());
-        for (AtomEntry entry : inputKindFeed.entries) {
-
-        }
+        refreshInputKinds();
 
         items.clear();
 
         // Iterate over all input kinds and collect all instances.
-        for (InputKind kind : kinds) {
+        for (InputKind kind : this.inputKinds) {
             String relpath = kind.relpath;
             String inputs = String.format("%s/%s?count=-1", path, relpath);
             ResponseMessage response;
