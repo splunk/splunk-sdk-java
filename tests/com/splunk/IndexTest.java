@@ -21,10 +21,46 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.junit.Before;
 import org.junit.Test;
 import java.lang.Thread;
 
 public class IndexTest extends SplunkTestCase {
+    @Test
+    public void testAttachWith() throws Exception {
+        Service service = connect();
+        String indexName = temporaryName();
+        final Index index = service.getIndexes().create(indexName);
+
+        try {
+            final int nEvents = index.getTotalEventCount();
+            index.attachWith(new ReceiverBehavior() {
+                public void run(OutputStream stream) throws IOException {
+                    String s = createTimestamp() + " Boris the mad baboon!\r\n";
+                    stream.write(s.getBytes("UTF8"));
+                }
+            });
+            int nTries = 10;
+            while (nTries > 0) {
+                index.refresh();
+                if (index.getTotalEventCount() == nEvents + 1) {
+                    return;
+                } else {
+                    nTries -= 1;
+                    Thread.sleep(1000);
+                }
+            }
+            if (nTries == 0) {
+                SplunkTestCase.fail("Test timed out.");
+            }
+        } finally {
+            if (index != null && service.versionCompare("5.0") >= 0) {
+                index.remove();
+            }
+        }
+    }
+
+
     @Test
     public void testDeleteIndex() throws Exception {
         Service service = connect();
@@ -130,6 +166,12 @@ public class IndexTest extends SplunkTestCase {
             index.getTotalEventCount();
             index.isDisabled();
             index.isInternal();
+
+            if (service.versionCompare("5.0") >= 0) {
+                index.getBucketRebuildMemoryHint();
+                index.getMaxTimeUnreplicatedNoAcks();
+                index.getMaxTimeUnreplicatedWithAcks();
+            }
         }
 
         if (!indexes.containsKey(indexName)) {
@@ -207,6 +249,11 @@ public class IndexTest extends SplunkTestCase {
         index.setServiceMetaPeriod(index.getServiceMetaPeriod()+1);
         index.setSyncMeta(!index.getSyncMeta());
         index.setThrottleCheckPeriod(index.getThrottleCheckPeriod()+1);
+        if (service.versionCompare("5.0") >= 0) {
+            index.setBucketRebuildMemoryHint("auto");
+            index.setMaxTimeUnreplicatedNoAcks(300);
+            index.setMaxTimeUnreplicatedWithAcks(60);
+        }
         index.update();
 
         // check, then restore using map method
