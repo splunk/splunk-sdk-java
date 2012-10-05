@@ -2,6 +2,23 @@
 
 ## Version 1.0
 
+* InputCollection now handles arbitrary input kinds represented by modular inputs. The set
+  of InputKinds on the connected Splunk instance is available by calling getInputKinds.
+  That set is updated every time you call refresh on the collection.
+* Removing indexes is support when connected to Splunk >= 5.0.
+* Added getters and setters on Index for bucketRebuildMemoryHint, maxTimeUnreplicatedNoAcks,
+  and maxTimeUnreplicatedWithAcks.
+* Setting assureUTF8 on an index fails when connected to Splunk >= 5.0, since that field
+  is only settable globally in that version of Splunk, not on a per-index basis.
+* isManageable and setManageable on Application are deprecated, matching the behavior
+  in Splunk >= 5.0.
+* InputKind has changed from an enum to a class. It has static members identical to
+  the enum values, but you can no longer use a switch statement over the values.
+  Instead you must use a series of if-else blocks. However, it now handles arbitrary
+  modular input kinds.
+* WindowsRegistryInput.getType's return value fixed to be String[] instead of String.
+* Added attachWith method to Index to stream data with deterministic handling
+  of the socket.
 * Added submit method to UdpInput to send events to that input.
 * Added attach method to TcpInput to get an open socket to the input, and
   convenience methods submit (to send a single event) and attachWith (to

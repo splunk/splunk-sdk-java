@@ -101,8 +101,8 @@ public class WindowsRegistryInput extends Input {
      *
      * @return The registry type regex, or {@code null} if not specified.
      */
-    public String getType() {
-        return getString("type", null);
+    public String[] getType() {
+        return getStringArray("type");
     }
 
     /**
