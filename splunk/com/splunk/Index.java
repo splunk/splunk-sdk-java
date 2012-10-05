@@ -16,7 +16,9 @@
 
 package com.splunk;
 
+import java.lang.UnsupportedOperationException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
@@ -44,6 +46,27 @@ public class Index extends Entity {
     public Socket attach() throws IOException {
         Receiver receiver = service.getReceiver();
         return receiver.attach(getName());
+    }
+
+    /**
+     * Write events to this index, reusing the connection.
+     *
+     * attachWith passes an {@code OutputStream} connected to the index
+     * to a {@code ReceiverBehavior}, and handles all the set up and
+     * tear down of the socket.
+     */
+    public void attachWith(ReceiverBehavior behavior) throws IOException {
+        Socket socket = null;
+        OutputStream output = null;
+        try {
+            socket = attach();
+            output = socket.getOutputStream();
+            behavior.run(output);
+            output.flush();
+        } finally {
+            if (output != null) { output.close(); }
+            if (socket != null) { socket.close(); }
+        }
     }
 
     /**
@@ -132,6 +155,18 @@ public class Index extends Entity {
      */
     public int getBloomfilterTotalSizeKB() {
         return getInteger("bloomfilterTotalSizeKB", 0);
+    }
+
+    /**
+     * Returns the value of bucketRebuildMemoryHint.
+     *
+     * This can be {@code "auto"}, or a positive integer, possibly
+     * with a suffix like MB or GB (i.e., "1234", "16MB", "2GB").
+     *
+     * @return A string representing the field value.
+     */
+    public String getBucketRebuildMemoryHint() {
+        return getString("bucketRebuildMemoryHint");
     }
 
     /**
@@ -396,6 +431,20 @@ public class Index extends Entity {
     }
 
     /**
+     * [undocumented in REST API so far]
+     */
+    public int getMaxTimeUnreplicatedNoAcks() {
+        return getInteger("maxTimeUnreplicatedNoAcks");
+    }
+
+    /**
+     * [undocumented in REST API so far]
+     */
+    public int getMaxTimeUnreplicatedWithAcks() {
+        return getInteger("maxTimeUnreplicatedWithAcks");
+    }
+
+    /**
      * Returns the maximum number of warm buckets for this index. If this
      * value is exceeded, the warm buckets with the lowest value for their
      * latest times are moved to cold.
@@ -622,6 +671,9 @@ public class Index extends Entity {
      * <b>Note:</b> Indexing performance degrades when this parameter is set to
      * {@code true}.
      *
+     * On Splunk 5.0 and later, this is a global property, and cannot be set on
+     * a per index basis.
+     *
      * @param assure {@code true} to ensure UTF8 encoding, {@code false} if not.
      */
     public void setAssureUTF8(boolean assure) {
@@ -636,6 +688,20 @@ public class Index extends Entity {
      */
     public void setBlockSignSize(int value) {
         setCacheValue("blockSignSize", value);
+    }
+
+
+    /**
+     * Set the bucketRebuildMemoryHint field on this index.
+     *
+     * The value can be {@code "auto"}, or a number specifying
+     * memory size, with optional MB and GB suffixes to specify
+     * megabytes and gigabytes (i.e., "1234", "16MB", "2GB").
+     *
+     * @param value The memory hint value to set.
+     */
+    public void setBucketRebuildMemoryHint(String value) {
+        setCacheValue("bucketRebuildMemoryHint", value);
     }
 
     /**
@@ -812,6 +878,21 @@ public class Index extends Entity {
      */
     public void setMaxMetaEntries(int entries) {
         setCacheValue("maxMetaEntries", entries);
+    }
+
+
+    /**
+     * [undocumented in REST API]
+     */
+    public void setMaxTimeUnreplicatedNoAcks(int value) {
+        setCacheValue("maxTimeUnreplicatedNoAcks", value);
+    }
+
+    /**
+     * [undocumented in REST API]
+     */
+    public void setMaxTimeUnreplicatedWithAcks(int value) {
+        setCacheValue("maxTimeUnreplicatedWithAcks", value);
     }
 
     /**

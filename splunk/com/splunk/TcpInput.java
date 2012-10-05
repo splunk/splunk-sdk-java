@@ -26,7 +26,6 @@ import java.net.Socket;
  * processed (or "cooked").
  */
 public class TcpInput extends Input {
-    public static interface ReceiverBehavior { public void run(OutputStream stream) throws IOException; }
 
     /**
      * Class constructor.
@@ -52,14 +51,14 @@ public class TcpInput extends Input {
      * Submit events to this TCP input, reusing the connection.
      *
      * attachWith passes a {@code OutputStream} connected to the TCP input
-     * to a {@code TcpInput.ReceiverBehavior}'s {@code run} method, and handles all
+     * to a {@code ReceiverBehavior}'s {@code run} method, and handles all
      * the set up and tear down of the socket.
      *
      * Example:
      *
      *     Service service = Service.connect(...);
      *     TcpInput input = service.getInputs().get('10000', InputKind.Tcp);
-     *     input.attachWith(new TcpInput.TcpInputReceiverBehavior() {
+     *     input.attachWith(new ReceiverBehavior() {
      *         public void run(OutputStream stream) {
      *             stream.print(getTimestamp() + " Boris the mad baboon!\r\n");
      *         }
