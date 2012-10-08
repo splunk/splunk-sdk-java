@@ -87,7 +87,7 @@ public class JobArgs extends Args {
      *      If specified, the job automatically cancels after this many seconds of inactivity. (0 means never auto-cancel)
      */
     public void setAutoCancel(int autoCancel) {
-        this.put("auto_cancel", String.valueOf(autoCancel));
+        this.put("auto_cancel", autoCancel);
     }
     
     /**
@@ -97,7 +97,7 @@ public class JobArgs extends Args {
      *      Specify 0 to indicate no limit.
      */
     public void setAutoFinalizeEventCount(int autoFinalizeEventCount) {
-        this.put("auto_finalize_ec", String.valueOf(autoFinalizeEventCount));
+        this.put("auto_finalize_ec", autoFinalizeEventCount);
     }
     
     /**
@@ -105,7 +105,7 @@ public class JobArgs extends Args {
      *      If specified, the job automatically cancels after this many seconds of inactivity. (0 means never auto-pause) 
      */
     public void setAutoPause(int autoPause) {
-        this.put("auto_pause", String.valueOf(autoPause));
+        this.put("auto_pause", autoPause);
     }
     
     /**
@@ -115,7 +115,7 @@ public class JobArgs extends Args {
      *      The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. (Also see comment for the search_mode variable.)
      */
     public void setEarliestTime(String earliestTime) {
-        this.put("earliest_time", String.valueOf(earliestTime));
+        this.put("earliest_time", earliestTime);
     }
     
     /**
@@ -125,7 +125,7 @@ public class JobArgs extends Args {
      *      Specifying true (the default) may slow searches significantly depending on the nature of the lookups.
      */
     public void setEnableLookups(boolean enableLookups) {
-        this.put("enable_lookups", String.valueOf(enableLookups));
+        this.put("enable_lookups", enableLookups);
     }
     
     /**
@@ -137,7 +137,7 @@ public class JobArgs extends Args {
      *      If set to oneshot, returns results in the same call. 
      */
     public void setExecutionMode(ExecutionMode executionMode) {
-        this.put("exec_mode", String.valueOf(executionMode));
+        this.put("exec_mode", executionMode);
     }
     
     /**
@@ -145,7 +145,7 @@ public class JobArgs extends Args {
      *      Specifies whether this search should cause (and wait depending on the value of sync_bundle_replication) for bundle synchronization with all search peers.
      */
     public void setForceBundleReplication(boolean forceBundleReplication) {
-        this.put("force_bundle_replication", String.valueOf(forceBundleReplication));
+        this.put("force_bundle_replication", forceBundleReplication);
     }
     
     /**
@@ -153,7 +153,7 @@ public class JobArgs extends Args {
      *      Optional string to specify the search ID (&lt:sid>). If unspecified, a random ID is generated.
      */
     public void setId(String id) {
-        this.put("id", String.valueOf(id));
+        this.put("id", id);
     }
     
     /**
@@ -163,7 +163,7 @@ public class JobArgs extends Args {
      *      The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. (Also see comment for the search_mode variable.)
      */
     public void setLatestTime(String latestTime) {
-        this.put("latest_time", String.valueOf(latestTime));
+        this.put("latest_time", latestTime);
     }
     
     /**
@@ -173,7 +173,7 @@ public class JobArgs extends Args {
      *      Also, in transforming mode, the maximum number of results to store. Specifically, in all calls, codeoffset+count <= max_count.
      */
     public void setMaximumCount(int maximumCount) {
-        this.put("max_count", String.valueOf(maximumCount));
+        this.put("max_count", maximumCount);
     }
     
     /**
@@ -181,7 +181,7 @@ public class JobArgs extends Args {
      *      The number of seconds to run this search before finalizing. Specify 0 to never finalize.
      */
     public void setMaximumTime(int maximumTime) {
-        this.put("max_time", String.valueOf(maximumTime));
+        this.put("max_time", maximumTime);
     }
     
     /**
@@ -191,7 +191,7 @@ public class JobArgs extends Args {
      *      The namespace corresponds to the identifier recognized in the /services/apps/local endpoint.
      */
     public void setNamespace(String namespace) {
-        this.put("namespace", String.valueOf(namespace));
+        this.put("namespace", namespace);
     }
     
     /**
@@ -205,7 +205,7 @@ public class JobArgs extends Args {
      *      Refer to <a href="http://docs.splunk.com/Documentation/Splunk/4.3.4/SearchReference/SearchTimeModifiers">Time modifiers for search</a> for details on specifying relative time modifiers. 
      */
     public void setNow(String now) {
-        this.put("now", String.valueOf(now));
+        this.put("now", now);
     }
     
     /**
@@ -213,7 +213,7 @@ public class JobArgs extends Args {
      *      Determines how frequently to run the MapReduce reduce phase on accumulated map values. 
      */
     public void setReduceFrequency(int reduceFrequency) {
-        this.put("reduce_freq", String.valueOf(reduceFrequency));
+        this.put("reduce_freq", reduceFrequency);
     }
     
     /**
@@ -223,7 +223,7 @@ public class JobArgs extends Args {
      *      Default is true.
      */
     public void setReloadMacros(boolean reloadMacros) {
-        this.put("reload_macros", String.valueOf(reloadMacros));
+        this.put("reload_macros", reloadMacros);
     }
     
     /**
@@ -257,7 +257,7 @@ public class JobArgs extends Args {
      *      For a realtime search, indicates if the indexer blocks if the queue for this search is full.
      */
     public void setRealtimeBlocking(boolean realtimeBlocking) {
-        this.put("rt_blocking", String.valueOf(realtimeBlocking));
+        this.put("rt_blocking", realtimeBlocking);
     }
     
     /**
@@ -265,7 +265,7 @@ public class JobArgs extends Args {
      *      For a realtime search, indicates if the indexer prefilters events.
      */
     public void setRealtimeIndexFilter(boolean realtimeIndexFilter) {
-        this.put("rt_indexfilter", String.valueOf(realtimeIndexFilter));
+        this.put("rt_indexfilter", realtimeIndexFilter);
     }
     
     /**
@@ -275,7 +275,7 @@ public class JobArgs extends Args {
      *      Specify 0 to indicate no limit.
      */
     public void setRealtimeMaximumBlockSeconds(int realtimeMaximumBlockSeconds) {
-        this.put("rt_maxblocksecs", String.valueOf(realtimeMaximumBlockSeconds));
+        this.put("rt_maxblocksecs", realtimeMaximumBlockSeconds);
     }
     
     /**
@@ -283,7 +283,7 @@ public class JobArgs extends Args {
      *      For a realtime search, the queue size (in events) that the indexer should use for this search.
      */
     public void setRealtimeQueueSize(int realtimeQueueSize) {
-        this.put("rt_queue_size", String.valueOf(realtimeQueueSize));
+        this.put("rt_queue_size", realtimeQueueSize);
     }
     
     /**
@@ -299,7 +299,7 @@ public class JobArgs extends Args {
      *      search_listener=onResults;true;POST;/servicesNS/admin/search/saved/search/foobar/notify;
      */
     public void setSearchListener(String searchListener) {
-        this.put("search_listener", String.valueOf(searchListener));
+        this.put("search_listener", searchListener);
     }
     
     /**
@@ -309,7 +309,7 @@ public class JobArgs extends Args {
      *      Additionally, if earliest_time and/or latest_time are 'rt' followed by a relative time specifiers then a sliding window is used where the time bounds of the window are determined by the relative time specifiers and are continuously updated based on the wall-clock time.
      */
     public void setSearchMode(SearchMode searchMode) {
-        this.put("search_mode", String.valueOf(searchMode));
+        this.put("search_mode", searchMode);
     }
     
     /**
@@ -319,7 +319,7 @@ public class JobArgs extends Args {
      *      Searches against indexes must run in a separate process.
      */
     public void setSpawnProcess(boolean spawnProcess) {
-        this.put("spawn_process", String.valueOf(spawnProcess));
+        this.put("spawn_process", spawnProcess);
     }
     
     /**
@@ -329,7 +329,7 @@ public class JobArgs extends Args {
      *      0 indicates to not generate timeline information.
      */
     public void setStatusBuckets(int statusBuckets) {
-        this.put("status_buckets", String.valueOf(statusBuckets));
+        this.put("status_buckets", statusBuckets);
     }
     
     /**
@@ -337,7 +337,7 @@ public class JobArgs extends Args {
      *      Specifies whether this search should wait for bundle replication to complete.
      */
     public void setSynchronizeBundleReplication(boolean synchronizeBundleReplication) {
-        this.put("sync_bundle_replication", String.valueOf(synchronizeBundleReplication));
+        this.put("sync_bundle_replication", synchronizeBundleReplication);
     }
     
     /**
@@ -345,7 +345,7 @@ public class JobArgs extends Args {
      *      Used to convert a formatted time string from {start,end}_time into UTC seconds. It defaults to ISO-8601.
      */
     public void setTimeFormat(String timeFormat) {
-        this.put("time_format", String.valueOf(timeFormat));
+        this.put("time_format", timeFormat);
     }
     
     /**
@@ -353,7 +353,7 @@ public class JobArgs extends Args {
      *      The number of seconds to keep this search after processing has stopped.
      */
     public void setTimeout(int timeout) {
-        this.put("timeout", String.valueOf(timeout));
+        this.put("timeout", timeout);
     }
     
     /* END AUTOGENERATED CODE */
