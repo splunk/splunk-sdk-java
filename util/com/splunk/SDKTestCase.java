@@ -45,14 +45,26 @@ public abstract class SDKTestCase extends TestCase {
     protected static ConnectionArgs connectionArgs;
     protected static Service connection;
 
+    /**
+     * @return The path to .splunkrc in the user's home directory.
+     */
     private static String getSplunkrcPath() {
         String homePath = System.getProperty("user.home");
         return homePath + File.separator + ".splunkrc";
     }
 
+    /**
+     *
+     *
+     * @param stream Stream attached to .splunkrc (usually a {@code FileReader}).
+     * @return A ConnectionArgs object with the keys and values set from .splunkrc.
+     */
     private static ConnectionArgs readSplunkrc(InputStreamReader stream) {
         BufferedReader bufferedStream = new BufferedReader(stream);
         ConnectionArgs args = new ConnectionArgs();
+        if (!args.isValid()) {
+            fail(".splunkrc does not specify a valid state.");
+        }
         try {
             String line = bufferedStream.readLine();
             while (line != null) {
@@ -105,5 +117,36 @@ public abstract class SDKTestCase extends TestCase {
         String name = "delete-me-" + u.toString();
         return name;
     }
+
+    public static abstract class EventuallyTrueBehavior {
+        public int tries;
+        public int pauseTime;
+
+        {
+            tries = 10;
+            pauseTime = 1000;
+        }
+
+        public String timeoutMessage = "Test timed out before true.";
+        public abstract boolean predicate();
+    }
+
+    public static boolean assertEventuallyTrue(EventuallyTrueBehavior behavior) {
+        int remainingTries = behavior.tries;
+        while (remainingTries > 0) {
+            boolean succeeded = behavior.predicate();
+            if (succeeded) {
+                return true;
+            } else {
+                remainingTries -= 1;
+                try {
+                    Thread.sleep(behavior.pauseTime);
+                } catch (InterruptedException e) {}
+            }
+        }
+        fail(behavior.timeoutMessage);
+        return false;
+    }
+
 
 }
