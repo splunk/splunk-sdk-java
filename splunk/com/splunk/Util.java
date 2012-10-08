@@ -34,11 +34,13 @@ public class Util {
         if (joinees.isEmpty()) {
             return "";
         } else {
-            String joined = joinees.get(0);
+            StringBuilder joined = new StringBuilder();
+            joined.append(joinees.get(0));
             for (String s : joinees.subList(1, joinees.size())) {
-                joined = joined + joiner + s;
+                joined.append(joiner);
+                joined.append(s);
             }
-            return joined;
+            return joined.toString();
         }
     }
 
