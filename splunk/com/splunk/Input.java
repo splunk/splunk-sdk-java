@@ -54,6 +54,6 @@ public class Input extends Entity {
             toJoin.add(pathComponents[i]);
         }
         String relpath = Util.join("/", toJoin);
-        return InputKind.createInputKind(relpath);
+        return InputKind.create(relpath);
     }
 }

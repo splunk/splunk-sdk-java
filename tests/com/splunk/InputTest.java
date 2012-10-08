@@ -66,7 +66,7 @@ public class InputTest extends SplunkTestCase {
         if (!hasAbcd) {
             Args args = new Args();
             args.add("field1", "boris");
-            inputs.create("abcd", InputKind.createInputKind("test2"), args);
+            inputs.create("abcd", InputKind.create("test2"), args);
         }
 
         boolean abcdFound = false;

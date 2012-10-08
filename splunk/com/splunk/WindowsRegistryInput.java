@@ -100,7 +100,7 @@ public class WindowsRegistryInput extends Input {
      * event types for this Windows Registry input. Only types that match
      * at least one of the regexes are monitored.
      * 
-     * @return The registry type regex, or {@code null} if not specified.
+     * @return A String array of the regular expressions.
      */
     public String[] getType() {
         String[] value = getStringArray("type");
@@ -188,6 +188,10 @@ public class WindowsRegistryInput extends Input {
         setCacheValue("type", val);
     }
 
+
+    /**
+     * @see {@link #setType(String[])}
+     */
     public void setType(Collection<String> regexes) {
         String[] variableToFixMethodType = {};
         setType(regexes.toArray(variableToFixMethodType));

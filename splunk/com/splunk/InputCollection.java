@@ -119,7 +119,7 @@ public class InputCollection extends EntityCollection<Input> {
     public <T extends Input> T
     create(String name, InputKind kind, Map<String, Object> args) {
         args = Args.create(args).add("name", name);
-        String path = this.path + "/" + kind.getRelpath();
+        String path = this.path + "/" + kind.getRelativePath();
         service.post(path, args);
         invalidate();
         return (T)get(name);
@@ -169,7 +169,7 @@ public class InputCollection extends EntityCollection<Input> {
      */
     protected InputKind itemKind(String path) {
         for (InputKind kind : this.inputKinds) {
-            if (path.indexOf("data/inputs/" + kind.getRelpath()) > 0)
+            if (path.indexOf("data/inputs/" + kind.getRelativePath()) > 0)
                 return kind;
         }
         return InputKind.Unknown; // Didn't recognize the input kind
@@ -229,7 +229,7 @@ public class InputCollection extends EntityCollection<Input> {
             if (entry.title.equals("all") || Util.join("/", thisSubPath).equals("tcp/ssl")) {
                 continue;
             } else if (hasCreateLink) {
-                InputKind newKind = InputKind.createInputKind(relpath);
+                InputKind newKind = InputKind.create(relpath);
                 kinds.add(newKind);
             } else {
                 Set<InputKind> subKinds = assembleInputKindSet(thisSubPath);
@@ -261,7 +261,7 @@ public class InputCollection extends EntityCollection<Input> {
 
         // Iterate over all input kinds and collect all instances.
         for (InputKind kind : this.inputKinds) {
-            String relpath = kind.getRelpath();
+            String relpath = kind.getRelativePath();
             String inputs = String.format("%s/%s?count=-1", path, relpath);
             ResponseMessage response;
             try {
@@ -322,13 +322,13 @@ public class InputCollection extends EntityCollection<Input> {
             InputKind kind = entryValue.get(0).getKind();
 
             if (InputCollection.matchesInputName(kind, key, entryKey)) {
-                    if (entryValue.size() > 1) {
-                        throw new SplunkException(SplunkException.AMBIGUOUS,
-                                "Key has multiple values, specify a namespace");
-                    } else {
-                        return entryValue.get(0);
-                    }
+                if (entryValue.size() > 1) {
+                    throw new SplunkException(SplunkException.AMBIGUOUS,
+                            "Multiple inputs matched " + key + "; specify a namespace to disambiguate.");
+                } else {
+                    return entryValue.get(0);
                 }
+            }
         }
         return null;
     }

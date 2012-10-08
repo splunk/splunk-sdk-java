@@ -22,6 +22,12 @@ import java.util.Map;
 /**
  * The {@code InputKind} enumeration defines the different types of Splunk data
  * inputs (<i>input kinds</i>).
+ *
+ * For example, the type of a raw TCP input is {@code InputKind.Tcp}. The type of a cooked TCP input is
+ * {@code InputKind.TcpSplunk}. Each modular input kind shows up as a separate instance of {@code InputKind}.
+ *
+ * Note that {@code InputKind}s are not hierarchical, so even though there are instances for both cooked and
+ * raw TCP, there is none for all TCP inputs.
  */
 public class InputKind {
     private String kind;
@@ -29,34 +35,6 @@ public class InputKind {
     private Class inputClass;
 
     private static Map<String, InputKind> knownKinds = new HashMap<String, InputKind>();
-
-    public InputKind(String relpath, Class inputClass, String kind) {
-        this.relpath = relpath;
-        this.inputClass = inputClass;
-        this.kind = kind;
-        knownKinds.put(kind, this);
-    }
-
-
-    public InputKind(String relpath, Class inputClass) {
-        this(
-            relpath,
-            inputClass,
-            Util.substringAfter(relpath, "data/inputs/", relpath)
-        );
-    }
-
-    public String getKind() {
-        return kind;
-    }
-
-    public String getRelpath() {
-        return relpath;
-    }
-
-    public Class getInputClass() {
-        return inputClass;
-    }
 
     /** Unknown input kind. */
     public static final InputKind Unknown = new InputKind(null, Input.class, "unknown");
@@ -91,7 +69,44 @@ public class InputKind {
     /** {@code Windows WMI} input kind. */
     public static final InputKind WindowsWmi = new InputKind("win-wmi-collections", WindowsWmiInput.class);
 
-    public static InputKind createInputKind(String kind) {
+    private InputKind(String relpath, Class inputClass, String kind) {
+        this.relpath = relpath;
+        this.inputClass = inputClass;
+        this.kind = kind;
+        knownKinds.put(kind, this);
+    }
+
+
+    private InputKind(String relpath, Class inputClass) {
+        this(
+            relpath,
+            inputClass,
+            relpath
+        );
+    }
+
+    /**
+     * @return String representing the kind of this InputKind.
+     */
+    String getKind() {
+        return kind;
+    }
+
+    /**
+     * @return String giving the relative path from data/inputs/ to this InputKind.
+     */
+    String getRelativePath() {
+        return relpath;
+    }
+
+    /**
+     * @return The class this InputKind's instances should be created with.
+     */
+    Class getInputClass() {
+        return inputClass;
+    }
+
+    public static InputKind create(String kind) {
         if (knownKinds.containsKey(kind)) {
             return knownKinds.get(kind);
         } else {

@@ -44,6 +44,9 @@ public class Util {
         }
     }
 
+    /**
+     * @see {@link #join(String, List<String>)}
+     */
     public static String join(String joiner, String[] joinees) {
         return join(joiner, Arrays.asList(joinees));
     }
@@ -53,7 +56,6 @@ public class Util {
      * occurs, or {@code defaultTo} if {@code toFind} does not occur. For example,
      * {@code substringAfter("This is a test", "is a", "abcd")} returns {@code " test"},
      * while {@code substringAfter("This is a test", "boris", "abcd")} returns {@code "abcd"}.
-     *
      *
      * @param template String to search in.
      * @param toFind String to search for.
