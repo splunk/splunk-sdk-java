@@ -16,85 +16,84 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The {@code InputKind} enumeration defines the different types of Splunk data
  * inputs (<i>input kinds</i>).
  */
 public class InputKind {
-    String kind;
-    String relpath;
-    Class inputClass;
+    private String kind;
+    private String relpath;
+    private Class inputClass;
+
+    private static Map<String, InputKind> knownKinds = new HashMap<String, InputKind>();
 
     public InputKind(String relpath, Class inputClass, String kind) {
         this.relpath = relpath;
         this.inputClass = inputClass;
         this.kind = kind;
+        knownKinds.put(kind, this);
     }
+
 
     public InputKind(String relpath, Class inputClass) {
         this(
-                relpath,
-                inputClass,
-                relpath.contains("data/inputs") ?
-                        relpath.substring(relpath.indexOf("data/inputs") + 12) :
-                        relpath
+            relpath,
+            inputClass,
+            Util.substringAfter(relpath, "data/inputs/", relpath)
         );
     }
 
+    public String getKind() {
+        return kind;
+    }
+
+    public String getRelpath() {
+        return relpath;
+    }
+
+    public Class getInputClass() {
+        return inputClass;
+    }
+
     /** Unknown input kind. */
-    public static InputKind Unknown = new InputKind(null, Input.class, "unknown");
+    public static final InputKind Unknown = new InputKind(null, Input.class, "unknown");
 
     /** {@code Monitor} input kind. */
-    public static InputKind Monitor = new InputKind("monitor", MonitorInput.class);
+    public static final InputKind Monitor = new InputKind("monitor", MonitorInput.class);
 
     /** {@code Script} input kind. */
-    public static InputKind Script = new InputKind("script", ScriptInput.class);
+    public static final InputKind Script = new InputKind("script", ScriptInput.class);
 
     /** {@code TCP} input kind, raw input data. */
-    public static InputKind Tcp = new InputKind("tcp/raw", TcpInput.class, "tcp");
+    public static final InputKind Tcp = new InputKind("tcp/raw", TcpInput.class, "tcp");
 
     /** {@code TCP} input kind, processed input data. */
-    public static InputKind TcpSplunk = new InputKind("tcp/cooked", TcpSplunkInput.class);
+    public static final InputKind TcpSplunk = new InputKind("tcp/cooked", TcpSplunkInput.class);
 
     /** {@code UDP} input kind. */
-    public static InputKind Udp = new InputKind("udp", UdpInput.class);
+    public static final InputKind Udp = new InputKind("udp", UdpInput.class);
 
     /** {@code Windows Active Directory} input kind. */
-    public static InputKind WindowsActiveDirectory = new InputKind("ad", WindowsActiveDirectoryInput.class);
+    public static final InputKind WindowsActiveDirectory = new InputKind("ad", WindowsActiveDirectoryInput.class);
 
     /** {@code Windows Event Log} input kind. */
-    public static InputKind WindowsEventLog = new InputKind("win-event-log-collections",WindowsEventLogInput.class);
+    public static final InputKind WindowsEventLog = new InputKind("win-event-log-collections",WindowsEventLogInput.class);
 
     /** {@code Windows Perfmon} input kind. */
-    public static InputKind WindowsPerfmon = new InputKind("win-perfmon", WindowsPerfmonInput.class);
+    public static final InputKind WindowsPerfmon = new InputKind("win-perfmon", WindowsPerfmonInput.class);
 
     /** {@code Windows Registry} input kind. */
-    public static InputKind WindowsRegistry = new InputKind("registry", WindowsRegistryInput.class);
+    public static final InputKind WindowsRegistry = new InputKind("registry", WindowsRegistryInput.class);
 
     /** {@code Windows WMI} input kind. */
-    public static InputKind WindowsWmi = new InputKind("win-wmi-collections", WindowsWmiInput.class);
+    public static final InputKind WindowsWmi = new InputKind("win-wmi-collections", WindowsWmiInput.class);
 
-    public static InputKind makeInputKind(String kind) {
-        if (kind.equals("monitor")) {
-            return Monitor;
-        } else if (kind.equals("script")) {
-            return Script;
-        } else if (kind.equals("tcp/raw") || kind.equals("tcp")) {
-            return Tcp;
-        } else if (kind.equals("tcp/cooked")|| kind.equals("splunktcp")) {
-            return TcpSplunk;
-        } else if (kind.equals("udp")) {
-            return Udp;
-        } else if (kind.equals("ad")) {
-            return WindowsActiveDirectory;
-        } else if (kind.equals("win-event-log-collections")) {
-            return WindowsEventLog;
-        } else if (kind.equals("win-perfmon")) {
-            return WindowsPerfmon;
-        } else if (kind.equals("registry")) {
-            return WindowsRegistry;
-        } else if (kind.equals("win-wmi-collections")) {
-            return WindowsWmi;
+    public static InputKind createInputKind(String kind) {
+        if (knownKinds.containsKey(kind)) {
+            return knownKinds.get(kind);
         } else {
             return new InputKind(kind, Input.class);
         }

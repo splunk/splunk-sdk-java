@@ -37,25 +37,23 @@ public class Input extends Entity {
     }
 
     /**
-     * Returns unknown input kind. Overridden in sub-classes.
+     * Returns an {@code InputKind} representing this input's kind.
+     *
+     * The kind is inferred from the input's path.
      *
      * @return Unknown input kind.
      */
     public InputKind getKind() {
         String[] pathComponents = this.path.split("/");
         int offset = 0;
-        while (true) {
-            if (pathComponents[offset].equals("inputs")) {
-                break;
-            } else {
-                offset += 1;
-            }
+        while (!pathComponents[offset].equals("inputs")) {
+            offset += 1;
         }
         List<String> toJoin = new ArrayList<String>();
         for (int i = offset+1; i < pathComponents.length; i++) {
             toJoin.add(pathComponents[i]);
         }
-        String relpath = InputCollection.join("/", toJoin);
-        return InputKind.makeInputKind(relpath);
+        String relpath = Util.join("/", toJoin);
+        return InputKind.createInputKind(relpath);
     }
 }

@@ -25,15 +25,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 
-/**
- * [Insert documentation here]
- */
 public class TcpInputTest extends SplunkTestCase {
-    Service service;
-    int tcpPort;
-    TcpInput tcpInput = null;
-    public String indexName;
-    public Index index = null;
+    protected Service service;
+    protected int tcpPort;
+    protected TcpInput tcpInput = null;
+    protected String indexName;
+    protected Index index = null;
 
     public int findNextUnusedTcpPort(int startingPort) {
         int port = startingPort;
@@ -68,15 +65,19 @@ public class TcpInputTest extends SplunkTestCase {
     }
 
     @Test
-    public void testAttachAndWrite() throws Exception {
+    public void testAttachAndWrite() {
         final int nEvents = index.getTotalEventCount();
         final Index index = this.index;
 
-        Socket socket = this.tcpInput.attach();
-        PrintStream output = new PrintStream(socket.getOutputStream());
-        output.print(createTimestamp() + " Boris the mad baboon!\r\n");
-        output.flush();
-        socket.close();
+        try {
+            Socket socket = this.tcpInput.attach();
+            PrintStream output = new PrintStream(socket.getOutputStream());
+            output.print(createTimestamp() + " Boris the mad baboon!\r\n");
+            output.flush();
+            socket.close();
+        } catch (IOException e) {
+            SplunkTestCase.fail("Got an IO exception in attaching.");
+        }
 
 
         SplunkTestCase.assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -88,11 +89,15 @@ public class TcpInputTest extends SplunkTestCase {
     }
 
     @Test
-    public void testSubmit() throws Exception {
+    public void testSubmit() {
         final int nEvents = index.getTotalEventCount();
         final Index index = this.index;
 
-        this.tcpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
+        try {
+            this.tcpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
+        } catch (IOException e) {
+            SplunkTestCase.fail("Got an IO exception in submit.");
+        }
 
         SplunkTestCase.assertEventuallyTrue(new EventuallyTrueBehavior() {
             public boolean predicate() {
@@ -103,15 +108,19 @@ public class TcpInputTest extends SplunkTestCase {
     }
 
     @Test
-    public void testAttachWith() throws Exception {
+    public void testAttachWith() {
         final int nEvents = index.getTotalEventCount();
         final Index index = this.index;
 
-        this.tcpInput.attachWith(new TcpInput.ReceiverBehavior() {
-            public void run(OutputStream stream) throws IOException {
-                String s = createTimestamp() + " Boris the mad baboon!\r\n";
-                stream.write(s.getBytes("UTF8"));
-            }
-        });
+        try {
+            this.tcpInput.attachWith(new TcpInput.ReceiverBehavior() {
+                public void run(OutputStream stream) throws IOException {
+                    String s = createTimestamp() + " Boris the mad baboon!\r\n";
+                    stream.write(s.getBytes("UTF8"));
+                }
+            });
+        } catch (IOException e) {
+            SplunkTestCase.fail("IOException in attachWith.");
+        }
     }
 }

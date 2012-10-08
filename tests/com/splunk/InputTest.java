@@ -18,52 +18,28 @@ package com.splunk;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 
 public class InputTest extends SplunkTestCase {
     @Test
     public void testMatchNonscriptInputName() {
-        boolean matches = InputCollection.matchInputName(InputKind.Tcp, "1-[]bc", "def");
+        boolean matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "def");
         SplunkTestCase.assertFalse(matches);
-        matches = InputCollection.matchInputName(InputKind.Tcp, "1-[]bc", "1-[]bc");
+        matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "1-[]bc");
         SplunkTestCase.assertTrue(matches);
     }
 
     @Test
     public void testMatchScriptInputName() {
-        SplunkTestCase.assertTrue(InputCollection.matchInputName(
+        SplunkTestCase.assertTrue(InputCollection.matchesInputName(
                 InputKind.Script, "abc.py", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
         ));
-        SplunkTestCase.assertFalse(InputCollection.matchInputName(
+        SplunkTestCase.assertFalse(InputCollection.matchesInputName(
                 InputKind.Script, "abc", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
         ));
     }
 
-    @Test
-    public void testJoin() {
-        List<String> emptyList = new ArrayList<String>();
-        SplunkTestCase.assertEquals("", InputCollection.join("/", emptyList));
-
-        List<String> oneElementList = new ArrayList<String>();
-        oneElementList.add("abcd");
-        SplunkTestCase.assertEquals("abcd", InputCollection.join("/", oneElementList));
-
-        List<String> fullList = new ArrayList<String>();
-        fullList.add("abcd");
-        fullList.add("defg");
-        SplunkTestCase.assertEquals(
-                "abcd/defg",
-                InputCollection.join("/", fullList)
-        );
-    }
 
     @Test
     public void testInputKinds() {
@@ -73,10 +49,11 @@ public class InputTest extends SplunkTestCase {
         Set<InputKind> kinds = inputs.getInputKinds();
         boolean hasTest2 = false;
         for (InputKind ik : kinds) {
-            if (ik.kind == "test2") {
+            if (ik.getKind() == "test2") {
                 hasTest2 = true;
             }
         }
+        SplunkTestCase.assertTrue(hasTest2);
     }
 
     @Test
@@ -89,12 +66,12 @@ public class InputTest extends SplunkTestCase {
         if (!hasAbcd) {
             Args args = new Args();
             args.add("field1", "boris");
-            inputs.create("abcd", InputKind.makeInputKind("test2"), args);
+            inputs.create("abcd", InputKind.createInputKind("test2"), args);
         }
 
         boolean abcdFound = false;
         for (Input input : inputs.values()) {
-            if (input.getName().equals("abcd") && input.getKind().kind.equals("test2")) {
+            if (input.getName().equals("abcd") && input.getKind().getKind().equals("test2")) {
                 abcdFound = true;
             }
         }
@@ -682,16 +659,17 @@ public class InputTest extends SplunkTestCase {
                 windowsRegistryInput.getIndex());
 
             // adjust a few of the arguments
-            windowsRegistryInput.setType("create,delete");
+            String[] wriType = {"create", "delete"};
+            windowsRegistryInput.setType(wriType);
             windowsRegistryInput.setBaseline(false);
             windowsRegistryInput.update();
 
             assertEquals(assertRoot + "#75", "*",
                 windowsRegistryInput.getProc());
             assertTrue(assertRoot + "#76",
-                windowsRegistryInput.getType().contains("create"));
+                    windowsRegistryInput.getType()[0].equals("create"));
             assertTrue(assertRoot + "#77",
-                windowsRegistryInput.getType().contains("delete"));
+                    windowsRegistryInput.getType()[1].equals("delete"));
             assertFalse(assertRoot + "#78", windowsRegistryInput.getBaseline());
 
             windowsRegistryInput.remove();

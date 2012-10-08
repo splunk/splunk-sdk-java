@@ -119,7 +119,7 @@ public class InputCollection extends EntityCollection<Input> {
     public <T extends Input> T
     create(String name, InputKind kind, Map<String, Object> args) {
         args = Args.create(args).add("name", name);
-        String path = this.path + "/" + kind.relpath;
+        String path = this.path + "/" + kind.getRelpath();
         service.post(path, args);
         invalidate();
         return (T)get(name);
@@ -134,7 +134,7 @@ public class InputCollection extends EntityCollection<Input> {
     @Override protected Input createItem(AtomEntry entry) {
         String path = itemPath(entry);
         InputKind kind = itemKind(path);
-        Class inputClass = kind.inputClass;
+        Class inputClass = kind.getInputClass();
         return createItem(inputClass, path, null);
     }
 
@@ -169,12 +169,17 @@ public class InputCollection extends EntityCollection<Input> {
      */
     protected InputKind itemKind(String path) {
         for (InputKind kind : this.inputKinds) {
-            if (path.indexOf("data/inputs/" + kind.relpath) > 0)
+            if (path.indexOf("data/inputs/" + kind.getRelpath()) > 0)
                 return kind;
         }
         return InputKind.Unknown; // Didn't recognize the input kind
     }
 
+    /**
+     * Return a set of all the input kinds recognized by the Splunk server.
+     *
+     * @return A set of {@code InputKind}s.
+     */
     public Set<InputKind> getInputKinds() {
         return this.inputKinds;
     }
@@ -186,7 +191,7 @@ public class InputCollection extends EntityCollection<Input> {
      * which are listed by their full path, we want to match the final component
      * of the filename instead.
      */
-    public static boolean matchInputName(InputKind kind, String searchFor, String searchIn) {
+    protected static boolean matchesInputName(InputKind kind, String searchFor, String searchIn) {
         if (kind == InputKind.Script) {
             return searchIn.endsWith("/" + searchFor) || searchIn.endsWith("\\" + searchFor);
         } else {
@@ -194,38 +199,19 @@ public class InputCollection extends EntityCollection<Input> {
         }
     }
 
-    /**
-     * Join the strings in {@code joinees}, separated by {@code joiner}.
-     *
-     * For example, {@code join("/", list)} where {@code list} contains the strings {@code "a"},
-     * {@code "b"}, and {@code "c"} returns "a/b/c";
-     *
-     * @param joiner String to interpolate between each element of {@code joinees}.
-     * @param joinees List of strings to join.
-     * @return The strines in {@code joinees} concatenated with a copy of {@code joiner} between each.
-     */
-    public static String join(String joiner, List<String> joinees) {
-        if (joinees.isEmpty()) {
-            return "";
-        } else {
-            String joined = joinees.get(0);
-            for (String s : joinees.subList(1, joinees.size())) {
-                joined = joined + joiner + s;
-            }
-            return joined;
-        }
-    }
 
     /**
      * Recursively assemble a set of all the {@code InputKind}s available on this Splunk
-     * instance.
+     * instance. {@code subPath} is a list of URL components *after* ".../data/inputs/".
+     * So a call to assemble all inputs should pass an empty list as {@code subPath}. If
+     * you wanted only TCP inputs, you would pass a list with one element, {@code "tcp"}.
      *
-     * @param subPath A list of strings giving the components of the URL.
+     * @param subPath A list of strings giving the components of the URL after "data/inputs/".
      * @return A set of {@code InputKind} objects.
      */
-    protected Set<InputKind> assembleInputKindSet(List<String> subPath) {
+    private Set<InputKind> assembleInputKindSet(List<String> subPath) {
         Set<InputKind> kinds = new HashSet<InputKind>();
-        ResponseMessage response = service.get(this.path + "/" + join("/", subPath));
+        ResponseMessage response = service.get(this.path + "/" + Util.join("/", subPath));
         AtomFeed feed = AtomFeed.parseStream(response.getContent());
         for (AtomEntry entry : feed.entries) {
             String relpath = itemKey(entry);
@@ -240,10 +226,10 @@ public class InputCollection extends EntityCollection<Input> {
             List<String> thisSubPath = new ArrayList<String>(subPath);
             thisSubPath.add(relpath);
 
-            if (entry.title.equals("all") || join("/", thisSubPath).equals("tcp/ssl")) {
+            if (entry.title.equals("all") || Util.join("/", thisSubPath).equals("tcp/ssl")) {
                 continue;
             } else if (hasCreateLink) {
-                InputKind newKind = InputKind.makeInputKind(relpath);
+                InputKind newKind = InputKind.createInputKind(relpath);
                 kinds.add(newKind);
             } else {
                 Set<InputKind> subKinds = assembleInputKindSet(thisSubPath);
@@ -256,7 +242,7 @@ public class InputCollection extends EntityCollection<Input> {
     /**
      * Refresh the {@code inputKinds} field on this object.
      */
-    protected void refreshInputKinds() {
+    private void refreshInputKinds() {
         List<String> basePath = new ArrayList<String>();
         Set<InputKind> kinds = assembleInputKindSet(basePath);
         this.inputKinds.clear();
@@ -275,7 +261,7 @@ public class InputCollection extends EntityCollection<Input> {
 
         // Iterate over all input kinds and collect all instances.
         for (InputKind kind : this.inputKinds) {
-            String relpath = kind.relpath;
+            String relpath = kind.getRelpath();
             String inputs = String.format("%s/%s?count=-1", path, relpath);
             ResponseMessage response;
             try {
@@ -335,7 +321,7 @@ public class InputCollection extends EntityCollection<Input> {
             LinkedList<Input> entryValue = entry.getValue();
             InputKind kind = entryValue.get(0).getKind();
 
-            if (InputCollection.matchInputName(kind, key, entryKey)) {
+            if (InputCollection.matchesInputName(kind, key, entryKey)) {
                     if (entryValue.size() > 1) {
                         throw new SplunkException(SplunkException.AMBIGUOUS,
                                 "Key has multiple values, specify a namespace");
@@ -360,7 +346,7 @@ public class InputCollection extends EntityCollection<Input> {
             LinkedList<Input> entryValue = entry.getValue();
             InputKind kind = entryValue.get(0).getKind();
 
-            if (InputCollection.matchInputName(kind, key, entryKey)) {
+            if (InputCollection.matchesInputName(kind, key, entryKey)) {
                 for (Input entity: entryValue) {
                     if (entity.path.startsWith(pathMatcher)) {
                         return entity;

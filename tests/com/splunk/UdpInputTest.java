@@ -20,14 +20,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * [Insert documentation here]
- */
-public class UdpInputTest extends SplunkTestCase {        Service service;
-    int udpPort;
-    UdpInput udpInput = null;
-    public String indexName;
-    public Index index = null;
+public class UdpInputTest extends SplunkTestCase {
+    protected Service service;
+    protected int udpPort;
+    protected UdpInput udpInput = null;
+    protected String indexName;
+    protected Index index = null;
 
     public int findNextUnusedUdpPort(int startingPort) {
         int port = startingPort;

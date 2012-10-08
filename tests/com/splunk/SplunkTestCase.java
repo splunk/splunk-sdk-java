@@ -189,13 +189,8 @@ public class SplunkTestCase extends TestCase {
     }
 
     public static abstract class EventuallyTrueBehavior {
-        public int tries;
-        public int pauseTime;
-
-        {
-            tries = 10;
-            pauseTime = 1000;
-        }
+        public int tries = 10;
+        public int pauseTime = 1000;
 
         public String timeoutMessage = "Test timed out before true.";
         public abstract boolean predicate();
