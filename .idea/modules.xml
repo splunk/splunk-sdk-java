@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/examples/index/index.iml" filepath="$PROJECT_DIR$/examples/index/index.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/info/info.iml" filepath="$PROJECT_DIR$/examples/info/info.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/input/input.iml" filepath="$PROJECT_DIR$/examples/input/input.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/newtests/newtests.iml" filepath="$PROJECT_DIR$/newtests/newtests.iml" />
       <module fileurl="file://$PROJECT_DIR$/examples/search/search.iml" filepath="$PROJECT_DIR$/examples/search/search.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/search_blocking/search_blocking.iml" filepath="$PROJECT_DIR$/examples/search_blocking/search_blocking.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/search_oneshot/search_oneshot.iml" filepath="$PROJECT_DIR$/examples/search_oneshot/search_oneshot.iml" group="examples" />
@@ -20,6 +21,7 @@
       <module fileurl="file://$PROJECT_DIR$/examples/spurl/spurl.iml" filepath="$PROJECT_DIR$/examples/spurl/spurl.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/examples/tail/tail.iml" filepath="$PROJECT_DIR$/examples/tail/tail.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/util.iml" filepath="$PROJECT_DIR$/util/util.iml" />
     </modules>
   </component>
 </project>

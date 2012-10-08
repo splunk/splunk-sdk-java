@@ -30,15 +30,13 @@ import java.util.UUID;
 // Shared base class for Splunk SDK unit tests, contains common unit setup
 // and a collection of helper functions.
 public class SplunkTestCase extends TestCase {
-    final static String assertRoot = "Test Support assert: ";
-
     protected String createTimestamp() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);
     }
 
-    protected String temporaryName() {
+    protected String createTemporaryName() {
         UUID u = UUID.randomUUID();
         String name = "delete-me-" + u.toString();
         return name;
