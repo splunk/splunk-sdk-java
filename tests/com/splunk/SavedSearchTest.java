@@ -18,7 +18,10 @@ package com.splunk;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Test;
@@ -385,6 +388,72 @@ public class SavedSearchTest extends SplunkTestCase {
         // Delete the saved search
         savedSearches.remove("sdk-test1");
         assertFalse(assertRoot + "#68", savedSearches.containsKey("sdk-test1"));
+    }
+    
+    @Test public void testDispatchWithAbsoluteTimeArg() throws IOException, InterruptedException {
+        Service service = connect();
+
+        SavedSearchCollection savedSearches = service.getSavedSearches();
+
+        // Ensure test starts in a known good state
+        if (savedSearches.containsKey("sdk-test1"))
+            savedSearches.remove("sdk-test1");
+        assertFalse(assertRoot + "#67", savedSearches.containsKey("sdk-test1"));
+
+        String search = "search index=sdk-tests * earliest=-1m";
+
+        // Create a saved search
+        SavedSearch savedSearch = savedSearches.create("sdk-test1", search);
+        
+        Calendar c = new GregorianCalendar();
+        c.setTime(new Date());
+        c.add(Calendar.MINUTE, -2);
+        Date expectedTime = c.getTime();
+        
+        SavedSearchDispatchArgs dispatchArgs = new SavedSearchDispatchArgs();
+        dispatchArgs.setDispatchEarliestTime(expectedTime);
+
+        // Dispatch the saved search and check job properties
+        Job job = savedSearch.dispatch(dispatchArgs);
+        ready(job);
+        Date actualTime = job.getEarliestTime();
+        
+        boolean nearlyEqual = actualTime.toString().equals(expectedTime.toString());
+        assertTrue(actualTime + " != " + expectedTime, nearlyEqual);
+    }
+    
+    @Test public void testDispatchWithRelativeTimeArg() throws IOException, InterruptedException {
+        Service service = connect();
+
+        SavedSearchCollection savedSearches = service.getSavedSearches();
+
+        // Ensure test starts in a known good state
+        if (savedSearches.containsKey("sdk-test1"))
+            savedSearches.remove("sdk-test1");
+        assertFalse(assertRoot + "#67", savedSearches.containsKey("sdk-test1"));
+
+        String search = "search index=sdk-tests * earliest=-1m";
+
+        // Create a saved search
+        SavedSearch savedSearch = savedSearches.create("sdk-test1", search);
+        
+        String expectedTimeString = "-2m";
+        
+        Calendar c = new GregorianCalendar();
+        c.setTime(new Date());
+        c.add(Calendar.MINUTE, -2);
+        Date expectedTime = c.getTime();
+        
+        SavedSearchDispatchArgs dispatchArgs = new SavedSearchDispatchArgs();
+        dispatchArgs.setDispatchEarliestTime(expectedTimeString);
+
+        // Dispatch the saved search and check job properties
+        Job job = savedSearch.dispatch(dispatchArgs);
+        ready(job);
+        Date actualTime = job.getEarliestTime();
+        
+        boolean nearlyEqual = actualTime.toString().equals(expectedTime.toString());
+        assertTrue(actualTime + " != " + expectedTime, nearlyEqual);
     }
 
     boolean contains(Job[] history, String sid) {

@@ -85,6 +85,16 @@ public class SavedSearch extends Entity {
 
         return job;
     }
+    
+    /**
+     * Runs the saved search using dispatch arguments.
+     *
+     * @param args Dispatch arguments.
+     * @return The search job.
+     */
+    public Job dispatch(SavedSearchDispatchArgs args) throws InterruptedException {
+        return dispatch((Map<String, Object>) args);
+    }
 
     /**
      * Returns an array of search jobs created from this saved search.
