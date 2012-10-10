@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import java.io.*;
+import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -180,4 +181,55 @@ public abstract class SDKTestCase extends TestCase {
         service.post("apps/appinstall", args);
         installedApps.add(applicationName);
     }
+
+    void sleep(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        }
+        catch (InterruptedException e) {}
+    }
+
+    public void splunkRestart() {
+        // If not specified, use 3 minutes (in milliseconds) as default
+        // restart timeout.
+        splunkRestart(3*60*1000);
+    }
+
+    public void splunkRestart(int millisecondTimeout) {
+        ResponseMessage response = service.restart();
+        if (response.getStatus() != 200) {
+            fail("Restart command failed: " + response.getContent());
+        }
+
+        final Service service = this.service;
+
+        // Wait for splunkd to go down.
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                try {
+                    new Socket(service.getHost(), service.getPort()).close();
+                    return false;
+                } catch (Exception e) {
+                    return true;
+                }
+            }
+        });
+
+        // Wait for splunkd to come back up.
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                try {
+                    Service.connect(connectionArgs);
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        });
+
+        connect();
+    }
+
 }

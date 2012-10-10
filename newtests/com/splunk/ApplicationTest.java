@@ -52,7 +52,11 @@ public class ApplicationTest extends SDKTestCase {
     @Override
     public void tearDown() throws Exception {
         super.tearDown();
-        application.remove();
+        for (Application app : service.getApplications().values()) {
+            if (app.getName().startsWith("delete-me")) {
+                app.remove();
+            }
+        }
     }
 
     @Test
@@ -109,7 +113,7 @@ public class ApplicationTest extends SDKTestCase {
         assertEquals(null, application.getAuthor());
         assertTrue(application.getCheckForUpdates());
         assertFalse(application.isConfigured());
-        assertFalse(application.isVisible());
+        assertTrue(application.isVisible());
         assertFalse(application.stateChangeRequiresRestart());
 
         String authorString = "Boris the mad baboon";
@@ -122,7 +126,7 @@ public class ApplicationTest extends SDKTestCase {
         String versionString = "VII";
         application.setVersion(versionString);
         application.setConfigured(true);
-        application.setVisible(true);
+        application.setVisible(false);
 
         application.update();
         application.refresh();
@@ -133,15 +137,69 @@ public class ApplicationTest extends SDKTestCase {
         assertEquals(labelString, application.getLabel());
         assertEquals(versionString, application.getVersion());
         assertTrue(application.isConfigured());
-        assertTrue(application.isVisible());
+        assertFalse(application.isVisible());
     }
 
     @Test
     public void testUpdate() {
-        ApplicationUpdate update = application.getUpdate();
-
+        // The easiest way to test this is to set the version of gettingstarted to something
+        // small, then wait for splunkd to pull its update information from splunkbase.
+        Application gettingStarted = service.getApplications().get("gettingstarted");
+        String originalVersion = gettingStarted.getVersion();
+        try {
+            gettingStarted.setVersion("0.1");
+            gettingStarted.update();
+            splunkRestart();
+            gettingStarted = service.getApplications().get("gettingstarted");
+            final Application gettingStartedReference = gettingStarted;
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return gettingStartedReference.getUpdate().getChecksum() != null;
+                }
+            });
+            ApplicationUpdate update = gettingStarted.getUpdate();
+            assertEquals("f1a30efa896d9a2f7272420c2f999f03", update.getChecksum());
+            assertEquals("md5", update.getChecksumType());
+            assertEquals("https://splunkbase.splunk.com/apps/Getting+Started", update.getHomepage());
+            assertEquals(804665, update.getSize());
+            assertEquals("Getting Started", update.getUpdateName());
+            assertEquals(
+                    "https://splunkbase.splunk.com/api/apps:download/Getting+Started/1.0/gettingstarted.spl",
+                    update.getAppUrl()
+            );
+            assertEquals("1.0", update.getVersion());
+            assertTrue(update.isImplicitIdRequired());
+        } finally {
+            gettingStarted.setVersion(originalVersion);
+            gettingStarted.update();
+        }
     }
 
+    @Test public void testEmptyUpdate() {
+        ApplicationUpdate update = application.getUpdate();
+        assertNull(update.getChecksum());
+        assertNull(update.getChecksumType());
+        assertNull(update.getHomepage());
+        assertEquals(-1, update.getSize());
+        assertNull(update.getUpdateName());
+        assertNull(update.getAppUrl());
+        assertNull(update.getVersion());
+        assertFalse(update.isImplicitIdRequired());
+    }
 
+    @Test public void testListApplications() {
+        boolean found = false;
+        for (Application app : service.getApplications().values()) {
+            if (app.getName().equals(applicationName)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+    }
+
+    @Test public void testContains() {
+        assertTrue(service.getApplications().containsKey(applicationName));
+    }
 
 }
