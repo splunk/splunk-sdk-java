@@ -18,199 +18,61 @@ package com.splunk;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.Socket;
-
+import java.util.Set;
 
 
 public class InputTest extends SplunkTestCase {
-    public static int findNextUnusedTcpPort(Service service, int startingPort) {
-        int port = startingPort;
-        while (service.getInputs().containsKey(String.valueOf(port))) {
-            port += 1;
-        }
-        return port;
+    @Test public void testMatchNonscriptInputName() {
+        boolean matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "def");
+        SplunkTestCase.assertFalse(matches);
+        matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "1-[]bc");
+        SplunkTestCase.assertTrue(matches);
+    }
+
+    @Test public void testMatchScriptInputName() {
+        SplunkTestCase.assertTrue(InputCollection.matchesInputName(
+                InputKind.Script, "abc.py", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
+        ));
+        SplunkTestCase.assertFalse(InputCollection.matchesInputName(
+                InputKind.Script, "abc", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
+        ));
     }
 
 
-    @Test
-    public void testTcpAttachAndWrite() throws Exception {
+    @Test public void testInputKinds() {
         Service service = connect();
-        String indexName = temporaryName();
-        Integer tcpPort = findNextUnusedTcpPort(service, 10000);
+        InputCollection inputs = service.getInputs();
 
-        Index index = null;
-        TcpInput input = null;
-
-        try {
-            index = service.getIndexes().create(indexName);
-            Args args = new Args();
-            args.add("index", indexName);
-            input = service.getInputs().create(tcpPort.toString(), InputKind.Tcp, args);
-
-            int nEvents = index.getTotalEventCount();
-            Socket socket = input.attach();
-
-            PrintStream output = new PrintStream(socket.getOutputStream());
-            output.print(createTimestamp() + " Boris the mad baboon!\r\n");
-            output.flush();
-            socket.close();
-
-            int nTries = 50;
-            while (nTries > 0) {
-                index.refresh();
-                if (index.getTotalEventCount() == nEvents + 1) {
-                    break;
-                } else {
-                    nTries -= 1;
-                    Thread.sleep(1000);
-                }
-            }
-            if (nTries == 0) {
-                SplunkTestCase.fail("Timed out before new events were found in index.");
-            }
-        } finally {
-            if (index != null && service.versionCompare("5.0") >= 0) {
-                index.remove();
-            }
-            if (input != null) {
-                input.remove();
+        Set<InputKind> kinds = inputs.getInputKinds();
+        boolean hasTest2 = false;
+        for (InputKind ik : kinds) {
+            if (ik.getKind() == "test2") {
+                hasTest2 = true;
             }
         }
+        SplunkTestCase.assertTrue(hasTest2);
     }
 
-    @Test
-    public void testSubmit() throws Exception {
+    @Test public void testListInputs() {
         Service service = connect();
-        String indexName = temporaryName();
-        int tcpPort = findNextUnusedTcpPort(service, 10000);
+        InputCollection inputs = service.getInputs();
 
-        Index index = null;
-        TcpInput input = null;
-
-        try {
-            index = service.getIndexes().create(indexName);
+        SplunkTestCase.assertFalse(inputs.isEmpty());
+        boolean hasAbcd = inputs.containsKey("abcd");
+        if (!hasAbcd) {
             Args args = new Args();
-            args.add("index", indexName);
-            input = service.getInputs().create(String.valueOf(tcpPort), InputKind.Tcp, args);
+            args.add("field1", "boris");
+            inputs.create("abcd", InputKind.create("test2"), args);
+        }
 
-            int nEvents = index.getTotalEventCount();
-            input.submit(createTimestamp() + " Boris the mad baboon!\r\n");
-
-            int nTries = 50;
-            while (nTries > 0) {
-                index.refresh();
-                if (index.getTotalEventCount() == nEvents + 1) {
-                    break;
-                } else {
-                    nTries -= 1;
-                    Thread.sleep(1000);
-                }
-            }
-            if (nTries == 0) {
-                SplunkTestCase.fail("Timed out before new events were found in index.");
-            }
-        } finally {
-            if (index != null && service.versionCompare("5.0") >= 0) {
-                index.remove();
-            }
-            if (input != null) {
-                input.remove();
+        boolean abcdFound = false;
+        for (Input input : inputs.values()) {
+            if (input.getName().equals("abcd") && input.getKind().getKind().equals("test2")) {
+                abcdFound = true;
             }
         }
+        SplunkTestCase.assertTrue("Modular input did not show up in list.", abcdFound);
     }
-
-    @Test
-    public void testAttachWith() throws Exception {
-        Service service = connect();
-        String indexName = temporaryName();
-        int tcpPort = findNextUnusedTcpPort(service, 10000);
-
-        Index index = null;
-        TcpInput input = null;
-
-        try {
-            index = service.getIndexes().create(indexName);
-            Args args = new Args();
-            args.add("index", indexName);
-            input = service.getInputs().create(String.valueOf(tcpPort), InputKind.Tcp, args);
-            int nEvents = index.getTotalEventCount();
-            input.attachWith(new ReceiverBehavior() {
-                public void run(OutputStream stream) throws IOException {
-                    String s = createTimestamp() + " Boris the mad baboon!\r\n";
-                    stream.write(s.getBytes("UTF8"));
-                }
-            });
-
-            int nTries = 50;
-            while (nTries > 0) {
-                index.refresh();
-                if (index.getTotalEventCount() == nEvents + 1) {
-                    break;
-                } else {
-                    nTries -= 1;
-                    Thread.sleep(1000);
-                }
-            }
-            if (nTries == 0) {
-                SplunkTestCase.fail("Timed out before new events were found in index.");
-            }
-        } finally {
-            if (index != null && service.versionCompare("5.0") >= 0) {
-                index.remove();
-            }
-            if (input != null) {
-                input.remove();
-            }
-        }
-    }
-
-    @Test
-    public void testSubmitToUdpInput() throws Exception {
-        Service service = connect();
-        String indexName = temporaryName();
-        int udpPort = 10000;
-        while (service.getInputs().containsKey(String.valueOf(udpPort))) {
-            udpPort += 1;
-        }
-
-        Index index = null;
-        UdpInput input = null;
-
-        try {
-            index = service.getIndexes().create(indexName);
-            Args args = new Args();
-            args.add("index", indexName);
-            input = service.getInputs().create(String.valueOf(udpPort), InputKind.Udp, args);
-            int nEvents = index.getTotalEventCount();
-            input.submit(createTimestamp() + " Boris the mad baboon!\r\n");
-
-            int nTries = 50;
-            while (nTries > 0) {
-                index.refresh();
-                if (index.getTotalEventCount() == nEvents + 1) {
-                    break;
-                } else {
-                    nTries -= 1;
-                    Thread.sleep(1000);
-                }
-            }
-            if (nTries == 0) {
-                SplunkTestCase.fail("Timed out before new events were found in index.");
-            }
-        } finally {
-            if (index != null && service.versionCompare("5.0") >= 0) {
-                index.remove();
-            }
-            if (input != null) {
-                input.remove();
-            }
-        }
-    }
-
-
 
     final static String assertRoot = "Input assert: ";
 
@@ -219,129 +81,118 @@ public class InputTest extends SplunkTestCase {
         TcpConnections tcpConnections = null;
         UdpConnections udpConnections = null;
 
-        switch (inputKind) {
-            case Monitor:
-                MonitorInput monitorInput = (MonitorInput) input;
-                monitorInput.getBlacklist();
-                monitorInput.getCrcSalt();
-                monitorInput.getFileCount();
-                monitorInput.getFollowTail();
-                monitorInput.getHost();
-                monitorInput.getHostRegex();
-                monitorInput.getIgnoreOlderThan();
-                monitorInput.getIndex();
-                monitorInput.getQueue();
-                monitorInput.getRcvBuf();
-                monitorInput.getRecursive();
-                monitorInput.getSource();
-                monitorInput.getSourceType();
-                monitorInput.getTimeBeforeClose();
-                monitorInput.getWhitelist();
-                break;
-            case Script:
-                ScriptInput scriptInput = (ScriptInput) input;
-                scriptInput.getEndTime();
-                scriptInput.getGroup();
-                scriptInput.getHost();
-                scriptInput.getIndex();
-                scriptInput.getInterval();
-                scriptInput.getRcvBuf();
-                scriptInput.getStartTime();
-                break;
-            case Tcp:
-                TcpInput tcpInput = (TcpInput) input;
-                tcpInput.getConnectionHost();
-                tcpInput.getGroup();
-                tcpInput.getHost();
-                tcpInput.getIndex();
-                tcpInput.getQueue();
-                tcpInput.getRcvBuf();
-                tcpInput.getRestrictToHost();
-                tcpInput.getSource();
-                tcpInput.getSourceType();
-                tcpInput.getSSL();
-                tcpConnections = tcpInput.connections();
-                tcpConnections.getConnection();
-                tcpConnections.getServername();
-                break;
-            case TcpSplunk:
-                TcpSplunkInput tcpSplunkInput = (TcpSplunkInput) input;
-                tcpSplunkInput.getConnectionHost();
-                tcpSplunkInput.getGroup();
-                tcpSplunkInput.getHost();
-                tcpSplunkInput.getIndex();
-                tcpSplunkInput.getQueue();
-                tcpSplunkInput.getRcvBuf();
-                tcpSplunkInput.getSource();
-                tcpSplunkInput.getSourceType();
-                tcpSplunkInput.getSSL();
-                tcpConnections = tcpSplunkInput.connections();
-                tcpConnections.getConnection();
-                tcpConnections.getServername();
-                break;
-            case Udp:
-                UdpInput udpInput = (UdpInput) input;
-                udpInput.getConnectionHost();
-                udpInput.getGroup();
-                udpInput.getHost();
-                udpInput.getIndex();
-                udpInput.getQueue();
-                udpInput.getRcvBuf();
-                udpInput.getSource();
-                udpInput.getSourceType();
-                udpInput.getNoAppendingTimeStamp();
-                udpInput.getNoPriorityStripping();
-                udpConnections = udpInput.connections();
-                udpConnections.getGroup();
-                break;
-            case WindowsActiveDirectory:
-                WindowsActiveDirectoryInput windowsActiveDirectoryInput =
-                        (WindowsActiveDirectoryInput) input;
-                windowsActiveDirectoryInput.getIndex();
-                windowsActiveDirectoryInput.getMonitorSubtree();
-                windowsActiveDirectoryInput.getStartingNode();
-                windowsActiveDirectoryInput.getTargetDc();
-                break;
-            case WindowsEventLog:
-                WindowsEventLogInput windowsEventLogInput =
-                        (WindowsEventLogInput) input;
-                windowsEventLogInput.getHosts();
-                windowsEventLogInput.getIndex();
-                windowsEventLogInput.getLocalName();
-                windowsEventLogInput.getLogs();
-                windowsEventLogInput.getLookupHost();
-                break;
-            case WindowsPerfmon:
-                WindowsPerfmonInput windowsPerfmonInput =
-                        (WindowsPerfmonInput) input;
-                windowsPerfmonInput.getCounters();
-                windowsPerfmonInput.getIndex();
-                windowsPerfmonInput.getInstances();
-                windowsPerfmonInput.getInterval();
-                windowsPerfmonInput.getObject();
-                break;
-            case WindowsRegistry:
-                WindowsRegistryInput windowsRegistryInput =
-                        (WindowsRegistryInput) input;
-                windowsRegistryInput.getBaseline();
-                windowsRegistryInput.getHive();
-                windowsRegistryInput.getIndex();
-                windowsRegistryInput.getMonitorSubnodes();
-                windowsRegistryInput.getProc();
-                windowsRegistryInput.getType();
-                break;
-            case WindowsWmi:
-                WindowsWmiInput windowsWmiInput = (WindowsWmiInput) input;
-                windowsWmiInput.getClasses();
-                windowsWmiInput.getFields();
-                windowsWmiInput.getIndex();
-                windowsWmiInput.getInstances();
-                windowsWmiInput.getInterval();
-                windowsWmiInput.getLocalName();
-                windowsWmiInput.getLookupHost();
-                windowsWmiInput.getServers();
-                windowsWmiInput.getWql();
-                break;
+        if (inputKind == InputKind.Monitor) {
+            MonitorInput monitorInput = (MonitorInput) input;
+            monitorInput.getBlacklist();
+            monitorInput.getCrcSalt();
+            monitorInput.getFileCount();
+            monitorInput.getFollowTail();
+            monitorInput.getHost();
+            monitorInput.getHostRegex();
+            monitorInput.getIgnoreOlderThan();
+            monitorInput.getIndex();
+            monitorInput.getQueue();
+            monitorInput.getRcvBuf();
+            monitorInput.getRecursive();
+            monitorInput.getSource();
+            monitorInput.getSourceType();
+            monitorInput.getTimeBeforeClose();
+            monitorInput.getWhitelist();
+        } else if (inputKind == InputKind.Script) {
+            ScriptInput scriptInput = (ScriptInput) input;
+            scriptInput.getEndTime();
+            scriptInput.getGroup();
+            scriptInput.getHost();
+            scriptInput.getIndex();
+            scriptInput.getInterval();
+            scriptInput.getRcvBuf();
+            scriptInput.getStartTime();
+        } else if (inputKind == InputKind.Tcp) {
+            TcpInput tcpInput = (TcpInput) input;
+            tcpInput.getConnectionHost();
+            tcpInput.getGroup();
+            tcpInput.getHost();
+            tcpInput.getIndex();
+            tcpInput.getQueue();
+            tcpInput.getRcvBuf();
+            tcpInput.getRestrictToHost();
+            tcpInput.getSource();
+            tcpInput.getSourceType();
+            tcpInput.getSSL();
+            tcpConnections = tcpInput.connections();
+            tcpConnections.getConnection();
+            tcpConnections.getServername();
+        } else if (inputKind == InputKind.TcpSplunk) {
+            TcpSplunkInput tcpSplunkInput = (TcpSplunkInput) input;
+            tcpSplunkInput.getConnectionHost();
+            tcpSplunkInput.getGroup();
+            tcpSplunkInput.getHost();
+            tcpSplunkInput.getIndex();
+            tcpSplunkInput.getQueue();
+            tcpSplunkInput.getRcvBuf();
+            tcpSplunkInput.getSource();
+            tcpSplunkInput.getSourceType();
+            tcpSplunkInput.getSSL();
+            tcpConnections = tcpSplunkInput.connections();
+            tcpConnections.getConnection();
+            tcpConnections.getServername();
+        } else if (inputKind == InputKind.Udp) {
+            UdpInput udpInput = (UdpInput) input;
+            udpInput.getConnectionHost();
+            udpInput.getGroup();
+            udpInput.getHost();
+            udpInput.getIndex();
+            udpInput.getQueue();
+            udpInput.getRcvBuf();
+            udpInput.getSource();
+            udpInput.getSourceType();
+            udpInput.getNoAppendingTimeStamp();
+            udpInput.getNoPriorityStripping();
+            udpConnections = udpInput.connections();
+            udpConnections.getGroup();
+        } else if (inputKind == InputKind.WindowsActiveDirectory) {
+            WindowsActiveDirectoryInput windowsActiveDirectoryInput =
+                    (WindowsActiveDirectoryInput) input;
+            windowsActiveDirectoryInput.getIndex();
+            windowsActiveDirectoryInput.getMonitorSubtree();
+            windowsActiveDirectoryInput.getStartingNode();
+            windowsActiveDirectoryInput.getTargetDc();
+        } else if (inputKind == InputKind.WindowsEventLog) {
+            WindowsEventLogInput windowsEventLogInput =
+                    (WindowsEventLogInput) input;
+            windowsEventLogInput.getHosts();
+            windowsEventLogInput.getIndex();
+            windowsEventLogInput.getLocalName();
+            windowsEventLogInput.getLogs();
+            windowsEventLogInput.getLookupHost();
+        } else if (inputKind == InputKind.WindowsPerfmon) {
+            WindowsPerfmonInput windowsPerfmonInput =
+                    (WindowsPerfmonInput) input;
+            windowsPerfmonInput.getCounters();
+            windowsPerfmonInput.getIndex();
+            windowsPerfmonInput.getInstances();
+            windowsPerfmonInput.getInterval();
+            windowsPerfmonInput.getObject();
+        } else if (inputKind == InputKind.WindowsRegistry) {
+            WindowsRegistryInput windowsRegistryInput =
+                    (WindowsRegistryInput) input;
+            windowsRegistryInput.getBaseline();
+            windowsRegistryInput.getHive();
+            windowsRegistryInput.getIndex();
+            windowsRegistryInput.getMonitorSubnodes();
+            windowsRegistryInput.getProc();
+            windowsRegistryInput.getType();
+        } else if (inputKind == InputKind.WindowsWmi) {
+            WindowsWmiInput windowsWmiInput = (WindowsWmiInput) input;
+            windowsWmiInput.getClasses();
+            windowsWmiInput.getFields();
+            windowsWmiInput.getIndex();
+            windowsWmiInput.getInstances();
+            windowsWmiInput.getInterval();
+            windowsWmiInput.getLocalName();
+            windowsWmiInput.getLookupHost();
+            windowsWmiInput.getServers();
+            windowsWmiInput.getWql();
         }
     }
 
@@ -804,16 +655,17 @@ public class InputTest extends SplunkTestCase {
                 windowsRegistryInput.getIndex());
 
             // adjust a few of the arguments
-            windowsRegistryInput.setType("create,delete");
+            String[] wriType = {"create", "delete"};
+            windowsRegistryInput.setType(wriType);
             windowsRegistryInput.setBaseline(false);
             windowsRegistryInput.update();
 
             assertEquals(assertRoot + "#75", "*",
                 windowsRegistryInput.getProc());
             assertTrue(assertRoot + "#76",
-                windowsRegistryInput.getType().contains("create"));
+                    windowsRegistryInput.getType()[0].equals("create"));
             assertTrue(assertRoot + "#77",
-                windowsRegistryInput.getType().contains("delete"));
+                    windowsRegistryInput.getType()[1].equals("delete"));
             assertFalse(assertRoot + "#78", windowsRegistryInput.getBaseline());
 
             windowsRegistryInput.remove();

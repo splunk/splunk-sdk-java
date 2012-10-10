@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -95,14 +96,21 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns the regular expression (regex) that is compared to registry
+     * Returns the regular expressions (regexes) that are compared to registry
      * event types for this Windows Registry input. Only types that match
-     * this regex are monitored.
-     *
-     * @return The registry type regex, or {@code null} if not specified.
+     * at least one of the regexes are monitored.
+     * 
+     * @return A String array of the regular expressions.
      */
-    public String getType() {
-        return getString("type", null);
+    public String[] getType() {
+        String[] value = getStringArray("type");
+        String[] typeRegex;
+        if (value.length == 1 && value[0].contains("|")) {
+            typeRegex = value[0].split("|");
+        } else {
+            typeRegex = value;
+        }
+        return typeRegex;
     }
 
     /**
@@ -169,14 +177,24 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Sets the regular expression (regex) that is compared to registry
+     * Sets the regular expressions (regexes) that are compared to registry
      * event types for this Windows Registry input. Only types that match
-     * this regex are monitored.
+     * at least one regex are monitored.
      *
-     * @param type The type regex.
+     * @param regexes Array or collection of strings giving the regexes.
      */
-    public void setType(String type) {
-        setCacheValue("type", type);
+    public void setType(String[] regexes) {
+        String val = Util.join("|", regexes);
+        setCacheValue("type", val);
+    }
+
+
+    /**
+     * @see {@link #setType(String[])}
+     */
+    public void setType(Collection<String> regexes) {
+        String[] variableToFixMethodType = {};
+        setType(regexes.toArray(variableToFixMethodType));
     }
 
     /**

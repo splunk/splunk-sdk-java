@@ -16,55 +16,114 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The {@code InputKind} enumeration defines the different types of Splunk data
  * inputs (<i>input kinds</i>).
+ *
+ * For example, the type of a raw TCP input is {@code InputKind.Tcp}. The type of a cooked TCP input is
+ * {@code InputKind.TcpSplunk}. Each modular input kind shows up as a separate instance of {@code InputKind}.
+ *
+ * Note that {@code InputKind}s are not hierarchical, so even though there are instances for both cooked and
+ * raw TCP, there is none for all TCP inputs.
  */
-public enum InputKind {
+public class InputKind {
+    private String kind;
+    private String relpath;
+    private Class<? extends Input> inputClass;
+
+    private static Map<String, InputKind> knownKinds = new HashMap<String, InputKind>();
+
     /** Unknown input kind. */
-    Unknown("Unknown", Input.class),
+    public static final InputKind Unknown = new InputKind(null, Input.class, "unknown");
 
     /** {@code Monitor} input kind. */
-    Monitor("monitor", MonitorInput.class),
+    public static final InputKind Monitor = new InputKind("monitor", MonitorInput.class);
 
     /** {@code Script} input kind. */
-    Script("script", ScriptInput.class),
+    public static final InputKind Script = new InputKind("script", ScriptInput.class);
 
     /** {@code TCP} input kind, raw input data. */
-    Tcp("tcp/raw", TcpInput.class),
+    public static final InputKind Tcp = new InputKind("tcp/raw", TcpInput.class, "tcp");
 
     /** {@code TCP} input kind, processed input data. */
-    TcpSplunk("tcp/cooked", TcpSplunkInput.class),
+    public static final InputKind TcpSplunk = new InputKind("tcp/cooked", TcpSplunkInput.class);
 
     /** {@code UDP} input kind. */
-    Udp("udp", UdpInput.class),
+    public static final InputKind Udp = new InputKind("udp", UdpInput.class);
 
     /** {@code Windows Active Directory} input kind. */
-    WindowsActiveDirectory("ad", WindowsActiveDirectoryInput.class),
+    public static final InputKind WindowsActiveDirectory = new InputKind("ad", WindowsActiveDirectoryInput.class);
 
     /** {@code Windows Event Log} input kind. */
-    WindowsEventLog("win-event-log-collections",WindowsEventLogInput.class),
+    public static final InputKind WindowsEventLog = new InputKind("win-event-log-collections",WindowsEventLogInput.class);
 
     /** {@code Windows Perfmon} input kind. */
-    WindowsPerfmon("win-perfmon", WindowsPerfmonInput.class),
+    public static final InputKind WindowsPerfmon = new InputKind("win-perfmon", WindowsPerfmonInput.class);
 
     /** {@code Windows Registry} input kind. */
-    WindowsRegistry("registry", WindowsRegistryInput.class),
+    public static final InputKind WindowsRegistry = new InputKind("registry", WindowsRegistryInput.class);
 
     /** {@code Windows WMI} input kind. */
-    WindowsWmi("win-wmi-collections", WindowsWmiInput.class);
+    public static final InputKind WindowsWmi = new InputKind("win-wmi-collections", WindowsWmiInput.class);
 
-    /**
-     * Sets the relative path and input class for the active object.
-     *
-     * @param relpath The relative path.
-     * @param inputClass The input class.
-     */
-    InputKind(String relpath, Class inputClass) {
+    private InputKind(String relpath, Class inputClass, String kind) {
         this.relpath = relpath;
         this.inputClass = inputClass;
+        this.kind = kind;
+        knownKinds.put(kind, this);
     }
 
-    String relpath;
-    Class inputClass;
+    private InputKind(String relpath, Class inputClass) {
+        this(
+            relpath,
+            inputClass,
+            relpath
+        );
+    }
+
+    /**
+     * @return String representing the kind of this InputKind.
+     */
+    String getKind() {
+        return kind;
+    }
+
+    /**
+     * @return String giving the relative path from data/inputs/ to this InputKind.
+     */
+    String getRelativePath() {
+        return relpath;
+    }
+
+    /**
+     * @return The class this InputKind's instances should be created with.
+     */
+    Class<? extends Input> getInputClass() {
+        return inputClass;
+    }
+
+    /**
+     * Create an {@code InputKind} object from a {@code String} giving
+     * the kind or relative path from data/inputs/ to the kind.
+     *
+     * {@code InputKind}'s constructors are private. You should use this method
+     * to create an {@code InputKind}.
+     *
+     * Kinds and relpaths are not always the same. For example,
+     * {@code create("tcp")} and {@code create("tcp/raw")} return the same {@code InputKind},
+     * as do {@code create("splunktcp")} and {@code create("tcp/cooked")}.
+     *
+     * @param kindOrRelpath The kind or relative path from data/inputs specifying the {@code InputKind} to create.
+     * @return An {@code InputKind} object.
+     */
+    public static InputKind create(String kindOrRelpath) {
+        if (knownKinds.containsKey(kindOrRelpath)) {
+            return knownKinds.get(kindOrRelpath);
+        } else {
+            return new InputKind(kindOrRelpath, Input.class);
+        }
+    }
 }
