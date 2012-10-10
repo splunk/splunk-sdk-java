@@ -465,9 +465,19 @@ public class Service extends HttpService {
      * pagination.
      * @return A collection of indexes.
      */
-    public EntityCollection<Index> getIndexes(Args args) {
-        return new EntityCollection<Index>(
-            this, "data/indexes", Index.class, args);
+    public IndexCollection getIndexes(Args args) {
+        return new IndexCollection(this, args);
+    }
+    
+    /**
+     * Returns a collection of Splunk indexes.
+     *
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of indexes.
+     */
+    public IndexCollection getIndexes(IndexCollectionArgs args) {
+        return new IndexCollection(this, args);
     }
 
     /**
