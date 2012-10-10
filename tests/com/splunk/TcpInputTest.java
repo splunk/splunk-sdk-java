@@ -113,7 +113,7 @@ public class TcpInputTest extends SplunkTestCase {
         final Index index = this.index;
 
         try {
-            this.tcpInput.attachWith(new TcpInput.ReceiverBehavior() {
+            this.tcpInput.attachWith(new ReceiverBehavior() {
                 public void run(OutputStream stream) throws IOException {
                     String s = createTimestamp() + " Boris the mad baboon!\r\n";
                     stream.write(s.getBytes("UTF8"));
