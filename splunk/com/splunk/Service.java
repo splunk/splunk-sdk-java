@@ -518,6 +518,17 @@ public class Service extends HttpService {
     public JobCollection getJobs(Args args) {
         return new JobCollection(this, args);
     }
+    
+    /**
+     * Returns a collection of current search jobs.
+     *
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of search jobs.
+     */
+    public JobCollection getJobs(CollectionArgs args) {
+        return new JobCollection(this, args);
+    }
 
     /**
      * Returns a collection of license group configurations.
