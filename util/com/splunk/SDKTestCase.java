@@ -18,15 +18,14 @@ package com.splunk;
 
 import junit.framework.TestCase;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 import java.io.*;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,7 +42,8 @@ import java.util.UUID;
  */
 public abstract class SDKTestCase extends TestCase {
     protected static ConnectionArgs connectionArgs;
-    protected static Service connection;
+    protected static Service service;
+    protected List<String> installedApps;
 
     /**
      * @return The path to .splunkrc in the user's home directory.
@@ -54,7 +54,8 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     /**
-     *
+     * Read a stream attached to a .splunkrc file into a {@code ConnectionArgs}
+     * (which is a subclass of {@code Map<String, Object>}).
      *
      * @param stream Stream attached to .splunkrc (usually a {@code FileReader}).
      * @return A ConnectionArgs object with the keys and values set from .splunkrc.
@@ -62,9 +63,6 @@ public abstract class SDKTestCase extends TestCase {
     private static ConnectionArgs readSplunkrc(InputStreamReader stream) {
         BufferedReader bufferedStream = new BufferedReader(stream);
         ConnectionArgs args = new ConnectionArgs();
-        if (!args.isValid()) {
-            fail(".splunkrc does not specify a valid state.");
-        }
         try {
             String line = bufferedStream.readLine();
             while (line != null) {
@@ -92,18 +90,24 @@ public abstract class SDKTestCase extends TestCase {
         }
         connectionArgs = readSplunkrc(splunkrcReader);
 
-        connection = Service.connect(connectionArgs);
+        service = Service.connect(connectionArgs);
     }
 
     @Before
     @Override
-    public void setUp() {
-        try {
-            super.setUp();
-        } catch (Exception e) {
-            fail(e.toString());
-        }
+    public void setUp() throws Exception {
+        super.setUp();
         connect();
+        installedApps = new ArrayList<String>();
+    }
+
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        for (String applicationName : installedApps) {
+            service.getApplications().remove(applicationName);
+        }
     }
 
     protected static String createTimestamp() {
@@ -148,5 +152,32 @@ public abstract class SDKTestCase extends TestCase {
         return false;
     }
 
+    public boolean hasApplicationCollection() {
+        if (!connectionArgs.containsKey("appcollection") ||
+                !new File((String)connectionArgs.get("appcollection")).isDirectory()) {
+            return false;
+        } else {
+            return true;
+        }
 
+    }
+
+    public void installApplicationFromCollection(String applicationName)
+            throws MissingAppCollectionException, FileNotFoundException {
+        if (!hasApplicationCollection()) {
+            throw new MissingAppCollectionException();
+        }
+
+        String applicationPath = (String)connectionArgs.get("appcollection") +
+                                 "/build/" + applicationName + ".tar";
+        File applicationFile = new File(applicationPath);
+        if (!applicationFile.exists()) {
+            throw new FileNotFoundException(applicationFile.getAbsolutePath());
+        }
+        Args args = new Args();
+        args.put("name", applicationFile.getAbsolutePath());
+        args.put("update", "1");
+        service.post("apps/appinstall", args);
+        installedApps.add(applicationName);
+    }
 }

@@ -23,14 +23,6 @@ import java.util.HashMap;
  * Class to contain the values extracted from .splunkrc file.
  */
 public class ConnectionArgs extends HashMap<String, Object> {
-    public String scheme = "https";
-    public String host = "localhost";
-    public int port = 8089;
-    public String username = null;
-    public String password = null;
-    public String app = null;
-    public String owner = null;
-
     public void setField(String key, String value)
             throws UnknownSplunkrcKeyException, InvalidUrlSchemeException {
         if (key.equals("scheme")) {
@@ -43,11 +35,12 @@ public class ConnectionArgs extends HashMap<String, Object> {
                    key.equals("username") ||
                    key.equals("password") ||
                    key.equals("app") ||
-                   key.equals("owner")) {
+                   key.equals("owner") ||
+                   key.equals("appcollection")) {
             put(key, value);
         } else if (key.equals("port")) {
             try {
-                this.port = Integer.parseInt(value);
+                put("port", Integer.parseInt(value));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Port must be an integer, found: " + value);
             }
@@ -71,17 +64,5 @@ public class ConnectionArgs extends HashMap<String, Object> {
             String value = pair[1];
             setField(key, value);
         }
-    }
-
-    /**
-     * Is the state of the args valid?
-     */
-    public boolean isValid() {
-        return scheme != null &&
-                host != null &&
-                username != null &&
-                password != null &&
-                app != null &&
-                owner != null;
     }
 }
