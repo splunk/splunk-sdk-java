@@ -22,16 +22,14 @@ import java.util.Set;
 
 
 public class InputTest extends SplunkTestCase {
-    @Test
-    public void testMatchNonscriptInputName() {
+    @Test public void testMatchNonscriptInputName() {
         boolean matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "def");
         SplunkTestCase.assertFalse(matches);
         matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "1-[]bc");
         SplunkTestCase.assertTrue(matches);
     }
 
-    @Test
-    public void testMatchScriptInputName() {
+    @Test public void testMatchScriptInputName() {
         SplunkTestCase.assertTrue(InputCollection.matchesInputName(
                 InputKind.Script, "abc.py", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
         ));
@@ -41,8 +39,7 @@ public class InputTest extends SplunkTestCase {
     }
 
 
-    @Test
-    public void testInputKinds() {
+    @Test public void testInputKinds() {
         Service service = connect();
         InputCollection inputs = service.getInputs();
 
@@ -56,8 +53,7 @@ public class InputTest extends SplunkTestCase {
         SplunkTestCase.assertTrue(hasTest2);
     }
 
-    @Test
-    public void testListInputs() {
+    @Test public void testListInputs() {
         Service service = connect();
         InputCollection inputs = service.getInputs();
 
