@@ -187,4 +187,29 @@ public class SplunkTestCase extends TestCase {
         }
         return job;
     }
+
+    public static abstract class EventuallyTrueBehavior {
+        public int tries = 10;
+        public int pauseTime = 1000;
+
+        public String timeoutMessage = "Test timed out before true.";
+        public abstract boolean predicate();
+    }
+
+    public static boolean assertEventuallyTrue(EventuallyTrueBehavior behavior) {
+        int remainingTries = behavior.tries;
+        while (remainingTries > 0) {
+            boolean succeeded = behavior.predicate();
+            if (succeeded) {
+                return true;
+            } else {
+                remainingTries -= 1;
+                try {
+                    Thread.sleep(behavior.pauseTime);
+                } catch (InterruptedException e) {}
+            }
+        }
+        SplunkTestCase.fail(behavior.timeoutMessage);
+        return false;
+    }
 }
