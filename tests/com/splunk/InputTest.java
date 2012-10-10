@@ -26,58 +26,6 @@ import java.net.Socket;
 
 
 public class InputTest extends SplunkTestCase {
-    @Test public void testMatchNonscriptInputName() {
-        boolean matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "def");
-        SplunkTestCase.assertFalse(matches);
-        matches = InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "1-[]bc");
-        SplunkTestCase.assertTrue(matches);
-    }
-
-    @Test public void testMatchScriptInputName() {
-        SplunkTestCase.assertTrue(InputCollection.matchesInputName(
-                InputKind.Script, "abc.py", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
-        ));
-        SplunkTestCase.assertFalse(InputCollection.matchesInputName(
-                InputKind.Script, "abc", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
-        ));
-    }
-
-
-    @Test public void testInputKinds() {
-        Service service = connect();
-        InputCollection inputs = service.getInputs();
-
-        Set<InputKind> kinds = inputs.getInputKinds();
-        boolean hasTest2 = false;
-        for (InputKind ik : kinds) {
-            if (ik.getKind() == "test2") {
-                hasTest2 = true;
-            }
-        }
-        SplunkTestCase.assertTrue(hasTest2);
-    }
-
-    @Test public void testListInputs() {
-        Service service = connect();
-        InputCollection inputs = service.getInputs();
-
-        SplunkTestCase.assertFalse(inputs.isEmpty());
-        boolean hasAbcd = inputs.containsKey("abcd");
-        if (!hasAbcd) {
-            Args args = new Args();
-            args.add("field1", "boris");
-            inputs.create("abcd", InputKind.create("test2"), args);
-        }
-
-        boolean abcdFound = false;
-        for (Input input : inputs.values()) {
-            if (input.getName().equals("abcd") && input.getKind().getKind().equals("test2")) {
-                abcdFound = true;
-            }
-        }
-        SplunkTestCase.assertTrue("Modular input did not show up in list.", abcdFound);
-    }
-
     public static int findNextUnusedTcpPort(Service service, int startingPort) {
         int port = startingPort;
         while (service.getInputs().containsKey(String.valueOf(port))) {
