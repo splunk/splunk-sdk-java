@@ -32,7 +32,7 @@ import java.util.Map;
 public class InputKind {
     private String kind;
     private String relpath;
-    private Class inputClass;
+    private Class<? extends Input> inputClass;
 
     private static Map<String, InputKind> knownKinds = new HashMap<String, InputKind>();
 
@@ -76,7 +76,6 @@ public class InputKind {
         knownKinds.put(kind, this);
     }
 
-
     private InputKind(String relpath, Class inputClass) {
         this(
             relpath,
@@ -102,15 +101,29 @@ public class InputKind {
     /**
      * @return The class this InputKind's instances should be created with.
      */
-    Class getInputClass() {
+    Class<? extends Input> getInputClass() {
         return inputClass;
     }
 
-    public static InputKind create(String kind) {
-        if (knownKinds.containsKey(kind)) {
-            return knownKinds.get(kind);
+    /**
+     * Create an {@code InputKind} object from a {@code String} giving
+     * the kind or relative path from data/inputs/ to the kind.
+     *
+     * {@code InputKind}'s constructors are private. You should use this method
+     * to create an {@code InputKind}.
+     *
+     * Kinds and relpaths are not always the same. For example,
+     * {@code create("tcp")} and {@code create("tcp/raw")} return the same {@code InputKind},
+     * as do {@code create("splunktcp")} and {@code create("tcp/cooked")}.
+     *
+     * @param kindOrRelpath The kind or relative path from data/inputs specifying the {@code InputKind} to create.
+     * @return An {@code InputKind} object.
+     */
+    public static InputKind create(String kindOrRelpath) {
+        if (knownKinds.containsKey(kindOrRelpath)) {
+            return knownKinds.get(kindOrRelpath);
         } else {
-            return new InputKind(kind, Input.class);
+            return new InputKind(kindOrRelpath, Input.class);
         }
     }
 }
