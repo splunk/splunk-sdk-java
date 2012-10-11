@@ -96,6 +96,23 @@ public class JobCollection extends EntityCollection<Job> {
 
         return job;
     }
+    
+    /**
+     * Creates a search.
+     * <p>
+     * <b>Note:</b> A 'oneshot' request is invalid. To create a oneshot search,
+     * use the {@code Service.oneshot} method instead.
+     * @see Service#oneshot
+     *
+     * @param query The search query string.
+     * @param args Additional arguments for this job.
+     * @return The unique search identifier (SID).
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public Job create(String query, JobArgs args) {
+        return this.create(query, (Map<String, Object>) args);
+    }
 
     /**
      * Returns the job's response.

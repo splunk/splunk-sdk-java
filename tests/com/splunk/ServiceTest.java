@@ -357,5 +357,75 @@ public class ServiceTest extends SplunkTestCase {
         users.remove(username);
         assertFalse(assertRoot + "#50", users.containsKey(username));
     }
+    
+    @SuppressWarnings("deprecation")
+    @Test public void testClassicServiceArgs() {
+        ServiceArgs args = new ServiceArgs();
+        args.app = "myapp";
+        args.host = "myhost.splunk.com";
+        args.owner = "myuser";
+        args.port = 9999;
+        args.scheme = "https";
+        args.token = "Splunk MY_SESSION_KEY";
+        
+        Service service = new Service(args);
+        assertEquals(args.app, service.getApp());
+        assertEquals(args.host, service.getHost());
+        assertEquals(args.owner, service.getOwner());
+        assertEquals((int) args.port, (int) service.getPort());
+        assertEquals(args.scheme, service.getScheme());
+        assertEquals(args.token, service.getToken());
+    }
+    
+    @SuppressWarnings("deprecation")
+    @Test public void testNewServiceArgs() {
+        ServiceArgs args = new ServiceArgs();
+        args.setApp("myapp");
+        args.setHost("myhost.splunk.com");
+        args.setOwner("myuser");
+        args.setPort(9999);
+        args.setScheme("https");
+        args.setToken("Splunk MY_SESSION_KEY");
+        
+        assertEquals("Arg setters didn't replicate value to deprecated fields.", args.app, "myapp");
+        
+        Service service = new Service(args);
+        assertEquals(args.app, service.getApp());
+        assertEquals(args.host, service.getHost());
+        assertEquals(args.owner, service.getOwner());
+        assertEquals((int) args.port, (int) service.getPort());
+        assertEquals(args.scheme, service.getScheme());
+        assertEquals(args.token, service.getToken());
+    }
+    
+    @Test public void testNewServiceArgsAsMap() {
+        ServiceArgs args = new ServiceArgs();
+        args.put("app", "myapp");
+        args.put("host", "myhost.splunk.com");
+        args.put("owner", "myuser");
+        args.put("port", 9999);
+        args.put("scheme", "https");
+        args.put("token", "Splunk MY_SESSION_KEY");
+        
+        Service service = new Service(args);
+        assertEquals("myapp", service.getApp());
+        assertEquals("myhost.splunk.com", service.getHost());
+        assertEquals("myuser", service.getOwner());
+        assertEquals(9999, (int) service.getPort());
+        assertEquals("https", service.getScheme());
+        assertEquals("Splunk MY_SESSION_KEY", service.getToken());
+    }
+    
+    @Test public void testNewServiceArgsWithDefaults() {
+        ServiceArgs args = new ServiceArgs();
+        
+        Service service = new Service(args);
+        assertEquals(null, service.getApp());
+        assertEquals("localhost", service.getHost());
+        assertEquals(null, service.getOwner());
+        assertEquals(8089, (int) service.getPort());
+        assertEquals("https", service.getScheme());
+        assertEquals(null, service.getToken());
+    }
 }
 
