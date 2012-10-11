@@ -300,6 +300,8 @@ public class Job extends Entity {
      *
      * @return The event InputStream IO handle.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public InputStream getEvents(JobEventsArgs args) {
         checkReady();
         return getEvents((Map<String, Object>) args);
@@ -487,6 +489,8 @@ public class Job extends Entity {
      * @param args Optional arguments.
      * @return The results InputStream IO handle.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public InputStream getResults(JobResultsArgs args) {
         checkReady();
         return getResults((Map<String, Object>) args);
@@ -520,6 +524,8 @@ public class Job extends Entity {
      * @param  args Optional arguments.
      * @return The preview results InputStream IO handle.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public InputStream getResultsPreview(JobResultsPreviewArgs args) {
         checkReady();
         return getResultsPreview((Map<String, Object>) args);
@@ -658,6 +664,8 @@ public class Job extends Entity {
      * @param args Optional arguments.
      * @return The summary InputStream IO handle.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public InputStream getSummary(JobSummaryArgs args) {
         checkReady();
         return getSummary((Map<String, Object>) args);

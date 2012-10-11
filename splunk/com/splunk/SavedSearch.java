@@ -92,6 +92,8 @@ public class SavedSearch extends Entity {
      * @param args Dispatch arguments.
      * @return The search job.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public Job dispatch(SavedSearchDispatchArgs args) throws InterruptedException {
         return dispatch((Map<String, Object>) args);
     }

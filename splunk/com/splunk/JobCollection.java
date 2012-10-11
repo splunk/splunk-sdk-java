@@ -108,6 +108,8 @@ public class JobCollection extends EntityCollection<Job> {
      * @param args Additional arguments for this job.
      * @return The unique search identifier (SID).
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public Job create(String query, JobArgs args) {
         return this.create(query, (Map<String, Object>) args);
     }

@@ -109,6 +109,8 @@ public class Service extends HttpService {
      *
      * @param args The {@code ServiceArgs} to initialize the service.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     @SuppressWarnings("deprecation")
     public Service(ServiceArgs args) {
         super();
@@ -192,6 +194,8 @@ public class Service extends HttpService {
      * @param args Additional search arguments.
      * @return The {@code InputStream} object that contains the search results.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public InputStream export(String search, JobExportArgs args) {
         return export(search, (Map<String, Object>) args);
     }
@@ -495,6 +499,8 @@ public class Service extends HttpService {
      * pagination.
      * @return A collection of indexes.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public IndexCollection getIndexes(IndexCollectionArgs args) {
         return new IndexCollection(this, args);
     }
@@ -555,6 +561,8 @@ public class Service extends HttpService {
      * pagination.
      * @return A collection of search jobs.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public JobCollection getJobs(CollectionArgs args) {
         return new JobCollection(this, args);
     }
@@ -918,6 +926,8 @@ public class Service extends HttpService {
      * pagination.
      * @return A collection of saved searches.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
     public SavedSearchCollection getSavedSearches(SavedSearchCollectionArgs args) {
         return new SavedSearchCollection(this, args);
     }
