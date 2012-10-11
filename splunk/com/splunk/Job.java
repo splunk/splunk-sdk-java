@@ -292,6 +292,20 @@ public class Job extends Entity {
         ResponseMessage response = service.get(path + "/events", args);
         return response.getContent();
     }
+    
+    /**
+     * Returns the InputStream IO handle for this job's events.
+     *
+     * @param args Optional arguments.
+     *
+     * @return The event InputStream IO handle.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public InputStream getEvents(JobEventsArgs args) {
+        checkReady();
+        return getEvents((Map<String, Object>) args);
+    }
 
     /**
      * Returns the subset of the entire search that is before any transforming 
@@ -468,6 +482,19 @@ public class Job extends Entity {
         ResponseMessage response = service.get(path + "/results", args);
         return response.getContent();
     }
+    
+    /**
+     * Returns the InputStream IO handle for the results from this job.
+     *
+     * @param args Optional arguments.
+     * @return The results InputStream IO handle.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public InputStream getResults(JobResultsArgs args) {
+        checkReady();
+        return getResults((Map<String, Object>) args);
+    }
 
     /**
      * Returns the InputStream IO handle for the preview results from this job.
@@ -489,6 +516,19 @@ public class Job extends Entity {
         checkReady();
         ResponseMessage response = service.get(path + "/results_preview", args);
         return response.getContent();
+    }
+    
+    /**
+     * Returns the InputStream IO handle for the preview results from this job.
+     *
+     * @param  args Optional arguments.
+     * @return The preview results InputStream IO handle.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public InputStream getResultsPreview(JobResultsPreviewArgs args) {
+        checkReady();
+        return getResultsPreview((Map<String, Object>) args);
     }
 
     /**
@@ -616,6 +656,19 @@ public class Job extends Entity {
         checkReady();
         ResponseMessage response = service.get(path + "/summary", args);
         return response.getContent();
+    }
+    
+    /**
+     * Returns the InputStream IO handle for the summary for this job.
+     *
+     * @param args Optional arguments.
+     * @return The summary InputStream IO handle.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public InputStream getSummary(JobSummaryArgs args) {
+        checkReady();
+        return getSummary((Map<String, Object>) args);
     }
 
     /**
