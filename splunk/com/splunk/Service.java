@@ -109,14 +109,21 @@ public class Service extends HttpService {
      *
      * @param args The {@code ServiceArgs} to initialize the service.
      */
+    @SuppressWarnings("deprecation")
     public Service(ServiceArgs args) {
         super();
-        this.app = args.app;
-        this.host = args.host == null ? DEFAULT_HOST : args.host;
-        this.owner = args.owner;
-        this.port = args.port == null ? DEFAULT_PORT : args.port;
-        this.scheme = args.scheme == null ? DEFAULT_SCHEME : args.scheme;
-        this.token = args.token;
+        // NOTE: Must read the deprecated fields for backward compatibility.
+        //       (Consider the case where the fields are initialized directly,
+        //        rather than using the new setters.)
+        // NOTE: Must also read the underlying dictionary for forward compatibility.
+        //       (Consider the case where the user calls Map.put() directly,
+        //        rather than using the new setters.)
+        this.app = Args.<String>get(args,    "app",    args.app != null    ? args.app    : null);
+        this.host = Args.<String>get(args,   "host",   args.host != null   ? args.host   : DEFAULT_HOST);
+        this.owner = Args.<String>get(args,  "owner",  args.owner != null  ? args.owner  : null);
+        this.port = Args.<Integer>get(args,  "port",   args.port != null   ? args.port   : DEFAULT_PORT);
+        this.scheme = Args.<String>get(args, "scheme", args.scheme != null ? args.scheme : DEFAULT_SCHEME);
+        this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
     }
 
     /**
