@@ -183,6 +183,18 @@ public class Service extends HttpService {
         ResponseMessage response = get("search/jobs/export", args);
         return response.getContent();
     }
+    
+    /**
+     * Runs a search with arguments using the {@code search/jobs/export}
+     * endpoint, which streams results back in an input stream.
+     *
+     * @param search The search query to run.
+     * @param args Additional search arguments.
+     * @return The {@code InputStream} object that contains the search results.
+     */
+    public InputStream export(String search, JobExportArgs args) {
+        return export(search, (Map<String, Object>) args);
+    }
 
     /**
      * Ensures that the given path is fully qualified, prepending a path
