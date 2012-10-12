@@ -1,0 +1,12 @@
+count
+Count
+int
+Indicates the maximum number of entries to return. To return all entries, specify -1.
+!CODE
+        super.setCount(count);
+===
+summarize
+Summarize
+boolean
+If true, leaves out certain index details in order to provide a faster response.
+===

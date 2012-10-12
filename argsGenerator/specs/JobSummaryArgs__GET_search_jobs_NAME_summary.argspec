@@ -1,0 +1,62 @@
+# TODO: Make Date version.
+# TODO: Improve docs: "respectively"?
+earliest_time
+EarliestTime
+String
+Time string representing the earliest (inclusive), respectively, time bounds for the search.
+
+The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. (Also see comment for the search_mode variable.) 
+===
+f
+FieldList
+String[]-MULTIPLE
+A list of the fields to return for the event set.
+===
+histogram
+Histogram
+boolean
+Indicates whether to add hitsogram data to the summary output. 
+===
+# TODO: Make Date version.
+# TODO: Improve docs: "respectively"?
+latest_time
+LatestTime
+String
+Time string representing the latest (exclusive), respectively, time bounds for the search.
+
+The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. (Also see comment for the search_mode variable.)
+===
+min_freq
+MinimumFrequency
+double
+For each key, the fraction of results this key must occur in to be displayed.
+
+Express the fraction as a number between 0 and 1. 
+===
+# TODO: Improve docs: The description and default value contradict each other.
+output_time_format
+OutputTimeFormat
+String
+Formats a UTC time. Defaults to what is specified in time_format.
+===
+search
+Search
+String
+Specifies a substring that all returned events should contain either in one of their values or tags.
+===
+# TODO: Improve docs: The default value specified does not match that of the description.
+#       (It is missing a trailing S). The description version is probably right.
+# TODO: Improve docs: Are you sure this is the default? This time format lacks time zone and millisecond resolution.
+# TODO: Improve docs: There is no {start,end}_time. Perhaps {earliest,latest}_time was intended?
+time_format
+TimeFormat
+String
+Expression to convert a formatted time string from {start,end}_time into UTC seconds.
+
+It defaults to %m/%d/%Y:%H:%M:%S
+===
+top_count
+TopCount
+int
+For each key, specfies how many of the most frequent items to return.
+===
