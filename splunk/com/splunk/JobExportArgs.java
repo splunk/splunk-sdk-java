@@ -191,7 +191,7 @@ public class JobExportArgs extends Args {
     
     /**
      * @param id
-     *      Optional string to specify the search ID (&lt:sid>). If unspecified, a random ID is generated.
+     *      Optional string to specify the search ID (<sid>). If unspecified, a random ID is generated.
      */
     public void setId(String id) {
         this.put("id", id);
