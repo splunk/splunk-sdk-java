@@ -1,0 +1,191 @@
+# NOTE: Large sections of this specification have been copied to
+#       JobExportArgs__GET_search_jobs_export.argspec, which should be
+#       updated (and regenerated) to reflect changes made to this file.
+#
+auto_cancel
+AutoCancel
+int
+If specified, the job automatically cancels after this many seconds of inactivity. (0 means never auto-cancel)
+===
+auto_finalize_ec
+AutoFinalizeEventCount
+int
+Auto-finalize the search after at least this many events have been processed.
+
+Specify 0 to indicate no limit.
+===
+auto_pause
+AutoPause
+int
+If specified, the job automatically cancels after this many seconds of inactivity. (0 means never auto-pause) 
+===
+# TODO: Make Date version.
+earliest_time
+EarliestTime
+String
+Specify a time string. Sets the earliest (inclusive), respectively, time bounds for the search.
+
+The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. (Also see comment for the search_mode variable.)
+===
+enable_lookups
+EnableLookups
+boolean
+Indicates whether lookups should be applied to events.
+
+Specifying true (the default) may slow searches significantly depending on the nature of the lookups.
+===
+exec_mode
+ExecutionMode
+ExecutionMode
+If set to normal, runs an asynchronous search.
+
+If set to blocking, returns the sid when the job is complete.
+
+If set to oneshot, returns results in the same call. 
+===
+force_bundle_replication
+ForceBundleReplication
+boolean
+Specifies whether this search should cause (and wait depending on the value of sync_bundle_replication) for bundle synchronization with all search peers.
+===
+id
+Id
+String
+Optional string to specify the search ID (&lt:sid>). If unspecified, a random ID is generated.
+===
+# TODO: Make Date version.
+latest_time
+LatestTime
+String
+Specify a time string. Sets the latest (exclusive), respectively, time bounds for the search.
+
+The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. (Also see comment for the search_mode variable.)
+===
+max_count
+MaximumCount
+int
+The number of events that can be accessible in any given status bucket.
+
+Also, in transforming mode, the maximum number of results to store. Specifically, in all calls, codeoffset+count <= max_count.
+===
+max_time
+MaximumTime
+int
+The number of seconds to run this search before finalizing. Specify 0 to never finalize.
+===
+namespace
+Namespace
+String
+The application namespace in which to restrict searches.
+
+The namespace corresponds to the identifier recognized in the /services/apps/local endpoint.
+===
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+now
+Now
+String
+Specify a time string to set the absolute time used for any relative time specifier in the search. Defaults to the current system time.
+
+You can specify a relative time modifier for this parameter. For example, specify +2d to specify the current time plus two days.
+
+If you specify a relative time modifier both in this parameter and in the search string, the search string modifier takes precedence.
+
+Refer to <a href="http://docs.splunk.com/Documentation/Splunk/4.3.4/SearchReference/SearchTimeModifiers">Time modifiers for search</a> for details on specifying relative time modifiers. 
+===
+reduce_freq
+ReduceFrequency
+int
+Determines how frequently to run the MapReduce reduce phase on accumulated map values. 
+===
+reload_macros
+ReloadMacros
+boolean
+Specifies whether to reload macro definitions from macros.conf.
+
+Default is true.
+===
+remote_server_list
+RemoteServerList
+String[]-CSV
+List of (possibly wildcarded) servers from which raw events should be pulled. This same server list is to be used in subsearches.
+===
+rf
+RequiredFieldList
+String[]-MULTIPLE
+Required fields for the search.
+
+These fields, even if not referenced or used directly by the search, are still included by the events and summary endpoints. Splunk Web uses these fields to prepopulate panels in the Search view.
+===
+rt_blocking
+RealtimeBlocking
+boolean
+For a realtime search, indicates if the indexer blocks if the queue for this search is full.
+===
+rt_indexfilter
+RealtimeIndexFilter
+boolean
+For a realtime search, indicates if the indexer prefilters events.
+===
+rt_maxblocksecs
+RealtimeMaximumBlockSeconds
+int
+For a realtime search with rt_blocking set to true, the maximum time to block.
+
+Specify 0 to indicate no limit.
+===
+rt_queue_size
+RealtimeQueueSize
+int
+For a realtime search, the queue size (in events) that the indexer should use for this search.
+===
+search_listener
+SearchListener
+String
+Registers a search state listener with the search.
+
+Use the format:
+
+search_state;results_condition;http_method;uri;
+
+For example:
+
+search_listener=onResults;true;POST;/servicesNS/admin/search/saved/search/foobar/notify;
+===
+search_mode
+SearchMode
+SearchMode
+If set to realtime, search runs over live data. A realtime search may also be indicated by earliest_time and latest_time variables starting with 'rt' even if the search_mode is set to normal or is unset. For a real-time search, if both earliest_time and latest_time are both exactly 'rt', the search represents all appropriate live data received since the start of the search.
+
+Additionally, if earliest_time and/or latest_time are 'rt' followed by a relative time specifiers then a sliding window is used where the time bounds of the window are determined by the relative time specifiers and are continuously updated based on the wall-clock time.
+===
+spawn_process
+SpawnProcess
+boolean
+Specifies whether the search should run in a separate spawned process. Default is true.
+
+Searches against indexes must run in a separate process.
+===
+status_buckets
+StatusBuckets
+int
+The most status buckets to generate.
+
+0 indicates to not generate timeline information.
+===
+sync_bundle_replication
+SynchronizeBundleReplication
+boolean
+Specifies whether this search should wait for bundle replication to complete.
+===
+# TODO: Improve docs: There is no {start,end}_time. Perhaps {earliest,latest}_time was intended?
+time_format
+TimeFormat
+String
+Used to convert a formatted time string from {start,end}_time into UTC seconds. It defaults to ISO-8601.
+===
+timeout
+Timeout
+int
+The number of seconds to keep this search after processing has stopped.
+===

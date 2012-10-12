@@ -1,0 +1,84 @@
+# NOTE: The entire contents of this specification have been copied to
+#       JobExportArgs__GET_search_jobs_export.argspec, which should be
+#       updated (and regenerated) to reflect changes made to this file.
+#
+count
+Count
+int
+The maximum number of results to return. If value is set to 0, then all available results are returned. Default value is 100.
+===
+# TODO: Make Date version.
+# TODO: Improve docs: "respectively"?
+earliest_time
+EarliestTime
+String
+A time string representing the earliest (inclusive), respectively, time bounds for the results to be returned. If not specified, the range applies to all results found.
+===
+f
+FieldList
+String[]-MULTIPLE
+A list of fields to return for the event set.
+===
+# TODO: Make Date version.
+# TODO: Improve docs: "respectively"?
+latest_time
+LatestTime
+String
+A time string representing the latest (exclusive), respectively, time bounds for the results to be returned. If not specified, the range applies to all results found.
+===
+max_lines
+MaximumLines
+int
+The maximum lines that any single event's _raw field should contain.
+
+Specify 0 to specify no limit.
+===
+offset
+Offset
+int
+The first result (inclusive) from which to begin returning data.
+
+This value is 0-indexed. Default value is 0.
+
+In 4.1+, negative offsets are allowed and are added to count to compute the absolute offset (for example, offset=-1 is the last available offset. Offsets in the results are always absolute and never negative.
+===
+# TODO: Improve docs: The referenced document does not actually document the enum constants.
+output_mode
+OutputMode
+OutputMode
+Specifies the format for the returned output. For details on each format, see Splunk responses to REST operations.
+===
+output_time_format
+OutputTimeFormat
+String
+Formats a UTC time. Defaults to what is specified in time_format.
+===
+search
+Search
+String
+The post processing search to apply to results. Can be any valid search language string.
+===
+# TODO: Improve docs: Typo: incudes
+# TODO: Improve docs: What are the valid values for this parameter?
+segmentation
+Segmentation
+String
+The type of segmentation to perform on the data. This incudes an option to perform k/v segmentation.
+===
+# TODO: Are you sure this is the default? This time format lacks time zone and millisecond resolution.
+# TODO: Improve docs: There is no {start,end}_time. Perhaps {earliest,latest}_time was intended?
+time_format
+TimeFormat
+String
+Expression to convert a formatted time string from {start,end}_time into UTC seconds.
+
+It defaults to %m/%d/%Y:%H:%M:%S
+===
+# TODO: Improve docs: What effect does each value have?
+truncation_mode
+TruncationMode
+TruncationMode
+Specifies how "max_lines" should be achieved.
+
+Default value is abstract.
+===
