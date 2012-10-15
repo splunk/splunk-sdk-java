@@ -21,7 +21,6 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Before;
 import org.junit.Test;
 import java.lang.Thread;
 
@@ -29,7 +28,7 @@ public class IndexTest extends SplunkTestCase {
     @Test
     public void testAttachWith() throws Exception {
         Service service = connect();
-        String indexName = temporaryName();
+        String indexName = createTemporaryName();
         final Index index = service.getIndexes().create(indexName);
 
         try {
@@ -69,7 +68,7 @@ public class IndexTest extends SplunkTestCase {
 
         }
 
-        String indexName = temporaryName();
+        String indexName = createTemporaryName();
         EntityCollection<Index> indexes = service.getIndexes();
         Index index = indexes.create(indexName);
         SplunkTestCase.assertTrue(indexes.containsKey(indexName));
