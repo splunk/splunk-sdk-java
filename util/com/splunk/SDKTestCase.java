@@ -196,6 +196,16 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     public void splunkRestart(int millisecondTimeout) {
+        MessageCollection messages = service.getMessages();
+        boolean restartRequired = false;
+        for (Message message : messages.values()) {
+            if (message.containsKey("restart_required")) {
+                restartRequired = true;
+            }
+        }
+        if (!restartRequired) {
+            fail("Asked to restart Splunk when no restart was required.");
+        }
         ResponseMessage response = service.restart();
         if (response.getStatus() != 200) {
             fail("Restart command failed: " + response.getContent());

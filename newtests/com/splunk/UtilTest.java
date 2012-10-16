@@ -16,25 +16,27 @@
 
 package com.splunk;
 
+import junit.framework.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UtilTest extends SplunkTestCase {
+public class UtilTest extends SDKTestCase {
     @Test
     public void testJoin() {
         List<String> emptyList = new ArrayList<String>();
-        SplunkTestCase.assertEquals("", Util.join("/", emptyList));
+        assertEquals("", Util.join("/", emptyList));
 
         List<String> oneElementList = new ArrayList<String>();
         oneElementList.add("abcd");
-        SplunkTestCase.assertEquals("abcd", Util.join("/", oneElementList));
+        assertEquals("abcd", Util.join("/", oneElementList));
 
         List<String> fullList = new ArrayList<String>();
         fullList.add("abcd");
         fullList.add("defg");
-        SplunkTestCase.assertEquals(
+        assertEquals(
                 "abcd/defg",
                 Util.join("/", fullList)
         );
@@ -43,13 +45,13 @@ public class UtilTest extends SplunkTestCase {
     @Test
     public void testJoinOnArray() {
         String[] emptyArray = {};
-        SplunkTestCase.assertEquals("", Util.join("/", emptyArray));
+        assertEquals("", Util.join("/", emptyArray));
 
         String[] oneElementArray = {"abcd"};
-        SplunkTestCase.assertEquals("abcd", Util.join("/", oneElementArray));
+        assertEquals("abcd", Util.join("/", oneElementArray));
 
         String[] fullArray = {"abcd", "defg"};
-        SplunkTestCase.assertEquals(
+        assertEquals(
                 "abcd/defg",
                 Util.join("/", fullArray)
         );
@@ -57,17 +59,24 @@ public class UtilTest extends SplunkTestCase {
 
     @Test
     public void testSubstringAfterSucceeds() {
-        SplunkTestCase.assertEquals(
+        assertEquals(
                 "efg",
                 Util.substringAfter("abcdefg", "cd", "boris")
         );
     }
 
-    @Test
-    public void testSubstringAfterFails() {
-        SplunkTestCase.assertEquals(
+    @Test public void testSubstringAfterFails() {
+        assertEquals(
                 "boris",
                 Util.substringAfter("abcdefg", "pq", "boris")
+        );
+    }
+
+    @Test public void testJoinPath() {
+        String[] pathComponents = {"a", "b"};
+        Assert.assertEquals(
+                new File(new File("a"), "b"),
+                Util.joinPath(pathComponents)
         );
     }
 }

@@ -1130,6 +1130,74 @@ public class Service extends HttpService {
         this.token = value;
     }
 
+    /**
+     * Returns true is this Splunk instance's version is no later than
+     * the version specified in {@code version}.
+     *
+     * So when called on a Splunk 4.3.2 instance:
+     *   * {@code versionIsAtLatest("4.3.2")} is {@code true}.
+     *   * {@code versionIsAtLatest("4.1.0")} is {@code false}.
+     *   * {@code versionIsAtLatest("5.0.0")} is {@code true}.
+     *
+     * @param version The version to compare this Splunk instance's version against.
+     * @return {@code true} if this Splunk instance's version is equal or
+     *         less than {@code version}; {@code false} otherwise.
+     */
+    public boolean versionIsAtLatest(String version) {
+        return versionCompare(version) >= 0;
+    }
+
+    /**
+     * Returns true is this Splunk instance's version is no earlier than
+     * the version specified in {@code version}.
+     *
+     * So when called on a Splunk 4.3.2 instance:
+     *   * {@code versionIsAtEarliest("4.3.2")} is {@code true}.
+     *   * {@code versionIsAtEarliest("4.1.0")} is {@code true}.
+     *   * {@code versionIsAtEarliest("5.0.0")} is {@code false}.
+     *
+     * @param version The version to compare this Splunk instance's version against.
+     * @return {@code true} if this Splunk instance's version is equal or
+     *         greater than {@code version}; {@code false} otherwise.
+     */
+    public boolean versionIsAtEarliest(String version) {
+        return versionCompare(version) <= 0;
+    }
+
+    /**
+     * Returns true is this Splunk instance's version is earlier than
+     * the version specified in {@code version}.
+     *
+     * So when called on a Splunk 4.3.2 instance:
+     *   * {@code versionIsEarlierThan("4.3.2")} is {@code false}.
+     *   * {@code versionIsEarlierThan("4.1.0")} is {@code false}.
+     *   * {@code versionIsEarlierThan("5.0.0")} is {@code true}.
+     *
+     * @param version The version to compare this Splunk instance's version against.
+     * @return {@code true} if this Splunk instance's version is less
+     *         than {@code version}; {@code false} otherwise.
+     */
+    public boolean versionIsEarlierThan(String version) {
+        return versionCompare(version) > 0;
+    }
+
+    /**
+     * Returns true is this Splunk instance's version is later than
+     * the version specified in {@code version}.
+     *
+     * So when called on a Splunk 4.3.2 instance:
+     *   * {@code versionIsEarlierThan("4.3.2")} is {@code false}.
+     *   * {@code versionIsLaterThan("4.1.0")} is {@code true}.
+     *   * {@code versionIsLaterThan("5.0.0")} is {@code false}.
+     *
+     * @param version The version to compare this Splunk instance's version against.
+     * @return {@code true} if this Splunk instance's version is greater
+     *         than {@code version}; {@code false} otherwise.
+     */
+    public boolean versionIsLaterThan(String version) {
+        return versionCompare(version) < 0;
+    }
+
     // returns -1, 0, 1 comparing current Splunk version string to right version
     // string for less than, equal to or greater than
     public int versionCompare(String right) {

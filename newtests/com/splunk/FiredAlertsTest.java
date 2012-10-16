@@ -57,7 +57,7 @@ public class FiredAlertsTest extends SDKTestCase {
 
     @After @Override public void tearDown() throws Exception {
         super.tearDown();
-        if (service.versionCompare("5") < 0) {
+        if (service.versionIsEarlierThan("5.0.0")) {
             index.remove();
         }
         for (Job job : savedSearch.history()) {
