@@ -20,22 +20,106 @@ package com.splunk;
  * The {@code ServiceArgs} class contains a collection of arguments that are 
  * used to initialize a Splunk {@code Service} instance.
  */
-public class ServiceArgs {
-    /** The application context of the service. */
+public class ServiceArgs extends Args {
+    /**
+     * The application context of the service.
+     * 
+     * @deprecated
+     *      Use {@link #setApp(String)} instead.
+     */
     public String app = null;
 
-    /** The host name of the service. */
+    /**
+     * The host name of the service.
+     * 
+     * @deprecated
+     *      Use {@link #setHost(String)} instead.
+     */
     public String host = null;
 
-    /** The owner context of the service. */
+    /**
+     * The owner context of the service.
+     * 
+     * @deprecated
+     *      Use {@link #setOwner(String)} instead.
+     */
     public String owner = null;
 
-    /** The port number of the service. */
+    /**
+     * The port number of the service.
+     * 
+     * @deprecated
+     *      Use {@link #setPort(int)} instead.
+     */
     public Integer port = null;
 
-    /** The scheme to use for accessing the service. */
+    /**
+     * The scheme to use for accessing the service.
+     * 
+     * @deprecated
+     *      Use {@link #setScheme(String)} instead.
+     */
     public String scheme = null;
 
-    /** A Splunk authentication token to use for the session. */
+    /**
+     * A Splunk authentication token to use for the session.
+     * 
+     * @deprecated
+     *      Use {@link #setToken(String)} instead.
+     */
     public String token = null;
+    
+    /**
+     * @param app
+     *      The application context of the service.
+     */
+    public void setApp(String app) {
+        this.app = app; // for backward compatibility
+        this.put("app", app);
+    }
+    
+    /**
+     * @param host
+     *      The host name of the service.
+     */
+    public void setHost(String host) {
+        this.host = host; // for backward compatibility
+        this.put("host", host);
+    }
+    
+    /**
+     * @param owner
+     *      The owner context of the service.
+     */
+    public void setOwner(String owner) {
+        this.owner = owner; // for backward compatibility
+        this.put("owner", owner);
+    }
+    
+    /**
+     * @param port
+     *      The port number of the service.
+     */
+    public void setPort(int port) {
+        this.port = port; // for backward compatibility
+        this.put("port", port);
+    }
+    
+    /**
+     * @param scheme
+     *      The scheme to use for accessing the service.
+     */
+    public void setScheme(String scheme) {
+        this.scheme = scheme; // for backward compatibility
+        this.put("scheme", scheme);
+    }
+    
+    /**
+     * @param token
+     *      A Splunk authentication token to use for the session.
+     */
+    public void setToken(String token) {
+        this.token = token; // for backward compatibility
+        this.put("token", token);
+    }
 }

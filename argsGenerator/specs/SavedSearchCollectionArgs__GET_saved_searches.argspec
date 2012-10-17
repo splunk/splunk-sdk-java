@@ -1,0 +1,14 @@
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+earliest_time
+EarliestTime
+String
+For scheduled searches display all the scheduled times starting from this time (not just the next run time)
+===
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+latest_time
+LatestTime
+String
+For scheduled searches display all the scheduled times until this time (not just the next run time)
+===

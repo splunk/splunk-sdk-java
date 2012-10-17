@@ -109,14 +109,23 @@ public class Service extends HttpService {
      *
      * @param args The {@code ServiceArgs} to initialize the service.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    @SuppressWarnings("deprecation")
     public Service(ServiceArgs args) {
         super();
-        this.app = args.app;
-        this.host = args.host == null ? DEFAULT_HOST : args.host;
-        this.owner = args.owner;
-        this.port = args.port == null ? DEFAULT_PORT : args.port;
-        this.scheme = args.scheme == null ? DEFAULT_SCHEME : args.scheme;
-        this.token = args.token;
+        // NOTE: Must read the deprecated fields for backward compatibility.
+        //       (Consider the case where the fields are initialized directly,
+        //        rather than using the new setters.)
+        // NOTE: Must also read the underlying dictionary for forward compatibility.
+        //       (Consider the case where the user calls Map.put() directly,
+        //        rather than using the new setters.)
+        this.app = Args.<String>get(args,    "app",    args.app != null    ? args.app    : null);
+        this.host = Args.<String>get(args,   "host",   args.host != null   ? args.host   : DEFAULT_HOST);
+        this.owner = Args.<String>get(args,  "owner",  args.owner != null  ? args.owner  : null);
+        this.port = Args.<Integer>get(args,  "port",   args.port != null   ? args.port   : DEFAULT_PORT);
+        this.scheme = Args.<String>get(args, "scheme", args.scheme != null ? args.scheme : DEFAULT_SCHEME);
+        this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
     }
 
     /**
@@ -175,6 +184,20 @@ public class Service extends HttpService {
         args = Args.create(args).add("search", search);
         ResponseMessage response = get("search/jobs/export", args);
         return response.getContent();
+    }
+    
+    /**
+     * Runs a search with arguments using the {@code search/jobs/export}
+     * endpoint, which streams results back in an input stream.
+     *
+     * @param search The search query to run.
+     * @param args Additional search arguments.
+     * @return The {@code InputStream} object that contains the search results.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public InputStream export(String search, JobExportArgs args) {
+        return export(search, (Map<String, Object>) args);
     }
 
     /**
@@ -465,9 +488,21 @@ public class Service extends HttpService {
      * pagination.
      * @return A collection of indexes.
      */
-    public EntityCollection<Index> getIndexes(Args args) {
-        return new EntityCollection<Index>(
-            this, "data/indexes", Index.class, args);
+    public IndexCollection getIndexes(Args args) {
+        return new IndexCollection(this, args);
+    }
+    
+    /**
+     * Returns a collection of Splunk indexes.
+     *
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of indexes.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public IndexCollection getIndexes(IndexCollectionArgs args) {
+        return new IndexCollection(this, args);
     }
 
     /**
@@ -516,6 +551,19 @@ public class Service extends HttpService {
      * @return A collection of search jobs.
      */
     public JobCollection getJobs(Args args) {
+        return new JobCollection(this, args);
+    }
+    
+    /**
+     * Returns a collection of current search jobs.
+     *
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of search jobs.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public JobCollection getJobs(CollectionArgs args) {
         return new JobCollection(this, args);
     }
 
@@ -868,6 +916,19 @@ public class Service extends HttpService {
      * @return A collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches(Args args) {
+        return new SavedSearchCollection(this, args);
+    }
+
+    /**
+     * Returns a collection of saved searches.
+     *
+     * @param args Optional arguments, such as "count" and "offset" for 
+     * pagination.
+     * @return A collection of saved searches.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public SavedSearchCollection getSavedSearches(SavedSearchCollectionArgs args) {
         return new SavedSearchCollection(this, args);
     }
 
