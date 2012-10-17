@@ -44,6 +44,8 @@ public class ConnectionArgs extends HashMap<String, Object> {
             } catch (Exception e) {
                 throw new IllegalArgumentException("Port must be an integer, found: " + value);
             }
+        } else if (key.equals("version")) {
+            // Ignore this key. It is used by the JavaScript SDK.
         } else {
             throw new UnknownSplunkrcKeyException(value);
         }
