@@ -42,12 +42,12 @@ public class ApplicationTest extends SDKTestCase {
         }
 
         applicationName = createTemporaryName();
-        EntityCollection<Application> applications = service.getApplications();
-        application = applications.create(applicationName);
+        application = service.getApplications().create(applicationName);
     }
 
     @After @Override public void tearDown() throws Exception {
         super.tearDown();
+        
         final EntityCollection<Application> apps = service.getApplications();
         for (Application app : apps.values()) {
             final String appName = app.getName();
@@ -61,6 +61,7 @@ public class ApplicationTest extends SDKTestCase {
                 });
             }
         }
+        
         // Clear the restart message that deleting apps causes in splunkd.
         // It's fine to keep going despite it.
         clearRestartMessage();
@@ -68,36 +69,29 @@ public class ApplicationTest extends SDKTestCase {
 
     @Test public void testForEmptySetup() {
         // Newly created applications have no setup.
-        ApplicationSetup applicationSetup = application.setup();
-        assertNull(applicationSetup.getSetupXml());
+        assertNull(application.setup().getSetupXml());
     }
 
-    @Test public void testForSetupPresent() {
+    @Test public void testForSetupPresent() throws Exception {
         if (!hasApplicationCollection()) {
-           return;
+            return;
         }
-        try {
-            installApplicationFromCollection("has_setup_xml");
-        } catch (Exception e) {
-            fail(e.toString());
-        }
+        
+        installApplicationFromCollection("has_setup_xml");
         assertTrue(service.getApplications().containsKey("has_setup_xml"));
         Application applicationWithSetupXml = service.getApplications().get("has_setup_xml");
+        
         ApplicationSetup applicationSetup = applicationWithSetupXml.setup();
         assertEquals("has_setup_xml", applicationSetup.getName());
-        String xml = applicationSetup.getSetupXml();
-        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-        Document parsedXml = null;
-        try {
-            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-            InputStream xmlStream = new ByteArrayInputStream(xml.getBytes());
-            parsedXml = docBuilder.parse(xmlStream);
-        } catch (Exception e) {
-            fail(e.toString());
-        }
-        parsedXml.getDocumentElement().normalize();
-        assertEquals(parsedXml.getDocumentElement().getNodeName(), "SetupInfo");
-        NodeList blocks = parsedXml.getDocumentElement().getElementsByTagName("block");
+        
+        String setupXml = applicationSetup.getSetupXml();
+        Document parsedSetupXml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
+            new ByteArrayInputStream(setupXml.getBytes()));
+        parsedSetupXml.getDocumentElement().normalize();
+        
+        assertEquals(parsedSetupXml.getDocumentElement().getNodeName(), "SetupInfo");
+        
+        NodeList blocks = parsedSetupXml.getDocumentElement().getElementsByTagName("block");
         assertEquals(1, blocks.getLength());
         Node block = blocks.item(0);
         assertEquals("block", block.getNodeName());
@@ -107,9 +101,7 @@ public class ApplicationTest extends SDKTestCase {
     public void testArchive() {
         ApplicationArchive archive = application.archive();
         assertEquals(applicationName, archive.getAppName());
-        String path = archive.getFilePath();
-        File archiveFile = new File(path);
-        assertTrue(archiveFile.exists());
+        assertTrue(new File(archive.getFilePath()).exists());
     }
 
     @Test
