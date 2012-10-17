@@ -21,8 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class EventTypesTest extends SDKTestCase {
-    String eventTypeName;
-    EventType eventType;
+    protected String eventTypeName;
+    protected EventType eventType;
 
     @Before @Override public void setUp() throws Exception {
         super.setUp();

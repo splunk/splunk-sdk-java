@@ -21,10 +21,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class FiredAlertsTest extends SDKTestCase {
-    String indexName;
-    Index index;
-    String savedSearchName;
-    SavedSearch savedSearch;
+    protected String indexName;
+    protected Index index;
+    protected String savedSearchName;
+    protected SavedSearch savedSearch;
 
     @Before public void setUp() throws Exception {
         super.setUp();

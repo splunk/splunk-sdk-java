@@ -21,8 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ConfigurationTest extends SDKTestCase {
-    String applicationName;
-    Application application;
+    protected String applicationName;
+    protected Application application;
 
     @Before @Override public void setUp() throws Exception {
         super.setUp();

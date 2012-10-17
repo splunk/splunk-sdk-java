@@ -182,9 +182,9 @@ public abstract class SDKTestCase extends TestCase {
             throw new MissingAppCollectionException();
         }
 
-        String applicationPath = (String)connectionArgs.get("appcollection") +
-                                 "/build/" + applicationName + ".tar";
-        File applicationFile = new File(applicationPath);
+        String[] components = {(String)connectionArgs.get("appcollection"), "build",
+                               applicationName + ".tar"};
+        File applicationFile = Util.joinPath(components);
         if (!applicationFile.exists()) {
             throw new FileNotFoundException(applicationFile.getAbsolutePath());
         }
@@ -202,12 +202,6 @@ public abstract class SDKTestCase extends TestCase {
         catch (InterruptedException e) {}
     }
 
-    public void splunkRestart() {
-        // If not specified, use 3 minutes (in milliseconds) as default
-        // restart timeout.
-        splunkRestart(3*60*1000);
-    }
-
     public boolean restartRequired() {
         MessageCollection messages = service.getMessages();
         boolean restartRequired = false;
@@ -217,6 +211,12 @@ public abstract class SDKTestCase extends TestCase {
             }
         }
         return restartRequired;
+    }
+
+    public void splunkRestart() {
+        // If not specified, use 3 minutes (in milliseconds) as default
+        // restart timeout.
+        splunkRestart(3*60*1000);
     }
 
     public void splunkRestart(int millisecondTimeout) {

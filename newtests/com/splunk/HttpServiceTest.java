@@ -26,7 +26,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class HttpServiceTest extends SDKTestCase {
-    HttpService httpService;
+    protected HttpService httpService;
+
     @Before @Override public void setUp() throws Exception {
         super.setUp();
         httpService = new HttpService(
