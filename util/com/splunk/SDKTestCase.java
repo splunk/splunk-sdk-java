@@ -45,6 +45,7 @@ public abstract class SDKTestCase extends TestCase {
     protected static ConnectionArgs connectionArgs;
     protected static Service service;
     protected List<String> installedApps;
+    protected boolean alreadyRequiredRestart = false;
 
     /**
      * @return The path to .splunkrc in the user's home directory.
@@ -99,15 +100,18 @@ public abstract class SDKTestCase extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         connect();
+        alreadyRequiredRestart = restartRequired();
         installedApps = new ArrayList<String>();
     }
 
-    @After
-    @Override
+    @After @Override
     public void tearDown() throws Exception {
         super.tearDown();
         for (String applicationName : installedApps) {
             service.getApplications().remove(applicationName);
+        }
+        if (restartRequired() && !alreadyRequiredRestart) {
+            fail("Test left Splunk in a state that required restart.");
         }
     }
 
@@ -153,6 +157,15 @@ public abstract class SDKTestCase extends TestCase {
         return false;
     }
 
+    public void clearRestartMessage() {
+        MessageCollection messages = service.getMessages();
+        for (Message message : messages.values()) {
+            if (message.containsKey("restart_required")) {
+                message.remove();
+            }
+        }
+    }
+
     public boolean hasApplicationCollection() {
         if (!connectionArgs.containsKey("appcollection") ||
                 !new File((String)connectionArgs.get("appcollection")).isDirectory()) {
@@ -195,7 +208,7 @@ public abstract class SDKTestCase extends TestCase {
         splunkRestart(3*60*1000);
     }
 
-    public void splunkRestart(int millisecondTimeout) {
+    public boolean restartRequired() {
         MessageCollection messages = service.getMessages();
         boolean restartRequired = false;
         for (Message message : messages.values()) {
@@ -203,7 +216,11 @@ public abstract class SDKTestCase extends TestCase {
                 restartRequired = true;
             }
         }
-        if (!restartRequired) {
+        return restartRequired;
+    }
+
+    public void splunkRestart(int millisecondTimeout) {
+        if (!restartRequired()) {
             fail("Asked to restart Splunk when no restart was required.");
         }
         ResponseMessage response = service.restart();

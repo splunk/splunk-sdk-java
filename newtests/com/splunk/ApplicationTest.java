@@ -32,9 +32,7 @@ public class ApplicationTest extends SDKTestCase {
     String applicationName;
     Application application;
 
-    @Before
-    @Override
-    public void setUp() throws Exception {
+    @Before @Override public void setUp() throws Exception {
         super.setUp();
 
         for (Application app : service.getApplications().values()) {
@@ -48,26 +46,33 @@ public class ApplicationTest extends SDKTestCase {
         application = applications.create(applicationName);
     }
 
-    @After
-    @Override
-    public void tearDown() throws Exception {
+    @After @Override public void tearDown() throws Exception {
         super.tearDown();
-        for (Application app : service.getApplications().values()) {
-            if (app.getName().startsWith("delete-me")) {
+        final EntityCollection<Application> apps = service.getApplications();
+        for (Application app : apps.values()) {
+            final String appName = app.getName();
+            if (appName.startsWith("delete-me")) {
                 app.remove();
+                assertEventuallyTrue(new EventuallyTrueBehavior() {
+                    @Override public boolean predicate() {
+                        apps.refresh();
+                        return !apps.containsKey(appName);
+                    }
+                });
             }
         }
+        // Clear the restart message that deleting apps causes in splunkd.
+        // It's fine to keep going despite it.
+        clearRestartMessage();
     }
 
-    @Test
-    public void testForEmptySetup() {
+    @Test public void testForEmptySetup() {
         // Newly created applications have no setup.
         ApplicationSetup applicationSetup = application.setup();
         assertNull(applicationSetup.getSetupXml());
     }
 
-    @Test
-    public void testForSetupPresent() {
+    @Test public void testForSetupPresent() {
         if (!hasApplicationCollection()) {
            return;
         }

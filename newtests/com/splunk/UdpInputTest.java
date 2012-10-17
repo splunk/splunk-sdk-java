@@ -20,8 +20,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class UdpInputTest extends SplunkTestCase {
-    protected Service service;
+public class UdpInputTest extends SDKTestCase {
     protected int udpPort;
     protected UdpInput udpInput = null;
     protected String indexName;
@@ -29,45 +28,50 @@ public class UdpInputTest extends SplunkTestCase {
 
     public int findNextUnusedUdpPort(int startingPort) {
         int port = startingPort;
-        while (this.service.getInputs().containsKey(String.valueOf(port))) {
+        InputCollection inputs = service.getInputs();
+        while (inputs.containsKey(String.valueOf(port))) {
             port += 1;
         }
         return port;
     }
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() throws Exception {
         super.setUp();
-        this.service = connect();
 
-        this.indexName = temporaryName();
-        this.index = service.getIndexes().create(indexName);
+        indexName = createTemporaryName();
+        index = service.getIndexes().create(indexName);
 
-        this.udpPort = findNextUnusedUdpPort(10000);
+        udpPort = findNextUnusedUdpPort(10000);
         Args args = new Args();
         args.add("index", indexName);
-        this.udpInput = service.getInputs().create(String.valueOf(this.udpPort), InputKind.Udp, args);
+        udpInput = service.getInputs().create(String.valueOf(udpPort), InputKind.Udp, args);
     }
 
-    @After
-    public void tearDown() {
-        if (this.index != null && this.service.versionCompare("5.0") >= 0) {
-            this.index.remove();
+    @After public void tearDown() throws Exception {
+        super.tearDown();
+        if (index != null && service.versionCompare("5.0") >= 0) {
+            index.remove();
         }
-        if (this.udpInput != null) {
-            this.udpInput.remove();
+        if (udpInput != null) {
+            udpInput.remove();
         }
     }
 
-    @Test
-    public void testSubmit() throws Exception {
-        final int nEvents = this.index.getTotalEventCount();
-        final Index index = this.index;
+    @Test public void testSubmit() {
+        final int nEvents = index.getTotalEventCount();
 
-        this.udpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
+        try {
+            udpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
+        } catch (Exception e) {
+            fail(e.toString());
+        }
 
-        SplunkTestCase.assertEventuallyTrue(new EventuallyTrueBehavior() {
-            { tries = 50; }
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            {
+                tries = 50;
+            }
+
+            @Override
             public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == nEvents + 1;

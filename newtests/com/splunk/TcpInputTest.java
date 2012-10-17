@@ -25,62 +25,58 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 
-public class TcpInputTest extends SplunkTestCase {
-    protected Service service;
-    protected int tcpPort;
+public class TcpInputTest extends SDKTestCase {
+    protected int tcpPort = -1;
     protected TcpInput tcpInput = null;
     protected String indexName;
     protected Index index = null;
 
     public int findNextUnusedTcpPort(int startingPort) {
         int port = startingPort;
-        while (this.service.getInputs().containsKey(String.valueOf(port))) {
+        InputCollection inputs = service.getInputs();
+        while (inputs.containsKey(String.valueOf(port))) {
             port += 1;
         }
         return port;
     }
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() throws Exception {
         super.setUp();
-        this.service = connect();
+        indexName = createTemporaryName();
+        index = service.getIndexes().create(indexName);
 
-        this.indexName = temporaryName();
-        this.index = service.getIndexes().create(indexName);
-
-        this.tcpPort = findNextUnusedTcpPort(10000);
+        tcpPort = findNextUnusedTcpPort(10000);
         Args args = new Args();
         args.add("index", indexName);
-        this.tcpInput = service.getInputs().create(String.valueOf(this.tcpPort), InputKind.Tcp, args);
+        tcpInput = service.getInputs().create(String.valueOf(tcpPort), InputKind.Tcp, args);
     }
 
-    @After
-    public void tearDown() {
-        if (this.index != null && this.service.versionCompare("5.0") >= 0) {
-            this.index.remove();
+    @After public void tearDown() throws Exception {
+        super.tearDown();
+        if (index != null && service.versionCompare("5.0") >= 0) {
+            index.remove();
         }
-        if (this.tcpInput != null) {
-            this.tcpInput.remove();
+        if (tcpPort != -1) {
+            service.getInputs().get(String.valueOf(tcpPort)).remove();
         }
     }
 
     @Test
     public void testAttachAndWrite() {
         final int nEvents = index.getTotalEventCount();
-        final Index index = this.index;
 
         try {
-            Socket socket = this.tcpInput.attach();
+            Socket socket = tcpInput.attach();
             PrintStream output = new PrintStream(socket.getOutputStream());
             output.print(createTimestamp() + " Boris the mad baboon!\r\n");
             output.flush();
             socket.close();
         } catch (IOException e) {
-            SplunkTestCase.fail("Got an IO exception in attaching.");
+            fail("Got an IO exception in attaching.");
         }
 
-
-        SplunkTestCase.assertEventuallyTrue(new EventuallyTrueBehavior() {
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
             public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == nEvents + 1;
@@ -91,15 +87,15 @@ public class TcpInputTest extends SplunkTestCase {
     @Test
     public void testSubmit() {
         final int nEvents = index.getTotalEventCount();
-        final Index index = this.index;
 
         try {
             this.tcpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
         } catch (IOException e) {
-            SplunkTestCase.fail("Got an IO exception in submit.");
+            fail("Got an IO exception in submit.");
         }
 
-        SplunkTestCase.assertEventuallyTrue(new EventuallyTrueBehavior() {
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
             public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == nEvents + 1;
@@ -120,7 +116,14 @@ public class TcpInputTest extends SplunkTestCase {
                 }
             });
         } catch (IOException e) {
-            SplunkTestCase.fail("IOException in attachWith.");
+            fail("IOException in attachWith.");
         }
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override public boolean predicate() {
+                index.refresh();
+                return index.getTotalEventCount() == nEvents + 1;
+            }
+        });
     }
 }
