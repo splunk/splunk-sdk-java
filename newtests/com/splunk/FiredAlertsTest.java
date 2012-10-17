@@ -28,8 +28,10 @@ public class FiredAlertsTest extends SDKTestCase {
 
     @Before public void setUp() throws Exception {
         super.setUp();
+        
         indexName = createTemporaryName();
         assertFalse(service.getIndexes().containsKey(indexName));
+        
         index = service.getIndexes().create(indexName);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             { pauseTime = 500; tries = 50; }
@@ -40,6 +42,7 @@ public class FiredAlertsTest extends SDKTestCase {
         });
 
         savedSearchName = createTemporaryName();
+        
         String searchString = "search index=" + indexName;
         Args args = new Args();
         args.put("alert_type", "always");
@@ -57,9 +60,11 @@ public class FiredAlertsTest extends SDKTestCase {
 
     @After @Override public void tearDown() throws Exception {
         super.tearDown();
+        
         if (service.versionIsEarlierThan("5.0.0")) {
             index.remove();
         }
+        
         for (Job job : savedSearch.history()) {
             job.cancel();
         }
@@ -85,6 +90,7 @@ public class FiredAlertsTest extends SDKTestCase {
         try {
             savedSearch.dispatch(); // Force the search to run now.
         } catch (InterruptedException e) {}
+        
         final EntityCollection<FiredAlertGroup> firedAlertGroups =
                 service.getFiredAlertGroups();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -94,6 +100,7 @@ public class FiredAlertsTest extends SDKTestCase {
                 return firedAlertGroups.containsKey(savedSearchName);
             }
         });
+        
         FiredAlertGroup firedAlertGroup =
                 service.getFiredAlertGroups().get(savedSearchName);
         assertNotNull(firedAlertGroup);
