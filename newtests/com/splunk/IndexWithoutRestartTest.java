@@ -24,65 +24,79 @@ import java.io.*;
 import java.net.Socket;
 
 public class IndexWithoutRestartTest extends SDKTestCase {
-    protected String indexName;
-    protected Index index;
+    private String indexName;
+    private Index index;
 
-    @Before @Override public void setUp() throws Exception {
+    @Before
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
+        
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
-    }
-
-    @After @Override public void tearDown() throws Exception {
-        super.tearDown();
-        if (service.versionIsAtEarliest("5.0.0") &&
-                service.getIndexes().containsKey(indexName)) {
-            index.remove();
-        }
-        for (Index localIndex : service.getIndexes().values()) {
-            if (localIndex.getName().startsWith("delete-me")) {
-                localIndex.remove();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return service.getIndexes().containsKey(indexName);
             }
-        }
+        });
     }
 
-    @Test public void testDeletion() {
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        if (service.versionIsAtEarliest("5.0.0")) {
+            if (service.getIndexes().containsKey(indexName)) {
+                index.remove();
+            }
+        } else {
+            // Can't delete indexes via the REST API. Just let them build up.
+        }
+        
+        super.tearDown();
+    }
+
+    @Test
+    public void testDeletion() {
         if (service.versionIsEarlierThan("5.0.0")) {
+            // Can't delete indexes via the REST API.
             return;
         }
-        final IndexCollection indexes = service.getIndexes();
-        final String indexName = this.indexName;
-        assertTrue(indexes.containsKey(indexName));
+        
+        assertTrue(service.getIndexes().containsKey(indexName));
+        
         index.remove();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
-                indexes.refresh();
-                return !indexes.containsKey(indexName);
+            @Override
+            public boolean predicate() {
+                return !service.getIndexes().containsKey(indexName);
             }
         });
     }
 
-    @Test public void testAttachWith() {
-        final int nEvents = index.getTotalEventCount();
-        try {
-            index.attachWith(new ReceiverBehavior() {
-                public void run(OutputStream stream) throws IOException {
-                    String s = createTimestamp() + " Boris the mad baboon!\r\n";
-                    stream.write(s.getBytes("UTF8"));
-                }
-            });
-        } catch (IOException e) {
-            fail(e.toString());
-        }
+    @Test
+    public void testAttachWith() throws IOException {
+        final int originalEventCount = index.getTotalEventCount();
+        
+        index.attachWith(new ReceiverBehavior() {
+            public void run(OutputStream stream) throws IOException {
+                String s = createTimestamp() + " Boris the mad baboon!\r\n";
+                stream.write(s.getBytes("UTF8"));
+            }
+        });
+        
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
-                return index.getTotalEventCount() == nEvents + 1;
+                return index.getTotalEventCount() == originalEventCount + 1;
             }
         });
     }
 
-    @Test public void testIndexGettersThrowNoErrors() {
+    @Test
+    @SuppressWarnings("deprecation")
+    public void testIndexGettersThrowNoErrors() {
         index.getAssureUTF8();
         index.getBlockSignatureDatabase();
         index.getBlockSignSize();
@@ -133,6 +147,7 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         index.getTotalEventCount();
         index.isDisabled();
         index.isInternal();
+        
         // Fields only available from 5.0 on.
         if (service.versionIsAtEarliest("5.0.0")) {
             index.getBucketRebuildMemoryHint();
@@ -141,7 +156,8 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         }
     }
 
-    @Test public void testSetters() {
+    @Test
+    public void testSetters() {
         int newBlockSignSize = index.getBlockSignSize() + 1;
         index.setBlockSignSize(newBlockSignSize);
         int newFrozenTimePeriodInSecs = index.getFrozenTimePeriodInSecs()+1;
@@ -180,6 +196,7 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         index.setSyncMeta(newSyncMeta);
         int newThrottleCheckPeriod = index.getThrottleCheckPeriod()+1;
         index.setThrottleCheckPeriod(newThrottleCheckPeriod);
+        
         boolean newEnableOnlineBucketRepair = false;
         String newMaxBloomBackfillBucketAge = null;
         if (service.versionIsAtEarliest("4.3")) {
@@ -188,6 +205,7 @@ public class IndexWithoutRestartTest extends SDKTestCase {
             newMaxBloomBackfillBucketAge = "20d";
             index.setMaxBloomBackfillBucketAge(newMaxBloomBackfillBucketAge);
         }
+        
         String newBucketRebuildMemoryHint = null;
         int newMaxTimeUnreplicatedNoAcks = -1;
         int newMaxTimeUnreplicatedWithAcks = -1;
@@ -246,9 +264,14 @@ public class IndexWithoutRestartTest extends SDKTestCase {
                     index.getMaxTimeUnreplicatedWithAcks()
             );
         }
+        
+        // TODO: Figure out which of the above setters is forcing
+        //       Splunk to restart.
+        clearRestartMessage();
     }
 
-    @Test public void testEnable() {
+    @Test
+    public void testEnable() {
         // Force the index to be disabled
         if (!index.isDisabled()) {
             index.disable();
@@ -258,7 +281,9 @@ public class IndexWithoutRestartTest extends SDKTestCase {
                     return index.isDisabled();
                 }
             });
+            clearRestartMessage();
         }
+        
         index.enable();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override public boolean predicate() {
@@ -268,47 +293,103 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         });
     }
 
-    @Test public void testSubmit() {
-        final int eventCount = index.getTotalEventCount();
-        for (int i = 1; i < 6; i++) {
-            final int j = i;
-            index.submit("This is a test of the emergency broadcasting system.");
-            assertEventuallyTrue(new EventuallyTrueBehavior() {
-                @Override public boolean predicate() {
-                    index.refresh();
-                    return index.getTotalEventCount() == eventCount + j;
-                }
-            });
-        }
-    }
-
-    @Test public void testAttach() {
-        final int eventCount = index.getTotalEventCount();
-        try {
-            Socket socket = index.attach();
-            OutputStream ostream = socket.getOutputStream();
-            Writer out = new OutputStreamWriter(ostream, "UTF8");
-            out.write(createTimestamp() + "Hello world!\u0150\r\n");
-            out.write(createTimestamp() + "Goodbye world!\u0150\r\n");
-            out.flush();
-            socket.close();
-        } catch (IOException e) {
-            fail(e.toString());
-        }
+    @Test
+    public void testSubmitOne() {
+        assertTrue(getResultCountOfIndex() == 0);
+        assertTrue(index.getTotalEventCount() == 0);
+        
+        index.submit(createTimestamp() + " This is a test of the emergency broadcasting system.");
+        
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
-                return index.getTotalEventCount() == eventCount+ 2;
+                return index.getTotalEventCount() == 1;
+            }
+        });
+    }
+    
+    @Test
+    public void testSubmitOneInEachCall() {
+        assertTrue(getResultCountOfIndex() == 0);
+        assertTrue(index.getTotalEventCount() == 0);
+        
+        index.submit(createTimestamp() + " Hello world!\u0150");
+        index.submit(createTimestamp() + " Goodbye world!\u0150");
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return getResultCountOfIndex() == 2;
+            }
+        });
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                // Yeah 1, not 2. Weird isn't it?
+                return index.getTotalEventCount() == 1;
+            }
+        });
+    }
+    
+    @Test
+    public void testSubmitMultipleInOneCall() {
+        assertTrue(getResultCountOfIndex() == 0);
+        assertTrue(index.getTotalEventCount() == 0);
+        
+        index.submit(
+                createTimestamp() + " Hello world!\u0150" + "\r\n" +
+                createTimestamp() + " Goodbye world!\u0150");
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return getResultCountOfIndex() == 2;
+            }
+        });
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                // Yeah 1, not 2. Weird isn't it?
+                return index.getTotalEventCount() == 1;
             }
         });
     }
 
-    @Test public void testUpload() {
-        try {
-            installApplicationFromCollection("file_to_upload");
-        } catch (Exception e) {
-            fail(e.toString());
-        }
+    @Test
+    public void testAttach() throws IOException {
+        assertTrue(getResultCountOfIndex() == 0);
+        assertTrue(index.getTotalEventCount() == 0);
+        
+        Socket socket = index.attach();
+        OutputStream ostream = socket.getOutputStream();
+        Writer out = new OutputStreamWriter(ostream, "UTF8");
+        out.write(createTimestamp() + " Hello world!\u0150\r\n");
+        out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
+        out.flush();
+        socket.close();
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return getResultCountOfIndex() == 2;
+            }
+        });
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                // Yeah 1, not 2. Weird isn't it?
+                return index.getTotalEventCount() == 1;
+            }
+        });
+    }
+
+    @Test
+    public void testUpload() throws Exception {
+        installApplicationFromCollection("file_to_upload");
 
         final String splunkHome = service.getSettings().getSplunkHome();
         String[] pathComponents = {splunkHome, "etc", "apps", "file_to_upload", "log.txt"};
@@ -318,33 +399,56 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         final int eventCount = index.getTotalEventCount();
         index.upload(pathToLog.getAbsolutePath());
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == eventCount + 4;
             }
         });
     }
 
-    @Test public void testSubmitAndClean() {
-        index.refresh();
-        final int originalEventCount = index.getTotalEventCount();
+    @Test
+    public void testSubmitAndClean() {
+        assertTrue(index.getTotalEventCount() == 0);
+        
         // Make sure the index is not empty.
         index.submit("Hello world");
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
-                return index.getTotalEventCount() == originalEventCount + 1;
+                return index.getTotalEventCount() == 1;
             }
         });
+        
         // Clean the index and make sure it's empty.
-        index.clean(500000);
+        index.clean(60);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == 0;
             }
         });
     }
+    
+    // === Utility ===
 
+    private int getResultCountOfIndex() {
+        InputStream results = service.oneshot("search index=" + indexName);
+        try {
+            ResultsReaderXml resultsReader = new ResultsReaderXml(results);
+            
+            int numEvents = 0;
+            while (resultsReader.getNextEvent() != null) {
+                numEvents++;
+            }
+            return numEvents;
+        } catch (Exception e) {
+            // TODO: Stop catching Exception once ResultsReader's interface
+            //       has been cleaned up to not throw raw Exceptions.
+            throw new RuntimeException(e);
+        }
+    }
 }
 
