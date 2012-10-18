@@ -32,22 +32,30 @@ public class ApplicationTest extends SDKTestCase {
     String applicationName;
     Application application;
 
-    @Before @Override public void setUp() throws Exception {
+    @Before
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
 
-        for (Application app : service.getApplications().values()) {
-            if (app.getName().startsWith("delete-me")) {
-                app.remove();
-            }
-        }
+        removeTestApplications();
 
         applicationName = createTemporaryName();
         application = service.getApplications().create(applicationName);
     }
 
-    @After @Override public void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        removeTestApplications();
         
+        // Clear the restart message that deleting apps causes in splunkd.
+        // It's fine to keep going despite it.
+        clearRestartMessage();
+        
+        super.tearDown();
+    }
+    
+    private void removeTestApplications() {
         final EntityCollection<Application> apps = service.getApplications();
         for (Application app : apps.values()) {
             final String appName = app.getName();
@@ -61,18 +69,16 @@ public class ApplicationTest extends SDKTestCase {
                 });
             }
         }
-        
-        // Clear the restart message that deleting apps causes in splunkd.
-        // It's fine to keep going despite it.
-        clearRestartMessage();
     }
 
-    @Test public void testForEmptySetup() {
+    @Test
+    public void testForEmptySetup() {
         // Newly created applications have no setup.
         assertNull(application.setup().getSetupXml());
     }
 
-    @Test public void testForSetupPresent() throws Exception {
+    @Test
+    public void testForSetupPresent() throws Exception {
         if (!hasApplicationCollection()) {
             return;
         }
@@ -173,7 +179,8 @@ public class ApplicationTest extends SDKTestCase {
         }
     }
 
-    @Test public void testEmptyUpdate() {
+    @Test
+    public void testEmptyUpdate() {
         ApplicationUpdate update = application.getUpdate();
         assertNull(update.getChecksum());
         assertNull(update.getChecksumType());
@@ -185,7 +192,8 @@ public class ApplicationTest extends SDKTestCase {
         assertFalse(update.isImplicitIdRequired());
     }
 
-    @Test public void testListApplications() {
+    @Test
+    public void testListApplications() {
         boolean found = false;
         for (Application app : service.getApplications().values()) {
             if (app.getName().equals(applicationName)) {
@@ -195,7 +203,8 @@ public class ApplicationTest extends SDKTestCase {
         assertTrue(found);
     }
 
-    @Test public void testContains() {
+    @Test
+    public void testContains() {
         assertTrue(service.getApplications().containsKey(applicationName));
     }
 

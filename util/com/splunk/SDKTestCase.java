@@ -99,20 +99,23 @@ public abstract class SDKTestCase extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        
         connect();
         alreadyRequiredRestart = restartRequired();
         installedApps = new ArrayList<String>();
     }
 
-    @After @Override
+    @After
+    @Override
     public void tearDown() throws Exception {
-        super.tearDown();
         for (String applicationName : installedApps) {
             service.getApplications().remove(applicationName);
         }
         if (restartRequired() && !alreadyRequiredRestart) {
             fail("Test left Splunk in a state that required restart.");
         }
+        
+        super.tearDown();
     }
 
     protected static String createTimestamp() {
@@ -195,7 +198,7 @@ public abstract class SDKTestCase extends TestCase {
         installedApps.add(applicationName);
     }
 
-    void sleep(int milliseconds) {
+    protected static void sleep(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
         }
@@ -209,14 +212,12 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     public boolean restartRequired() {
-        MessageCollection messages = service.getMessages();
-        boolean restartRequired = false;
-        for (Message message : messages.values()) {
+        for (Message message : service.getMessages().values()) {
             if (message.containsKey("restart_required")) {
-                restartRequired = true;
+                return true;
             }
         }
-        return restartRequired;
+        return false;
     }
 
     public void splunkRestart(int millisecondTimeout) {
