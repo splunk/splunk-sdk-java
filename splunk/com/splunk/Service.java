@@ -1192,7 +1192,7 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns true is this Splunk instance's version is no later than
+     * Returns true if this Splunk instance's version is no later than
      * the version specified in {@code version}.
      *
      * So when called on a Splunk 4.3.2 instance:
@@ -1205,11 +1205,11 @@ public class Service extends HttpService {
      *         less than {@code version}; {@code false} otherwise.
      */
     public boolean versionIsAtLatest(String version) {
-        return versionCompare(version) >= 0;
+        return versionCompare(version) <= 0;
     }
 
     /**
-     * Returns true is this Splunk instance's version is no earlier than
+     * Returns true if this Splunk instance's version is no earlier than
      * the version specified in {@code version}.
      *
      * So when called on a Splunk 4.3.2 instance:
@@ -1222,11 +1222,11 @@ public class Service extends HttpService {
      *         greater than {@code version}; {@code false} otherwise.
      */
     public boolean versionIsAtEarliest(String version) {
-        return versionCompare(version) <= 0;
+        return versionCompare(version) >= 0;
     }
 
     /**
-     * Returns true is this Splunk instance's version is earlier than
+     * Returns true if this Splunk instance's version is earlier than
      * the version specified in {@code version}.
      *
      * So when called on a Splunk 4.3.2 instance:
@@ -1239,11 +1239,11 @@ public class Service extends HttpService {
      *         than {@code version}; {@code false} otherwise.
      */
     public boolean versionIsEarlierThan(String version) {
-        return versionCompare(version) > 0;
+        return versionCompare(version) < 0;
     }
 
     /**
-     * Returns true is this Splunk instance's version is later than
+     * Returns true if this Splunk instance's version is later than
      * the version specified in {@code version}.
      *
      * So when called on a Splunk 4.3.2 instance:
@@ -1256,37 +1256,35 @@ public class Service extends HttpService {
      *         than {@code version}; {@code false} otherwise.
      */
     public boolean versionIsLaterThan(String version) {
-        return versionCompare(version) < 0;
+        return versionCompare(version) > 0;
     }
 
-    // returns -1, 0, 1 comparing current Splunk version string to right version
-    // string for less than, equal to or greater than
-    public int versionCompare(String right) {
-
-        // short cut for equality.
-        if (this.version.equals(right)) return 0;
-
-        // if not the same, break down into individual digits for comparison.
-        String[] leftDigits = this.version.split(".");
-        String[] rightDigits = right.split(".");
-        int i=0;
-
-        for (; i<leftDigits.length; i++) {
-            // No more right side, left side is bigger
-            if (i == rightDigits.length) return 1;
-            // left side smaller>?
-            if (Integer.parseInt(leftDigits[i]) <
-                Integer.parseInt(leftDigits[1])) {
+    /**
+     * Returns {@code -1} if {@code this.version &lt; otherVersion}.
+     * Returns {@code  0} if {@code this.version &eq; otherVersion}.
+     * Returns {@code  1} if {@code this.version &gt; otherVersion}.
+     * 
+     * @param otherVersion The version to compare this Splunk instance's version against. 
+     * @return {@code -1} if {@code this.version &lt; otherVersion},
+     *         {@code  0} if {@code this.version &eq; otherVersion}, or
+     *         {@code  1} if {@code this.version &gt; otherVersion}.
+     */
+    public int versionCompare(String otherVersion) {
+        String[] components1 = this.version.split("\\.");
+        String[] components2 = otherVersion.split("\\.");
+        int numComponents = Math.max(components1.length, components2.length);
+        
+        for (int i = 0; i < numComponents; i++) {
+            int c1 = (i < components1.length)
+                    ? Integer.parseInt(components1[i], 10) : 0;
+            int c2 = (i < components2.length)
+                    ? Integer.parseInt(components2[i], 10) : 0;
+            if (c1 < c2) {
                 return -1;
-            }
-            // left side bigger?
-            if (Integer.parseInt(leftDigits[i]) >
-                    Integer.parseInt(leftDigits[1])) {
+            } else if (c1 > c2) {
                 return 1;
             }
         }
-        // we got to the end of the left side, and not equal, right side
-        // most be larger by having more digits.
-        return -1;
+        return 0;
     }
 }
