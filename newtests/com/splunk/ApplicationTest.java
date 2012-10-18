@@ -73,7 +73,6 @@ public class ApplicationTest extends SDKTestCase {
     @Test
     public void testForEmptySetup() {
         // Newly created applications have no setup.
-<<<<<<< HEAD
         try {
             assertNull(application.setup().getSetupXml());
         } catch (Exception e) {
