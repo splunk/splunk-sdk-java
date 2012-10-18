@@ -24,9 +24,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 
-/**
- * [Insert documentation here]
- */
 public class ResultsReaderTest extends TestCase {
     public InputStream openResource(String path) {
         try {

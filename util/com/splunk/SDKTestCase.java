@@ -45,7 +45,6 @@ public abstract class SDKTestCase extends TestCase {
     protected static ConnectionArgs connectionArgs;
     protected static Service service;
     protected List<String> installedApps;
-    protected boolean alreadyRequiredRestart = false;
 
     /**
      * @return The path to .splunkrc in the user's home directory.
@@ -100,7 +99,9 @@ public abstract class SDKTestCase extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         connect();
-        alreadyRequiredRestart = restartRequired();
+        if (restartRequired()) {
+            fail("Splunk was in a state requiring restart. Cowardly refusing to start.");
+        }
         installedApps = new ArrayList<String>();
     }
 
@@ -110,7 +111,7 @@ public abstract class SDKTestCase extends TestCase {
         for (String applicationName : installedApps) {
             service.getApplications().remove(applicationName);
         }
-        if (restartRequired() && !alreadyRequiredRestart) {
+        if (restartRequired()) {
             fail("Test left Splunk in a state that required restart.");
         }
     }
@@ -158,11 +159,15 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     public void clearRestartMessage() {
-        MessageCollection messages = service.getMessages();
-        for (Message message : messages.values()) {
-            if (message.containsKey("restart_required")) {
-                message.remove();
-            }
+        final MessageCollection messages = service.getMessages();
+        if (messages.containsKey("restart_required")) {
+            messages.remove("restart_required");
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override public boolean predicate() {
+                    messages.refresh();
+                    return !messages.containsKey("restart_required");
+                }
+            });
         }
     }
 

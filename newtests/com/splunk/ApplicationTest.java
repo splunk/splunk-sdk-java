@@ -47,7 +47,6 @@ public class ApplicationTest extends SDKTestCase {
     }
 
     @After @Override public void tearDown() throws Exception {
-        super.tearDown();
         final EntityCollection<Application> apps = service.getApplications();
         for (Application app : apps.values()) {
             final String appName = app.getName();
@@ -64,12 +63,17 @@ public class ApplicationTest extends SDKTestCase {
         // Clear the restart message that deleting apps causes in splunkd.
         // It's fine to keep going despite it.
         clearRestartMessage();
+        super.tearDown();
     }
 
     @Test public void testForEmptySetup() {
         // Newly created applications have no setup.
-        ApplicationSetup applicationSetup = application.setup();
-        assertNull(applicationSetup.getSetupXml());
+        try {
+            ApplicationSetup applicationSetup = application.setup();
+            assertNull(applicationSetup.getSetupXml());
+        } catch (Exception e) {
+            fail(e.toString());
+        }
     }
 
     @Test public void testForSetupPresent() {
