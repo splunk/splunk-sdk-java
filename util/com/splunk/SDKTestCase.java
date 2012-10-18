@@ -109,13 +109,17 @@ public abstract class SDKTestCase extends TestCase {
     @After
     @Override
     public void tearDown() throws Exception {
-        for (String applicationName : installedApps) {
-            service.getApplications().remove(applicationName);
-        }
         if (restartRequired()) {
             fail("Test left Splunk in a state that required restart.");
         }
-        
+        // We delete the apps we installed for capabilities after checking
+        // for restarts that might be required, since deleting an app
+        // triggers a restart (but one that we can safely ignore).
+        for (String applicationName : installedApps) {
+            service.getApplications().remove(applicationName);
+            clearRestartMessage();
+        }
+
         super.tearDown();
     }
 
@@ -229,6 +233,14 @@ public abstract class SDKTestCase extends TestCase {
         if (!restartRequired()) {
             fail("Asked to restart Splunk when no restart was required.");
         }
+        uncheckedSplunkRestart(millisecondTimeout);
+    }
+
+    public void uncheckedSplunkRestart() {
+        uncheckedSplunkRestart(3*60*1000);
+    }
+
+    public void uncheckedSplunkRestart(int millisecondTimeout) {
         ResponseMessage response = service.restart();
         if (response.getStatus() != 200) {
             fail("Restart command failed: " + response.getContent());

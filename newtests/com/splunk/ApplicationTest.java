@@ -155,7 +155,7 @@ public class ApplicationTest extends SDKTestCase {
         try {
             gettingStarted.setVersion("0.1");
             gettingStarted.update();
-            splunkRestart();
+            uncheckedSplunkRestart();
             gettingStarted = service.getApplications().get("gettingstarted");
             final Application gettingStartedReference = gettingStarted;
             assertEventuallyTrue(new EventuallyTrueBehavior() {

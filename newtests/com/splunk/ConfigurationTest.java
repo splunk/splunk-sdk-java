@@ -54,6 +54,7 @@ public class ConfigurationTest extends SDKTestCase {
     public void tearDown() throws Exception {
         application.remove();
         service.app = null;
+        clearRestartMessage();
         
         super.tearDown();
     }
