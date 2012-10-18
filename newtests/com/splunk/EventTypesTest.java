@@ -21,12 +21,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class EventTypesTest extends SDKTestCase {
-    protected String eventTypeName;
-    protected EventType eventType;
+    private String eventTypeName;
+    private EventType eventType;
 
-    @Before @Override public void setUp() throws Exception {
+    @Before
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
+        
         eventTypeName = createTemporaryName();
+        
         Args args = new Args();
         args.put("search", "index=_internal *");
         args.put("description", "Test event type.");
@@ -35,15 +39,19 @@ public class EventTypesTest extends SDKTestCase {
         eventType = service.getEventTypes().create(eventTypeName, args);
     }
 
-    @After @Override public void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    @Override
+    public void tearDown() throws Exception {
         if (service.getEventTypes().containsKey(eventTypeName)) {
             eventType.remove();
         }
         assertFalse(service.getEventTypes().containsKey(eventTypeName));
+        
+        super.tearDown();
     }
 
-    @Test public void testList() {
+    @Test
+    public void testList() {
         EntityCollection<EventType> eventTypes = service.getEventTypes();
         assertFalse("No event types in system.", eventTypes.size() == 0);
 
@@ -54,7 +62,8 @@ public class EventTypesTest extends SDKTestCase {
         }
     }
 
-    @Test public void testInitializedProperly() {
+    @Test
+    public void testInitializedProperly() {
         assertEquals(
                 "Wrong search in event type",
                 "index=_internal *",
@@ -72,7 +81,8 @@ public class EventTypesTest extends SDKTestCase {
         );
     }
 
-    @Test public void testSetEventTypeProperties() {
+    @Test
+    public void testSetEventTypeProperties() {
         eventType.setDescription("abcd");
         eventType.setDisabled(false);
         eventType.setPriority(3);
@@ -83,14 +93,14 @@ public class EventTypesTest extends SDKTestCase {
         assertEquals(3, eventType.getPriority());
     }
 
-    @Test public void testEnableDisable() {
+    @Test
+    public void testEnableDisable() {
         assertTrue(eventType.isDisabled());
+        
         eventType.enable();
         assertFalse(eventType.isDisabled());
+        
         eventType.disable();
         assertTrue(eventType.isDisabled());
     }
-
-
-
 }

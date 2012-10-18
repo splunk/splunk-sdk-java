@@ -21,15 +21,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class FiredAlertsTest extends SDKTestCase {
-    protected String indexName;
-    protected Index index;
-    protected String savedSearchName;
-    protected SavedSearch savedSearch;
+    private String indexName;
+    private Index index;
+    private String savedSearchName;
+    private SavedSearch savedSearch;
 
-    @Before public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
+        
         indexName = createTemporaryName();
         assertFalse(service.getIndexes().containsKey(indexName));
+        
         index = service.getIndexes().create(indexName);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             { pauseTime = 500; tries = 50; }
@@ -40,6 +43,7 @@ public class FiredAlertsTest extends SDKTestCase {
         });
 
         savedSearchName = createTemporaryName();
+        
         String searchString = "search index=" + indexName;
         Args args = new Args();
         args.put("alert_type", "always");
@@ -55,18 +59,23 @@ public class FiredAlertsTest extends SDKTestCase {
         );
     }
 
-    @After @Override public void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    @Override
+    public void tearDown() throws Exception {
         if (service.versionIsEarlierThan("5.0.0")) {
             index.remove();
         }
+        
         for (Job job : savedSearch.history()) {
             job.cancel();
         }
         savedSearch.remove();
+        
+        super.tearDown();
     }
 
-    @Test public void testAlertsShowUp() {
+    @Test
+    public void testAlertsShowUp() {
         assertFalse(
                 "Found alerts before sending any events.",
                 service.getFiredAlertGroups().containsKey(savedSearchName)
@@ -85,6 +94,7 @@ public class FiredAlertsTest extends SDKTestCase {
         try {
             savedSearch.dispatch(); // Force the search to run now.
         } catch (InterruptedException e) {}
+        
         final EntityCollection<FiredAlertGroup> firedAlertGroups =
                 service.getFiredAlertGroups();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -94,6 +104,7 @@ public class FiredAlertsTest extends SDKTestCase {
                 return firedAlertGroups.containsKey(savedSearchName);
             }
         });
+        
         FiredAlertGroup firedAlertGroup =
                 service.getFiredAlertGroups().get(savedSearchName);
         assertNotNull(firedAlertGroup);

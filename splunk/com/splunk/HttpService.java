@@ -33,6 +33,8 @@ import java.util.Map.Entry;
  * ({@code http} or {@code https}).
  */
 public class HttpService {
+    // For debugging purposes
+    private static final boolean VERBOSE_REQUESTS = false;
 
     private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
 
@@ -312,7 +314,9 @@ public class HttpService {
             throw new RuntimeException(e.getMessage());
         }
 
-        // System.out.format("%s %s => ", method, url.toString());
+        if (VERBOSE_REQUESTS) {
+            System.out.format("%s %s => ", method, url.toString());
+        }
 
         // Execute the request
         try {
@@ -340,7 +344,9 @@ public class HttpService {
 
         ResponseMessage response = new ResponseMessage(status, input);
 
-        // System.out.format("%d\n", status);
+        if (VERBOSE_REQUESTS) {
+            System.out.format("%d\n", status);
+        }
 
         if (status >= 400)
             throw HttpException.create(response);

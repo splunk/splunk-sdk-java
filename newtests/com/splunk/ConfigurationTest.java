@@ -21,33 +21,45 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ConfigurationTest extends SDKTestCase {
-    protected String applicationName;
-    protected Application application;
 
-    @Before @Override public void setUp() throws Exception {
+    private String applicationName;
+    private Application application;
+
+    @Before
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
+        
         // We cannot straightforwardly delete confs,
         // so instead we create a temporary application,
         // reconnect using its namespace, then delete it
         // when we're done.
         applicationName = createTemporaryName();
         service.getApplications().create(applicationName);
+        
+        service.logout();
+        
         ConnectionArgs applicationArgs = new ConnectionArgs();
         applicationArgs.putAll(connectionArgs);
         applicationArgs.put("sharing", "app");
         applicationArgs.put("owner", "nobody");
         applicationArgs.put("app", applicationName);
-        service.logout();
         service = Service.connect(applicationArgs);
+        
         application = service.getApplications().get(applicationName);
     }
 
-    @After @Override public void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    @Override
+    public void tearDown() throws Exception {
         application.remove();
+        service.app = null;
+        
+        super.tearDown();
     }
 
-    @Test public void testStandardFilesExist() {
+    @Test
+    public void testStandardFilesExist() {
         ConfCollection confs = service.getConfs();
         assertTrue(confs.containsKey("eventtypes"));
         assertTrue(confs.containsKey("indexes"));
@@ -63,7 +75,8 @@ public class ConfigurationTest extends SDKTestCase {
         }
     }
 
-    @Test public void testCreateConfWorks() {
+    @Test
+    public void testCreateConfWorks() {
         ConfCollection confs = service.getConfs();
         String confName = createTemporaryName();
 
@@ -73,7 +86,8 @@ public class ConfigurationTest extends SDKTestCase {
         assertEquals("New configuration is not empty.", 0, conf.size());
     }
 
-    @Test public void testCreateAndDeleteStanzaWorks() {
+    @Test
+    public void testCreateAndDeleteStanzaWorks() {
         ConfCollection confs = service.getConfs();
         String confName = createTemporaryName();
         EntityCollection<Entity> conf = confs.create(confName);
@@ -90,7 +104,8 @@ public class ConfigurationTest extends SDKTestCase {
         assertFalse("Stanza not deleted by remove()", conf.containsKey(stanzaName));
     }
 
-    @Test public void testWriteToStanza() {
+    @Test
+    public void testWriteToStanza() {
         ConfCollection confs = service.getConfs();
         String confName = createTemporaryName();
         EntityCollection<Entity> conf = confs.create(confName);

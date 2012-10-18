@@ -26,10 +26,13 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class HttpServiceTest extends SDKTestCase {
-    protected HttpService httpService;
-
-    @Before @Override public void setUp() throws Exception {
+    private HttpService httpService;
+    
+    @Before
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
+        
         httpService = new HttpService(
                 (String)connectionArgs.get("host"),
                 (Integer)connectionArgs.get("port"),
@@ -51,13 +54,15 @@ public class HttpServiceTest extends SDKTestCase {
         }
     }
 
-    @Test public void testGet() {
+    @Test
+    public void testGet() {
         ResponseMessage response = httpService.get("/");
         assertEquals(200, response.getStatus());
         assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 
-    @Test public void testPost() {
+    @Test
+    public void testPost() {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put("foo", "bar");
         ResponseMessage response = httpService.post("/", args);
@@ -65,7 +70,8 @@ public class HttpServiceTest extends SDKTestCase {
         assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 
-    @Test public void testSend() {
+    @Test
+    public void testSend() {
         RequestMessage request = new RequestMessage("GET");
         ResponseMessage response = service.send("/", request);
         assertEquals(200, response.getStatus());
