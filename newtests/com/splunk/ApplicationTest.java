@@ -29,8 +29,8 @@ import java.io.*;
 import java.util.Collection;
 
 public class ApplicationTest extends SDKTestCase {
-    String applicationName;
-    Application application;
+    private String applicationName;
+    private Application application;
 
     @Before
     @Override

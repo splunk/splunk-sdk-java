@@ -65,14 +65,16 @@ public class UtilTest extends SDKTestCase {
         );
     }
 
-    @Test public void testSubstringAfterFails() {
+    @Test
+    public void testSubstringAfterFails() {
         assertEquals(
                 "boris",
                 Util.substringAfter("abcdefg", "pq", "boris")
         );
     }
 
-    @Test public void testJoinPath() {
+    @Test
+    public void testJoinPath() {
         String[] pathComponents = {"a", "b"};
         Assert.assertEquals(
                 new File(new File("a"), "b"),

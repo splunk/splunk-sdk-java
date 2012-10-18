@@ -21,12 +21,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class FiredAlertsTest extends SDKTestCase {
-    String indexName;
-    Index index;
-    String savedSearchName;
-    SavedSearch savedSearch;
+    private String indexName;
+    private Index index;
+    private String savedSearchName;
+    private SavedSearch savedSearch;
 
-    @Before public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
         
         indexName = createTemporaryName();
@@ -58,9 +59,9 @@ public class FiredAlertsTest extends SDKTestCase {
         );
     }
 
-    @After @Override public void tearDown() throws Exception {
-        super.tearDown();
-        
+    @After
+    @Override
+    public void tearDown() throws Exception {
         if (service.versionIsEarlierThan("5.0.0")) {
             index.remove();
         }
@@ -69,9 +70,12 @@ public class FiredAlertsTest extends SDKTestCase {
             job.cancel();
         }
         savedSearch.remove();
+        
+        super.tearDown();
     }
 
-    @Test public void testAlertsShowUp() {
+    @Test
+    public void testAlertsShowUp() {
         assertFalse(
                 "Found alerts before sending any events.",
                 service.getFiredAlertGroups().containsKey(savedSearchName)

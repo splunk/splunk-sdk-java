@@ -19,25 +19,16 @@ package com.splunk;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Map;
 
-/**
- * [Insert documentation here]
- */
 public class ResultsReaderTest extends TestCase {
-    public InputStream openResource(String path) {
-        try {
-            return this.getClass().getResourceAsStream(path);
-        } catch (Exception e) {
-            fail(e.toString());
-            return null;
-        }
+    private InputStream openResource(String path) {
+        return this.getClass().getResourceAsStream(path);
     }
 
-    @Test public void testAtomFeed() {
+    @Test
+    public void testAtomFeed() {
         InputStream input = openResource("jobs.xml");
         AtomFeed feed = AtomFeed.parseStream(input);
         assertEquals(131, feed.entries.size());
@@ -50,7 +41,8 @@ public class ResultsReaderTest extends TestCase {
         assertEquals(true, entry.content.getBoolean("isDone"));
     }
 
-    @Test public void test200Results() {
+    @Test
+    public void test200Results() {
         InputStream input = openResource("results200.xml");
         try {
             ResultsReaderXml reader = new ResultsReaderXml(input);
@@ -62,7 +54,8 @@ public class ResultsReaderTest extends TestCase {
         }
     }
 
-    @Test public void test404Results() {
+    @Test
+    public void test404Results() {
 
     }
 }
