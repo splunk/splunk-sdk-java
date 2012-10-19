@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ConfigurationTest extends SDKTestCase {
-
+    private Service appService;
     private String applicationName;
     private Application application;
 
@@ -34,26 +34,39 @@ public class ConfigurationTest extends SDKTestCase {
         // so instead we create a temporary application,
         // reconnect using its namespace, then delete it
         // when we're done.
-        applicationName = createTemporaryName();
+                applicationName = createTemporaryName();
         service.getApplications().create(applicationName);
-        
-        service.logout();
-        
+
+        // We cannot easily change the namespace of service,
+        // so rather than fight with it, we create a new
+        // service with the right namespace and work from it
+        // instead. Then we'll return to service in tearDown
+        // to clean up.
+
+        // NOTE: If you ever have to put a restart into
+        // the configuration tests, then you will need
+        // to explicitly re-login appService, since it will
+        // not be re-logged in by the call to restartSplunk.
         ConnectionArgs applicationArgs = new ConnectionArgs();
         applicationArgs.putAll(connectionArgs);
         applicationArgs.put("sharing", "app");
         applicationArgs.put("owner", "nobody");
         applicationArgs.put("app", applicationName);
-        service = Service.connect(applicationArgs);
-        
-        application = service.getApplications().get(applicationName);
+        appService = Service.connect(applicationArgs);
     }
 
     @After
     @Override
     public void tearDown() throws Exception {
-        application.remove();
-        service.app = null;
+        appService.logout();
+        final EntityCollection<Application> apps = service.getApplications();
+        apps.remove(applicationName);
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override public boolean predicate() {
+                apps.refresh();
+                return !apps.containsKey(applicationName);
+            }
+        });
         clearRestartMessage();
         
         super.tearDown();
@@ -61,7 +74,7 @@ public class ConfigurationTest extends SDKTestCase {
 
     @Test
     public void testStandardFilesExist() {
-        ConfCollection confs = service.getConfs();
+        ConfCollection confs = appService.getConfs();
         assertTrue(confs.containsKey("eventtypes"));
         assertTrue(confs.containsKey("indexes"));
         assertTrue(confs.containsKey("inputs"));
@@ -78,7 +91,7 @@ public class ConfigurationTest extends SDKTestCase {
 
     @Test
     public void testCreateConfWorks() {
-        ConfCollection confs = service.getConfs();
+        ConfCollection confs = appService.getConfs();
         String confName = createTemporaryName();
 
         assertFalse("New configuration name already used.", confs.containsKey(confName));
@@ -89,7 +102,7 @@ public class ConfigurationTest extends SDKTestCase {
 
     @Test
     public void testCreateAndDeleteStanzaWorks() {
-        ConfCollection confs = service.getConfs();
+        ConfCollection confs = appService.getConfs();
         String confName = createTemporaryName();
         EntityCollection<Entity> conf = confs.create(confName);
 
@@ -107,7 +120,7 @@ public class ConfigurationTest extends SDKTestCase {
 
     @Test
     public void testWriteToStanza() {
-        ConfCollection confs = service.getConfs();
+        ConfCollection confs = appService.getConfs();
         String confName = createTemporaryName();
         EntityCollection<Entity> conf = confs.create(confName);
         String stanzaName = createTemporaryName();
