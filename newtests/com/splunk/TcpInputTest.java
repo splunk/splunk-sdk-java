@@ -123,4 +123,23 @@ public class TcpInputTest extends SDKTestCase {
             }
         });
     }
+    
+    // TODO: Move to InputTest once it has been ported over to the new suite.
+    @Test
+    public void testGetInputKindOfScript() {
+        Input scriptInput = new Input(service, "data/inputs/script/$SPLUNK_HOME/etc/apps/myapp/bin/myscript.py");
+        assertEquals(InputKind.Script, scriptInput.getKind());
+        
+        Input tcpRawInput = new Input(service, "data/inputs/tcp/raw/6666");
+        assertEquals(InputKind.Tcp, tcpRawInput.getKind());
+        
+        Input tcpCookedInput = new Input(service, "data/inputs/tcp/cooked/6666");
+        assertEquals(InputKind.TcpSplunk, tcpCookedInput.getKind());
+        
+        Input udpInput = new Input(service, "data/inputs/udp/6666");
+        assertEquals(InputKind.Udp, udpInput.getKind());
+        
+        Input modularInput = new Input(service, "data/inputs/my_modular_input/input_name");
+        assertEquals(InputKind.createFromRelativePath("my_modular_input"), modularInput.getKind());
+    }
 }
