@@ -23,16 +23,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
-import java.util.Collection;
 
 public class ApplicationTest extends SDKTestCase {
     private String applicationName;
     private Application application;
 
-    @Before @Override public void setUp() throws Exception {
+    @Before
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
 
         removeTestApplications();
@@ -61,7 +61,8 @@ public class ApplicationTest extends SDKTestCase {
             if (appName.startsWith("delete-me")) {
                 app.remove();
                 assertEventuallyTrue(new EventuallyTrueBehavior() {
-                    @Override public boolean predicate() {
+                    @Override
+                    public boolean predicate() {
                         apps.refresh();
                         return !apps.containsKey(appName);
                     }
@@ -74,9 +75,12 @@ public class ApplicationTest extends SDKTestCase {
     public void testForEmptySetup() {
         // Newly created applications have no setup.
         try {
-            assertNull(application.setup().getSetupXml());
-        } catch (Exception e) {
-            fail(e.toString());
+            application.setup().getSetupXml();
+            fail("Expected HTTP 500.");
+        }
+        catch (HttpException e) {
+            assertEquals(500, e.getStatus());
+            assertTrue(e.getMessage().contains("does not exits")); // [sic]
         }
     }
 
@@ -148,15 +152,22 @@ public class ApplicationTest extends SDKTestCase {
 
     @Test
     public void testUpdate() {
-        // The easiest way to test this is to set the version of gettingstarted to something
-        // small, then wait for splunkd to pull its update information from splunkbase.
+        // Set the version of gettingstarted to something small,
+        // then wait for splunkd to pull its update information from splunkbase.
+        
         Application gettingStarted = service.getApplications().get("gettingstarted");
         String originalVersion = gettingStarted.getVersion();
         try {
+            // Decrease the app's version
             gettingStarted.setVersion("0.1");
             gettingStarted.update();
+            
+            // TODO: Is this really needed?
+            //       If so, an explanation should be provided.
             uncheckedSplunkRestart();
             gettingStarted = service.getApplications().get("gettingstarted");
+            
+            // Wait until Splunk sees that an update for the app is available
             final Application gettingStartedReference = gettingStarted;
             assertEventuallyTrue(new EventuallyTrueBehavior() {
                 @Override
@@ -164,6 +175,8 @@ public class ApplicationTest extends SDKTestCase {
                     return gettingStartedReference.getUpdate().getChecksum() != null;
                 }
             });
+            
+            // Verify expected properties of the update
             ApplicationUpdate update = gettingStarted.getUpdate();
             assertEquals("f1a30efa896d9a2f7272420c2f999f03", update.getChecksum());
             assertEquals("md5", update.getChecksumType());
@@ -177,6 +190,7 @@ public class ApplicationTest extends SDKTestCase {
             assertEquals("1.0", update.getVersion());
             assertTrue(update.isImplicitIdRequired());
         } finally {
+            // Restore the app's original version
             gettingStarted.setVersion(originalVersion);
             gettingStarted.update();
         }
