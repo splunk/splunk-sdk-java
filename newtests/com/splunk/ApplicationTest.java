@@ -168,6 +168,7 @@ public class ApplicationTest extends SDKTestCase {
             gettingStarted = service.getApplications().get("gettingstarted");
             
             // Wait until Splunk sees that an update for the app is available
+            // NOTE: This typically takes about 15s
             final Application gettingStartedReference = gettingStarted;
             assertEventuallyTrue(new EventuallyTrueBehavior() {
                 @Override
