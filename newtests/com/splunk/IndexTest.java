@@ -23,7 +23,7 @@ import org.junit.Test;
 import java.io.*;
 import java.net.Socket;
 
-public class IndexWithoutRestartTest extends SDKTestCase {
+public class IndexTest extends SDKTestCase {
     private String indexName;
     private Index index;
 
