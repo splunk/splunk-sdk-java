@@ -26,39 +26,35 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 public class TcpInputTest extends SDKTestCase {
-    protected int tcpPort = -1;
-    protected TcpInput tcpInput = null;
-    protected String indexName;
-    protected Index index = null;
+    private int tcpPort = -1;
+    private TcpInput tcpInput = null;
+    private String indexName;
+    private Index index = null;
 
-    public int findNextUnusedTcpPort(int startingPort) {
-        int port = startingPort;
-        InputCollection inputs = service.getInputs();
-        while (inputs.containsKey(String.valueOf(port))) {
-            port += 1;
-        }
-        return port;
-    }
-
-    @Before public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
+        
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
 
-        tcpPort = findNextUnusedTcpPort(10000);
-        Args args = new Args();
-        args.add("index", indexName);
-        tcpInput = service.getInputs().create(String.valueOf(tcpPort), InputKind.Tcp, args);
+        tcpPort = findNextUnusedPort(10000);
+        tcpInput = service.getInputs().create(
+                String.valueOf(tcpPort),
+                InputKind.Tcp,
+                new Args("index", indexName));
     }
 
-    @After public void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         if (index != null && service.versionCompare("5.0") >= 0) {
             index.remove();
         }
-        if (tcpPort != -1) {
-            service.getInputs().get(String.valueOf(tcpPort)).remove();
+        if (tcpInput != null) {
+            tcpInput.remove();
         }
+        
+        super.tearDown();
     }
 
     @Test
@@ -120,7 +116,8 @@ public class TcpInputTest extends SDKTestCase {
         }
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == nEvents + 1;
             }

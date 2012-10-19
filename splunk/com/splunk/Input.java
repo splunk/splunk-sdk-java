@@ -45,15 +45,18 @@ public class Input extends Entity {
      */
     public InputKind getKind() {
         String[] pathComponents = this.path.split("/");
+        
         int offset = 0;
         while (!pathComponents[offset].equals("inputs")) {
             offset += 1;
         }
-        List<String> toJoin = new ArrayList<String>();
-        for (int i = offset+1; i < pathComponents.length; i++) {
-            toJoin.add(pathComponents[i]);
+        
+        List<String> relpathComponents = new ArrayList<String>();
+        for (int i = offset + 1; i < pathComponents.length - 1; i++) {
+            relpathComponents.add(pathComponents[i]);
         }
-        String relpath = Util.join("/", toJoin);
-        return InputKind.create(relpath);
+        
+        String relpath = Util.join("/", relpathComponents);
+        return InputKind.createFromRelativePath(relpath);
     }
 }

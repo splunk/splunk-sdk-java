@@ -281,4 +281,13 @@ public abstract class SDKTestCase extends TestCase {
         connect();
     }
 
+    protected int findNextUnusedPort(int startingPort) {
+        InputCollection inputs = service.getInputs();
+        
+        int port = startingPort;
+        while (inputs.containsKey(String.valueOf(port))) {
+            port++;
+        }
+        return port;
+    }
 }
