@@ -23,7 +23,6 @@ import org.junit.Test;
 public class ConfigurationTest extends SDKTestCase {
     private Service appService;
     private String applicationName;
-    private Application application;
 
     @Before
     @Override

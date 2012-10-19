@@ -266,7 +266,7 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         }
         
         // TODO: Figure out which of the above setters is forcing
-        //       Splunk to restart.
+        //       causing a restart request.
         clearRestartMessage();
     }
 
@@ -452,8 +452,8 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         });
         
         // Clean the index and make sure it's empty.
-        // NOTE: Average time for this is 65s (!!!).
-        index.clean(100);
+        // NOTE: Average time for this is 65s (!!!). Have seen 110+.
+        index.clean(150);
         assertTrue(getResultCountOfIndex() == 0);
     }
     

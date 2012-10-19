@@ -36,7 +36,9 @@ public class FiredAlertsTest extends SDKTestCase {
         index = service.getIndexes().create(indexName);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             { pauseTime = 500; tries = 50; }
-            @Override public boolean predicate() {
+            
+            @Override
+            public boolean predicate() {
                 index.refresh();
                 return !index.isDisabled();
             }
@@ -99,7 +101,9 @@ public class FiredAlertsTest extends SDKTestCase {
                 service.getFiredAlertGroups();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             { pauseTime = 2000; tries = 100; }
-            @Override public boolean predicate() {
+            
+            @Override
+            public boolean predicate() {
                 firedAlertGroups.refresh();
                 return firedAlertGroups.containsKey(savedSearchName);
             }
