@@ -282,7 +282,11 @@ public class IndexWithoutRestartTest extends SDKTestCase {
                 return index.isDisabled();
             }
         });
-        
+
+        // Disabling an index puts Splunk into a weird state that actually
+        // requires a restart to get out of.
+        splunkRestart();
+
         // And then enable it
         index.enable();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -291,10 +295,6 @@ public class IndexWithoutRestartTest extends SDKTestCase {
                 return !index.isDisabled();
             }
         });
-        
-        // Disabling an index puts Splunk into a weird state that actually
-        // requires a restart to get out of.
-        splunkRestart();
     }
 
     @Test

@@ -81,17 +81,21 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     public void connect() {
-        String splunkrcPath = getSplunkrcPath();
-        FileReader splunkrcReader;
-        try {
-            splunkrcReader = new FileReader(splunkrcPath);
-        } catch (FileNotFoundException e) {
-            fail("Could not find .splunkrc at " + splunkrcPath);
-            return;
-        }
-        connectionArgs = readSplunkrc(splunkrcReader);
+        if (service != null) {
+            service.login(service.username, service.password);
+        } else {
+            String splunkrcPath = getSplunkrcPath();
+            FileReader splunkrcReader;
+            try {
+                splunkrcReader = new FileReader(splunkrcPath);
+            } catch (FileNotFoundException e) {
+                fail("Could not find .splunkrc at " + splunkrcPath);
+                return;
+            }
+            connectionArgs = readSplunkrc(splunkrcReader);
 
-        service = Service.connect(connectionArgs);
+            service = Service.connect(connectionArgs);
+        }
     }
 
     @Before
