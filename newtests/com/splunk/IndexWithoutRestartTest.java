@@ -303,6 +303,12 @@ public class IndexWithoutRestartTest extends SDKTestCase {
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
+                return getResultCountOfIndex() == 1;
+            }
+        });
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == 1;
             }
@@ -327,8 +333,11 @@ public class IndexWithoutRestartTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                // Yeah 1, not 2. Weird isn't it?
-                return index.getTotalEventCount() == 1;
+                
+                // Some versions of Splunk only increase event count by 1.
+                // Event count should never go up by more than the result count.
+                int tec = index.getTotalEventCount();
+                return (1 <= tec) && (tec <= 2);
             }
         });
     }
@@ -352,8 +361,11 @@ public class IndexWithoutRestartTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                // Yeah 1, not 2. Weird isn't it?
-                return index.getTotalEventCount() == 1;
+                
+                // Some versions of Splunk only increase event count by 1.
+                // Event count should never go up by more than the result count.
+                int tec = index.getTotalEventCount();
+                return (1 <= tec) && (tec <= 2);
             }
         });
     }
@@ -381,8 +393,11 @@ public class IndexWithoutRestartTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                // Yeah 1, not 2. Weird isn't it?
-                return index.getTotalEventCount() == 1;
+                
+                // Some versions of Splunk only increase event count by 1.
+                // Event count should never go up by more than the result count.
+                int tec = index.getTotalEventCount();
+                return (1 <= tec) && (tec <= 2);
             }
         });
     }
