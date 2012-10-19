@@ -272,18 +272,18 @@ public class IndexWithoutRestartTest extends SDKTestCase {
 
     @Test
     public void testEnable() {
-        // Force the index to be disabled
-        if (!index.isDisabled()) {
-            index.disable();
-            assertEventuallyTrue(new EventuallyTrueBehavior() {
-                @Override public boolean predicate() {
-                    index.refresh();
-                    return index.isDisabled();
-                }
-            });
-            clearRestartMessage();
-        }
+        assertFalse(index.isDisabled());
         
+        // Force the index to be disabled
+        index.disable();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override public boolean predicate() {
+                index.refresh();
+                return index.isDisabled();
+            }
+        });
+        
+        // And then enable it
         index.enable();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override public boolean predicate() {
@@ -291,6 +291,10 @@ public class IndexWithoutRestartTest extends SDKTestCase {
                 return !index.isDisabled();
             }
         });
+        
+        // Disabling an index puts Splunk into a weird state that actually
+        // requires a restart to get out of.
+        splunkRestart();
     }
 
     @Test
@@ -405,46 +409,52 @@ public class IndexWithoutRestartTest extends SDKTestCase {
     @Test
     public void testUpload() throws Exception {
         installApplicationFromCollection("file_to_upload");
+        
+        assertTrue(getResultCountOfIndex() == 0);
+        assertTrue(index.getTotalEventCount() == 0);
 
-        final String splunkHome = service.getSettings().getSplunkHome();
-        String[] pathComponents = {splunkHome, "etc", "apps", "file_to_upload", "log.txt"};
-        File pathToLog = Util.joinPath(pathComponents);
-
-        assertTrue("File to upload does not exist.", pathToLog.exists());
-        final int eventCount = index.getTotalEventCount();
-        index.upload(pathToLog.getAbsolutePath());
+        File fileToUpload = Util.joinPath(new String[] {
+                service.getSettings().getSplunkHome(),
+                "etc", "apps", "file_to_upload", "log.txt"});
+        assertTrue("File to upload does not exist.", fileToUpload.exists());
+        index.upload(fileToUpload.getAbsolutePath());
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return getResultCountOfIndex() == 4;
+            }
+        });
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
                 index.refresh();
-                return index.getTotalEventCount() == eventCount + 4;
+                
+                // Some versions of Splunk only increase event count by 1.
+                // Event count should never go up by more than the result count.
+                int tec = index.getTotalEventCount();
+                return (1 <= tec) && (tec <= 4);
             }
         });
     }
 
     @Test
     public void testSubmitAndClean() {
-        assertTrue(index.getTotalEventCount() == 0);
+        assertTrue(getResultCountOfIndex() == 0);
         
         // Make sure the index is not empty.
         index.submit("Hello world");
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
-                index.refresh();
-                return index.getTotalEventCount() == 1;
+                return getResultCountOfIndex() == 1;
             }
         });
         
         // Clean the index and make sure it's empty.
-        index.clean(60);
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override
-            public boolean predicate() {
-                index.refresh();
-                return index.getTotalEventCount() == 0;
-            }
-        });
+        // NOTE: Average time for this is 65s (!!!).
+        index.clean(100);
+        assertTrue(getResultCountOfIndex() == 0);
     }
     
     // === Utility ===

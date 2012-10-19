@@ -26,6 +26,7 @@ public class SplunkException extends RuntimeException {
     public static int UNSUPPORTED = 4;
 
     SplunkException(int code, String text) {
+        super(text);
         this.code = code;
         this.text = text;
     }
