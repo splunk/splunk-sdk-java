@@ -228,29 +228,17 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     public void splunkRestart() {
-        // If not specified, use 3 minutes (in milliseconds) as default
-        // restart timeout.
-        splunkRestart(3*60*1000);
-    }
-
-    public void splunkRestart(int millisecondTimeout) {
         if (!restartRequired()) {
             fail("Asked to restart Splunk when no restart was required.");
         }
-        uncheckedSplunkRestart(millisecondTimeout);
+        uncheckedSplunkRestart();
     }
 
     public void uncheckedSplunkRestart() {
-        uncheckedSplunkRestart(3*60*1000);
-    }
-
-    public void uncheckedSplunkRestart(int millisecondTimeout) {
         ResponseMessage response = service.restart();
         if (response.getStatus() != 200) {
             fail("Restart command failed: " + response.getContent());
         }
-
-        final Service service = this.service;
 
         // Wait for splunkd to go down.
         assertEventuallyTrue(new EventuallyTrueBehavior() {
