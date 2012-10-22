@@ -26,38 +26,34 @@ public class UdpInputTest extends SDKTestCase {
     protected String indexName;
     protected Index index = null;
 
-    public int findNextUnusedUdpPort(int startingPort) {
-        int port = startingPort;
-        InputCollection inputs = service.getInputs();
-        while (inputs.containsKey(String.valueOf(port))) {
-            port += 1;
-        }
-        return port;
-    }
-
-    @Before public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
 
-        udpPort = findNextUnusedUdpPort(10000);
-        Args args = new Args();
-        args.add("index", indexName);
-        udpInput = service.getInputs().create(String.valueOf(udpPort), InputKind.Udp, args);
+        udpPort = findNextUnusedPort(10000);
+        udpInput = service.getInputs().create(
+                String.valueOf(udpPort),
+                InputKind.Udp,
+                new Args("index", indexName));
     }
 
-    @After public void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         if (index != null && service.versionCompare("5.0") >= 0) {
             index.remove();
         }
         if (udpInput != null) {
             udpInput.remove();
         }
+        
+        super.tearDown();
     }
 
-    @Test public void testSubmit() {
+    @Test
+    public void testSubmit() {
         final int nEvents = index.getTotalEventCount();
 
         try {

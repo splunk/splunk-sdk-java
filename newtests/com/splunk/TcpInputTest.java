@@ -26,39 +26,35 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 public class TcpInputTest extends SDKTestCase {
-    protected int tcpPort = -1;
-    protected TcpInput tcpInput = null;
-    protected String indexName;
-    protected Index index = null;
+    private int tcpPort = -1;
+    private TcpInput tcpInput = null;
+    private String indexName;
+    private Index index = null;
 
-    public int findNextUnusedTcpPort(int startingPort) {
-        int port = startingPort;
-        InputCollection inputs = service.getInputs();
-        while (inputs.containsKey(String.valueOf(port))) {
-            port += 1;
-        }
-        return port;
-    }
-
-    @Before public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
+        
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
 
-        tcpPort = findNextUnusedTcpPort(10000);
-        Args args = new Args();
-        args.add("index", indexName);
-        tcpInput = service.getInputs().create(String.valueOf(tcpPort), InputKind.Tcp, args);
+        tcpPort = findNextUnusedPort(10000);
+        tcpInput = service.getInputs().create(
+                String.valueOf(tcpPort),
+                InputKind.Tcp,
+                new Args("index", indexName));
     }
 
-    @After public void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         if (index != null && service.versionCompare("5.0") >= 0) {
             index.remove();
         }
-        if (tcpPort != -1) {
-            service.getInputs().get(String.valueOf(tcpPort)).remove();
+        if (tcpInput != null) {
+            tcpInput.remove();
         }
+        
+        super.tearDown();
     }
 
     @Test
@@ -120,10 +116,30 @@ public class TcpInputTest extends SDKTestCase {
         }
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
+            @Override
+            public boolean predicate() {
                 index.refresh();
                 return index.getTotalEventCount() == nEvents + 1;
             }
         });
+    }
+    
+    // TODO: Move to InputTest once it has been ported over to the new suite.
+    @Test
+    public void testGetInputKindOfScript() {
+        Input scriptInput = new Input(service, "data/inputs/script/$SPLUNK_HOME/etc/apps/myapp/bin/myscript.py");
+        assertEquals(InputKind.Script, scriptInput.getKind());
+        
+        Input tcpRawInput = new Input(service, "data/inputs/tcp/raw/6666");
+        assertEquals(InputKind.Tcp, tcpRawInput.getKind());
+        
+        Input tcpCookedInput = new Input(service, "data/inputs/tcp/cooked/6666");
+        assertEquals(InputKind.TcpSplunk, tcpCookedInput.getKind());
+        
+        Input udpInput = new Input(service, "data/inputs/udp/6666");
+        assertEquals(InputKind.Udp, udpInput.getKind());
+        
+        Input modularInput = new Input(service, "data/inputs/my_modular_input/input_name");
+        assertEquals(InputKind.createFromRelativePath("my_modular_input"), modularInput.getKind());
     }
 }

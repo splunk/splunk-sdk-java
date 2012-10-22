@@ -38,22 +38,17 @@ public class Input extends Entity {
 
     /**
      * Returns an {@code InputKind} representing this input's kind.
-     *
-     * The kind is inferred from the input's path.
-     *
-     * @return Unknown input kind.
      */
     public InputKind getKind() {
-        String[] pathComponents = this.path.split("/");
-        int offset = 0;
-        while (!pathComponents[offset].equals("inputs")) {
-            offset += 1;
+        String[] pathComponents = 
+                Util.substringAfter(this.path, "/data/inputs/", null).split("/");
+        
+        String kindPath;
+        if (pathComponents[0].equals("tcp")) {
+            kindPath = "tcp/" + pathComponents[1];
+        } else {
+            kindPath = pathComponents[0];
         }
-        List<String> toJoin = new ArrayList<String>();
-        for (int i = offset+1; i < pathComponents.length; i++) {
-            toJoin.add(pathComponents[i]);
-        }
-        String relpath = Util.join("/", toJoin);
-        return InputKind.create(relpath);
+        return InputKind.createFromRelativePath(kindPath);
     }
 }

@@ -34,7 +34,7 @@ public class InputKind {
     private String relpath;
     private Class<? extends Input> inputClass;
 
-    private static Map<String, InputKind> knownKinds = new HashMap<String, InputKind>();
+    private static Map<String, InputKind> knownRelpaths = new HashMap<String, InputKind>();
 
     /** Unknown input kind. */
     public static final InputKind Unknown = new InputKind(null, Input.class, "unknown");
@@ -69,14 +69,15 @@ public class InputKind {
     /** {@code Windows WMI} input kind. */
     public static final InputKind WindowsWmi = new InputKind("win-wmi-collections", WindowsWmiInput.class);
 
-    private InputKind(String relpath, Class inputClass, String kind) {
+    private InputKind(String relpath, Class<? extends Input> inputClass, String kind) {
         this.relpath = relpath;
         this.inputClass = inputClass;
         this.kind = kind;
-        knownKinds.put(kind, this);
+        
+        knownRelpaths.put(relpath, this);
     }
 
-    private InputKind(String relpath, Class inputClass) {
+    private InputKind(String relpath, Class<? extends Input> inputClass) {
         this(
             relpath,
             inputClass,
@@ -85,7 +86,8 @@ public class InputKind {
     }
 
     /**
-     * @return String representing the kind of this InputKind.
+     * @return String representing the kind of this InputKind, as it is
+     *         represented in the Atom entry for an input entity.
      */
     String getKind() {
         return kind;
@@ -107,23 +109,27 @@ public class InputKind {
 
     /**
      * Create an {@code InputKind} object from a {@code String} giving
-     * the kind or relative path from data/inputs/ to the kind.
+     * the relative path from data/inputs/ to the kind. For example,
+     * "tcp/raw" or "monitor".
      *
      * {@code InputKind}'s constructors are private. You should use this method
      * to create an {@code InputKind}.
      *
-     * Kinds and relpaths are not always the same. For example,
-     * {@code create("tcp")} and {@code create("tcp/raw")} return the same {@code InputKind},
-     * as do {@code create("splunktcp")} and {@code create("tcp/cooked")}.
-     *
-     * @param kindOrRelpath The kind or relative path from data/inputs specifying the {@code InputKind} to create.
+     * @param relpath The relative path from data/inputs specifying the {@code InputKind} to create.
      * @return An {@code InputKind} object.
      */
-    public static InputKind create(String kindOrRelpath) {
-        if (knownKinds.containsKey(kindOrRelpath)) {
-            return knownKinds.get(kindOrRelpath);
+    public static InputKind createFromRelativePath(String relpath) {
+        if (knownRelpaths.containsKey(relpath)) {
+            return knownRelpaths.get(relpath);
         } else {
-            return new InputKind(kindOrRelpath, Input.class);
+            return new InputKind(relpath, Input.class);
         }
+    }
+    
+    /**
+     * @return Textual representation for debugging purposes.
+     */
+    public String toString() {
+        return relpath;
     }
 }
