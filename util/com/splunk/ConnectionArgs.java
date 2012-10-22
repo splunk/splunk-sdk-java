@@ -35,8 +35,7 @@ public class ConnectionArgs extends HashMap<String, Object> {
                    key.equals("username") ||
                    key.equals("password") ||
                    key.equals("app") ||
-                   key.equals("owner") ||
-                   key.equals("appcollection")) {
+                   key.equals("owner")) {
             put(key, value);
         } else if (key.equals("port")) {
             try {
