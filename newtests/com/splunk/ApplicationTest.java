@@ -80,7 +80,9 @@ public class ApplicationTest extends SDKTestCase {
         }
         catch (HttpException e) {
             assertEquals(500, e.getStatus());
-            assertTrue(e.getMessage().contains("does not exits")); // [sic]
+            assertTrue(
+                    e.getMessage().contains("does not exits") ||    // 4.3.2
+                    e.getMessage().contains("does not exist"));     // 5.0rc5
         }
     }
 
