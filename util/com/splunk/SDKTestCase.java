@@ -183,29 +183,34 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     public boolean hasApplicationCollection() {
-        if (!connectionArgs.containsKey("appcollection") ||
-                !new File((String)connectionArgs.get("appcollection")).isDirectory()) {
-            return false;
-        } else {
-            return true;
-        }
-
+        return !service.getApplications().containsKey("sdk-app-collection");
     }
 
-    public void installApplicationFromCollection(String applicationName)
-            throws MissingAppCollectionException, FileNotFoundException {
-        if (!hasApplicationCollection()) {
+    public void installApplicationFromCollection(String applicationName) {
+        String collectionName = "sdk-app-collection";
+        if (hasApplicationCollection()) {
             throw new MissingAppCollectionException();
         }
 
-        String[] components = {(String)connectionArgs.get("appcollection"), "build",
-                               applicationName + ".tar"};
-        File applicationFile = Util.joinPath(components);
-        if (!applicationFile.exists()) {
-            throw new FileNotFoundException(applicationFile.getAbsolutePath());
+        String splunkHome = service.getSettings().getSplunkHome();
+
+        String separator;
+        if (splunkHome.contains("/") && splunkHome.contains("\\")) {
+            throw new NoSeparatorFindableInPathException();
+        } else if (splunkHome.contains("/")) {
+            separator = "/";
+        } else if (splunkHome.contains("\\")) {
+            separator = "\\";;
+        } else {
+            throw new NoSeparatorFindableInPathException();
         }
+
+        String[] pathComponents = {splunkHome, "etc", "apps",
+                collectionName, "build", applicationName + ".tar"};
+        String appPath = Util.join(separator, pathComponents);
+
         Args args = new Args();
-        args.put("name", applicationFile.getAbsolutePath());
+        args.put("name", appPath);
         args.put("update", "1");
         service.post("apps/appinstall", args);
         installedApps.add(applicationName);

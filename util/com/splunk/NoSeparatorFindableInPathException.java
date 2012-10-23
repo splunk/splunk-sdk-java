@@ -16,4 +16,5 @@
 
 package com.splunk;
 
-public class MissingAppCollectionException extends RuntimeException {}
+public class NoSeparatorFindableInPathException extends RuntimeException {
+}

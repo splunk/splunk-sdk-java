@@ -28,7 +28,8 @@ public class LoggerTest extends SDKTestCase {
             "INFO", "WARN", "ERROR", "DEBUG", "CRIT");
     
     // NOTE: Ideally we would create our own logger instead of using an existing
-    //       one. However there is no REST API call to create a Logger.
+    //       one. However there is no REST API call to create a Logger, and
+    //       we can't use an app to install one, either.
     private static final String TEST_LOGGER_NAME = "AuditLogger";
     
     private Logger logger;
