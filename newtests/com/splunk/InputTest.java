@@ -356,7 +356,7 @@ public class InputTest extends SDKTestCase {
                 scriptInput.setPassAuth("admin");
             }
             scriptInput.setRenameSource("renamedSource");
-            scriptInput.setSource("source");
+            scriptInput.setSource("renamedSource2");
             scriptInput.setSourcetype("script");
             scriptInput.update();
 
@@ -366,7 +366,9 @@ public class InputTest extends SDKTestCase {
             if (service.versionCompare("4.2.4") >= 0) {
                 assertEquals("admin", scriptInput.getPassAuth());
             }
-            assertEquals("renamedSource", scriptInput.getSource());
+            if (!WORKAROUND_KNOWN_BUGS) {   // SPL-57223
+                assertEquals("renamedSource", scriptInput.getSource());
+            }
             assertEquals("script", scriptInput.getSourceType());
         }
 
@@ -378,12 +380,8 @@ public class InputTest extends SDKTestCase {
     @Test
     public void testTcpInputCrud() {
         String port = "9999";   // test port
-
-        if (inputs.containsKey(port)) {
-            inputs.remove(port);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(port));
+        
+        deleteInputIfExists(port);
         
         // Create
         inputs.create(port, InputKind.Tcp);
@@ -392,21 +390,24 @@ public class InputTest extends SDKTestCase {
 
         // Probe
         {
-            tcpInput.setConnectionHost("one.two.three");
+            assertFalse("ip".equals(tcpInput.getConnectionHost()));
+            tcpInput.setConnectionHost("ip");
             tcpInput.setHost("myhost");
             tcpInput.setIndex("main");
             tcpInput.setQueue("indexQueue");
             if (service.versionCompare("4.3") >= 0) {
                 // Behavioral difference between 4.3 and earlier versions
                 tcpInput.setRawTcpDoneTimeout(120);
-                tcpInput.setRestrictToHost("four.five.com");
+                if (!WORKAROUND_KNOWN_BUGS) {   // SPL-57233
+                    tcpInput.setRestrictToHost("four.five.com");
+                }
             }
             tcpInput.setSource("tcp");
             tcpInput.setSourceType("sdk-tests");
             tcpInput.setSSL(false);
             tcpInput.update();
 
-            assertEquals("one.two.three", tcpInput.getConnectionHost());
+            assertEquals("ip", tcpInput.getConnectionHost());
             assertEquals("myhost", tcpInput.getHost());
             assertEquals("main", tcpInput.getIndex());
             assertEquals("indexQueue", tcpInput.getQueue());
@@ -416,6 +417,7 @@ public class InputTest extends SDKTestCase {
         }
 
         // Remove
+        assertTrue(inputs.refresh().containsKey(port));
         tcpInput.remove();
         assertFalse(inputs.refresh().containsKey(port));
     }
@@ -424,11 +426,7 @@ public class InputTest extends SDKTestCase {
     public void testTcpSplunkInputCrud() {
         String port = "9998";   // test port
 
-        if (inputs.containsKey(port)) {
-            inputs.remove(port);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(port));
+        deleteInputIfExists(port);
 
         // Create
         inputs.create(port, InputKind.TcpSplunk);
@@ -438,16 +436,19 @@ public class InputTest extends SDKTestCase {
 
         // Probe
         {
-            tcpSplunkInput.setConnectionHost("one.two.three");
+            assertFalse("dns".equals(tcpSplunkInput.getConnectionHost()));
+            tcpSplunkInput.setConnectionHost("dns");
             tcpSplunkInput.setHost("myhost");
             if (service.versionCompare("4.3") >= 0) {
                 // Behavioral difference between 4.3 and earlier versions
-                tcpSplunkInput.setRestrictToHost("four.five.com");
+                if (!WORKAROUND_KNOWN_BUGS) {   // SPL-57233
+                    tcpSplunkInput.setRestrictToHost("four.five.com");
+                }
             }
             tcpSplunkInput.setSSL(false);
             tcpSplunkInput.update();
 
-            assertEquals("one.two.three", tcpSplunkInput.getConnectionHost());
+            assertEquals("dns", tcpSplunkInput.getConnectionHost());
             assertEquals("myhost", tcpSplunkInput.getHost());
             assertFalse(tcpSplunkInput.getSSL());
         }
@@ -461,11 +462,7 @@ public class InputTest extends SDKTestCase {
     public void testUdpInputCrud() {
         String port = "9997";   // test port
 
-        if (inputs.containsKey(port)) {
-            inputs.remove(port);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(port));
+        deleteInputIfExists(port);
 
         // Create
         inputs.create(port, InputKind.Udp);
@@ -474,7 +471,8 @@ public class InputTest extends SDKTestCase {
 
         // Probe
         {
-            udpInput.setConnectionHost("connectionHost.com");
+            assertFalse("dns".equals(udpInput.getConnectionHost()));
+            udpInput.setConnectionHost("dns");
             udpInput.setHost("myhost");
             udpInput.setIndex("main");
             udpInput.setNoAppendingTimeStamp(true);
@@ -484,7 +482,7 @@ public class InputTest extends SDKTestCase {
             udpInput.setSourceType("mysourcetype");
             udpInput.update();
     
-            assertEquals("connectionHost.com", udpInput.getConnectionHost());
+            assertEquals("dns", udpInput.getConnectionHost());
             assertEquals("myhost", udpInput.getHost());
             assertEquals("main", udpInput.getIndex());
             assertTrue(udpInput.getNoAppendingTimeStamp());
@@ -508,11 +506,7 @@ public class InputTest extends SDKTestCase {
         
         String name = "sdk-input-wad";
         
-        if (inputs.containsKey(name)) {
-            inputs.remove(name);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(name));
+        deleteInputIfExists(name);
 
         // Create
         inputs.create(
@@ -549,11 +543,7 @@ public class InputTest extends SDKTestCase {
         
         String name = "sdk-input-wel";
         
-        if (inputs.containsKey(name)) {
-            inputs.remove(name);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(name));
+        deleteInputIfExists(name);
 
         // Create
         inputs.create(
@@ -588,11 +578,7 @@ public class InputTest extends SDKTestCase {
             
         String name = "sdk-input-wp";
         
-        if (inputs.containsKey(name)) {
-            inputs.remove(name);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(name));
+        deleteInputIfExists(name);
 
         // Create
         Args args = new Args();
@@ -649,11 +635,7 @@ public class InputTest extends SDKTestCase {
         
         String name = "sdk-input-wr";
 
-        if (inputs.containsKey(name)) {
-            inputs.remove(name);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(name));
+        deleteInputIfExists(name);
 
         // Create
         Args args = new Args();
@@ -705,11 +687,7 @@ public class InputTest extends SDKTestCase {
         
         String name = "sdk-input-wmi";
         
-        if (inputs.containsKey(name)) {
-            inputs.remove(name);
-            inputs.refresh();
-        }
-        assertFalse(inputs.containsKey(name));
+        deleteInputIfExists(name);
 
         // Create
         Args args = new Args();
@@ -773,6 +751,16 @@ public class InputTest extends SDKTestCase {
         // Remove
         windowsWmiInput.remove();
         assertFalse(inputs.refresh().containsKey(name));
+    }
+    
+    // === Utility ===
+    
+    private void deleteInputIfExists(String name) {
+        if (inputs.containsKey(name)) {
+            inputs.remove(name);
+            inputs.refresh();
+        }
+        assertFalse(inputs.containsKey(name));
     }
     
     private static boolean contains(String[] array, String value) {

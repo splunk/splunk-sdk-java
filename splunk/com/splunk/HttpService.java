@@ -346,6 +346,9 @@ public class HttpService {
 
         if (VERBOSE_REQUESTS) {
             System.out.format("%d\n", status);
+            if (method.equals("POST")) {
+                System.out.println("    " + request.getContent());
+            }
         }
 
         if (status >= 400)

@@ -19,6 +19,7 @@ package com.splunk;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -30,7 +31,7 @@ import java.util.Map.Entry;
  * to a Splunk instance in a key?value pairing for a string, or
  * key?value1&key?value2 (and so on) for an array of strings.
  */
-public class Args extends HashMap<String, Object> {
+public class Args extends LinkedHashMap<String, Object> {
 
     /**
      * Class constructor.

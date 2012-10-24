@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
-    public HashMap<String, Object> toUpdate = new HashMap<String, Object>();
+    public HashMap<String, Object> toUpdate = new LinkedHashMap<String, Object>();
 
     /**
      * Class constructor.
