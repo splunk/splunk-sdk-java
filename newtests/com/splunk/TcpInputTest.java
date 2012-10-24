@@ -140,6 +140,6 @@ public class TcpInputTest extends SDKTestCase {
         assertEquals(InputKind.Udp, udpInput.getKind());
         
         Input modularInput = new Input(service, "data/inputs/my_modular_input/input_name");
-        assertEquals(InputKind.createFromRelativePath("my_modular_input"), modularInput.getKind());
+        assertEquals(InputKind.create("my_modular_input"), modularInput.getKind());
     }
 }

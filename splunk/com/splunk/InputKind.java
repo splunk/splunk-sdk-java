@@ -118,7 +118,7 @@ public class InputKind {
      * @param relpath The relative path from data/inputs specifying the {@code InputKind} to create.
      * @return An {@code InputKind} object.
      */
-    public static InputKind createFromRelativePath(String relpath) {
+    public static InputKind create(String relpath) {
         if (knownRelpaths.containsKey(relpath)) {
             return knownRelpaths.get(relpath);
         } else {

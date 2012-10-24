@@ -49,6 +49,6 @@ public class Input extends Entity {
         } else {
             kindPath = pathComponents[0];
         }
-        return InputKind.createFromRelativePath(kindPath);
+        return InputKind.create(kindPath);
     }
 }

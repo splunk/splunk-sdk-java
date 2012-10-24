@@ -239,7 +239,7 @@ public class InputCollection extends EntityCollection<Input> {
                 continue;
             } else if (hasCreateLink) {
                 // Found an InputKind leaf
-                InputKind newKind = InputKind.createFromRelativePath(relpath);
+                InputKind newKind = InputKind.create(relpath);
                 kinds.add(newKind);
             } else {
                 Set<InputKind> subKinds = assembleInputKindSet(thisSubPath);
