@@ -18,6 +18,7 @@ package com.splunk;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The {@code Input} class represents a data input. This class is the base for
@@ -50,5 +51,41 @@ public class Input extends Entity {
             kindPath = pathComponents[0];
         }
         return InputKind.create(kindPath);
+    }
+    
+    @Override
+    public void update(Map<String, Object> args) {
+        // Is the host restriction being updated?
+        Object newHostObject = toUpdate.get("restrictToHost");
+        if (args.containsKey("restrictToHost")) {
+            newHostObject = args.get("restrictToHost");
+        }
+        String newHost = (newHostObject == null) ? null : newHostObject.toString();
+        
+        if (newHost != null && service.versionCompare("5.0") < 0) {
+            throw new IllegalStateException(
+                    "Cannot update 'restrictToHost' property on Splunk < 5.0.");
+        }
+        
+        String port = null;
+        if (newHost != null) {
+            // Save old port
+            String[] components = getTitle().split(":");
+            port = components[components.length - 1];
+        }
+        
+        super.update(args);
+        
+        if (newHost != null) {
+            String newEntityName = newHost.equals("") ? port : newHost + ":" + port;
+            
+            // Update path with new entity name
+            String[] pathComponents = this.path.split("/");
+            pathComponents[pathComponents.length - 1] = newEntityName;
+            this.path = Util.join("/", pathComponents);
+            
+            // Update title with new entity name
+            this.title = newEntityName;
+        }
     }
 }

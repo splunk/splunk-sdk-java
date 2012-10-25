@@ -95,7 +95,6 @@ public abstract class Resource {
      *
      * @return The resource name.
      */
-    //
     public String getName() {
         return getTitle();
     }
