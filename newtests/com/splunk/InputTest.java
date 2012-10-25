@@ -23,8 +23,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.splunk.SDKTestCase.EventuallyTrueBehavior;
-
 public class InputTest extends SDKTestCase {
     private static final InputKind[] INPUT_KINDS_WITH_RESTRICTABLE_HOST = {
             InputKind.Tcp, InputKind.TcpSplunk, InputKind.Udp
