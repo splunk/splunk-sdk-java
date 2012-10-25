@@ -42,6 +42,8 @@ import java.util.UUID;
  *   - Logout the Service object.
  */
 public abstract class SDKTestCase extends TestCase {
+    protected static final boolean WORKAROUND_KNOWN_BUGS = true;
+    
     protected static ConnectionArgs connectionArgs;
     protected static Service service;
     protected List<String> installedApps;
