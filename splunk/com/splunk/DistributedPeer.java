@@ -37,8 +37,8 @@ public class DistributedPeer extends Entity {
      *
      * @return The build number, or {@code null} if not specified.
      */
-    public String getBuild() {
-        return getString("build", null);
+    public int getBuild() {
+        return getInteger("build");
     }
 
     /**
