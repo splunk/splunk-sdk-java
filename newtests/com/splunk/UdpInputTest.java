@@ -53,14 +53,10 @@ public class UdpInputTest extends SDKTestCase {
     }
 
     @Test
-    public void testSubmit() {
+    public void testSubmit() throws Exception {
         final int nEvents = index.getTotalEventCount();
 
-        try {
-            udpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
-        } catch (Exception e) {
-            fail(e.toString());
-        }
+        udpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
@@ -74,5 +70,5 @@ public class UdpInputTest extends SDKTestCase {
             }
         });
     }
-
+    
 }
