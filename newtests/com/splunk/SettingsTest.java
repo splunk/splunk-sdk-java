@@ -44,6 +44,21 @@ public class SettingsTest extends SDKTestCase {
     public void testHttpPortSetter() throws Exception {
         Settings settings = service.getSettings();
         
+        // Try to clean up from previous test runs, if needed
+        if (isPortInUse(8000) && isPortInUse(8001)) {
+            // Looks like there are two splunkwebs. Kill them.
+            System.out.println("WARNING: There seem to be two splunkwebs running. Trying to recover...");
+            uncheckedSplunkRestart();
+            if (isPortInUse(8000) && isPortInUse(8001)) {
+                fail("There seem to be two splunkwebs running and I couldn't kill them.");
+            }
+        }
+        if (settings.getHttpPort() == 8001) {
+            System.out.println("WARNING: splunkweb seems to be running on the test port (8001). Trying to recover...");
+            changeHttpPort(8000);
+            settings.refresh();
+        }
+        
         int originalHttpPort = settings.getHttpPort();
         assertTrue(isPortInUse(originalHttpPort));
         assertFalse(
