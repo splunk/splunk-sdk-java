@@ -24,7 +24,7 @@ import java.net.InetAddress;
 /**
  * The {@code UdpInput} class represents a UDP input.
  */
-public class UdpInput extends Input {
+public class UdpInput extends PortInput {
 
     /**
      * Class constructor.
@@ -268,8 +268,8 @@ public class UdpInput extends Input {
      */
     public void submit(String eventBody) throws IOException {
         DatagramSocket socket = new DatagramSocket();
-        InetAddress address = InetAddress.getByName(this.getHost());
-        int port = java.lang.Integer.parseInt(this.getName());
+        InetAddress address = InetAddress.getByName(this.service.getHost());
+        int port = this.getPort();
         byte[] buffer = eventBody.getBytes("UTF8");
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
         socket.send(packet);

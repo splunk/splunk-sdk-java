@@ -21,7 +21,7 @@ package com.splunk;
  * input. This differs from a TCP raw input in that this TCP cooked data is 
  * processed by Splunk and is not in raw form.
  */
-public class TcpSplunkInput extends Input {
+public class TcpSplunkInput extends PortInput {
 
     /**
      * Class constructor.

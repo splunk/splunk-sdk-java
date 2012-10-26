@@ -25,7 +25,7 @@ import java.net.Socket;
  * TCP <i>cooked</i> input in that this TCP input is in raw form, and is not
  * processed (or "cooked").
  */
-public class TcpInput extends Input {
+public class TcpInput extends PortInput {
 
     /**
      * Class constructor.
@@ -42,8 +42,7 @@ public class TcpInput extends Input {
      */
     public Socket attach() throws IOException {
         String hostname = this.service.getHost();
-        int port = java.lang.Integer.parseInt(this.getName());
-        Socket socket = new Socket(hostname, port);
+        Socket socket = new Socket(hostname, this.getPort());
         return socket;
     }
 
