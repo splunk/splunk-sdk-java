@@ -757,6 +757,9 @@ public class InputTest extends SDKTestCase {
     public void testManipulateRestrictToHostProperty() {
         for (InputKind inputKind : INPUT_KINDS_WITH_RESTRICTABLE_HOST) {
             inputs.refresh();
+            testUnrestrictedHost(inputKind);
+            
+            inputs.refresh();
             testSetHost(inputKind);
             
             inputs.refresh();
@@ -765,6 +768,23 @@ public class InputTest extends SDKTestCase {
             inputs.refresh();
             testUpdateHost(inputKind);
         }
+    }
+    
+    private void testUnrestrictedHost(InputKind inputKind) {
+        String port = "9999";   // test port
+        
+        deleteInputIfExists(port);
+        
+        // Create
+        inputs.create(port, inputKind);
+        assertTrue(inputs.containsKey(port));
+        Input input = inputs.get(port);
+        
+        // Test port getter
+        assertEquals(Integer.parseInt(port), getPort(input));
+        
+        // Clean up
+        input.remove();
     }
     
     private void testSetHost(InputKind inputKind) {
@@ -785,6 +805,9 @@ public class InputTest extends SDKTestCase {
             input.refresh();
             assertTrue(inputs.refresh().containsKey(host + ":" + port));
         }
+        
+        // Test port getter
+        assertEquals(Integer.parseInt(port), getPort(input));
         
         // Clean up
         input.remove();
@@ -815,6 +838,9 @@ public class InputTest extends SDKTestCase {
             input.refresh();
             assertTrue(inputs.refresh().containsKey(port));
         }
+        
+        // Test port getter
+        assertEquals(Integer.parseInt(port), getPort(input));
         
         // Clean up
         input.remove();
@@ -847,6 +873,9 @@ public class InputTest extends SDKTestCase {
             assertTrue(inputs.refresh().containsKey(host2 + ":" + port));
         }
         
+        // Test port getter
+        assertEquals(Integer.parseInt(port), getPort(input));
+        
         // Clean up
         input.remove();
     }
@@ -875,6 +904,15 @@ public class InputTest extends SDKTestCase {
             Method setRestrictToHost = input.getClass().getMethod(
                     "setRestrictToHost", String.class);
             setRestrictToHost.invoke(input, host);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private static int getPort(Input input) {
+        try {
+            Method getPort = input.getClass().getMethod("getPort");
+            return (Integer) getPort.invoke(input);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
