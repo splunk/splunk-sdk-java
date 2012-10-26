@@ -2,6 +2,8 @@
 
 ## Version 1.0
 
+* DistributedPeer.getBuild() now returns an int instead of a String (to bring
+  it into line with ServiceInfo.getBuild()).
 * InputCollection now handles arbitrary input kinds represented by modular inputs. The set
   of InputKinds on the connected Splunk instance is available by calling getInputKinds.
   That set is updated every time you call refresh on the collection.

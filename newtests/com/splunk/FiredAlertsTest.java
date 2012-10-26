@@ -113,5 +113,18 @@ public class FiredAlertsTest extends SDKTestCase {
                 service.getFiredAlertGroups().get(savedSearchName);
         assertNotNull(firedAlertGroup);
         assertEquals(1, firedAlertGroup.getAlerts().size());
+
+        for (FiredAlert firedAlert : firedAlertGroup.getAlerts().values()) {
+            firedAlert.getAction();
+            firedAlert.getAlertType();
+            firedAlert.getExpirationTime();
+            firedAlert.getSavedSearchName();
+            firedAlert.getSeverity();
+            firedAlert.getSid();
+            firedAlert.getTriggeredAlertCount();
+            firedAlert.getTriggerTime();
+            firedAlert.getTriggerTimeRendered();
+            firedAlert.isDigestMode();
+        }
     }
 }

@@ -34,11 +34,11 @@ import java.util.UUID;
  *
  * TestCase does the following actions in the various test contexts:
  *
- * @@BeforeClass:
+ * @@Before:
  *   - Read ~/.splunkrc to get host, port, user, and password to connect with.
  *   - Create a Service object connected to the Splunk instance.
  *
- * @@AfterClass:
+ * @@After:
  *   - Logout the Service object.
  */
 public abstract class SDKTestCase extends TestCase {
