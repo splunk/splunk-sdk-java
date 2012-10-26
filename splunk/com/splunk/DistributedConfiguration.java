@@ -45,13 +45,38 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
+     * Disable distributed search on this Splunk instance.
+     *
+     * Requires restarting Splunk before it takes effect.
+     */
+    @Override
+    public void disable() {
+        Args args = new Args();
+        args.put("disabled", "1");
+        update(args);
+    }
+
+    /**
+     * Enable distributed search on this Splunk instance.
+     *
+     * Requires restarting Splunk before it takes effect.
+     */
+    @Override
+    public void enable() {
+        Args args = new Args();
+        args.put("disabled", "0");
+        update(args);
+    }
+
+    /**
      * Indicates whether Splunk automatically adds all discovered servers.
      *
      * @return {@code true} if Splunk automatically adds servers, {@code false}
      * if not.
      */
+    @Deprecated
     public boolean getAutoAddServers() {
-        return getBoolean("autoAddServers");
+        return getBoolean("autoAddServers", false);
     }
 
     /**
@@ -92,7 +117,7 @@ public class DistributedConfiguration extends Entity {
      * servers are not rechecked. The default is 60 seconds.
      */
     public int getCheckTimedOutServersFrequency() {
-        return getInteger("checkTimedOutServersFrequency");
+        return getInteger("checkTimedOutServersFrequency", 60);
     }
 
     /**
@@ -101,8 +126,9 @@ public class DistributedConfiguration extends Entity {
      * @return The heartbeat period, in seconds. If 0, heartbeat checks are
      * disabled.
      */
+    @Deprecated
     public int getHeartbeatFrequency() {
-        return getInteger("heartbeatFrequency");
+        return getInteger("heartbeatFrequency", 0);
     }
 
     /**
@@ -112,18 +138,20 @@ public class DistributedConfiguration extends Entity {
      * @return The multicast address for discovery and heartbeat messages, 
      * or {@code null} if not available.
      */
+    @Deprecated
     public String getHeartbeatMcastAddress() {
-        return getString("heartbeatMcastAddr", null);
+        return getString("heartbeatMcastAddr", "224.0.0.37");
     }
 
     /**
      * Returns the port where each Splunk server sends and listens for heartbeat
      * messages.
      *
-     * @return The heartbeat port.
+     * @return The heartbeat port, or -1 if not specified.
      */
+    @Deprecated
     public int getHeartbeatPort() {
-        return getInteger("heartbeatPort");
+        return getInteger("heartbeatPort", 8888);
     }
 
     /**
@@ -144,7 +172,7 @@ public class DistributedConfiguration extends Entity {
      * distributed configuration, {@code false} if not.
      */
     public boolean getRemovedTimedOutServers() {
-        return getBoolean("removedTimedOutServers");
+        return getBoolean("removedTimedOutServers", false);
     }
 
     /**
@@ -191,7 +219,7 @@ public class DistributedConfiguration extends Entity {
      * {@code false} if not.
      */
     public boolean getShareBundles() {
-        return getBoolean("shareBundles");
+        return getBoolean("shareBundles", true);
     }
 
     /**
@@ -203,8 +231,9 @@ public class DistributedConfiguration extends Entity {
      * @return {@code true} if the server does not participate as a server in
      * any search, {@code false} if it does.
      */
+    @Deprecated
     public boolean getSkipOurselves() {
-        return getBoolean("skipOurselves");
+        return getBoolean("skipOurselves", false);
     }
 
     /**
@@ -214,7 +243,7 @@ public class DistributedConfiguration extends Entity {
      * @return The time-out period, in seconds.
      */
     public int getStatusTimeout() {
-        return getInteger("statusTimeout");
+        return getInteger("statusTimeout", 10);
     }
 
     /**
@@ -222,8 +251,9 @@ public class DistributedConfiguration extends Entity {
      *
      * @return The time-to-live of heartbeat messages.
      */
+    @Deprecated
     public int getTtl() {
-        return getInteger("ttl");
+        return getInteger("ttl", 1);
     }
 
     /**
@@ -233,7 +263,7 @@ public class DistributedConfiguration extends Entity {
      * disabled.
      */
     public boolean isDistSearchEnabled() {
-        return getBoolean("dist_search_enabled");
+        return getBoolean("dist_search_enabled", true);
     }
 
     /**
@@ -242,6 +272,7 @@ public class DistributedConfiguration extends Entity {
      * @param autoAdd {@code true} to add servers automatically, {@code false} 
      * if not. 
      */
+    @Deprecated
     public void setAutoAddServers(boolean autoAdd) {
         setCacheValue("autoAddServers", autoAdd);
     }
@@ -312,6 +343,7 @@ public class DistributedConfiguration extends Entity {
      * @param seconds The time for peer heartbeats, in seconds. If set to 0,
      * heartbeat messages are disabled.
      */
+    @Deprecated
     public void setHeartbeatFrequency(int seconds) {
         setCacheValue("heartbeatFrequency", seconds);
     }
@@ -322,6 +354,7 @@ public class DistributedConfiguration extends Entity {
      *
      * @param mCastAddress The multicast address for server auto discovery.
      */
+    @Deprecated
     public void setHeartbeatMcastAddr(String mCastAddress) {
         setCacheValue("heartbeatMcastAddr", mCastAddress);
     }
@@ -331,6 +364,7 @@ public class DistributedConfiguration extends Entity {
      *
      * @param port The heartbeat port.
      */
+    @Deprecated
     public void setHeartbeatPort(int port) {
         setCacheValue("heartbeatPort", port);
     }
@@ -408,6 +442,7 @@ public class DistributedConfiguration extends Entity {
      * @param skipOurselves {@code true} to skip participation, {@code false} to
      * participate as a server in searches and calls.
      */
+    @Deprecated
     public void setSkipOurselves(boolean skipOurselves) {
         setCacheValue("skipOurselves", skipOurselves);
     }
@@ -433,6 +468,7 @@ public class DistributedConfiguration extends Entity {
      *
      * @param value The time-to-live value of heartbeat messages.
      */
+    @Deprecated
     public void setTTL(int value) {
         setCacheValue("ttl", value);
     }
