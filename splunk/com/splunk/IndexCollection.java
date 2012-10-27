@@ -15,6 +15,9 @@
  */
 
 package com.splunk;
+/**
+ * The {@code IndexCollection} class represents a collection of indexes.
+ */
 
 public class IndexCollection extends EntityCollection<Index> {
     /**
@@ -30,8 +33,8 @@ public class IndexCollection extends EntityCollection<Index> {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link IndexCollectionArgs}).
      */
     IndexCollection(Service service, Args args) {
         super(service, "data/indexes", Index.class, args);
@@ -45,7 +48,7 @@ public class IndexCollection extends EntityCollection<Index> {
         if (this.service.versionCompare("5.0") < 0) {
             throw new SplunkException(
                     SplunkException.UNSUPPORTED,
-                    "Indexes cannot be deleted via the REST API in versions prior to 5.0"
+                    "Indexes cannot be deleted using the REST API in versions earlier than Splunk 5.0."
             );
         } else {
             return (Index)super.remove(key);

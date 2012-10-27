@@ -19,7 +19,8 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * The {@code WindowsEventLogInput} class represents a Windows Event Log input.
+ * The {@code WindowsEventLogInput} class represents a Windows Event Log data
+ * input.
  */
 public class WindowsEventLogInput extends Input {
 
@@ -34,7 +35,9 @@ public class WindowsEventLogInput extends Input {
     }
 
     /**
-     * Returns a list of additional hosts used in monitoring.
+     * Returns a list of secondary hosts used for monitoring. To list the main 
+     * host, use the {@code getLookupHost} method.
+     * @see #getLookupHost
      *
      * @return A comma-separated list of additional hosts used in monitoring,
      * or {@code null} if not specified.
@@ -53,8 +56,7 @@ public class WindowsEventLogInput extends Input {
     }
 
     /**
-     * Returns the input kind of this Windows Event Log input.
-     * @see InputKind
+     * Returns the input kind of this input.
      *
      * @return The input kind.
      */
@@ -85,8 +87,8 @@ public class WindowsEventLogInput extends Input {
     }
 
     /**
-     * Returns the main host of this Windows Event Log input. Secondary hosts
-     * are specified in the {@code hosts} attribute.
+     * Returns the main host of this Windows Event Log input. To list secondary 
+     * hosts, use the {@code getHosts} method.
      * @see #getHosts
      *
      * @return The main host.
@@ -96,10 +98,9 @@ public class WindowsEventLogInput extends Input {
     }
 
     /**
-     * Sets the list of <i>additional</i> hosts to be used for monitoring. This
-     * is a comma-separated list of additional hosts to be used for monitoring.
-     * The first host should be specified with "lookup_host", and the additional
-     * ones using this parameter.
+     * Sets a list of secondary hosts to be used for monitoring. Specify the 
+     * main host using the {@code setLookupHost} method.
+     * @see #setLookupHost
      *
      * @param hosts The comma-separated list of additional hosts.
      */
@@ -126,11 +127,11 @@ public class WindowsEventLogInput extends Input {
     }
 
     /**
-     * Sets the host from which to monitor log events. To specify additional 
-     * hosts to be monitored using WMI, use the {@code hosts} parameter.
-     * @see #getHosts
+     * Sets the main host from which to monitor log events. To specify 
+     * additional hosts to use for monitoring, use the {@code setHosts} method.
+     * @see #setHosts
      *
-     * @param lookup_host The host.
+     * @param lookup_host The main host.
      */
     public void setLookupHost(String lookup_host) {
         setCacheValue("lookup_host", lookup_host);

@@ -65,7 +65,7 @@ public class FiredAlert extends Entity {
     }
 
     /**
-     * Returns the saved search name for this alert.
+     * Returns the saved search for this alert.
      *
      * @return The saved search name, or {@code null} if not available.
      */
@@ -75,7 +75,7 @@ public class FiredAlert extends Entity {
 
     /**
      * Returns this alert's severity on a scale of 1 to 10, with 1 being the
-     * highest priority.
+     * highest severity.
      *
      * @return This alert's severity, or -1 if the value is not specified.
      */
@@ -86,7 +86,7 @@ public class FiredAlert extends Entity {
     /**
      * Returns this alert's search ID (SID).
      *
-     * @return This alerts SID, or {@code null} if not available.
+     * @return This alert's SID, or {@code null} if not available.
      */
     public String getSid() {
         return getString("sid", null);
@@ -103,7 +103,7 @@ public class FiredAlert extends Entity {
     }
 
     /**
-     * Returns this alert's trigger time.
+     * Returns the time this alert was triggered.
      *
      * @return This alert's trigger time, or {@code null} if not available.
      */
@@ -112,7 +112,7 @@ public class FiredAlert extends Entity {
     }
 
     /**
-     * Returns this alert's redered trigger time.
+     * Returns this alert's rendered trigger time.
      * This method is available in Splunk 4.3 and later.
      *
      * @return This alert's trigger time, or {@code null} if not available.

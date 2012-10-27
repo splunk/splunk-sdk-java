@@ -23,6 +23,10 @@ import java.util.Iterator;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
 import java.io.PushbackReader;
+/**
+ * The {@code ResultsReaderXml} class represents a streaming XML reader for 
+ * Splunk search results.
+ */
 
 public class ResultsReaderXml extends ResultsReader {
 

@@ -20,7 +20,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * The {@code EntityCollection} class represents a collection of entities.
+ * The {@code EntityCollection} class represents a collection of Splunk 
+ * entities.
  *
  * @param <T> The type of members in the collection.
  */
@@ -41,8 +42,8 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      *
      * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link CollectionArgs}).
      */
     EntityCollection(Service service, String path, Args args) {
         super(service, path, Entity.class, args);
@@ -65,8 +66,8 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
      * @param itemClass The entity's class.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link CollectionArgs}).
      */
     EntityCollection(Service service, String path, Class itemClass, Args args) {
         super(service, path, itemClass, args);
@@ -86,7 +87,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * Creates an entity in this collection.
      *
      * @param name The name of the entity.
-     * @param args The arguments that are provided for creating the entity.
+     * @param args Arguments for creating the entity.
      * @return The entity.
      */
     public T create(String name, Map args) {
@@ -100,11 +101,12 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * Removes an entity from this collection.
      *
      * @param key The name of the entity to remove.
-     * @return This collection.
-     * @throws SplunkException "AMBIGUOUS" if the collection contains more than
-     * one entity with the specified key. Disambiguation is done through the
-     * similar method {@code remove(Object key, HashMap<String,String>namespace}
-     * which uses the namespace to perform the disambiguation.
+     * @return The collection.
+     * @throws SplunkException The exception "AMBIGUOUS" if the collection
+     * contains more than one entity with the specified key. Disambiguation is
+     * done through a similar method, 
+     * {@code remove(Object key, HashMap<String,String>namespace}, which uses 
+     * the namespace to perform the disambiguation.
      */
     public T remove(String key) {
         validate();

@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.Date;
 
 /**
- * The {@code ScriptInput} class represents a scripted input.
+ * The {@code ScriptInput} class represents a scripted data input.
  */
 public class ScriptInput extends Input {
 
@@ -45,7 +45,7 @@ public class ScriptInput extends Input {
     /**
      * Returns the OS group of commands for this scripted input.
      *
-     * @return The group, or {@code null} if not specified.
+     * @return The group of commands, or {@code null} if not specified.
      */
     public String getGroup() {
         return getString("group", null);
@@ -80,7 +80,6 @@ public class ScriptInput extends Input {
 
     /**
      * Returns the input kind for this scripted input.
-     * @see InputKind
      *
      * @return The input kind.
      */
@@ -136,13 +135,14 @@ public class ScriptInput extends Input {
 
     /**
      * Sets whether the scripted input is enabled or disabled. 
-     * You can also do this using the {@code Entity.disable} and 
-     * {@code Entity.enable} methods. 
-     * @see Entity#disable
-     * @see Entity#enable
+     * <p>
+     * <b>Note:</b> Using this method requires you to restart Splunk before this
+     * setting takes effect. To avoid restarting Splunk, use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
      *
-     * @param disabled {@code true} to disable the scripted input, {@code false}
-     * to enable it.
+     * @param disabled {@code true} to disable the input, {@code false} to
+     * enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
@@ -171,7 +171,7 @@ public class ScriptInput extends Input {
      * Sets an interval or a cron schedule that determines when to run the 
      * script. If a cron schedule is used, the script doesn't run at startup.
      *
-     * @param interval An interval, in seconds or cron schedule.
+     * @param interval An interval, in seconds or a cron schedule.
      */
     public void setInterval(String interval) {
         setCacheValue("interval", interval);

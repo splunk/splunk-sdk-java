@@ -26,7 +26,7 @@ public class ApplicationSetup extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The full path of the parent endpoint.
+     * @param path The application endpoint.
      */
     ApplicationSetup(Service service, String path) {
         super(service, path + "/setup");

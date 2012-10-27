@@ -19,9 +19,9 @@ package com.splunk;
 import java.io.UnsupportedEncodingException;
 
 /**
- * This module is used to turn binary date in to base64 (radix-64) encoding.
- * Its primary use is a utility function to encode the StormService
- * authorization token.
+ * The {@code Base64} module is used to turn binary data into base64 (radix-64)
+ * encoding. Its primary use is a utility function to encode the 
+ * {@code StormService} authorization token.
  */
 public class Base64 {
 

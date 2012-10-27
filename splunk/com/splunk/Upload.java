@@ -20,7 +20,8 @@ import java.util.Date;
 
 /**
  * The {@code Upload} class represents an in-progress oneshot upload. Use this 
- * class to query the state of the upload.
+ * class to query the state of the upload. 
+ * @see Index#upload 
  */
 public class Upload extends Entity {
 

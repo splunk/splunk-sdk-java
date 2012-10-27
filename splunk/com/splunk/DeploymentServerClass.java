@@ -80,9 +80,9 @@ public class DeploymentServerClass extends Entity {
 
     /**
      * Returns the filter type that is applied first. If {@code filterType} is 
-     * whitelist, all whitelist filters are applied first, followed by blacklist
-     * filters. If {@code filterType} is blacklist, all blacklist filters are
-     * applied first, followed by whitelist filters.
+     * "whitelist", all whitelist filters are applied first, followed by 
+     * blacklist filters. If {@code filterType} is "blacklist", all blacklist 
+     * filters are applied first, followed by whitelist filters.
      *
      * @return The filter type.
      */
@@ -195,8 +195,7 @@ public class DeploymentServerClass extends Entity {
      * <li>"blacklist" applies the blacklist filters first, followed by 
      * whitelist filters. </li></ul>
      *
-     * @param filterType The filter type to apply first ("whitelist" or 
-     * "blacklist").
+     * @param filterType The filter type to apply first.
      */
     public void setFilterType(String filterType) {
         setCacheValue("filterType", filterType);

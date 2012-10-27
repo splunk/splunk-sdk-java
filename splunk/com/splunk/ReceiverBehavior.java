@@ -17,6 +17,9 @@ package com.splunk;
 
 import java.io.IOException;
 import java.io.OutputStream;
+/**
+ * The {@code ReceiverBehavior} interface represents an output stream.
+ */
 
 public interface ReceiverBehavior {
     public void run(OutputStream stream) throws IOException;

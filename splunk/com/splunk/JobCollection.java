@@ -40,8 +40,8 @@ public class JobCollection extends EntityCollection<Job> {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link CollectionArgs}).
      */
     JobCollection(Service service, Args args) {
         super(service, "search/jobs", Job.class, args);
@@ -50,11 +50,10 @@ public class JobCollection extends EntityCollection<Job> {
     /**
      * Creates a search with a UTF8 pre-encoded search request.
      * <p>
-     * <b>Note:</b> A 'oneshot' request is invalid. To create a oneshot search,
-     * use the {@code Service.oneshot} method instead.
-     * @see Service#oneshot
+     * <b>Note:</b> You can't create a "oneshot" search using this method. 
+     * Instead, use the {@link Service#oneshot} method.
      *
-     * @param query The search query string.
+     * @param query The search query.
      * @return The unique search identifier (SID).
      */
     public Job create(String query) {
@@ -64,12 +63,11 @@ public class JobCollection extends EntityCollection<Job> {
     /**
      * Creates a search.
      * <p>
-     * <b>Note:</b> A 'oneshot' request is invalid. To create a oneshot search,
-     * use the {@code Service.oneshot} method instead.
-     * @see Service#oneshot
+     * <b>Note:</b> You can't create a "oneshot" search using this method. 
+     * Instead, use the {@link Service#oneshot} method.
      *
-     * @param query The search query string.
-     * @param args Additional arguments for this job.
+     * @param query The search query.
+     * @param args Additional arguments for this job (see {@link JobArgs}).
      * @return The unique search identifier (SID).
      */
     public Job create(String query, Map args) {
@@ -100,13 +98,12 @@ public class JobCollection extends EntityCollection<Job> {
     /**
      * Creates a search.
      * <p>
-     * <b>Note:</b> A 'oneshot' request is invalid. To create a oneshot search,
-     * use the {@code Service.oneshot} method instead.
-     * @see Service#oneshot
+     * <b>Note:</b> You can't create a "oneshot" search using this method. 
+     * Instead, use the {@link Service#oneshot} method.
      *
-     * @param query The search query string.
-     * @param args Additional arguments for this job.
-     * @return The unique search identifier (SID).
+     * @param query The search query.
+     * @param args Additional arguments for this job (see {@link JobArgs}).
+     * @return The unique search identifier (SID) for the job.
      */
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.

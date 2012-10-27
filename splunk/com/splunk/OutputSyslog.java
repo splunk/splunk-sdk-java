@@ -52,7 +52,10 @@ public class OutputSyslog extends Entity {
     }
 
     /**
-     * Sets the syslog priority.
+     * Sets the syslog priority. For more information about the correct values 
+     * and format, see 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/Admin/Outputsconf" 
+     * target="_blank">outputs.conf</a> in the Admin Manual.
      *
      * @param priority The syslog priority.
      */
@@ -70,7 +73,10 @@ public class OutputSyslog extends Entity {
     }
 
     /**
-     * Sets the timestamp format that precedes each event that is sent.
+     * Sets the timestamp format that precedes each event that is sent. For more
+     * information about this format, see 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/Admin/Outputsconf" 
+     * target="_blank">outputs.conf</a> in the Admin Manual.
      *
      * @param timestampformat The timestamp format.
      */

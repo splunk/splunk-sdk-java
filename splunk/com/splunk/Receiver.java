@@ -63,7 +63,8 @@ public class Receiver {
     /**
      * Creates a writable socket to this index.
      *
-     * @param args The optional arguments to the streaming endpoint.
+     * @param args Optional arguments for this stream. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
      * @throws IOException
      */
@@ -75,7 +76,8 @@ public class Receiver {
      * Creates a writable socket to this index.
      *
      * @param indexName The index to write to.
-     * @param args The optional arguments to the streaming endpoint.
+     * @param args Optional arguments for this stream. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
      * @throws IOException
      */
@@ -108,7 +110,7 @@ public class Receiver {
     /**
      * Submits an event to this index through HTTP POST.
      *
-     * @param data Posted event data.
+     * @param data A string containing event data.
      */
     public void submit(String data) {
         submit(null, null, data);
@@ -118,7 +120,7 @@ public class Receiver {
      * Submits an event to this index through HTTP POST.
      *
      * @param indexName The index to write to.
-     * @param data Posted event data.
+     * @param data A string containing event data.
      */
     public void submit(String indexName, String data) {
         submit(indexName, null, data);
@@ -127,8 +129,9 @@ public class Receiver {
     /**
      * Submits an event to this index through HTTP POST.
      *
-     * @param data Posted event data.
-     * @param args Optional arguments for the simple receivers endpoint.
+     * @param data A string containing event data.
+     * @param args Optional arguments for this stream. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
      */
     public void submit(Args args, String data) {
         submit(null, args, data);
@@ -138,8 +141,9 @@ public class Receiver {
      * Logs an event to this index through HTTP POST.
      *
      * @param indexName The index to write to.
-     * @param data Posted event data.
-     * @param args Optional arguments for the simple receivers endpoint.
+     * @param data A string containing event data.
+     * @param args Optional arguments for this stream. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
      */
     public void submit(String indexName, Args args, String data) {
         String sendString = "";
@@ -160,7 +164,7 @@ public class Receiver {
      * Submits an event to this index through HTTP POST. This method is an alias
      * for {@code submit()}.
      *
-     * @param data Posted event data.
+     * @param data A string containing event data.
      */
     public void log(String data) {
         submit(data);
@@ -171,7 +175,7 @@ public class Receiver {
      * for {@code submit()}.
      *
      * @param indexName The index to write to.
-     * @param data Posted event data.
+     * @param data A string containing event data.
      */
     public void log(String indexName, String data) {
         submit(indexName, data);
@@ -181,8 +185,9 @@ public class Receiver {
      * Submits an event to this index through HTTP POST. This method is an alias
      * for {@code submit()}.
      *
-     * @param args Optional arguments for the simple receivers endpoint.
-     * @param data Posted event data.
+     * @param args Optional arguments for this stream. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
+     * @param data A string containing event data.
      */
     public void log(Args args, String data) {
         submit(args, data);
@@ -193,8 +198,9 @@ public class Receiver {
      * for {@code submit()}.
      *
      * @param indexName The index to write to.
-     * @param args Optional arguments for the simple receivers endpoint.
-     * @param data Posted event data.
+     * @param args Optional arguments for this stream. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
+     * @param data A string containing event data.
      */
     public void log(String indexName, Args args, String data) {
         submit(indexName, args, data);

@@ -33,7 +33,7 @@ public class Job extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The jobs search endpoint.
+     * @param path The search jobs endpoint.
      */
     Job(Service service, String path) {
         super(service, path);
@@ -57,7 +57,7 @@ public class Job extends Entity {
      * "enablepreview", and "disablepreview".
      *
      * @param action The action to perform.
-     * @return The job.
+     * @return The search job.
      */
     public Job control(String action) {
         return control(action, null);
@@ -70,7 +70,7 @@ public class Job extends Entity {
      *
      * @param action The action to perform.
      * @param args Optional arguments for this action ("ttl" and "priority").
-     * @return The job.
+     * @return The search job.
      */
     public Job control(String action, Map args) {
         args = Args.create(args).add("action", action);
@@ -82,14 +82,15 @@ public class Job extends Entity {
     /**
      * Stops the current search and deletes the result cache.
      *
-     * @return The job.
+     * @return The search job.
      */
     public Job cancel() {
         return control("cancel");
     }
 
     /**
-     * Checks if the job is ready to be accessed, throw an exception if not.
+     * Checks whether the job is ready to be accessed, and throws an exception
+     * if it is not.
      */
     private void checkReady() {
         if (!isReady()) throw new SplunkException(SplunkException.JOB_NOTREADY,
@@ -99,7 +100,7 @@ public class Job extends Entity {
     /**
      * Disables preview for this job.
      *
-     * @return The job.
+     * @return The search job.
      */
     public Job disablePreview() {
         return control("disablepreview");
@@ -109,7 +110,7 @@ public class Job extends Entity {
      * Enables preview for this job (although it might slow search
      * considerably).
      *
-     * @return The job.
+     * @return The search job.
      */
     public Job enablePreview() {
         return control("enablepreview");
@@ -118,16 +119,16 @@ public class Job extends Entity {
     /**
      * Stops the job and provides intermediate results available for retrieval.
      *
-     * @return  The job.
+     * @return  The search job.
      */
     public Job finish() {
         return control("finalize");
     }
 
     /**
-     * Suspends the execution of the current search.
+     * Pauses the current search.
      *
-     * @return The job.
+     * @return The search job.
      */
     public Job pause() {
         return control("pause");
@@ -148,7 +149,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns a value that indicates jobs how were started (such as the
+     * Returns a value that indicates how jobs were started (such as the
      * scheduler).
      *
      * @return The delegate, or {@code null} if not specified.
@@ -182,7 +183,8 @@ public class Job extends Entity {
 
     /**
      * Returns the approximate progress of the job, in the range of 0.0 to 1.0.
-     * </br>doneProgress = (latestTime-cursorTime) / (latestTime-earliestTime)
+     * </br>
+     * {@code doneProgress = (latestTime-cursorTime)/(latestTime-earliestTime)}
      * @see #getLatestTime
      * @see #getCursorTime
      * @see #getEarliestTime
@@ -271,9 +273,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for this job's events.
+     * Returns the {@code InputStream} IO handle for this job's events.
      *
-     * @return The event InputStream IO handle.
+     * @return The event {@code InputStream} IO handle.
      */
     public InputStream getEvents() {
         checkReady();
@@ -281,11 +283,15 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for this job's events.
+     * Returns the {@code InputStream} IO handle for this job's events.
      *
-     * @param args Optional arguments.
+     * @param args Optional arguments. 
+     * For a list of possible parameters, see the Request parameters for the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTsearch#GET_search.2Fjobs.2F.7Bsearch_id.7D.2Fevents" 
+     * target="_blank">GET search/jobs/{search_id}/events</a>
+     * endpoint in the REST API documentation.
      *
-     * @return The event InputStream IO handle.
+     * @return The event {@code InputStream} IO handle.
      */
     public InputStream getEvents(Map args) {
         checkReady();
@@ -294,11 +300,11 @@ public class Job extends Entity {
     }
     
     /**
-     * Returns the InputStream IO handle for this job's events.
+     * Returns the {@code InputStream} IO handle for this job's events.
      *
-     * @param args Optional arguments.
+     * @param args Optional arguments (see {@link JobEventsArgs}).
      *
-     * @return The event InputStream IO handle.
+     * @return The event {@code InputStream} IO handle.
      */
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.
@@ -309,7 +315,8 @@ public class Job extends Entity {
 
     /**
      * Returns the subset of the entire search that is before any transforming 
-     * commands. The original search should be the eventSearch + reportSearch.
+     * commands. The original search should be the "eventSearch" + 
+     * "reportSearch".
      * @see #getReportSearch
      * @return The event search query.
      */
@@ -321,9 +328,9 @@ public class Job extends Entity {
     /**
      * Returns a value that indicates how events are sorted. 
      *
-     * @return {@code asc} if events are sorted in time order (oldest first),
-     * {@code desc} if events are sorted in inverse time order (latest first), 
-     * or {@code none} if events are not sorted.
+     * @return "asc" if events are sorted in time order (oldest first),
+     * "desc" if events are sorted in inverse time order (latest first), 
+     * or "none" if events are not sorted.
      */
     public String getEventSorting() {
         checkReady();
@@ -334,7 +341,7 @@ public class Job extends Entity {
      * Returns all positive keywords used by this job. A positive keyword is 
      * a keyword that is not in a NOT clause.
      *
-     * @return The job keywords.
+     * @return The search job keywords.
      */
     public String getKeywords() {
         checkReady();
@@ -344,7 +351,7 @@ public class Job extends Entity {
     /**
      * Returns this job's label.
      *
-     * @return The job label.
+     * @return The search job label.
      */
     public String getLabel() {
         checkReady();
@@ -365,9 +372,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns this job's name (its SID).
+     * Returns this job's name (its search ID).
      *
-     * @return The job name.
+     * @return The search job name.
      */
     @Override public String getName() {
         checkReady();
@@ -388,7 +395,7 @@ public class Job extends Entity {
     /**
      * Returns this job's priority in the range of 0-10.
      *
-     * @return The job priority.
+     * @return The search job priority.
      */
     public int getPriority() {
         checkReady();
@@ -418,7 +425,7 @@ public class Job extends Entity {
     /**
      * Returns the reporting subset of this search, which is the streaming part
      * of the search that is send to remote providers if reporting commands are
-     * used. The original search should be the eventSearch + reportSearch.
+     * used. The original search should be the "eventSearch" + "reportSearch".
      * @see #getEventSearch
      *
      * @return The reporting search query.
@@ -441,7 +448,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Indicates whether the job's result is available by streaming.
+     * Indicates whether the job's results are available by streaming.
      *
      * @return {@code true} if results can be streamed, {@code false} if not.
      */
@@ -462,9 +469,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the results from this job.
+     * Returns the {@code InputStream} IO handle for the results from this job.
      *
-     * @return The results InputStream IO handle.
+     * @return The results {@code InputStream} IO handle.
      */
     public InputStream getResults() {
         checkReady();
@@ -472,10 +479,14 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the results from this job.
+     * Returns the {@code InputStream} IO handle for the results from this job.
      *
      * @param args Optional arguments.
-     * @return The results InputStream IO handle.
+     * For a list of possible parameters, see the Request parameters for the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTsearch#GET_search.2Fjobs.2F.7Bsearch_id.7D.2Fresults" 
+     * target="_blank">GET search/jobs/{search_id}/results</a>
+     * endpoint in the REST API documentation.
+     * @return The results {@code InputStream} IO handle.
      */
     public InputStream getResults(Map args) {
         checkReady();
@@ -484,10 +495,10 @@ public class Job extends Entity {
     }
     
     /**
-     * Returns the InputStream IO handle for the results from this job.
+     * Returns the {@code InputStream} IO handle for the results from this job.
      *
-     * @param args Optional arguments.
-     * @return The results InputStream IO handle.
+     * @param args Optional arguments (see {@link JobResultsArgs}).
+     * @return The results {@code InputStream} IO handle.
      */
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.
@@ -497,9 +508,10 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the preview results from this job.
+     * Returns the {@code InputStream} IO handle for the preview results from 
+     * this job.
      *
-     * @return The preview results InputStream IO handle.
+     * @return The preview results {@code InputStream} IO handle.
      */
     public InputStream getResultsPreview() {
         checkReady();
@@ -507,10 +519,15 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the preview results from this job.
+     * Returns the {@code InputStream} IO handle for the preview results from 
+     * this job.
      *
-     * @param  args Optional arguments.
-     * @return The preview results InputStream IO handle.
+     * @param args Optional arguments.
+     * For a list of possible parameters, see the Request parameters for the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTsearch#GET_search.2Fjobs.2F.7Bsearch_id.7D.2Fresults_preview" 
+     * target="_blank">GET search/jobs/{search_id}/results_preview</a>
+     * endpoint in the REST API documentation.
+     * @return The preview results {@code InputStream} IO handle.
      */
     public InputStream getResultsPreview(Map args) {
         checkReady();
@@ -519,10 +536,11 @@ public class Job extends Entity {
     }
     
     /**
-     * Returns the InputStream IO handle for the preview results from this job.
+     * Returns the {@code InputStream} IO handle for the preview results from 
+     * this job.
      *
-     * @param  args Optional arguments.
-     * @return The preview results InputStream IO handle.
+     * @param  args Optional arguments (see {@link JobResultsPreviewArgs}).
+     * @return The preview results {@code InputStream} IO handle.
      */
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.
@@ -588,9 +606,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle to the search log for this job.
+     * Returns the {@code InputStream} IO handle to the search log for this job.
      *
-     * @return The search log InputStream IO handle.
+     * @return The search log {@code InputStream} IO handle.
      */
     public InputStream getSearchLog() {
         checkReady();
@@ -598,10 +616,10 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle to the search log for this job.
+     * Returns the {@code InputStream} IO handle to the search log for this job.
      *
-     * @param args Optional arguments
-     * @return The search log InputStream IO handle.
+     * @param args Optional argument ("attachment").
+     * @return The search log {@code InputStream} IO handle.
      */
     public InputStream getSearchLog(Map args) {
         checkReady();
@@ -609,6 +627,11 @@ public class Job extends Entity {
         return response.getContent();
     }
 
+    /**
+     * Returns a list of search peers that were contacted for this search.
+     *
+     * @return The search peers.
+     */
     public String[] getSearchProviders() {
         checkReady();
         return getStringArray("searchProviders", null);
@@ -624,7 +647,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns this job's SID from within a response message.
+     * Returns this job's search ID from within a response message.
      *
      * @param response The response message.
      * @return This job's SID.
@@ -637,9 +660,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the summary for this job.
+     * Returns the {@code InputStream} IO handle for the summary for this job.
      *
-     * @return The summary InputStream IO handle.
+     * @return The summary {@code InputStream} IO handle.
      */
     public InputStream getSummary() {
         checkReady();
@@ -647,10 +670,14 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the summary for this job.
+     * Returns the {@code InputStream} IO handle for the summary for this job.
      *
      * @param args Optional arguments.
-     * @return The summary InputStream IO handle.
+     * For a list of possible parameters, see the Request parameters for the 
+     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTsearch#GET_search.2Fjobs.2F.7Bsearch_id.7D.2Fsummary" 
+     * target="_blank">GET search/jobs/{search_id}/summary</a>
+     * endpoint in the REST API documentation.
+     * @return The summary {@code InputStream} IO handle.
      */
     public InputStream getSummary(Map args) {
         checkReady();
@@ -659,10 +686,10 @@ public class Job extends Entity {
     }
     
     /**
-     * Returns the InputStream IO handle for the summary for this job.
+     * Returns the {@code InputStream} IO handle for the summary for this job.
      *
-     * @param args Optional arguments.
-     * @return The summary InputStream IO handle.
+     * @param args Optional arguments (see {@link JobSummaryArgs}).
+     * @return The summary {@code InputStream} IO handle.
      */
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.
@@ -682,9 +709,9 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the timeline for this job.
+     * Returns the {@code InputStream} IO handle for the timeline for this job.
      *
-     * @return The timeline InputStream IO handle.
+     * @return The timeline {@code InputStream} IO handle.
      */
     public InputStream getTimeline() {
         checkReady();
@@ -692,10 +719,10 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the InputStream IO handle for the timeline for this job.
+     * Returns the {@code InputStream} IO handle for the timeline for this job.
      *
-     * @param args Optional arguments.
-     * @return The timeline InputStream IO handle.
+     * @param args Optional arguments ("output_time_format" and "time_format").
+     * @return The timeline {@code InputStream} IO handle.
      */
     public InputStream getTimeline(Map args) {
         checkReady();
@@ -747,7 +774,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Indicates whether the jobs is paused.
+     * Indicates whether the job is paused.
      *
      * @return {@code true} if the job is paused, {@code false} if not.
      */
@@ -770,7 +797,7 @@ public class Job extends Entity {
      * Indicates whether the job has been scheduled and is ready to
      * return data.
      *
-     * @return {@code true} if the job is a real-time search, {@code false} if
+     * @return {@code true} if the job is ready to return data, {@code false} if
      * not.
      */
     public boolean isReady() {
@@ -837,7 +864,7 @@ public class Job extends Entity {
     /**
      * Refreshes this job.
      *
-     * @return This job.
+     * @return The search job.
      */
     @Override public Job refresh() {
         update();
