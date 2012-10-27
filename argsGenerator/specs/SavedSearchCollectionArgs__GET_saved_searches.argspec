@@ -3,12 +3,14 @@
 earliest_time
 EarliestTime
 String
-For scheduled searches display all the scheduled times starting from this time (not just the next run time)
+Sets the earliest time for which to display the scheduled times for scheduled searches (not just the next run time).
+The earliest time.
 ===
 # TODO: Improve docs: What is the accepted time format?
 # TODO: Make Date version.
 latest_time
 LatestTime
 String
-For scheduled searches display all the scheduled times until this time (not just the next run time)
+Sets the latest time until which to display the scheduled times for scheduled searches (not just the next run time). 
+The latest time.
 ===

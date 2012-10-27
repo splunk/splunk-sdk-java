@@ -1,25 +1,30 @@
+# FIXME: Temporarily all overloaded arguments until David can update the generator
+!SET ignore_duplicates 1
+#
 # TODO: Improve docs: What is the accepted time format?
 # TODO: Make Date version.
 dispatch.now
 DispatchNow
 String
-Dispatch the search as if this was the current time.
+Sets a time that dispatches the search as though the specified time were the current time.
+A string with the specified time.
 ===
 dispatch.buckets
 DispatchBuckets
 int
+Sets the maximum number of timeline buckets. 
 The maximum number of timeline buckets.
 ===
 dispatch.earliest_time
 DispatchEarliestTime
 String
-A time string that specifies the earliest time for this search. Can be a relative or absolute time.
-
-If this value is an absolute time, use the dispatch.time_format to format the value.
+Specifies the earliest time for this search. This value can be a relative or absolute time. If this value is an absolute time, use {@link #setDispatchTimeFormat} to format the value.
+A time string that specifies the earliest time for this search.
 ===
 dispatch.earliest_time
 DispatchEarliestTime
 Date
+Sets the earliest time for this search. 
 A date that specifies the earliest time for this search.
 !CODE
         // Documented format:        "%FT%T.%Q%:z"
@@ -32,13 +37,13 @@ A date that specifies the earliest time for this search.
 dispatch.latest_time
 DispatchLatestTime
 String
-A time string that specifies the latest time for this saved search. Can be a relative or absolute time.
-
-If this value is an absolute time, use the dispatch.time_format to format the value.
+Specifies the latest time for this search. This value can be a relative or absolute time. If this value is an absolute time, use {@link #setDispatchTimeFormat} to format the value.
+A time string that specifies the latest time for this search.
 ===
 dispatch.latest_time
 DispatchLatestTime
 Date
+Sets the latest time for this search. 
 A date that specifies the latest time for this saved search.
 !CODE
         // Documented format:        "%FT%T.%Q%:z"
@@ -51,59 +56,61 @@ A date that specifies the latest time for this saved search.
 dispatch.lookups
 DispatchLookups
 boolean
-Enables or disables the lookups for this search.
+Indicates whether to enable lookups for this search.
+{@code true} to enable lookups, {@code false} if not.
 ===
 dispatch.max_count
 DispatchMaximumCount
 int
-The maximum number of results before finalizing the search.
+Sets the maximum number of results before finalizing the search. 
+The maximum number of results.
 ===
 dispatch.max_time
 DispatchMaximumTime
 int
-Indicates the maximum amount of time (in seconds) before finalizing the search.
+Sets the the maximum amount of time before finalizing the search.
+The maximum amount of time, in seconds. 
 ===
 dispatch.reduce_freq
 DispatchReduceFrequency
 int
-Specifies, in seconds, how frequently Splunk should run the MapReduce reduce phase on accumulated map values.
+Set the frequency for how often Splunk should run the MapReduce reduce phase on accumulated map values.
+The frequency, in seconds.
 ===
 dispatch.rt_backfill
 DispatchRealTimeBackfill
 boolean
-Whether to back fill the real time window for this search. Parameter valid only if this is a real time search
+Indicates whether to back fill the real-time window for this search. This value is only used for real-time searches. 
+{@code true} to back fill the real-time window, {@code false} if not.
 ===
 dispatch.spawn_process
 DispatchSpawnProcess
 boolean
-Specifies whether Splunk spawns a new search process when this saved search is executed.
-
-Searches against indexes must run in a separate process.
+Indicates whether the search should run in a separate spawned process. Searches against indexes must run in a separate process.
+{@code true} to run the search in a separate process, {@code false} if not.
 ===
 dispatch.time_format
 DispatchTimeFormat
 String
-A time format string that defines the time format that Splunk uses to specify the earliest and latest time. 
+Sets a time format for Splunk to use to specify the earliest and latest times.
+A time format string. 
 ===
 dispatch.ttl
 # The TTL acronym is not expanded here to be consistent with Job.getTtl
 DispatchTtl
 String
-Valid values: Integer[p]
-
-Indicates the time to live (in seconds) for the artifacts of the scheduled search, if no actions are triggered.
-
-If an action is triggered Splunk changes the ttl to that action's ttl. If multiple actions are triggered, Splunk applies the maximum ttl to the artifacts. To set the action's ttl, refer to alert_actions.conf.spec.
-
-If the integer is followed by the letter 'p' Splunk interprets the ttl as a multiple of the scheduled search's period.
+Indicates the time to live (TTL) for the artifacts of the scheduled search, if no actions are triggered. If an action is triggered, Splunk changes the TTL to that action's TTL. If multiple actions are triggered, Splunk applies the maximum TTL to the artifacts. To set the action's TTL, refer to alert_actions.conf.spec.
+The time to live, in seconds. If the value is a number followed by "p", it is the number of scheduled search periods.
 ===
 trigger_actions
 TriggerActions
 boolean
 Indicates whether to trigger alert actions.
+{@code true} to trigger alert actions, {@code false} if not.
 ===
 force_dispatch
 ForceDispatch
 boolean
-Indicates whether to start a new search even if another instance of this search is already running.
+Indicates whether to start a new search, even if another instance of this search is already running.
+{@code true} to start a new search, {@code false} if not.
 ===
