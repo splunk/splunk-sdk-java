@@ -22,6 +22,8 @@ import java.net.Socket;
 import org.junit.Test;
 
 public class SettingsTest extends SDKTestCase {
+    private static final boolean VERBOSE_PORT_SCAN = false;
+    
     @Test
     public void testGettersThrowNoExceptions() {
         Settings settings = service.getSettings();
@@ -104,8 +106,14 @@ public class SettingsTest extends SDKTestCase {
         try {
             Socket pingSocket = new Socket("127.0.0.1", port);
             pingSocket.close();
+            if (VERBOSE_PORT_SCAN) {
+                System.out.println("IN-USE(" + port + ")");
+            }
             return true;
         } catch (IOException e) {
+            if (VERBOSE_PORT_SCAN) {
+                System.out.println("OPEN(" + port + "): " + e.getMessage());
+            }
             return false;
         }
     }
