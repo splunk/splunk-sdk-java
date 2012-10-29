@@ -23,9 +23,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 public class DeploymentServerClassTest extends SDKTestCase {
-    EntityCollection<DeploymentServerClass> classes;
-    String serverClassName;
-    DeploymentServerClass serverClass;
+    private EntityCollection<DeploymentServerClass> classes;
+    private String serverClassName;
+    private DeploymentServerClass serverClass;
 
     @Before @Override
     public void setUp() throws Exception {
