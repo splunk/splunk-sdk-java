@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -643,11 +642,5 @@ public class InputCrudTest extends InputTest {
         // Remove
         windowsWmiInput.remove();
         assertFalse(inputs.refresh().containsKey(name));
-    }
-    
-    // === Utility ===
-    
-    protected static boolean contains(String[] array, String value) {
-        return Arrays.asList(array).contains(value);
     }
 }

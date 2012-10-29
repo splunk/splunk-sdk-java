@@ -25,6 +25,7 @@ import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -128,6 +129,8 @@ public abstract class SDKTestCase extends TestCase {
 
         super.tearDown();
     }
+    
+    // === Temporary Names ===
 
     protected static String createTimestamp() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
@@ -140,6 +143,8 @@ public abstract class SDKTestCase extends TestCase {
         String name = "delete-me-" + u.toString();
         return name;
     }
+    
+    // === Asserts ===
 
     public static abstract class EventuallyTrueBehavior {
         public int tries;
@@ -170,19 +175,8 @@ public abstract class SDKTestCase extends TestCase {
         fail(behavior.timeoutMessage);
         return false;
     }
-
-    public void clearRestartMessage() {
-        final MessageCollection messages = service.getMessages();
-        if (messages.containsKey("restart_required")) {
-            messages.remove("restart_required");
-            assertEventuallyTrue(new EventuallyTrueBehavior() {
-                @Override public boolean predicate() {
-                    messages.refresh();
-                    return !messages.containsKey("restart_required");
-                }
-            });
-        }
-    }
+    
+    // === Test Data Installation ===
 
     public boolean hasApplicationCollection() {
         return !service.getApplications().containsKey("sdk-app-collection");
@@ -217,12 +211,20 @@ public abstract class SDKTestCase extends TestCase {
         service.post("apps/appinstall", args);
         installedApps.add(applicationName);
     }
+    
+    // === Restarts ===
 
-    protected static void sleep(int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
+    public void clearRestartMessage() {
+        final MessageCollection messages = service.getMessages();
+        if (messages.containsKey("restart_required")) {
+            messages.remove("restart_required");
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override public boolean predicate() {
+                    messages.refresh();
+                    return !messages.containsKey("restart_required");
+                }
+            });
         }
-        catch (InterruptedException e) {}
     }
 
     public boolean restartRequired() {
@@ -280,6 +282,15 @@ public abstract class SDKTestCase extends TestCase {
 
         connect();
     }
+    
+    // === Misc ===
+    
+    protected static void sleep(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        }
+        catch (InterruptedException e) {}
+    }
 
     protected int findNextUnusedPort(int startingPort) {
         InputCollection inputs = service.getInputs();
@@ -289,5 +300,9 @@ public abstract class SDKTestCase extends TestCase {
             port++;
         }
         return port;
+    }
+    
+    protected static boolean contains(String[] array, String value) {
+        return Arrays.asList(array).contains(value);
     }
 }
