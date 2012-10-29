@@ -85,7 +85,16 @@ public class Job extends Entity {
      * @return The job.
      */
     public Job cancel() {
-        return control("cancel");
+        try {
+            return control("cancel");
+        } catch (HttpException e) {
+            if (e.getStatus() == 404) {
+                // Already cancelled; cancel is a nop.
+            } else {
+                throw e;
+            }
+        }
+        return this;
     }
 
     /**
