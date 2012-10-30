@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ResultsReaderTest extends TestCase {
@@ -42,20 +43,67 @@ public class ResultsReaderTest extends TestCase {
     }
 
     @Test
-    public void test200Results() {
-        InputStream input = openResource("results200.xml");
+    public void testResults() {
+        InputStream input = openResource("results.xml");
         try {
             ResultsReaderXml reader = new ResultsReaderXml(input);
-            Map<String, String> event = reader.getNextEvent();
-            assertEquals("0:39987", event.get("_cd"));
-            assertEquals("blovering.local", event.get("host"));
+
+            Map<String, String> expected, found;
+            expected = new HashMap<String, String>();
+
+            expected.clear();
+            expected.put("series", "twitter");
+            expected.put("sum(kb)", "14372242.758775");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd");
+            expected.put("sum(kb)", "267802.333926");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "flurry");
+            expected.put("sum(kb)", "12576.454102");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd_access");
+            expected.put("sum(kb)", "5979.036338");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunk_web_access");
+            expected.put("sum(kb)", "5838.935649");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
         } catch (Exception e) {
             fail(e.toString());
         }
     }
 
     @Test
-    public void test404Results() {
+    public void testReadRawField() {
+        InputStream input = openResource("raw_field.xml");
+        try {
+            ResultsReaderXml reader = new ResultsReaderXml(input);
 
+            Map<String, String> expected, found;
+            expected = new HashMap<String, String>();
+
+            expected.clear();
+            expected.put(
+                    "_raw",
+                    "07-13-2012 09:27:27.307 -0700 INFO  Metrics - group=search_concurrency, system total, active_hist_searches=0, active_realtime_searches=0"
+            );
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
     }
 }
