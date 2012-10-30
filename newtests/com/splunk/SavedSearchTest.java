@@ -264,6 +264,7 @@ public class SavedSearchTest extends SDKTestCase {
 
     @Test
     public void testHistory() {
+        savedSearch.refresh();
         Job[] oldJobs = savedSearch.history();
 
         try {
@@ -275,7 +276,7 @@ public class SavedSearchTest extends SDKTestCase {
                 }
             });
 
-            assertEquals(oldJobs.length + 1, service.getJobs().size());
+            assertEquals(oldJobs.length + 1, savedSearch.history().length);
 
             boolean isFound = false;
             for (Job j : savedSearch.history()) {
