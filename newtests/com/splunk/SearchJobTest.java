@@ -19,14 +19,16 @@ package com.splunk;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.stream.XMLStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class SearchJobTest extends SDKTestCase {
-    private String query = "search index=_internal | head 10";
+    private static final String QUERY = "search index=_internal | head 10";
+    private static final String SUMMARY_FIELD_MAGIC_4x = "<field k='host' c='10' nc='0' dc='1' exact='1' relevant='0'>";
+    private static final String SUMMARY_FIELD_MAGIC_5x = "<field k=\"host\" c=\"10\" nc=\"0\" dc=\"1\" exact=\"1\" relevant=\"0\">";
+    
     private JobCollection jobs;
 
     @Before
@@ -92,7 +94,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testEventsFromJob() {
-        Job job = jobs.create(query);
+        Job job = jobs.create(QUERY);
         waitUntilDone(job);
 
         assertEquals(10, countEvents(job.getEvents()));
@@ -102,7 +104,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testResultsFromJob() {
-        Job job = jobs.create(query);
+        Job job = jobs.create(QUERY);
         waitUntilDone(job);
 
         assertEquals(10, countEvents(job.getResults()));
@@ -112,7 +114,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testBlockingSearch() {
-        assertEquals(10, countEvents(service.oneshot(query)));
+        assertEquals(10, countEvents(service.oneshot(QUERY)));
     }
 
     @Test
@@ -127,7 +129,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testBlockingExport() {
-        assertEquals(10, countEvents(service.export(query)));
+        assertEquals(10, countEvents(service.export(QUERY)));
     }
 
     @Test
@@ -157,7 +159,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testSimpleParse() {
         String response = inputStreamToString(
-                service.parse(query).getContent()
+                service.parse(QUERY).getContent()
         );
 
         assertTrue(response.contains("<key name=\"command\">search</key>"));
@@ -168,7 +170,7 @@ public class SearchJobTest extends SDKTestCase {
     public void testParseWithParseOnly() {
         Args args = new Args("output_mode", "json");
         String response = inputStreamToString(
-                service.parse(query, args).getContent()
+                service.parse(QUERY, args).getContent()
         );
 
         assertTrue(response.startsWith("{"));
@@ -201,7 +203,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testCancel() {
-        Job job = jobs.create(query);
+        Job job = jobs.create(QUERY);
 
         String sid = job.getSid();
 
@@ -215,7 +217,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testCancelIsIdempotent() {
-        Job job = jobs.create(query);
+        Job job = jobs.create(QUERY);
 
         String sid = job.getSid();
 
@@ -234,7 +236,7 @@ public class SearchJobTest extends SDKTestCase {
         args.put("field_list", "source,host,sourcetype");
         args.setStatusBuckets(100);
 
-        Job job = jobs.create(query, args);
+        Job job = jobs.create(QUERY, args);
         assertTrue(10 >= countEvents(job.getResultsPreview()));
 
         job.cancel();
@@ -242,7 +244,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testSearchLog() {
-        Job job = jobs.create(query);
+        Job job = jobs.create(QUERY);
         waitUntilDone(job);
         String response = inputStreamToString(job.getSearchLog());
 
@@ -250,7 +252,7 @@ public class SearchJobTest extends SDKTestCase {
 
         job.cancel();
     }
-
+    
     @Test
     public void testSummary() {
         // status_buckets > 0 and arguments to
@@ -259,11 +261,15 @@ public class SearchJobTest extends SDKTestCase {
         JobArgs args = new JobArgs();
         args.setStatusBuckets(100);
         args.put("required_fields_list", "source,host");
-        Job job = jobs.create(query, args);
+        Job job = jobs.create(QUERY, args);
         waitUntilDone(job);
 
+        // Ensure at least one field comes back
         String response = inputStreamToString(job.getSummary());
-        assertTrue(response.contains("<field k=\"host\" c=\"10\" nc=\"0\" dc=\"1\" exact=\"1\" relevant=\"0\">"));
+        if (!response.contains(SUMMARY_FIELD_MAGIC_4x) &&
+                !response.contains(SUMMARY_FIELD_MAGIC_5x)) {
+            fail("Couldn't find <field> in response: " + response);
+        }
 
         job.cancel();
     }
@@ -272,7 +278,7 @@ public class SearchJobTest extends SDKTestCase {
     public void testTimeline() {
         Args args = new Args();
         args.put("status_buckets", 100);
-        Job job = jobs.create(query, args);
+        Job job = jobs.create(QUERY, args);
         waitUntilDone(job);
 
         String response = inputStreamToString(job.getTimeline());
@@ -285,7 +291,7 @@ public class SearchJobTest extends SDKTestCase {
     public void testTimelineWithJobArgs() {
         JobArgs args = new JobArgs();
         args.setStatusBuckets(100);
-        Job job = jobs.create(query, args);
+        Job job = jobs.create(QUERY, args);
         waitUntilDone(job);
 
         String response = inputStreamToString(job.getTimeline());
@@ -298,7 +304,7 @@ public class SearchJobTest extends SDKTestCase {
     public void testAttributes() {
         Args args = new Args();
         args.put("status_buckets", 100);
-        Job job = jobs.create(query, args);
+        Job job = jobs.create(QUERY, args);
         waitUntilDone(job);
 
         String response = Util.join(",", job.getSearchProviders());
