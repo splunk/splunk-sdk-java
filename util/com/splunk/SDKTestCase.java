@@ -108,7 +108,10 @@ public abstract class SDKTestCase extends TestCase {
         
         connect();
         if (restartRequired()) {
-            fail("Splunk was in a state requiring restart. Cowardly refusing to start.");
+            System.out.println(
+                    "WARNING: Splunk was already in a state requiring a " +
+                    "restart prior to running this test. Trying to recover...");
+            splunkRestart();
         }
         installedApps = new ArrayList<String>();
     }

@@ -62,6 +62,12 @@ public class SettingsTest extends SDKTestCase {
         }
         
         int originalHttpPort = settings.getHttpPort();
+        if (!isPortInUse(originalHttpPort)) {
+            // Try to clean up from weird state where splunkweb isn't running
+            System.out.println("WARNING: splunkweb seems to be down. Trying to recover...");
+            uncheckedSplunkRestart();
+            waitForSplunkwebUp(originalHttpPort);
+        }
         assertTrue(isPortInUse(originalHttpPort));
         assertFalse(
                 "This test is not valid if splunkweb's port is already 8001.",
@@ -76,7 +82,7 @@ public class SettingsTest extends SDKTestCase {
         assertFalse(isPortInUse(8001));
     }
 
-    private void changeHttpPort(final int newHttpPort) {
+    private void changeHttpPort(int newHttpPort) {
         Settings settings = service.getSettings();
         settings.setHttpPort(newHttpPort);
         settings.update();
@@ -85,7 +91,13 @@ public class SettingsTest extends SDKTestCase {
         // will be created on the new port. However the old splunkweb instance
         // will remain until you do a full restart.
         splunkRestart();
+        waitForSplunkwebUp(newHttpPort);
         
+        settings = service.getSettings();
+        assertEquals(newHttpPort, settings.getHttpPort());
+    }
+    
+    private void waitForSplunkwebUp(final int httpPort) {
         // Wait for splunkweb to come back up
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
@@ -94,12 +106,9 @@ public class SettingsTest extends SDKTestCase {
             }
             
             public boolean predicate() {
-                return isPortInUse(newHttpPort);
+                return isPortInUse(httpPort);
             }
         });
-        
-        settings = service.getSettings();
-        assertEquals(newHttpPort, settings.getHttpPort());
     }
     
     private boolean isPortInUse(int port) {
