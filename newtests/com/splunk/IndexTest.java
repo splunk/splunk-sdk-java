@@ -467,6 +467,9 @@ public class IndexTest extends SDKTestCase {
                 // Due to flakiness of the underlying implementation,
                 // this index clean method doesn't always work on a "dirty"
                 // Splunk instance. Try again on a "clean" instance.
+                System.out.println(
+                        "WARNING: Index clean timed out. Trying again on a " +
+                        "freshly restarted Splunk instance...");
                 uncheckedSplunkRestart();
                 
                 tryTestSubmitAndClean();
