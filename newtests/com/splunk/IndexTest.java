@@ -460,6 +460,23 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testSubmitAndClean() {
+        try {
+            tryTestSubmitAndClean();
+        } catch (SplunkException e) {
+            if (e.getCode() == SplunkException.TIMEOUT) {
+                // Due to flakiness of the underlying implementation,
+                // this index clean method doesn't always work on a "dirty"
+                // Splunk instance. Try again on a "clean" instance.
+                uncheckedSplunkRestart();
+                
+                tryTestSubmitAndClean();
+            } else {
+                throw e;
+            }
+        }
+    }
+    
+    private void tryTestSubmitAndClean() {
         assertTrue(getResultCountOfIndex() == 0);
         
         // Make sure the index is not empty.
