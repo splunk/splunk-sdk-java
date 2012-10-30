@@ -291,7 +291,7 @@ public class ServiceTest extends SDKTestCase {
             assertFalse(users.containsKey(username));
         }
 
-        // Create using drived method with multiple roles and extra properties
+        // Create using derived method with multiple roles and extra properties
         {
             args = new Args();
             args.put("realname", "Renzo");
