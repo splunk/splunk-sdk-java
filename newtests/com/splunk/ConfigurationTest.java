@@ -46,8 +46,7 @@ public class ConfigurationTest extends SDKTestCase {
         // the configuration tests, then you will need
         // to explicitly re-login appService, since it will
         // not be re-logged in by the call to restartSplunk.
-        ConnectionArgs applicationArgs = new ConnectionArgs();
-        applicationArgs.putAll(connectionArgs);
+        Args applicationArgs = new Args(command.opts);
         applicationArgs.put("sharing", "app");
         applicationArgs.put("owner", "nobody");
         applicationArgs.put("app", applicationName);

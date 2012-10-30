@@ -34,9 +34,9 @@ public class HttpServiceTest extends SDKTestCase {
         super.setUp();
         
         httpService = new HttpService(
-                (String)connectionArgs.get("host"),
-                (Integer)connectionArgs.get("port"),
-                (String)connectionArgs.get("scheme")
+                (String)command.opts.get("host"),
+                (Integer)command.opts.get("port"),
+                (String)command.opts.get("scheme")
         );
     }
 

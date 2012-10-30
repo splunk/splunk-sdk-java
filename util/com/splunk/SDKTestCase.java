@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import com.splunk.sdk.Command;
+
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -44,59 +46,16 @@ import java.util.UUID;
 public abstract class SDKTestCase extends TestCase {
     protected static final boolean WORKAROUND_KNOWN_BUGS = true;
     
-    protected static ConnectionArgs connectionArgs;
     protected static Service service;
     protected List<String> installedApps;
 
-    /**
-     * @return The path to .splunkrc in the user's home directory.
-     */
-    private static String getSplunkrcPath() {
-        String homePath = System.getProperty("user.home");
-        return homePath + File.separator + ".splunkrc";
-    }
-
-    /**
-     * Read a stream attached to a .splunkrc file into a {@code ConnectionArgs}
-     * (which is a subclass of {@code Map<String, Object>}).
-     *
-     * @param stream Stream attached to .splunkrc (usually a {@code FileReader}).
-     * @return A ConnectionArgs object with the keys and values set from .splunkrc.
-     */
-    private static ConnectionArgs readSplunkrc(InputStreamReader stream) {
-        BufferedReader bufferedStream = new BufferedReader(stream);
-        ConnectionArgs args = new ConnectionArgs();
-        try {
-            String line = bufferedStream.readLine();
-            while (line != null) {
-                args.handleLine(line);
-                line = bufferedStream.readLine();
-            }
-        } catch (Exception e) {
-            fail(e.toString());
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {}
-        }
-        return args;
-    }
+    protected Command command;
 
     public void connect() {
         if (service != null) {
             service.login(service.username, service.password);
         } else {
-            String splunkrcPath = getSplunkrcPath();
-            FileReader splunkrcReader;
-            try {
-                splunkrcReader = new FileReader(splunkrcPath);
-            } catch (FileNotFoundException e) {
-                fail("Could not find .splunkrc at " + splunkrcPath);
-                return;
-            }
-            connectionArgs = readSplunkrc(splunkrcReader);
-
-            service = Service.connect(connectionArgs);
+            service = Service.connect(command.opts);
         }
     }
 
@@ -104,7 +63,8 @@ public abstract class SDKTestCase extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        
+
+        command = Command.splunk();
         connect();
         if (restartRequired()) {
             fail("Splunk was in a state requiring restart. Cowardly refusing to start.");
@@ -270,7 +230,7 @@ public abstract class SDKTestCase extends TestCase {
             @Override
             public boolean predicate() {
                 try {
-                    Service.connect(connectionArgs);
+                    Service.connect(command.opts);
                     return true;
                 } catch (Exception e) {
                     return false;

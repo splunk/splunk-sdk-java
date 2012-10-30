@@ -45,15 +45,15 @@ public class DistributedPeerTest extends SDKTestCase {
 
     private DistributedPeer connectToSelfAsPeer() {
         Args args = new Args();
-        args.put("remoteUsername", connectionArgs.get("username"));
-        args.put("remotePassword", connectionArgs.get("password"));
+        args.put("remoteUsername", command.opts.get("username"));
+        args.put("remotePassword", command.opts.get("password"));
         DistributedPeer peer = peers.create(nameOfPeer(), args);
         return peer;
     }
 
     private String nameOfPeer() {
-        return connectionArgs.get("host") + ":" +
-                String.valueOf(connectionArgs.get("port"));
+        return command.opts.get("host") + ":" +
+                String.valueOf(command.opts.get("port"));
     }
 
     @After @Override
