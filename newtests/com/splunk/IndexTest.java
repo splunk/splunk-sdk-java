@@ -23,6 +23,8 @@ import org.junit.Test;
 import java.io.*;
 import java.net.Socket;
 
+import junit.framework.AssertionFailedError;
+
 public class IndexTest extends SDKTestCase {
     private String indexName;
     private Index index;
@@ -298,7 +300,25 @@ public class IndexTest extends SDKTestCase {
     }
 
     @Test
-    public void testSubmitOne() {
+    public void testSubmitOne() throws Exception {
+        try {
+            tryTestSubmitOne();
+        } catch (AssertionFailedError e) {
+            if (e.getMessage().contains("Test timed out before true.") && 
+                    restartRequired()) {
+                System.out.println(
+                        "WARNING: Splunk indicated restart required while " +
+                        "running a test. Trying to recover...");
+                splunkRestart();
+                
+                tryTestSubmitOne();
+            } else {
+                throw e;
+            }
+        }
+    }
+    
+    private void tryTestSubmitOne() {
         assertTrue(getResultCountOfIndex() == 0);
         assertTrue(index.getTotalEventCount() == 0);
         

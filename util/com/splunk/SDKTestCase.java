@@ -214,6 +214,11 @@ public abstract class SDKTestCase extends TestCase {
 
         // Wait for splunkd to go down.
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            {
+                tries = 20;
+                pauseTime = 1000;
+            }
+            
             @Override
             public boolean predicate() {
                 try {
