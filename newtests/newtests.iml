@@ -18,6 +18,7 @@
     </orderEntry>
     <orderEntry type="module" module-name="util" />
     <orderEntry type="module" module-name="splunk" />
+    <orderEntry type="module" module-name="splunk-sdk" />
   </component>
 </module>
 

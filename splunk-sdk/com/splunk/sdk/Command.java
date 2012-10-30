@@ -89,6 +89,8 @@ public class Command {
         rules.addOption(null, "password", true, "Password to login with");
         rules.addOption(null, "app", true, "App/namespace context");
         rules.addOption(null, "owner", true, "Owner/user context");
+        // This is here only for compatibility with the JavaScript SDK's .splunkrc.
+        rules.addOption(null, "version", true, "Version (irrelevant for Java)");
         return this;
     }
 
