@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UtilTest extends SDKTestCase {
-    @Test public void testJoin() {
+    @Test
+    public void testJoin() {
         List<String> emptyList = new ArrayList<String>();
         assertEquals("", Util.join("/", emptyList));
 
@@ -41,7 +42,8 @@ public class UtilTest extends SDKTestCase {
         );
     }
 
-    @Test public void testJoinOnArray() {
+    @Test
+    public void testJoinOnArray() {
         String[] emptyArray = {};
         assertEquals("", Util.join("/", emptyArray));
 
@@ -55,7 +57,8 @@ public class UtilTest extends SDKTestCase {
         );
     }
 
-    @Test public void testSubstringAfterSucceeds() {
+    @Test
+    public void testSubstringAfterSucceeds() {
         assertEquals(
                 "efg",
                 Util.substringAfter("abcdefg", "cd", "boris")

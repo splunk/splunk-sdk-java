@@ -89,6 +89,7 @@ public class ApplicationTest extends SDKTestCase {
     @Test
     public void testForSetupPresent() throws Exception {
         if (!hasApplicationCollection()) {
+            System.out.println("WARNING: App collection not installed. Nothing to test.");
             return;
         }
         

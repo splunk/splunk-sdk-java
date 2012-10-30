@@ -290,7 +290,7 @@ public class OutputDefault extends Entity {
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
         if (!args.containsKey("name")) {
-            args = Args.create(args).add("search", "tcpout");
+            args = Args.create(args).add("name", "tcpout");
         }
         super.update(args);
     }
