@@ -106,9 +106,9 @@ public class ServiceTest extends SDKTestCase {
         ResponseMessage response;
 
         Service service = new Service(
-                (String) connectionArgs.get("host"),
-                (Integer) connectionArgs.get("port"),
-                (String) connectionArgs.get("scheme"));
+                (String) command.opts.get("host"),
+                (Integer) command.opts.get("port"),
+                (String) command.opts.get("scheme"));
 
         // Not logged in, should fail with 401
         try {
@@ -121,8 +121,8 @@ public class ServiceTest extends SDKTestCase {
 
         // Logged in, request should succeed
         service.login(
-                (String) connectionArgs.get("username"),
-                (String) connectionArgs.get("password"));
+                (String) command.opts.get("username"),
+                (String) command.opts.get("password"));
         response = service.get("/services/authentication/users");
         checkResponse(response);
 
