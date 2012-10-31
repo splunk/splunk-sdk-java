@@ -164,8 +164,7 @@ The queue size, in events.
 search_listener
 SearchListener
 String
-Sets a string that registers a search state listener with the search. Use the format: {@code search_state;results_condition;http_method;uri;}<p>
-For example:<p>{@code search_listener=onResults;true;POST;/servicesNS/admin/search/saved/search/foobar/notify;}
+Sets a string that registers a search state listener with the search. Use the format: {@code search_state;results_condition;http_method;uri;}<p>For example:<p>{@code search_listener=onResults;true;POST;/servicesNS/admin/search/saved/search/foobar/notify;}
 The search listener string.
 ===
 search_mode

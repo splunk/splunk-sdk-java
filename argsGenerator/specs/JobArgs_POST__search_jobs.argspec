@@ -61,19 +61,19 @@ The latest time.
 max_count
 MaximumCount
 int
-Sets the number of events that can be accessible in any given status bucket. Also, in transforming mode, this sets the maximum number of results to store. Specifically, in all calls, {@code codeoffset +count <= max_count}.
+Sets the number of events that can be accessible in any given status bucket. Also, in transforming mode, this sets the maximum number of results to store. Specifically, in all calls, {@code codeoffset + count <= max_count}.
 The maximum count of events.
 ===
 max_time
 MaximumTime
 int
-Sets the number of seconds to run this search before finalizing. Specify 0 to never finalize.
+Sets the maximum number of seconds to run this search before finalizing. Specify 0 to never finalize.
 The maximum time, in seconds.
 ===
 namespace
 Namespace
 String
-Specifies the application namespace in which to restrict searches. 
+Specifies the application namespace to which to restrict searches. 
 The namespace.
 ===
 # TODO: Improve docs: What is the accepted time format?
@@ -81,7 +81,7 @@ The namespace.
 now
 Now
 String
-Specifies a time string that sets the absolute time used for any relative time specifier in the search. This value defaults to the current system time.<p> You can specify a relative time modifier for this parameter. For example, specify +2d to specify the current time plus two days. If you specify a relative time modifier both in this parameter and in the search string, the search string modifier takes precedence.<p>For information about relative time modifiers, see <a href="http://docs.splunk.com/Documentation/Splunk/latest/SearchReference/SearchTimeModifiers" target="_blank">Time modifiers for search</a> in the Search Reference. 
+Specifies a time string that sets the absolute time used for any relative time specifier in the search. This value defaults to the current system time.<p>You can specify a relative time modifier for this parameter. For example, specify +2d to specify the current time plus two days. If you specify a relative time modifier both in this parameter and in the search string, the search string modifier takes precedence.<p>For information about relative time modifiers, see <a href="http://docs.splunk.com/Documentation/Splunk/latest/SearchReference/SearchTimeModifiers" target="_blank">Time modifiers for search</a> in the Search Reference. 
 The time string.
 ===
 reduce_freq
@@ -135,8 +135,7 @@ The queue size, in events.
 search_listener
 SearchListener
 String
-Sets a string that registers a search state listener with the search. Use the format: {@code search_state;results_condition;http_method;uri;}<p>
-For example:<p>{@code search_listener=onResults;true;POST;/servicesNS/admin/search/saved/search/foobar/notify;}
+Sets a string that registers a search state listener with the search. Use the format: {@code search_state;results_condition;http_method;uri;}<p>For example:<p>{@code search_listener=onResults;true;POST;/servicesNS/admin/search/saved/search/foobar/notify;}
 The search listener string.
 ===
 search_mode

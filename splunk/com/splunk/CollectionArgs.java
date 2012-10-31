@@ -51,7 +51,8 @@ public class CollectionArgs extends Args {
      */
     public static enum SortMode {
         /** If all values of the field are numbers, collate numerically. 
-        * Otherwise, collate alphabetically. */
+         * Otherwise, collate alphabetically. 
+         */
         AUTO("auto"),
         /** Collate alphabetically. */
         ALPHA("alpha"),
