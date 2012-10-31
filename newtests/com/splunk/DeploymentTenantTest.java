@@ -18,22 +18,22 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class DeploymentServerTest extends SDKTestCase {
+public class DeploymentTenantTest extends SDKTestCase {
     @Test
-    public void testDeploymentServer() throws Exception {
-        EntityCollection<DeploymentServer> deploymentServers =
-                service.getDeploymentServers();
-        if (deploymentServers.values().size() == 0) {
-            System.out.println("WARNING: No DeploymentServer entities to test");
+    public void testDeploymentTenant() throws Exception {
+        EntityCollection<DeploymentTenant> deploymentTenants =
+                service.getDeploymentTenants();
+        if (deploymentTenants.values().size() == 0) {
+            System.out.println("WARNING: No DeploymentTenant entities to test");
             return;
         }
 
-        for (DeploymentServer deploymentServer : deploymentServers.values()) {
+        for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
             // Ensure getters throw no exceptions
-            deploymentServer.isDisabled();
-            assertTrue(deploymentServer.getWhitelistByIndex(0).length() > 0);
+            deploymentTenant.isDisabled();
+            assertTrue(deploymentTenant.getWhitelistByIndex(0).length() > 0);
             for (int i=0; i<10; i++) {
-                deploymentServer.getWhitelistByIndex(i);
+                deploymentTenant.getWhitelistByIndex(i);
             }
         }
     }
