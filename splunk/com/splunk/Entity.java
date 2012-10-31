@@ -19,7 +19,7 @@ package com.splunk;
 import java.util.*;
 
 /**
- * The {@code Entity} class is a base class for all Splunk entity resources.
+ * The {@code Entity} class represents a Splunk entity.
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;

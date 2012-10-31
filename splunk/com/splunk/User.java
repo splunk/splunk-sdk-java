@@ -26,7 +26,7 @@ public class User extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The resource path.
+     * @param path The user endpoint.
      */
     User(Service service, String path) {
         super(service, path);

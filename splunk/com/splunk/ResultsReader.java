@@ -18,15 +18,18 @@ package com.splunk;
 
 import java.io.*;
 import java.util.HashMap;
-
+/**
+ * The {@code ResultsReader} class represents a streaming reader for Splunk 
+ * search results.
+ */
 public abstract  class ResultsReader {
     InputStreamReader inputStreamReader = null;
 
     /**
      * Class constructor.
      *
-     * @param inputStream The input stream (unread) return stream from a Splunk
-     * query or export.
+     * @param inputStream The unread return input stream from a Splunk query or 
+     * export.
      * @throws IOException If an IO exception occurs.
      */
     public ResultsReader(InputStream inputStream) throws Exception {

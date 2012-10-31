@@ -15,30 +15,32 @@
  */
 
 package com.splunk;
-
+/**
+ * The {@code TcpConnections} class represents a raw or cooked TCP connection.
+ */
 public class TcpConnections extends Entity {
 
     /**
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The output server all-connections endpoint.
+     * @param path The TCP input endpoint.
      */
     TcpConnections(Service service, String path) {
         super(service, path);
     }
 
     /**
-     * Return the connection.
+     * Returns the TCP connection.
      *
-     * @return The connection.
+     * @return The TCP connection.
      */
     public String getConnection() {
         return getString("connection", null);
     }
 
     /**
-     * Return the server name.
+     * Returns the server name.
      *
      * @return The server name.
      */

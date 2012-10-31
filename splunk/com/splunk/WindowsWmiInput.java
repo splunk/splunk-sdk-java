@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * The {@code WindowsWmiInput} class represents a Windows Management
- * Instrumentation (WMI) input.
+ * Instrumentation (WMI) data input.
  */
 public class WindowsWmiInput extends Input {
 
@@ -84,8 +84,7 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Returns the input kind of this WMI input.
-     * @see InputKind
+     * Returns the input kind of this input.
      *
      * @return The input kind.
      */
@@ -94,10 +93,11 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Returns the main host for this WMI input. Secondary hosts are specified
-     * in the {@code server} attribute.
+     * Returns the main server for this WMI input. To list secondary servers,
+     * use the {@code getServers} method.
+     * @see #getServers
      *
-     * @return The main host.
+     * @return The main server.
      */
     public String getLookupHost() {
         return getString("lookup_host");
@@ -114,7 +114,8 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Returns a list of additional servers used in monitoring.
+     * Returns a list of secondary servers used for monitoring. To list the main
+     * server, use the {@code getLookupHost} method.
      * @see #getLookupHost
      *
      * @return A comma-separated list of additional servers, or {@code null}
@@ -144,13 +145,14 @@ public class WindowsWmiInput extends Input {
 
     /**
      * Sets whether this input is enabled or disabled. 
-     * You can also do this using the {@code Entity.disable} and 
-     * {@code Entity.enable} methods. 
-     * @see Entity#disable
-     * @see Entity#enable
+     * <p>
+     * <b>Note:</b> Using this method requires you to restart Splunk before this
+     * setting takes effect. To avoid restarting Splunk, use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
      *
-     * @param disabled {@code true} to disabled to script input,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable this input, {@code false} to 
+     * enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
@@ -214,20 +216,24 @@ public class WindowsWmiInput extends Input {
     }
 
     /**
-     * Sets the host from which to monitor log events. To specify
-     * additional hosts to monitor using WMI, use the {@code setServers} method.
+     * Sets the main server from which to monitor log events. To specify
+     * additional servers to monitor using WMI, use the {@code setServers} 
+     * method.
+     * @see #setServers
      *
-     * @param lookup_host The host.
+     * @param lookup_host The main server.
      */
     public void setLookupHost(String lookup_host) {
         setCacheValue("lookup_host", lookup_host);
     }
 
     /**
-     * Sets the additional servers that you want to gather data from. Use this
-     * method if you need to gather more than a single server.
+     * Sets secondary servers that you want to gather data from. Use this
+     * method if you need to gather more than a single server. To specify the 
+     * main server, use the {@code setLookupHost} method.
+     * @see #setLookupHost
      *
-     * @param servers A comma-separated list of hosts.
+     * @param servers A comma-separated list of additional servers.
      */
     public void setServers(String servers) {
         setCacheValue("server", servers);

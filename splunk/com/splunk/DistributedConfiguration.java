@@ -181,8 +181,7 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Indicates whether this server uses bundle replication to share
-     * search-time configuration with search peers. 
-     * 
+     * search-time configuration with search peers.
      * <p>
      * <b>Note:</b> If set to {@code false}, the search head assumes that the
      * search peers can access the correct bundles using an NFS share.
@@ -208,8 +207,8 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns the time-out period for gathering a search peer's basic info 
-     * (/services/server/info).
+     * Returns the time-out period for gathering a search peer's basic info.
+     * @see ServiceInfo
      *
      * @return The time-out period, in seconds.
      */
@@ -292,8 +291,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Sets whether the distributed configuration is enabled or disabled. 
      * <p>
-     * <b>Note:</b> You must restart Splunk for this setting to take effect.
-     * However, to avoid restarting Splunk, you can use the 
+     * <b>Note:</b> Using this method requires you to restart Splunk before this 
+     * setting takes effect. To avoid restarting Splunk, use the 
      * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
      * take effect immediately. 
      * @see Entity#disable
@@ -390,8 +389,8 @@ public class DistributedConfiguration extends Entity {
      *
      * If set to {@code false}, the search head assumes that the search peers
      * can access the correct bundles using an NFS share and have correctly
-     * configured the options listed under "SEARCH HEAD BUNDLE MOUNTING 
-     * OPTIONS".
+     * configured the options for mounted_bundles and bundles_location in the 
+     * distsearch.conf file.
      *
      * @param shareBundles {@code true} to share search-time configuration
      * with peers, {@code false} if not.
@@ -414,7 +413,8 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Sets the time-out period for connecting to a search peer for getting its
-     * basic info (/services/server/info).
+     * basic info.
+     * @see ServiceInfo
      *
      * @param seconds The connection time-out period, in seconds.
      */
@@ -426,7 +426,6 @@ public class DistributedConfiguration extends Entity {
      * Sets the time-to-live (ttl) of heartbeat messages. Increasing this number
      * allows UDP packets to spread beyond the current sub-net to the specified
      * number of hops.
-     *
      * <p>
      * <b>Note:</b> This feature only works when routers along the way are 
      * configured to pass UDP multicast packets.

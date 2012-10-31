@@ -41,7 +41,8 @@ public class RequestMessage {
      * Indicates whether the given value is a supported HTTP method.
      *
      * @param value The value to check.
-     * @return {@code true} if the value is a supported method, {@code false} if not.
+     * @return {@code true} if the value is a supported method, 
+     * {@code false} if not.
      */
     boolean checkMethod(String value) {
         return
@@ -52,9 +53,9 @@ public class RequestMessage {
     }
 
     /**
-     * Returns the {@code Map} of message headers.
+     * Returns a map of message headers.
      *
-     * @return Message headers.
+     * @return A {@code Map} of message headers.
      */
     public Map<String, String> getHeader() {
         if (this.header == null)

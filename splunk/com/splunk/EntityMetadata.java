@@ -44,9 +44,9 @@ public class EntityMetadata {
     }
 
     /**
-     * Indicates whether this resource can be shared via an app.
+     * Indicates whether this entity can be shared via an app.
      *
-     * @return {@code true} if this resource can be shared via an app,
+     * @return {@code true} if this entity can be shared via an app,
      * {@code false} if not.
      */
     public boolean canShareApp() {
@@ -54,9 +54,9 @@ public class EntityMetadata {
     }
 
     /**
-     * Indicates whether the resource can be shared globally.
+     * Indicates whether the entity can be shared globally.
      *
-     * @return {@code true} if this resource can be shared globally,
+     * @return {@code true} if this entity can be shared globally,
      * {@code false} if not.
      */
     public boolean canShareGlobal() {
@@ -64,9 +64,9 @@ public class EntityMetadata {
     }
 
     /**
-     * Indicates whether the resource can be shared to a specific user.
+     * Indicates whether the entity can be shared to a specific user.
      *
-     * @return {@code true} if this resource can be shared to a specific user,
+     * @return {@code true} if this entity can be shared to a specific user,
      * {@code false} if not.
      */
     public boolean canShareUser() {
@@ -84,9 +84,9 @@ public class EntityMetadata {
     }
 
     /**
-     * Returns the app context of this resource.
+     * Returns the app context of this entity.
      *
-     * @return The app context of this resource.
+     * @return The app context of this entity.
      */
     public String getApp() {
         return getEaiAcl().getString("app", "system");
@@ -94,7 +94,7 @@ public class EntityMetadata {
 
     /**
      * Returns a record containing all of the metadata information 
-     * for this resource.
+     * for this entity.
      *
      * @return The record containing the metadata information.
      */
@@ -103,9 +103,9 @@ public class EntityMetadata {
     }
 
     /**
-     * Returns the username of the resource owner.
+     * Returns the username of the entity owner.
      *
-     * @return The resource owner's username.
+     * @return The entity owner's username.
      */
     public String getOwner() {
         return getEaiAcl().getString("owner");
@@ -122,9 +122,9 @@ public class EntityMetadata {
     }
 
     /**
-     * Returns how this resource is shared (app, global, and/or user).
+     * Returns how this entity is shared (app, global, and/or user).
      *
-     * @return Values that indicate how this resource is shared.
+     * @return Values that indicate how this entity is shared.
      */
     public String getSharing() {
         return getEaiAcl().getString("sharing");

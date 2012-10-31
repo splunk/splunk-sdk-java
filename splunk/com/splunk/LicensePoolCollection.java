@@ -37,8 +37,8 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      */
     LicensePoolCollection(Service service, Args args) {
         super(service, "licenser/pools", LicensePool.class, args);
@@ -70,7 +70,7 @@ public class LicensePoolCollection extends EntityCollection<LicensePool> {
      * <li>"MAX" (Only one license pool can have "MAX" size in a stack.)</li>
      * </ul>
      * @param stackId The stack ID corresponding to this license pool.
-     * @param args Optional arguments.
+     * @param args Optional arguments ("description" and "slaves").
      * @return The new license pool.
      */
     public LicensePool 

@@ -20,8 +20,9 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * {@code ModularInputKind} represents a particular modular input. The actual inputs of this kind can be
- * accessed from the InputCollection.
+ * The {@code ModularInputKind} class represents a particular modular input. 
+ * The actual inputs of this kind can be accessed from the 
+ * {@code InputCollection} object.
  */
 public class ModularInputKind extends Entity {
     protected Map<String, Map<String,String>> args;
@@ -39,8 +40,10 @@ public class ModularInputKind extends Entity {
     }
 
     /**
-     * Returns a {@code Map} with all the argument names as keys, and the {@code ModularInputKindArgument} as the
-     * corresponding value.
+     * Returns an argument map that contains the argument names as keys, and the 
+     * {@code ModularInputKindArgument}s as corresponding values.
+     *
+     * @return A {@code Map} containing the argument key-value pairs.
      */
     public Map<String, ModularInputKindArgument> getArguments() {
         Map<String, ModularInputKindArgument> arguments = new HashMap<String, ModularInputKindArgument>();
@@ -51,9 +54,9 @@ public class ModularInputKind extends Entity {
     }
 
     /**
-     * Return the streaming mode of this modular input kind.
+     * Returns the streaming mode of this modular input kind.
      *
-     * @return {@code "xml"} or {@code "simple"}
+     * @return The streaming mode ("xml" or "simple"). 
      */
     public String getStreamingMode() {
         String mode = getString("streaming_mode");
@@ -61,11 +64,12 @@ public class ModularInputKind extends Entity {
     }
 
     /**
-     * Get a {@code Map}-like object representing a particular argument of this modular input kind.
+     * Returns a map-like object representing a particular argument of this 
+     * modular input kind.
      *
-     * @param argumentName Name of the argument to fetch.
-     * @return a {@code ModularInputKindArgument} representing the argument, or {@code null}
-     *         if the argument does not exist.
+     * @param argumentName The name of the argument to retrieve.
+     * @return A {@code ModularInputKindArgument} object representing the given
+     * argument, or {@code null} if the argument does not exist.
      */
     public ModularInputKindArgument getArgument(String argumentName) {
         if (this.args.get(argumentName) != null) {
@@ -76,9 +80,9 @@ public class ModularInputKind extends Entity {
     }
 
     /**
-     * Return the description of this modular input kind.
+     * Returns the description of this modular input kind.
      *
-     * @return A string giving the description.
+     * @return A string containing the description.
      */
     public String getDescription() {
         if (containsKey("description")) {
@@ -89,10 +93,8 @@ public class ModularInputKind extends Entity {
     }
 
     /**
-     * Return the title of thhis modular input kind.
-     *
-     * The title is the human readable string displayed in splunkweb rather than the name
-     * you access it under in the REST API.
+     * Returns the title of this modular input kind, which is also displayed in
+     * Splunk Web (rather than the name used in the REST API). 
      *
      * @return A string containing the title.
      */
@@ -105,10 +107,10 @@ public class ModularInputKind extends Entity {
     }
 
     /**
-     * Check whether this {@code ModularInputKind} has an argument of the given name.
+     * Indicates whether this modular input kind has a given argument.
      *
      * @param argumentName The argument to look up.
-     * @return {@code true} if the argument exists; {@code false} otherwise.
+     * @return {@code true} if the argument exists, {@code false} if not.
      */
     public boolean hasArgument(String argumentName) {
         return this.args.containsKey(argumentName);

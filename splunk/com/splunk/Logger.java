@@ -32,8 +32,8 @@ public class Logger extends Entity {
     }
 
     /**
-     * Returns the logging level of this logger. Valid values are: {@code FATAL,
-     * CRIT, WARN, INFO}, and {@code DEBUG}.
+     * Returns the logging level of this logger. Valid values are: "FATAL",
+     * "CRIT", "WARN", "INFO", and "DEBUG".
      *
      * @return The logging level.
      */
@@ -42,10 +42,10 @@ public class Logger extends Entity {
     }
 
     /**
-     * Sets the logger level this logger. Valid values are: {@code FATAL,
-     * CRIT, WARN, INFO}, and {@code DEBUG}.
+     * Sets the logging level of this logger. Valid values are: "FATAL",
+     * "CRIT", "WARN", "INFO", and "DEBUG".
      *
-     * @param level the level this logger is set to.
+     * @param level The logging level.
      */
     public void setLevel(String level) {
         setCacheValue("level", level);

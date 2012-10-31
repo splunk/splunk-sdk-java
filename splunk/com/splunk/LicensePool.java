@@ -28,7 +28,7 @@ public class LicensePool extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The license group endpoint.
+     * @param path The license pool endpoint.
      */
     LicensePool(Service service, String path) {
         super(service, path);
@@ -37,7 +37,7 @@ public class LicensePool extends Entity {
     /**
      * Returns the description of this license pool.
      *
-     * @return This description, or {@code null} if not specified.
+     * @return The description, or {@code null} if not specified.
      */
     public String getDescription() {
         return getString("description", null);

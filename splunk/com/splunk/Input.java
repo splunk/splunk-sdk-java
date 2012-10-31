@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * The {@code Input} class represents a data input. This class is the base for
  * all typed {@code Input} classes and is also used when Splunk does not
- * recognize an input type (<i>input kind</i>).
+ * recognize an input kind.
  */
 public class Input extends Entity {
 
@@ -37,9 +37,9 @@ public class Input extends Entity {
     }
 
     /**
-     * Returns an {@code InputKind} representing this input's kind.
+     * Returns an {@code InputKind} representing this input's type.
      *
-     * The kind is inferred from the input's path.
+     * The input kind is inferred from the input's path.
      *
      * @return Unknown input kind.
      */

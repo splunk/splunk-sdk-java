@@ -37,8 +37,8 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link SavedSearchCollectionArgs}).
      */
     SavedSearchCollection(Service service, Args args) {
         super(service, "saved/searches", SavedSearch.class, args);
@@ -50,10 +50,10 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
     }
 
     /**
-     * Creates a saved search from a name and search expression.
+     * Creates a saved search from a name and search query.
      *
      * @param name The name for the search.
-     * @param search The search expression.
+     * @param search The search query.
      * @return The new saved search.
      */
     public SavedSearch create(String name, String search) {
@@ -62,12 +62,16 @@ public class SavedSearchCollection extends EntityCollection<SavedSearch> {
     }
 
     /**
-     * Creates a saved search from a name, search expression, and
+     * Creates a saved search from a name, search query, and
      * additional arguments.
      *
      * @param name The name for the search.
-     * @param search The search expression.
-     * @param args Additional arguments.
+     * @param search The search query.
+     * @param args Additional arguments. For a list of possible parameters, see
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ#savedsearchparams" 
+     * target="_blank">Saved search parameters</a> on 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ" 
+     * target="_blank">dev.splunk.com</a>.
      * @return The new saved search.
      */
     public SavedSearch create(String name, String search, Map args) {

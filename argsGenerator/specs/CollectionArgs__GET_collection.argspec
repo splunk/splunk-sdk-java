@@ -1,52 +1,54 @@
 app
 App
 String
-The app context in which to list the collection.
-A {@code null} value indicates no app context, and a value of 
-{@code "-"} indicates an app wildcard.
+Sets the app context in which to list the collection. 
+The app context in which to list the collection. A {@code null} value indicates no app context, and a value of {@code "-"} indicates an app wildcard.
 ===
 owner
 Owner
 String
-The owner context in which to list the collection.
-A value of {@code "-"} indicates a wildcard, and a {@code null} value 
-indicates no owner context.
+Sets the owner context in which to list the collection. 
+The owner context in which to list the collection. A value of {@code "-"} indicates a wildcard, and a {@code null} value indicates no owner context.
 ===
 sharing
 Sharing
 String
-The sharing context in which to list the collection.
-Valid values are "user", "app", "global", and "system".
+Sets the sharing context in which to list the collection. 
+The sharing context in which to list the collection. Valid values are "user", "app", "global", and "system".
 ===
 count
 Count
 int
-Indicates the maximum number of entries to return. To return all entries, specify 0.
+Sets the maximum number of entries to return. 
+The maximum number of entries to return. To return all entries, specify 0.
 ===
 offset
 Offset
 int
-Index for first item to return.
+Sets the index of the first entry to return 
+The index of the first entry to return.
 ===
 search
 Search
 String
-Search expression to filter the response. The response matches field values against the search expression. For example:
-
-"foo" matches any object that has "foo" as a substring in a field. "field_name=field_value" restricts the match to a single field.
+Sets a search query to filter the response. The response matches field  values against the search query. For example, "foo" matches any object  that has "foo" as a substring in a field, and "field_name=field_value"  restricts the match to a single field. 
+A search query to filter the response. 
 ===
 sort_dir
 SortDirection
 SortDirection
-Indicates whether to sort returned entries in ascending or descending order.
+Sets the direction to sort entries. 
+The sorting order--ascending or descending.
 ===
 sort_key
 SortKey
 String
-Field to use for sorting.
+Sets the field to use for sorting. 
+The field to sort by.
 ===
 sort_mode
 SortMode
 SortMode
-Indicates the collating sequence for sorting the returned entries.
+Sets the mode to use for sorting. 
+The collating sequence for sorting entries.
 ===

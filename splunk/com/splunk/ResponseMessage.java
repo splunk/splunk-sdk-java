@@ -51,7 +51,7 @@ public class ResponseMessage {
     /**
      * Returns the body content stream.
      *
-     * @return Content stream.
+     * @return The content stream.
      */
     public InputStream getContent() {
         return this.content;
@@ -72,7 +72,7 @@ public class ResponseMessage {
     /**
      * Returns the response status.
      *
-     * @return Response status.
+     * @return The response status.
      */
     public int getStatus() {
         return this.status;

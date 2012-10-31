@@ -20,7 +20,7 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * The {@code Resource} class represents a Splunk resource.
+ * The {@code Resource} abstract base class represents a Splunk resource.
  */
 public abstract class Resource {
     protected Map<String, String> actions;
@@ -49,8 +49,7 @@ public abstract class Resource {
      *
      * @param service The connected {@code Service} instance.
      * @param path The target endpoint.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Arguments to use when you instantiate the entity.
      */
     Resource(Service service, String path, Args args) {
         this.service = service;
@@ -89,7 +88,7 @@ public abstract class Resource {
 
     /**
      * Returns the resource name. By default, the name is the resource title. 
-     * This name may also be used as the key for the resource if it belongs 
+     * This name can also be used as the key for the resource if it belongs 
      * to a container resource (for example, an entity that belongs to an 
      * entity collection).
      *

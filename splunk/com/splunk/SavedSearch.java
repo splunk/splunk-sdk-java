@@ -28,7 +28,7 @@ public class SavedSearch extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The resource path.
+     * @param path The saved searches endpoint.
      */
     SavedSearch(Service service, String path) {
         super(service, path);
@@ -66,7 +66,15 @@ public class SavedSearch extends Entity {
     /**
      * Runs the saved search using dispatch arguments.
      *
-     * @param args Dispatch arguments.
+     * @param args Dispatch arguments: <ul>
+     * <li>"dispatch.now": A time string that is used to dispatch the search as 
+     * though the specified time were the current time.</li>
+     * <li>"dispatch.*": Overwrites the value of the search field specified in 
+     * "*".</li>
+     * <li>"trigger_actions": A Boolean that indicates whether to trigger alert 
+     * actions.</li>
+     * <li>"force_dispatch": A Boolean that indicates whether to start a new 
+     * search if another instance of this search is already running.</li></ul>
      * @return The search job.
      */
     public Job dispatch(Map args) throws InterruptedException {
@@ -89,7 +97,7 @@ public class SavedSearch extends Entity {
     /**
      * Runs the saved search using dispatch arguments.
      *
-     * @param args Dispatch arguments.
+     * @param args Dispatch arguments (see {@link SavedSearchDispatchArgs}).
      * @return The search job.
      */
     // NOTE: This overload exists primarily to provide better documentation
@@ -158,11 +166,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @return The search command (or pipeline).
      */
@@ -387,7 +395,6 @@ public class SavedSearch extends Entity {
     /**
      * Indicates whether columns should be sorted from least wide to most wide,
      * left to right.
-     *
      * This value is only used when {@code ActionEmailFormat} is "plain".
      * @see #getActionEmailFormat
      *
@@ -419,7 +426,6 @@ public class SavedSearch extends Entity {
     /**
      * Returns the host name used in the web link (URL) that is sent in
      * populate-lookup alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @return The hostname used in the URL.
@@ -545,7 +551,7 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Returns the file name of the script to call.
+     * Returns the filename of the script to call.
      *
      * @return The filename of the script.
      */
@@ -620,11 +626,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @return The search command (or pipeline).
      */
@@ -1045,9 +1051,9 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Returns the search expression for this saved search.
+     * Returns the search query for this saved search.
      *
-     * @return The search expression.
+     * @return The search query.
      */
     public String getSearch() {
         return getString("search");
@@ -1181,7 +1187,7 @@ public class SavedSearch extends Entity {
      * Sets the carbon copy (CC) email address to use for email alerts.
      * @see #isActionEmail
      *
-     * @param cc The carbon copy email address.
+     * @param cc The CC email address.
      */
     public void setActionEmailCc(String cc) {
         setCacheValue("action.email.cc", cc);
@@ -1189,11 +1195,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1222,7 +1228,6 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the host name used in the web link (URL) to send in email alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1417,7 +1422,6 @@ public class SavedSearch extends Entity {
     /**
      * Sets whether columns should be sorted from least wide to most wide,
      * left to right.
-     *
      * This value is only used when {@code ActionEmailFormat} is "plain".
      * @see #getActionEmailFormat
      *
@@ -1449,7 +1453,6 @@ public class SavedSearch extends Entity {
     /**
      * Sets the host name used in the web link (URL) to send in populate-lookup
      * alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1504,11 +1507,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1518,7 +1521,6 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the host name to use in the web link (URL) to send in RSS alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1572,11 +1574,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1597,7 +1599,6 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the host name used in the web link (URL) to send in script alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1661,11 +1662,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1676,7 +1677,6 @@ public class SavedSearch extends Entity {
     /**
      * Sets the host name used in the web link (URL) to send in summary-index
      * alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1890,8 +1890,8 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the wildcard argument that accepts any saved search template
-     * argument, such as "args.username=foobar" when the search is {@code search
-     * $username$}.
+     * argument, such as "args.username=foobar" when the search is "search
+     * $username$".
      *
      * @param wildcard The wildcard argument.
      */
@@ -2158,9 +2158,9 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Sets the search expression for this saved search.
+     * Sets the search query for this saved search.
      *
-     * @param search The search expression.
+     * @param search The search query.
      */
     public void setSearch(String search) {
         setCacheValue("search", search);

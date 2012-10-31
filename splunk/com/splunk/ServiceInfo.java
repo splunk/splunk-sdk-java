@@ -26,7 +26,7 @@ public class ServiceInfo extends Entity {
     }
 
     /**
-     * Returns the build number of this instance.
+     * Returns the build number of this Splunk instance.
      *
      * @return The build number.
      */
@@ -55,7 +55,7 @@ public class ServiceInfo extends Entity {
      /**
       * Returns an array of the service's license labels.
       *
-      * @return Array of license labels.
+      * @return An array of license labels.
       */
     public String[] getLicenseLabels() {
         return getStringArray("license_labels", null);

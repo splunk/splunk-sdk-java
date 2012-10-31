@@ -17,9 +17,9 @@ package com.splunk;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
- * A {@code Map}-like object specialized to represent arguments to modular input kinds.
+ * The {@code ModularInputKindArgument} class is a map-like object that is 
+ * specialized to represent arguments for modular input kinds.
  */
 public class ModularInputKindArgument extends HashMap<String,String> {
     public enum ModularInputKindArgumentType { Number, String, Boolean };
@@ -27,8 +27,8 @@ public class ModularInputKindArgument extends HashMap<String,String> {
     /**
      * Class constructor.
      *
-     * @param template A {@code Map&lt;String,String&gt;} which will be copied into the
-     *                 new object.
+     * @param template A {@code Map&lt;String,String&gt;} that is copied into
+     * the new object.
      */
     ModularInputKindArgument(Map<String,String> template) {
         super();
@@ -36,7 +36,9 @@ public class ModularInputKindArgument extends HashMap<String,String> {
     }
 
     /**
-     * Return the description of this field.
+     * Returns the description of this field.
+     *
+     * @return The description.
      */
     public String getDescription() {
         String description = get("description");
@@ -48,7 +50,10 @@ public class ModularInputKindArgument extends HashMap<String,String> {
     }
 
     /**
-     * Return a boolean extracted from the specified field.
+     * Returns a Boolean that is extracted from the specified field.
+     *
+     * @param fieldName The field name.
+     * @return A Boolean from the specified field.
      */
     protected boolean getBoolean(String fieldName) {
         String r = get(fieldName);
@@ -62,24 +67,33 @@ public class ModularInputKindArgument extends HashMap<String,String> {
     }
 
     /**
-     * Return whether this argument is required when creating a modular input of this kind.
+     * Indicates whether this argument is required when creating a modular input
+     * of this kind.
+     *
+     * @return {@code true} if this argument is required for creating an input,
+     * {@code false} if not.
      */
     public boolean getRequiredOnCreate() {
         return getBoolean("required_on_create");
     }
 
     /**
-     * Return whether this argument is required when editing a modular input of this kind.
+     * Indicates whether this argument is required when editing a modular input
+     * of this kind.
+     *
+     * @return {@code true} if this argument is required for editing, 
+     * {@code false} if not.
      */
+
     public boolean getRequiredOnEdit() {
         return getBoolean("required_on_edit");
     }
 
     /**
-     * Return the type of this argument to the modular input.
+     * Returns the type of this argument to the modular input.
      *
-     * @return One of the elements of the {@code ModularInputKindArgumentType}
-     *         enumeration ({@code Number}, {@code Boolean}, or {@code String}).
+     * @return A member of the {@code ModularInputKindArgumentType} enumeration 
+     * ({@code Number}, {@code Boolean}, or {@code String}).
      */
     public ModularInputKindArgumentType getType() {
         String type = get("data_type");
