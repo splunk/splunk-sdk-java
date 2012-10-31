@@ -16,11 +16,8 @@
 
 package com.splunk;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
 
 public class DeploymentServerClassTest extends SDKTestCase {
     private EntityCollection<DeploymentServerClass> classes;

@@ -38,60 +38,6 @@ public class SearchJobTest extends SDKTestCase {
         jobs = service.getJobs();
     }
 
-
-    private int countEvents(InputStream stream) {
-        ResultsReaderXml results = null;
-        try {
-            results = new ResultsReaderXml(stream);
-
-            int count = 0;
-            while (results.getNextEvent() != null) {
-                count += 1;
-            }
-
-            return count;
-        } catch (Exception e) {
-            fail(e.toString());
-            return -1;
-        }
-    }
-
-    private void waitUntilDone(final Job job) {
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override
-            public boolean predicate() {
-                return job.isDone();
-            }
-        });
-    }
-
-    private void waitUntilReady(final Job job) {
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override
-            public boolean predicate() {
-                return job.isReady();
-            }
-        });
-    }
-
-    private String inputStreamToString(InputStream stream) {
-        try {
-            StringBuilder b = new StringBuilder();
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(stream)
-            );
-            String tmp;
-            while ((tmp = reader.readLine()) != null) {
-                b.append(tmp + "\n");
-            }
-
-            return b.toString();
-        } catch (IOException e) {
-            fail(e.toString());
-            return null;
-        }
-    }
-
     @Test
     public void testEventsFromJob() {
         Job job = jobs.create(QUERY);
@@ -435,5 +381,51 @@ public class SearchJobTest extends SDKTestCase {
         assertTrue(job.isFinalized());
 
         job.cancel();
+    }
+    
+    // === Utility ===
+    
+    private int countEvents(InputStream stream) {
+        ResultsReaderXml results = null;
+        try {
+            results = new ResultsReaderXml(stream);
+
+            int count = 0;
+            while (results.getNextEvent() != null) {
+                count += 1;
+            }
+
+            return count;
+        } catch (Exception e) {
+            fail(e.toString());
+            return -1;
+        }
+    }
+    
+    private void waitUntilDone(final Job job) {
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isDone();
+            }
+        });
+    }
+
+    private String inputStreamToString(InputStream stream) {
+        try {
+            StringBuilder b = new StringBuilder();
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(stream)
+            );
+            String tmp;
+            while ((tmp = reader.readLine()) != null) {
+                b.append(tmp + "\n");
+            }
+
+            return b.toString();
+        } catch (IOException e) {
+            fail(e.toString());
+            return null;
+        }
     }
 }

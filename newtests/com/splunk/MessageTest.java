@@ -31,17 +31,20 @@ public class MessageTest extends SDKTestCase {
             messageCollection.remove("sdk-test-message2");
         assertFalse(messageCollection.containsKey("sdk-test-message2"));
 
-        messageCollection.create("sdk-test-message1", "hello.");
-        assertTrue(messageCollection.containsKey("sdk-test-message1"));
-        Message message = messageCollection.get("sdk-test-message1");
-        assertEquals("sdk-test-message1", message.getKey());
-        assertEquals("hello.", message.getValue());
-
-        messageCollection.create("sdk-test-message2", new Args("value", "world."));
-        assertTrue(messageCollection.containsKey("sdk-test-message2"));
-        message = messageCollection.get("sdk-test-message2");
-        assertEquals("sdk-test-message2", message.getKey());
-        assertEquals("world.", message.getValue());
+        // Create & Check
+        {
+            messageCollection.create("sdk-test-message1", "hello.");
+            assertTrue(messageCollection.containsKey("sdk-test-message1"));
+            Message message = messageCollection.get("sdk-test-message1");
+            assertEquals("sdk-test-message1", message.getKey());
+            assertEquals("hello.", message.getValue());
+    
+            messageCollection.create("sdk-test-message2", new Args("value", "world."));
+            assertTrue(messageCollection.containsKey("sdk-test-message2"));
+            message = messageCollection.get("sdk-test-message2");
+            assertEquals("sdk-test-message2", message.getKey());
+            assertEquals("world.", message.getValue());
+        }
 
         messageCollection.remove("sdk-test-message1");
         assertFalse(messageCollection.containsKey("sdk-test-message1"));

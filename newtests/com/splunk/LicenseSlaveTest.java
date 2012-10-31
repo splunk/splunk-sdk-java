@@ -33,7 +33,7 @@ public class LicenseSlaveTest extends SDKTestCase {
     @Test
     public void testDefaultLicenseSlavesAreKnown() throws Exception {
         EntityCollection<LicenseSlave> licenseSlaves = service.getLicenseSlaves();
-        for (LicenseSlave licenseSlave: licenseSlaves.values()) {
+        for (LicenseSlave licenseSlave : licenseSlaves.values()) {
             assertTrue(licenseSlave.getLabel().length() > 0);
             
             for (String pool: licenseSlave.getPoolIds()) {

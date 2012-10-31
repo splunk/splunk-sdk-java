@@ -30,6 +30,8 @@ public class DistributedConfTest extends SDKTestCase {
     }
 
     @Test
+    // We want to continue testing deprecated getters and setters
+    @SuppressWarnings("deprecation")
     public void testSetAutoAddServers() {
         boolean originalAutoAddServers = conf.getAutoAddServers();
         boolean newAutoAddServers = !originalAutoAddServers;
