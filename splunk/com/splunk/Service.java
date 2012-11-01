@@ -761,6 +761,16 @@ public class Service extends HttpService {
     }
 
     /**
+     * Returns a collection of modular inputs.
+     *
+     * @return A collection of modular inputs.
+     */
+    public ResourceCollection<ModularInputKind> getModularInputKinds() {
+        Args emptyArgs = new Args();
+        return getModularInputKinds(emptyArgs);
+    }
+
+    /**
      * Returns global TCP output properties.
      *
      * @return Global TCP output properties.
