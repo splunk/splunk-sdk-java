@@ -15,6 +15,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="splunk" />
+    <orderEntry type="library" name="commons-cli-1.2" level="project" />
   </component>
 </module>
 

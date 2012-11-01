@@ -45,19 +45,11 @@
         <javac includeantruntime="false"
                srcdir="splunk"
                destdir="${build.splunk}">
-        </javac>
-
-        <!-- Compile the parts of the SDK that are kept external
-             because they require additional libraries to run. -->
-        <mkdir dir="${build.splunk-external}" />
-        <javac includeantruntime="false"
-               srcdir="splunk-external"
-               destdir="${build.splunk-external}">
             <classpath>
-                <pathelement location="${build.splunk}" />
                 <pathelement location="${gson}" />
                 <pathelement location="${opencsv}" />
             </classpath>
+
         </javac>
 
         <!-- Compile utils -->
@@ -91,7 +83,6 @@
                destdir="${build.examples}">
             <classpath>
                 <pathelement location="${build.splunk}" />
-                <pathelement location="${build.splunk-external}" />
                 <pathelement location="${build.util}" />
                 <pathelement location="lib/org-openide-explorer.jar"/>
                 <pathelement location="lib/org-openide-nodes.jar"/>
@@ -179,19 +170,8 @@
         </manifest>
         </jar>
 
-        <!-- splunk-external.jar -->
-        <jar basedir="${build.splunk-external}"
-             destfile="${dist}/splunk-external.jar"
-             includes="**/*.class">
-            <manifest>
-                <attribute name="Implementation-Title"
-                           value="com.splunk.splunk-external"/>
-                <attribute name="Implementation-Vendor"
-                           value="Splunk, Inc."/>
-                <attribute name="Implementation-Version"
-                           value="${version.number}"/>
-            </manifest>
-        </jar>
+        <copy file="${gson}" todir="${dist}" />
+        <copy file="${opencsv}" todir="${dist}" />
 
         <!-- Now, the examples -->
         <standalone-example-jar name="explorer">
@@ -233,7 +213,12 @@
         <mkdir dir="${dist.docs}"/>
         <javadoc destdir="${dist.docs}"
                  sourcepath="splunk"
-                 stylesheetfile="splunk/staticdocs.css" />
+                 stylesheetfile="splunk/staticdocs.css">
+            <classpath>
+                <pathelement location="${gson}" />
+                <pathelement location="${opencsv}" />
+            </classpath>
+        </javadoc>
     </target>
 
     <!-- Run the test suite -->

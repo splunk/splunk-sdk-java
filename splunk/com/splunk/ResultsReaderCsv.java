@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.external;
+package com.splunk;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.splunk.ResultsReader;
