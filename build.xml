@@ -75,7 +75,7 @@
         <!-- Compile the unit tests -->
         <mkdir dir="${build.tests}" />
         <javac includeantruntime="false"
-               srcdir="newtests"
+               srcdir="tests"
                destdir="${build.tests}">
             <classpath>
                 <pathelement location="${build.splunk}" />

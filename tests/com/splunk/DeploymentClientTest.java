@@ -18,45 +18,49 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class DeploymentClientTest extends SplunkTestCase {
-    final static String assertRoot = "Deployment Client assert: ";
-
-    @Test public void testDeploymentClient() throws Exception {
-        Service service = connect();
-
+public class DeploymentClientTest extends SDKTestCase {
+    @Test
+    public void testDeploymentClient() throws Exception {
         DeploymentClient deploymentClient = service.getDeploymentClient();
         String uri = deploymentClient.getTargetUri();
-        if (uri != null) {
-            try {
-                deploymentClient.disable();
-                assert false;
-            } catch (Exception e) {
-                // except exception
-            }
-            try {
-                deploymentClient.enable();
-                assert false;
-            } catch (Exception e) {
-                // except exception
-            }
-            deploymentClient.setDisabled(true);
-            deploymentClient.setDisabled(false);
-            deploymentClient.reload();
-            // use both setters and map update techniques
-            deploymentClient.setTargetUri("1.2.3.4:8080");
-            deploymentClient.update();
-            assertEquals(assertRoot + "#1",
-                "1.2.3.4:8080", deploymentClient.getTargetUri());
-            Args args = new Args();
-            args.put("targetUri", uri);
-            deploymentClient.update(args);
-            assertEquals(assertRoot + "#2",
-                uri, deploymentClient.getTargetUri());
-            deploymentClient.getServerClasses();
-            deploymentClient.reload();
+        if (uri == null) {
+            System.out.println("WARNING: No DeploymentClient entities to test");
+            return;
         }
-        else {
-            System.out.println("WARNING: deploymenClient not configured");
+        
+        // Try to disable & enable with standard methods (which should fail)
+        try {
+            deploymentClient.disable();
+            fail("Expected disable to fail.");
+        } catch (UnsupportedOperationException e) {
+            // Expected
         }
+        try {
+            deploymentClient.enable();
+            fail("Expected enable to fail.");
+        } catch (UnsupportedOperationException e) {
+            // Expected
+        }
+        
+        // Try to disable & enable with setters
+        deploymentClient.setDisabled(true);
+        // TODO: Should there be an update here?
+        deploymentClient.setDisabled(false);
+        // TODO: Should there be an update here?
+        
+        deploymentClient.reload();
+        
+        // Probe via setter
+        deploymentClient.setTargetUri("1.2.3.4:8080");
+        deploymentClient.update();
+        assertEquals("1.2.3.4:8080", deploymentClient.getTargetUri());
+        
+        // Prove via argument map
+        deploymentClient.update(new Args("targetUri", uri));
+        assertEquals(uri, deploymentClient.getTargetUri());
+        
+        // Ensure getters throw no exceptions
+        deploymentClient.getServerClasses();
+        deploymentClient.getTargetUri();
     }
 }

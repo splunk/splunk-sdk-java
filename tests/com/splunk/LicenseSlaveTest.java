@@ -20,37 +20,33 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
-public class LicenseSlaveTest extends SplunkTestCase {
-    final static String assertRoot = "License Slave assert: ";
-
-    @Test public void testLicenseSlave() throws Exception {
-        Service service = connect();
-
-        EntityCollection<LicenseSlave> licenseSlaves = 
-                service.getLicenseSlaves();
-
-        // list of pools
-        List<String> pools = Arrays.asList(
+public class LicenseSlaveTest extends SDKTestCase {
+    private static final List<String> KNOWN_POOL_IDS = Arrays.asList(
             "auto_generated_pool_download-trial",
             "auto_generated_pool_enterprise",
             "auto_generated_pool_forwarder",
             "auto_generated_pool_free");
-
-        List<String> stacks = Arrays.asList(
-             "download-trial", "enterprise", "forwarder", "free");
-
-        for (LicenseSlave licenseSlave: licenseSlaves.values()) {
-            assertTrue(assertRoot + "#1", licenseSlave.getLabel().length() > 0);
+    
+    private static final List<String> KNOWN_STACK_IDS = Arrays.asList(
+            "download-trial", "enterprise", "forwarder", "free");
+    
+    @Test
+    public void testDefaultLicenseSlavesAreKnown() throws Exception {
+        EntityCollection<LicenseSlave> licenseSlaves = service.getLicenseSlaves();
+        for (LicenseSlave licenseSlave : licenseSlaves.values()) {
+            assertTrue(licenseSlave.getLabel().length() > 0);
+            
             for (String pool: licenseSlave.getPoolIds()) {
                 // Special-case, fixed sourcetype has a hash at the end; so
                 // no fixed value will match. Thus only check versus known
                 // fixed values from list.
                 if (!pool.startsWith("auto_generated_pool_fixed-sourcetype_")) {
-                    assertTrue(assertRoot + "#2", pools.contains(pool));
+                    assertTrue(KNOWN_POOL_IDS.contains(pool));
                 }
             }
+            
             for (String stack: licenseSlave.getStackIds()) {
-                assertTrue(assertRoot + "#3", stacks.contains(stack));
+                assertTrue(KNOWN_STACK_IDS.contains(stack));
             }
         }
     }

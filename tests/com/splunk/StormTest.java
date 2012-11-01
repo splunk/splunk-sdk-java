@@ -16,11 +16,10 @@
 
 package com.splunk;
 
-import org.junit.Test;
-
 public class StormTest {
-
-    @Test public void testStorm() {
+    // Disabled until DVPL-1203 is resolved
+    //@Test
+    public void _testStorm() {
 
         // the storm token provided by Splunk
         Args loginArgs = new Args("StormToken",

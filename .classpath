@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="splunk"/>
-	<classpathentry kind="src" path="examples/search_saved"/>
-	<classpathentry kind="src" path="examples/search_simple"/>
-	<classpathentry kind="src" path="examples/input"/>
-	<classpathentry kind="src" path="examples/genevents"/>
 	<classpathentry kind="src" path="splunk-external"/>
 	<classpathentry kind="src" path="splunk-sdk"/>
 	<classpathentry kind="src" path="tests"/>
-	<classpathentry kind="src" path="examples/explorer"/>
-	<classpathentry kind="src" path="examples/export"/>
-	<classpathentry kind="src" path="examples/index"/>
-	<classpathentry kind="src" path="examples/info"/>
-	<classpathentry kind="src" path="examples/search"/>
-	<classpathentry kind="src" path="examples/search_blocking"/>
-	<classpathentry kind="src" path="examples/search_oneshot"/>
-	<classpathentry kind="src" path="examples/search_realtime"/>
-	<classpathentry kind="src" path="examples/spurl"/>
-	<classpathentry kind="src" path="examples/tail"/>
+	<classpathentry kind="src" path="examples"/>
+	<classpathentry kind="src" path="util"/> <!-- FIXME: Merge this into existing build path -->
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-actions.jar"/>

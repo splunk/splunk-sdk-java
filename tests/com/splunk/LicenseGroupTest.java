@@ -20,28 +20,25 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
-public class LicenseGroupTest extends SplunkTestCase {
-    final static String assertRoot = "License Group assert: ";
-
-    @Test public void testLicenseGroup() throws Exception {
-        Service service = connect();
-
-        EntityCollection<LicenseGroup> licenseGroups =
-                service.getLicenseGroups();
-
-        // list of stackids, empirically created
-        List<String> stacks = Arrays.asList(
-            "download-trial",
-            "enterprise",
-            "forwarder",
-            "free",
-            "trial",
-            "");
-        for (LicenseGroup licenseGroup: licenseGroups.values()) {
-            // enterprise, forwarder, free, download-trial and empty
+public class LicenseGroupTest extends SDKTestCase {
+    // list of stackids, empirically created
+    private static final List<String> KNOWN_STACK_IDS = Arrays.asList(
+        "download-trial",
+        "enterprise",
+        "forwarder",
+        "free",
+        "trial",
+        "");
+    
+    @Test
+    public void testLicenseGroup() throws Exception {
+        for (LicenseGroup licenseGroup: service.getLicenseGroups().values()) {
+            // Recognized stack ID?
             for (String id: licenseGroup.getStackIds()) {
-                assertTrue(assertRoot + "#1", stacks.contains(id));
+                assertTrue(KNOWN_STACK_IDS.contains(id));
             }
+            
+            // Test getters
             licenseGroup.isActive();
         }
     }
