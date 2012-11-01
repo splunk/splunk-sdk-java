@@ -18,24 +18,23 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class DeploymentServerTest extends SplunkTestCase {
-    final static String assertRoot = "Deployment Server assert: ";
-
-    @Test public void testDeploymentServer() throws Exception {
-        Service service = connect();
-
+public class DeploymentServerTest extends SDKTestCase {
+    @Test
+    public void testDeploymentServer() throws Exception {
         EntityCollection<DeploymentServer> deploymentServers =
                 service.getDeploymentServers();
         if (deploymentServers.values().size() == 0) {
-            System.out.println("WARNING: Deployment Server not configured");
+            System.out.println("WARNING: No DeploymentServer entities to test");
             return;
         }
 
-        for (DeploymentServer deploymentServer: deploymentServers.values()) {
-            assertTrue(assertRoot + "#1",
-                deploymentServer.getWhitelistByIndex(0).length() > 0);
-            for (int i=0; i<10; i++)
+        for (DeploymentServer deploymentServer : deploymentServers.values()) {
+            // Ensure getters throw no exceptions
+            deploymentServer.isDisabled();
+            assertTrue(deploymentServer.getWhitelistByIndex(0).length() > 0);
+            for (int i=0; i<10; i++) {
                 deploymentServer.getWhitelistByIndex(i);
+            }
         }
     }
 }

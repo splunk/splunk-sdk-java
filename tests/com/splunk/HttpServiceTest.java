@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -16,40 +16,65 @@
 
 package com.splunk;
 
-import java.util.HashMap;
+import org.junit.Before;
 import org.junit.Test;
 
-public class HttpServiceTest extends SplunkTestCase {
-    final static String assertRoot = "Event Type assert: ";
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 
-    @Test public void testGet() {
-        HttpService service = new HttpService(
-            command.host, command.port, command.scheme);
-        ResponseMessage response = service.get("/");
-        assertEquals(assertRoot + "#1", 200, response.getStatus());
+public class HttpServiceTest extends SDKTestCase {
+    private HttpService httpService;
+    
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        
+        httpService = new HttpService(
+                (String)command.opts.get("host"),
+                (Integer)command.opts.get("port"),
+                (String)command.opts.get("scheme")
+        );
     }
 
-    @Test public void testPost() {
-        HttpService service = new HttpService(
-            command.host, command.port, command.scheme);
+    private boolean firstLineIsXmlDtd(InputStream stream) {
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(stream)
+        );
+        try {
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".equals(
+                    reader.readLine()
+            );
+        } catch (IOException e) {
+            fail(e.toString());
+            return false;
+        }
+    }
+
+    @Test
+    public void testGet() {
+        ResponseMessage response = httpService.get("/");
+        assertEquals(200, response.getStatus());
+        assertTrue(firstLineIsXmlDtd(response.getContent()));
+    }
+
+    @Test
+    public void testPost() {
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put("foo", "bar");
-        ResponseMessage response = service.post("/", args);
-        // We are taking advantage of the fact that a post to the root of
-        // the REST API hierarchy ignores POST args and returns the same
-        // results as a GET. It could be argued this is not a very good
-        // test because we can't distinguish between a GET & POST result ..
-        // But I dont have a better idea for how to excercise this code path
-        // at this layer (without authenticating against Splunk).
-        assertEquals(assertRoot + "#2", 200, response.getStatus());
+        ResponseMessage response = httpService.post("/", args);
+        assertEquals(200, response.getStatus());
+        assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 
-    @Test public void testSend() {
-        HttpService service = new HttpService(
-            command.host, command.port, command.scheme);
+    @Test
+    public void testSend() {
         RequestMessage request = new RequestMessage("GET");
         ResponseMessage response = service.send("/", request);
-        assertEquals(assertRoot + "#3", 200, response.getStatus());
+        assertEquals(200, response.getStatus());
+        assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 }
-

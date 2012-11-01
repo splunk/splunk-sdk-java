@@ -18,25 +18,23 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class DeploymentTenantTest extends SplunkTestCase {
-    final static String assertRoot = "Deployment Tenant assert: ";
-
-    @Test public void testDeploymentTenant() throws Exception {
-        Service service = connect();
-
+public class DeploymentTenantTest extends SDKTestCase {
+    @Test
+    public void testDeploymentTenant() throws Exception {
         EntityCollection<DeploymentTenant> deploymentTenants =
                 service.getDeploymentTenants();
         if (deploymentTenants.values().size() == 0) {
-            System.out.println("WARNING: Deployment Tenant not configured");
+            System.out.println("WARNING: No DeploymentTenant entities to test");
             return;
         }
 
         for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
-            assertTrue(assertRoot + "#1",
-                deploymentTenant.getWhitelistByIndex(0).length() > 0);
+            // Ensure getters throw no exceptions
             deploymentTenant.isDisabled();
-            for (int i=0; i<10; i++)
+            assertTrue(deploymentTenant.getWhitelistByIndex(0).length() > 0);
+            for (int i=0; i<10; i++) {
                 deploymentTenant.getWhitelistByIndex(i);
+            }
         }
     }
 }

@@ -18,43 +18,40 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class OutputGroupTest extends SplunkTestCase {
-    final static String assertRoot = "Output Group assert: ";
-
-    @Test public void testOutputGroup() throws Exception {
-        Service service = connect();
-
+public class OutputGroupTest extends SDKTestCase {
+    @Test
+    public void testOutputGroup() throws Exception {
         EntityCollection<OutputGroup> outputGroups = service.getOutputGroups();
 
         if (outputGroups.values().size() == 0) {
-            System.out.println("WARNING: OutputGroup not configured");
+            System.out.println("WARNING: No OutputGroups to test");
             return;
         }
 
         for (OutputGroup outputGroup: outputGroups.values()) {
+            // Getters don't throw exception &
+            // Save old values
             outputGroup.getMethod();
             String[] servers = outputGroup.getServers();
             outputGroup.isDisabled();
             outputGroup.getAutoLB();
 
-            outputGroup.setServers("1.1.1.1:9997");
-            outputGroup.update();
-
-            String[] updatedServers = outputGroup.getServers();
-            assertTrue(assertRoot + "#1",
-                contains(updatedServers, "1.1.1.1:9997"));
-
-            // restore originals
-            StringBuilder serverList = new StringBuilder();
-            boolean firstTime = true;
-            for (String server: servers) {
-                if (!firstTime) serverList.append(",");
-                else firstTime = false;
-                serverList.append(server);
+            // Probe
+            {
+                outputGroup.setServers("1.1.1.1:9997");
+                outputGroup.update();
+    
+                String[] updatedServers = outputGroup.getServers();
+                assertTrue(contains(updatedServers, "1.1.1.1:9997"));
             }
-            outputGroup.setServers(serverList.toString());
-            outputGroup.update();
-            outputGroup.getServers();
+
+            // Restore original values
+            {
+                outputGroup.setServers(Util.join(",", servers));
+                outputGroup.update();
+                
+                outputGroup.getServers();
+            }
         }
     }
 }

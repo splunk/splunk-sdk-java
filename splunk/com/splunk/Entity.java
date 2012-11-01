@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
-    public HashMap<String, Object> toUpdate = new HashMap<String, Object>();
+    public HashMap<String, Object> toUpdate = new LinkedHashMap<String, Object>();
 
     /**
      * Class constructor.
@@ -416,25 +416,25 @@ public class Entity extends Resource implements Map<String, Object> {
      * @param args The arguments to update.
      */
     public void update(Map<String, Object> args) {
-        // Merge cached setters and live args together before updating.
-        HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
-        mergedArgs.putAll(toUpdate);
-        mergedArgs.putAll(args);
-        service.post(actionPath("edit"), mergedArgs);
-        toUpdate.clear();
-        invalidate();
+        if (!toUpdate.isEmpty() || !args.isEmpty()) {
+            // Merge cached setters and live args together before updating.
+            HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
+            mergedArgs.putAll(toUpdate);
+            mergedArgs.putAll(args);
+            
+            service.post(actionPath("edit"), mergedArgs);
+            toUpdate.clear();
+            invalidate();
+        }
     }
 
     /**
      * Updates the entity with the accumulated arguments, established by the
      * individual setter methods for each specific entity class.
      */
+    @SuppressWarnings("unchecked")
     public void update() {
-        if (toUpdate.size() > 0) {
-            service.post(actionPath("edit"), toUpdate);
-            toUpdate.clear();
-            invalidate();
-        }
+        update(Collections.EMPTY_MAP);
     }
 
     /**

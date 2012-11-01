@@ -18,40 +18,26 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class LicensePoolTest extends SplunkTestCase {
-    final static String assertRoot = "License Pool assert: ";
-
-    void checkLicensePool(LicensePool licensePool) {
-        licensePool.getDescription();
-        licensePool.getQuota();
-        licensePool.getSlaves();
-        licensePool.getSlavesUsageBytes();
-        licensePool.getStackId();
-        licensePool.getUsedBytes();
-    }
-
-    void checkLicensePools(LicensePoolCollection licensePoolCollection) {
-        for (LicensePool licensePool : licensePoolCollection.values())
-            checkLicensePool(licensePool);
-    }
-
-    @Test public void testLicensePool() throws Exception {
-        Service service = connect();
-
+public class LicensePoolTest extends SDKTestCase {
+    @Test
+    public void testCreateWithNoQuota() throws Exception {
         LicensePoolCollection licensePoolCollection = service.getLicensePools();
-
-        checkLicensePools(licensePoolCollection);
-
         try {
             // The following will fail because there is no quota available
             licensePoolCollection.create("sdk-test", "MAX", "download-trial");
             fail("Expected pool create to fail");
         }
         catch (HttpException e) {
-            assertEquals(assertRoot + "#1", 400, e.getStatus());
+            assertEquals(400, e.getStatus());
         }
-      
+    }
+    
+    @Test
+    public void testLicensePoolSetters() throws Exception {
+        LicensePoolCollection licensePoolCollection = service.getLicensePools();
+        
         // Try updating some pools ..
+        boolean foundAnUpdatablePool = false;
         for (LicensePool licensePool : licensePoolCollection.values()) {
             if (licensePool.getStackId().equals("download-trial"))
                 continue; // Can't edit a pool in stack: download-trial
@@ -59,23 +45,43 @@ public class LicensePoolTest extends SplunkTestCase {
                 continue; // Can't edit a pool in stack: forwarder
             if (licensePool.getStackId().equals("free"))
                 continue; // Can't edit a pool in stack: free
+            foundAnUpdatablePool = true;
 
-            Args saved = new Args();
-            saved.put("description", licensePool.getDescription());
-
-            // update using setters
-            licensePool.setDescription("sdk-test description");
-            licensePool.setQuota("1048576");
-            licensePool.update();
-
-            assertEquals(assertRoot + "#2", 1024*1024,
-                    (int)Integer.valueOf(licensePool.getQuota()));
-
-            // use map technique for restore
-            saved.put("quota", "MAX");
-            licensePool.update(saved);
-            assertEquals(assertRoot + "#3", saved.get("description"),
-                licensePool.getDescription());
+            String originalDescription = licensePool.getDescription();
+            
+            // Probe
+            {
+                licensePool.setDescription("sdk-test description");
+                licensePool.setQuota("1048576");
+                licensePool.update();
+    
+                assertEquals("sdk-test description", licensePool.getDescription());
+                assertEquals("1048576", licensePool.getQuota());
+            }
+            
+            licensePool.update(new Args("description", originalDescription));
+            licensePool.update(new Args("quota", "MAX"));
         }
+        
+        if (!foundAnUpdatablePool) {
+            System.out.println("WARNING: Didn't find any updatable license pools.");
+        }
+    }
+    
+    @Test
+    public void testLicensePoolGetters() {
+        LicensePoolCollection licensePoolCollection = service.getLicensePools();
+        for (LicensePool licensePool : licensePoolCollection.values()) {
+            testLicensePoolGetters(licensePool);
+        }
+    }
+    
+    private void testLicensePoolGetters(LicensePool licensePool) {
+        licensePool.getDescription();
+        licensePool.getQuota();
+        licensePool.getSlaves();
+        licensePool.getSlavesUsageBytes();
+        licensePool.getStackId();
+        licensePool.getUsedBytes();
     }
 }

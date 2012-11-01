@@ -2188,6 +2188,13 @@ public class SavedSearch extends Entity {
         if (!args.containsKey("search")) {
             args = Args.create(args).add("search", getSearch());
         }
+
+        // Throw an exception if trying to set the name, since it
+        // won't work, but will silently fail on Splunk's end.
+        if (args.containsKey("name")) {
+            throw new IllegalStateException("Cannot set 'name' on a saved search.");
+        }
+
         super.update(args);
     }
 

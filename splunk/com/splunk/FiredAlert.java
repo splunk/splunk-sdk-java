@@ -112,7 +112,7 @@ public class FiredAlert extends Entity {
     }
 
     /**
-     * Returns this alert's redered trigger time.
+     * Returns this alert's rendered trigger time.
      * This method is available in Splunk 4.3 and later.
      *
      * @return This alert's trigger time, or {@code null} if not available.

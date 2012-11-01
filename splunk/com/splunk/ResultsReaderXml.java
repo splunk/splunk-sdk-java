@@ -84,9 +84,10 @@ public class ResultsReaderXml extends ResultsReader {
 
     /** {@inheritDoc} */
     @Override public void close() throws Exception {
-        super.close();
         if (xmlReader != null) xmlReader.close();
         xmlReader = null;
+        
+        super.close();
     }
 
     /** {@inheritDoc} */

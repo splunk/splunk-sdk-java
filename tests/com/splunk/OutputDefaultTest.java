@@ -18,14 +18,13 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class OutputDefaultTest extends SplunkTestCase {
-    final static String assertRoot = "Output Default assert: ";
-
-    @Test public void testOutputDefault() throws Exception {
-        Service service = connect();
-
+public class OutputDefaultTest extends SDKTestCase {
+    @Test
+    public void testOutputDefault() throws Exception {
         OutputDefault outputDefault = service.getOutputDefault();
 
+        // Getters don't throw exception &
+        // Save old values
         outputDefault.getAutoLB();
         outputDefault.blockOnQueueFull();
         outputDefault.getAutoLBFrequency();
@@ -41,41 +40,32 @@ public class OutputDefaultTest extends SplunkTestCase {
         outputDefault.isForwardedIndexFilterDisable();
         boolean cookedData = outputDefault.getSendCookedData();
 
-        // set-ables
+        // Probe
+        {
+            outputDefault.setDropEventsOnQueueFull(0);
+            outputDefault.setHeartbeatFrequency(heartbeat+1);
+            outputDefault.setIndexAndForward(!forward);
+            outputDefault.setSendCookedData(!cookedData);
+            outputDefault.update();
+    
+            assertEquals(0, outputDefault.getDropEventsOnQueueFull());
+            assertEquals(heartbeat+1, outputDefault.getHeartbeatFrequency());
+            assertEquals(!forward, outputDefault.indexAndForward());
+            assertEquals(!cookedData, outputDefault.getSendCookedData());
+        }
 
-        outputDefault.setDropEventsOnQueueFull(0);
-        outputDefault.setHeartbeatFrequency(heartbeat+1);
-        outputDefault.setIndexAndForward(!forward);
-        outputDefault.setSendCookedData(!cookedData);
-
-        outputDefault.update();
-
-        //check
-        assertEquals(assertRoot + "#1", 0,
-            outputDefault.getDropEventsOnQueueFull());
-        assertEquals(assertRoot + "#2", heartbeat+1,
-            outputDefault.getHeartbeatFrequency());
-        assertEquals(assertRoot + "#3", !forward,
-            outputDefault.indexAndForward());
-        assertEquals(assertRoot + "#4", !cookedData,
-            outputDefault.getSendCookedData());
-
-        // restore
-        outputDefault.setDropEventsOnQueueFull(onQueueFull);
-        outputDefault.setHeartbeatFrequency(heartbeat);
-        outputDefault.setIndexAndForward(forward);
-        outputDefault.setSendCookedData(cookedData);
-
-        outputDefault.update();
-
-        //check
-        assertEquals(assertRoot + "#5", onQueueFull,
-            outputDefault.getDropEventsOnQueueFull());
-        assertEquals(assertRoot + "#6", heartbeat,
-            outputDefault.getHeartbeatFrequency());
-        assertEquals(assertRoot + "#7", forward,
-            outputDefault.indexAndForward());
-        assertEquals(assertRoot + "#8", cookedData,
-            outputDefault.getSendCookedData());
+        // Restore original values
+        {
+            outputDefault.setDropEventsOnQueueFull(onQueueFull);
+            outputDefault.setHeartbeatFrequency(heartbeat);
+            outputDefault.setIndexAndForward(forward);
+            outputDefault.setSendCookedData(cookedData);
+            outputDefault.update();
+    
+            assertEquals(onQueueFull, outputDefault.getDropEventsOnQueueFull());
+            assertEquals(heartbeat, outputDefault.getHeartbeatFrequency());
+            assertEquals(forward, outputDefault.indexAndForward());
+            assertEquals(cookedData, outputDefault.getSendCookedData());
+        }
     }
 }

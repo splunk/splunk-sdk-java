@@ -18,44 +18,46 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class OutputSyslogTest extends SplunkTestCase {
-    final static String assertRoot = "Output Syslog assert: ";
-
-    @Test public void testOutputSyslog() throws Exception {
-        Service service = connect();
-
+public class OutputSyslogTest extends SDKTestCase {
+    @Test
+    public void testOutputSyslog() throws Exception {
         EntityCollection<OutputSyslog> dos = service.getOutputSyslogs();
 
         if (dos.values().size() == 0) {
-            System.out.println("WARNING: OutputSyslog not configured");
+            System.out.println("WARNING: No OutputSyslogs to test");
             return;
         }
 
-        for (OutputSyslog entity: dos.values()) {
+        for (OutputSyslog entity : dos.values()) {
+            // Save
             String server = entity.getServer();
             String type = entity.getType();
 
-            entity.setServer("1.1.1.1:514");
-            //entity.setPriority(); -- can't check
-            //entity.setTimestampFormat(); -- can't check
-            String otherType = "tcp";
-            if (type.equals("tcp"))
-                otherType = "udp";
-            entity.setType(otherType);
-            entity.update();
+            // Probe
+            {
+                entity.setServer("1.1.1.1:514");
+                //entity.setPriority(); -- can't check
+                //entity.setTimestampFormat(); -- can't check
+                String otherType = "tcp";
+                if (type.equals("tcp"))
+                    otherType = "udp";
+                entity.setType(otherType);
+                entity.update();
+    
+                // check
+                assertEquals("1.1.1.1:514", entity.getServer());
+                assertEquals(otherType, entity.getType());
+            }
 
-            // check
-            assertEquals(assertRoot + "#1", "1.1.1.1:514", entity.getServer());
-            assertEquals(assertRoot + "#2", otherType, entity.getType());
-
-            // restore
-            entity.setServer(server);
-            entity.setType(type);
-            entity.update();
-
-            // re-check
-            assertEquals(assertRoot + "#3", server, entity.getServer());
-            assertEquals(assertRoot + "#4", type, entity.getType());
+            // Restore
+            {
+                entity.setServer(server);
+                entity.setType(type);
+                entity.update();
+    
+                assertEquals(server, entity.getServer());
+                assertEquals(type, entity.getType());
+            }
         }
     }
 }

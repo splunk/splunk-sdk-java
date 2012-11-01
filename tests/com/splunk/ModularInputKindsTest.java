@@ -21,33 +21,35 @@ import org.junit.Test;
 
 import java.util.*;
 
-public class ModularInputKindsTest extends SplunkTestCase {
-    Service service;
-    ResourceCollection<ModularInputKind> inputKinds;
+public class ModularInputKindsTest extends SDKTestCase {
+    private ResourceCollection<ModularInputKind> inputKinds;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
-        this.service = connect();
-        this.inputKinds = this.service.getModularInputKinds(null);
-        if (this.inputKinds.isEmpty()) {
-            SplunkTestCase.fail("No modular inputs found. Please install modular-input-test app in your Splunk.");
+        if (service.versionIsAtEarliest("5.0")) {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
         }
     }
-
+    
     public void checkModularInputKind(ModularInputKind m) {
-        if (m.getName() == "test1") {
-            SplunkTestCase.assertEquals("Test \"Input\" - 1", m.getTitle());
-            SplunkTestCase.assertEquals("xml", m.getStreamingMode());
-        } else if (m.getName() == "test2") {
-            SplunkTestCase.assertEquals("test2", m.getTitle());
-            SplunkTestCase.assertEquals("simple", m.getStreamingMode());
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
+        if (m.getName().equals("test1")) {
+            assertEquals("Test \"Input\" - 1", m.getTitle());
+            assertEquals("xml", m.getStreamingMode());
+        } else if (m.getName().equals("test2")) {
+            assertEquals("test2", m.getTitle());
+            assertEquals("simple", m.getStreamingMode());
         }
 
     }
 
     @Test
     public void testListInputKinds() {
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
         for (ModularInputKind kind : inputKinds.values()) {
             checkModularInputKind(kind);
         }
@@ -55,36 +57,44 @@ public class ModularInputKindsTest extends SplunkTestCase {
 
     @Test
     public void testInputByName() {
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
         ModularInputKind m;
-        m = this.inputKinds.get("test1");
+        m = inputKinds.get("test1");
         checkModularInputKind(m);
-        m = this.inputKinds.get("test2");
+        m = inputKinds.get("test2");
         checkModularInputKind(m);
     }
 
     @Test
     public void testNonexistantArg() {
-        ModularInputKind test1 = this.inputKinds.get("test1");
-        SplunkTestCase.assertFalse(test1.hasArgument("nonexistant_argument"));
-        SplunkTestCase.assertNull(test1.getArgument("nonexistant_argument"));
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
+        ModularInputKind test1 = inputKinds.get("test1");
+        assertFalse(test1.hasArgument("nonexistant_argument"));
+        assertNull(test1.getArgument("nonexistant_argument"));
     }
 
     @Test
     public void testInputKindDescriptionAndTitle() {
-        ModularInputKind test1 = this.inputKinds.get("test1");
-        String expectedDescription1 = "A description of test input 1 with special characters: //;!*%";
-        SplunkTestCase.assertEquals(expectedDescription1, test1.getDescription());
-        SplunkTestCase.assertEquals("Test \"Input\" - 1", test1.getTitle());
+        if (service.versionIsEarlierThan("5.0")) { return; }
 
-        ModularInputKind test2 = this.inputKinds.get("test2");
+        ModularInputKind test1 = inputKinds.get("test1");
+        String expectedDescription1 = "A description of test input 1 with special characters: //;!*%";
+        assertEquals(expectedDescription1, test1.getDescription());
+        assertEquals("Test \"Input\" - 1", test1.getTitle());
+
+        ModularInputKind test2 = inputKinds.get("test2");
         String expectedDescription2 = "";
-        SplunkTestCase.assertEquals(expectedDescription2, test2.getDescription());
-        SplunkTestCase.assertEquals("test2", test2.getTitle());
+        assertEquals(expectedDescription2, test2.getDescription());
+        assertEquals("test2", test2.getTitle());
     }
 
     @Test
     public void testArgDescription() {
-        ModularInputKind test1 = this.inputKinds.get("test1");
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
+        ModularInputKind test1 = inputKinds.get("test1");
 
         ModularInputKindArgument arg;
 
@@ -94,17 +104,19 @@ public class ModularInputKindsTest extends SplunkTestCase {
         expectedValues.put("empty_description", "");
 
         for (String key : expectedValues.keySet()) {
-            SplunkTestCase.assertTrue(test1.hasArgument(key));
+            assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
             String expectedDescription = expectedValues.get(key);
             String foundDescription = arg.getDescription();
-            SplunkTestCase.assertEquals(expectedDescription, foundDescription);
+            assertEquals(expectedDescription, foundDescription);
         }
     }
 
     @Test
     public void testArgDataType() {
-        ModularInputKind test1 = this.inputKinds.get("test1");
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
+        ModularInputKind test1 = inputKinds.get("test1");
 
         ModularInputKindArgument arg;
 
@@ -115,15 +127,17 @@ public class ModularInputKindsTest extends SplunkTestCase {
         expectedValues.put("string_field", ModularInputKindArgument.ModularInputKindArgumentType.String);
 
         for (String key : expectedValues.keySet()) {
-            SplunkTestCase.assertTrue(test1.hasArgument(key));
+            assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
-            SplunkTestCase.assertEquals(expectedValues.get(key), arg.getType());
+            assertEquals(expectedValues.get(key), arg.getType());
         }
     }
 
     @Test
     public void testRequiredOnCreate() {
-        ModularInputKind test1 = this.inputKinds.get("test1");
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
+        ModularInputKind test1 = inputKinds.get("test1");
 
         ModularInputKindArgument arg;
 
@@ -132,15 +146,17 @@ public class ModularInputKindsTest extends SplunkTestCase {
         expectedValues.put("not_required_on_create", false);
 
         for (String key : expectedValues.keySet()) {
-            SplunkTestCase.assertTrue(test1.hasArgument(key));
+            assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
-            SplunkTestCase.assertEquals((boolean)expectedValues.get(key), arg.getRequiredOnCreate());
+            assertEquals((boolean)expectedValues.get(key), arg.getRequiredOnCreate());
         }
     }
 
     @Test
     public void testRequiredOnEdit() {
-        ModularInputKind test1 = this.inputKinds.get("test1");
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
+        ModularInputKind test1 = inputKinds.get("test1");
 
         ModularInputKindArgument arg;
 
@@ -149,15 +165,17 @@ public class ModularInputKindsTest extends SplunkTestCase {
         expectedValues.put("not_required_on_edit", false);
 
         for (String key : expectedValues.keySet()) {
-            SplunkTestCase.assertTrue(test1.hasArgument(key));
+            assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
-            SplunkTestCase.assertEquals((boolean)expectedValues.get(key), arg.getRequiredOnEdit());
+            assertEquals((boolean)expectedValues.get(key), arg.getRequiredOnEdit());
         }
     }
 
     @Test
     public void testGetArguments() {
-        ModularInputKind test1 = this.inputKinds.get("test1");
+        if (service.versionIsEarlierThan("5.0")) { return; }
+
+        ModularInputKind test1 = inputKinds.get("test1");
         Map<String, ModularInputKindArgument> args = test1.getArguments();
 
         Set<String> expectedKeys = new HashSet<String>();
@@ -174,6 +192,6 @@ public class ModularInputKindsTest extends SplunkTestCase {
         expectedKeys.add("string_field");
         expectedKeys.add("boolean_field");
 
-        SplunkTestCase.assertEquals(expectedKeys, args.keySet());
+        assertEquals(expectedKeys, args.keySet());
     }
 }

@@ -121,17 +121,20 @@ public class InputCollection extends EntityCollection<Input> {
         args = Args.create(args).add("name", name);
         String path = this.path + "/" + kind.getRelativePath();
         service.post(path, args);
+        
         invalidate();
+        
         return (T)get(name);
     }
-
+    
     /**
      * Creates an {@code Input} resource item.
      *
      * @param entry The {@code AtomEntry} object describing the entry.
      * @return The input that was created.
      */
-    @Override protected Input createItem(AtomEntry entry) {
+    @Override
+    protected Input createItem(AtomEntry entry) {
         String path = itemPath(entry);
         InputKind kind = itemKind(path);
         Class inputClass = kind.getInputClass();
@@ -143,7 +146,6 @@ public class InputCollection extends EntityCollection<Input> {
      */
     @Override public Input get(Object key) {
         return retrieveInput((String)key);
-
     }
 
     /**
@@ -168,11 +170,15 @@ public class InputCollection extends EntityCollection<Input> {
      * @return The kind of input.
      */
     protected InputKind itemKind(String path) {
-        for (InputKind kind : this.inputKinds) {
-            if (path.indexOf("data/inputs/" + kind.getRelativePath()) > 0)
+        String relpathWithInputName = Util.substringAfter(path, "/data/inputs/", null);
+        for (InputKind kind : inputKinds) {
+            if (relpathWithInputName.startsWith(kind.getRelativePath())) {
                 return kind;
+            }
         }
-        return InputKind.Unknown; // Didn't recognize the input kind
+        
+        // Not good. This means that there is an input of an unknown kind.
+        return InputKind.Unknown;
     }
 
     /**
@@ -214,7 +220,7 @@ public class InputCollection extends EntityCollection<Input> {
         ResponseMessage response = service.get(this.path + "/" + Util.join("/", subPath));
         AtomFeed feed = AtomFeed.parseStream(response.getContent());
         for (AtomEntry entry : feed.entries) {
-            String relpath = itemKey(entry);
+            String itemKeyName = itemKey(entry);
 
             boolean hasCreateLink = false;
             for (String linkName : entry.links.keySet()) {
@@ -224,11 +230,15 @@ public class InputCollection extends EntityCollection<Input> {
             }
 
             List<String> thisSubPath = new ArrayList<String>(subPath);
-            thisSubPath.add(relpath);
+            thisSubPath.add(itemKeyName);
+            
+            String relpath = Util.join("/", thisSubPath);
 
-            if (entry.title.equals("all") || Util.join("/", thisSubPath).equals("tcp/ssl")) {
+            if (relpath.equals("all") || relpath.equals("tcp/ssl")) {
+                // Skip these input types
                 continue;
             } else if (hasCreateLink) {
+                // Found an InputKind leaf
                 InputKind newKind = InputKind.create(relpath);
                 kinds.add(newKind);
             } else {
@@ -243,8 +253,8 @@ public class InputCollection extends EntityCollection<Input> {
      * Refresh the {@code inputKinds} field on this object.
      */
     private void refreshInputKinds() {
-        List<String> basePath = new ArrayList<String>();
-        Set<InputKind> kinds = assembleInputKindSet(basePath);
+        Set<InputKind> kinds = assembleInputKindSet(new ArrayList<String>());
+        
         this.inputKinds.clear();
         this.inputKinds.addAll(kinds);
     }
@@ -255,6 +265,7 @@ public class InputCollection extends EntityCollection<Input> {
      * @return The refreshed input collection.
      */
     @Override public InputCollection refresh() {
+        // Populate this.inputKinds
         refreshInputKinds();
 
         items.clear();
@@ -311,11 +322,12 @@ public class InputCollection extends EntityCollection<Input> {
 
     private Input retrieveInput(String key) {
         validate();
+        
         // Because scripted input names are not 1:1 with the original name
         // (they are the absolute path on the splunk instance followed by
         // the original name), we will iterate over the entities in the list,
         // and if we find one that matches, return it.
-        Set<Entry<String, LinkedList<Input>>> set =  items.entrySet();
+        Set<Entry<String, LinkedList<Input>>> set = items.entrySet();
         for (Entry<String, LinkedList<Input>> entry: set) {
             String entryKey = entry.getKey();
             LinkedList<Input> entryValue = entry.getValue();
@@ -335,12 +347,13 @@ public class InputCollection extends EntityCollection<Input> {
 
     private Input retrieveInput(String key, Args namespace) {
         validate();
-        // because scripted input names are not 1:1 with the original name
+        
+        // Because scripted input names are not 1:1 with the original name
         // (they are the absolute path on the splunk instance followed by
         // the original name), we will iterate over the entities in the list,
         // and if we find one that matches, return it.
         String pathMatcher = service.fullpath("", namespace);
-        Set<Entry<String, LinkedList<Input>>> set =  items.entrySet();
+        Set<Entry<String, LinkedList<Input>>> set = items.entrySet();
         for (Entry<String, LinkedList<Input>> entry: set) {
             String entryKey = entry.getKey();
             LinkedList<Input> entryValue = entry.getValue();

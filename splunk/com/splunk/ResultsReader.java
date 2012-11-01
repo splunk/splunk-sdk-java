@@ -19,7 +19,7 @@ package com.splunk;
 import java.io.*;
 import java.util.HashMap;
 
-public abstract  class ResultsReader {
+public abstract class ResultsReader {
     InputStreamReader inputStreamReader = null;
 
     /**
