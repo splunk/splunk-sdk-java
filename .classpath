@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="splunk"/>
-	<classpathentry kind="src" path="splunk-external"/>
-	<classpathentry kind="src" path="splunk-sdk"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="src" path="examples"/>
-	<classpathentry kind="src" path="util"/> <!-- FIXME: Merge this into existing build path -->
+	<classpathentry kind="src" path="util"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/org-openide-actions.jar"/>
