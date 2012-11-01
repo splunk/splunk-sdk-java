@@ -71,6 +71,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Indicates whether Splunk automatically adds all discovered servers.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return {@code true} if Splunk automatically adds servers, {@code false}
      * if not.
      */
@@ -123,6 +125,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Returns the period between heartbeat checks on other servers' health.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return The heartbeat period, in seconds. If 0, heartbeat checks are
      * disabled.
      */
@@ -135,6 +139,8 @@ public class DistributedConfiguration extends Entity {
      * Returns the multicast address where each Splunk server sends and 
      * listens for heartbeat messages.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return The multicast address for discovery and heartbeat messages, 
      * or {@code null} if not available.
      */
@@ -146,6 +152,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Returns the port where each Splunk server sends and listens for heartbeat
      * messages.
+     *
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @return The heartbeat port, or -1 if not specified.
      */
@@ -228,6 +236,8 @@ public class DistributedConfiguration extends Entity {
      * setting is used for building a node that only merges the results from 
      * other servers.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return {@code true} if the server does not participate as a server in
      * any search, {@code false} if it does.
      */
@@ -249,6 +259,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Returns the time-to-live (ttl) of heartbeat messages.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return The time-to-live of heartbeat messages.
      */
     @Deprecated
@@ -267,7 +279,9 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Sets whether to automatically add discovered servers. 
+     * Sets whether to automatically add discovered servers.
+     *
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @param autoAdd {@code true} to add servers automatically, {@code false} 
      * if not. 
@@ -340,6 +354,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Sets the heartbeat frequency between peers.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @param seconds The time for peer heartbeats, in seconds. If set to 0,
      * heartbeat messages are disabled.
      */
@@ -352,6 +368,8 @@ public class DistributedConfiguration extends Entity {
      * Sets the heartbeat multicast address. This address is used for server
      * auto discovery. The default address is "224.0.0.37".
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @param mCastAddress The multicast address for server auto discovery.
      */
     @Deprecated
@@ -361,6 +379,8 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Sets the port where Splunk sends and listens for heartbeat messages.
+     *
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @param port The heartbeat port.
      */
@@ -439,6 +459,8 @@ public class DistributedConfiguration extends Entity {
      * other call. This setting is used for building a node that only merges the
      * results from other servers.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @param skipOurselves {@code true} to skip participation, {@code false} to
      * participate as a server in searches and calls.
      */
@@ -462,8 +484,9 @@ public class DistributedConfiguration extends Entity {
      * allows UDP packets to spread beyond the current sub-net to the specified
      * number of hops.
      *
-     * <p>
-     * <b>Note:</b> This feature only works when routers along the way are 
+     * @deprecated Deprecated since Splunk 5.0.
+     *
+     * <b>Note:</b> This feature only works when routers along the way are
      * configured to pass UDP multicast packets.
      *
      * @param value The time-to-live value of heartbeat messages.
