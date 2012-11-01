@@ -22,7 +22,6 @@
     <!-- Paths within the repository that are referenced
          multiple times. -->
     <property name="build.splunk" location="build/splunk" />
-    <property name="build.splunk-external" location="build/splunk-external" />
     <property name="build.tests" location="build/tests" />
     <property name="build.examples" location="build/examples" />
     <property name="build.util" location="build/util" />
@@ -102,7 +101,7 @@
 
          <standalone-example-jar name="explorer">
              <dependencies>
-                 <fileset dir="${build.splunk-external}"
+                 <fileset dir="${build.util}"
                           includes="**/*.class" />
                  <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
                  <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
@@ -143,15 +142,9 @@
     </macrodef>
 
 
-    <!-- Make jar files for general distribution of the SDK. There are
-         two primary ones,
-
-           - splunk.jar: The SDK code itself.
-
-           - splunk-external.jar: The SDK code that requires gson and opencsv.
-
-         and we create a jar for each example, including its dependencies,
-         to make it easily redistributable.
+    <!-- Make jar files for general distribution of the SDK. The primary one
+         is splunk.jar, and we create a jar for each example, including its
+         dependencies, to make it easily redistributable.
     -->
     <target name="dist" depends="build, javadoc">
         <mkdir dir="${dist}" />
@@ -176,7 +169,6 @@
         <!-- Now, the examples -->
         <standalone-example-jar name="explorer">
             <dependencies>
-                <fileset dir="${build.splunk-external}" includes="**/*.class" />
                 <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
                 <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
                 <zipgroupfileset dir="lib" includes="org-openide-*.jar" />
@@ -191,7 +183,6 @@
 
         <standalone-example-jar name="search">
             <dependencies>
-                <fileset dir="${build.splunk-external}" includes="**/*.class" />
                 <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
                 <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
             </dependencies>
