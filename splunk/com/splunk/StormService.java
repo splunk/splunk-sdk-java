@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.util.Map;
+
 /**
  * The {@code StormService} class represents a Splunk service instance at a
  * given address (host:port), accessed using the {@code http} or {@code https}
