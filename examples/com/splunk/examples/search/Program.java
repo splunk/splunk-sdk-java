@@ -17,8 +17,8 @@
 package com.splunk.examples.search;
 
 import com.splunk.*;
-import com.splunk.external.ResultsReaderCsv;
-import com.splunk.external.ResultsReaderJson;
+import com.splunk.ResultsReaderCsv;
+import com.splunk.ResultsReaderJson;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

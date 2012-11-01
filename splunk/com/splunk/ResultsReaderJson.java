@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.external;
+package com.splunk;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
