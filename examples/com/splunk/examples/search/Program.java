@@ -192,11 +192,9 @@ public class Program {
             HashMap<String, String> map;
             try {
                 // NOTE: The JSON and CSV results readers requires an external
-                // jar (gson-2.1.jar, opencsv-2.3.jar) for json and csv parsing
-                // and is not part of the base Splunk Java SDK. These readers
-                // are found in the "com.splunk.external" module. If you include
-                // the splunk-external.jar and the both gson-2.1.jar and
-                // opencsv-2.3.jar, you can use any -- just like this sample.
+                // jar (gson-2.1.jar, opencsv-2.3.jar) for json and csv parsing.
+                // You need to include these jars (which are in the lib/ directory
+                // of the SDK) in your classpath to run this.
                 ResultsReader resultsReader;
                 if (outputMode.equals("xml"))
                     resultsReader = new ResultsReaderXml(stream);
