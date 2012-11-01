@@ -2,24 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/examples/explorer/explorer.iml" filepath="$PROJECT_DIR$/examples/explorer/explorer.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/export/export.iml" filepath="$PROJECT_DIR$/examples/export/export.iml" group="examples" />
+      <module fileurl="file://$PROJECT_DIR$/examples/examples.iml" filepath="$PROJECT_DIR$/examples/examples.iml" />
       <module fileurl="file://$PROJECT_DIR$/splunk-external/external.iml" filepath="$PROJECT_DIR$/splunk-external/external.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examples/genevents/genevents.iml" filepath="$PROJECT_DIR$/examples/genevents/genevents.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/index/index.iml" filepath="$PROJECT_DIR$/examples/index/index.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/info/info.iml" filepath="$PROJECT_DIR$/examples/info/info.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/input/input.iml" filepath="$PROJECT_DIR$/examples/input/input.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/newtests/newtests.iml" filepath="$PROJECT_DIR$/newtests/newtests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examples/search/search.iml" filepath="$PROJECT_DIR$/examples/search/search.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/search_blocking/search_blocking.iml" filepath="$PROJECT_DIR$/examples/search_blocking/search_blocking.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/search_oneshot/search_oneshot.iml" filepath="$PROJECT_DIR$/examples/search_oneshot/search_oneshot.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/search_realtime/search_realtime.iml" filepath="$PROJECT_DIR$/examples/search_realtime/search_realtime.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/search_saved/search_saved.iml" filepath="$PROJECT_DIR$/examples/search_saved/search_saved.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/search_simple/search_simple.iml" filepath="$PROJECT_DIR$/examples/search_simple/search_simple.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/splunk/splunk.iml" filepath="$PROJECT_DIR$/splunk/splunk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" filepath="$PROJECT_DIR$/splunk-sdk/splunk-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/examples/spurl/spurl.iml" filepath="$PROJECT_DIR$/examples/spurl/spurl.iml" group="examples" />
-      <module fileurl="file://$PROJECT_DIR$/examples/tail/tail.iml" filepath="$PROJECT_DIR$/examples/tail/tail.iml" group="examples" />
       <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/util/util.iml" filepath="$PROJECT_DIR$/util/util.iml" />
     </modules>

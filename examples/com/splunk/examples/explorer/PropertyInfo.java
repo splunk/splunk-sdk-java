@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Splunk, Inc.
+ * Copyright 2011 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -14,16 +14,17 @@
  * under the License.
  */
 
-package com.splunk;
+package com.splunk.examples.explorer;
 
-public class InvalidUrlSchemeException extends Exception {
-    public String scheme;
+public class PropertyInfo {
+    public Class datatype;
+    public String getter;
+    public String setter;
 
-    public InvalidUrlSchemeException(String scheme) {
-        this.scheme = scheme;
-    }
-
-    public String toString() {
-        return "Invalid scheme for URL (must be http or https): " + scheme;
+    public PropertyInfo(Class datatype, String getter, String setter) {
+        this.datatype = datatype;
+        this.getter = getter;
+        this.setter = setter;
     }
 }
+

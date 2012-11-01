@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Splunk, Inc.
+ * Copyright 2011 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -14,16 +14,18 @@
  * under the License.
  */
 
-package com.splunk;
+package com.splunk.examples.explorer;
 
-public class InvalidUrlSchemeException extends Exception {
-    public String scheme;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 
-    public InvalidUrlSchemeException(String scheme) {
-        this.scheme = scheme;
-    }
-
-    public String toString() {
-        return "Invalid scheme for URL (must be http or https): " + scheme;
+// A simple named container node.
+class GroupNode extends AbstractNode {
+    GroupNode(String name, final Node... kids) {
+        super(Children.LEAF);
+        setDisplayName(name);
+        setChildren(new Children.Array() {{ add(kids); }});
     }
 }
+

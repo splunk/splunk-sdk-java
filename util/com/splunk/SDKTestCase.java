@@ -16,13 +16,10 @@
 
 package com.splunk;
 
-import com.splunk.sdk.Command;
-
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.*;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

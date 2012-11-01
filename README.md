@@ -104,17 +104,10 @@ To build the documentation for the SDK, enter:
 
 >  ant javadoc
 
-If you are interested in more control of the build process, see the build.xml 
-file. You can also type the following command from anywhere in the repository 
-and Ant will find the root build file:
-
->  ant {target} -find
-
 ### Examples and unit tests
 
 The Splunk Java SDK includes several examples and unit tests that are run at 
 the command line. 
-
 
 #### Set up the .splunkrc file
 
@@ -193,6 +186,9 @@ simply enter:
 
 >  ./run search "search * | head 10" --output_mode=csv
 
+All the the example jars are completely self contained. They can be used
+completely independently of the SDK's repository.
+
 #### Run unit tests
 
 To run the SDK unit tests, open a command prompt at the root of the Splunk 
@@ -247,16 +243,15 @@ outputs</td>
 </tr>
 
 <tr>
-<td><em><nobr>splunk-sdk</nobr></em></td>
-<td>Source for <code>com.splunk.sdk</code>, utilities shared by examples and 
-units</td>
-</tr>
-
-<tr>
 <td><em>tests</em></td>
 <td>Source for unit tests</td>
 </tr>
 </table>
+
+<tr>
+<td><em><nobr>util</nobr></em></td>
+<td>Utilities shared by examples and units</td>
+</tr>
 
 ### Changelog
 

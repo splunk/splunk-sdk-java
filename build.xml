@@ -16,388 +16,243 @@
   under the License.
 -->
 
-<project name="splunk-sdk-java" basedir="." default="build">
-    <property file="build.properties"/>
+<project name="splunk-sdk-java" basedir="." default="dist">
+    <property name="version.number" value="1.0" />
 
-    <path id="classpath.splunk-sdk">
-        <pathelement location="${lib.commons-cli}"/>
-    </path>
+    <!-- Paths within the repository that are referenced
+         multiple times. -->
+    <property name="build.splunk" location="build/splunk" />
+    <property name="build.splunk-external" location="build/splunk-external" />
+    <property name="build.tests" location="build/tests" />
+    <property name="build.examples" location="build/examples" />
+    <property name="build.util" location="build/util" />
+    <property name="dist" location="dist" />
 
-    <path id="classpath.examples">
-        <pathelement location="${dist.splunk}"/>
-        <pathelement location="${dist.splunk-sdk}"/>
-    </path>
-
-    <path id="classpath.splunk-external">
-        <pathelement location="${dist.splunk}"/>
-        <pathelement location="${dist.splunk-sdk}"/>
-        <pathelement location="${dist.splunk-external}"/>
-    </path>
-
-    <path id="classpath.examples-gui">
-        <pathelement location="${dist.splunk}"/>
-        <pathelement location="${dist.splunk-sdk}"/>
-        <pathelement location="${lib.org-openide-explorer}"/>
-        <pathelement location="${lib.org-openide-nodes}"/>
-        <pathelement location="${lib.org-openide-util}"/>
-        <pathelement location="${lib.org-openide-util-lookup}"/>
-    </path>
-
-    <path id="classpath.gson">
-        <pathelement location="${lib.gson}"/>
-    </path>
-
-    <path id="classpath.opencsv">
-        <pathelement location="${lib.opencsv}"/>
-    </path>
-
-    <!-- Classpaath for building tests -->
-    <path id="classpath.tests">
-        <pathelement location="${dist.splunk}"/>
-        <pathelement location="${dist.splunk-sdk}"/>
-        <pathelement location="${lib.junit}"/>
-    </path>
-
-    <!-- Classpath for executing test target -->
-    <path id="classpath.test">
-        <pathelement location="${dir.build.tests}"/>
-        <pathelement location="${dist.splunk}"/>
-        <pathelement location="${dist.splunk-sdk}"/>
-        <pathelement location="${lib.junit}"/>
-    </path>
-
-    <target name="build" depends="dist"/>
+    <!-- Short names for all the external libraries that get
+ referenced multiple times. -->
+    <property name="junit" location="lib/junit-4.8.1.jar" />
+    <property name="gson" location="lib/gson-2.1.jar" />
+    <property name="opencsv" location="lib/opencsv-2.3.jar" />
 
     <target name="clean">
-        <delete dir="${dir.build}"/>
-        <delete dir="${dir.dist}"/>
+        <delete dir="build"/>
+        <delete dir="dist"/>
     </target>
 
-    <target name="compile-libs"
-     depends="compile-splunk,compile-splunk-sdk"/>
-
-    <target name="compile-splunk">
-        <mkdir dir="${dir.build.splunk}"/>
+    <target name="build">
+        <!-- Compile the SDK -->
+        <mkdir dir="${build.splunk}" />
         <javac includeantruntime="false"
-         srcdir="${dir.splunk}"
-         destdir="${dir.build.splunk}">
+               srcdir="splunk"
+               destdir="${build.splunk}">
+        </javac>
+
+        <!-- Compile the parts of the SDK that are kept external
+             because they require additional libraries to run. -->
+        <mkdir dir="${build.splunk-external}" />
+        <javac includeantruntime="false"
+               srcdir="splunk-external"
+               destdir="${build.splunk-external}">
+            <classpath>
+                <pathelement location="${build.splunk}" />
+                <pathelement location="${gson}" />
+                <pathelement location="${opencsv}" />
+            </classpath>
+        </javac>
+
+        <!-- Compile utils -->
+        <mkdir dir="${build.util}" />
+        <javac includeantruntime="false"
+               srcdir="util"
+               destdir="${build.util}">
+            <classpath>
+                <pathelement location="${build.splunk}" />
+                <pathelement location="lib/commons-cli-1.2.jar" />
+                <pathelement location="${junit}" />
+            </classpath>
+        </javac>
+
+        <!-- Compile the unit tests -->
+        <mkdir dir="${build.tests}" />
+        <javac includeantruntime="false"
+               srcdir="newtests"
+               destdir="${build.tests}">
+            <classpath>
+                <pathelement location="${build.splunk}" />
+                <pathelement location="${build.util}" />
+                <pathelement location="${junit}" />
+            </classpath>
+        </javac>
+
+        <!-- Compile the examples -->
+        <mkdir dir="${build.examples}/" />
+        <javac includeantruntime="false"
+               srcdir="examples"
+               destdir="${build.examples}">
+            <classpath>
+                <pathelement location="${build.splunk}" />
+                <pathelement location="${build.splunk-external}" />
+                <pathelement location="${build.util}" />
+                <pathelement location="lib/org-openide-explorer.jar"/>
+                <pathelement location="lib/org-openide-nodes.jar"/>
+                <pathelement location="lib/org-openide-util.jar"/>
+                <pathelement location="lib/org-openide-util-lookup.jar"/>
+                <pathelement location="${gson}"/>
+                <pathelement location="${opencsv}"/>
+            </classpath>
         </javac>
     </target>
 
-    <target name="compile-splunk-external">
-        <mkdir dir="${dir.build.splunk-external}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.splunk-external}"
-         destdir="${dir.build.splunk-external}">
-            <classpath refid="classpath.splunk-external"/>
-            <classpath refid="classpath.gson"/>
-            <classpath refid="classpath.opencsv"/>
-        </javac>
-    </target>
+    <!-- Macro to build standalone, executable jars for the examples. Specify the
+         example's name and any extra dependencies it requires besides the base SDK,
+         utils, and commons-cli-1.2.jar.
 
-    <target name="compile-splunk-sdk">
-        <mkdir dir="${dir.build.splunk-sdk}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.splunk-sdk}"
-         destdir="${dir.build.splunk-sdk}">
-            <classpath refid="classpath.splunk-sdk"/>
-        </javac>
-    </target>
+         Example:
 
-    <!-- Common compile action for all examples -->
-    <macrodef name="compile-example">
-        <attribute name="name"/>
-        <attribute name="classpath"/>
+         <standalone-example-jar name="explorer">
+             <dependencies>
+                 <fileset dir="${build.splunk-external}"
+                          includes="**/*.class" />
+                 <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
+                 <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
+                 <zipgroupfileset dir="lib" includes="org-openide-*.jar" />
+             </dependencies>
+         </standalone-example-jar>
+    -->
+    <macrodef name="standalone-example-jar">
+        <attribute name="name" />
+        <element name="dependencies" optional="yes" />
         <sequential>
-            <mkdir dir="${dir.build.examples}/@{name}"/>
-            <javac includeantruntime="false"
-             srcdir="${dir.examples}/@{name}/com/splunk/sdk/@{name}"
-             destdir="${dir.build.examples}/@{name}">
-                <classpath refid="@{classpath}"/>
-            </javac>
+            <mkdir dir="${dist}/examples"/>
+            <jar destfile="${dist}/examples/@{name}.jar">
+                <!-- The example's code -->
+                <fileset dir="${build.examples}"
+                         includes="com/splunk/examples/@{name}/**/*.class" />
+
+                <!-- Dependencies shared by all examples -->
+                <fileset dir="${build.util}" includes="**/*.class" />
+                <fileset dir="${build.splunk}" includes="**/*.class" />
+                <zipgroupfileset dir="lib" includes="commons-cli-1.2.jar" />
+
+                <!-- Extra dependencies for this example -->
+                <dependencies />
+
+                <manifest>
+                    <attribute name="Main-Class"
+                               value="com.splunk.examples.@{name}.Program" />
+                    <attribute name="Implementation-Title"
+                               value="com.splunk.examples.@{name}" />
+                    <attribute name="Implementation-Vendor"
+                               value="Splunk, Inc."/>
+                    <attribute name="Implementation-Version"
+                               value="${version.number}"/>
+                </manifest>
+            </jar>
         </sequential>
     </macrodef>
 
-    <target name="compile-example-explorer" depends="compile-libs">
-        <compile-example name="explorer" classpath="classpath.examples-gui"/>
-    </target>
 
-    <target name="compile-example-export" depends="compile-libs">
-        <compile-example name="export" classpath="classpath.examples"/>
-    </target>
+    <!-- Make jar files for general distribution of the SDK. There are
+         two primary ones,
 
-    <target name="compile-example-genevents" depends="dist-libs">
-        <compile-example name="genevents" classpath="classpath.examples"/>
-    </target>
+           - splunk.jar: The SDK code itself.
 
-    <target name="compile-example-index" depends="compile-libs">
-        <compile-example name="index" classpath="classpath.examples"/>
-    </target>
+           - splunk-external.jar: The SDK code that requires gson and opencsv.
 
-    <target name="compile-example-info" depends="compile-libs">
-        <compile-example name="info" classpath="classpath.examples"/>
-    </target>
+         and we create a jar for each example, including its dependencies,
+         to make it easily redistributable.
+    -->
+    <target name="dist" depends="build, javadoc">
+        <mkdir dir="${dist}" />
 
-    <target name="compile-example-input" depends="compile-libs">
-        <compile-example name="input" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-search" 
-        depends="dist-libs,dist-splunk-external">
-        <compile-example name="search" classpath="classpath.splunk-external"/>
-    </target>
-
-    <target name="compile-example-search-blocking" depends="dist-libs">
-        <compile-example name="search_blocking" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-search-oneshot" depends="dist-libs">
-        <compile-example name="search_oneshot" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-search-realtime" depends="dist-libs">
-        <compile-example name="search_realtime" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-search-saved" depends="compile-libs">
-        <compile-example name="search_saved" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-search-simple" depends="compile-libs">
-        <compile-example name="search_simple" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-spurl" depends="dist-libs">
-        <compile-example name="spurl" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-example-tail" depends="dist-libs">
-        <compile-example name="tail" classpath="classpath.examples"/>
-    </target>
-
-    <target name="compile-tests" depends="dist-libs">
-        <mkdir dir="${dir.build.tests}"/>
-        <javac includeantruntime="false"
-         srcdir="${dir.tests}"
-         destdir="${dir.build.tests}">
-            <classpath refid="classpath.tests"/>
-        </javac>
-    </target>
-
-    <target name="dist" 
-     depends="dist-libs,dist-examples,dist-tests"/>
-
-    <target name="dist-libs" 
-     depends="dist-splunk,dist-splunk-sdk"/>
-
-    <target name="dist-splunk" depends="compile-splunk">
-        <mkdir dir="${dir.dist}"/>
-        <jar 
-         basedir="${dir.build.splunk}"
-         destfile="${dist.splunk}"
-         includes="**/*.class">
+        <!-- splunk.jar -->
+        <jar basedir="${build.splunk}"
+             destfile="${dist}/splunk.jar"
+             includes="**/*.class">
             <manifest>
-                <attribute 
-                 name="Implementation-Title" value="com.splunk"/>
-                <attribute 
-                 name="Implementation-Vendor" value="Splunk, Inc."/>
-                <attribute 
-                 name="Implementation-Version" value="${version.number}"/>
+                <attribute name="Implementation-Title"
+                           value="com.splunk"/>
+                <attribute name="Implementation-Vendor"
+                           value="Splunk, Inc."/>
+                <attribute name="Implementation-Version"
+                           value="${version.number}"/>
+        </manifest>
+        </jar>
+
+        <!-- splunk-external.jar -->
+        <jar basedir="${build.splunk-external}"
+             destfile="${dist}/splunk-external.jar"
+             includes="**/*.class">
+            <manifest>
+                <attribute name="Implementation-Title"
+                           value="com.splunk.splunk-external"/>
+                <attribute name="Implementation-Vendor"
+                           value="Splunk, Inc."/>
+                <attribute name="Implementation-Version"
+                           value="${version.number}"/>
             </manifest>
         </jar>
+
+        <!-- Now, the examples -->
+        <standalone-example-jar name="explorer">
+            <dependencies>
+                <fileset dir="${build.splunk-external}" includes="**/*.class" />
+                <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
+                <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
+                <zipgroupfileset dir="lib" includes="org-openide-*.jar" />
+            </dependencies>
+        </standalone-example-jar>
+
+        <standalone-example-jar name="export" />
+        <standalone-example-jar name="genevents" />
+        <standalone-example-jar name="index" />
+        <standalone-example-jar name="info" />
+        <standalone-example-jar name="input" />
+
+        <standalone-example-jar name="search">
+            <dependencies>
+                <fileset dir="${build.splunk-external}" includes="**/*.class" />
+                <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
+                <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
+            </dependencies>
+        </standalone-example-jar>
+
+        <standalone-example-jar name="search_blocking" />
+        <standalone-example-jar name="search_oneshot" />
+        <standalone-example-jar name="search_realtime" />
+        <standalone-example-jar name="search_saved" />
+        <standalone-example-jar name="search_simple" />
+        <standalone-example-jar name="spurl" />
+        <standalone-example-jar name="tail" />
     </target>
 
-    <target name="dist-splunk-external" 
-            depends="compile-splunk-sdk,compile-splunk-external">
-        <mkdir dir="${dir.dist}"/>
-        <jar 
-         basedir="${dir.build.splunk-external}"
-         destfile="${dist.splunk-external}"
-         includes="**/*.class">
-            <manifest>
-                <attribute 
-                 name="Class-Path" value="../lib/splunk-external.jar"/>
-                <attribute 
-                 name="Implementation-Title" value="com.splunk.splunk-external"/>
-                <attribute 
-                 name="Implementation-Vendor" value="Splunk, Inc."/>
-                <attribute 
-                 name="Implementation-Version" value="${version.number}"/>
-            </manifest>
-        </jar>
-    </target>
 
-    <target name="dist-splunk-sdk" depends="compile-splunk-sdk">
-        <mkdir dir="${dir.dist}"/>
-        <jar 
-         basedir="${dir.build.splunk-sdk}"
-         destfile="${dist.splunk-sdk}"
-         includes="**/*.class">
-            <manifest>
-                <attribute 
-                 name="Class-Path" value="../lib/commons-cli-1.2.jar"/>
-                <attribute 
-                 name="Implementation-Title" value="com.splunk.sdk"/>
-                <attribute 
-                 name="Implementation-Vendor" value="Splunk, Inc."/>
-                <attribute 
-                 name="Implementation-Version" value="${version.number}"/>
-            </manifest>
-        </jar>
-    </target>
-
-    <!-- Distribution targets -->
-    <target name="dist-examples"
-     depends="
-        dist-example-explorer,
-        dist-example-export,
-        dist-example-genevents,
-        dist-example-index,
-        dist-example-info,
-        dist-example-input,
-        dist-example-search,
-        dist-example-search-blocking,
-        dist-example-search-oneshot,
-        dist-example-search-realtime,
-        dist-example-search-saved,
-        dist-example-search-simple,
-        dist-example-spurl,
-        dist-example-tail"/>
-
-    <!-- Common dist action for all examples -->
-    <macrodef name="dist-example">
-        <attribute name="name"/>
-        <attribute name="classpath"/>
-        <sequential>
-          <mkdir dir="${dir.dist.examples}"/>
-          <jar
-           basedir="${dir.build.examples}/@{name}"
-           destfile="${dir.dist.examples}/@{name}.jar"
-           includes="**/*.class">
-              <manifest>
-                  <attribute name="Main-Class" 
-                   value="com.splunk.sdk.@{name}.Program"/>
-                  <attribute name="Class-Path" value="@{classpath}"/>
-              </manifest>
-          </jar>
-        </sequential>
-    </macrodef>
-
-    <target name="dist-example-explorer" depends="compile-example-explorer">
-        <dist-example name="explorer" 
-         classpath="
-            ../splunk.jar 
-            ../splunk-sdk.jar 
-            ../../lib/org-openide-actions.jar 
-            ../../lib/org-openide-awt.jar 
-            ../../lib/org-openide-dialogs.jar 
-            ../../lib/org-openide-explorer.jar 
-            ../../lib/org-openide-nodes.jar 
-            ../../lib/org-openide-util.jar 
-            ../../lib/org-openide-util-lookup.jar"/>
-    </target>
-
-    <target name="dist-example-export" depends="compile-example-export">
-        <dist-example name="export" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-genevents" depends="compile-example-genevents">
-        <dist-example name="genevents" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-index" depends="compile-example-index">
-        <dist-example name="index" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-info" depends="compile-example-info">
-        <dist-example name="info" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-input" depends="compile-example-input">
-        <dist-example name="input" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-search" depends="compile-example-search">
-        <dist-example name="search" 
-         classpath="../splunk.jar 
-                    ../splunk-sdk.jar
-                    ../splunk-external.jar
-                    ../../lib/opencsv-2.3.jar
-                    ../../lib/gson-2.1.jar"/>
-    </target>
-
-    <target name="dist-example-search-blocking" depends="compile-example-search-blocking">
-        <dist-example name="search_blocking" 
-         classpath="../splunk.jar 
-                    ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-search-oneshot" depends="compile-example-search-oneshot">
-        <dist-example name="search_oneshot" 
-         classpath="../splunk.jar 
-                    ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-search-realtime" depends="compile-example-search-realtime">
-        <dist-example name="search_realtime" 
-         classpath="../splunk.jar 
-                    ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-search-saved" depends="compile-example-search-saved">
-        <dist-example name="search_saved" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-search-simple" depends="compile-example-search-simple">
-        <dist-example name="search_simple" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-spurl" depends="compile-example-spurl">
-        <dist-example name="spurl" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-example-tail" depends="compile-example-tail">
-        <dist-example name="tail" 
-         classpath="../splunk.jar ../splunk-sdk.jar"/>
-    </target>
-
-    <target name="dist-tests" depends="compile-tests">
-        <mkdir dir="${dir.dist}"/>
-        <jar 
-         basedir="${dir.build.tests}"
-         destfile="${dist.tests}"
-         includes="**/*.class">
-            <manifest>
-                <attribute name="Class-Path" 
-                 value="./splunk.jar ./splunk-sdk.jar ../lib/junit-4.8.1.jar"/>
-            </manifest>
-        </jar>
-    </target>
-
+    <!-- Create JavaDoc output in dist/docs/ -->
     <target name="javadoc">
-        <mkdir dir="${dir.dist.docs}"/>
-        <javadoc destdir="${dir.dist.docs}" 
-                 sourcepath="${dir.splunk}" 
-                 stylesheetfile="${dir.splunk}/staticdocs.css"/>
+        <property name="dist.docs" location="${dist}/docs" />
+        <mkdir dir="${dist.docs}"/>
+        <javadoc destdir="${dist.docs}"
+                 sourcepath="splunk"
+                 stylesheetfile="splunk/staticdocs.css" />
     </target>
 
-    <!-- Execute unit tests -->
-    <target name="test" depends="dist">
+    <!-- Run the test suite -->
+    <target name="test" depends="build">
         <junit fork="yes" haltonfailure="no">
-            <classpath refid="classpath.test"/>
+            <classpath>
+                <pathelement location="${build.tests}" />
+                <pathelement location="${build.util}" />
+                <pathelement location="lib/commons-cli-1.2.jar" />
+                <pathelement location="${build.splunk}" />
+                <pathelement location="${junit}" />
+            </classpath>
+
             <batchtest>
-                <fileset dir="${dir.build.tests}">
+                <fileset dir="${build.tests}">
                     <include name="**/*Test.class"/>
                 </fileset>
             </batchtest>
+
             <formatter type="plain" usefile="false"/>
         </junit>
     </target>
