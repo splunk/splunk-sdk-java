@@ -88,12 +88,7 @@ public class ApplicationTest extends SDKTestCase {
 
     @Test
     public void testForSetupPresent() throws Exception {
-        if (!hasApplicationCollection()) {
-            System.out.println("WARNING: App collection not installed. Nothing to test.");
-            return;
-        }
-        
-        installApplicationFromCollection("has_setup_xml");
+        installApplicationFromTestData("has_setup_xml");
         assertTrue(service.getApplications().containsKey("has_setup_xml"));
         Application applicationWithSetupXml = service.getApplications().get("has_setup_xml");
         

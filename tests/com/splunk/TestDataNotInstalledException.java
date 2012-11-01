@@ -16,5 +16,10 @@
 
 package com.splunk;
 
-public class NoSeparatorFindableInPathException extends RuntimeException {
+public class TestDataNotInstalledException extends RuntimeException {
+    public TestDataNotInstalledException() {
+        super(
+                "The test data is not installed in your splunkd. " +
+                "Please see the documentation to install the test data.");
+    }
 }

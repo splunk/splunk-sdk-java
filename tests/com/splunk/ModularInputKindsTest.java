@@ -28,7 +28,7 @@ public class ModularInputKindsTest extends SDKTestCase {
     public void setUp() throws Exception {
         super.setUp();
         if (service.versionIsAtEarliest("5.0")) {
-            installApplicationFromCollection("modular-inputs");
+            installApplicationFromTestData("modular-inputs");
             inputKinds = service.getModularInputKinds();
         }
     }

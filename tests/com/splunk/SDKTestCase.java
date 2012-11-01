@@ -138,27 +138,30 @@ public abstract class SDKTestCase extends TestCase {
     
     // === Test Data Installation ===
 
-    public boolean hasApplicationCollection() {
-        return !service.getApplications().containsKey("sdk-app-collection");
-    }
-
-    public void installApplicationFromCollection(String applicationName) {
+    public void installApplicationFromTestData(String applicationName) {
         String collectionName = "sdk-app-collection";
-        if (hasApplicationCollection()) {
-            throw new MissingAppCollectionException();
+        if (!service.getApplications().containsKey("sdk-app-collection")) {
+            throw new TestDataNotInstalledException();
         }
 
         String splunkHome = service.getSettings().getSplunkHome();
 
+        // This is the filename separator sequence for splunkd, not
+        // the Splunk SDK. Therefore we can't just use File.separator here.
         String separator;
         if (splunkHome.contains("/") && splunkHome.contains("\\")) {
-            throw new NoSeparatorFindableInPathException();
+            // Windows - allows mixed paths
+            separator = "\\";
         } else if (splunkHome.contains("/")) {
+            // Unix or Mac OS X
             separator = "/";
         } else if (splunkHome.contains("\\")) {
-            separator = "\\";;
+            // Windows
+            separator = "\\";
         } else {
-            throw new NoSeparatorFindableInPathException();
+            throw new RuntimeException(
+                    "Couldn't determine what the path separator was " +
+                    "for splunkd.");
         }
 
         String[] pathComponents = {splunkHome, "etc", "apps",

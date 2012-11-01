@@ -61,7 +61,7 @@ public class ModularInputTest extends InputTest {
     }
     
     private void ensureModularInputsTestDataInstalled() {
-        installApplicationFromCollection("modular-inputs");
+        installApplicationFromTestData("modular-inputs");
         // Will not pick up the new inputs unless a restart is done.
         // Nevertheless Splunk does not request a restart after app installation.
         uncheckedSplunkRestart();

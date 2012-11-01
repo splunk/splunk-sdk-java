@@ -261,7 +261,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testEnablePreview() {
-        installApplicationFromCollection("sleep_command");
+        installApplicationFromTestData("sleep_command");
         String query = "search index=_internal | sleep done=100";
         Args args = new Args();
         args.put("earliest_time", "-1m");
@@ -294,7 +294,7 @@ public class SearchJobTest extends SDKTestCase {
         // Note that you can only *decrease* the priority of a job unless
         // splunkd is running as root.This is because Splunk jobs
         // are tied up with operating system processes and their priorities.
-        installApplicationFromCollection("sleep_command");
+        installApplicationFromTestData("sleep_command");
         String query = "search index=_internal | sleep done=100";
         Args args = new Args();
         args.put("earliest_time", "-1m");
@@ -321,7 +321,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testPause() {
-        installApplicationFromCollection("sleep_command");
+        installApplicationFromTestData("sleep_command");
         String query = "search index=_internal | sleep done=100";
         final Job job = jobs.create(query);
 
@@ -345,7 +345,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testUnpause() {
-        installApplicationFromCollection("sleep_command");
+        installApplicationFromTestData("sleep_command");
         String query = "search index=_internal | sleep done=100";
         final Job job = jobs.create(query);
 
@@ -369,7 +369,7 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testFinalize() {
-        installApplicationFromCollection("sleep_command");
+        installApplicationFromTestData("sleep_command");
         String query = "search index=_internal | sleep done=100";
         final Job job = jobs.create(query);
 

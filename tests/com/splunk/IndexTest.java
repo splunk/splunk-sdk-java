@@ -428,7 +428,7 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testUpload() throws Exception {
-        installApplicationFromCollection("file_to_upload");
+        installApplicationFromTestData("file_to_upload");
         
         assertTrue(getResultCountOfIndex() == 0);
         assertTrue(index.getTotalEventCount() == 0);
