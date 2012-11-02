@@ -1,0 +1,14 @@
+[
+    {
+        "sum(kb)":"14372242.758775",
+        "series":"twitter"
+    },
+    {
+        "sum(kb)":"267802.333926",
+        "series":"splunkd"
+    },
+    {
+        "sum(kb)":"5979.036338",
+        "series":"splunkd_access"
+    }
+]

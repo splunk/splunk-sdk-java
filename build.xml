@@ -74,6 +74,12 @@
                 <pathelement location="${junit}" />
             </classpath>
         </javac>
+        <mkdir dir="${build.tests}/test_data" />
+        <copy todir="${build.tests}/com/splunk">
+            <fileset dir="tests/com/splunk">
+                <exclude name="**/*.java" />
+            </fileset>
+        </copy>
 
         <!-- Compile the examples -->
         <mkdir dir="${build.examples}/" />
@@ -214,6 +220,8 @@
 
     <!-- Run the test suite -->
     <target name="test" depends="build">
+        <property name="report.dir" location="reports/tests" />
+        <mkdir dir="${report.dir}" />
         <junit fork="yes" haltonfailure="no">
             <classpath>
                 <pathelement location="${build.tests}" />
@@ -221,9 +229,11 @@
                 <pathelement location="lib/commons-cli-1.2.jar" />
                 <pathelement location="${build.splunk}" />
                 <pathelement location="${junit}" />
+                <pathelement location="${gson}"/>
+                <pathelement location="${opencsv}"/>
             </classpath>
 
-            <batchtest>
+            <batchtest todir="${report.dir}">
                 <fileset dir="${build.tests}">
                     <include name="**/*Test.class"/>
                 </fileset>
