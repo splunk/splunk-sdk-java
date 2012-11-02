@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class Util {
+class Util {
     /**
      * Join the strings in {@code joinees}, separated by {@code joiner}.
      *

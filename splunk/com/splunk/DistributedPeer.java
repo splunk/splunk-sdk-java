@@ -35,7 +35,7 @@ public class DistributedPeer extends Entity {
     /**
      * Returns this peer's build number.
      *
-     * @return The build number, or {@code null} if not specified.
+     * @return The build number.
      */
     public int getBuild() {
         return getInteger("build");

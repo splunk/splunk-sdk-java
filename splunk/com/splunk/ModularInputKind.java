@@ -89,7 +89,7 @@ public class ModularInputKind extends Entity {
     }
 
     /**
-     * Return the title of thhis modular input kind.
+     * Return the title of this modular input kind.
      *
      * The title is the human readable string displayed in splunkweb rather than the name
      * you access it under in the REST API.

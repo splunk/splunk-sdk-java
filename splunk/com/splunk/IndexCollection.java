@@ -43,10 +43,9 @@ public class IndexCollection extends EntityCollection<Index> {
      */
     public Index remove(String key) {
         if (this.service.versionCompare("5.0") < 0) {
-            throw new SplunkException(
-                    SplunkException.UNSUPPORTED,
-                    "Indexes cannot be deleted via the REST API in versions prior to 5.0"
-            );
+            throw new UnsupportedOperationException(
+                    "Indexes cannot be deleted via the REST API in versions " +
+                    "prior to 5.0");
         } else {
             return (Index)super.remove(key);
         }
