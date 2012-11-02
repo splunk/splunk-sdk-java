@@ -18,6 +18,7 @@ package com.splunk;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Base class of tests that need to access the service's InputCollection
@@ -67,4 +68,7 @@ public abstract class InputTest extends SDKTestCase {
         }
         assertFalse(inputs.containsKey(name));
     }
+
+    @Test
+    public void testNop() {} // Here to make Ant's test runner happy.
 }
