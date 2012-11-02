@@ -23,7 +23,6 @@ public class SplunkException extends RuntimeException {
     public static int JOB_NOTREADY = 1;
     public static int TIMEOUT = 2;
     public static int AMBIGUOUS = 3;
-    public static int UNSUPPORTED = 4;
 
     SplunkException(int code, String text) {
         super(text);
