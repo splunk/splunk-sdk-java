@@ -188,15 +188,6 @@ public class WindowsRegistryInput extends Input {
         setCacheValue("type", val);
     }
 
-
-    /**
-     * @see {@link #setType(String[])}
-     */
-    public void setType(Collection<String> regexes) {
-        String[] variableToFixMethodType = {};
-        setType(regexes.toArray(variableToFixMethodType));
-    }
-
     /**
      * {@inheritDoc}
      */
