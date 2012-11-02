@@ -23,6 +23,9 @@ import org.junit.Test;
 /**
  * Base class of tests that need to access the service's InputCollection
  * or otherwise need to manipulate Input entities.
+ *
+ * Class was abstract, and abstract has only been removed, and testNop added,
+ * to make Ant's test runner happy.
  */
 public class InputTest extends SDKTestCase {
     protected InputCollection inputs;
@@ -44,7 +47,7 @@ public class InputTest extends SDKTestCase {
     }
 
     @Test
-    public void testNop() {}
+    public void testNop() {} // Here only to make Ant's test runner happy.
 
     private void removeTestInputs() {
         for (Input input : inputs.refresh().values()) {
