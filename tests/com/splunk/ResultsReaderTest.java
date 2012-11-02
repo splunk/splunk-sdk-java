@@ -30,7 +30,7 @@ public class ResultsReaderTest extends TestCase {
 
     @Test
     public void testAtomFeed() {
-        InputStream input = openResource("/com/splunk/jobs.xml");
+        InputStream input = openResource("jobs.xml");
         assertNotNull("Could not open jobs.xml", input);
         AtomFeed feed = AtomFeed.parseStream(input);
         assertEquals(131, feed.entries.size());
@@ -45,7 +45,7 @@ public class ResultsReaderTest extends TestCase {
 
     @Test
     public void testResults() {
-        InputStream input = openResource("/com/splunk/results.xml");
+        InputStream input = openResource("results.xml");
         assertNotNull("Could not open results.xml", input);
         try {
             ResultsReaderXml reader = new ResultsReaderXml(input);
@@ -90,7 +90,7 @@ public class ResultsReaderTest extends TestCase {
 
     @Test
     public void testReadRawField() {
-        InputStream input = openResource("/com/splunk/raw_field.xml");
+        InputStream input = openResource("raw_field.xml");
         assertNotNull("Could not open raw_field.xml", input);
         try {
             ResultsReaderXml reader = new ResultsReaderXml(input);
@@ -112,7 +112,7 @@ public class ResultsReaderTest extends TestCase {
 
     @Test
     public void testReadCsv() {
-        InputStream input = openResource("/com/splunk/results.csv");
+        InputStream input = openResource("results.csv");
         assertNotNull("Failed to find results.csv", input);
         try {
             ResultsReaderCsv reader = new ResultsReaderCsv(input);
@@ -120,9 +120,93 @@ public class ResultsReaderTest extends TestCase {
             expected = new HashMap<String, String>();
 
             expected.clear();
-            expected.put("host", "boris");
+            expected.put("series", "twitter");
+            expected.put("sum(kb)", "14372242.758775");
             found = reader.getNextEvent();
             assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd");
+            expected.put("sum(kb)", "267802.333926");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd_access");
+            expected.put("sum(kb)", "5979.036338");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            assertNull(reader.getNextEvent());
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+
+    @Test
+    public void testReadJsonOnSplunk4() {
+        InputStream input = openResource("results4.json");
+        assertNotNull("Failed to find results4.json", input);
+        try {
+            ResultsReaderJson reader = new ResultsReaderJson(input);
+            Map <String, String> expected, found;
+            expected = new HashMap<String, String>();
+
+            expected.clear();
+            expected.put("series", "twitter");
+            expected.put("sum(kb)", "14372242.758775");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd");
+            expected.put("sum(kb)", "267802.333926");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd_access");
+            expected.put("sum(kb)", "5979.036338");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            assertNull(reader.getNextEvent());
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testReadJsonOnSplunk5() {
+        // Splunk 5.0 uses a different format for JSON results
+        // from Splunk 4.3.
+        InputStream input = openResource("results5.json");
+        assertNotNull("Failed to find results5.csv", input);
+        try {
+            ResultsReaderJson reader = new ResultsReaderJson(input);
+            Map <String, String> expected, found;
+            expected = new HashMap<String, String>();
+
+            expected.clear();
+            expected.put("series", "twitter");
+            expected.put("sum(kb)", "14372242.758775");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd");
+            expected.put("sum(kb)", "267802.333926");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            expected.clear();
+            expected.put("series", "splunkd_access");
+            expected.put("sum(kb)", "5979.036338");
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+
+            assertNull(reader.getNextEvent());
         } catch (Exception e) {
             fail(e.toString());
         }

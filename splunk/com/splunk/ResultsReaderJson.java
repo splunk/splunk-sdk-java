@@ -21,12 +21,12 @@ import com.google.gson.stream.JsonToken;
 import com.splunk.ResultsReader;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class ResultsReaderJson extends ResultsReader {
-
     private JsonReader jsonReader = null;
 
     /**
@@ -44,11 +44,61 @@ public class ResultsReaderJson extends ResultsReader {
         jsonReader = new JsonReader(new InputStreamReader(inputStream));
         // if stream is empty, return a null reader.
         try {
-            jsonReader.beginArray();
-        }
-        catch (EOFException e) {
-            jsonReader =  null;
+            if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+                // In Splunk 5.0, JSON output is an object, and the results are
+                // an array at that object's key "results". In Splunk 4.3, the
+                // array was the top level returned. So if we find an object
+                // at top level, we step into it until we find the right key,
+                // then leave it in that state to iterate over.
+                jsonReader.beginObject();
+
+                String key;
+                while (true) {
+                    key = jsonReader.nextName();
+                    if (key.equals("results")) {
+                        jsonReader.beginArray();
+                        return;
+                    } else {
+                        skipEntity();
+                    }
+                }
+            } else { // We're on Splunk 4.x, and we just need to start the array.
+                jsonReader.beginArray();
+                return;
+            }
+        } catch (EOFException e) {
+            jsonReader = null;
             return;
+        }
+    }
+
+    /**
+     * Skip the next value, whether it is atomic or compound, in the JSON
+     * stream.
+     */
+    private void skipEntity() throws IOException {
+        if (jsonReader.peek() == JsonToken.STRING) {
+            jsonReader.nextString();
+        } else if (jsonReader.peek() == JsonToken.BOOLEAN) {
+            jsonReader.nextBoolean();
+        } else if (jsonReader.peek() == JsonToken.NUMBER) {
+            jsonReader.nextDouble();
+        } else if (jsonReader.peek() == JsonToken.NULL) {
+            jsonReader.nextNull();
+        } else if (jsonReader.peek() == JsonToken.NAME) {
+            jsonReader.nextName();
+        } else if (jsonReader.peek() == JsonToken.BEGIN_ARRAY) {
+            jsonReader.beginArray();
+            while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                skipEntity();
+            }
+            jsonReader.endArray();
+        } else if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+            jsonReader.beginObject();
+            while (jsonReader.peek() != JsonToken.END_OBJECT) {
+                skipEntity();
+            }
+            jsonReader.endObject();
         }
     }
 

@@ -233,7 +233,7 @@
 
             <batchtest>
                 <fileset dir="${build.tests}">
-                    <include name="**/ResultsReaderTest.class"/>
+                    <include name="**/*Test.class"/>
                 </fileset>
             </batchtest>
 
