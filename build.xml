@@ -220,6 +220,8 @@
 
     <!-- Run the test suite -->
     <target name="test" depends="build">
+        <property name="report.dir" location="reports/tests" />
+        <mkdir dir="${report.dir}" />
         <junit fork="yes" haltonfailure="no">
             <classpath>
                 <pathelement location="${build.tests}" />
@@ -231,7 +233,7 @@
                 <pathelement location="${opencsv}"/>
             </classpath>
 
-            <batchtest>
+            <batchtest todir="${report.dir}">
                 <fileset dir="${build.tests}">
                     <include name="**/*Test.class"/>
                 </fileset>
