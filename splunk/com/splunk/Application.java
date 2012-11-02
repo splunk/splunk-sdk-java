@@ -102,6 +102,8 @@ public class Application extends Entity {
 
     /**
      * Indicates whether the app can be managed by Splunk Manager.
+     * 
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @return {@code true} if the app can be managed by Splunk Manager,
      * {@code false} if not.
@@ -185,6 +187,8 @@ public class Application extends Entity {
 
     /**
      * Sets whether the app can be managed by Splunk Manager.
+     * 
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @param value {@code true} if the app can be managed by Splunk Manager,
      * {@code false} if not.

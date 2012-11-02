@@ -2,31 +2,94 @@
 
 ## Version 1.0
 
-* DistributedPeer.getBuild() now returns an int instead of a String (to bring
-  it into line with ServiceInfo.getBuild()).
-* InputCollection now handles arbitrary input kinds represented by modular inputs. The set
-  of InputKinds on the connected Splunk instance is available by calling getInputKinds.
-  That set is updated every time you call refresh on the collection.
-* Removing indexes is supported when connected to Splunk >= 5.0.
-* Added getters and setters on Index for bucketRebuildMemoryHint, maxTimeUnreplicatedNoAcks,
-  and maxTimeUnreplicatedWithAcks.
-* Setting assureUTF8 on an index fails when connected to Splunk >= 5.0, since that field
-  is only settable globally in that version of Splunk, not on a per-index basis.
-* isManageable and setManageable on Application are deprecated, matching the behavior
-  in Splunk >= 5.0.
-* InputKind has changed from an enum to a class. It has static members identical to
-  the enum values, but you can no longer use a switch statement over the values.
-  Instead you must use a series of if-else blocks. However, it now handles arbitrary
-  modular input kinds.
-* WindowsRegistryInput.getType's return value fixed to be String[] instead of String.
-  setType now takes an array or collection of Strings instead of a single String.
-* Added attachWith method to Index to stream data with deterministic handling
-  of the socket.
-* Added submit method to UdpInput to send events to that input.
-* Added attach method to TcpInput to get an open socket to the input, and
-  convenience methods submit (to send a single event) and attachWith (to
-  stream data to the input with deterministic creation and cleanup of the
-  socket).
+### New features
+
+* Specialized Args classes that make it easier to determine what arguments can
+  be passed to various methods:
+    - Service.&lt;init&gt;()
+    - Service.getSavedSearches()
+    - Service.getJobs()
+    - Service.getIndexes()
+    - Service.export()
+    - JobCollection.create()
+    - Job.getResults()
+    - Job.getResultsPreview()
+    - Job.getEvents()
+    - Job.getSummary()
+    - SavedSearch.dispatch()
+
+* Modular inputs for Splunk >= 5.0.
+    - InputCollection now handles arbitrary input kinds represented by modular
+      inputs.
+    - The set of InputKinds on the connected Splunk instance is available by
+      calling InputCollection.getInputKinds().
+
+* Removing indexes for Splunk >= 5.0.
+
+* TcpInputs.attach() and submit() convenience methods allow you to send data
+  to the input.
+
+* UdpInput.submit() convenience method allows you to send data to the input.
+
+* setRestrictToHost() on TcpInput, TcpSplunkInput, and UdpInput are now
+  supported for Splunk >= 5.0.
+
+* DistributedConfiguration.enable() and disable() convenience methods that
+  immediately enable/disable the configuration.
+
+* More accessors on Index.
+    - bucketRebuildMemoryHint
+    - maxTimeUnreplicatedNoAcks
+    - maxTimeUnreplicatedWithAcks
+
+* SplunkExceptions now provide their error message when printed.
+
+* Massive cleanup of the test suite.
+    - Better coverage.
+    - Runs a ton faster, mostly due to elimination of unnecessary restarts.
+    - Strictly requires tests to handle restart requests.
+
+### Behavioral changes
+
+* JAR changes:
+    - Everything is now in splunk.jar.
+      There is no longer a separate splunk-external.jar.
+    - splunk-sdk.jar has been removed.
+
+* Arguments are now submitted to Splunk in a consistent order.
+    - This improves behavior in certain edge cases.
+  
+* InputKind has changed from an enum to a class.
+    - It has static members identical to the enum values, but you can no longer
+      use a switch statement over the values. Instead you must use a series of
+      if-else blocks.
+    - This was necessary to support arbitrary modular input kinds.
+
+* Index.setAssureUTF8() fails for Splunk >= 5.0, since that field has become a
+  global setting instead of a per-index setting.
+
+* WindowsRegistryInput.getType() and setType() changed to be String[] instead of String.
+
+* DistributedPeer.getBuild() now returns an int instead of a String to be
+  consistent with ServiceInfo.getBuild().
+
+* Deprecated ServiceArgs public fields in favor of the new setter methods.
+    - This was needed to maintain consistency with the new-style Args subclasses.
+
+* Deprecated Application.isManageable() and setManageable() as of Splunk >= 5.0.
+
+* Deprecated several getters on DistributedConfiguration as of Splunk >= 5.0.
+
+* Fix OutputDefault.update() when no "name" key was specified.
+    - Previously, failing to specify a "name" key would cause this method to
+      fail.
+
+* setRestrictToHost() on TcpInput, TcpSplunkInput, and UdpInput throws an
+  exception for Splunk 4.x.
+    - Previously this method failed silently.
+
+* Fix Service.versionCompare(). It was completely broken before.
+
 
 ## Version 0.8.0 (beta)
 
