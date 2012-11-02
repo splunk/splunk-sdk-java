@@ -24,7 +24,7 @@ import org.junit.Test;
  * Base class of tests that need to access the service's InputCollection
  * or otherwise need to manipulate Input entities.
  */
-public abstract class InputTest extends SDKTestCase {
+public class InputTest extends SDKTestCase {
     protected InputCollection inputs;
     
     @Before
@@ -42,7 +42,10 @@ public abstract class InputTest extends SDKTestCase {
         
         super.tearDown();
     }
-    
+
+    @Test
+    public void testNop() {}
+
     private void removeTestInputs() {
         for (Input input : inputs.refresh().values()) {
             final String inputName = input.getName();
@@ -68,7 +71,4 @@ public abstract class InputTest extends SDKTestCase {
         }
         assertFalse(inputs.containsKey(name));
     }
-
-    @Test
-    public void testNop() {} // Here to make Ant's test runner happy.
 }
