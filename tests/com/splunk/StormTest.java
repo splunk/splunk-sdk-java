@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import org.junit.Test;
+
 public class StormTest {
     // Disabled until DVPL-1203 is resolved
     //@Test
@@ -38,4 +40,7 @@ public class StormTest {
         receiver.submit(logArgs, "This is a test from the SDK");
         receiver.log(logArgs, "This is a test from the SDK, a second time");
     }
+
+    @Test
+    public void testNop() {} // Here to make Ant's test runner happy.
 }

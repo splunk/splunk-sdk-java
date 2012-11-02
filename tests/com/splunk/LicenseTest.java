@@ -16,8 +16,7 @@
 
 package com.splunk;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -84,15 +83,14 @@ public class LicenseTest extends SDKTestCase {
         assertFalse(licenses.containsKey(licenseKey));
         
         // Read test license from disk
-        char[] licensePayload = new char[2048];
-        FileReader fileReader = new FileReader(new File(
-                "tests" + File.separator + "com" + File.separator +
-                "splunk" + File.separator + "splunk.license"));
+        byte[] licensePayload = new byte[2048];
+        InputStream licenseStream = getClass().getResourceAsStream("splunk.license");
+        assertNotNull("Could not find splunk.license.", licenseStream);
         try {
-            fileReader.read(licensePayload);
+            licenseStream.read(licensePayload);
         }
         finally {
-            fileReader.close();
+            licenseStream.close();
         }
         
         // Create
