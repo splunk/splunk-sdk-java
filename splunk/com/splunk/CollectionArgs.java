@@ -50,7 +50,8 @@ public class CollectionArgs extends Args {
      * Indicates the sorting mode for entries.
      */
     public static enum SortMode {
-        /** If all values of the field are numbers, collate numerically. 
+        /**
+         * If all values of the field are numbers, collate numerically.
          * Otherwise, collate alphabetically. 
          */
         AUTO("auto"),
@@ -84,11 +85,9 @@ public class CollectionArgs extends Args {
     
     /**
      * Sets the app context in which to list the collection.
-     *
+     * 
      * @param app
-     *      The app context in which to list the collection.
-     *      A {@code null} value indicates no app context, and a value of 
-     *      {@code "-"} indicates an app wildcard.
+     *      The app context in which to list the collection. A {@code null} value indicates no app context, and a value of {@code "-"} indicates an app wildcard.
      */
     public void setApp(String app) {
         this.put("app", app);
@@ -96,11 +95,9 @@ public class CollectionArgs extends Args {
     
     /**
      * Sets the owner context in which to list the collection.
-     *
+     * 
      * @param owner
-     *      The owner context in which to list the collection.
-     *      A value of {@code "-"} indicates a wildcard, and a {@code null} value 
-     *      indicates no owner context.
+     *      The owner context in which to list the collection. A value of {@code "-"} indicates a wildcard, and a {@code null} value indicates no owner context.
      */
     public void setOwner(String owner) {
         this.put("owner", owner);
@@ -108,10 +105,9 @@ public class CollectionArgs extends Args {
     
     /**
      * Sets the sharing context in which to list the collection.
-     *
+     * 
      * @param sharing
-     *      The sharing context in which to list the collection.
-     *      Valid values are "user", "app", "global", and "system".
+     *      The sharing context in which to list the collection. Valid values are "user", "app", "global", and "system".
      */
     public void setSharing(String sharing) {
         this.put("sharing", sharing);
@@ -119,7 +115,7 @@ public class CollectionArgs extends Args {
     
     /**
      * Sets the maximum number of entries to return.
-     *
+     * 
      * @param count
      *      The maximum number of entries to return. To return all entries, specify 0.
      */
@@ -128,8 +124,8 @@ public class CollectionArgs extends Args {
     }
     
     /**
-     * Sets the index of the first entry to return
-     *
+     * Sets the index of the first entry to return.
+     * 
      * @param offset
      *      The index of the first entry to return.
      */
@@ -138,11 +134,8 @@ public class CollectionArgs extends Args {
     }
     
     /**
-     * Sets a search query to filter the response. The response matches field 
-     * values against the search query. For example, "foo" matches any object 
-     * that has "foo" as a substring in a field, and "field_name=field_value" 
-     * restricts the match to a single field.
-     *
+     * Sets a search query to filter the response. The response matches field values against the search query. For example, "foo" matches any object that has "foo" as a substring in a field, and "field_name=field_value" restricts the match to a single field.
+     * 
      * @param search
      *      A search query to filter the response. 
      */
@@ -152,7 +145,7 @@ public class CollectionArgs extends Args {
     
     /**
      * Sets the direction to sort entries.
-     *
+     * 
      * @param sortDirection
      *      The sorting order--ascending or descending.
      */
@@ -161,8 +154,8 @@ public class CollectionArgs extends Args {
     }
     
     /**
-     * Sets the field to use for sorting.
-     *
+     * Sets the field to use for sorting. 
+     * 
      * @param sortKey
      *      The field to sort by.
      */
@@ -172,7 +165,7 @@ public class CollectionArgs extends Args {
     
     /**
      * Sets the mode to use for sorting.
-     *
+     * 
      * @param sortMode
      *      The collating sequence for sorting entries.
      */

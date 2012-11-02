@@ -70,10 +70,9 @@ public class JobResultsPreviewArgs extends Args {
     
     /**
      * Sets the maximum number of results to return. 
-     *
+     * 
      * @param count
-     *      The maximum number of results. To return all available results, 
-     * specify 0.
+     *      The maximum number of results. To return all available results, specify 0.
      */
     public void setCount(int count) {
         this.put("count", count);
@@ -81,7 +80,7 @@ public class JobResultsPreviewArgs extends Args {
     
     /**
      * Sets a list of fields to return for the event set. 
-     *
+     * 
      * @param fieldList
      *      A list of fields.
      */
@@ -90,14 +89,8 @@ public class JobResultsPreviewArgs extends Args {
     }
     
     /**
-     * Specifies the index of the first result (inclusive) from which to begin 
-     * returning data. This value is 0-indexed.
-     * <p>
-     * In Splunk 4.1+, negative offsets are allowed and are added to the count 
-     * to compute the absolute offset (for example, offset=-1 is the last 
-     * available offset). Offsets in the results are always absolute and never 
-     * negative. The default value is 0.
-     *
+     * Specifies the index of the first result (inclusive) from which to begin returning data. This value is 0-indexed.<p>In Splunk 4.1+, negative offsets are allowed and are added to the count to compute the absolute offset (for example, offset=-1 is the last available offset). Offsets in the results are always absolute and never negative. The default value is 0.
+     * 
      * @param offset
      *      The index of the first result to return.
      */
@@ -107,7 +100,7 @@ public class JobResultsPreviewArgs extends Args {
     
     /**
      * Sets the format of the output.
-     *
+     * 
      * @param outputMode
      *      The output format.
      */
@@ -117,7 +110,7 @@ public class JobResultsPreviewArgs extends Args {
     
     /**
      * Sets the post-processing search to apply to results. 
-     *
+     * 
      * @param search
      *      The post-processing search query.
      */

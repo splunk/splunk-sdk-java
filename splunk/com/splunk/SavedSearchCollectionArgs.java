@@ -31,7 +31,7 @@ public class SavedSearchCollectionArgs extends CollectionArgs {
     
     /**
      * Sets the earliest time for which to display the scheduled times for scheduled searches (not just the next run time).
-     *
+     * 
      * @param earliestTime
      *      The earliest time.
      */
@@ -41,7 +41,7 @@ public class SavedSearchCollectionArgs extends CollectionArgs {
     
     /**
      * Sets the latest time until which to display the scheduled times for scheduled searches (not just the next run time). 
-     *
+     * 
      * @param latestTime
      *      The latest time.
      */

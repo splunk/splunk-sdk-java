@@ -2,6 +2,7 @@ count
 Count
 int
 Sets the maximum number of entries to return.
+---
 The maximum number of entries to return. To return all entries, specify -1.
 !CODE
         super.setCount(count);
@@ -9,5 +10,8 @@ The maximum number of entries to return. To return all entries, specify -1.
 summarize
 Summarize
 boolean
-Sets whether to omits certain index details to provide a faster response.{@code true} to omit index details for a faster response, {@code false} if not.
+Sets whether to omits certain index details to provide a faster response.
+---
+{@code true} to omit index details for a faster response,
+{@code false} if not.
 ===

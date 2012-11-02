@@ -31,7 +31,7 @@ public class IndexCollectionArgs extends CollectionArgs {
     
     /**
      * Sets the maximum number of entries to return.
-     *
+     * 
      * @param count
      *      The maximum number of entries to return. To return all entries, specify -1.
      */
@@ -41,9 +41,9 @@ public class IndexCollectionArgs extends CollectionArgs {
     
     /**
      * Sets whether to omits certain index details to provide a faster response.
-     *
+     * 
      * @param summarize
-     *      {@code true} to omit index details for a faster response, 
+     *      {@code true} to omit index details for a faster response,
      *      {@code false} if not.
      */
     public void setSummarize(boolean summarize) {
