@@ -25,12 +25,13 @@ import java.util.Map;
 
 public class ResultsReaderTest extends TestCase {
     private InputStream openResource(String path) {
-        return this.getClass().getResourceAsStream(path);
+        return getClass().getResourceAsStream(path);
     }
 
     @Test
     public void testAtomFeed() {
-        InputStream input = openResource("jobs.xml");
+        InputStream input = openResource("/com/splunk/jobs.xml");
+        assertNotNull("Could not open jobs.xml", input);
         AtomFeed feed = AtomFeed.parseStream(input);
         assertEquals(131, feed.entries.size());
         AtomEntry entry = feed.entries.get(0);
@@ -44,7 +45,8 @@ public class ResultsReaderTest extends TestCase {
 
     @Test
     public void testResults() {
-        InputStream input = openResource("results.xml");
+        InputStream input = openResource("/com/splunk/results.xml");
+        assertNotNull("Could not open results.xml", input);
         try {
             ResultsReaderXml reader = new ResultsReaderXml(input);
 
@@ -88,7 +90,8 @@ public class ResultsReaderTest extends TestCase {
 
     @Test
     public void testReadRawField() {
-        InputStream input = openResource("raw_field.xml");
+        InputStream input = openResource("/com/splunk/raw_field.xml");
+        assertNotNull("Could not open raw_field.xml", input);
         try {
             ResultsReaderXml reader = new ResultsReaderXml(input);
 
@@ -100,6 +103,24 @@ public class ResultsReaderTest extends TestCase {
                     "_raw",
                     "07-13-2012 09:27:27.307 -0700 INFO  Metrics - group=search_concurrency, system total, active_hist_searches=0, active_realtime_searches=0"
             );
+            found = reader.getNextEvent();
+            assertEquals(expected, found);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testReadCsv() {
+        InputStream input = openResource("/com/splunk/results.csv");
+        assertNotNull("Failed to find results.csv", input);
+        try {
+            ResultsReaderCsv reader = new ResultsReaderCsv(input);
+            Map <String, String> expected, found;
+            expected = new HashMap<String, String>();
+
+            expected.clear();
+            expected.put("host", "boris");
             found = reader.getNextEvent();
             assertEquals(expected, found);
         } catch (Exception e) {
