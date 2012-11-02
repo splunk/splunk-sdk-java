@@ -6,7 +6,7 @@
 
 * Specialized Args classes that make it easier to determine what arguments can
   be passed to various methods:
-    - Service.&lt;init&gt;()
+    - Service's constructor
     - Service.getSavedSearches()
     - Service.getJobs()
     - Service.getIndexes()
