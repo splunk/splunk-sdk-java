@@ -16,22 +16,25 @@
   under the License.
 -->
 
-<project name="splunk-sdk-java" basedir="." default="dist">
-    <property name="version.number" value="1.0" />
+<project name="splunk-sdk-java" basedir="." default="dist" xmlns:jacoco="antlib:org.jacoco.ant"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="antlib:org.jacoco.ant ">
+    <property name="version.number" value="1.0"/>
 
     <!-- Paths within the repository that are referenced
          multiple times. -->
-    <property name="build.splunk" location="build/splunk" />
-    <property name="build.tests" location="build/tests" />
-    <property name="build.examples" location="build/examples" />
-    <property name="build.util" location="build/util" />
-    <property name="dist" location="dist" />
+    <property name="build.splunk" location="build/splunk"/>
+    <property name="build.tests" location="build/tests"/>
+    <property name="build.examples" location="build/examples"/>
+    <property name="build.util" location="build/util"/>
+    <property name="dist" location="dist"/>
+    <property name="coverage.dir" location="build/reports/coverage"/>
+    <property name="testreport.dir" location="build/reports/tests" />
 
     <!-- Short names for all the external libraries that get
  referenced multiple times. -->
-    <property name="junit" location="lib/junit-4.8.1.jar" />
-    <property name="gson" location="lib/gson-2.1.jar" />
-    <property name="opencsv" location="lib/opencsv-2.3.jar" />
+    <property name="junit" location="lib/junit-4.8.1.jar"/>
+    <property name="gson" location="lib/gson-2.1.jar"/>
+    <property name="opencsv" location="lib/opencsv-2.3.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -40,55 +43,57 @@
 
     <target name="build">
         <!-- Compile the SDK -->
-        <mkdir dir="${build.splunk}" />
+        <mkdir dir="${build.splunk}"/>
         <javac includeantruntime="false"
                srcdir="splunk"
-               destdir="${build.splunk}">
+               destdir="${build.splunk}"
+               debug="true"
+               debuglevel="lines,vars,source">
             <classpath>
-                <pathelement location="${gson}" />
-                <pathelement location="${opencsv}" />
+                <pathelement location="${gson}"/>
+                <pathelement location="${opencsv}"/>
             </classpath>
 
         </javac>
 
         <!-- Compile utils -->
-        <mkdir dir="${build.util}" />
+        <mkdir dir="${build.util}"/>
         <javac includeantruntime="false"
                srcdir="util"
                destdir="${build.util}">
             <classpath>
-                <pathelement location="${build.splunk}" />
-                <pathelement location="lib/commons-cli-1.2.jar" />
-                <pathelement location="${junit}" />
+                <pathelement location="${build.splunk}"/>
+                <pathelement location="lib/commons-cli-1.2.jar"/>
+                <pathelement location="${junit}"/>
             </classpath>
         </javac>
 
         <!-- Compile the unit tests -->
-        <mkdir dir="${build.tests}" />
+        <mkdir dir="${build.tests}"/>
         <javac includeantruntime="false"
                srcdir="tests"
                destdir="${build.tests}">
             <classpath>
-                <pathelement location="${build.splunk}" />
-                <pathelement location="${build.util}" />
-                <pathelement location="${junit}" />
+                <pathelement location="${build.splunk}"/>
+                <pathelement location="${build.util}"/>
+                <pathelement location="${junit}"/>
             </classpath>
         </javac>
-        <mkdir dir="${build.tests}/test_data" />
+        <mkdir dir="${build.tests}/test_data"/>
         <copy todir="${build.tests}/com/splunk">
             <fileset dir="tests/com/splunk">
-                <exclude name="**/*.java" />
+                <exclude name="**/*.java"/>
             </fileset>
         </copy>
 
         <!-- Compile the examples -->
-        <mkdir dir="${build.examples}/" />
+        <mkdir dir="${build.examples}/"/>
         <javac includeantruntime="false"
                srcdir="examples"
                destdir="${build.examples}">
             <classpath>
-                <pathelement location="${build.splunk}" />
-                <pathelement location="${build.util}" />
+                <pathelement location="${build.splunk}"/>
+                <pathelement location="${build.util}"/>
                 <pathelement location="lib/org-openide-explorer.jar"/>
                 <pathelement location="lib/org-openide-nodes.jar"/>
                 <pathelement location="lib/org-openide-util.jar"/>
@@ -116,28 +121,28 @@
          </standalone-example-jar>
     -->
     <macrodef name="standalone-example-jar">
-        <attribute name="name" />
-        <element name="dependencies" optional="yes" />
+        <attribute name="name"/>
+        <element name="dependencies" optional="yes"/>
         <sequential>
             <mkdir dir="${dist}/examples"/>
             <jar destfile="${dist}/examples/@{name}.jar">
                 <!-- The example's code -->
                 <fileset dir="${build.examples}"
-                         includes="com/splunk/examples/@{name}/**/*.class" />
+                         includes="com/splunk/examples/@{name}/**/*.class"/>
 
                 <!-- Dependencies shared by all examples -->
-                <fileset dir="${build.util}" includes="**/*.class" />
-                <fileset dir="${build.splunk}" includes="**/*.class" />
-                <zipgroupfileset dir="lib" includes="commons-cli-1.2.jar" />
+                <fileset dir="${build.util}" includes="**/*.class"/>
+                <fileset dir="${build.splunk}" includes="**/*.class"/>
+                <zipgroupfileset dir="lib" includes="commons-cli-1.2.jar"/>
 
                 <!-- Extra dependencies for this example -->
-                <dependencies />
+                <dependencies/>
 
                 <manifest>
                     <attribute name="Main-Class"
-                               value="com.splunk.examples.@{name}.Program" />
+                               value="com.splunk.examples.@{name}.Program"/>
                     <attribute name="Implementation-Title"
-                               value="com.splunk.examples.@{name}" />
+                               value="com.splunk.examples.@{name}"/>
                     <attribute name="Implementation-Vendor"
                                value="Splunk, Inc."/>
                     <attribute name="Implementation-Version"
@@ -147,20 +152,19 @@
         </sequential>
     </macrodef>
 
-
     <!-- Make jar files for general distribution of the SDK. The primary one
          is splunk.jar, and we create a jar for each example, including its
          dependencies, to make it easily redistributable.
     -->
     <target name="dist" depends="build, javadoc">
-        <mkdir dir="${dist}" />
+        <mkdir dir="${dist}"/>
 
         <!-- splunk.jar -->
         <jar destfile="${dist}/splunk.jar">
             <fileset dir="${build.splunk}"
-                     includes="**/*.class" />
+                     includes="**/*.class"/>
 
-            <fileset dir="${dist}" includes="docs/**/*" />
+            <fileset dir="splunk" includes="**/*"/>
 
             <manifest>
                 <attribute name="Implementation-Title"
@@ -169,80 +173,142 @@
                            value="Splunk, Inc."/>
                 <attribute name="Implementation-Version"
                            value="${version.number}"/>
-        </manifest>
+            </manifest>
         </jar>
 
-        <copy file="${gson}" todir="${dist}" />
-        <copy file="${opencsv}" todir="${dist}" />
+        <copy file="${gson}" todir="${dist}"/>
+        <copy file="${opencsv}" todir="${dist}"/>
 
         <!-- Now, the examples -->
         <standalone-example-jar name="explorer">
             <dependencies>
-                <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
-                <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
-                <zipgroupfileset dir="lib" includes="org-openide-*.jar" />
+                <zipgroupfileset dir="lib" includes="gson-2.1.jar"/>
+                <zipgroupfileset dir="lib" includes="opencsv-2.3.jar"/>
+                <zipgroupfileset dir="lib" includes="org-openide-*.jar"/>
             </dependencies>
         </standalone-example-jar>
 
-        <standalone-example-jar name="export" />
-        <standalone-example-jar name="genevents" />
-        <standalone-example-jar name="index" />
-        <standalone-example-jar name="info" />
-        <standalone-example-jar name="input" />
+        <standalone-example-jar name="export"/>
+        <standalone-example-jar name="genevents"/>
+        <standalone-example-jar name="index"/>
+        <standalone-example-jar name="info"/>
+        <standalone-example-jar name="input"/>
 
         <standalone-example-jar name="search">
             <dependencies>
-                <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
-                <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
+                <zipgroupfileset dir="lib" includes="gson-2.1.jar"/>
+                <zipgroupfileset dir="lib" includes="opencsv-2.3.jar"/>
             </dependencies>
         </standalone-example-jar>
 
-        <standalone-example-jar name="search_blocking" />
-        <standalone-example-jar name="search_oneshot" />
-        <standalone-example-jar name="search_realtime" />
-        <standalone-example-jar name="search_saved" />
-        <standalone-example-jar name="search_simple" />
-        <standalone-example-jar name="spurl" />
-        <standalone-example-jar name="tail" />
+        <standalone-example-jar name="search_blocking"/>
+        <standalone-example-jar name="search_oneshot"/>
+        <standalone-example-jar name="search_realtime"/>
+        <standalone-example-jar name="search_saved"/>
+        <standalone-example-jar name="search_simple"/>
+        <standalone-example-jar name="spurl"/>
+        <standalone-example-jar name="tail"/>
     </target>
 
 
     <!-- Create JavaDoc output in dist/docs/ -->
     <target name="javadoc">
-        <property name="dist.docs" location="${dist}/docs" />
+        <property name="dist.docs" location="${dist}/docs"/>
         <mkdir dir="${dist.docs}"/>
         <javadoc destdir="${dist.docs}"
                  sourcepath="splunk"
                  stylesheetfile="splunk/staticdocs.css">
             <classpath>
-                <pathelement location="${gson}" />
-                <pathelement location="${opencsv}" />
+                <pathelement location="${gson}"/>
+                <pathelement location="${opencsv}"/>
             </classpath>
         </javadoc>
     </target>
 
     <!-- Run the test suite -->
     <target name="test" depends="build">
-        <property name="report.dir" location="reports/tests" />
-        <mkdir dir="${report.dir}" />
         <junit fork="yes" haltonfailure="no">
             <classpath>
-                <pathelement location="${build.tests}" />
-                <pathelement location="${build.util}" />
-                <pathelement location="lib/commons-cli-1.2.jar" />
-                <pathelement location="${build.splunk}" />
-                <pathelement location="${junit}" />
+                <pathelement location="${build.tests}"/>
+                <pathelement location="${build.util}"/>
+                <pathelement location="lib/commons-cli-1.2.jar"/>
+                <pathelement location="${build.splunk}"/>
+                <pathelement location="${junit}"/>
                 <pathelement location="${gson}"/>
                 <pathelement location="${opencsv}"/>
             </classpath>
 
-            <batchtest todir="${report.dir}">
+            <batchtest>
                 <fileset dir="${build.tests}">
                     <include name="**/*Test.class"/>
                 </fileset>
             </batchtest>
 
+            <formatter type="xml" />
             <formatter type="plain" usefile="false"/>
         </junit>
+
+        <junitreport todir="${testreport.dir}">
+            <fileset dir="${testreport.dir}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report todir="${testreport.dir}" />
+        </junitreport>
     </target>
+
+    <!-- Run the test suite with code coverage. -->
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="lib/jacocoant.jar"/>
+    </taskdef>
+
+    <target name="coverage" depends="build">
+        <delete file="${coverage.dir}/coverage_report.exec" />
+        <jacoco:coverage append="true" destfile="${coverage.dir}/coverage_report.exec">
+            <junit fork="yes" haltonfailure="no">
+                <classpath>
+                    <pathelement location="${build.tests}"/>
+                    <pathelement location="${build.util}"/>
+                    <pathelement location="lib/commons-cli-1.2.jar"/>
+                    <pathelement location="${build.splunk}"/>
+                    <pathelement location="${junit}"/>
+                    <pathelement location="${gson}"/>
+                    <pathelement location="${opencsv}"/>
+                </classpath>
+
+                <batchtest>
+                    <fileset dir="${build.tests}">
+                        <include name="**/*Test.class"/>
+                    </fileset>
+                </batchtest>
+
+                <formatter type="xml" />
+                <formatter type="plain" usefile="false"/>
+            </junit>
+        </jacoco:coverage>
+
+        <jacoco:report>
+            <executiondata>
+                <file file="${coverage.dir}/coverage_report.exec" />
+            </executiondata>
+
+            <structure name="Splunk Java SDK">
+                <classfiles>
+                    <fileset dir="${build.splunk}" />
+                </classfiles>
+                <sourcefiles encoding="UTF-8">
+                    <fileset dir="splunk" />
+                </sourcefiles>
+            </structure>
+
+            <html destdir="${coverage.dir}"/>
+        </jacoco:report>
+
+        <junitreport todir="${testreport.dir}">
+            <fileset dir="${testreport.dir}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report todir="${testreport.dir}" />
+        </junitreport>
+    </target>
+
 </project>

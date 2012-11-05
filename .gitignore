@@ -8,3 +8,5 @@ build
 build.log
 dist
 out
+*.properties
+TEST-com.splunk.*.xml
