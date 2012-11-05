@@ -156,9 +156,12 @@
         <mkdir dir="${dist}" />
 
         <!-- splunk.jar -->
-        <jar basedir="${build.splunk}"
-             destfile="${dist}/splunk.jar"
-             includes="**/*.class">
+        <jar destfile="${dist}/splunk.jar">
+            <fileset dir="${build.splunk}"
+                     includes="**/*.class" />
+
+            <fileset dir="${dist}" includes="docs/**/*" />
+
             <manifest>
                 <attribute name="Implementation-Title"
                            value="com.splunk"/>
