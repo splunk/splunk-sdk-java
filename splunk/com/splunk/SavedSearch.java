@@ -918,7 +918,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Indicates whether to back fill the real-time window for this search.
-     * This attribute is only valid Only applies to real-time searches.
+     * This attribute only applies to real-time searches.
      *
      * @return {@code true} if Splunk back fills the real-time window,
      * {@code false} if not.
@@ -1998,7 +1998,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets whether to back fill the real-time window for this search.
-     * This attribute is only valid Only applies to real-time searches.
+     * This attribute only applies to real-time searches.
      *
      * @param backfill {@code true} if Splunk back fills the real-time window,
      * {@code false} if not.
