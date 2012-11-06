@@ -207,7 +207,7 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns the time-out period for gathering a search peer's basic info.
+     * Returns the time-out period for gathering a search peer's basic information.
      * @see ServiceInfo
      *
      * @return The time-out period, in seconds.
@@ -413,7 +413,7 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Sets the time-out period for connecting to a search peer for getting its
-     * basic info.
+     * basic information.
      * @see ServiceInfo
      *
      * @param seconds The connection time-out period, in seconds.

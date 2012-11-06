@@ -57,8 +57,7 @@ The output format.
 output_time_format
 OutputTimeFormat
 String
-Sets a UTC time format. This value defaults to {@code setTimeFormat}.
----
+Sets a UTC time format. 
 A UTC time format.
 ===
 search

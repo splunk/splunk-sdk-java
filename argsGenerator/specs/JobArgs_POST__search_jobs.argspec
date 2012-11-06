@@ -101,9 +101,8 @@ The time string.
 reduce_freq
 ReduceFrequency
 int
-Sets the number of seconds (frequency) to run the MapReduce reduce phase on accumulated map values.
----
-The reduce frequency, in seconds. 
+Sets the time to wait between running the MapReduce phase on accumulated map values.
+The time to wait, in seconds. 
 ===
 reload_macros
 ReloadMacros
@@ -129,15 +128,13 @@ The list of fields.
 rt_blocking
 RealtimeBlocking
 boolean
-Indicates whether the indexer blocks if the queue for this search is full. For real-time searches.
----
+Indicates whether the indexer blocks if the queue for this search is full. Only applies to real-time searches.
 {@code true} to block the indexer for a full queue, {@code false} if not.
 ===
 rt_indexfilter
 RealtimeIndexFilter
 boolean
-Indicates whether the indexer pre-filters events. For real-time searches.
----
+Indicates whether the indexer pre-filters events. Only applies to real-time searches.
 {@code true} to pre-filter events, {@code false} if not.
 ===
 rt_maxblocksecs
@@ -150,8 +147,7 @@ The maximum time to block, in seconds.
 rt_queue_size
 RealtimeQueueSize
 int
-Sets the number indicating the queue size (in events) that the indexer should use for this search. For real-time searches.
----
+Sets the number indicating the queue size (in events) that the indexer should use for this search. Only applies to real-time searches.
 The queue size, in events.
 ===
 search_listener

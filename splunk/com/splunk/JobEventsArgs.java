@@ -163,8 +163,8 @@ public class JobEventsArgs extends Args {
     }
     
     /**
-     * Sets a UTC time format. This value defaults to {@code setTimeFormat}.
-     * 
+     * Sets a UTC time format. 
+     *
      * @param outputTimeFormat
      *      A UTC time format.
      */

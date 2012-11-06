@@ -227,10 +227,11 @@ public class JobArgs extends Args {
     }
     
     /**
-     * Sets the number of seconds (frequency) to run the MapReduce reduce phase on accumulated map values.
+     * Sets the time to wait between running the MapReduce phase on accumulated 
+     * map values.
      * 
      * @param reduceFrequency
-     *      The reduce frequency, in seconds. 
+     *      The time to wait, in seconds. 
      */
     public void setReduceFrequency(int reduceFrequency) {
         this.put("reduce_freq", reduceFrequency);
@@ -275,7 +276,8 @@ public class JobArgs extends Args {
     }
     
     /**
-     * Indicates whether the indexer blocks if the queue for this search is full. For real-time searches.
+     * Indicates whether the indexer blocks if the queue for this search is 
+     * full. Only applies to real-time searches.
      * 
      * @param realtimeBlocking
      *      {@code true} to block the indexer for a full queue, {@code false} if not.
@@ -285,7 +287,7 @@ public class JobArgs extends Args {
     }
     
     /**
-     * Indicates whether the indexer pre-filters events. For real-time searches.
+     * Indicates whether the indexer pre-filters events. Only applies to real-time searches.
      * 
      * @param realtimeIndexFilter
      *      {@code true} to pre-filter events, {@code false} if not.
@@ -305,7 +307,8 @@ public class JobArgs extends Args {
     }
     
     /**
-     * Sets the number indicating the queue size (in events) that the indexer should use for this search. For real-time searches.
+     * Sets the number indicating the queue size (in events) that the indexer 
+     * should use for this search. Only applies to real-time searches.
      * 
      * @param realtimeQueueSize
      *      The queue size, in events.

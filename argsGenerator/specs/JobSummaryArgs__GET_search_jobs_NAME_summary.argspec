@@ -33,23 +33,20 @@ The latest time.
 min_freq
 MinimumFrequency
 double
-Set the fraction of results for each key that this key must occur in to be displayed.
----
+Sets the fraction of results for each key that this key must occur in to be displayed.
 The frequency, as a fraction (a value between 0 and 1).
 ===
 # TODO: Improve docs: The description and default value contradict each other.
 output_time_format
 OutputTimeFormat
 String
-Sets a UTC time format. This value defaults to {@code setTimeFormat}.
----
+Sets a UTC time format. 
 A UTC time format.
 ===
 search
 Search
 String
-Specifies a substring that all returned events should contain in one of their values or tags.
----
+Sets a search query to filter the response. The response matches field values against the search query. For example, "foo" matches any object that has "foo" as a substring in a field, and "field_name=field_value" restricts the match to a single field.
 A search substring.
 ===
 # TODO: Improve docs: The default value specified does not match that of the description.
