@@ -45,7 +45,7 @@ public class Application extends Entity {
     /**
      * Indicates whether Splunk checks Splunkbase for updates.
      *
-     * @return {@code true} if Splunk checks Splunkbase for updates,
+     * @return {@code true} if Splunk checks Splunkbase for app updates,
      * {@code false} if not.
      */
     public boolean getCheckForUpdates() {
@@ -134,9 +134,9 @@ public class Application extends Entity {
     }
 
     /***
-     * Sets the  name of the app's author. For Splunkbase
-     * apps, this value is the username of the Splunk.com account. For internal
-     * apps, this value is the full name.
+     * Sets the  name of the app's author. For Splunkbase apps, this value is 
+     * the username of the Splunk.com account. For internal apps, this value is
+     * the full name.
      *
      * @param author The author name.
      */
@@ -147,7 +147,7 @@ public class Application extends Entity {
     /**
      * Sets whether Splunk checks Splunkbase for updates to the app.
      *
-     * @param value {@code true} if the app is checked for updates, 
+     * @param value {@code true} if Splunk checks Splunkbase for app updates, 
      * {@code false} if not.
      */
     public void setCheckForUpdates(boolean value) {
@@ -201,7 +201,7 @@ public class Application extends Entity {
     /**
      * Sets the version of the app.
      *
-     * @param version The version.
+     * @param version The app's version.
      */
     public void setVersion(String version) {
         setCacheValue("version", version);
@@ -220,7 +220,7 @@ public class Application extends Entity {
     /**
      * Archives the app on the server file system. 
      *
-     * @return Location of the archived app, as {app_name}.spl.
+     * @return The location of the archived app, as {app_name}.spl.
      */
     public ApplicationArchive archive() {
         return new ApplicationArchive(service, path);

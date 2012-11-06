@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * The {@code WindowsActiveDirectoryInput} class represents a Windows Active
- * Directory input.
+ * Directory data input.
  */
 public class WindowsActiveDirectoryInput extends Input {
 
@@ -37,15 +37,14 @@ public class WindowsActiveDirectoryInput extends Input {
     /**
      * Returns the index name of this Windows Active Directory input.
      *
-     * @return The index name, or {@code null}  if not specified.
+     * @return The index name, or {@code null} if not specified.
      */
     public String getIndex() {
         return getString("index", null);
     }
 
     /**
-     * Returns the input kind of this Windows Active Directory input.
-     * @see InputKind
+     * Returns the input kind of this input.
      *
      * @return The input kind.
      */
@@ -66,7 +65,7 @@ public class WindowsActiveDirectoryInput extends Input {
 
     /**
      * Returns the starting location in the directory path for this Windows
-     * Active Directory input. If not specified, the the root of the directory
+     * Active Directory input. If not specified, the root of the directory
      * tree is used.
      *
      * @return The starting location in the directory path, or {@code null} if 
@@ -89,13 +88,14 @@ public class WindowsActiveDirectoryInput extends Input {
 
     /**
      * Sets whether this input is enabled or disabled. 
-     * You can also do this using the {@code Entity.disable} and 
-     * {@code Entity.enable} methods. 
-     * @see Entity#disable
-     * @see Entity#enable
+     * <p>
+     * <b>Note:</b> Using this method requires you to restart Splunk before this
+     * setting takes effect. To avoid restarting Splunk, use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
      *
-     * @param disabled {@code true} to disabled to script input,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable this input, {@code false} to 
+     * enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);

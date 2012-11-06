@@ -15,14 +15,16 @@
  */
 
 package com.splunk;
-
+/**
+ * The {@code UdpConnections} class represents a UDP connection.
+ */
 public class UdpConnections extends Entity {
 
     /**
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The output server all-connections endpoint.
+     * @param path The UPD input endpoint.
      */
     UdpConnections(Service service, String path) {
         super(service, path);

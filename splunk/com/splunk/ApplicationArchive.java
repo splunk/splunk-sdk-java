@@ -25,16 +25,16 @@ public class ApplicationArchive extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The full path of the parent endpoint.
+     * @param path The application endpoint.
      */
     ApplicationArchive(Service service, String path) {
         super(service, path + "/package");
     }
 
     /**
-     * Returns the app name.
+     * Returns the name of the app.
      *
-     * @return The app name.
+     * @return The app's name.
      */
     public String getAppName() {
         return getString("name");

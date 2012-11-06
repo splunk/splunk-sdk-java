@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * The {@code InputCollection} class represents a collection of inputs. The 
  * collection is heterogeneous and each member contains an {@code InputKind}
- * value that indicates the specific type of input (<i>input kind</i>).
+ * value that indicates the specific type of input.
  */
 public class InputCollection extends EntityCollection<Input> {
     protected Set<InputKind> inputKinds = new HashSet<InputKind>();
@@ -39,8 +39,8 @@ public class InputCollection extends EntityCollection<Input> {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      */
     InputCollection(Service service, Args args) {
         super(service, "data/inputs", args);
@@ -53,12 +53,16 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Creates a stub.
+     * Creates a stub for a new data input.
      *
-     * @param name The name of the input based on the type: the filename or
-     * directory and path (monitor, oneshot), the script name (script), the port
-     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
-     * (Windows Registry), or the name of the configuration (AD).
+     * @param name Depending on the type of input, a string that contains: 
+     * <ul><li>The filename or directory and path (for monitor and oneshot 
+     * inputs)</li>
+     * <li> The script name (for script inputs)</li>
+     * <li> The port number (for TCP and UDP inputs)</li>
+     * <li> The collection name (for Windows Perfmon and WMI inputs)</li>
+     * <li> The stanza (for Windows Registry inputs)</li>
+     * <li> The name of the configuration (for Windows AD inputs)</li></ul>
      * @return No return value.
      * @throws UnsupportedOperationException
      */
@@ -67,17 +71,22 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Creates a stub by providing additional arguments. For details, see the
-     * POST request arguments for the 
-     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" 
-     * target="_blank">data/inputs/* endpoints</a> in the Splunk REST API 
-     * documentation.
+     * Creates a stub for a new data input based on additional arguments. 
      *
-     * @param name The name of the input based on the type: the filename or
-     * directory and path (monitor, oneshot), the script name (script), the port
-     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
-     * (Windows Registry), or the name of the configuration (AD).
-     * @param args Optional arguments.
+     * @param name Depending on the type of data input, a string that contains: 
+     * <ul><li>The filename or directory and path (for monitor and oneshot 
+     * inputs)</li>
+     * <li> The script name (for script inputs)</li>
+     * <li> The port number (for TCP and UDP inputs)</li>
+     * <li> The collection name (for Windows Perfmon and WMI inputs)</li>
+     * <li> The stanza (for Windows Registry inputs)</li>
+     * <li> The name of the configuration (for Windows AD inputs)</li></ul>
+     * @param args Optional arguments to define the data input. For a list of 
+     * the available parameters, see 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2#inputparams" 
+     * target="_blank">Input parameters</a> on 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
+     * target="_blank">dev.splunk.com</a>.
      * @return No return value.
      * @throws UnsupportedOperationException
      */
@@ -86,35 +95,45 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Creates a specific kind of input.
+     * Creates a new data input based on the input kind.
      *
-     * @param name The name of the input based on the type: the filename or
-     * directory and path (monitor, oneshot), the script name (script), the port
-     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
-     * (Windows Registry), or the name of the configuration (AD).
-     * @param kind The specific kind of input.
+     * @param name Depending on the type of data input, a string that contains: 
+     * <ul><li>The filename or directory and path (for monitor and oneshot 
+     * inputs)</li>
+     * <li> The script name (for script inputs)</li>
+     * <li> The port number (for TCP and UDP inputs)</li>
+     * <li> The collection name (for Windows Perfmon and WMI inputs)</li>
+     * <li> The stanza (for Windows Registry inputs)</li>
+     * <li> The name of the configuration (for Windows AD inputs)</li></ul>
+     * @param kind A member of {@code InputKind}, indicating the type of input.
      * @param <T> The implicit type of the input.
-     * @return The input that was created.
+     * @return The {@code Input} that was created.
      */
     public <T extends Input> T create(String name, InputKind kind) {
         return (T)create(name, kind, (Map<String, Object>)null);
     }
 
     /**
-     * Creates a specific kind of input by providing arguments.For details, see the
-     * POST request arguments for the 
-     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput" 
-     * target="_blank">data/inputs/* endpoints</a> in the Splunk REST API 
-     * documentation.
+     * Creates a new data input based on the input kind and additional 
+     * arguments. 
      *
-     * @param name The name of the input based on the type: the filename or
-     * directory and path (monitor, oneshot), the script name (script), the port
-     * number (TCP, UDP), the collection name (Windows perfmon, WMI), the stanza
-     * (Windows Registry), or the name of the configuration (AD).
-     * @param kind The specific kind of input.
-     * @param args Optional arguments.
+     * @param name Depending on the type of data input, a string that contains: 
+     * <ul><li>The filename or directory and path (for monitor and oneshot 
+     * inputs)</li>
+     * <li> The script name (for script inputs)</li>
+     * <li> The port number (for TCP and UDP inputs)</li>
+     * <li> The collection name (for Windows Perfmon and WMI inputs)</li>
+     * <li> The stanza (for Windows Registry inputs)</li>
+     * <li> The name of the configuration (for Windows AD inputs)</li></ul>
+     * @param kind A member of {@code InputKind}, indicating the type of input.
+     * @param args Optional arguments to define the data input. For a list of 
+     * the available parameters, see 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2#inputparams" 
+     * target="_blank">Input parameters</a> on 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
+     * target="_blank">dev.splunk.com</a>.
      * @param <T> The implicit type of the input.
-     * @return The input that was created.
+     * @return The {@code Input} that was created.
      */
     public <T extends Input> T
     create(String name, InputKind kind, Map<String, Object> args) {
@@ -128,10 +147,10 @@ public class InputCollection extends EntityCollection<Input> {
     }
     
     /**
-     * Creates an {@code Input} resource item.
+     * Creates a new data input based on an Atom entry.
      *
      * @param entry The {@code AtomEntry} object describing the entry.
-     * @return The input that was created.
+     * @return The {@code Input} that was created.
      */
     @Override
     protected Input createItem(AtomEntry entry) {
@@ -149,25 +168,24 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Returns the value of a scoped, namespace-constrained key if it exists 
-     * within this collection.
+     * Returns the value of a scoped, namespace-constrained key, if it 
+     * exists within this collection.
      *
      * @param key The key to look up.
      * @param namespace The namespace to constrain the search to.
      * @return The value indexed by the key, or {@code null} if it doesn't 
      * exist.
      */
-
-    
    public Input get(Object key, Args namespace) {
        return retrieveInput((String)key, namespace);
    }
 
     /**
-     * Returns the path's {@code InputKind} value.
+     * Returns the input kind for a given path.
      *
-     * @param path The input path.
-     * @return The kind of input.
+     * @param path The relative endpoint path (the path that follows 
+     * data/inputs).
+     * @return A member of {@code InputKind}, indicating the type of input.
      */
     protected InputKind itemKind(String path) {
         String relpathWithInputName = Util.substringAfter(path, "/data/inputs/", null);
@@ -191,11 +209,15 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Matches a string to an input name.
+     * Indicates whether a given string matches the input name (string 
+     * equality). For scripted inputs, which are listed by their full path, this
+     * method compares only the final component of the filename for a match.
      *
-     * In most cases this is the same as string equality, but for scripted inputs,
-     * which are listed by their full path, we want to match the final component
-     * of the filename instead.
+     * @param kind A member of {@code InputKind}, indicating the type of input.
+     * @param searchFor A string to search for.
+     * @param searchIn The string that contains the input name.
+     * @return {@code true} if the string matches the input name, {@code false}
+     * if not.
      */
     protected static boolean matchesInputName(InputKind kind, String searchFor, String searchIn) {
         if (kind == InputKind.Script) {
@@ -207,13 +229,13 @@ public class InputCollection extends EntityCollection<Input> {
 
 
     /**
-     * Recursively assemble a set of all the {@code InputKind}s available on this Splunk
-     * instance. {@code subPath} is a list of URL components *after* ".../data/inputs/".
-     * So a call to assemble all inputs should pass an empty list as {@code subPath}. If
-     * you wanted only TCP inputs, you would pass a list with one element, {@code "tcp"}.
+     * Assembles a set of all the input kinds that are available on this Splunk
+     * instance. To list all inputs, pass an empty list to {@code subPath}. Or, 
+     * specify a component of the path such as "tcp" to list all TCP inputs. 
      *
-     * @param subPath A list of strings giving the components of the URL after "data/inputs/".
-     * @return A set of {@code InputKind} objects.
+     * @param subPath A list of strings containing the components of the
+     * endpoint path that follow data/inputs/.
+     * @return A set of available {@code InputKind}s.
      */
     private Set<InputKind> assembleInputKindSet(List<String> subPath) {
         Set<InputKind> kinds = new HashSet<InputKind>();
@@ -250,7 +272,7 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     /**
-     * Refresh the {@code inputKinds} field on this object.
+     * Refreshes the {@code inputKinds} field on this object.
      */
     private void refreshInputKinds() {
         Set<InputKind> kinds = assembleInputKindSet(new ArrayList<String>());
@@ -262,7 +284,7 @@ public class InputCollection extends EntityCollection<Input> {
     /**
      * Refreshes this input collection.
      *
-     * @return The refreshed input collection.
+     * @return The refreshed {@code InputCollection}.
      */
     @Override public InputCollection refresh() {
         // Populate this.inputKinds
@@ -324,7 +346,7 @@ public class InputCollection extends EntityCollection<Input> {
         validate();
         
         // Because scripted input names are not 1:1 with the original name
-        // (they are the absolute path on the splunk instance followed by
+        // (they are the absolute path on the Splunk instance followed by
         // the original name), we will iterate over the entities in the list,
         // and if we find one that matches, return it.
         Set<Entry<String, LinkedList<Input>>> set = items.entrySet();
@@ -349,7 +371,7 @@ public class InputCollection extends EntityCollection<Input> {
         validate();
         
         // Because scripted input names are not 1:1 with the original name
-        // (they are the absolute path on the splunk instance followed by
+        // (they are the absolute path on the Splunk instance followed by
         // the original name), we will iterate over the entities in the list,
         // and if we find one that matches, return it.
         String pathMatcher = service.fullpath("", namespace);

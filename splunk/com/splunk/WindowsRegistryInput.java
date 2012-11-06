@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * The {@code WindowsRegistryInput} class represents a Windows Registry input.
+ * The {@code WindowsRegistryInput} class represents a Windows Registry data 
+ * input.
  */
 public class WindowsRegistryInput extends Input {
 
@@ -75,8 +76,7 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns the input kind for this Windows Registry input.
-     * @see InputKind
+     * Returns the input kind for this input.
      *
      * @return The input kind.
      */
@@ -100,7 +100,7 @@ public class WindowsRegistryInput extends Input {
      * event types for this Windows Registry input. Only types that match
      * at least one of the regexes are monitored.
      * 
-     * @return A String array of the regular expressions.
+     * @return An array of regex strings for event types.
      */
     public String[] getType() {
         String[] value = getStringArray("type");
@@ -125,13 +125,14 @@ public class WindowsRegistryInput extends Input {
 
     /**
      * Sets whether this input is enabled or disabled.
-     * You can also do this using the {@code Entity.disable} and 
-     * {@code Entity.enable} methods. 
-     * @see Entity#disable
-     * @see Entity#enable
+     * <p>
+     * <b>Note:</b> Using this method requires you to restart Splunk before this
+     * setting takes effect. To avoid restarting Splunk, use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
      *
-     * @param disabled {@code true} to disabled to script input,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable this input, {@code false} to 
+     * enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
@@ -166,11 +167,11 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Sets the process regular expression (regex) that is compared to process 
+     * Sets the regular expression (regex) that is compared to process 
      * names when including or excluding events for this Windows Registry input.
      * Changes are only collected if a process name matches this regex. 
      *
-     * @param proc The process regex.
+     * @param proc The process names regex.
      */
     public void setProc(String proc) {
         setCacheValue("proc", proc);
@@ -181,7 +182,7 @@ public class WindowsRegistryInput extends Input {
      * event types for this Windows Registry input. Only types that match
      * at least one regex are monitored.
      *
-     * @param regexes Array or collection of strings giving the regexes.
+     * @param regexes An array of regex strings for event types.
      */
     public void setType(String[] regexes) {
         String val = Util.join("|", regexes);

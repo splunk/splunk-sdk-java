@@ -20,16 +20,21 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The {@code Util} class contains string utilities.
+ */
 class Util {
     /**
-     * Join the strings in {@code joinees}, separated by {@code joiner}.
+     * Joins the strings in {@code joinees}, separated by {@code joiner}.
      *
-     * For example, {@code join("/", list)} where {@code list} contains the strings {@code "a"},
-     * {@code "b"}, and {@code "c"} returns "a/b/c";
+     * For example, {@code list} contains the strings {@code "a"}, {@code "b"}, 
+     * and {@code "c"}. To combine these strings as "a/b/c", use 
+     * {@code join("/", list)}.
      *
-     * @param joiner String to interpolate between each element of {@code joinees}.
-     * @param joinees List of strings to join.
-     * @return The strines in {@code joinees} concatenated with a copy of {@code joiner} between each.
+     * @param joiner The string to use as the delimiter between each element.
+     * @param joinees The list of strings to join.
+     * @return The combined strings in {@code joinees} separated  by the 
+     * {@code joiner} delimiter.
      */
     public static String join(String joiner, List<String> joinees) {
         if (joinees.isEmpty()) {
@@ -46,23 +51,41 @@ class Util {
     }
 
     /**
-     * @see {@link #join(String, List<String>)}
+     * Joins the strings in {@code joinees}, separated by {@code joiner}.
+     *
+     * For example, {@code list} contains the strings {@code "a"}, {@code "b"}, 
+     * and {@code "c"}. To combine these strings as "a/b/c", use 
+     * {@code join("/", list)}.
+     *
+     * @param joiner The string to use as the delimiter between each element.
+     * @param joinees The array of strings to join.
+     * @return The combined strings in {@code joinees} separated  by the 
+     * {@code joiner} delimiter.
      */
     public static String join(String joiner, String[] joinees) {
         return join(joiner, Arrays.asList(joinees));
     }
 
     /**
-     * Return the substring of {@code template} beginning after {@code toFind}
-     * occurs, or {@code defaultTo} if {@code toFind} does not occur. For example,
-     * {@code substringAfter("This is a test", "is a", "abcd")} returns {@code " test"},
-     * while {@code substringAfter("This is a test", "boris", "abcd")} returns {@code "abcd"}.
+     * Searches a given string ({@code template}) for a substring 
+     * ({@code toFind}) and returns the portion of the string that follows the
+     * substring. If the {@code toFind} string is not found in {@code template},
+     * an alternative string ({@code defaultTo}) is returned. 
+     * <br>
+     * For example: 
+     * <br>
+     * {@code substringAfter("This is a test", "is a ", "abcd")} 
+     * returns {@code "test"}. 
+     * <br>
+     * {@code substringAfter("This is a test", "boris",
+     * "abcd")} returns {@code "abcd"}.
      *
-     * @param template String to search in.
-     * @param toFind String to search for.
-     * @param defaultTo String to return if {@code toFind} does not occur in {@code template}.
-     * @return Substring of {@code template} beginning after {@code toFind},
-     *         or {@code defaultTo} if {@code toFind} is not there.
+     * @param template The string to search in.
+     * @param toFind The substring to search for.
+     * @param defaultTo The alternative string to return if {@code toFind} is 
+     *        not found.
+     * @return The substring of {@code template} that follows {@code toFind},
+     *         or {@code defaultTo} if {@code toFind} is not found.
      */
     public static String substringAfter(String template, String toFind, String defaultTo) {
         int toFindLength = toFind.length();

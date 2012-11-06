@@ -47,8 +47,8 @@ public class DeploymentServer extends Entity {
     /**
      * Sets whether the deployment server is enabled or disabled.
      * <p>
-     * <b>Note:</b> You must restart Splunk for this setting to take effect.
-     * However, to avoid restarting Splunk, you can use the 
+     * <b>Note:</b> Using this method requires you to restart Splunk before this 
+     * setting takes effect. To avoid restarting Splunk, use the 
      * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
      * take effect immediately. 
      * @see Entity#disable

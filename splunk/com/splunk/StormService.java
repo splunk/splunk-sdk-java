@@ -22,11 +22,8 @@ import java.util.Map;
  * The {@code StormService} class represents a Splunk service instance at a
  * given address (host:port), accessed using the {@code http} or {@code https}
  * protocol scheme.
- * <p>
  * Using the {@code StormService} class, you can get a {@code Receiver} object
- * and log events to it. For more information, see 
- * <a href="http://dev.splunk.com/view/java-sdk/SP-CAAAECN" 
- * target="_blank">Overview of the Splunk Java SDK</a> on the Developer Portal. 
+ * and log events to it.
  */
 public class StormService extends Service {
 

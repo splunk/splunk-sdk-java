@@ -18,7 +18,7 @@ package com.splunk;
 
 /**
  * The {@code WindowsPerfmonInput} class represents a Windows Performance
- * Monitor (Perfmon) input.
+ * Monitor (Perfmon) data input.
  */
 public class WindowsPerfmonInput extends Input {
 
@@ -74,8 +74,7 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns the input kind of this Windows Perfmon input.
-     * @see InputKind
+     * Returns the input kind of this input.
      *
      * @return The input kind.
      */
@@ -84,10 +83,10 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Returns the performance monitor object for this Windows Perfmon input
-     * (for example, "Process", "Server", or "PhysicalDisk".)
+     * Returns the performance monitor object for this Windows 
+     * Perfmon input (for example, "Process", "Server", or "PhysicalDisk").
      *
-     * @return The Windows performance object.
+     * @return A string containing the performance monitor object.
      */
     public String getObject() {
         return getString("object");
@@ -115,13 +114,13 @@ public class WindowsPerfmonInput extends Input {
 
     /**
      * Sets whether this input is enabled or disabled. 
-     * You can also do this using the {@code Entity.disable} and 
-     * {@code Entity.enable} methods. 
-     * @see Entity#disable
-     * @see Entity#enable
+     * <b>Note:</b> Using this method requires you to restart Splunk before this
+     * setting takes effect. To avoid restarting Splunk, use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
      *
-     * @param disabled {@code true} to disabled to script input,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable this input, {@code false} to 
+     * enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
@@ -166,7 +165,8 @@ public class WindowsPerfmonInput extends Input {
     }
 
     /**
-     * Sets the performance monitor object.
+     * Sets the performance monitor object (for example, "Process", "Server", or
+     * "PhysicalDisk").
      *
      * @param object The performance monitor object.
      */

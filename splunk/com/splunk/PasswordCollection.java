@@ -34,8 +34,8 @@ public class PasswordCollection extends EntityCollection<Password> {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      */
     PasswordCollection(Service service, Args args) {
         super(service, service.passwordEndPoint, Password.class, args);

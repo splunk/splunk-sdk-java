@@ -15,24 +15,26 @@
  */
 
 package com.splunk;
-
+/**
+ * The {@code FiredAlertGroup} class represents a group of fired alerts, which 
+ * are the alerts for a given saved search.
+ */
 public class FiredAlertGroup extends Entity {
 
     /**
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The event type endpoint.
+     * @param path The fired alert endpoint.
      */
     FiredAlertGroup(Service service, String path) {
         super(service, path);
     }
 
     /**
-     * Return the collection of fired alerts for this specific fired alert
-     * group.
+     * Returns a group of fired alerts for a given saved search.
      *
-     * @return The fired alerts for this group.
+     * @return The fired alerts in the group.
      */
     public EntityCollection<FiredAlert> getAlerts() {
         return new EntityCollection<FiredAlert>(

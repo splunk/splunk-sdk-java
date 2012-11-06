@@ -15,10 +15,9 @@
  */
 
 package com.splunk;
-
 /**
-* The {@code MonitorInput} class represents a monitor input, which is a file,
-* directory, script, or network port that is monitored for new data.
+ * The {@code MonitorInput} class represents a monitor input, which is a file,
+ * directory, script, or network port that is monitored for new data.
  */
 public class MonitorInput extends Input {
 
@@ -122,7 +121,6 @@ public class MonitorInput extends Input {
 
     /**
      * Returns the type of monitor input.
-     * @see InputKind
      *
      * @return The input kind.
      */
@@ -131,8 +129,8 @@ public class MonitorInput extends Input {
     }
 
     /**
-     * Returns the queue for this monitor input. Valid values are "parsingQueue" and
-     * "indexQueue".
+     * Returns the queue for this monitor input. Valid values are "parsingQueue"
+     * and "indexQueue".
      *
      * @return The queue, or {@code null} if not specified.
      */

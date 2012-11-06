@@ -16,6 +16,9 @@
 
 package com.splunk;
 
+/**
+ * The {@code IndexCollection} class represents a collection of indexes.
+ */
 public class IndexCollection extends EntityCollection<Index> {
     /**
      * Class constructor.
@@ -30,13 +33,12 @@ public class IndexCollection extends EntityCollection<Index> {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link IndexCollectionArgs}).
      */
     IndexCollection(Service service, Args args) {
         super(service, "data/indexes", Index.class, args);
     }
-
 
     /**
      * {@inheritDoc}

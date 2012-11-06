@@ -7,35 +7,37 @@
 count
 Count
 int
-The maximum number of results to return.
-
-If value is set to 0, then all available results are returned.
+Sets the maximum number of results to return. 
+---
+The maximum number of results. To return all available results, specify 0.
 ===
 # TODO: Improve docs: Why isn't "field_list" deprecated when there is "f" present?
 f
 FieldList
 String[]-MULTIPLE
-A list of the fields to return for the event set. 
+Sets a list of fields to return for the event set. 
+---
+A list of fields.
 ===
 offset
 Offset
 int
-The first result (inclusive) from which to begin returning data.
-
-This value is 0-indexed. Default value is 0.
-
-In 4.1+, negative offsets are allowed and are added to count to compute the absolute offset (for example, offset=-1 is the last available offset).
-
-Offsets in the results are always absolute and never negative.
+Specifies the index of the first result (inclusive) from which to begin returning data. This value is 0-indexed.<p>In Splunk 4.1+, negative offsets are allowed and are added to the count to compute the absolute offset (for example, offset=-1 is the last available offset). Offsets in the results are always absolute and never negative. The default value is 0.
+---
+The index of the first result to return.
 ===
 # TODO: Improve docs: The referenced document does not actually document the enum constants.
 output_mode
 OutputMode
 OutputMode
-Specifies the format for the returned output. For details on each format, see Splunk responses to REST operations. 
+Sets the format of the output.
+---
+The output format.
 ===
 search
 Search
 String
-The post processing search to apply to results. Can be any valid search language string.
+Sets the post-processing search to apply to results. 
+---
+The post-processing search query.
 ===

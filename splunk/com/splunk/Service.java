@@ -177,7 +177,12 @@ public class Service extends HttpService {
      * endpoint, which streams results back in an input stream.
      *
      * @param search The search query to run.
-     * @param args Additional search arguments.
+     * @param args Additional search arguments. 
+     * For a list of possible parameters, see
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ#savedsearchparams" 
+     * target="_blank">Saved search parameters</a> on 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ" 
+     * target="_blank">dev.splunk.com</a>. 
      * @return The {@code InputStream} object that contains the search results.
      */
     public InputStream export(String search, Map args) {
@@ -191,7 +196,7 @@ public class Service extends HttpService {
      * endpoint, which streams results back in an input stream.
      *
      * @param search The search query to run.
-     * @param args Additional search arguments.
+     * @param args Additional search arguments (see {@code JobExportArgs}).
      * @return The {@code InputStream} object that contains the search results.
      */
     // NOTE: This overload exists primarily to provide better documentation
@@ -300,8 +305,8 @@ public class Service extends HttpService {
     /**
      * Returns the collection of configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return The configurations collection.
      */
     public ConfCollection getConfs(Args args) {
@@ -338,10 +343,10 @@ public class Service extends HttpService {
     }
 
     /**
-     * Returns the configuration of all deployment servers.
+     * Returns the collection of deployment servers.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return The configuration of deployment servers.
      */
     public EntityCollection<DeploymentServer> getDeploymentServers(Args args) {
@@ -362,8 +367,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of class configurations for a deployment server.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of server class configurations.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(
@@ -385,8 +390,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of multi-tenant configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of multi-tenant configurations.
      */
     public EntityCollection<DeploymentTenant> getDeploymentTenants(Args args) {
@@ -422,8 +427,8 @@ public class Service extends HttpService {
      * The Splunk server where the search originates is referred to as the
      * <i>search head</i>.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search peers.
      */
     public EntityCollection<DistributedPeer> getDistributedPeers(Args args) {
@@ -444,8 +449,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of saved event types.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of saved event types.
      */
     public EventTypeCollection getEventTypes(Args args) {
@@ -464,8 +469,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of alerts that have been fired by the service.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of fired alerts.
      */
     public FiredAlertGroupCollection getFiredAlerts(Args args) {
@@ -484,8 +489,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of Splunk indexes.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of indexes.
      */
     public IndexCollection getIndexes(Args args) {
@@ -495,8 +500,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of Splunk indexes.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link IndexCollectionArgs}.
      * @return A collection of indexes.
      */
     // NOTE: This overload exists primarily to provide better documentation
@@ -526,8 +531,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of configured inputs.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of inputs.
      */
     public InputCollection getInputs(Args args) {
@@ -546,8 +551,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of current search jobs.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search jobs.
      */
     public JobCollection getJobs(Args args) {
@@ -557,8 +562,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of current search jobs.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search jobs.
      */
     // NOTE: This overload exists primarily to provide better documentation
@@ -580,8 +585,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of license group configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups(Args args) {
@@ -602,8 +607,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of messages from the licenser.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages(Args args) {
@@ -634,8 +639,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of licenser pool configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser pool configurations.
      */
     public LicensePoolCollection getLicensePools(Args args) {
@@ -655,8 +660,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of slaves reporting to this license master.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves(Args args) {
@@ -677,8 +682,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of license stack configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks(Args args) {
@@ -699,8 +704,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of licenses for this service.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses(Args args) {
@@ -721,8 +726,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of service logging categories and their status.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of logging categories.
      */
     public EntityCollection<Logger> getLoggers(Args args) {
@@ -742,8 +747,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of system messages.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of system messages.
      */
     public MessageCollection getMessages(Args args) {
@@ -753,7 +758,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of modular inputs.
      *
-     * @param args Optional arguments, such as "count" and "offset" for pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of modular inputs.
      */
     public ResourceCollection<ModularInputKind> getModularInputKinds(Args args) {
@@ -792,8 +798,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of output group configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups(Args args) {
@@ -814,8 +820,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of data-forwarding configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of data-forwarding configurations.
      */
     public EntityCollection<OutputServer> getOutputServers(Args args) {
@@ -838,8 +844,8 @@ public class Service extends HttpService {
      * Returns a collection of configurations for forwarding data in standard
      * syslog format.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of syslog forwarders.
      */
     public EntityCollection<OutputSyslog> getOutputSyslogs(Args args) {
@@ -870,8 +876,8 @@ public class Service extends HttpService {
      * Returns a collection of passwords. This collection is used for managing
      * secure credentials.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of passwords.
      */
     public PasswordCollection getPasswords(Args args) {
@@ -900,8 +906,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of Splunk user roles.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of user roles.
      */
     public EntityCollection<Role> getRoles(Args args) {
@@ -921,8 +927,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of saved searches.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches(Args args) {
@@ -932,8 +938,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of saved searches.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link SavedSearchCollectionArgs}.
      * @return A collection of saved searches.
      */
     // NOTE: This overload exists primarily to provide better documentation
@@ -1006,8 +1012,8 @@ public class Service extends HttpService {
     /**
      * Returns a collection of Splunk users.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of users.
      */
     public UserCollection getUsers(Args args) {
@@ -1065,7 +1071,16 @@ public class Service extends HttpService {
      * Creates a oneshot synchronous search using search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments.
+     * @param inputArgs The search arguments:<ul>
+     * <li>"output_mode": Specifies the output format of the results (XML, JSON,
+     * or CSV).</li>
+     * <li>"earliest_time": Specifies the earliest time in the time range to 
+     * search. The time string can be a UTC time (with fractional seconds), a 
+     * relative time specifier (to now), or a formatted time string.</li>
+     * <li>"latest_time": Specifies the latest time in the time range to search.
+     * The time string can be a UTC time (with fractional seconds), a relative 
+     * time specifier (to now), or a formatted time string.</li>
+     * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
      */
     public InputStream oneshot(String query, Map inputArgs) {
@@ -1076,7 +1091,16 @@ public class Service extends HttpService {
      * Creates a oneshot synchronous search using search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments.
+     * @param inputArgs The search arguments:<ul>
+     * <li>"output_mode": Specifies the output format of the results (XML, JSON,
+     * or CSV).</li>
+     * <li>"earliest_time": Specifies the earliest time in the time range to 
+     * search. The time string can be a UTC time (with fractional seconds), a 
+     * relative time specifier (to now), or a formatted time string.</li>
+     * <li>"latest_time": Specifies the latest time in the time range to search.
+     * The time string can be a UTC time (with fractional seconds), a relative 
+     * time specifier (to now), or a formatted time string.</li>
+     * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @param outputArgs The output qualifier arguments.
      * @return The search results.
      */

@@ -90,8 +90,8 @@ public class HttpService {
      *
      * @param host The host name of the service.
      * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service
-     *        ({@code http} or {@code https}).
+     * @param scheme Scheme for accessing the service ({@code http} or 
+     * {@code https}).
      */
     public HttpService(String host, int port, String scheme) {
         this.host = host;
@@ -174,7 +174,7 @@ public class HttpService {
      * Constructs a fully-qualified URL for this service using a given path.
      *
      * @param path The path to qualify.
-     * @return Fully-qualified URL.
+     * @return The fully-qualified URL for the service.
      */
     public URL getUrl(String path) {
         try {

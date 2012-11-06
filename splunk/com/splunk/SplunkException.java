@@ -15,7 +15,9 @@
  */
 
 package com.splunk;
-
+/**
+ * Thrown for Splunk responses that return an error status code.
+ */
 public class SplunkException extends RuntimeException {
     private int code;
     private String text;

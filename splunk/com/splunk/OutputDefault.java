@@ -119,10 +119,11 @@ public class OutputDefault extends Entity {
      * Returns the frequency that specifies how often to send a heartbeat packet
      * to the receiving server.
      * <p>
-     * <b>Note:</b> This field is only used when {@code sendCookedData} is
+     * <b>Note:</b> This field is only used when {@code SendCookedData} is
      * {@code true}.
      *
      * @see #getSendCookedData
+     * @see #setSendCookedData
      * @return The heartbeat frequency, in seconds.
      */
     public int getHeartbeatFrequency() {
@@ -212,6 +213,7 @@ public class OutputDefault extends Entity {
      * <b>Note:</b> Heartbeats are only sent when {@code SendCookedData} is 
      * {@code true}. 
      * @see #getSendCookedData
+     * @see #setSendCookedData
      *
      * @param frequency The frequency, in seconds. 
      */
