@@ -69,7 +69,7 @@ public class JobSummaryArgs extends Args {
     }
     
     /**
-     * Set the fraction of results for each key that this key must occur in to be displayed.
+     * Sets the fraction of results for each key that this key must occur in to be displayed.
      * 
      * @param minimumFrequency
      *      The frequency, as a fraction (a value between 0 and 1).
@@ -89,7 +89,7 @@ public class JobSummaryArgs extends Args {
     }
     
     /**
-     * Specifies a substring that all returned events should contain in one of their values or tags.
+     * Sets a search query to filter the response. The response matches field values against the search query. For example, "foo" matches any object that has "foo" as a substring in a field, and "field_name=field_value" restricts the match to a single field.
      * 
      * @param search
      *      A search substring.

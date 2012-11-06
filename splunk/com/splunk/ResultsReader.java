@@ -18,12 +18,13 @@ package com.splunk;
 
 import java.io.*;
 import java.util.HashMap;
+
 /**
  * The {@code ResultsReader} class is a base class that represents a streaming 
- * reader for Splunk search results. See {@code ResultsReaderXml}, which is 
+ * reader for Splunk search results. See {@link ResultsReaderXml}, which is 
  * probably more useful to you.
  */
-public abstract  class ResultsReader {
+public abstract class ResultsReader {
     InputStreamReader inputStreamReader = null;
 
     /**

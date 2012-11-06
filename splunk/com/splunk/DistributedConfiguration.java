@@ -208,9 +208,9 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Returns the time-out period for gathering a search peer's basic information.
-     * @see ServiceInfo
      *
      * @return The time-out period, in seconds.
+     * @see ServiceInfo
      */
     public int getStatusTimeout() {
         return getInteger("statusTimeout");
@@ -414,9 +414,9 @@ public class DistributedConfiguration extends Entity {
     /**
      * Sets the time-out period for connecting to a search peer for getting its
      * basic information.
-     * @see ServiceInfo
      *
      * @param seconds The connection time-out period, in seconds.
+     * @see ServiceInfo
      */
     public void setStatusTimeout(int seconds) {
         setCacheValue("statusTimeout", seconds);
