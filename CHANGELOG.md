@@ -90,6 +90,8 @@
 
 * Fix Service.versionCompare(). It was completely broken before.
 
+* StormService has been removed. It will be restored in a subsequent release.
+
 
 ## Version 0.8.0 (beta)
 

@@ -35,7 +35,7 @@ import java.util.Map;
  * by constructing the {@code Service} instance using the {@code connect}
  * method, which both creates and authenticates the instance.
  */
-public class Service extends HttpService {
+public class Service extends BaseService {
     /** The current app context. */
     protected String app = null;
 
