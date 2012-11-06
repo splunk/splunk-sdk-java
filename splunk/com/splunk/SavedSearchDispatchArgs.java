@@ -144,7 +144,7 @@ public class SavedSearchDispatchArgs extends Args {
     
     /**
      * Indicates whether to back fill the real-time window for this search. This
-     * value is only applies to real-time searches. 
+     * value only applies to real-time searches. 
      * @param dispatchRealTimeBackfill
      *      {@code true} to back fill the real-time window, {@code false} if not.
      */

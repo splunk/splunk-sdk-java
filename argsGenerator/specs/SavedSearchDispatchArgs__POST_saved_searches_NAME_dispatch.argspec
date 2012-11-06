@@ -87,7 +87,7 @@ The frequency, in seconds.
 dispatch.rt_backfill
 DispatchRealTimeBackfill
 boolean
-Indicates whether to back fill the real-time window for this search. This value is only used for real-time searches. 
+Indicates whether to back fill the real-time window for this search. This value only applies to real-time searches. 
 ---
 {@code true} to back fill the real-time window, {@code false} if not.
 ===
