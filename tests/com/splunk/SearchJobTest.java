@@ -396,7 +396,7 @@ public class SearchJobTest extends SDKTestCase {
             }
 
             return count;
-        } catch (Exception e) {
+        } catch (IOException e) {
             fail(e.toString());
             return -1;
         }

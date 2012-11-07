@@ -19,6 +19,7 @@ package com.splunk;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class ResultsReaderTest extends TestCase {
     }
 
     @Test
-    public void testResults() throws Exception {
+    public void testResults() throws IOException {
         InputStream input = openResource("results.xml");
         assertNotNull("Could not open results.xml", input);
         ResultsReaderXml reader = new ResultsReaderXml(input);
@@ -84,7 +85,7 @@ public class ResultsReaderTest extends TestCase {
     }
 
     @Test
-    public void testReadRawField() throws Exception {
+    public void testReadRawField() throws IOException {
         InputStream input = openResource("raw_field.xml");
         assertNotNull("Could not open raw_field.xml", input);
         ResultsReaderXml reader = new ResultsReaderXml(input);
