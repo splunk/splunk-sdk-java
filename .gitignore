@@ -1,10 +1,23 @@
+# Java
 *.class
+
+# Mac OS X
 *.DS_Store*
-*.swp
-.idea/workspace.xml
-.settings
-bin
+
+# Generated directories
 build
-build.log
 dist
 out
+
+# Test & Coverage
+TEST-com.splunk.*.xml
+
+# IntelliJ
+.idea/workspace.xml
+
+# Unknown
+*.swp
+*.properties
+.settings
+bin
+build.log

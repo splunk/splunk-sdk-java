@@ -205,7 +205,21 @@ Eclipse. For example, to open the Splunk Java SDK project in Eclipse:
 1.  Click File, Import. 
 2.  Click General, Existing Projects into Workspace, then click Next. 
 3.  In Select root directory, type the path to the Splunk Java SDK root
-    directory (or click Browse to locate it), then click Finish. 
+    directory (or click Browse to locate it), then click Finish.
+
+#### Measure code coverage
+
+To measure the code coverage of the test suite, open a command prompt at the root
+of the Splunk Java SDK repository and enter:
+
+> ant coverage
+
+To run code coverage from anywhere in the repository, enter:
+
+> ant coverage -find
+
+To view the coverage report, open build/reports/coverage/index.html in the Splunk
+Java SDK repository in your web browser.
 
 ## Repository
 
