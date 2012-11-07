@@ -80,14 +80,14 @@ try:
                 elif type == 'String[]-CSV':
                     type = 'String[]'
                     code = """        StringBuilder csv = new StringBuilder();
-            for (int i = 0, n = %s.length; i < n; i++) {
-                if (i != 0) {
-                    csv.append(",");
-                }
-                csv.append(%s[i]);
+        for (int i = 0, n = %s.length; i < n; i++) {
+            if (i != 0) {
+                csv.append(",");
             }
-            
-            this.put("%s", String.valueOf(csv));""" % (java_name_lower, java_name_lower, machine_name)
+            csv.append(%s[i]);
+        }
+        
+        this.put("%s", String.valueOf(csv));""" % (java_name_lower, java_name_lower, machine_name)
                 else:
                     sys.exit("Don't know how to encode an array of type: %s" % type);
         
