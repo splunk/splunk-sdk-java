@@ -28,8 +28,6 @@ public class JobExportArgs extends Args {
     public static enum OutputMode {
         /** Returns output in "all" format. */
         ALL("all"),
-        /** Returns output in Atom format. */
-        ATOM("atom"),
         /** Returns output in CSV format. */
         CSV("csv"),
         /** Returns output in "full" format. */
@@ -42,8 +40,6 @@ public class JobExportArgs extends Args {
         JSON_ROWS("json_rows"),
         /** Returns output in a summary format. */
         SUMMARY("summary"),
-        /** Returns output in raw format. */
-        RAW("raw"),
         /** Returns output in XML format. */
         XML("xml");
         
