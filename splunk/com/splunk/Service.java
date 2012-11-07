@@ -1238,7 +1238,7 @@ public class Service extends BaseService {
      * @return {@code true} if this Splunk instance's version is equal or
      *         less than {@code version}; {@code false} otherwise.
      */
-    public boolean versionIsAtLatest(String version) {
+    boolean versionIsAtLatest(String version) {
         return versionCompare(version) <= 0;
     }
 
@@ -1255,7 +1255,7 @@ public class Service extends BaseService {
      * @return {@code true} if this Splunk instance's version is equal or
      *         greater than {@code version}; {@code false} otherwise.
      */
-    public boolean versionIsAtEarliest(String version) {
+    boolean versionIsAtEarliest(String version) {
         return versionCompare(version) >= 0;
     }
 
@@ -1272,7 +1272,7 @@ public class Service extends BaseService {
      * @return {@code true} if this Splunk instance's version is less
      *         than {@code version}; {@code false} otherwise.
      */
-    public boolean versionIsEarlierThan(String version) {
+    boolean versionIsEarlierThan(String version) {
         return versionCompare(version) < 0;
     }
 
@@ -1289,7 +1289,7 @@ public class Service extends BaseService {
      * @return {@code true} if this Splunk instance's version is greater
      *         than {@code version}; {@code false} otherwise.
      */
-    public boolean versionIsLaterThan(String version) {
+    boolean versionIsLaterThan(String version) {
         return versionCompare(version) > 0;
     }
 
