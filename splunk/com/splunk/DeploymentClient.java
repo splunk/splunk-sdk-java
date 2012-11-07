@@ -42,12 +42,13 @@ public class DeploymentClient extends Entity {
             return path + "/deployment-client";
         return super.actionPath(action);
     }
-    /** {@inheritDoc} */
+    
+    /** Not supported for this endpoint. */
     @Override public void disable() {
         throw new UnsupportedOperationException();
     }
 
-    /** {@inheritDoc} */
+    /** Not supported for this endpoint. */
     @Override public void enable() {
         throw new UnsupportedOperationException();
     }
