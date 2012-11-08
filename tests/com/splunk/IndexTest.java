@@ -459,7 +459,7 @@ public class IndexTest extends SDKTestCase {
     }
 
     @Test
-    public void testSubmitAndClean() {
+    public void testSubmitAndClean() throws InterruptedException {
         try {
             tryTestSubmitAndClean();
         } catch (SplunkException e) {
@@ -479,7 +479,7 @@ public class IndexTest extends SDKTestCase {
         }
     }
     
-    private void tryTestSubmitAndClean() {
+    private void tryTestSubmitAndClean() throws InterruptedException {
         assertTrue(getResultCountOfIndex() == 0);
         
         // Make sure the index is not empty.

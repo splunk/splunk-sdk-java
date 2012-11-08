@@ -64,8 +64,14 @@ public class Program {
         if (index == null)
             Command.error("Index '" + name + "' does not exists");
 
-        if (action.equals("clean"))
-            index.clean(180); // Timeout after 3 minutes.
+        if (action.equals("clean")) {
+            try {
+                index.clean(180);   // Timeout after 3 minutes.
+            } catch (InterruptedException e) {
+                // User pressed Ctrl-C
+                return;
+            } 
+        }
         else if (action.equals("disable"))
             index.disable();
         else if (action.equals("enable"))

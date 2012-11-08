@@ -68,6 +68,11 @@
 * Index.setAssureUTF8() fails for Splunk >= 5.0, since that field has become a
   global setting instead of a per-index setting.
 
+* Index.clean() now throws InterruptedException instead of swallowing it.
+  Additionally the timeout parameter is obeyed more accurately.
+    - Since InterruptedException is a checked exception, callers must now
+      handle it.
+
 * WindowsRegistryInput.getType() and setType() changed to be String[] instead of String.
 
 * DistributedPeer.getBuild() now returns an int instead of a String to be
