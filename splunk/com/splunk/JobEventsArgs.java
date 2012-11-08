@@ -26,22 +26,16 @@ public class JobEventsArgs extends Args {
      * Specifies the format for the returned output.
      */
     public static enum OutputMode {
-        /** Returns output in "all" format. */
-        ALL("all"),
         /** Returns output in Atom format. */
         ATOM("atom"),
         /** Returns output in CSV format. */
         CSV("csv"),
-        /** Returns output in "full" format. */
-        FULL("full"),
         /** Returns output in JSON format. */
         JSON("json"),
         /** Returns output in JSON_COLS format. */
         JSON_COLS("json_cols"),
         /** Returns output in JSON_ROWS format. */
         JSON_ROWS("json_rows"),
-        /** Returns output in a summary format. */
-        SUMMARY("summary"),
         /** Returns output in raw format. */
         RAW("raw"),
         /** Returns output in XML format. */
