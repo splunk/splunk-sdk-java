@@ -19,6 +19,8 @@ package com.splunk;
 
 import org.junit.Test;
 
+import com.splunk.SDKTestCase.EventuallyTrueBehavior;
+
 public class InputCrudTest extends InputTest {
     @Test
     public void testGetters() {
@@ -158,7 +160,7 @@ public class InputCrudTest extends InputTest {
     @Test
     public void testMonitorInputCrud() {
         // Locate the system log, which our test input will monitor
-        String filename;
+        final String filename;
         String osName = service.getInfo().getOsName();
         if (osName.equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log";
@@ -217,7 +219,12 @@ public class InputCrudTest extends InputTest {
 
         // Remove
         monitorInput.remove();
-        assertFalse(inputs.refresh().containsKey(filename));
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return !inputs.refresh().containsKey(filename);
+            }
+        });
     }
     
     @Test
