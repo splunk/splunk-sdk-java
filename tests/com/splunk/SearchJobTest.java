@@ -415,7 +415,7 @@ public class SearchJobTest extends SDKTestCase {
         try {
             StringBuilder b = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(stream)
+                    new InputStreamReader(stream, "UTF8")
             );
             String tmp;
             while ((tmp = reader.readLine()) != null) {
