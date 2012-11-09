@@ -38,7 +38,7 @@ public class Base64 {
         String encoded = "";
         byte[] byteArray = {};
         try {
-            byteArray = string.getBytes("UTF-8");
+            byteArray = string.getBytes("UTF8");
         } catch (UnsupportedEncodingException e) { assert false; }
 
         int paddingCount = (3 - (byteArray.length % 3)) % 3;

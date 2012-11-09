@@ -63,7 +63,7 @@ public class Program {
         // output args are allowed, but they are not shown in this example.
         InputStream stream = service.search(query);
 
-        InputStreamReader reader = new InputStreamReader(stream);
+        InputStreamReader reader = new InputStreamReader(stream, "UTF8");
         OutputStreamWriter writer = new OutputStreamWriter(System.out);
 
         int size = 1024;

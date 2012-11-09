@@ -65,6 +65,12 @@
       if-else blocks.
     - This was necessary to support arbitrary modular input kinds.
 
+* All text is encoded in UTF-8 consistently. Previously the platform-native
+  encoding was used in some cases.
+    - Http requests are sent in UTF-8. In particular the values of Args classes
+      are always encoded in UTF-8.
+    - Results and events from jobs are read in as UTF-8.
+
 * Index.setAssureUTF8() fails for Splunk >= 5.0, since that field has become a
   global setting instead of a per-index setting.
 

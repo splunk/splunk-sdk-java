@@ -39,7 +39,7 @@ public class ResultsReaderCsv extends ResultsReader {
      */
     public ResultsReaderCsv(InputStream inputStream) throws Exception {
         super(inputStream);
-        csvReader = new CSVReader(new InputStreamReader(inputStream));
+        csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF8"));
         // initial line contains the keys, except for oneshot -- which contains
         // a blank line, and then the key list.
         keys = csvReader.readNext();
