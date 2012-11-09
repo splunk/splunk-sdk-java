@@ -509,9 +509,7 @@ public class IndexTest extends SDKTestCase {
                 numEvents++;
             }
             return numEvents;
-        } catch (Exception e) {
-            // TODO: Stop catching Exception once ResultsReader's interface
-            //       has been cleaned up to not throw raw Exceptions.
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
