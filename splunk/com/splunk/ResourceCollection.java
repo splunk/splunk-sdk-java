@@ -79,7 +79,9 @@ public class ResourceCollection<T extends Resource>
      * @return {@code true} if the key exists, {@code false} if not.
      */
     public boolean containsKey(Object key, Args namespace) {
+        Util.ensureNamespaceIsExact(namespace);
         validate();
+        
         LinkedList<T> entities = items.get(key);
         if (entities == null || entities.size() == 0) return false;
         String pathMatcher = service.fullpath("", namespace);
@@ -192,7 +194,9 @@ public class ResourceCollection<T extends Resource>
      * exist.
      */
     public T get(Object key, Args namespace) {
+        Util.ensureNamespaceIsExact(namespace);
         validate();
+        
         LinkedList<T> entities = items.get(key);
         if (entities == null || entities.size() == 0) return null;
         String pathMatcher = service.fullpath("", namespace);

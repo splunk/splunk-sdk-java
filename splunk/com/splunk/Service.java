@@ -984,8 +984,7 @@ public class Service extends BaseService {
      * optional arguments for this endpoint.
      * @return A collection of in-progress oneshot uploads
      */
-    public EntityCollection<Upload>
-    getUploads(Args namespace) {
+    public EntityCollection<Upload> getUploads(Args namespace) {
         return new EntityCollection<Upload>(
             this, "data/inputs/oneshot", Upload.class, namespace);
     }

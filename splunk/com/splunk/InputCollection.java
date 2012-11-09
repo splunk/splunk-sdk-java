@@ -177,6 +177,7 @@ public class InputCollection extends EntityCollection<Input> {
      * exist.
      */
    public Input get(Object key, Args namespace) {
+       Util.ensureNamespaceIsExact(namespace);
        return retrieveInput((String)key, namespace);
    }
 
@@ -335,6 +336,8 @@ public class InputCollection extends EntityCollection<Input> {
      */
     @Override public Input remove(
             String key, Args namespace) {
+        Util.ensureNamespaceIsExact(namespace);
+        
         Input input = retrieveInput(key, namespace);
         if (input != null) {
             input.remove();
@@ -368,6 +371,7 @@ public class InputCollection extends EntityCollection<Input> {
     }
 
     private Input retrieveInput(String key, Args namespace) {
+        Util.ensureNamespaceIsExact(namespace);
         validate();
         
         // Because scripted input names are not 1:1 with the original name
