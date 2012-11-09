@@ -294,7 +294,17 @@
 
             <structure name="Splunk Java SDK">
                 <classfiles>
-                    <fileset dir="${build.splunk}" />
+                    <fileset dir="${build.splunk}">
+                        <exclude name="com/splunk/CollectionArgs*.class" />
+                        <exclude name="com/splunk/JobArgs*.class" />
+                        <exclude name="com/splunk/JobEventsArgs*.class" />
+                        <exclude name="com/splunk/JobExportArgs*.class" />
+                        <exclude name="com/splunk/JobResultsArgs*.class" />
+                        <exclude name="com/splunk/JobResultsPreviewArgs*.class" />
+                        <exclude name="com/splunk/JobSummaryArgs*.class" />
+                        <exclude name="com/splunk/SavedSearchCollectionArgs*.class" />
+                        <exclude name="com/splunk/SavedSearchDispatchArgs*.class" />
+                    </fileset>
                 </classfiles>
                 <sourcefiles encoding="UTF-8">
                     <fileset dir="splunk" />
