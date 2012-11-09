@@ -41,7 +41,7 @@ public class ResultsReaderJson extends ResultsReader {
      */
     public ResultsReaderJson(InputStream inputStream) throws Exception {
         super(inputStream);
-        jsonReader = new JsonReader(new InputStreamReader(inputStream));
+        jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF8"));
         // if stream is empty, return a null reader.
         try {
             if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {

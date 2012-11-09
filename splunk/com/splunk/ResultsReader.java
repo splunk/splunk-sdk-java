@@ -37,7 +37,7 @@ public abstract class ResultsReader {
     public ResultsReader(InputStream inputStream) throws Exception {
         try {
             inputStreamReader = new
-                InputStreamReader(inputStream, "UTF-8");
+                InputStreamReader(inputStream, "UTF8");
         }
         catch (UnsupportedEncodingException e) { assert false; }
     }
