@@ -34,12 +34,8 @@ public abstract class ResultsReader {
      * export.
      * @throws IOException If an IO exception occurs.
      */
-    public ResultsReader(InputStream inputStream) throws Exception {
-        try {
-            inputStreamReader = new
-                InputStreamReader(inputStream, "UTF8");
-        }
-        catch (UnsupportedEncodingException e) { assert false; }
+    public ResultsReader(InputStream inputStream) throws IOException {
+        inputStreamReader = new InputStreamReader(inputStream, "UTF8");
     }
 
     /**
@@ -47,7 +43,7 @@ public abstract class ResultsReader {
      *
      * @throws Exception on Exception
      */
-    public void close() throws Exception {
+    public void close() throws IOException {
         if (inputStreamReader != null)
             inputStreamReader.close();
         inputStreamReader = null;
@@ -59,7 +55,5 @@ public abstract class ResultsReader {
      * @return The hash map of key-value pairs for an entire event.
      * @throws Exception on Exception.
      */
-    public HashMap<String, String> getNextEvent() throws Exception {
-        return null;
-    }
+    public abstract HashMap<String, String> getNextEvent() throws IOException;
 }

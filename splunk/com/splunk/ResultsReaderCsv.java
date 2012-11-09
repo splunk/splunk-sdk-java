@@ -18,6 +18,8 @@ package com.splunk;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.splunk.ResultsReader;
+
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -37,7 +39,7 @@ public class ResultsReaderCsv extends ResultsReader {
      * @param inputStream The stream to be parsed.
      * @throws Exception On exception.
      */
-    public ResultsReaderCsv(InputStream inputStream) throws Exception {
+    public ResultsReaderCsv(InputStream inputStream) throws IOException {
         super(inputStream);
         csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF8"));
         // initial line contains the keys, except for oneshot -- which contains
@@ -49,7 +51,7 @@ public class ResultsReaderCsv extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    @Override public void close() throws Exception {
+    @Override public void close() throws IOException {
         super.close();
         if (csvReader != null)
             csvReader.close();
@@ -57,7 +59,7 @@ public class ResultsReaderCsv extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws Exception {
+    @Override public HashMap<String, String> getNextEvent() throws IOException {
         HashMap<String, String> returnData = null;
         String[] line;
 

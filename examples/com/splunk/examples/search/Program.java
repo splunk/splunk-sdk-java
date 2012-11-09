@@ -17,9 +17,8 @@
 package com.splunk.examples.search;
 
 import com.splunk.*;
-import com.splunk.ResultsReaderCsv;
-import com.splunk.ResultsReaderJson;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -209,8 +208,8 @@ public class Program {
                         System.out.println("  " + key + " --> " + map.get(key));
                 }
                 resultsReader.close();
-            } catch (Exception e) {
-                System.out.println("exception: " + e);
+            } catch (IOException e) {
+                System.out.println("I/O exception: " + e);
             }
         }
         else {

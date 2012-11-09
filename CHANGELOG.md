@@ -98,6 +98,9 @@
 
 * StormService has been removed. It will be restored in a subsequent release.
 
+* ResultsReader methods now throws IOException instead of a plain Exception.
+    - Callers no longer need to handle a plain Exception.
+
 
 ## Version 0.8.0 (beta)
 

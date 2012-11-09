@@ -39,7 +39,7 @@ public class ResultsReaderJson extends ResultsReader {
      * @param inputStream The stream to be parsed.
      * @throws Exception On exception.
      */
-    public ResultsReaderJson(InputStream inputStream) throws Exception {
+    public ResultsReaderJson(InputStream inputStream) throws IOException {
         super(inputStream);
         jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF8"));
         // if stream is empty, return a null reader.
@@ -103,7 +103,7 @@ public class ResultsReaderJson extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    @Override public void close() throws Exception {
+    @Override public void close() throws IOException {
         super.close();
         if (jsonReader != null)
             jsonReader.close();
@@ -111,7 +111,7 @@ public class ResultsReaderJson extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws Exception {
+    @Override public HashMap<String, String> getNextEvent() throws IOException {
         HashMap<String, String> returnData = null;
         String name = "";
 

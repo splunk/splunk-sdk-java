@@ -175,8 +175,8 @@ public class Program {
                     System.out.println("   " + map);
                 }
                 resultsReader.close();
-            } catch (Exception e) {
-                System.out.println("Xml exception: " + e);
+            } catch (IOException e) {
+                System.out.println("I/O exception: " + e);
             }
         }
         else {

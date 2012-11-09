@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,11 +24,11 @@ import java.util.Iterator;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
 import java.io.PushbackReader;
+
 /**
  * The {@code ResultsReaderXml} class represents a streaming XML reader for 
  * Splunk search results.
  */
-
 public class ResultsReaderXml extends ResultsReader {
 
     private XMLEventReader xmlReader = null;
@@ -46,7 +47,7 @@ public class ResultsReaderXml extends ResultsReader {
      * @param inputStream The stream to be parsed.
      * @throws Exception On exception.
      */
-    public ResultsReaderXml(InputStream inputStream) throws Exception {
+    public ResultsReaderXml(InputStream inputStream) throws IOException {
         super(inputStream);
         PushbackReader pushbackReader =
             new PushbackReader(inputStreamReader, 256);
@@ -83,19 +84,29 @@ public class ResultsReaderXml extends ResultsReader {
 
         // Attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
-        xmlReader = inputFactory.createXMLEventReader(pushbackReader);
+        try {
+            xmlReader = inputFactory.createXMLEventReader(pushbackReader);
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /** {@inheritDoc} */
-    @Override public void close() throws Exception {
-        if (xmlReader != null) xmlReader.close();
+    @Override public void close() throws IOException {
+        if (xmlReader != null) {
+            try {
+                xmlReader.close();
+            } catch (XMLStreamException e) {
+                throw new RuntimeException(e);
+            }
+        }
         xmlReader = null;
         
         super.close();
     }
 
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws Exception {
+    @Override public HashMap<String, String> getNextEvent() throws IOException {
         XMLEvent xmlEvent;
         int eType;
 
@@ -121,20 +132,22 @@ public class ResultsReaderXml extends ResultsReader {
                 }
             }
         }
-        catch (XMLStreamException exception) {
+        catch (XMLStreamException e) {
             // Because we cannot stuff trailing information into the stream,
             // we expect an XMLStreamingException that contains our
             // corresponding end-of-document </doc> that we injected into the
             // front of the stream. Any other exception we rethrow.
-            if (exception.getMessage().contains("</doc>")) {
+            if (e.getMessage().contains("</doc>")) {
                 return null;
             }
-            throw exception;
+            
+            throw new RuntimeException(e);
         }
         return null;
     }
 
-    private HashMap<String, String> getResultKVPairs() throws Exception {
+    private HashMap<String, String> getResultKVPairs()
+            throws IOException, XMLStreamException {
         HashMap<String, String> returnData = new HashMap<String, String>();
         XMLEvent xmlEvent;
         int eType;
