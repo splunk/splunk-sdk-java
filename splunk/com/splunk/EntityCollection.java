@@ -132,7 +132,9 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @return This collection.
      */
     public T remove(String key, Args namespace) {
+        Util.ensureNamespaceIsExact(namespace);
         validate();
+        
         if (!containsKey(key)) return null;
         LinkedList<T> entities = items.get(key);
         String pathMatcher = service.fullpath("", namespace);

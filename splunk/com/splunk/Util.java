@@ -117,4 +117,22 @@ class Util {
             return file;
         }
     }
+    
+    /**
+     * Throws an IllegalArgumentException if the specified namespace
+     * is a wildcarded namespace.
+     */
+    public static void ensureNamespaceIsExact(Args namespace) {
+        String app = (String)namespace.get("app");
+        String owner = (String)namespace.get("owner");
+        
+        boolean wildcardedApp = (app == null || app.equals("-"));
+        boolean wildcardedOwner = (owner == null || owner.equals("-"));
+        boolean isExact = !wildcardedApp && !wildcardedOwner;
+        
+        if (!isExact) {
+            throw new IllegalArgumentException(
+                    "An exact namespace must be provided.");
+        }
+    }
 }
