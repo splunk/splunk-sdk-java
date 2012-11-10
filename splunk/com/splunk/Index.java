@@ -95,10 +95,11 @@ public class Index extends Entity {
      *
      * @param maxSeconds The maximum number of seconds to wait before returning.
      * A value of -1 means to wait forever.
-     * @throws InterruptedException If the thread was interrupted.
+     * @throws SplunkException If cleaning timed out or
+     * if the thread was interrupted.
      * @return This index.
      */
-    public Index clean(int maxSeconds) throws InterruptedException {
+    public Index clean(int maxSeconds) {
         Args saved = new Args();
         saved.put("maxTotalDataSizeMB", getMaxTotalDataSizeMB());
         saved.put("frozenTimePeriodInSecs", getFrozenTimePeriodInSecs());
@@ -126,6 +127,14 @@ public class Index extends Entity {
             
             throw new SplunkException(SplunkException.TIMEOUT,
                                       "Index cleaning timed out");
+        }
+        catch (InterruptedException e)
+        {
+            SplunkException f = new SplunkException(
+                    SplunkException.INTERRUPTED,
+                    "Index cleaning interrupted.");
+            f.initCause(e);
+            throw f;
         }
         finally {
             update(saved);

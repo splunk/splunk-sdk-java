@@ -20,6 +20,7 @@ import com.splunk.EntityCollection;
 import com.splunk.Index;
 import com.splunk.Service;
 import com.splunk.Command;
+import com.splunk.SplunkException;
 
 public class Program {
     private static void list(Service service) {
@@ -67,9 +68,13 @@ public class Program {
         if (action.equals("clean")) {
             try {
                 index.clean(180);   // Timeout after 3 minutes.
-            } catch (InterruptedException e) {
-                // User pressed Ctrl-C
-                return;
+            } catch (SplunkException e) {
+                if (e.getCode() == SplunkException.INTERRUPTED) {
+                    // User pressed Ctrl-C
+                    return;
+                } else {
+                    throw e;
+                }
             } 
         }
         else if (action.equals("disable"))
