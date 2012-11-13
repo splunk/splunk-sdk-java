@@ -95,35 +95,50 @@ public class Index extends Entity {
      *
      * @param maxSeconds The maximum number of seconds to wait before returning.
      * A value of -1 means to wait forever.
+     * @throws SplunkException If cleaning timed out or
+     * if the thread was interrupted.
      * @return This index.
      */
     public Index clean(int maxSeconds) {
         Args saved = new Args();
         saved.put("maxTotalDataSizeMB", getMaxTotalDataSizeMB());
         saved.put("frozenTimePeriodInSecs", getFrozenTimePeriodInSecs());
-
-        Args reset = new Args();
-        reset.put("maxTotalDataSizeMB", "1");
-        reset.put("frozenTimePeriodInSecs", "1");
-        update(reset);
-        rollHotBuckets();
-
-        while (maxSeconds != 0) {
-            try {
-                Thread.sleep(1000); // 1000ms (1 second sleep)
-                maxSeconds = maxSeconds - 1;
+        try {
+            Args reset = new Args();
+            reset.put("maxTotalDataSizeMB", "1");
+            reset.put("frozenTimePeriodInSecs", "1");
+            update(reset);
+            rollHotBuckets();
+            
+            long startTime = System.currentTimeMillis();
+            long endTime = startTime + (maxSeconds * 1000);
+            while (true) {
+                long timeLeft = endTime - System.currentTimeMillis();
+                if (timeLeft <= 0) {
+                    break;
+                }
+                Thread.sleep(Math.min(1000, timeLeft));
+                
+                if (this.getTotalEventCount() == 0) {
+                    return this;
+                }
+                refresh();
             }
-            catch (InterruptedException e) {
-                return this; // eat
-            }
-            if (this.getTotalEventCount() == 0) {
-                update(saved);
-                return this;
-            }
-            refresh();
+            
+            throw new SplunkException(SplunkException.TIMEOUT,
+                                      "Index cleaning timed out");
         }
-        throw new SplunkException(SplunkException.TIMEOUT,
-                                  "Index cleaning timed out");
+        catch (InterruptedException e)
+        {
+            SplunkException f = new SplunkException(
+                    SplunkException.INTERRUPTED,
+                    "Index cleaning interrupted.");
+            f.initCause(e);
+            throw f;
+        }
+        finally {
+            update(saved);
+        }
     }
 
     /**
