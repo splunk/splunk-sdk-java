@@ -105,6 +105,10 @@
 * ResultsReader methods now throws IOException instead of a plain Exception.
     - Callers no longer need to handle a plain Exception.
 
+* The get(), remove(), and contains() methods on entity collections now throw
+  an exception when passed a wildcarded namespace instead of incorrectly
+  returning an empty list or taking no action.
+
 
 ## Version 0.8.0 (beta)
 
