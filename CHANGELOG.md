@@ -1,4 +1,4 @@
- # Splunk Java SDK Changelog
+# Splunk Java SDK Changelog
  
 ## Version 1.0
 
