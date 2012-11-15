@@ -17,9 +17,9 @@
 package com.splunk;
 
 
-import org.junit.Test;
+import java.util.HashMap;
 
-import com.splunk.SDKTestCase.EventuallyTrueBehavior;
+import org.junit.Test;
 
 public class InputCrudTest extends InputTest {
     @Test
@@ -172,6 +172,20 @@ public class InputCrudTest extends InputTest {
             throw new RuntimeException("OS: " + osName + " not supported");
         }
         
+        // Create variants
+        try {
+            inputs.create(filename);
+            fail("Expected UnsupportedOperationException");
+        } catch (UnsupportedOperationException e) {
+            // Good
+        }
+        try {
+            inputs.create(filename, new HashMap<String, Object>());
+            fail("Expected UnsupportedOperationException");
+        } catch (UnsupportedOperationException e) {
+            // Good
+        }
+        
         // Create
         if (inputs.containsKey(filename)) {
             inputs.remove(filename);
@@ -179,6 +193,12 @@ public class InputCrudTest extends InputTest {
         inputs.create(filename, InputKind.Monitor);
         assertTrue(inputs.containsKey(filename));
         MonitorInput monitorInput = (MonitorInput)inputs.get(filename);
+        
+        // Get variant
+        Args namespace = new Args();
+        namespace.put("owner", monitorInput.getMetadata().getOwner());
+        namespace.put("app", monitorInput.getMetadata().getApp());
+        inputs.get(filename, namespace);    // throws no exception
 
         // Probe
         {
