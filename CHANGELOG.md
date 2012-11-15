@@ -110,7 +110,7 @@
   returning an empty list or taking no action.
 
 * SavedSearch.getDispatchMaxTime() was previously returning a String, but is now
-  returning an int. This was an error in previous SDKs.
+  returning an int.
 
 * LicensePool.getSlavesUsageBytes() would previously always return 0. It now
   returns the correct value.

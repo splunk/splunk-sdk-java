@@ -149,8 +149,8 @@ public class LicensePool extends Entity {
     /**
      * Sets the list of slaves that are members of this license pool.
      *
-     * @param slaves The array of slaves. Use an array with a single element
-     * that is an asterisk ("*") to accept all slaves.
+     * @param slaves The array of slaves. To accept all slaves, use an 
+     * array with a single asterisk element ("*").
      */
     public void setSlaves(String[] slaves) {
     	StringBuilder sb = new StringBuilder();
