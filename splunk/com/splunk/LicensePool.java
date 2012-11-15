@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -75,10 +76,22 @@ public class LicensePool extends Entity {
      * Returns the usage of indexing volume by slave licenses in this license
      * pool.
      *
-     * @return The overall license slave usage, in bytes.
+     * @return A map from each slave GUID to the number of bytes it is using.
      */
-    public long getSlavesUsageBytes() {
-        return getLong("slaves_usage_bytes", 0);
+    public HashMap<String, Long> getSlavesUsageBytes() {
+    	HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
+    	if (values == null) {
+    		values = new HashMap<String, Object>();
+    	}
+    	
+    	HashMap<String, Long> usageBytes = new HashMap<String, Long>();
+    	
+    	for(String key : values.keySet()) {
+    		String value = (String)values.get(key);
+    		usageBytes.put(key, Long.parseLong(value));
+    	}
+        
+    	return usageBytes;
     }
 
     /**

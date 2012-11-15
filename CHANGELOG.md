@@ -112,8 +112,8 @@
 * SavedSearch.getDispatchMaxTime() was previously returning a String, but is now
   returning an int.
 
-* LicensePool.getSlavesUsageBytes() would previously always return 0. It now
-  returns the correct value.
+* LicensePool.getSlavesUsageBytes() was previously returning an integer, instead
+  of a map from each slave GUID to the license usage of that slave.
 
 
 ## Version 0.8.0 (beta)
