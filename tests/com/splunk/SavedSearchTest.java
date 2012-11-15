@@ -69,6 +69,7 @@ public class SavedSearchTest extends SDKTestCase {
         super.tearDown();
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testUpdate() {
         boolean isVisible = savedSearch.isVisible();
@@ -141,11 +142,11 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch.setAlertSuppressFields("host");
         savedSearch.setAlertSuppressPeriod("1m");
         savedSearch.setAlertThreshold("50%");
-        savedSearch.setAlertTrack("false");
+        savedSearch.setAlertTrack("0");
         savedSearch.setAlertType("number of events");
         savedSearch.setCronSchedule("*/5 * * * *");
         savedSearch.setDescription("Cake!");
-        savedSearch.setDispatchBuckets("100");  // FIXME: should be int to match getter
+        savedSearch.setDispatchBuckets("100");
         savedSearch.setDispatchEarliestTime("-100s@s");
         savedSearch.setDispatchLatestTime("-1s@s");
         savedSearch.setDispatchLookups(false);
@@ -162,6 +163,11 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch.setRunOnStartup(true);
         // TODO: Create a vsid to test this properly
         savedSearch.setVsid("");
+        
+        savedSearch.setDispatchReduceFrequency(11);
+        savedSearch.setDispatchRealTimeBackfill(true);
+        savedSearch.setRestartOnSearchpeerAdd(false);
+        savedSearch.setDisabled(true);
 
         savedSearch.update();
         savedSearch.refresh();
@@ -238,7 +244,8 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals("host", savedSearch.getAlertSuppressFields());
         assertEquals("1m", savedSearch.getAlertSuppressPeriod());
         assertEquals("50%", savedSearch.getAlertThreshold());
-        assertEquals("0", savedSearch.getAlertTrack()); // FIXME: Core bug: should be "false" to match docs
+        // NOTE: Always returns "0" or "1". Never "auto". Vince notified.
+        assertEquals("0", savedSearch.getAlertTrack());
         assertEquals("number of events", savedSearch.getAlertType());
         assertEquals("*/5 * * * *", savedSearch.getCronSchedule());
         assertEquals("Cake!", savedSearch.getDescription());
@@ -247,7 +254,8 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals("-1s@s", savedSearch.getDispatchLatestTime());
         assertEquals(false, savedSearch.getDispatchLookups());
         assertEquals(100000, savedSearch.getDispatchMaxCount());
-        assertEquals("120", savedSearch.getDispatchMaxTime());    // FIXME: should be int to match setter
+        // NOTE: Should be int to match setter. See DVPL-1268.
+        assertEquals("120", savedSearch.getDispatchMaxTime());
         assertEquals(true, savedSearch.getDispatchSpawnProcess());
         assertEquals("%FT%T.%Q", savedSearch.getDispatchTimeFormat());
         assertEquals("3p", savedSearch.getDispatchTtl());
@@ -258,6 +266,11 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals("bar", savedSearch.getRequestUiDispatchView());
         assertEquals(true, savedSearch.getRunOnStartup());
         assertEquals(null, savedSearch.getVsid());
+        
+        assertEquals(11, savedSearch.getDispatchReduceFreq());
+        assertEquals(true, savedSearch.getDispatchRtBackfill());
+        assertEquals(false, savedSearch.getRestartOnSearchPeerAdd());
+        assertEquals(true, savedSearch.isDisabled());
     }
 
     @Test
