@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 public class LicensePoolTest extends SDKTestCase {
@@ -57,6 +59,32 @@ public class LicensePoolTest extends SDKTestCase {
     
                 assertEquals("sdk-test description", licensePool.getDescription());
                 assertEquals("1048576", licensePool.getQuota());
+            }
+            
+            String[] originalSlaves = licensePool.getSlaves();
+            {
+            	licensePool.setSlaves("abc,def");
+            	String[] slaves = licensePool.getSlaves();
+            	assertEquals(slaves[0], "abc");
+            	assertEquals(slaves[1], "def");
+            	
+            	licensePool.setSlaves(new String[]{"xyz", "qrs"});
+            	String[] slaves2 = licensePool.getSlaves();
+            	assertEquals(slaves2[0], "xyz");
+            	assertEquals(slaves2[1], "qrs");
+            	
+            	licensePool.update();
+            	String[] slaves3 = licensePool.getSlaves();
+            	assertEquals(slaves3.length, 2);
+            	assertTrue(Arrays.asList(slaves3).contains("xyz"));
+            	assertTrue(Arrays.asList(slaves3).contains("qrs"));
+            	
+            	licensePool.setSlaves(originalSlaves);
+            	String[] slaves4 = licensePool.getSlaves();
+            	assertEquals(slaves4.length, originalSlaves.length);
+            	for(int i = 0; i < originalSlaves.length; i++) {
+            		assertTrue(Arrays.asList(slaves4).contains(originalSlaves[i]));
+            	}
             }
             
             licensePool.update(new Args("description", originalDescription));

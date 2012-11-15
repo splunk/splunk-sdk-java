@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.List;
+
 /**
 * The {@code LicensePool} class represents a license pool, which is made up 
 * of a single license master and zero or more license slave instances of Splunk 
@@ -60,7 +62,13 @@ public class LicensePool extends Entity {
      * specified.
      */
     public String[] getSlaves() {
-        return getStringArray("slaves", null);
+    	if (toUpdate.containsKey("slaves")) {
+    		String value = (String)toUpdate.get("slaves");
+    		return value.split(",");
+    	}
+    	else {
+    		return getStringArray("slaves", null);
+    	}
     }
 
     /**
@@ -136,5 +144,22 @@ public class LicensePool extends Entity {
      */
     public void setSlaves(String slaves) {
         setCacheValue("slaves", slaves);
+    }
+
+    /**
+     * Sets the list of slaves that are members of this license pool.
+     *
+     * @param slaves The array of slaves. Use an array with a single element
+     * that is an asterisk ("*") to accept all slaves.
+     */
+    public void setSlaves(String[] slaves) {
+    	StringBuilder sb = new StringBuilder();
+    	for(int i = 0; i < slaves.length; i++) {
+    		sb.append(slaves[i]);
+    		if (i < slaves.length - 1) {
+    			sb.append(",");
+    		}
+    	}
+    	setSlaves(sb.toString());
     }
 }
