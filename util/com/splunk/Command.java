@@ -44,16 +44,17 @@ public class Command {
     // The parsed command line options (flags)
     public HashMap<String, Object> opts = new HashMap<String, Object>();
 
-    // Option fields
-    public String app = null;
+    // Whether or not this is a help request
     public Boolean help = false;
-    public String host = "localhost";
-    public String owner = null;
-    public int port = 8089;
-    public String password = null;
-    public String scheme = "https";
-    public String username = null;
 
+    public static final HashMap<String, Object> defaultValues = new HashMap<String, Object>() {
+    	{
+    		put("scheme", "https");
+    		put("host", "localhost");
+    		put("port", 8089);
+    	}
+    };
+    
     Command(String appName) { 
         this.appName = appName;
     }
@@ -149,13 +150,15 @@ public class Command {
         catch (ParseException e) {
             error(e.getMessage());
         }
+        
+        this.opts.putAll(defaultValues);
 
         // Unpack the cmdline into a simple Map of options and optionally
         // assign values to any corresponding fields found in the Command class.
         for (Option option : cmdline.getOptions()) {
             String name = option.getLongOpt();
             Object value = option.getValue();
-
+            
             // Figure out the type of the option and convert the value.
             if (!option.hasArg()) {
                 // If it has no arg, then its implicitly boolean and presence
