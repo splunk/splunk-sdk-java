@@ -131,6 +131,37 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch.setActions(
                 "rss,email,populate_lookup,script,summary_index");
         savedSearch.setSearch("search index=boris abcd");
+        
+        savedSearch.setAlertComparator("greater than");
+        savedSearch.setAlertCondition("*");
+        savedSearch.setAlertDigestMode(true);   // false causes side effects
+        savedSearch.setAlertExpires("23h");
+        savedSearch.setAlertSeverity(6);
+        savedSearch.setAlertSuppress(true);
+        savedSearch.setAlertSuppressFields("host");
+        savedSearch.setAlertSuppressPeriod("1m");
+        savedSearch.setAlertThreshold("50%");
+        savedSearch.setAlertTrack("false");
+        savedSearch.setAlertType("number of events");
+        savedSearch.setCronSchedule("*/5 * * * *");
+        savedSearch.setDescription("Cake!");
+        savedSearch.setDispatchBuckets("100");  // FIXME: should be int to match getter
+        savedSearch.setDispatchEarliestTime("-100s@s");
+        savedSearch.setDispatchLatestTime("-1s@s");
+        savedSearch.setDispatchLookups(false);
+        savedSearch.setDispatchMaxCount(100000);
+        savedSearch.setDispatchMaxTime(120);
+        savedSearch.setDispatchSpawnProcess(true);
+        savedSearch.setDispatchTimeFormat("%FT%T.%Q");
+        savedSearch.setDispatchTtl("3p");
+        savedSearch.setDisplayView("flash_timeline");
+        savedSearch.setMaxConcurrent(2);
+        savedSearch.setRealtimeSchedule(false);
+        savedSearch.setRequestUiDispatchApp("foo");
+        savedSearch.setRequestUiDispatchView("bar");
+        savedSearch.setRunOnStartup(true);
+        // TODO: Create a vsid to test this properly
+        savedSearch.setVsid("");
 
         savedSearch.update();
         savedSearch.refresh();
@@ -197,6 +228,36 @@ public class SavedSearchTest extends SDKTestCase {
         assertFalse(savedSearch.getActionSummaryIndexTrackAlert());
         assertEquals("65", savedSearch.getActionSummaryIndexTtl());
         assertEquals(savedSearch.isVisible(), !isVisible);
+        
+        assertEquals("greater than", savedSearch.getAlertComparator());
+        assertEquals("*", savedSearch.getAlertCondition());
+        assertEquals(true, savedSearch.getAlertDigestMode());
+        assertEquals("23h", savedSearch.getAlertExpires());
+        assertEquals(6, savedSearch.getAlertSeverity());
+        assertEquals(true, savedSearch.getAlertSuppress());
+        assertEquals("host", savedSearch.getAlertSuppressFields());
+        assertEquals("1m", savedSearch.getAlertSuppressPeriod());
+        assertEquals("50%", savedSearch.getAlertThreshold());
+        assertEquals("0", savedSearch.getAlertTrack()); // FIXME: Core bug: should be "false" to match docs
+        assertEquals("number of events", savedSearch.getAlertType());
+        assertEquals("*/5 * * * *", savedSearch.getCronSchedule());
+        assertEquals("Cake!", savedSearch.getDescription());
+        assertEquals(100, savedSearch.getDispatchBuckets());
+        assertEquals("-100s@s", savedSearch.getDispatchEarliestTime());
+        assertEquals("-1s@s", savedSearch.getDispatchLatestTime());
+        assertEquals(false, savedSearch.getDispatchLookups());
+        assertEquals(100000, savedSearch.getDispatchMaxCount());
+        assertEquals("120", savedSearch.getDispatchMaxTime());    // FIXME: should be int to match setter
+        assertEquals(true, savedSearch.getDispatchSpawnProcess());
+        assertEquals("%FT%T.%Q", savedSearch.getDispatchTimeFormat());
+        assertEquals("3p", savedSearch.getDispatchTtl());
+        assertEquals("flash_timeline", savedSearch.getDisplayView());
+        assertEquals(2, savedSearch.getMaxConcurrent());
+        assertEquals(false, savedSearch.getRealtimeSchedule());
+        assertEquals("foo", savedSearch.getRequestUiDispatchApp());
+        assertEquals("bar", savedSearch.getRequestUiDispatchView());
+        assertEquals(true, savedSearch.getRunOnStartup());
+        assertEquals(null, savedSearch.getVsid());
     }
 
     @Test
