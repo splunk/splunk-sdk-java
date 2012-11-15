@@ -63,7 +63,7 @@ public class AtomObject {
             reader = factory.createXMLStreamReader(input);
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         assert reader.getEventType() == XMLStreamConstants.START_DOCUMENT;
@@ -169,7 +169,7 @@ public class AtomObject {
             return reader.getElementText();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -195,7 +195,7 @@ public class AtomObject {
             while (reader.isWhiteSpace()); // Ignore whitespace
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -234,7 +234,7 @@ public class AtomObject {
             reader.nextTag();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

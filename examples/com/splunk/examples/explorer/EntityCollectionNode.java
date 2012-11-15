@@ -49,7 +49,7 @@ class EntityCollectionNode extends ResourceNode {
             return (Node)itemCtor.newInstance(entity);
         }
         catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

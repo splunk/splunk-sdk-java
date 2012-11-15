@@ -181,7 +181,7 @@ public class HttpService {
             return new URL(getPrefix() + path);
         }
         catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -269,7 +269,7 @@ public class HttpService {
             cn = (HttpURLConnection)url.openConnection();
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
         if(cn instanceof HttpsURLConnection) {
             ((HttpsURLConnection)cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
@@ -284,7 +284,7 @@ public class HttpService {
             cn.setRequestMethod(method);
         }
         catch (ProtocolException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         // Add headers from request message
@@ -311,7 +311,7 @@ public class HttpService {
             }
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         if (VERBOSE_REQUESTS) {
@@ -323,7 +323,7 @@ public class HttpService {
             cn.connect();
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         int status;
@@ -331,7 +331,7 @@ public class HttpService {
             status = cn.getResponseCode();
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         InputStream input = null;

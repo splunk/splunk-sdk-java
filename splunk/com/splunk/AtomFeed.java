@@ -62,7 +62,7 @@ public class AtomFeed extends AtomObject {
             reader.close();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         return result;
