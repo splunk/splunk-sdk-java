@@ -112,6 +112,9 @@
 * SavedSearch.getDispatchMaxTime() was previously returning a String, but is now
   returning an int. This was an error in previous SDKs.
 
+* LicensePool.getSlavesUsageBytes() would previously always return 0. It now
+  returns the correct value.
+
 
 ## Version 0.8.0 (beta)
 

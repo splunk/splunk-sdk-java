@@ -78,7 +78,7 @@ public class LicensePool extends Entity {
      * @return The overall license slave usage, in bytes.
      */
     public long getSlavesUsageBytes() {
-        return getLong("salves_usage_bytes", 0);
+        return getLong("slaves_usage_bytes", 0);
     }
 
     /**
