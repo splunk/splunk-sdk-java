@@ -49,7 +49,7 @@
     - Runs a ton faster, mostly due to elimination of unnecessary restarts.
     - Strictly requires tests to handle restart requests.
 
-### Behavioral changes
+### Breaking Changes
 
 * JAR changes:
     - Everything is now in splunk.jar.
@@ -109,10 +109,13 @@
   an exception when passed a wildcarded namespace instead of incorrectly
   returning an empty list or taking no action.
 
+* SavedSearch.getDispatchMaxTime() was previously returning a String, but is now
+  returning an int. This was an error in previous SDKs.
+
 
 ## Version 0.8.0 (beta)
 
-### Behavior changes
+### Breaking Changes
 
 * Changed how isDone() behaves with respect to job creation. Previously if a job
   was not ready on the server, calling job.isDone() would cause an exception.

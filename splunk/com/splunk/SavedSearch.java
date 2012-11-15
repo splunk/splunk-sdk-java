@@ -902,8 +902,8 @@ public class SavedSearch extends Entity {
      *
      * @return The maximum amount of time, in seconds.
      */
-    public String getDispatchMaxTime() {
-        return getString("dispatch.max_time");
+    public int getDispatchMaxTime() {
+        return getInteger("dispatch.max_time");
     }
 
     /**
