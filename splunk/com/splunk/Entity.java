@@ -298,8 +298,10 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The string array value associated with the specified key.
      */
     String[] getStringArray(String key) {
-        if (toUpdate.containsKey(key))
-            return getStringArray(toUpdate.get(key).toString());
+        if (toUpdate.containsKey(key)) {
+            List<String> value = (List<String>)toUpdate.get(key);
+            return value.toArray(new String[value.size()]); 
+        }
         return getContent().getStringArray(key);
     }
 
@@ -313,7 +315,7 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     String[] getStringArray(String key, String[] defaultValue) {
         if (toUpdate.containsKey(key))
-            return getStringArray(toUpdate.get(key).toString());
+            return getStringArray(key);
         return getContent().getStringArray(key, defaultValue);
     }
 
