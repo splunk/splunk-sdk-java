@@ -299,7 +299,7 @@ public class Service extends BaseService {
      * @return The configurations collection.
      */
     public ConfCollection getConfs() {
-        return new ConfCollection(this);
+        return getConfs(null);
     }
 
     /**
@@ -338,8 +338,7 @@ public class Service extends BaseService {
      * @return The configuration of deployment servers.
      */
     public EntityCollection<DeploymentServer> getDeploymentServers() {
-        return new EntityCollection<DeploymentServer>(
-            this, "deployment/server", DeploymentServer.class);
+        return getDeploymentServers(null);
     }
 
     /**
@@ -360,8 +359,7 @@ public class Service extends BaseService {
      * @return A collection of class configurations.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(){
-        return new EntityCollection<DeploymentServerClass>(
-            this, "deployment/serverclass", DeploymentServerClass.class);
+        return getDeploymentServerClasses(null);
     }
 
     /**
@@ -372,7 +370,7 @@ public class Service extends BaseService {
      * @return A collection of server class configurations.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(
-            Args args){
+            Args args) {
         return new EntityCollection<DeploymentServerClass>(
             this, "deployment/serverclass", DeploymentServerClass.class, args);
     }
@@ -383,8 +381,7 @@ public class Service extends BaseService {
      * @return A collection of multi-tenant configurations.
      */
     public EntityCollection<DeploymentTenant> getDeploymentTenants() {
-        return new EntityCollection<DeploymentTenant>(
-            this, "deployment/tenants", DeploymentTenant.class);
+        return getDeploymentTenants(null);
     }
 
     /**
@@ -417,8 +414,7 @@ public class Service extends BaseService {
      * @return A collection of search peers.
      */
     public EntityCollection<DistributedPeer> getDistributedPeers() {
-        return new EntityCollection<DistributedPeer>(
-            this, "search/distributed/peers", DistributedPeer.class);
+        return getDistributedPeers(null);
     }
 
     /**
@@ -443,7 +439,7 @@ public class Service extends BaseService {
      * @return A collection of saved event types.
      */
     public EventTypeCollection getEventTypes() {
-        return new EventTypeCollection(this);
+        return getEventTypes(null);
     }
 
     /**
@@ -483,18 +479,7 @@ public class Service extends BaseService {
      * @return A collection of indexes.
      */
     public IndexCollection getIndexes() {
-        return new IndexCollection(this);
-    }
-
-    /**
-     * Returns a collection of Splunk indexes.
-     *
-     * @param args Collection arguments that specify the number of entities to 
-     * return and how to sort them. See {@link CollectionArgs}.
-     * @return A collection of indexes.
-     */
-    public IndexCollection getIndexes(Args args) {
-        return new IndexCollection(this, args);
+        return getIndexes((IndexCollectionArgs)null);
     }
     
     /**
@@ -507,6 +492,17 @@ public class Service extends BaseService {
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.
     public IndexCollection getIndexes(IndexCollectionArgs args) {
+        return getIndexes((Args)args);
+    }
+
+    /**
+     * Returns a collection of Splunk indexes.
+     *
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link IndexCollectionArgs}.
+     * @return A collection of indexes.
+     */
+    public IndexCollection getIndexes(Args args) {
         return new IndexCollection(this, args);
     }
 
@@ -525,7 +521,7 @@ public class Service extends BaseService {
      * @return A collection of inputs.
      */
     public InputCollection getInputs() {
-        return new InputCollection(this);
+        return getInputs(null);
     }
 
     /**
@@ -545,18 +541,7 @@ public class Service extends BaseService {
      * @return A collection of search jobs.
      */
     public JobCollection getJobs() {
-        return new JobCollection(this);
-    }
-
-    /**
-     * Returns a collection of current search jobs.
-     *
-     * @param args Collection arguments that specify the number of entities to 
-     * return and how to sort them. See {@link CollectionArgs}.
-     * @return A collection of search jobs.
-     */
-    public JobCollection getJobs(Args args) {
-        return new JobCollection(this, args);
+        return getJobs((CollectionArgs)null);
     }
     
     /**
@@ -569,6 +554,17 @@ public class Service extends BaseService {
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.
     public JobCollection getJobs(CollectionArgs args) {
+        return getJobs((Args)args);
+    }
+
+    /**
+     * Returns a collection of current search jobs.
+     *
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
+     * @return A collection of search jobs.
+     */
+    public JobCollection getJobs(Args args) {
         return new JobCollection(this, args);
     }
 
@@ -578,8 +574,7 @@ public class Service extends BaseService {
      * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups() {
-        return new EntityCollection<LicenseGroup>(
-            this, "licenser/groups", LicenseGroup.class);
+        return getLicenseGroups(null);
     }
 
     /**
@@ -600,8 +595,7 @@ public class Service extends BaseService {
      * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages() {
-        return new EntityCollection<LicenseMessage>(
-            this, "licenser/messages", LicenseMessage.class);
+        return getLicenseMessages(null);
     }
 
     /**
@@ -633,7 +627,7 @@ public class Service extends BaseService {
      * @return A collection of licenser pool configurations.
      */
     public LicensePoolCollection getLicensePools() {
-        return new LicensePoolCollection(this);
+        return getLicensePools(null);
     }
 
     /**
@@ -653,8 +647,7 @@ public class Service extends BaseService {
      * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
-        return new EntityCollection<LicenseSlave>(
-            this, "licenser/slaves", LicenseSlave.class);
+        return getLicenseSlaves(null);
     }
 
     /**
@@ -675,8 +668,7 @@ public class Service extends BaseService {
      * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks() {
-        return new EntityCollection<LicenseStack>(
-            this, "licenser/stacks", LicenseStack.class);
+        return getLicenseStacks(null);
     }
 
     /**
@@ -697,8 +689,7 @@ public class Service extends BaseService {
      * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses() {
-        return new EntityCollection<License>(
-            this, "licenser/licenses", License.class);
+        return getLicenses(null);
     }
 
     /**
@@ -719,8 +710,7 @@ public class Service extends BaseService {
      * @return A collection of logging categories.
      */
     public EntityCollection<Logger> getLoggers() {
-        return new EntityCollection<Logger>(
-            this, "server/logger", Logger.class);
+        return getLoggers(null);
     }
 
     /**
@@ -741,7 +731,7 @@ public class Service extends BaseService {
      * @return A collection of system messages.
      */
     public MessageCollection getMessages() {
-        return new MessageCollection(this);
+        return getMessages(null);
     }
 
     /**
@@ -754,6 +744,15 @@ public class Service extends BaseService {
     public MessageCollection getMessages(Args args) {
         return new MessageCollection(this, args);
     }
+    
+    /**
+     * Returns a collection of modular inputs.
+     *
+     * @return A collection of modular inputs.
+     */
+    public ResourceCollection<ModularInputKind> getModularInputKinds() {
+        return getModularInputKinds(null);
+    }
 
     /**
      * Returns a collection of modular inputs.
@@ -763,17 +762,8 @@ public class Service extends BaseService {
      * @return A collection of modular inputs.
      */
     public ResourceCollection<ModularInputKind> getModularInputKinds(Args args) {
-        return new ResourceCollection<ModularInputKind>(this, "data/modular-inputs", ModularInputKind.class);
-    }
-
-    /**
-     * Returns a collection of modular inputs.
-     *
-     * @return A collection of modular inputs.
-     */
-    public ResourceCollection<ModularInputKind> getModularInputKinds() {
-        Args emptyArgs = new Args();
-        return getModularInputKinds(emptyArgs);
+        return new ResourceCollection<ModularInputKind>(
+                this, "data/modular-inputs", ModularInputKind.class, args);
     }
 
     /**
@@ -791,8 +781,7 @@ public class Service extends BaseService {
      * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups() {
-        return new EntityCollection<OutputGroup>(
-            this, "data/outputs/tcp/group", OutputGroup.class);
+        return getOutputGroups(null);
     }
 
     /**
@@ -813,8 +802,7 @@ public class Service extends BaseService {
      * @return A collection of data-forwarding configurations.
      */
     public EntityCollection<OutputServer> getOutputServers() {
-        return new EntityCollection<OutputServer>(
-            this, "data/outputs/tcp/server", OutputServer.class);
+        return getOutputServers(null);
     }
 
     /**
@@ -836,8 +824,7 @@ public class Service extends BaseService {
      * @return A collection of syslog forwarders.
      */
     public EntityCollection<OutputSyslog> getOutputSyslogs() {
-        return new EntityCollection<OutputSyslog>(
-            this, "data/outputs/tcp/syslog", OutputSyslog.class);
+        return getOutputSyslogs(null);
     }
 
     /**
@@ -869,7 +856,7 @@ public class Service extends BaseService {
      * @return A collection of passwords.
      */
     public PasswordCollection getPasswords() {
-        return new PasswordCollection(this);
+        return getPasswords(null);
     }
 
     /**
@@ -899,8 +886,7 @@ public class Service extends BaseService {
      * @return A collection of user roles.
      */
     public EntityCollection<Role> getRoles() {
-        return new EntityCollection<Role>(
-            this, "authentication/roles", Role.class);
+        return getRoles(null);
     }
 
     /**
@@ -921,20 +907,9 @@ public class Service extends BaseService {
      * @return A collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches() {
-        return new SavedSearchCollection(this);
+        return getSavedSearches((SavedSearchCollectionArgs)null);
     }
-
-    /**
-     * Returns a collection of saved searches.
-     *
-     * @param args Collection arguments that specify the number of entities to 
-     * return and how to sort them. See {@link CollectionArgs}.
-     * @return A collection of saved searches.
-     */
-    public SavedSearchCollection getSavedSearches(Args args) {
-        return new SavedSearchCollection(this, args);
-    }
-
+    
     /**
      * Returns a collection of saved searches.
      *
@@ -945,6 +920,17 @@ public class Service extends BaseService {
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.
     public SavedSearchCollection getSavedSearches(SavedSearchCollectionArgs args) {
+        return getSavedSearches((Args)args);
+    }
+
+    /**
+     * Returns a collection of saved searches.
+     *
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
+     * @return A collection of saved searches.
+     */
+    public SavedSearchCollection getSavedSearches(Args args) {
         return new SavedSearchCollection(this, args);
     }
 
@@ -973,8 +959,7 @@ public class Service extends BaseService {
      * @return A collection of in-progress oneshot uploads
      */
     public EntityCollection<Upload> getUploads() {
-        return new EntityCollection<Upload>(
-            this, "data/inputs/oneshot", Upload.class);
+        return getUploads(null);
     }
 
     /**
@@ -1005,7 +990,7 @@ public class Service extends BaseService {
      * @return A collection of users.
      */
     public UserCollection getUsers() {
-        return new UserCollection(this);
+        return getUsers(null);
     }
 
     /**
@@ -1165,7 +1150,7 @@ public class Service extends BaseService {
      * @return The search results.
      */
     public InputStream search(String query) {
-        return search(query, null, null);
+        return search(query, null);
     }
 
     /**
