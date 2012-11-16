@@ -69,6 +69,7 @@ public class SavedSearchTest extends SDKTestCase {
         super.tearDown();
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testUpdate() {
         boolean isVisible = savedSearch.isVisible();
@@ -131,6 +132,42 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch.setActions(
                 "rss,email,populate_lookup,script,summary_index");
         savedSearch.setSearch("search index=boris abcd");
+        
+        savedSearch.setAlertComparator("greater than");
+        savedSearch.setAlertCondition("*");
+        savedSearch.setAlertDigestMode(true);   // false causes side effects
+        savedSearch.setAlertExpires("23h");
+        savedSearch.setAlertSeverity(6);
+        savedSearch.setAlertSuppress(true);
+        savedSearch.setAlertSuppressFields("host");
+        savedSearch.setAlertSuppressPeriod("1m");
+        savedSearch.setAlertThreshold("50%");
+        savedSearch.setAlertTrack("0");
+        savedSearch.setAlertType("number of events");
+        savedSearch.setCronSchedule("*/5 * * * *");
+        savedSearch.setDescription("Cake!");
+        savedSearch.setDispatchBuckets("100");
+        savedSearch.setDispatchEarliestTime("-100s@s");
+        savedSearch.setDispatchLatestTime("-1s@s");
+        savedSearch.setDispatchLookups(false);
+        savedSearch.setDispatchMaxCount(100000);
+        savedSearch.setDispatchMaxTime(120);
+        savedSearch.setDispatchSpawnProcess(true);
+        savedSearch.setDispatchTimeFormat("%FT%T.%Q");
+        savedSearch.setDispatchTtl("3p");
+        savedSearch.setDisplayView("flash_timeline");
+        savedSearch.setMaxConcurrent(2);
+        savedSearch.setRealtimeSchedule(false);
+        savedSearch.setRequestUiDispatchApp("foo");
+        savedSearch.setRequestUiDispatchView("bar");
+        savedSearch.setRunOnStartup(true);
+        // TODO: Create a vsid to test this properly
+        savedSearch.setVsid("");
+        
+        savedSearch.setDispatchReduceFrequency(11);
+        savedSearch.setDispatchRealTimeBackfill(true);
+        savedSearch.setRestartOnSearchpeerAdd(false);
+        savedSearch.setDisabled(true);
 
         savedSearch.update();
         savedSearch.refresh();
@@ -197,6 +234,43 @@ public class SavedSearchTest extends SDKTestCase {
         assertFalse(savedSearch.getActionSummaryIndexTrackAlert());
         assertEquals("65", savedSearch.getActionSummaryIndexTtl());
         assertEquals(savedSearch.isVisible(), !isVisible);
+        
+        assertEquals("greater than", savedSearch.getAlertComparator());
+        assertEquals("*", savedSearch.getAlertCondition());
+        assertEquals(true, savedSearch.getAlertDigestMode());
+        assertEquals("23h", savedSearch.getAlertExpires());
+        assertEquals(6, savedSearch.getAlertSeverity());
+        assertEquals(true, savedSearch.getAlertSuppress());
+        assertEquals("host", savedSearch.getAlertSuppressFields());
+        assertEquals("1m", savedSearch.getAlertSuppressPeriod());
+        assertEquals("50%", savedSearch.getAlertThreshold());
+        // NOTE: Always returns "0" or "1". Never "auto". Vince notified.
+        assertEquals("0", savedSearch.getAlertTrack());
+        assertEquals("number of events", savedSearch.getAlertType());
+        assertEquals("*/5 * * * *", savedSearch.getCronSchedule());
+        assertEquals("Cake!", savedSearch.getDescription());
+        assertEquals(100, savedSearch.getDispatchBuckets());
+        assertEquals("-100s@s", savedSearch.getDispatchEarliestTime());
+        assertEquals("-1s@s", savedSearch.getDispatchLatestTime());
+        assertEquals(false, savedSearch.getDispatchLookups());
+        assertEquals(100000, savedSearch.getDispatchMaxCount());
+        // NOTE: Should be int to match setter. See DVPL-1268.
+        assertEquals("120", savedSearch.getDispatchMaxTime());
+        assertEquals(true, savedSearch.getDispatchSpawnProcess());
+        assertEquals("%FT%T.%Q", savedSearch.getDispatchTimeFormat());
+        assertEquals("3p", savedSearch.getDispatchTtl());
+        assertEquals("flash_timeline", savedSearch.getDisplayView());
+        assertEquals(2, savedSearch.getMaxConcurrent());
+        assertEquals(false, savedSearch.getRealtimeSchedule());
+        assertEquals("foo", savedSearch.getRequestUiDispatchApp());
+        assertEquals("bar", savedSearch.getRequestUiDispatchView());
+        assertEquals(true, savedSearch.getRunOnStartup());
+        assertEquals(null, savedSearch.getVsid());
+        
+        assertEquals(11, savedSearch.getDispatchReduceFreq());
+        assertEquals(true, savedSearch.getDispatchRtBackfill());
+        assertEquals(false, savedSearch.getRestartOnSearchPeerAdd());
+        assertEquals(true, savedSearch.isDisabled());
     }
 
     @Test

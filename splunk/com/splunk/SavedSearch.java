@@ -911,8 +911,19 @@ public class SavedSearch extends Entity {
      * on accumulated map values.
      *
      * @return The reduce frequency.
+     * @deprecated Use {@link #getDispatchReduceFrequency()} instead.
      */
     public int getDispatchReduceFreq() {
+        return getDispatchReduceFrequency();
+    }
+    
+    /**
+     * Returns how frequently Splunk runs the MapReduce reduce phase
+     * on accumulated map values.
+     *
+     * @return The reduce frequency.
+     */
+    public int getDispatchReduceFrequency() {
         return getInteger("dispatch.reduce_freq");
     }
 
@@ -922,8 +933,20 @@ public class SavedSearch extends Entity {
      *
      * @return {@code true} if Splunk back fills the real-time window,
      * {@code false} if not.
+     * @deprecated Use {@link #getDispatchRealTimeBackfill()} instead.
      */
     public boolean getDispatchRtBackfill() {
+        return getDispatchRealTimeBackfill();
+    }
+    
+    /**
+     * Indicates whether to back fill the real-time window for this search.
+     * This attribute only applies to real-time searches.
+     *
+     * @return {@code true} if Splunk back fills the real-time window,
+     * {@code false} if not.
+     */
+    public boolean getDispatchRealTimeBackfill() {
         return getBoolean("dispatch.rt_backfill", false);
     }
 
@@ -995,7 +1018,7 @@ public class SavedSearch extends Entity {
      * @return The qualified search.
      */
     public String getQualifiedSearch() {
-        return getString("qualfiedSearch", null);
+        return getString("qualifiedSearch", null);
     }
 
     /**
@@ -1921,8 +1944,18 @@ public class SavedSearch extends Entity {
      * Sets the maximum number of timeline buckets.
      *
      * @param buckets The maximum number of timeline buckets.
+     * @deprecated Use {@link #setDispatchBuckets(int)} instead.
      */
     public void setDispatchBuckets(String buckets) {
+        setDispatchBuckets(Integer.parseInt(buckets));
+    }
+    
+    /**
+     * Sets the maximum number of timeline buckets.
+     *
+     * @param buckets The maximum number of timeline buckets.
+     */
+    public void setDispatchBuckets(int buckets) {
         setCacheValue("dispatch.buckets", buckets);
     }
 
@@ -2127,8 +2160,23 @@ public class SavedSearch extends Entity {
      *
      * @param restart {@code true} to restart a real-time search, {@code false}
      * if not.
+     * @deprecated Use {@link #setRestartOnSearchPeerAdd(boolean)} instead.
      */
     public void setRestartOnSearchpeerAdd(boolean restart) {
+        setRestartOnSearchPeerAdd(restart);
+    }
+    
+    /**
+     * Sets whether a real-time search managed by the scheduler is
+     * restarted when a search peer becomes available for this saved search.
+     * <p>
+     * <b>Note:</b> The peer can be one that is newly added or one that has
+     * become available after being down.
+     *
+     * @param restart {@code true} to restart a real-time search, {@code false}
+     * if not.
+     */
+    public void setRestartOnSearchPeerAdd(boolean restart) {
         setCacheValue("restart_on_searchpeer_add", restart);
     }
 
