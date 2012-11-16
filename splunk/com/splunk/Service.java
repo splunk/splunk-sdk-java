@@ -459,7 +459,7 @@ public class Service extends BaseService {
      * @return A collection of fired alerts.
      */
     public FiredAlertGroupCollection getFiredAlertGroups() {
-        return new FiredAlertGroupCollection(this);
+        return getFiredAlertsGroups(null);
     }
 
     /**
@@ -469,7 +469,7 @@ public class Service extends BaseService {
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of fired alerts.
      */
-    public FiredAlertGroupCollection getFiredAlerts(Args args) {
+    public FiredAlertGroupCollection getFiredAlertsGroups(Args args) {
         return new FiredAlertGroupCollection(this, args);
     }
 

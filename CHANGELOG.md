@@ -122,6 +122,9 @@
   any `args.{argname}` parameters, call `savedSearch.update` with the values set
   in the map.
 
+* The `Service.getFiredAlerts` method has been renamed to
+  `getFiredAlertsGroups`.
+
 
 ## Version 0.8.0 (beta)
 
