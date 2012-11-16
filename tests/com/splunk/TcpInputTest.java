@@ -58,18 +58,18 @@ public class TcpInputTest extends SDKTestCase {
     }
 
     @Test
-    public void testAttachAndWrite() {
+    public void testAttachAndWrite() throws IOException {
+        writeEventsTo(tcpInput.attach());
+        writeEventsTo(service.open(tcpInput.getPort()));
+    }
+    
+    private void writeEventsTo(Socket socket) throws IOException {
         final int nEvents = index.getTotalEventCount();
 
-        try {
-            Socket socket = tcpInput.attach();
-            PrintStream output = new PrintStream(socket.getOutputStream());
-            output.print(createTimestamp() + " Boris the mad baboon!\r\n");
-            output.flush();
-            socket.close();
-        } catch (IOException e) {
-            fail("Got an IO exception in attaching.");
-        }
+        PrintStream output = new PrintStream(socket.getOutputStream());
+        output.print(createTimestamp() + " Boris the mad baboon!\r\n");
+        output.flush();
+        socket.close();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
@@ -81,14 +81,10 @@ public class TcpInputTest extends SDKTestCase {
     }
 
     @Test
-    public void testSubmit() {
+    public void testSubmit() throws IOException {
         final int nEvents = index.getTotalEventCount();
 
-        try {
-            this.tcpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
-        } catch (IOException e) {
-            fail("Got an IO exception in submit.");
-        }
+        this.tcpInput.submit(createTimestamp() + " Boris the mad baboon!\r\n");
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
@@ -100,20 +96,16 @@ public class TcpInputTest extends SDKTestCase {
     }
 
     @Test
-    public void testAttachWith() {
+    public void testAttachWith() throws IOException {
         final int nEvents = index.getTotalEventCount();
         final Index index = this.index;
 
-        try {
-            this.tcpInput.attachWith(new ReceiverBehavior() {
-                public void run(OutputStream stream) throws IOException {
-                    String s = createTimestamp() + " Boris the mad baboon!\r\n";
-                    stream.write(s.getBytes("UTF8"));
-                }
-            });
-        } catch (IOException e) {
-            fail("IOException in attachWith.");
-        }
+        this.tcpInput.attachWith(new ReceiverBehavior() {
+            public void run(OutputStream stream) throws IOException {
+                String s = createTimestamp() + " Boris the mad baboon!\r\n";
+                stream.write(s.getBytes("UTF8"));
+            }
+        });
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override

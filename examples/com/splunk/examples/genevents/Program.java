@@ -125,11 +125,13 @@ public class Program {
                 }
             else {
                 // Create a tcp input if one does not already exist.
-                String inputName = String.format("%d", ingestPort);
-                if (!service.getInputs().containsKey(inputName)) {
-                    service.getInputs().create(inputName, InputKind.Tcp);
+                String inputName = String.valueOf(ingestPort);
+                TcpInput tcpInput = (TcpInput)service.getInputs().get(inputName);
+                if (tcpInput == null) {
+                    tcpInput = (TcpInput)service.getInputs().create(
+                            inputName, InputKind.Tcp);
                 }
-                stream = service.open(ingestPort);
+                stream = tcpInput.attach();
             }
             ostream = stream.getOutputStream();
             writerOut = new OutputStreamWriter(ostream, "UTF8");

@@ -41,9 +41,7 @@ public class TcpInput extends PortInput {
      * Returns a socket attached to this raw TCP input.
      */
     public Socket attach() throws IOException {
-        String hostname = this.service.getHost();
-        Socket socket = new Socket(hostname, this.getPort());
-        return socket;
+        return new Socket(this.service.getHost(), this.getPort());
     }
 
     /**
