@@ -255,7 +255,7 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals(false, savedSearch.getDispatchLookups());
         assertEquals(100000, savedSearch.getDispatchMaxCount());
         // NOTE: Should be int to match setter. See DVPL-1268.
-        assertEquals("120", savedSearch.getDispatchMaxTime());
+        assertEquals(120, savedSearch.getDispatchMaxTime());
         assertEquals(true, savedSearch.getDispatchSpawnProcess());
         assertEquals("%FT%T.%Q", savedSearch.getDispatchTimeFormat());
         assertEquals("3p", savedSearch.getDispatchTtl());
