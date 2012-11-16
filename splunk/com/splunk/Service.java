@@ -1063,7 +1063,7 @@ public class Service extends BaseService {
      * @return The search results.
      */
     public InputStream oneshot(String query) {
-       return oneshot(query, null, null);
+       return oneshot(query, null);
     }
 
     /**
@@ -1082,8 +1082,12 @@ public class Service extends BaseService {
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
      */
-    public InputStream oneshot(String query, Map inputArgs) {
-        return oneshot(query, inputArgs, null);
+    public InputStream oneshot(String query, Map args) {
+    	args = Args.create(args);
+        args.put("search", query);
+        args.put("exec_mode", "oneshot");
+        ResponseMessage response = post("search/jobs", args);
+        return response.getContent();
     }
 
     /**
@@ -1100,14 +1104,13 @@ public class Service extends BaseService {
      * The time string can be a UTC time (with fractional seconds), a relative 
      * time specifier (to now), or a formatted time string.</li>
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
-     * @param outputArgs The output qualifier arguments.
      * @return The search results.
      */
-    public InputStream oneshot(String query, Map inputArgs, Map outputArgs) {
-        inputArgs = Args.create(inputArgs);
-        inputArgs.put("search", query);
-        inputArgs.put("exec_mode", "oneshot");
-        ResponseMessage response = post("search/jobs", inputArgs);
+    public InputStream oneshot(String query, Args args) {
+    	args = args == null ? Args.create() : args;
+    	args.put("search", query);
+    	args.put("exec_mode", "oneshot");
+        ResponseMessage response = post("search/jobs", args);
         return response.getContent();
     }
 

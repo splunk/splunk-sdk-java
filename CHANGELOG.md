@@ -114,6 +114,9 @@
 
 * The `LicensePool.getSlavesUsageBytes` method now returns a map from each slave
   GUID to its license usage, instead of returning an `long`. 
+  
+* The `Service.oneshot(String query, Map inputArgs, Map outputArgs)` overload
+  has been removed, because `outputArgs` had no effect.
 
 
 ## Version 0.8.0 (beta)
