@@ -47,7 +47,7 @@ public class IndexTest extends SDKTestCase {
     @After
     @Override
     public void tearDown() throws Exception {
-        if (service.versionIsAtEarliest("5.0.0")) {
+        if (service.versionIsAtLeast("5.0.0")) {
             if (service.getIndexes().containsKey(indexName)) {
                 index.remove();
             }
@@ -151,7 +151,7 @@ public class IndexTest extends SDKTestCase {
         index.isInternal();
         
         // Fields only available from 5.0 on.
-        if (service.versionIsAtEarliest("5.0.0")) {
+        if (service.versionIsAtLeast("5.0.0")) {
             index.getBucketRebuildMemoryHint();
             index.getMaxTimeUnreplicatedNoAcks();
             index.getMaxTimeUnreplicatedWithAcks();
@@ -201,7 +201,7 @@ public class IndexTest extends SDKTestCase {
         
         boolean newEnableOnlineBucketRepair = false;
         String newMaxBloomBackfillBucketAge = null;
-        if (service.versionIsAtEarliest("4.3")) {
+        if (service.versionIsAtLeast("4.3")) {
             newEnableOnlineBucketRepair = !index.getEnableOnlineBucketRepair();
             index.setEnableOnlineBucketRepair(newEnableOnlineBucketRepair);
             newMaxBloomBackfillBucketAge = "20d";
@@ -211,7 +211,7 @@ public class IndexTest extends SDKTestCase {
         String newBucketRebuildMemoryHint = null;
         int newMaxTimeUnreplicatedNoAcks = -1;
         int newMaxTimeUnreplicatedWithAcks = -1;
-        if (service.versionIsAtEarliest("5.0")) {
+        if (service.versionIsAtLeast("5.0")) {
             newBucketRebuildMemoryHint = "auto";
             index.setBucketRebuildMemoryHint(newBucketRebuildMemoryHint);
             newMaxTimeUnreplicatedNoAcks = 300;
@@ -242,7 +242,7 @@ public class IndexTest extends SDKTestCase {
         assertEquals(newServiceMetaPeriod, index.getServiceMetaPeriod());
         assertEquals(newSyncMeta, index.getSyncMeta());
         assertEquals(newThrottleCheckPeriod, index.getThrottleCheckPeriod());
-        if (service.versionIsAtEarliest("4.3")) {
+        if (service.versionIsAtLeast("4.3")) {
             assertEquals(
                     newEnableOnlineBucketRepair,
                     index.getEnableOnlineBucketRepair()
@@ -252,7 +252,7 @@ public class IndexTest extends SDKTestCase {
                     index.getMaxBloomBackfillBucketAge()
             );
         }
-        if (service.versionIsAtEarliest("5.0")) {
+        if (service.versionIsAtLeast("5.0")) {
             assertEquals(
                     newBucketRebuildMemoryHint,
                     index.getBucketRebuildMemoryHint()

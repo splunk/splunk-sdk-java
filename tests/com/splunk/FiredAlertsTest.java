@@ -64,7 +64,7 @@ public class FiredAlertsTest extends SDKTestCase {
     @After
     @Override
     public void tearDown() throws Exception {
-        if (service.versionIsAtEarliest("5.0.0")) {
+        if (service.versionIsAtLeast("5.0.0")) {
             index.remove();
         }
         

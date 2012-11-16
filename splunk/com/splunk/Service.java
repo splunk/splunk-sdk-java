@@ -1226,23 +1226,6 @@ public class Service extends BaseService {
     }
 
     /**
-     * Returns true if this Splunk instance's version is no later than
-     * the version specified in {@code version}.
-     *
-     * So when called on a Splunk 4.3.2 instance:
-     *   * {@code versionIsAtLatest("4.3.2")} is {@code true}.
-     *   * {@code versionIsAtLatest("4.1.0")} is {@code false}.
-     *   * {@code versionIsAtLatest("5.0.0")} is {@code true}.
-     *
-     * @param version The version to compare this Splunk instance's version against.
-     * @return {@code true} if this Splunk instance's version is equal or
-     *         less than {@code version}; {@code false} otherwise.
-     */
-    boolean versionIsAtLatest(String version) {
-        return versionCompare(version) <= 0;
-    }
-
-    /**
      * Returns true if this Splunk instance's version is no earlier than
      * the version specified in {@code version}.
      *
@@ -1255,7 +1238,7 @@ public class Service extends BaseService {
      * @return {@code true} if this Splunk instance's version is equal or
      *         greater than {@code version}; {@code false} otherwise.
      */
-    boolean versionIsAtEarliest(String version) {
+    boolean versionIsAtLeast(String version) {
         return versionCompare(version) >= 0;
     }
 
@@ -1274,23 +1257,6 @@ public class Service extends BaseService {
      */
     boolean versionIsEarlierThan(String version) {
         return versionCompare(version) < 0;
-    }
-
-    /**
-     * Returns true if this Splunk instance's version is later than
-     * the version specified in {@code version}.
-     *
-     * So when called on a Splunk 4.3.2 instance:
-     *   * {@code versionIsEarlierThan("4.3.2")} is {@code false}.
-     *   * {@code versionIsLaterThan("4.1.0")} is {@code true}.
-     *   * {@code versionIsLaterThan("5.0.0")} is {@code false}.
-     *
-     * @param version The version to compare this Splunk instance's version against.
-     * @return {@code true} if this Splunk instance's version is greater
-     *         than {@code version}; {@code false} otherwise.
-     */
-    boolean versionIsLaterThan(String version) {
-        return versionCompare(version) > 0;
     }
 
     /**
