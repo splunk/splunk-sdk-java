@@ -1889,17 +1889,6 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Sets the wildcard argument that accepts any saved search template
-     * argument, such as "args.username=foobar" when the search is "search
-     * $username$".
-     *
-     * @param wildcard The wildcard argument.
-     */
-    public void setArgsWildcard(String wildcard) {
-        setCacheValue("args.*", wildcard);
-    }
-
-    /**
      * Sets the cron schedule for running this saved search.
      *
      * @param cronSchedule The schedule, as a valid cron-style string.

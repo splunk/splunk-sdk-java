@@ -118,6 +118,10 @@
 * The `Service.oneshot(String query, Map inputArgs, Map outputArgs)` overload
   has been removed, because `outputArgs` had no effect.
 
+* The `SavedSearch.setArgsWildcard` method has been removed. If you want to set
+  any `args.{argname}` parameters, call `savedSearch.update` with the values set
+  in the map.
+
 
 ## Version 0.8.0 (beta)
 
