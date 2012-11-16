@@ -139,6 +139,38 @@ public class ServiceTest extends SDKTestCase {
             assertEquals(401, e.getStatus());
         }
     }
+    
+    @Test
+    public void testLoginWithToken() {
+        String validToken = service.getToken();
+        
+        assertTrue(validToken.startsWith("Splunk "));
+        
+        Service s = new Service(service.getHost(), service.getPort());
+        s.setToken(validToken);
+        
+        // Ensure we can perform some action.
+        // In particular we don't expect an unauthenticated error.
+        s.getSettings().refresh();
+        
+        // Make sure we're still using the same token.
+        // In particular we don't want to trigger auto-login functionality
+        // that gets a new token.
+        assertEquals(s.getToken(), validToken);
+    }
+    
+    @Test
+    public void testLoginGetters() {
+        Service s = new Service("theHost");
+        try {
+            s.login("theUser", "thePassword");
+        } catch (Exception e) {
+            // Don't care if login fails. It probably will.
+        }
+        
+        assertEquals("theUser", s.getUsername());
+        assertEquals("thePassword", s.getPassword());
+    }
 
     @Test
     public void testJobs() {

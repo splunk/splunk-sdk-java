@@ -101,7 +101,7 @@ public class Receiver {
             "X-Splunk-Input-Mode: Streaming\r\n\r\n",
             postUrl,
             service.getHost(), service.getPort(),
-            service.token);
+            service.getToken());
         out.write(header);
         out.flush();
         return socket;
