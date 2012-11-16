@@ -1063,7 +1063,7 @@ public class Service extends BaseService {
      * @return The search results.
      */
     public InputStream oneshot(String query) {
-       return oneshot(query, null);
+        return oneshot(query, null);
     }
 
     /**
@@ -1086,6 +1086,7 @@ public class Service extends BaseService {
     	args = Args.create(args);
         args.put("search", query);
         args.put("exec_mode", "oneshot");
+        
         ResponseMessage response = post("search/jobs", args);
         return response.getContent();
     }
@@ -1107,11 +1108,7 @@ public class Service extends BaseService {
      * @return The search results.
      */
     public InputStream oneshot(String query, Args args) {
-    	args = args == null ? Args.create() : args;
-    	args.put("search", query);
-    	args.put("exec_mode", "oneshot");
-        ResponseMessage response = post("search/jobs", args);
-        return response.getContent();
+    	return oneshot(query, (Map<String, Object>)args);
     }
 
     /**
@@ -1168,7 +1165,7 @@ public class Service extends BaseService {
      * @return The search results.
      */
     public InputStream search(String query) {
-       return search(query, null, null);
+        return search(query, null, null);
     }
 
     /**
@@ -1197,6 +1194,7 @@ public class Service extends BaseService {
         inputArgs.put("search", query);
         // always block until results are ready.
         inputArgs.put("exec_mode", "blocking");
+        
         Job job = this.getJobs().create(query, inputArgs);
         return job.getResults(outputArgs);
     }

@@ -16,11 +16,15 @@
 
 package com.splunk;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
 public class ServiceTest extends SDKTestCase {
+    private static final String QUERY = "search index=_internal | head 10";
+    
     @Test
     public void testCapabilities() throws Exception {
         List<String> expected = Arrays.asList(
@@ -407,6 +411,74 @@ public class ServiceTest extends SDKTestCase {
         assertEquals(8089, (int) service.getPort());
         assertEquals("https", service.getScheme());
         assertEquals(null, service.getToken());
+    }
+    
+    @Test
+    public void testConstructors() {
+        Service s;
+        
+        s = new Service("localhost");
+        assertEquals("localhost", s.getHost());
+        assertEquals(8089, s.getPort());
+        assertEquals("https", s.getScheme());
+        
+        s = new Service("localhost", 9999);
+        assertEquals("localhost", s.getHost());
+        assertEquals(9999, s.getPort());
+        assertEquals("https", s.getScheme());
+        
+        s = new Service("localhost", 9999, "http");
+        assertEquals("localhost", s.getHost());
+        assertEquals(9999, s.getPort());
+        assertEquals("http", s.getScheme());
+    }
+    
+    @Test
+    public void testSearch() throws IOException {
+        service.search(QUERY);    // throws no exception
+
+        InputStream jobOutput = service.search(QUERY,
+                new Args(),
+                new Args("output_mode", "json"));
+        try {
+            char firstJsonChar;
+            if (service.versionCompare("5.0") < 0) {
+                firstJsonChar = '[';
+            } else {
+                firstJsonChar = '{';
+            }
+            
+            // Looks like JSON?
+            assertEquals(firstJsonChar, (char)jobOutput.read());
+        }
+        finally {
+            jobOutput.close();
+        }
+    }
+    
+    @Test
+    public void testOneshot() throws IOException {
+        service.oneshot(QUERY); // throws no exception
+        
+        InputStream jobOutput = service.oneshot(QUERY,
+                new Args("output_mode", "json"));
+        try {
+            char firstJsonChar;
+            if (service.versionCompare("5.0") < 0) {
+                firstJsonChar = '[';
+            } else {
+                firstJsonChar = '{';
+            }
+            
+            // Looks like JSON?
+            // NOTE: Not sure why a oneshot search would insert a leading
+            //       newline, whereas a blocking search doesn't.
+            assertEquals('\n', (char)jobOutput.read());
+            assertEquals(firstJsonChar, (char)jobOutput.read());
+        }
+        finally {
+            jobOutput.close();
+        }
     }
     
     // === Utility ===
