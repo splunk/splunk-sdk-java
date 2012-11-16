@@ -23,12 +23,22 @@ import java.util.Map;
  * The {@code Resource} abstract base class represents a Splunk resource.
  */
 public abstract class Resource {
-    protected Map<String, String> actions;
-    protected String path;
-    protected String partialPath;
+    private static final String[] NAMESPACE_COMPONENT_NAMES = {
+        "app", "owner", "sharing"
+    };
+    
+    /* Initialized by constructor. */
     protected Service service;
-    protected String title;
+    protected String path;
+    /**
+     * @deprecated No replacement. This field is unused by the SDK.
+     */
+    protected String partialPath;
     protected Args refreshArgs;
+    
+    /* Initialized by {@link #load()}. */
+    protected Map<String, String> actions;
+    protected String title;
     private boolean maybeValid = false;
 
     /**
@@ -38,10 +48,7 @@ public abstract class Resource {
      * @param path The target endpoint.
      */
     Resource(Service service, String path) {
-        this.path = service.fullpath(path);
-        this.partialPath = path;
-        this.service = service;
-        this.refreshArgs = new Args("count", "-1");
+        this(service, path, null);
     }
 
     /**
@@ -52,29 +59,38 @@ public abstract class Resource {
      * @param args Arguments to use when you instantiate the entity.
      */
     Resource(Service service, String path, Args args) {
+        // Clone the original argument list, since it will be modified
+        args = Args.create(args);
+        
+        Args namespace = extractNamespaceFrom(args);
+        if (!args.containsKey("count")) {
+            args.put("count", "-1");
+        }
+        
         this.service = service;
-        // Pull out namespace items (app, owner, sharing) from the args, and
-        // then use to create the full path.
-        Args clonedArgs = new Args(args);
-        Args namespace = new Args();
-        if (args.containsKey("app")) {
-            namespace.put("app", args.get("app").toString());
-            clonedArgs.remove("app");
-        }
-        if (args.containsKey("owner")) {
-            namespace.put("owner", args.get("owner").toString());
-            clonedArgs.remove("owner");
-        }
-        if (args.containsKey("sharing")) {
-            namespace.put("sharing", args.get("sharing").toString());
-            clonedArgs.remove("sharing");
-        }
-        if (!clonedArgs.containsKey("count"))
-            clonedArgs.put("count", "-1");
-
-        this.refreshArgs = clonedArgs;
         this.path = service.fullpath(
             path, namespace.size() == 0 ? null : namespace);
+        this.partialPath = path;
+        this.refreshArgs = args;
+    }
+    
+    /**
+     * Extracts the namespace components from the specified argument list
+     * (modifying the original list in place) and returns the namespace
+     * components in its own namespace Args.
+     * 
+     * @param args  An argument list. Will be modified in place.
+     * @return      The namespace arguments from the original argument list.
+     */
+    private static Args extractNamespaceFrom(Args args) {
+        Args namespace = new Args();
+        for (String componentName : NAMESPACE_COMPONENT_NAMES) {
+            if (args.containsKey(componentName)) {
+                namespace.put(componentName, args.get(componentName).toString());
+                args.remove(componentName);
+            }
+        }
+        return namespace;
     }
 
     /**
