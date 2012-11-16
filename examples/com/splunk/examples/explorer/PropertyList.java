@@ -39,7 +39,7 @@ public class PropertyList extends ArrayList<PropertyInfo> {
             }
         }
         catch (NoSuchMethodException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
         sheet.put(props);
         return sheet;
