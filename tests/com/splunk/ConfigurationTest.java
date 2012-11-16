@@ -33,7 +33,7 @@ public class ConfigurationTest extends SDKTestCase {
         // so instead we create a temporary application,
         // reconnect using its namespace, then delete it
         // when we're done.
-                applicationName = createTemporaryName();
+        applicationName = createTemporaryName();
         service.getApplications().create(applicationName);
 
         // We cannot easily change the namespace of service,
@@ -57,12 +57,13 @@ public class ConfigurationTest extends SDKTestCase {
     @Override
     public void tearDown() throws Exception {
         appService.logout();
+        
         final EntityCollection<Application> apps = service.getApplications();
         apps.remove(applicationName);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override public boolean predicate() {
-                apps.refresh();
-                return !apps.containsKey(applicationName);
+            @Override
+            public boolean predicate() {
+                return !apps.refresh().containsKey(applicationName);
             }
         });
         clearRestartMessage();
@@ -88,7 +89,7 @@ public class ConfigurationTest extends SDKTestCase {
     }
 
     @Test
-    public void testCreateConfWorks() {
+    public void testCreateConf() {
         ConfCollection confs = appService.getConfs();
         String confName = createTemporaryName();
 
@@ -99,7 +100,7 @@ public class ConfigurationTest extends SDKTestCase {
     }
 
     @Test
-    public void testCreateAndDeleteStanzaWorks() {
+    public void testCreateAndDeleteStanza() {
         ConfCollection confs = appService.getConfs();
         String confName = createTemporaryName();
         EntityCollection<Entity> conf = confs.create(confName);
