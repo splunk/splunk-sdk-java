@@ -42,6 +42,13 @@ public class EntityTest extends SDKTestCase {
         }
         
         try {
+            entity.put(null, null);
+            fail("Expected UnsupportedOperationException.");
+        } catch (UnsupportedOperationException e) {
+            // Good
+        }
+        
+        try {
             entity.putAll(null);
             fail("Expected UnsupportedOperationException.");
         } catch (UnsupportedOperationException e) {
