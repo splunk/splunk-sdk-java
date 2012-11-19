@@ -79,6 +79,14 @@ public class PasswordTest extends SDKTestCase {
         assertEquals("bizbaz", password.getClearPassword());
         assertEquals(realm, password.getRealm());
 
+        assertTrue(password.getEncryptedPassword().length() > 0);
+        assertEquals(password.getName(), name);
+        assertTrue(password.getPassword().length() > 0);
+        
+        password.setPassword("booyah");
+        password.update();
+        assertTrue(password.getPassword().length() > 0);
+        
         passwords.remove(name);
         assertFalse(passwords.containsKey(name));
     }
