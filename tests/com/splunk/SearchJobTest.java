@@ -39,6 +39,14 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
+    public void testRemove() {
+    	Args namespace = Args.create();
+    	namespace.put("app", "search");
+    	namespace.put("owner", "admin");
+    	assertNull(jobs.remove("doesntexist", namespace));
+    }
+
+    @Test
     public void testEventsFromJob() {
         Job job = jobs.create(QUERY);
         waitUntilDone(job);
