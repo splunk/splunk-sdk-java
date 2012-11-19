@@ -77,6 +77,24 @@ public class IndexTest extends SDKTestCase {
     }
 
     @Test
+    public void testDeletionFromCollection() {
+        if (service.versionIsEarlierThan("5.0.0")) {
+            // Can't delete indexes via the REST API.
+            return;
+        }
+        
+        assertTrue(service.getIndexes().containsKey(indexName));
+        service.getIndexes().remove(indexName);
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return !service.getIndexes().containsKey(indexName);
+            }
+        });
+    }
+
+    @Test
     public void testAttachWith() throws IOException {
         final int originalEventCount = index.getTotalEventCount();
         
@@ -198,6 +216,8 @@ public class IndexTest extends SDKTestCase {
         index.setSyncMeta(newSyncMeta);
         int newThrottleCheckPeriod = index.getThrottleCheckPeriod()+1;
         index.setThrottleCheckPeriod(newThrottleCheckPeriod);
+        String coldToFrozenDir = index.getColdToFrozenDir();
+        index.setColdToFrozenDir("/tmp/foobar" + index.getName());
         
         boolean newEnableOnlineBucketRepair = false;
         String newMaxBloomBackfillBucketAge = null;
@@ -242,6 +262,7 @@ public class IndexTest extends SDKTestCase {
         assertEquals(newServiceMetaPeriod, index.getServiceMetaPeriod());
         assertEquals(newSyncMeta, index.getSyncMeta());
         assertEquals(newThrottleCheckPeriod, index.getThrottleCheckPeriod());
+        assertEquals("/tmp/foobar" + index.getName(), index.getColdToFrozenDir());
         if (service.versionIsAtLeast("4.3")) {
             assertEquals(
                     newEnableOnlineBucketRepair,
@@ -266,6 +287,17 @@ public class IndexTest extends SDKTestCase {
                     index.getMaxTimeUnreplicatedWithAcks()
             );
         }
+        
+        index.setColdToFrozenDir(coldToFrozenDir == null ? "" : coldToFrozenDir);
+        index.update();
+        
+        String coldToFrozenScript = index.getColdToFrozenScript();
+        index.setColdToFrozenScript("/bin/sh");
+        index.update();
+        assertEquals("/bin/sh", index.getColdToFrozenScript());
+        index.setColdToFrozenScript(coldToFrozenScript == null ? "" : coldToFrozenScript);
+        index.update();
+        //index.setColdToFrozenScript(coldToFrozenScript);
         
         // TODO: Figure out which of the above setters is forcing
         //       causing a restart request.
@@ -323,6 +355,47 @@ public class IndexTest extends SDKTestCase {
         assertTrue(index.getTotalEventCount() == 0);
         
         index.submit(createTimestamp() + " This is a test of the emergency broadcasting system.");
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return getResultCountOfIndex() == 1;
+            }
+        });
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                return index.getTotalEventCount() == 1;
+            }
+        });
+    }
+
+    @Test
+    public void testSubmitOneArgs() throws Exception {
+        try {
+            tryTestSubmitOneArgs();
+        } catch (AssertionFailedError e) {
+            if (e.getMessage().contains("Test timed out before true.") && 
+                    restartRequired()) {
+                System.out.println(
+                        "WARNING: Splunk indicated restart required while " +
+                        "running a test. Trying to recover...");
+                splunkRestart();
+                
+                tryTestSubmitOne();
+            } else {
+                throw e;
+            }
+        }
+    }
+    
+    private void tryTestSubmitOneArgs() {
+        assertTrue(getResultCountOfIndex() == 0);
+        assertTrue(index.getTotalEventCount() == 0);
+        
+        Args args = Args.create("sourcetype", "mysourcetype");
+        index.submit(args, createTimestamp() + " This is a test of the emergency broadcasting system.");
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
@@ -422,6 +495,40 @@ public class IndexTest extends SDKTestCase {
                 // Event count should never go up by more than the result count.
                 int tec = index.getTotalEventCount();
                 return (1 <= tec) && (tec <= 2);
+            }
+        });
+    }
+
+    @Test
+    public void testAttachArgs() throws IOException {
+        assertTrue(getResultCountOfIndex() == 0);
+        assertTrue(index.getTotalEventCount() == 0);
+        
+        Args args = Args.create("sourcetype", "mysourcetype");
+        Socket socket = index.attach(args);
+        OutputStream ostream = socket.getOutputStream();
+        Writer out = new OutputStreamWriter(ostream, "UTF8");
+        out.write(createTimestamp() + " Hello world!\u0150\r\n");
+        out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
+        out.write(createTimestamp() + " Goodbye world again!\u0150\r\n");
+        out.flush();
+        socket.close();
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return getResultCountOfIndex() == 3;
+            }
+        });
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                
+                // Some versions of Splunk only increase event count by 1.
+                // Event count should never go up by more than the result count.
+                int tec = index.getTotalEventCount();
+                return (1 <= tec) && (tec <= 3);
             }
         });
     }
