@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 public class SearchJobTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
@@ -185,6 +186,48 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
+    public void testCursorTime() {
+        Job job = jobs.create(QUERY);
+
+        String sid = job.getSid();
+
+        jobs.refresh();
+        assertTrue(jobs.containsKey(sid));
+        
+        Date date = job.getCursorTime();
+        assertNotNull(date);
+    }
+
+    @Test
+    public void testRemoteTimeline() {
+        Job job = jobs.create(QUERY);
+
+        String sid = job.getSid();
+
+        jobs.refresh();
+        assertTrue(jobs.containsKey(sid));
+        
+        job.isRemoteTimeline();
+    }
+
+    @Test
+    public void testRemoveFail() {
+        Job job = jobs.create(QUERY);
+
+        String sid = job.getSid();
+
+        jobs.refresh();
+        assertTrue(jobs.containsKey(sid));
+        
+        try {
+        	job.remove();
+        	fail("Exception should be thrown on job removal");
+        } catch (Exception ex) {
+        	assertTrue(true);
+        }
+    }
+
+    @Test
     public void testPreview() {
         JobArgs args = new JobArgs();
         args.put("field_list", "source,host,sourcetype");
@@ -291,6 +334,37 @@ public class SearchJobTest extends SDKTestCase {
                 }
 
                 return job.isPreviewEnabled();
+            }
+        });
+
+        job.cancel();
+    }
+
+    @Test
+    public void testDisablePreview() {
+        installApplicationFromTestData("sleep_command");
+        String query = "search index=_internal | sleep done=100";
+        Args args = new Args();
+        args.put("earliest_time", "-1m");
+        args.put("priority", 5);
+        args.put("latest_time", "now");
+        args.put("preview", "1");
+        final Job job = jobs.create(query, args);
+        assertTrue(job.isPreviewEnabled());
+
+        job.disablePreview();
+        job.update();
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                job.refresh();
+
+                if (job.isDone()) {
+                    fail("Job finished before preview was enabled.");
+                }
+
+                return !job.isPreviewEnabled();
             }
         });
 
