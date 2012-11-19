@@ -47,6 +47,8 @@ public class LicenseTest extends SDKTestCase {
     	EntityCollection<LicenseStack> stacks = service.getLicenseStacks();
     	for (LicenseStack stack : stacks.values()) {
     		assertTrue(stack.getQuota() >= 0);
+    		assertTrue(!stack.getType().isEmpty());
+    		assertTrue(!stack.getLabel().isEmpty());
     	}
     }
     
