@@ -81,4 +81,13 @@ public class UtilTest extends SDKTestCase {
                 Util.joinPath(pathComponents)
         );
     }
+
+    @Test
+    public void testArgs() {
+    	Args args = Args.create();
+    	assertTrue(args != null);
+    	assertTrue(args instanceof Args);
+    	
+    	assertTrue(Args.encode((String)null).equals(""));
+    }
 }
