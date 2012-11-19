@@ -20,9 +20,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
@@ -81,6 +84,26 @@ public class HttpServiceTest extends SDKTestCase {
         ResponseMessage response = service.send("/", request);
         assertEquals(200, response.getStatus());
         assertTrue(firstLineIsXmlDtd(response.getContent()));
+    }
+
+    @Test
+    public void testRequestMessage() {
+        RequestMessage request = new RequestMessage("GET");
+        assertTrue(request.checkMethod(request.getMethod()));
+        request.setMethod("POST");
+        assertTrue(request.checkMethod(request.getMethod()));
+        assertEquals(request.getMethod(), "POST");
+        
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+			stream.write("HELLO".getBytes("UTF-8"));
+		} catch (Exception e) {
+			fail("Exception!");
+		}
+        
+        assertNull(request.getContent());
+        request.setContent(stream);
+        assertNotNull(request.getContent());
     }
 
     @Test
