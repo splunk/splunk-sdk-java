@@ -69,4 +69,48 @@ public class EntityTest extends SDKTestCase {
             // Good
         }
     }
+    
+    @Test
+    public void testResourceCollection() {
+    	IndexCollection indexes = service.getIndexes();
+    	
+    	try {
+    		indexes.clear();
+    		fail("Should've thrown");
+    	}
+    	catch (Exception ex) {
+    		assertTrue(true);
+    	}
+    	
+    	try {
+    		indexes.entrySet();
+    		fail("Should've thrown");
+    	}
+    	catch (Exception ex) {
+    		assertTrue(true);
+    	}
+    	
+    	try {
+    		indexes.put("hello", null);
+    		fail("Should've thrown");
+    	}
+    	catch (Exception ex) {
+    		assertTrue(true);
+    	}
+    	
+    	try {
+    		indexes.putAll(null);
+    		fail("Should've thrown");
+    	}
+    	catch (Exception ex) {
+    		assertTrue(true);
+    	}
+    	
+    	Index main = indexes.get("main");
+    	assertTrue(indexes.containsValue(main));
+    	assertTrue(indexes.equals(indexes.items));
+    	assertTrue(indexes.hashCode() != 0);
+    	assertTrue(indexes.keySet().contains("main"));
+    	assertTrue(indexes.valueSize("main") == 1);
+    }
 }
