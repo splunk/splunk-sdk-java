@@ -151,6 +151,8 @@ public class ServiceTest extends SDKTestCase {
         info.isFree();
         info.isRtSearchEnabled();
         info.isTrial();
+        
+        assertEquals(info.getService(), service);
     }
 
     @Test

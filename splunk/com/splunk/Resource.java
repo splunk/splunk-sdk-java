@@ -94,15 +94,6 @@ public abstract class Resource {
     }
 
     /**
-     * Returns a map of actions that are enabled for this resource.
-     *
-     * @return The action map.
-     */
-    public Map<String, String> getActions() {
-        return validate().actions;
-    }
-
-    /**
      * Returns the resource name. By default, the name is the resource title. 
      * This name can also be used as the key for the resource if it belongs 
      * to a container resource (for example, an entity that belongs to an 
@@ -140,15 +131,6 @@ public abstract class Resource {
      */
     public String getTitle() {
         return validate().title;
-    }
-
-    /**
-     * Sets the title of this resource.
-     *
-     * @param value The resource title.
-     */
-    void setTitle(String value) {
-        this.title = value;
     }
 
     /**
