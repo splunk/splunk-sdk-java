@@ -17,6 +17,8 @@
 package com.splunk;
 
 import junit.framework.TestCase;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,7 +26,14 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResultsReaderTest extends TestCase {
+public class ResultsReaderTest extends SDKTestCase {
+
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+    }
+	
     private InputStream openResource(String path) {
         return getClass().getResourceAsStream(path);
     }
@@ -82,6 +91,8 @@ public class ResultsReaderTest extends TestCase {
         expected.put("sum(kb)", "5838.935649");
         found = reader.getNextEvent();
         assertEquals(expected, found);
+        
+        reader.close();
     }
 
     @Test
@@ -129,8 +140,27 @@ public class ResultsReaderTest extends TestCase {
         assertEquals(expected, found);
 
         assertNull(reader.getNextEvent());
+        
+        reader.close();
     }
 
+    @Test
+    public void testReadCsvFromOneshot() throws Exception {
+        InputStream input = service.oneshot("search index=_internal | head 1 | stats count", Args.create("output_mode", "csv"));
+        assertNotNull("Failed to find results.csv", input);
+        ResultsReaderCsv reader = new ResultsReaderCsv(input);
+        Map <String, String> expected, found;
+        expected = new HashMap<String, String>();
+
+        expected.clear();
+        expected.put("count", "1");
+        found = reader.getNextEvent();
+        assertEquals(expected, found);
+
+        assertNull(reader.getNextEvent());
+        
+        reader.close();
+    }
 
     @Test
     public void testReadJsonOnSplunk4() throws Exception {
@@ -155,6 +185,7 @@ public class ResultsReaderTest extends TestCase {
         expected.clear();
         expected.put("series", "splunkd_access");
         expected.put("sum(kb)", "5979.036338");
+        expected.put("mvfield", "1,2");
         found = reader.getNextEvent();
         assertEquals(expected, found);
 
