@@ -1774,15 +1774,6 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Sets the wildcard argument that accepts any action.
-     *
-     * @param action The wildcard argument.
-     */
-    public void setActionWildcard(String action) {
-        setCacheValue("action.*", action);
-    }
-
-    /**
      * Sets whether Splunk applies the alert actions to the entire result set or
      * on each individual result.
      *
@@ -2060,15 +2051,6 @@ public class SavedSearch extends Entity {
      */
     public void setDispatchTtl(String format) {
         setCacheValue("dispatch.ttl", format);
-    }
-
-    /**
-     * Sets the wildcard argument that accepts any dispatch-related argument.
-     *
-     * @param wildcard The wildcard argument.
-     */
-    public void setDispatchWildcard(String wildcard) {
-        setCacheValue("dispatch.*", wildcard);
     }
 
     /**

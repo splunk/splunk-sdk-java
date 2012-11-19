@@ -58,7 +58,7 @@
 
 * Arguments are now submitted to Splunk in a consistent order.
     - This improves behavior in certain edge cases.
-  
+
 * InputKind has changed from an enum to a class.
     - It has static members identical to the enum values, but you can no longer
       use a switch statement over the values. Instead you must use a series of
@@ -113,8 +113,8 @@
   returning an int.
 
 * The `LicensePool.getSlavesUsageBytes` method now returns a map from each slave
-  GUID to its license usage, instead of returning an `long`. 
-  
+  GUID to its license usage, instead of returning an `long`.
+
 * The `Service.oneshot(String query, Map inputArgs, Map outputArgs)` overload
   has been removed, because `outputArgs` had no effect.
 
@@ -122,8 +122,15 @@
   any `args.{argname}` parameters, call `savedSearch.update` with the values set
   in the map.
 
+* The `SavedSearch.setActionWildcard` method has been removed. Use the specific
+  setters to update these parameters.
+
+* The `SavedSearch.setDispatchWildcard` method has been removed. Use the
+  specific setters to update these parameters.
+
 * The `Service.getFiredAlerts` method has been renamed to
   `getFiredAlertsGroups`.
+
 
 
 ## Version 0.8.0 (beta)
@@ -135,7 +142,7 @@
   Now, calling isDone() will return false under the two following conditions:
   1) The job has not yet been scheduled. 2) The job has been scheduled but the
   results are not ready. In addition, isDone() implicitly invokes job.refresh()
-  so the caller does not need to. This simplifies the code waiting for a job 
+  so the caller does not need to. This simplifies the code waiting for a job
   result to this: (with a 500 millisecond polling interval)
 
 ```
@@ -144,10 +151,10 @@
         }
 ```
 
-* Added isReady() method to the Job class. This method detects whether or 
-  not the job is ready to return data (i.e. be queried). It also implicitly 
-  invokes job.refresh(). This allows for jobs with previews but that have not 
-  necessarily completed to be accessed: (with a 500 millisecond polling 
+* Added isReady() method to the Job class. This method detects whether or
+  not the job is ready to return data (i.e. be queried). It also implicitly
+  invokes job.refresh(). This allows for jobs with previews but that have not
+  necessarily completed to be accessed: (with a 500 millisecond polling
   interval)
 
 ```
@@ -160,8 +167,8 @@
 
 ### Bug fixes
 
-* Fixed ordering of collections when using pagination. Previously the order 
-  could be random. Now it maintains the order of the entities returned by the 
+* Fixed ordering of collections when using pagination. Previously the order
+  could be random. Now it maintains the order of the entities returned by the
   server.
 
 * Fixed XML streaming reader to properly work with paginated result sets.
@@ -186,11 +193,11 @@
 
 ### New features
 * Added support for a default index, allowing optional parameters
-  for streaming connections. The `Index` class now uses the new `Receiver` 
+  for streaming connections. The `Index` class now uses the new `Receiver`
   class.
 
-* Added a paginate feature for Splunk return data. This feature allows for 
-  `count` and `offset` methods to page through Splunk meta data instead of 
+* Added a paginate feature for Splunk return data. This feature allows for
+  `count` and `offset` methods to page through Splunk meta data instead of
   retrieving all the data at once:
 
 ```
@@ -208,14 +215,14 @@
 ```
 
 * Added a namespacing feature as optional arguments (`app`, `owner`, `sharing`)
-  to the collection's `create` and `get` methods. For more information about 
-  namespaces, see 
-  ["Overview of the Splunk Java SDK"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN) 
+  to the collection's `create` and `get` methods. For more information about
+  namespaces, see
+  ["Overview of the Splunk Java SDK"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN)
   on the Developer Portal.
 
   The following example shows how to use the optional namespace to restrict
-  creating and selecting saved searches to the namespace "owner = magilicuddy, 
-  app = oneMeanApp": 
+  creating and selecting saved searches to the namespace "owner = magilicuddy,
+  app = oneMeanApp":
 
 ```
     String searchName = "My scoped search";
@@ -229,7 +236,7 @@
     savedSearches.create(searchName, search, args);
 ```
 
-  This example shows how to returns all saved searches within the same scoped 
+  This example shows how to returns all saved searches within the same scoped
   namespace:
 
 ```
@@ -241,9 +248,9 @@
 ```
 
 * Added an XML, JSON, and CSV streaming results reader. This feature allows you
-  to retrieve event data using an incremental streaming mechanism. Return data 
+  to retrieve event data using an incremental streaming mechanism. Return data
   is in key-value pairs. The XML form uses built-in JDK XML parsing support. The
-  JSON and CSV form requires third-party JSON and CSV tokenizers, which are 
+  JSON and CSV form requires third-party JSON and CSV tokenizers, which are
   included as ancillary .jar files in the SDK. The JSON and CSV streaming
   results reader, which requires the external tokenizers, are contained in a
   separate Splunk .jar file named `splunk-external.jar`.
@@ -263,7 +270,7 @@
     }
 ```
 
-* Added support for Splunk Storm. Instead of connecting to `Service`, you 
+* Added support for Splunk Storm. Instead of connecting to `Service`, you
   connect to the new `StormService` class using similar arguments. Then, get a
   `Receiver` object and log events. `StormService` requires the `index` key and
   `sourcetype` parameters when sending events:
@@ -288,7 +295,7 @@
 
 ### Minor additions
 
-* Added a `genevents` example to generate events and push into Splunk using 
+* Added a `genevents` example to generate events and push into Splunk using
   various methods.
 * Added a second time format when parsing time. A second time format is required
   to accommodate the `data/input/oneshot` endpoint that does not return a
@@ -304,7 +311,7 @@
 ### Bug fixes
 
 * Fixed argument processing in the tail example.
-* Fixed timing window during search job creation; added `JOB_NOT_READY` 
+* Fixed timing window during search job creation; added `JOB_NOT_READY`
   exception.
 * Fixed `Index` cleaning to require a timeout value; added `TIMEOUT` exception.
 * Fixed `LicensePool` type to use string quota instead of integer. This change

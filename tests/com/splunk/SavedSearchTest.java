@@ -115,6 +115,7 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch.setActionRssMaxTime("30s");
         savedSearch.setActionRssTrackAlert(false);
         savedSearch.setActionRssTtl("63");
+        savedSearch.setActionScriptFilename("foo.sh");
         savedSearch.setActionScriptCommand("$name4$");
         savedSearch.setActionScriptHostname("dummy4.host.com");
         savedSearch.setActionScriptMaxResults(104);
@@ -219,6 +220,7 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals("30s", savedSearch.getActionRssMaxTime());
         assertFalse(savedSearch.getActionRssTrackAlert());
         assertEquals("63", savedSearch.getActionRssTtl());
+        assertEquals("foo.sh", savedSearch.getActionScriptFilename());
         assertEquals("$name4$", savedSearch.getActionScriptCommand());
         assertEquals("dummy4.host.com", savedSearch.getActionScriptHostname());
         assertEquals(104, savedSearch.getActionScriptMaxResults());
@@ -234,6 +236,8 @@ public class SavedSearchTest extends SDKTestCase {
         assertFalse(savedSearch.getActionSummaryIndexTrackAlert());
         assertEquals("65", savedSearch.getActionSummaryIndexTtl());
         assertEquals(savedSearch.isVisible(), !isVisible);
+        assertNull(savedSearch.getNextScheduledTime());
+        assertEquals("search search index=boris abcd", savedSearch.getQualifiedSearch());
         
         assertEquals("greater than", savedSearch.getAlertComparator());
         assertEquals("*", savedSearch.getAlertCondition());
@@ -271,6 +275,34 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals(true, savedSearch.getDispatchRtBackfill());
         assertEquals(false, savedSearch.getRestartOnSearchPeerAdd());
         assertEquals(true, savedSearch.isDisabled());
+    }
+    
+    @Test
+    public void testScheduled() {
+    	SavedSearch savedSearch = this.savedSearches.create(createTemporaryName(), "search index=_internal | head 1");
+        
+        assertFalse(savedSearch.isScheduled());
+        savedSearch.setCronSchedule("*/5 * * * *");
+        savedSearch.setIsScheduled(true);
+        savedSearch.update();
+        assertTrue(savedSearch.isScheduled());
+        
+        savedSearch.remove();
+    }
+    
+    @Test
+    public void testCreateWithNoSearch() {
+    	try {
+    		this.savedSearches.create(createTemporaryName());
+    		fail("Should've thrown!");
+    	} catch (Exception e) {
+    		assertTrue(true);
+    	}
+    }
+
+    @Test
+    public void testAcknowledge() {
+    	savedSearch.acknowledge();
     }
 
     @Test
