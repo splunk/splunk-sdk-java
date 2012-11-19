@@ -34,4 +34,30 @@ public class ScriptedInputTest extends SDKTestCase {
                 InputKind.Script, "abc", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
         ));
     }
+    
+    @Test
+    public void testEntity() {
+    	InputCollection inputs = service.getInputs();
+    	inputs.create("$SPLUNK_HOME/etc/apps/search/bin/rangemap.py", InputKind.Script, Args.create("interval", "0"));
+    	inputs.refresh();
+    	
+    	ScriptInput input = (ScriptInput)inputs.get("rangemap.py");
+    	assertNotNull(input);
+    	
+    	input.getEndTime();
+    	input.getGroup();
+    	input.getRcvBuf();
+    	input.getSource();
+    	input.getStartTime();
+    	
+    	assertFalse(input.getBoolean("disabled"));
+    	input.setDisabled(true);
+    	input.update();
+    	assertTrue(input.getBoolean("disabled"));
+    	input.setDisabled(false);
+    	input.update();
+    	assertFalse(input.getBoolean("disabled"));
+    	
+    	input.remove();
+    }
 }
