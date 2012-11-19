@@ -134,6 +134,38 @@ public class SettingsTest extends SDKTestCase {
     }
     
     @Test
+    public void testMangementPort() throws Exception {
+        Settings settings = service.getSettings();
+        int managementPort = settings.getMgmtPort();
+        
+        settings.setMgmtHostPort(29111);
+        settings.update();
+        settings.refresh();
+        
+        assertEquals(29111, settings.getMgmtPort());
+        
+        settings.setMgmtHostPort(managementPort);
+        settings.update();
+        splunkRestart();
+    }
+    
+    @Test
+    public void testSymmKey() throws Exception {
+        Settings settings = service.getSettings();
+        String key = settings.getPass4SymmKey();
+        
+        settings.setPasswordSymmKey(key + "_foo");
+        settings.update();
+        settings.refresh();
+        
+        assertEquals(key + "_foo", settings.getPass4SymmKey());
+        
+        settings.setPasswordSymmKey(key);
+        settings.update();
+        splunkRestart();
+    }
+    
+    @Test
     public void testOtherSetters() throws Exception {
         Settings settings = service.getSettings();
 
