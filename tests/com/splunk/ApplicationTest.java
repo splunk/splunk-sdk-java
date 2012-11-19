@@ -94,6 +94,7 @@ public class ApplicationTest extends SDKTestCase {
         
         ApplicationSetup applicationSetup = applicationWithSetupXml.setup();
         assertEquals("has_setup_xml", applicationSetup.getName());
+        assertFalse(applicationSetup.getRefresh());
         
         String setupXml = applicationSetup.getSetupXml();
         Document parsedSetupXml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
@@ -113,6 +114,8 @@ public class ApplicationTest extends SDKTestCase {
         ApplicationArchive archive = application.archive();
         assertEquals(applicationName, archive.getAppName());
         assertTrue(new File(archive.getFilePath()).exists());
+        assertFalse(archive.getRefresh());
+        assertTrue(archive.getUrl() != null);
     }
 
     @Test
@@ -123,6 +126,8 @@ public class ApplicationTest extends SDKTestCase {
         assertFalse(application.isConfigured());
         assertTrue(application.isVisible());
         assertFalse(application.stateChangeRequiresRestart());
+        assertFalse(application.getRefresh());
+        assertTrue(application.isManageable());
 
         String authorString = "Boris the mad baboon";
         application.setAuthor(authorString);
@@ -135,6 +140,7 @@ public class ApplicationTest extends SDKTestCase {
         application.setVersion(versionString);
         application.setConfigured(true);
         application.setVisible(false);
+        application.setManageable(false);
 
         application.update();
         application.refresh();
@@ -146,6 +152,7 @@ public class ApplicationTest extends SDKTestCase {
         assertEquals(versionString, application.getVersion());
         assertTrue(application.isConfigured());
         assertFalse(application.isVisible());
+        assertFalse(application.isManageable());
     }
 
     @Test
