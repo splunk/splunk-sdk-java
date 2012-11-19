@@ -59,6 +59,7 @@ public class EventTypesTest extends SDKTestCase {
             eventType.getDescription();
             eventType.getPriority();
             eventType.getSearch();
+            assertNotNull(eventType.getTags());
         }
     }
 
@@ -86,11 +87,13 @@ public class EventTypesTest extends SDKTestCase {
         eventType.setDescription("abcd");
         eventType.setDisabled(false);
         eventType.setPriority(3);
+        eventType.setSearch("index=_internal foo");
         eventType.update();
 
         assertEquals("abcd", eventType.getDescription());
         assertFalse(eventType.isDisabled());
         assertEquals(3, eventType.getPriority());
+        assertEquals("index=_internal foo", eventType.getSearch());
     }
 
     @Test
