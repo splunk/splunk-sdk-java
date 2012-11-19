@@ -107,6 +107,13 @@ public class HttpServiceTest extends SDKTestCase {
     }
 
     @Test
+    public void testResponseMessage() {
+    	ResponseMessage response = new ResponseMessage(200);
+    	assertEquals(response.getStatus(), 200);
+    	assertTrue(response.getHeader() != null);
+    }
+
+    @Test
     public void testDelete() {
     	Args deleteArgs = Args.create("output_mode", "json");
     	try {
