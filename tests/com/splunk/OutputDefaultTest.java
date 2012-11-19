@@ -39,9 +39,15 @@ public class OutputDefaultTest extends SDKTestCase {
         outputDefault.isDisabled();
         outputDefault.isForwardedIndexFilterDisable();
         boolean cookedData = outputDefault.getSendCookedData();
+        long maxQueueSize = outputDefault.getMaxQueueSize();
 
         // Probe
         {
+        	outputDefault.setMaxQueueSize("1MB");
+        	assertEquals(outputDefault.getMaxQueueSize(), 1024 * 1024);
+        	outputDefault.setMaxQueueSize(maxQueueSize / 1024 + "KB");
+        	assertEquals(outputDefault.getMaxQueueSize(), maxQueueSize);
+        	
             outputDefault.setDropEventsOnQueueFull(0);
             outputDefault.setHeartbeatFrequency(heartbeat+1);
             outputDefault.setIndexAndForward(!forward);

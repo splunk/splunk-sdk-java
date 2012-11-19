@@ -48,8 +48,6 @@ public class Entity extends Resource implements Map<String, Object> {
             return path;
         if (action.equals("enable"))
             return path + "/enable";
-        if (action.equals("reload"))
-            return path + "/_reload";
         if (action.equals("remove"))
             return path;
         throw new IllegalArgumentException("Invalid action: " + action);
@@ -378,14 +376,6 @@ public class Entity extends Resource implements Map<String, Object> {
         AtomEntry entry = count == 0 ? null : feed.entries.get(0);
         load(entry);
         return this;
-    }
-
-    /**
-     * Performs this entity's reload action.
-     */
-    public void reload() {
-        service.get(actionPath("reload"));
-        invalidate();
     }
 
     /** {@inheritDoc} */

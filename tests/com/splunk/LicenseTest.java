@@ -43,6 +43,14 @@ public class LicenseTest extends SDKTestCase {
         "forwarder", "enterprise", "free", "download-trial");
     
     @Test
+    public void testStacks() throws Exception {
+    	EntityCollection<LicenseStack> stacks = service.getLicenseStacks();
+    	for (LicenseStack stack : stacks.values()) {
+    		assertTrue(stack.getQuota() >= 0);
+    	}
+    }
+    
+    @Test
     public void testDefaultLicensesHaveKnownProperties() throws Exception {
         EntityCollection<License> licenses = service.getLicenses();
 
