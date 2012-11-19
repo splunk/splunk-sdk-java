@@ -18,9 +18,13 @@ package com.splunk;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
+
+import com.splunk.SDKTestCase.EventuallyTrueBehavior;
 
 public class ServiceTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
@@ -47,6 +51,51 @@ public class ServiceTest extends SDKTestCase {
         for (String name : expected) {
             assertTrue(contains(caps, name));
         }
+    }
+
+    // Make a few simple requests and make sure the results look ok.
+    @Test
+    public void testReceiver() {
+    	Receiver receiver = service.getReceiver();
+
+    	final Index index = service.getIndexes().get("main");
+        final int originalEventCount = index.getTotalEventCount();
+        
+        try {
+			Socket socket1 = receiver.attach();
+			OutputStream stream = socket1.getOutputStream();
+
+            String s = createTimestamp() + " Boris the mad baboon1!\r\n";
+            stream.write(s.getBytes("UTF8"));
+		} catch (IOException e) {
+			fail("Exception on attach");
+		}
+        
+        try {
+			Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
+			OutputStream stream = socket1.getOutputStream();
+
+            String s = createTimestamp() + " Boris the mad baboon2!\r\n";
+            stream.write(s.getBytes("UTF8"));
+		} catch (IOException e) {
+			fail("Exception on attach");
+		}
+
+        receiver.submit("Boris the mad baboon3!\r\n");
+        receiver.submit(Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon4!\r\n");
+        receiver.log("Boris the mad baboon5!\r\n");
+        receiver.log("main", "Boris the mad baboon6!\r\n");
+        receiver.log(Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon7!\r\n");
+        receiver.log("main", Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon8!\r\n");
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                int eventCount = index.getTotalEventCount();
+                return eventCount == originalEventCount + 6;
+            }
+        });
     }
 
     // Make a few simple requests and make sure the results look ok.
