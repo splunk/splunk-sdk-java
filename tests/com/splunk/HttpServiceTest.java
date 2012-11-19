@@ -82,4 +82,15 @@ public class HttpServiceTest extends SDKTestCase {
         assertEquals(200, response.getStatus());
         assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
+
+    @Test
+    public void testDelete() {
+    	Args deleteArgs = Args.create("output_mode", "json");
+    	try {
+    		httpService.delete("/search/jobs/foobar_doesntexist", deleteArgs);
+    	} catch (HttpException e) {
+    		assertEquals(404, e.getStatus());
+        	assertNotNull(e.getDetail());
+    	}
+    }
 }
