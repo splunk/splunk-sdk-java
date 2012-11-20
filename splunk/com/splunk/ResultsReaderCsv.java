@@ -45,7 +45,7 @@ public class ResultsReaderCsv extends ResultsReader {
         // initial line contains the keys, except for oneshot -- which contains
         // a blank line, and then the key list.
         keys = csvReader.readNext();
-        if (keys.length == 1 && keys[0].equals("")) {
+        if (keys.length == 1 && keys[0].trim().equals("")) {
             keys = csvReader.readNext();
         }
     }
