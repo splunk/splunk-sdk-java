@@ -64,6 +64,13 @@ public class ResultsReaderCsv extends ResultsReader {
         String[] line;
 
         if ((line = csvReader.readNext()) != null) {
+        	if (line.length == 1 && line[0].equals("")) {
+        		line = csvReader.readNext();
+        		if (line == null) {
+        			return returnData;
+        		}
+        	}
+        	
             returnData = new HashMap<String, String>();
             int count = 0;
             for (String key: keys) {
