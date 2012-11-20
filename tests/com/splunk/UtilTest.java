@@ -90,4 +90,18 @@ public class UtilTest extends SDKTestCase {
     	
     	assertTrue(Args.encode((String)null).equals(""));
     }
+
+    @Test
+    public void testValue() {
+    	assertEquals(1024, Value.toByteCount("1KB"));
+    	assertEquals(1024 * 1024, Value.toByteCount("1MB"));
+    	assertEquals(1024 * 1024 * 1024, Value.toByteCount("1GB"));
+    	
+    	try {
+    		Value.toByteCount("0GGGGB");
+    		fail("Should error!");
+    	} catch(Exception e) {
+    		// nothing
+    	}
+    }
 }
