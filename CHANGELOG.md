@@ -131,7 +131,7 @@
 * The `Service.getFiredAlerts` method has been renamed to
   `getFiredAlertsGroups`.
 
-
+* The `Entity.reload` method has been removed.
 
 ## Version 0.8.0 (beta)
 
