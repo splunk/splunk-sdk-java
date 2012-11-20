@@ -32,7 +32,7 @@ public class SearchJobTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
     private static final String SUMMARY_FIELD_MAGIC_4x = "<field k='host' c='10' nc='0' dc='1' exact='1' relevant='0'>";
     private static final String SUMMARY_FIELD_MAGIC_5x = "<field k=\"host\" c=\"10\" nc=\"0\" dc=\"1\" exact=\"1\" relevant=\"0\">";
-    
+
     private JobCollection jobs;
 
     @Before
@@ -130,10 +130,10 @@ public class SearchJobTest extends SDKTestCase {
     	args.setOutputTimeFormat("%s.%Q");
     	args.setRequiredFieldList(new String[] { "_raw", "date_hour" });
     	args.setSearchMode(JobExportArgs.SearchMode.NORMAL);
-    	
+
     	InputStream input = service.export("search index=_internal | head 200", args);
     	ResultsReaderCsv reader = new ResultsReaderCsv(input);
-    	
+
     	int count = 0;
     	while(true) {
     		HashMap<String, String> found = reader.getNextEvent();
@@ -146,7 +146,7 @@ public class SearchJobTest extends SDKTestCase {
     			break;
     		}
     	}
-    	
+
     	assertEquals(200, count);
     }
 
@@ -166,22 +166,22 @@ public class SearchJobTest extends SDKTestCase {
     	args.setRequiredFieldList(new String[] { "_raw", "date_hour" });
     	args.setSearchMode(JobArgs.SearchMode.NORMAL);
     	args.setId(name);
-    	
+
     	JobCollection jobs = service.getJobs();
     	Job job = jobs.create("search index=_internal | head 200", args);
-    	
+
     	while(!job.isDone()) {
     		Thread.sleep(1000);
     	}
-    	
+
     	job.refresh();
     	assertEquals(job.get("sid"), name);
     	assertTrue(job.getEventCount() < 2000);
-    	
+
     	testEventArgs(job);
     	testResultArgs(job);
     	testPreviewArgs(job);
-    	
+
     	job.cancel();
     }
 
@@ -195,10 +195,10 @@ public class SearchJobTest extends SDKTestCase {
     	args.setOutputTimeFormat("%s.%Q");
     	args.setSegmentation("full");
     	args.setTruncationMode(JobEventsArgs.TruncationMode.TRUNCATE);
-    	
+
     	InputStream input = job.getEvents(args);
     	ResultsReaderCsv reader = new ResultsReaderCsv(input);
-    	
+
     	int count = 0;
     	while(true) {
     		HashMap<String, String> found = reader.getNextEvent();
@@ -212,7 +212,7 @@ public class SearchJobTest extends SDKTestCase {
     			break;
     		}
     	}
-    	
+
     	assertEquals(2, count);
     }
 
@@ -222,10 +222,10 @@ public class SearchJobTest extends SDKTestCase {
     	args.setOffset(2);
     	args.setFieldList(new String[] { "_raw", "date_hour", "_serial" });
     	args.setOutputMode(JobResultsArgs.OutputMode.CSV);
-    	
+
     	InputStream input = job.getResults(args);
     	ResultsReaderCsv reader = new ResultsReaderCsv(input);
-    	
+
     	int count = 0;
     	while(true) {
     		HashMap<String, String> found = reader.getNextEvent();
@@ -239,16 +239,16 @@ public class SearchJobTest extends SDKTestCase {
     			break;
     		}
     	}
-    	
+
     	assertEquals(2, count);
-    	
+
     	JobResultsArgs args2 = new JobResultsArgs();
     	args2.setSearch("stats count");
     	args2.setOutputMode(JobResultsArgs.OutputMode.JSON);
-    	
+
     	InputStream input2 = job.getResults(args2);
     	ResultsReaderJson reader2 = new ResultsReaderJson(input2);
-    	
+
     	int count2 = 0;
     	while(true) {
     		HashMap<String, String> found = reader2.getNextEvent();
@@ -260,7 +260,7 @@ public class SearchJobTest extends SDKTestCase {
     			break;
     		}
     	}
-    	
+
     	assertEquals(1, count2);
     }
 
@@ -270,10 +270,10 @@ public class SearchJobTest extends SDKTestCase {
     	args.setOffset(2);
     	args.setFieldList(new String[] { "_raw", "date_hour", "_serial" });
     	args.setOutputMode(JobResultsPreviewArgs.OutputMode.CSV);
-    	
+
     	InputStream input = job.getResultsPreview(args);
     	ResultsReaderCsv reader = new ResultsReaderCsv(input);
-    	
+
     	int count = 0;
     	while(true) {
     		HashMap<String, String> found = reader.getNextEvent();
@@ -287,16 +287,16 @@ public class SearchJobTest extends SDKTestCase {
     			break;
     		}
     	}
-    	
+
     	assertEquals(2, count);
-    	
+
     	JobResultsPreviewArgs args2 = new JobResultsPreviewArgs();
     	args2.setSearch("stats count");
     	args2.setOutputMode(JobResultsPreviewArgs.OutputMode.JSON);
-    	
+
     	InputStream input2 = job.getResultsPreview(args2);
     	ResultsReaderJson reader2 = new ResultsReaderJson(input2);
-    	
+
     	int count2 = 0;
     	while(true) {
     		HashMap<String, String> found = reader2.getNextEvent();
@@ -308,7 +308,7 @@ public class SearchJobTest extends SDKTestCase {
     			break;
     		}
     	}
-    	
+
     	assertEquals(1, count2);
     }
 
@@ -394,7 +394,7 @@ public class SearchJobTest extends SDKTestCase {
 
         jobs.refresh();
         assertTrue(jobs.containsKey(sid));
-        
+
         Date date = job.getCursorTime();
         assertNotNull(date);
     }
@@ -407,7 +407,7 @@ public class SearchJobTest extends SDKTestCase {
 
         jobs.refresh();
         assertTrue(jobs.containsKey(sid));
-        
+
         job.isRemoteTimeline();
     }
 
@@ -419,7 +419,7 @@ public class SearchJobTest extends SDKTestCase {
 
         jobs.refresh();
         assertTrue(jobs.containsKey(sid));
-        
+
         try {
         	job.remove();
         	fail("Exception should be thrown on job removal");
@@ -450,7 +450,7 @@ public class SearchJobTest extends SDKTestCase {
 
         job.cancel();
     }
-    
+
     @Test
     public void testSummary() {
         // status_buckets > 0 and arguments to
@@ -514,14 +514,14 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testEnablePreview() {
         installApplicationFromTestData("sleep_command");
-        String query = "search index=_internal | sleep done=100";
+        String query = "search index=_internal | sleep 10";
         Args args = new Args();
         args.put("earliest_time", "-1m");
         args.put("priority", 5);
         args.put("latest_time", "now");
         final Job job = jobs.create(query, args);
         assertFalse(job.isPreviewEnabled());
-
+        
         job.enablePreview();
         job.update();
 
@@ -530,7 +530,7 @@ public class SearchJobTest extends SDKTestCase {
             public boolean predicate() {
                 job.refresh();
 
-                if (job.isDone()) {
+                if (!job.isPreviewEnabled() && job.isDone()) {
                     fail("Job finished before preview was enabled.");
                 }
 
@@ -544,7 +544,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testDisablePreview() {
         installApplicationFromTestData("sleep_command");
-        String query = "search index=_internal | sleep done=100";
+        String query = "search index=_internal | sleep 10";
         Args args = new Args();
         args.put("earliest_time", "-1m");
         args.put("priority", 5);
@@ -561,7 +561,7 @@ public class SearchJobTest extends SDKTestCase {
             public boolean predicate() {
                 job.refresh();
 
-                if (job.isDone()) {
+                if (job.isPreviewEnabled() && job.isDone()) {
                     fail("Job finished before preview was enabled.");
                 }
 
@@ -578,7 +578,7 @@ public class SearchJobTest extends SDKTestCase {
         // splunkd is running as root.This is because Splunk jobs
         // are tied up with operating system processes and their priorities.
         installApplicationFromTestData("sleep_command");
-        String query = "search index=_internal | sleep done=100";
+        String query = "search index=_internal | sleep 10";
         Args args = new Args();
         args.put("earliest_time", "-1m");
         args.put("priority", 5);
@@ -605,7 +605,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testPause() {
         installApplicationFromTestData("sleep_command");
-        String query = "search index=_internal | sleep done=100";
+        String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
 
         if (job.isPaused()) {
@@ -629,7 +629,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testUnpause() {
         installApplicationFromTestData("sleep_command");
-        String query = "search index=_internal | sleep done=100";
+        String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
 
         if (!job.isPaused()) {
@@ -653,7 +653,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testFinalize() {
         installApplicationFromTestData("sleep_command");
-        String query = "search index=_internal | sleep done=100";
+        String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
 
         assertFalse(job.isFinalized());
@@ -665,9 +665,9 @@ public class SearchJobTest extends SDKTestCase {
 
         job.cancel();
     }
-    
+
     // === Utility ===
-    
+
     private int countEvents(InputStream stream) {
         ResultsReaderXml results = null;
         try {
@@ -684,7 +684,7 @@ public class SearchJobTest extends SDKTestCase {
             return -1;
         }
     }
-    
+
     private void waitUntilDone(final Job job) {
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
