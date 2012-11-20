@@ -394,16 +394,22 @@ public class ServiceTest extends SDKTestCase {
             assertEquals("Renzo", user.getRealName());
             assertEquals("email.me@now.com", user.getEmail());
             assertEquals("search", user.getDefaultApp());
-            user.getTz();
+            assertNotNull(user.getPassword());
+            user.getDefaultAppIsUserOverride();
+            assertNotNull(user.getDefaultAppSourceRole());
+            assertNotNull(user.getType());
     
             // Probe
             {
+            	String tz = user.getTz();
+            	
                 user.setDefaultApp("search");
                 user.setEmail("none@noway.com");
                 user.setPassword("new-password");
                 user.setRealName("SDK-name");
                 if (service.versionCompare("4.3") >= 0) {
                     user.setRestartBackgroundJobs(false);
+                    user.setTz("Pacific/Midway");
                 }
                 user.setRoles("power");
                 user.update();
@@ -413,6 +419,13 @@ public class ServiceTest extends SDKTestCase {
                 assertEquals("none@noway.com", user.getEmail());
                 assertEquals("SDK-name", user.getRealName());
                 assertEquals(1, user.getRoles().length);
+                assertEquals("Pacific/Midway", user.getTz());
+                assertTrue(contains(user.getRoles(), "power"));
+                
+                user.setTz(tz == null ? "" : tz);
+                user.setRoles(new String[] {"power"});
+                user.update();
+                user.refresh();
                 assertTrue(contains(user.getRoles(), "power"));
             }
     
