@@ -26,6 +26,9 @@ public class InputCrudTest extends InputTest {
     public void testGetters() {
         assertFalse("No default inputs to test.", inputs.isEmpty());
         
+        Input splunkInput = inputs.create(findNextUnusedPort(12911) +"", InputKind.TcpSplunk);
+        inputs.refresh();
+        
         // Test getters on all default inputs
         for (Input input : inputs.values()) {
             input.getName();
@@ -34,6 +37,8 @@ public class InputCrudTest extends InputTest {
             input.getKind();
             testSpecializedGetters(input);
         }
+        
+        splunkInput.remove();
     }
     
     @SuppressWarnings("deprecation")

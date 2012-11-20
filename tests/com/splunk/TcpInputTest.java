@@ -58,6 +58,39 @@ public class TcpInputTest extends SDKTestCase {
     }
 
     @Test
+    public void testGetters() throws IOException {
+    	final Socket socket = tcpInput.attach();
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+            	TcpConnections connections = tcpInput.connections();
+            	String connection = connections.getConnection();
+            	String servername = connections.getServername();
+            	
+            	if (connection == null && servername == null) {
+            		return false;
+            	}
+            	
+            	try {
+					socket.close();
+				} catch (IOException e) {
+					fail("Should not throw!");
+				} 
+            	
+            	return true;
+            }
+        });
+    
+        
+        assertNotNull(tcpInput.getGroup());
+        assertNull(tcpInput.getRestrictToHost());
+       
+        tcpInput.setDisabled(false);
+        tcpInput.update();
+    }
+    
+    @Test
     public void testAttachAndWrite() throws IOException {
         writeEventsTo(tcpInput.attach());
         writeEventsTo(service.open(tcpInput.getPort()));
