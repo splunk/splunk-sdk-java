@@ -19,11 +19,14 @@ package com.splunk;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.splunk.JobEventsArgs.OutputMode;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.HashMap;
 
 public class SearchJobTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
@@ -109,6 +112,204 @@ public class SearchJobTest extends SDKTestCase {
                 assertTrue(job.isFailed());
             }
         }
+    }
+
+    @Test
+    public void testExportArgs() throws IOException {
+    	JobExportArgs args = new JobExportArgs();
+    	args.setAutoCancel(5);
+    	args.setAutoFinalizeEventCount(2);
+    	args.setAutoPause(10);
+    	args.setEnableLookups(true);
+    	args.setMaximumTime(3);
+    	args.setMaximumLines(1);
+    	args.setOutputMode(JobExportArgs.OutputMode.CSV);
+    	args.setEarliestTime("-10m");
+    	args.setLatestTime("-5m");
+    	args.setTruncationMode(JobExportArgs.TruncationMode.TRUNCATE);
+    	args.setOutputTimeFormat("%s.%Q");
+    	args.setRequiredFieldList(new String[] { "_raw", "date_hour" });
+    	args.setSearchMode(JobExportArgs.SearchMode.NORMAL);
+    	
+    	InputStream input = service.export("search index=_internal | head 200", args);
+    	ResultsReaderCsv reader = new ResultsReaderCsv(input);
+    	
+    	int count = 0;
+    	while(true) {
+    		HashMap<String, String> found = reader.getNextEvent();
+    		if (found != null) {
+    			count++;
+    			assertEquals(found.get("_raw").split("\n").length, 1);
+    			assertFalse(found.containsKey("date_month"));
+    		}
+    		else {
+    			break;
+    		}
+    	}
+    	
+    	assertEquals(200, count);
+    }
+
+    @Test
+    public void testJobArgs() throws IOException, InterruptedException {
+    	String name = createTemporaryName();
+    	JobArgs args = new JobArgs();
+    	args.setAutoCancel(5);
+    	args.setAutoFinalizeEventCount(2);
+    	args.setAutoPause(10);
+    	args.setEnableLookups(true);
+    	args.setMaximumTime(3);
+    	args.setMaximumCount(10);
+    	args.setStatusBuckets(1);
+    	args.setEarliestTime("-600m");
+    	args.setLatestTime("-5m");
+    	args.setRequiredFieldList(new String[] { "_raw", "date_hour" });
+    	args.setSearchMode(JobArgs.SearchMode.NORMAL);
+    	args.setId(name);
+    	
+    	JobCollection jobs = service.getJobs();
+    	Job job = jobs.create("search index=_internal | head 200", args);
+    	
+    	while(!job.isDone()) {
+    		Thread.sleep(1000);
+    	}
+    	
+    	job.refresh();
+    	assertEquals(job.get("sid"), name);
+    	assertTrue(job.getEventCount() < 2000);
+    	
+    	testEventArgs(job);
+    	testResultArgs(job);
+    	testPreviewArgs(job);
+    	
+    	job.cancel();
+    }
+
+    public void testEventArgs(Job job) throws IOException, InterruptedException {
+    	JobEventsArgs args = new JobEventsArgs();
+    	args.setCount(2);
+    	args.setOffset(2);
+    	args.setMaximumLines(1);
+    	args.setFieldList(new String[] { "_raw", "date_hour", "_serial" });
+    	args.setOutputMode(JobEventsArgs.OutputMode.CSV);
+    	args.setOutputTimeFormat("%s.%Q");
+    	args.setSegmentation("full");
+    	args.setTruncationMode(JobEventsArgs.TruncationMode.TRUNCATE);
+    	
+    	InputStream input = job.getEvents(args);
+    	ResultsReaderCsv reader = new ResultsReaderCsv(input);
+    	
+    	int count = 0;
+    	while(true) {
+    		HashMap<String, String> found = reader.getNextEvent();
+    		if (found != null) {
+    			assertEquals(found.get("_raw").split("\n").length, 1);
+    			assertFalse(found.containsKey("date_month"));
+    			assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
+    			count++;
+    		}
+    		else {
+    			break;
+    		}
+    	}
+    	
+    	assertEquals(2, count);
+    }
+
+    public void testResultArgs(Job job) throws IOException, InterruptedException {
+    	JobResultsArgs args = new JobResultsArgs();
+    	args.setCount(2);
+    	args.setOffset(2);
+    	args.setFieldList(new String[] { "_raw", "date_hour", "_serial" });
+    	args.setOutputMode(JobResultsArgs.OutputMode.CSV);
+    	
+    	InputStream input = job.getResults(args);
+    	ResultsReaderCsv reader = new ResultsReaderCsv(input);
+    	
+    	int count = 0;
+    	while(true) {
+    		HashMap<String, String> found = reader.getNextEvent();
+    		if (found != null) {
+    			assertEquals(found.get("_raw").split("\n").length, 1);
+    			assertFalse(found.containsKey("date_month"));
+    			assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
+    			count++;
+    		}
+    		else {
+    			break;
+    		}
+    	}
+    	
+    	assertEquals(2, count);
+    	
+    	JobResultsArgs args2 = new JobResultsArgs();
+    	args2.setSearch("stats count");
+    	args2.setOutputMode(JobResultsArgs.OutputMode.JSON);
+    	
+    	InputStream input2 = job.getResults(args2);
+    	ResultsReaderJson reader2 = new ResultsReaderJson(input2);
+    	
+    	int count2 = 0;
+    	while(true) {
+    		HashMap<String, String> found = reader2.getNextEvent();
+    		if (found != null) {
+    			assertEquals(found.get("count"), "10");
+    			count2++;
+    		}
+    		else {
+    			break;
+    		}
+    	}
+    	
+    	assertEquals(1, count2);
+    }
+
+    public void testPreviewArgs(Job job) throws IOException, InterruptedException {
+    	JobResultsPreviewArgs args = new JobResultsPreviewArgs();
+    	args.setCount(2);
+    	args.setOffset(2);
+    	args.setFieldList(new String[] { "_raw", "date_hour", "_serial" });
+    	args.setOutputMode(JobResultsPreviewArgs.OutputMode.CSV);
+    	
+    	InputStream input = job.getResultsPreview(args);
+    	ResultsReaderCsv reader = new ResultsReaderCsv(input);
+    	
+    	int count = 0;
+    	while(true) {
+    		HashMap<String, String> found = reader.getNextEvent();
+    		if (found != null) {
+    			assertEquals(found.get("_raw").split("\n").length, 1);
+    			assertFalse(found.containsKey("date_month"));
+    			assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
+    			count++;
+    		}
+    		else {
+    			break;
+    		}
+    	}
+    	
+    	assertEquals(2, count);
+    	
+    	JobResultsPreviewArgs args2 = new JobResultsPreviewArgs();
+    	args2.setSearch("stats count");
+    	args2.setOutputMode(JobResultsPreviewArgs.OutputMode.JSON);
+    	
+    	InputStream input2 = job.getResultsPreview(args2);
+    	ResultsReaderJson reader2 = new ResultsReaderJson(input2);
+    	
+    	int count2 = 0;
+    	while(true) {
+    		HashMap<String, String> found = reader2.getNextEvent();
+    		if (found != null) {
+    			assertEquals(found.get("count"), "10");
+    			count2++;
+    		}
+    		else {
+    			break;
+    		}
+    	}
+    	
+    	assertEquals(1, count2);
     }
 
     @Test

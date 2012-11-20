@@ -216,16 +216,6 @@ public class JobExportArgs extends Args {
     }
     
     /**
-     * Sets a search ID (SID). If unspecified, a random ID is generated. 
-     * 
-     * @param id
-     *      The search ID.
-     */
-    public void setId(String id) {
-        this.put("id", id);
-    }
-    
-    /**
      * Specifies the latest time in the time range to search. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
      * 
      * @param latestTime
@@ -407,26 +397,6 @@ public class JobExportArgs extends Args {
     }
     
     /**
-     * Sets the maximum number of results to return. To return all available results, specify 0. The default value is 100.
-     * 
-     * @param count
-     *      The maximum number of results. 
-     */
-    public void setCount(int count) {
-        this.put("count", count);
-    }
-    
-    /**
-     * Sets a list of fields to return for the event set. 
-     * 
-     * @param fieldList
-     *      A list of fields.
-     */
-    public void setFieldList(String[] fieldList) {
-        this.put("f", fieldList);
-    }
-    
-    /**
      * Sets the maximum number of lines that any single event's <b>_raw</b> field should contain.
      * 
      * @param maximumLines
@@ -437,16 +407,6 @@ public class JobExportArgs extends Args {
     }
     
     /**
-     * Specifies the index of the first result (inclusive) from which to begin returning data. This value is 0-indexed.<p>In Splunk 4.1+, negative offsets are allowed and are added to the count to compute the absolute offset (for example, offset=-1 is the last available offset). Offsets in the results are always absolute and never negative. The default value is 0.
-     * 
-     * @param offset
-     *      The index of the first result to return.
-     */
-    public void setOffset(int offset) {
-        this.put("offset", offset);
-    }
-    
-    /**
      * Sets a UTC time format. 
      * 
      * @param outputTimeFormat
@@ -454,16 +414,6 @@ public class JobExportArgs extends Args {
      */
     public void setOutputTimeFormat(String outputTimeFormat) {
         this.put("output_time_format", outputTimeFormat);
-    }
-    
-    /**
-     * Sets the post-processing search to apply to results. 
-     * 
-     * @param search
-     *      The post-processing search query.
-     */
-    public void setSearch(String search) {
-        this.put("search", search);
     }
     
     /**
