@@ -17,6 +17,7 @@ package com.splunk;
 
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * The {@code ModularInputKindArgument} class is a map-like object that is 
  * specialized to represent arguments for modular input kinds.
@@ -62,7 +63,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
         } else if (r.equals("0")) {
             return false;
         } else {
-            throw new IllegalArgumentException("Expected 1 or 0; found: " + r);
+            throw new IllegalStateException("Expected 1 or 0; found: " + r);
         }
     }
 
@@ -84,7 +85,6 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      * @return {@code true} if this argument is required for editing, 
      * {@code false} if not.
      */
-
     public boolean getRequiredOnEdit() {
         return getBoolean("required_on_edit");
     }
@@ -104,7 +104,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
         } else if (type.equals("string")) {
             return ModularInputKindArgumentType.String;
         } else {
-            throw new IllegalArgumentException("Invalid data_type value: " + type);
+            throw new IllegalStateException("Invalid data_type value: " + type);
         }
     }
 }

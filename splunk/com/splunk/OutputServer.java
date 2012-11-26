@@ -158,7 +158,7 @@ public class OutputServer extends Entity {
      * @deprecated Use {@link #setSslRootCAPath(String)} instead.
      */
     public void setsslRootCAPath(String sslRootCAPath) {
-        this.setsslRootCAPath(sslRootCAPath);
+        this.setSslRootCAPath(sslRootCAPath);
     }
     
     /**

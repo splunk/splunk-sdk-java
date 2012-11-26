@@ -133,6 +133,8 @@
 
 * The `Entity.reload` method has been removed.
 
+* The `Entity.toUpdate` field is no longer public.
+
 ## Version 0.8.0 (beta)
 
 ### Breaking Changes
