@@ -103,10 +103,11 @@ public class UdpInput extends PortInput {
     }
 
     /**
-     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this 
+     * Returns the value of the {@code _rcvbuf} attribute for this 
      * UDP input.
      *
      * @return The {@code _rcvbuf} value.
+     * @deprecated This is not used anymore. No replacement.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
