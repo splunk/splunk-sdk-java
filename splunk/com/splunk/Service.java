@@ -1215,9 +1215,9 @@ public class Service extends BaseService {
      * the version specified in {@code version}.
      *
      * So when called on a Splunk 4.3.2 instance:
-     *   * {@code versionIsAtEarliest("4.3.2")} is {@code true}.
-     *   * {@code versionIsAtEarliest("4.1.0")} is {@code true}.
-     *   * {@code versionIsAtEarliest("5.0.0")} is {@code false}.
+     *   * {@code versionIsAtLeast("4.3.2")} is {@code true}.
+     *   * {@code versionIsAtLeast("4.1.0")} is {@code true}.
+     *   * {@code versionIsAtLeast("5.0.0")} is {@code false}.
      *
      * @param version The version to compare this Splunk instance's version against.
      * @return {@code true} if this Splunk instance's version is equal or
