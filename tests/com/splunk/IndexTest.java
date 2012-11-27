@@ -540,11 +540,18 @@ public class IndexTest extends SDKTestCase {
         assertTrue(getResultCountOfIndex() == 0);
         assertTrue(index.getTotalEventCount() == 0);
 
-        File fileToUpload = Util.joinPath(new String[] {
+        String splunkHome = service.getSettings().getSplunkHome();
+        String separator;
+        if (splunkHome.contains("\\")) {
+        	separator = "\\";
+        } else {
+        	separator = "/";
+        }
+        String fileToUpload = Util.join(separator, new String[] {
                 service.getSettings().getSplunkHome(),
                 "etc", "apps", "file_to_upload", "log.txt"});
-        assertTrue("File to upload does not exist.", fileToUpload.exists());
-        index.upload(fileToUpload.getAbsolutePath());
+
+        index.upload(fileToUpload);
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
