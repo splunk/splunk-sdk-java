@@ -3,6 +3,7 @@
 ## Version 1.0
 
 ### New features and APIs
+
 * Specialized *args* classes have been added to make it easier to pass entity-specific arguments:
     - `CollectionArgs`
     - `IndexCollectionArgs`
@@ -137,15 +138,15 @@
 
 * The `Entity.toUpdate` field is no longer public.
 
-
 ### Bug fixes
+
 * The `Service.versionCompare` method has been fixed to work as expected.
 
 * The `OutputDefault.update` method has been fixed so that when a "name" parameter is not
   specified, the method no longer fails. 
 
-
 ### Deprecated features
+
 The following list contains the main features that have been deprecated (trivial
 changes are not included): 
 
@@ -156,6 +157,7 @@ changes are not included):
   for Splunk 5.0 and later.
 
 * The `DistributedConfiguration.getServerTimeout` method has been deprecated for Splunk 5.0 and later.
+
 
 ## Version 0.8.0 (beta)
 
