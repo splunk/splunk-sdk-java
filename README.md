@@ -101,13 +101,13 @@ To use this convenience file, create a text file with the following format:
 
     # Splunk host (default: localhost)
     host=localhost
-    # Splunk port (default: the admin port, 8089)
+    # Splunk admin port (default: 8089)
     port=8089
     # Splunk username
     username=admin
     # Splunk password
     password=changeme
-    # Access scheme
+    # Access scheme (default: https)
     scheme=https
     # Application context
     app=search
@@ -252,12 +252,14 @@ outputs</td>
 ### Changelog
 
 The **CHANGELOG.md** file in the root of the repository contains a description
-of changes for each version of the SDK. You can also find it online at [https://github.com/splunk/splunk-sdk-java/blob/master/CHANGELOG.md](https://github.com/splunk/splunk-sdk-java/blob/master/CHANGELOG.md).
+of changes for each version of the SDK. You can also find it online at
+[https://github.com/splunk/splunk-sdk-java/blob/master/CHANGELOG.md](https://github.com/splunk/splunk-sdk-java/blob/master/CHANGELOG.md).
 
 ### Branches
 
 The **master** branch always represents a stable and released version of the SDK.
-You can read more about our branching model on our Wiki at [https://github.com/splunk/splunk-sdk-java/wiki/Branching-Model](https://github.com/splunk/splunk-sdk-java/wiki/Branching-Model).
+You can read more about our branching model on our Wiki at 
+[https://github.com/splunk/splunk-sdk-java/wiki/Branching-Model](https://github.com/splunk/splunk-sdk-java/wiki/Branching-Model).
 
 ## Documentation and resources
 

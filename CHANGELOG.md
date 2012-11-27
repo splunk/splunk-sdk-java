@@ -97,7 +97,7 @@
 * The methods in the `ResultsReader` class now throw `IOException` instead of a plain `Exception`,
   so callers no longer need to handle a plain `Exception`.
 
-* The `SplunkExceptions` class now provides error messages when printed.
+* The `SplunkException` class now provides error messages when printed.
 
 * The test suite has been completely cleaned up, resulting in better coverage and faster 
   performance, mostly by eliminating unnecessary restarts. The test suite strictly requires 
@@ -112,6 +112,9 @@
 
 
 ### Deprecated features
+The following list contains the main features that have been deprecated (trivial
+changes are not included): 
+
 * The `ServiceArgs` public fields have been deprecated in favor of the new setter 
   methods to maintain consistency with the new *args* subclasses.
 
