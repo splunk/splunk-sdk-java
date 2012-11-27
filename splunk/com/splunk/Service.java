@@ -1055,7 +1055,7 @@ public class Service extends BaseService {
      * Creates a oneshot synchronous search using search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments:<ul>
+     * @param args The search arguments:<ul>
      * <li>"output_mode": Specifies the output format of the results (XML, JSON,
      * or CSV).</li>
      * <li>"earliest_time": Specifies the earliest time in the time range to 
@@ -1080,7 +1080,7 @@ public class Service extends BaseService {
      * Creates a oneshot synchronous search using search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments:<ul>
+     * @param args The search arguments:<ul>
      * <li>"output_mode": Specifies the output format of the results (XML, JSON,
      * or CSV).</li>
      * <li>"earliest_time": Specifies the earliest time in the time range to 
