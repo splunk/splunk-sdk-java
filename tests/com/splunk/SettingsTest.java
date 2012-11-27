@@ -119,7 +119,7 @@ public class SettingsTest extends SDKTestCase {
     
     private boolean isPortInUse(int port) {
         try {
-            Socket pingSocket = new Socket("127.0.0.1", port);
+            Socket pingSocket = new Socket(service.getHost(), port);
             pingSocket.close();
             if (VERBOSE_PORT_SCAN) {
                 System.out.println("IN-USE(" + port + ")");

@@ -39,6 +39,7 @@
     <target name="clean">
         <delete dir="build"/>
         <delete dir="dist"/>
+        <delete dir="out" /> <!-- IntelliJ's output directory -->
     </target>
 
     <target name="build">
