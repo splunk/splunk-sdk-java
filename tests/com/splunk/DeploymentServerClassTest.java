@@ -132,20 +132,5 @@ public class DeploymentServerClassTest extends SDKTestCase {
         serverClass.refresh();
         assertEquals("blacklist", serverClass.getFilterType());
     }
-
-    @Test
-    public void testTargetRepositoryLocation() {
-        serverClass.setTargetRepositoryLocation("/nowhere");
-        serverClass.update();
-        serverClass.refresh();
-        assertEquals("/nowhere", serverClass.getTargetRepositoryLocation());
-    }
-
-    @Test public void testTmpFolder() {
-        serverClass.setTmpFolder("/nowhere");
-        serverClass.update();
-        serverClass.refresh();
-        assertEquals("/nowhere", serverClass.getTmpFolder());
-    }
 }
 

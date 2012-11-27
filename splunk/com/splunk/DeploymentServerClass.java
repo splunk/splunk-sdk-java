@@ -209,25 +209,7 @@ public class DeploymentServerClass extends Entity {
      */
     public void setRepositoryLocation(String location) {
         setCacheValue("repositoryLocation", location);
-    }
 
-    /**
-     * Sets the location on the deployment client where the content that is 
-     * being deployed should be installed. 
-     *
-     * @param location The location (path) for installing content.
-     */
-    public void setTargetRepositoryLocation(String location) {
-        setCacheValue("targetRepositoryLocation", location);
-    }
-
-    /**
-     * Sets the working folder used by the deployment server.
-     *
-     * @param location The working folder.
-     */
-    public void setTmpFolder(String location) {
-        setCacheValue("tmpFolder", location);
     }
 
     /**
