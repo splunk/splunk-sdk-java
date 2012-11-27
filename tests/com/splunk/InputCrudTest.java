@@ -616,7 +616,7 @@ public class InputCrudTest extends InputTest {
         Args args = new Args();
         args.put("classes", "PerfOS_Processor");
         args.put("interval", 600);
-        args.put("lookup_host", "127.0.0.1");
+        args.put("lookup_host", service.getHost());
         inputs.create(name, InputKind.WindowsWmi, args);
         assertTrue(inputs.containsKey(name));
         WindowsWmiInput windowsWmiInput =
