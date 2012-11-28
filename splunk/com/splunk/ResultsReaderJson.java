@@ -164,7 +164,13 @@ public class ResultsReaderJson extends ResultsReader {
                 name = jsonReader.nextName();
             }
             if (jsonReader.peek() == JsonToken.STRING) {
-                returnData.put(name, jsonReader.nextString());
+                String delimitedValues = jsonReader.nextString();
+                String[] valuesArray = delimitedValues.split("\n");
+                
+                Object valueOrValuesArray = (valuesArray.length == 1)
+                        ? valuesArray[0]
+                        : valuesArray;
+                returnData.put(name, valueOrValuesArray);
             }
             if (jsonReader.peek() == JsonToken.END_OBJECT) {
                 jsonReader.endObject();

@@ -273,4 +273,8 @@ public abstract class SDKTestCase extends TestCase {
     protected static boolean contains(String[] array, String value) {
         return Arrays.asList(array).contains(value);
     }
+    
+    protected static void assertEquals(String[] a1, String[] a2) {
+        assertEquals(Arrays.asList(a1), Arrays.asList(a2));
+    }
 }

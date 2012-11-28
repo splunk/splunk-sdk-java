@@ -185,36 +185,68 @@ public class ResultsReaderTest extends SDKTestCase {
         // These results were generated from "search index=_internal | head 1",
         // with the output formats {xml, csv, json}.
         
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderXml(openResource("resultsMV.xml")), ",");
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderCsv(openResource("resultsMV.csv")), "\n");
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMV4.json")), "\n");
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMV5.json")), "\n");
+        testReadMultivalue(
+                ResultsReaderXml.class, "resultsMV.xml");
+        testReadMultivalue(
+                ResultsReaderCsv.class, "resultsMV.csv");
+        testReadMultivalue(
+                ResultsReaderJson.class, "resultsMV4.json");
+        testReadMultivalue(
+                ResultsReaderJson.class, "resultsMV5.json");
         
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderXml(openResource("resultsMVOneshot.xml")), ",");
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderCsv(openResource("resultsMVOneshot.csv")), "\n");
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMVOneshot4.json")), "\n");
-        assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMVOneshot5.json")), "\n");
+        testReadMultivalue(
+                ResultsReaderXml.class, "resultsMVOneshot.xml");
+        testReadMultivalue(
+                ResultsReaderCsv.class, "resultsMVOneshot.csv");
+        testReadMultivalue(
+                ResultsReaderJson.class, "resultsMVOneshot4.json");
+        testReadMultivalue(
+                ResultsReaderJson.class, "resultsMVOneshot5.json");
     }
     
-    private static void assertResultHasExpectedMultivalueFormat(
-            ResultsReader reader, String delimiter) throws IOException {
-        Map<String, String> firstResult = reader.getNextEvent();
-        assertEquals("dfoster-mbp17.local" + delimiter + "_internal", firstResult.get("_si"));
-        assertNull("Expected exactly one result.", reader.getNextEvent());
-        reader.close();
+    private void testReadMultivalue(
+            Class<? extends ResultsReader> type,
+            String filename) throws IOException {
+        
+        String delimiter = (type == ResultsReaderXml.class) ? "," : "\n";
+        
+        // Test getNextEvent()
+        {
+            ResultsReader reader = createResultsReader(type, openResource(filename));
+            Map<String, String> firstResult = reader.getNextEvent();
+            assertEquals("dfoster-mbp17.local" + delimiter + "_internal", firstResult.get("_si"));
+            assertNull("Expected exactly one result.", reader.getNextEvent());
+            reader.close();
+        }
+        
+        // Test getNextEvent2()
+        {
+            ResultsReader reader = createResultsReader(type, openResource(filename));
+            Map<String, Object> firstResult = reader.getNextEvent2();
+            assertEquals(
+                    new String[] {"dfoster-mbp17.local", "_internal"},
+                    (String[]) firstResult.get("_si"));
+            assertNull("Expected exactly one result.", reader.getNextEvent2());
+            reader.close();
+        }
     }
+    
+    private static ResultsReader createResultsReader(
+            Class<? extends ResultsReader> type, InputStream input) {
+        
+        try {
+            return type.getConstructor(InputStream.class).newInstance(input);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    // === Utility ===
     
     private void assertNextEventEquals(
             Map<String, String> expected,
             ResultsReader reader) throws IOException {
+        
         assertEquals(expected, reader.getNextEvent());
         expected.clear();
     }
