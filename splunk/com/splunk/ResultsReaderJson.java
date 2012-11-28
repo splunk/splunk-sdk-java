@@ -119,8 +119,8 @@ public class ResultsReaderJson extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    @Override public Map<String, Object> getNextEvent2() throws IOException {
-        Map<String, Object> returnData = null;
+    @Override public Map<String, String[]> getNextEvent2() throws IOException {
+        Map<String, String[]> returnData = null;
         String name = null;
         List<String> values = new ArrayList<String>();
 
@@ -135,7 +135,7 @@ public class ResultsReaderJson extends ResultsReader {
         // previous object.
         while (jsonReader.hasNext()) {
             if (returnData == null) {
-                returnData = new HashMap<String, Object>();
+                returnData = new HashMap<String, String[]>();
             }
             if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
                 jsonReader.beginObject();
@@ -153,10 +153,9 @@ public class ResultsReaderJson extends ResultsReader {
                 }
                 jsonReader.endArray();
                 
-                Object valueOrValuesArray = (values.size() == 1)
-                        ? values.get(0)
-                        : values.toArray(new String[values.size()]);
-                returnData.put(name, valueOrValuesArray);
+                String[] valuesArray = 
+                        values.toArray(new String[values.size()]);
+                returnData.put(name, valuesArray);
                 
                 values.clear();
             }
@@ -167,10 +166,7 @@ public class ResultsReaderJson extends ResultsReader {
                 String delimitedValues = jsonReader.nextString();
                 String[] valuesArray = delimitedValues.split("\n");
                 
-                Object valueOrValuesArray = (valuesArray.length == 1)
-                        ? valuesArray[0]
-                        : valuesArray;
-                returnData.put(name, valueOrValuesArray);
+                returnData.put(name, valuesArray);
             }
             if (jsonReader.peek() == JsonToken.END_OBJECT) {
                 jsonReader.endObject();

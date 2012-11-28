@@ -62,25 +62,15 @@ public abstract class ResultsReader {
     protected final HashMap<String, String> getNextEvent(String delimiter)
             throws IOException {
         
-        Map<String, Object> event2 = this.getNextEvent2();
+        Map<String, String[]> event2 = this.getNextEvent2();
         if (event2 == null) {
             return null;
         }
         
         // Convert values of 'event2' to be in delimited form
         HashMap<String, String> event = new HashMap<String, String>();
-        for (Map.Entry<String, Object> field : event2.entrySet()) {
-            String delimitedValue;
-            Object fieldValueOrValues = field.getValue();
-            if (fieldValueOrValues instanceof String) {
-                delimitedValue = (String)fieldValueOrValues;
-            } else {
-                delimitedValue = Util.join(
-                        delimiter,
-                        (String[])fieldValueOrValues);
-            }
-            
-            event.put(field.getKey(), delimitedValue);
+        for (Map.Entry<String, String[]> field : event2.entrySet()) {
+            event.put(field.getKey(), Util.join(delimiter, field.getValue()));
         }
         return event;
     }
@@ -89,9 +79,7 @@ public abstract class ResultsReader {
      * Returns the next event in the event stream.
      *
      * @return The map of key-value(s) pairs for an event.
-     *         A single-item value will be a String.
-     *         A multi-item value will be a String[]. 
      * @throws IOException If an IO exception occurs.
      */
-    public abstract Map<String, Object> getNextEvent2() throws IOException;
+    public abstract Map<String, String[]> getNextEvent2() throws IOException;
 }

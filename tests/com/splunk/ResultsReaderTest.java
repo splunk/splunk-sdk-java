@@ -222,10 +222,10 @@ public class ResultsReaderTest extends SDKTestCase {
         // Test getNextEvent2()
         {
             ResultsReader reader = createResultsReader(type, openResource(filename));
-            Map<String, Object> firstResult = reader.getNextEvent2();
+            Map<String, String[]> firstResult = reader.getNextEvent2();
             assertEquals(
                     new String[] {"dfoster-mbp17.local", "_internal"},
-                    (String[]) firstResult.get("_si"));
+                    firstResult.get("_si"));
             assertNull("Expected exactly one result.", reader.getNextEvent2());
             reader.close();
         }

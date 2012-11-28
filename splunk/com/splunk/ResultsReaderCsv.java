@@ -65,8 +65,8 @@ public class ResultsReaderCsv extends ResultsReader {
     }
 
     /** {@inheritDoc} */
-    @Override public Map<String, Object> getNextEvent2() throws IOException {
-        Map<String, Object> returnData = null;
+    @Override public Map<String, String[]> getNextEvent2() throws IOException {
+        Map<String, String[]> returnData = null;
         String[] line;
 
         if ((line = csvReader.readNext()) != null) {
@@ -77,14 +77,12 @@ public class ResultsReaderCsv extends ResultsReader {
         		}
         	}
         	
-            returnData = new HashMap<String, Object>();
+            returnData = new HashMap<String, String[]>();
             int count = 0;
             for (String key : keys) {
                 String delimitedValues = line[count++];
                 String[] values = delimitedValues.split("\n");
-                Object valueOrValueArray = 
-                        (values.length == 1) ? values[0] : values;
-                returnData.put(key, valueOrValueArray);
+                returnData.put(key, values);
             }
         }
 
