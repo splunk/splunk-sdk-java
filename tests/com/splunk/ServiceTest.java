@@ -26,8 +26,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.splunk.SDKTestCase.EventuallyTrueBehavior;
-
 public class ServiceTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
     
@@ -157,40 +155,97 @@ public class ServiceTest extends SDKTestCase {
         assertEquals(info.getService(), service);
     }
 
+    private void checkLoggedIn(Service service) {
+        ResponseMessage response;
+    	response = service.get("/services/authentication/users");
+        checkResponse(response);
+    }
+    
+    protected void checkNotLoggedIn(Service service) {
+    	try {
+            service.get("/services/authentication/users");
+            fail("Expected HttpException");
+        }
+        catch (HttpException e) {
+            assertEquals(401, e.getStatus());
+        }
+    }
+    
     @Test
     public void testLogin() {
-        ResponseMessage response;
-
         Service service = new Service(
                 (String) command.opts.get("host"),
                 (Integer) command.opts.get("port"),
                 (String) command.opts.get("scheme"));
 
         // Not logged in, should fail with 401
-        try {
-            response = service.get("/services/authentication/users");
-            fail("Expected HttpException");
-        }
-        catch (HttpException e) {
-            assertEquals(401, e.getStatus());
-        }
+        checkNotLoggedIn(service);
 
         // Logged in, request should succeed
         service.login(
                 (String) command.opts.get("username"),
                 (String) command.opts.get("password"));
-        response = service.get("/services/authentication/users");
-        checkResponse(response);
+        checkLoggedIn(service);
 
         // Logout, the request should fail with a 401
         service.logout();
-        try {
-            response = service.get("/services/authentication/users");
-            fail("Expected HttpException");
-        }
-        catch (HttpException e) {
-            assertEquals(401, e.getStatus());
-        }
+        checkNotLoggedIn(service);
+    }
+    
+    @Test
+    public void testLoginWithoutArguments() {
+    	ServiceArgs args = new ServiceArgs();
+    	args.setHost((String) command.opts.get("host"));
+    	args.setPort((Integer) command.opts.get("port"));
+    	args.setScheme((String) command.opts.get("scheme"));
+    	args.setUsername((String) command.opts.get("username"));
+    	args.setPassword((String) command.opts.get("password"));
+    	Service service = new Service(args);
+    	
+    	checkNotLoggedIn(service);
+    	
+    	service.login();
+    	checkLoggedIn(service);
+    	
+    	service.logout();
+    	checkNotLoggedIn(service);
+    }
+    
+    @Test
+    public void testLoginWithArgumentsOverridesServiceArgs() {
+    	ServiceArgs args = new ServiceArgs();
+    	args.setHost((String) command.opts.get("host"));
+    	args.setPort((Integer) command.opts.get("port"));
+    	args.setScheme((String) command.opts.get("scheme"));
+    	args.setUsername("I can't possibly be a user");
+    	args.setPassword("This password is nonsense.");
+    	Service service = new Service(args);
+    	
+    	checkNotLoggedIn(service);
+    	
+    	service.login(
+    		(String) command.opts.get("username"),
+    		(String) command.opts.get("password")
+    	);
+    	checkLoggedIn(service);
+    	
+    	service.logout();
+    	checkNotLoggedIn(service);
+    }
+    
+    @Test
+    public void testLoginWithoutAnyUsernameFails() {
+    	ServiceArgs args = new ServiceArgs();
+    	args.setHost((String) command.opts.get("host"));
+    	args.setPort((Integer) command.opts.get("port"));
+    	args.setScheme((String) command.opts.get("scheme"));
+    	Service service = new Service(args);
+    	
+    	try {
+    		service.login();
+    		fail("Expected IllegalStateException");
+    	}
+    	catch (IllegalStateException e) {}
     }
     
     @Test

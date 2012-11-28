@@ -126,6 +126,8 @@ public class Service extends BaseService {
         this.port = Args.<Integer>get(args,  "port",   args.port != null   ? args.port   : DEFAULT_PORT);
         this.scheme = Args.<String>get(args, "scheme", args.scheme != null ? args.scheme : DEFAULT_SCHEME);
         this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
+        this.username = (String)args.get("username");
+        this.password = (String)args.get("password");
     }
 
     /**
@@ -141,6 +143,8 @@ public class Service extends BaseService {
         this.port = Args.<Integer>get(args, "port", DEFAULT_PORT);
         this.scheme = Args.<String>get(args, "scheme", DEFAULT_SCHEME);
         this.token = Args.<String>get(args, "token", null);
+        this.username = (String)args.get("username");
+        this.password = (String)args.get("password");
     }
 
     /**
@@ -154,9 +158,7 @@ public class Service extends BaseService {
     public static Service connect(Map<String, Object> args) {
         Service service = new Service(args);
         if (args.containsKey("username")) {
-            String username = Args.get(args, "username", null);
-            String password = Args.get(args, "password", null);
-            service.login(username, password);
+        	service.login();
         }
         return service;
     }
@@ -1004,6 +1006,21 @@ public class Service extends BaseService {
         return new UserCollection(this, args);
     }
 
+    /**
+     * Authenticates the {@code Service} instance with the username and password
+     * specified when the instance was created.
+     * 
+     * @return The current {@code Service} instance.
+     */
+    public Service login() {
+    	if (this.username == null || this.password == null) {
+    		throw new IllegalStateException("Missing username or password.");
+    	}
+    	else {
+    		return login(this.username, this.password);
+    	}
+    }
+    
     /**
      * Authenticates the {@code Service} instance with a username and password.
      *
