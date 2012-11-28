@@ -62,7 +62,7 @@
     - `maxTimeUnreplicatedNoAcks`
     - `maxTimeUnreplicatedWithAcks`
 
-### Breaking Changes
+### Breaking changes
 
 * The JAR files have changed so that everything is now included in the **splunk.jar** file. The
   **splunk-external.jar** and **splunk-sdk.jar** files have been removed.
@@ -161,7 +161,7 @@ changes are not included):
 
 ## Version 0.8.0 (beta)
 
-### Breaking Changes
+### Breaking changes
 
 * Changed how isDone() behaves with respect to job creation. Previously if a job
   was not ready on the server, calling job.isDone() would cause an exception.
