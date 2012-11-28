@@ -187,28 +187,28 @@ public class ResultsReaderTest extends SDKTestCase {
         // with the output formats {xml, csv, json}.
         
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderXml(openResource("resultsMV.xml")));
+                new ResultsReaderXml(openResource("resultsMV.xml")), ",");
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderCsv(openResource("resultsMV.csv")));
+                new ResultsReaderCsv(openResource("resultsMV.csv")), "\n");
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMV4.json")));
+                new ResultsReaderJson(openResource("resultsMV4.json")), "\n");
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMV5.json")));
+                new ResultsReaderJson(openResource("resultsMV5.json")), "\n");
         
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderXml(openResource("resultsMVOneshot.xml")));
+                new ResultsReaderXml(openResource("resultsMVOneshot.xml")), ",");
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderCsv(openResource("resultsMVOneshot.csv")));
+                new ResultsReaderCsv(openResource("resultsMVOneshot.csv")), "\n");
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMVOneshot4.json")));
+                new ResultsReaderJson(openResource("resultsMVOneshot4.json")), "\n");
         assertResultHasExpectedMultivalueFormat(
-                new ResultsReaderJson(openResource("resultsMVOneshot5.json")));
+                new ResultsReaderJson(openResource("resultsMVOneshot5.json")), "\n");
     }
     
     private static void assertResultHasExpectedMultivalueFormat(
-            ResultsReader reader) throws IOException {
+            ResultsReader reader, String delimiter) throws IOException {
         Map<String, String> firstResult = reader.getNextEvent();
-        assertEquals("dfoster-mbp17.local,_internal", firstResult.get("_si"));
+        assertEquals("dfoster-mbp17.local" + delimiter + "_internal", firstResult.get("_si"));
         assertNull("Expected exactly one result.", reader.getNextEvent());
         reader.close();
     }
