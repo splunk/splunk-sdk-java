@@ -115,12 +115,7 @@ public class ResultsReaderJson extends ResultsReader {
     
     /** {@inheritDoc} */
     @Override public HashMap<String, String> getNextEvent() throws IOException {
-        return getNextEvent("\n");
-    }
-
-    /** {@inheritDoc} */
-    @Override public Map<String, String[]> getNextEvent2() throws IOException {
-        Map<String, String[]> returnData = null;
+        Event returnData = null;
         String name = null;
         List<String> values = new ArrayList<String>();
 
@@ -135,7 +130,7 @@ public class ResultsReaderJson extends ResultsReader {
         // previous object.
         while (jsonReader.hasNext()) {
             if (returnData == null) {
-                returnData = new HashMap<String, String[]>();
+                returnData = new Event();
             }
             if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
                 jsonReader.beginObject();
@@ -155,7 +150,7 @@ public class ResultsReaderJson extends ResultsReader {
                 
                 String[] valuesArray = 
                         values.toArray(new String[values.size()]);
-                returnData.put(name, valuesArray);
+                returnData.putArray(name, valuesArray);
                 
                 values.clear();
             }
@@ -164,9 +159,7 @@ public class ResultsReaderJson extends ResultsReader {
             }
             if (jsonReader.peek() == JsonToken.STRING) {
                 String delimitedValues = jsonReader.nextString();
-                String[] valuesArray = delimitedValues.split("\n");
-                
-                returnData.put(name, valuesArray);
+                returnData.put(name, delimitedValues);
             }
             if (jsonReader.peek() == JsonToken.END_OBJECT) {
                 jsonReader.endObject();
@@ -177,5 +170,11 @@ public class ResultsReaderJson extends ResultsReader {
             }
         }
         return returnData;
+    }
+
+    /** {@inheritDoc} */
+    @Override public Map<String, String[]> getNextEvent2() throws IOException {
+        // FIXME
+        throw new UnsupportedOperationException();
     }
 }

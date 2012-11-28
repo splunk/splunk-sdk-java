@@ -221,13 +221,24 @@ public class ResultsReaderTest extends SDKTestCase {
         
         // Test getNextEvent2()
         {
-            ResultsReader reader = createResultsReader(type, openResource(filename));
-            Map<String, String[]> firstResult = reader.getNextEvent2();
-            assertEquals(
-                    new String[] {"dfoster-mbp17.local", "_internal"},
-                    firstResult.get("_si"));
-            assertNull("Expected exactly one result.", reader.getNextEvent2());
-            reader.close();
+            // FIXME: Unify behavior for all ResultsReader subclasses
+            if (type == ResultsReaderJson.class) {
+                ResultsReader reader = createResultsReader(type, openResource(filename));
+                Event firstResult = (Event) reader.getNextEvent();
+                assertEquals(
+                        new String[] {"dfoster-mbp17.local", "_internal"},
+                        firstResult.getArray("_si", delimiter));
+                assertNull("Expected exactly one result.", reader.getNextEvent());
+                reader.close();
+            } else {
+                ResultsReader reader = createResultsReader(type, openResource(filename));
+                Map<String, String[]> firstResult = reader.getNextEvent2();
+                assertEquals(
+                        new String[] {"dfoster-mbp17.local", "_internal"},
+                        firstResult.get("_si"));
+                assertNull("Expected exactly one result.", reader.getNextEvent2());
+                reader.close();
+            }
         }
     }
     
