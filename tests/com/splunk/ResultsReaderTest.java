@@ -226,8 +226,7 @@ public class ResultsReaderTest extends SDKTestCase {
         {
             ResultsReader reader = createResultsReader(type, openResource(filename));
             
-            // FIXME: Shouldn't need to cast here
-            Event firstResult = (Event) reader.getNextEvent();
+            Event firstResult = reader.getNextEvent();
             assertEquals(
                     new String[] {"dfoster-mbp17.local", "_internal"},
                     firstResult.getArray("_si", delimiter));

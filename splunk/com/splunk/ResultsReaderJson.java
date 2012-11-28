@@ -114,7 +114,7 @@ public class ResultsReaderJson extends ResultsReader {
     }
     
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws IOException {
+    @Override public Event getNextEvent() throws IOException {
         Event returnData = null;
         String name = null;
         List<String> values = new ArrayList<String>();
@@ -170,11 +170,5 @@ public class ResultsReaderJson extends ResultsReader {
             }
         }
         return returnData;
-    }
-
-    /** {@inheritDoc} */
-    @Override public Map<String, String[]> getNextEvent2() throws IOException {
-        // FIXME
-        throw new UnsupportedOperationException();
     }
 }

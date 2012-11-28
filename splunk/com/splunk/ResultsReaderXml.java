@@ -109,7 +109,7 @@ public class ResultsReaderXml extends ResultsReader {
     }
     
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws IOException {
+    @Override public Event getNextEvent() throws IOException {
         XMLEvent xmlEvent;
         int eType;
 
@@ -147,12 +147,6 @@ public class ResultsReaderXml extends ResultsReader {
             throw new RuntimeException(e);
         }
         return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override public Map<String, String[]> getNextEvent2() throws IOException {
-        // FIXME
-        throw new UnsupportedOperationException();
     }
 
     private Event getResultKVPairs()

@@ -60,7 +60,7 @@ public class ResultsReaderCsv extends ResultsReader {
     }
     
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws IOException {
+    @Override public Event getNextEvent() throws IOException {
         Event returnData = null;
         String[] line;
 
@@ -81,11 +81,5 @@ public class ResultsReaderCsv extends ResultsReader {
         }
 
         return returnData;
-    }
-
-    /** {@inheritDoc} */
-    @Override public Map<String, String[]> getNextEvent2() throws IOException {
-        // FIXME
-        throw new UnsupportedOperationException();
     }
 }

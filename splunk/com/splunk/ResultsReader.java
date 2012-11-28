@@ -55,25 +55,11 @@ public abstract class ResultsReader {
      *
      * @return The map of key-value pairs for an event.
      *         The format of multi-item values is implementation-specific.
+     *         It is recommended that callers use the methods on
+     *         {@link Event} to interpret multi-item values.
      * @throws IOException If an IO exception occurs.
      */
-    public abstract HashMap<String, String> getNextEvent() throws IOException;
-    
-    protected final HashMap<String, String> getNextEvent(String delimiter)
-            throws IOException {
-        
-        Map<String, String[]> event2 = this.getNextEvent2();
-        if (event2 == null) {
-            return null;
-        }
-        
-        // Convert values of 'event2' to be in delimited form
-        HashMap<String, String> event = new HashMap<String, String>();
-        for (Map.Entry<String, String[]> field : event2.entrySet()) {
-            event.put(field.getKey(), Util.join(delimiter, field.getValue()));
-        }
-        return event;
-    }
+    public abstract Event getNextEvent() throws IOException;
     
     /**
      * Returns the next event in the event stream.
@@ -81,5 +67,7 @@ public abstract class ResultsReader {
      * @return The map of key-value(s) pairs for an event.
      * @throws IOException If an IO exception occurs.
      */
-    public abstract Map<String, String[]> getNextEvent2() throws IOException;
+    public final Map<String, String[]> getNextEvent2() throws IOException {
+        throw new UnsupportedOperationException();
+    }
 }
