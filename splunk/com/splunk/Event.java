@@ -20,15 +20,58 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-// FIXME: document
+/**
+ * Wraps an individual event or result returned by
+ * {@link ResultsReader#getNextEvent()}.
+ * 
+ * An event maps each field name to a list of zero of more values.
+ * If accessed as a {@link Map}, the values are encoded as a delimited
+ * string. If accessed via {@link #getArray(String, String)} or 
+ * {@link #getArray(String)}, the values are returned as a {@code String[]}.
+ * 
+ * The delimiter for field values depends on the underlying result format.
+ * If the underlying format does not specify a delimiter, such as with
+ * {@link ResultsReaderXml}, the delimiter is comma (,). 
+ */
 public class Event extends HashMap<String, String> {
     private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
     
+    /**
+     * Returns the single value or delimited set of values for the specified
+     * field name, or {@code null} if the specified field is not present.
+     */
+    public String get(String key) {
+        return super.get(key);
+    }
+    
+    /**
+     * Sets the single value or delimited set of values for the specified
+     * field name.
+     * 
+     * When setting a multi-valued field, {@link #putArray(String, String[])}
+     * is recommended instead.
+     */
+    public String put(String key, String valueOrDelimitedValues) {
+        return super.put(key, valueOrDelimitedValues);
+    }
+    
+    /**
+     * Sets the value(s) for the specified field name.
+     */
     public void putArray(String key, String[] values) {
         super.put(key, Util.join(",", values)); // for backward compatibility
         arrayValues.put(key, values);
     }
     
+    /**
+     * Gets the value(s) for the specified field name.
+     * 
+     * <b>Caution:</b> This variant of {@link #getArray(String, String)} is
+     * unsafe for {@link ResultsReader} implementations that require a
+     * delimiter. Therefore this method should only be used for results
+     * returned by {@link ResultsReaderXml}. For other readers, use
+     * {@link #getArray(String, String)} instead.
+     */
     public String[] getArray(String key) {
         String[] arrayValue = arrayValues.get(key);
         if (arrayValue != null) {
@@ -42,6 +85,16 @@ public class Event extends HashMap<String, String> {
         return new String[] { singleValue };
     }
     
+    /**
+     * Gets the value(s) for the specified field name.
+     * 
+     * The delimiter must be determined empirically based on the search
+     * string and the data format of the index. The delimiter can differ
+     * between fields in the same {@link Event}.
+     * 
+     * The delimiter is ignored for {@link ResultsReader} implementations
+     * that do not require a delimiter, such as {@link ResultsReaderXml}.
+     */
     public String[] getArray(String key, String delimiter) {
         String[] arrayValue = arrayValues.get(key);
         if (arrayValue != null) {
