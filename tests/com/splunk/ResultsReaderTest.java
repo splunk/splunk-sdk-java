@@ -210,24 +210,33 @@ public class ResultsReaderTest extends SDKTestCase {
         
         String delimiter = (type == ResultsReaderXml.class) ? "," : "\n";
         
-        // Test getNextEvent()
+        // Test legacy getNextEvent() interface on 2-valued and 1-valued fields
         {
             ResultsReader reader = createResultsReader(type, openResource(filename));
-            Map<String, String> firstResult = reader.getNextEvent();
+            
+            HashMap<String, String> firstResult = reader.getNextEvent();
             assertEquals("dfoster-mbp17.local" + delimiter + "_internal", firstResult.get("_si"));
+            assertEquals("_internal", firstResult.get("index"));
+            
             assertNull("Expected exactly one result.", reader.getNextEvent());
             reader.close();
         }
         
-        // Test getNextEvent2()
+        // Test new getNextEvent() interface on 2-valued and 1-valued fields
         {
             // FIXME: Unify behavior for all ResultsReader subclasses
             if (type == ResultsReaderJson.class) {
                 ResultsReader reader = createResultsReader(type, openResource(filename));
+                
+                // FIXME: Shouldn't need to cast here
                 Event firstResult = (Event) reader.getNextEvent();
                 assertEquals(
                         new String[] {"dfoster-mbp17.local", "_internal"},
                         firstResult.getArray("_si", delimiter));
+                assertEquals(
+                        new String[] {"_internal"},
+                        firstResult.getArray("index", delimiter));
+                
                 assertNull("Expected exactly one result.", reader.getNextEvent());
                 reader.close();
             } else {
