@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 
 import com.splunk.SDKTestCase.EventuallyTrueBehavior;
@@ -556,21 +558,26 @@ public class ServiceTest extends SDKTestCase {
     public void testOneshot() throws IOException {
         service.oneshot(QUERY); // throws no exception
         
-        InputStream jobOutput = service.oneshot(QUERY,
-                new Args("output_mode", "json"));
+        InputStream jobOutput = service.oneshot(
+        	QUERY,
+            new Args("output_mode", "json")
+        );
+ 
         try {
-            char firstJsonChar;
-            if (service.versionCompare("5.0") < 0) {
-                firstJsonChar = '[';
-            } else {
-                firstJsonChar = '{';
-            }
-            
-            // Looks like JSON?
-            // NOTE: Not sure why a oneshot search would insert a leading
-            //       newline, whereas a blocking search doesn't.
-            assertEquals('\n', (char)jobOutput.read());
-            assertEquals(firstJsonChar, (char)jobOutput.read());
+        	ResultsReaderJson resultsReader = new ResultsReaderJson(jobOutput);
+        
+        	Map<String, String> event;
+    	   int nEvents = 0;
+        
+    	   do {
+    		   event = resultsReader.getNextEvent();
+    		   if (event != null) {
+    			   nEvents += 1;
+    		   }
+    	   } while (event != null);
+        
+    	   assertEquals(10, nEvents);
+
         }
         finally {
             jobOutput.close();
