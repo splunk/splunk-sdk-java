@@ -103,14 +103,18 @@ public class WindowsRegistryInput extends Input {
      * @return An array of regex strings for event types.
      */
     public String[] getType() {
-        String[] value = getStringArray("type");
-        String[] typeRegex;
-        if (value.length == 1 && value[0].contains("|")) {
-            typeRegex = value[0].split("|");
-        } else {
-            typeRegex = value;
-        }
-        return typeRegex;
+    	if (toUpdate.containsKey("type")) {
+    		String value = (String)toUpdate.get("type");
+    		if (value.contains("|")) {
+    			return value.split("\\|");
+    		}
+    		else {
+    			return new String[]{value};
+    		}
+    	}
+    	else {
+    		return getStringArray("type", new String[]{});
+    	}
     }
 
     /**
@@ -176,7 +180,7 @@ public class WindowsRegistryInput extends Input {
     public void setProc(String proc) {
         setCacheValue("proc", proc);
     }
-
+    
     /**
      * Sets the regular expressions (regexes) that are compared to registry
      * event types for this Windows Registry input. Only types that match
@@ -204,7 +208,7 @@ public class WindowsRegistryInput extends Input {
             args = Args.create(args).add("proc", getProc());
         }
         if (!args.containsKey("type")) {
-            args = Args.create(args).add("type", getType());
+            args = Args.create(args).add("type", Util.join("|", getType()));
         }
         super.update(args);
     }
@@ -225,7 +229,7 @@ public class WindowsRegistryInput extends Input {
             setCacheValue("proc", getProc());
         }
         if (toUpdate.size() > 0 && !toUpdate.containsKey("type")) {
-            setCacheValue("type", getType());
+            setCacheValue("type", Util.join("|", getType()));
         }
         super.update();
     }
