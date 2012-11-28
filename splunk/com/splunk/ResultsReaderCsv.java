@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ResultsReaderCsv extends ResultsReader {
 
@@ -57,10 +58,15 @@ public class ResultsReaderCsv extends ResultsReader {
             csvReader.close();
         csvReader = null;
     }
-
+    
     /** {@inheritDoc} */
     @Override public HashMap<String, String> getNextEvent() throws IOException {
-        HashMap<String, String> returnData = null;
+        return getNextEvent("\n");
+    }
+
+    /** {@inheritDoc} */
+    @Override public Map<String, Object> getNextEvent2() throws IOException {
+        Map<String, Object> returnData = null;
         String[] line;
 
         if ((line = csvReader.readNext()) != null) {
@@ -71,10 +77,14 @@ public class ResultsReaderCsv extends ResultsReader {
         		}
         	}
         	
-            returnData = new HashMap<String, String>();
+            returnData = new HashMap<String, Object>();
             int count = 0;
-            for (String key: keys) {
-                returnData.put(key, line[count++]);
+            for (String key : keys) {
+                String delimitedValues = line[count++];
+                String[] values = delimitedValues.split("\n");
+                Object valueOrValueArray = 
+                        (values.length == 1) ? values[0] : values;
+                returnData.put(key, valueOrValueArray);
             }
         }
 

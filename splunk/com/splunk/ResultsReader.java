@@ -18,6 +18,7 @@ package com.splunk;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@code ResultsReader} class is a base class that represents a streaming 
@@ -41,7 +42,7 @@ public abstract class ResultsReader {
     /**
      * Closes the reader and returns resources.
      *
-     * @throws Exception on Exception
+     * @throws IOException If an IO exception occurs.
      */
     public void close() throws IOException {
         if (inputStreamReader != null)
@@ -52,8 +53,45 @@ public abstract class ResultsReader {
     /**
      * Returns the next event in the event stream.
      *
-     * @return The hash map of key-value pairs for an entire event.
-     * @throws Exception on Exception.
+     * @return The map of key-value pairs for an event.
+     *         The format of multi-item values is implementation-specific.
+     * @throws IOException If an IO exception occurs.
      */
     public abstract HashMap<String, String> getNextEvent() throws IOException;
+    
+    protected final HashMap<String, String> getNextEvent(String delimiter)
+            throws IOException {
+        
+        Map<String, Object> event2 = this.getNextEvent2();
+        if (event2 == null) {
+            return null;
+        }
+        
+        // Convert values of 'event2' to be in delimited form
+        HashMap<String, String> event = new HashMap<String, String>();
+        for (Map.Entry<String, Object> field : event2.entrySet()) {
+            String delimitedValue;
+            Object fieldValueOrValues = field.getValue();
+            if (fieldValueOrValues instanceof String) {
+                delimitedValue = (String)fieldValueOrValues;
+            } else {
+                delimitedValue = Util.join(
+                        delimiter,
+                        (String[])fieldValueOrValues);
+            }
+            
+            event.put(field.getKey(), delimitedValue);
+        }
+        return event;
+    }
+    
+    /**
+     * Returns the next event in the event stream.
+     *
+     * @return The map of key-value(s) pairs for an event.
+     *         A single-item value will be a String.
+     *         A multi-item value will be a String[]. 
+     * @throws IOException If an IO exception occurs.
+     */
+    public abstract Map<String, Object> getNextEvent2() throws IOException;
 }

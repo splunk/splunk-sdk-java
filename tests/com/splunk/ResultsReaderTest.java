@@ -151,7 +151,6 @@ public class ResultsReaderTest extends SDKTestCase {
 
         expected.put("series", "splunkd_access");
         expected.put("sum(kb)", "5979.036338");
-        expected.put("mvfield", "1,2");
         assertNextEventEquals(expected, reader);
 
         assertNull(reader.getNextEvent());

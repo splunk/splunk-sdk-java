@@ -24,7 +24,10 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ResultsReaderJson extends ResultsReader {
     private JsonReader jsonReader = null;
@@ -109,11 +112,17 @@ public class ResultsReaderJson extends ResultsReader {
             jsonReader.close();
         jsonReader = null;
     }
-
+    
     /** {@inheritDoc} */
     @Override public HashMap<String, String> getNextEvent() throws IOException {
-        HashMap<String, String> returnData = null;
-        String name = "";
+        return getNextEvent("\n");
+    }
+
+    /** {@inheritDoc} */
+    @Override public Map<String, Object> getNextEvent2() throws IOException {
+        Map<String, Object> returnData = null;
+        String name = null;
+        List<String> values = new ArrayList<String>();
 
         if (jsonReader == null)
             return null;
@@ -126,7 +135,7 @@ public class ResultsReaderJson extends ResultsReader {
         // previous object.
         while (jsonReader.hasNext()) {
             if (returnData == null) {
-                returnData = new HashMap<String, String>();
+                returnData = new HashMap<String, Object>();
             }
             if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
                 jsonReader.beginObject();
@@ -136,16 +145,20 @@ public class ResultsReaderJson extends ResultsReader {
                 // The Gson parser is a little unintuitive here. Nested objects,
                 // have their own relative notion of hasNext; when hasNext()
                 // is done, it is only for this array.
-                String data = "";
                 while (jsonReader.hasNext()) {
                     JsonToken jsonToken2 = jsonReader.peek();
                     if (jsonToken2 == JsonToken.STRING) {
-                        data = data + (data.equals("") ? "" : ",") +
-                                jsonReader.nextString();
+                        values.add(jsonReader.nextString());
                     }
                 }
                 jsonReader.endArray();
-                returnData.put(name, data);
+                
+                Object valueOrValuesArray = (values.size() == 1)
+                        ? values.get(0)
+                        : values.toArray(new String[values.size()]);
+                returnData.put(name, valueOrValuesArray);
+                
+                values.clear();
             }
             if (jsonReader.peek() == JsonToken.NAME) {
                 name = jsonReader.nextName();
