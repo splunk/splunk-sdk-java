@@ -535,22 +535,29 @@ public class ServiceTest extends SDKTestCase {
     public void testSearch() throws IOException {
         service.search(QUERY);    // throws no exception
 
-        InputStream jobOutput = service.search(QUERY,
-                new Args(),
-                new Args("output_mode", "json"));
+        Job job = service.search(QUERY, new Args());
+        while (!job.isDone()) {
+        	sleep(50);
+        }
+        
+        InputStream jobOutput = job.getResults();
         try {
-            char firstJsonChar;
-            if (service.versionCompare("5.0") < 0) {
-                firstJsonChar = '[';
-            } else {
-                firstJsonChar = '{';
-            }
-            
-            // Looks like JSON?
-            assertEquals(firstJsonChar, (char)jobOutput.read());
+        	ResultsReaderXml resultsReader = new ResultsReaderXml(jobOutput);
+        
+        	Map<String, String> event;
+        	int nEvents = 0;
+        
+        	do {
+        		event = resultsReader.getNextEvent();
+        		if (event != null) {
+        			nEvents += 1;
+        		}
+        	} while (event != null);
+        
+        	assertEquals(10, nEvents);
         }
         finally {
-            jobOutput.close();
+        	jobOutput.close();
         }
     }
     
@@ -567,20 +574,19 @@ public class ServiceTest extends SDKTestCase {
         	ResultsReaderJson resultsReader = new ResultsReaderJson(jobOutput);
         
         	Map<String, String> event;
-    	   int nEvents = 0;
+        	int nEvents = 0;
         
-    	   do {
-    		   event = resultsReader.getNextEvent();
-    		   if (event != null) {
-    			   nEvents += 1;
-    		   }
-    	   } while (event != null);
+        	do {
+        		event = resultsReader.getNextEvent();
+        		if (event != null) {
+        			nEvents += 1;
+        		}
+        	} while (event != null);
         
-    	   assertEquals(10, nEvents);
-
+        	assertEquals(10, nEvents);
         }
         finally {
-            jobOutput.close();
+        	jobOutput.close();
         }
     }
     

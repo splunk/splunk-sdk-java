@@ -1143,45 +1143,29 @@ public class Service extends BaseService {
     }
 
     /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
+     * Creates an asynchronous search using the given query. Use this
+     * method for simple searches.
      *
      * @param query The search query.
-     * @return The search results.
+     * @return The search job.
      */
-    public InputStream search(String query) {
+    public Job search(String query) {
         return search(query, null);
     }
 
     /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
+     * Creates an asynchronous search job using the given query and
+     * search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments.
-     * @return The search results.
+     * @param args The search arguments.
+     * @return The search job.
      */
-    public InputStream search(String query, Map inputArgs) {
-        return search(query, inputArgs, null);
-    }
-
-    /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
-     *
-     * @param query The search query.
-     * @param inputArgs The search arguments.
-     * @param outputArgs The output qualifier arguments.
-     * @return The search results.
-     */
-    public InputStream search(String query, Map inputArgs, Map outputArgs) {
-        inputArgs = Args.create(inputArgs);
-        inputArgs.put("search", query);
-        // always block until results are ready.
-        inputArgs.put("exec_mode", "blocking");
-        
-        Job job = this.getJobs().create(query, inputArgs);
-        return job.getResults(outputArgs);
+    public Job search(String query, Map<String, Object> args) {
+        args = Args.create(args);
+        args.put("search", query);        
+        Job job = this.getJobs().create(query, args);
+        return job;
     }
 
     /**
