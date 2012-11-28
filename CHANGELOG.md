@@ -84,9 +84,8 @@
 * The `Index.setAssureUTF8` method fails for Splunk 5.0+ because this field has become a
   global setting rather than a per-index setting.
 
-* The `Index.clean` method now throws SplunkException.INTERRUPTED when
-  interrupted instead of swallowing the condition. Additionally the timeout
-  parameter is obeyed more accurately.
+* The `Index.clean` method now throws `SplunkException.INTERRUPTED` when
+  interrupted. Additionally, the `maxSeconds` parameter is obeyed more accurately.
 
 * The `WindowsRegistryInput.getType` and `WindowsRegistryInput.setType` method type has 
   changed to `String[]` instead of `String`.
@@ -108,12 +107,12 @@
   performance, mostly by eliminating unnecessary restarts. The test suite strictly requires 
   tests to handle restart requests.
 
-* The get(), remove(), and contains() methods on entity collections now throw
-  an exception when passed a wildcarded namespace instead of incorrectly
+* The `get`, `remove`, and `contains` methods for entity collections now throw
+  an exception when a wildcarded namespace is passed, rather than incorrectly
   returning an empty list or taking no action.
 
-* SavedSearch.getDispatchMaxTime() was previously returning a String, but is now
-  returning an int.
+* The `SavedSearch.getDispatchMaxTime` method previously returned a `String`, but now
+  returns an `int`.
 
 * The `LicensePool.getSlavesUsageBytes` method now returns a map from each slave
   GUID to its license usage, instead of returning an `long`.
