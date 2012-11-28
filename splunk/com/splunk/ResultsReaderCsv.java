@@ -61,31 +61,31 @@ public class ResultsReaderCsv extends ResultsReader {
     
     /** {@inheritDoc} */
     @Override public HashMap<String, String> getNextEvent() throws IOException {
-        return getNextEvent("\n");
-    }
-
-    /** {@inheritDoc} */
-    @Override public Map<String, String[]> getNextEvent2() throws IOException {
-        Map<String, String[]> returnData = null;
+        Event returnData = null;
         String[] line;
 
         if ((line = csvReader.readNext()) != null) {
-        	if (line.length == 1 && line[0].equals("")) {
-        		line = csvReader.readNext();
-        		if (line == null) {
-        			return returnData;
-        		}
-        	}
-        	
-            returnData = new HashMap<String, String[]>();
+            if (line.length == 1 && line[0].equals("")) {
+                line = csvReader.readNext();
+                if (line == null) {
+                    return returnData;
+                }
+            }
+            
+            returnData = new Event();
             int count = 0;
             for (String key : keys) {
                 String delimitedValues = line[count++];
-                String[] values = delimitedValues.split("\n");
-                returnData.put(key, values);
+                returnData.put(key, delimitedValues);
             }
         }
 
         return returnData;
+    }
+
+    /** {@inheritDoc} */
+    @Override public Map<String, String[]> getNextEvent2() throws IOException {
+        // FIXME
+        throw new UnsupportedOperationException();
     }
 }

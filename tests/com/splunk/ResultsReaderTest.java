@@ -224,30 +224,19 @@ public class ResultsReaderTest extends SDKTestCase {
         
         // Test new getNextEvent() interface on 2-valued and 1-valued fields
         {
-            // FIXME: Unify behavior for all ResultsReader subclasses
-            if (type == ResultsReaderJson.class) {
-                ResultsReader reader = createResultsReader(type, openResource(filename));
-                
-                // FIXME: Shouldn't need to cast here
-                Event firstResult = (Event) reader.getNextEvent();
-                assertEquals(
-                        new String[] {"dfoster-mbp17.local", "_internal"},
-                        firstResult.getArray("_si", delimiter));
-                assertEquals(
-                        new String[] {"_internal"},
-                        firstResult.getArray("index", delimiter));
-                
-                assertNull("Expected exactly one result.", reader.getNextEvent());
-                reader.close();
-            } else {
-                ResultsReader reader = createResultsReader(type, openResource(filename));
-                Map<String, String[]> firstResult = reader.getNextEvent2();
-                assertEquals(
-                        new String[] {"dfoster-mbp17.local", "_internal"},
-                        firstResult.get("_si"));
-                assertNull("Expected exactly one result.", reader.getNextEvent2());
-                reader.close();
-            }
+            ResultsReader reader = createResultsReader(type, openResource(filename));
+            
+            // FIXME: Shouldn't need to cast here
+            Event firstResult = (Event) reader.getNextEvent();
+            assertEquals(
+                    new String[] {"dfoster-mbp17.local", "_internal"},
+                    firstResult.getArray("_si", delimiter));
+            assertEquals(
+                    new String[] {"_internal"},
+                    firstResult.getArray("index", delimiter));
+            
+            assertNull("Expected exactly one result.", reader.getNextEvent());
+            reader.close();
         }
     }
     

@@ -110,11 +110,6 @@ public class ResultsReaderXml extends ResultsReader {
     
     /** {@inheritDoc} */
     @Override public HashMap<String, String> getNextEvent() throws IOException {
-        return getNextEvent(",");
-    }
-
-    /** {@inheritDoc} */
-    @Override public Map<String, String[]> getNextEvent2() throws IOException {
         XMLEvent xmlEvent;
         int eType;
 
@@ -154,10 +149,16 @@ public class ResultsReaderXml extends ResultsReader {
         return null;
     }
 
-    private Map<String, String[]> getResultKVPairs()
+    /** {@inheritDoc} */
+    @Override public Map<String, String[]> getNextEvent2() throws IOException {
+        // FIXME
+        throw new UnsupportedOperationException();
+    }
+
+    private Event getResultKVPairs()
             throws IOException, XMLStreamException {
         
-        Map<String, String[]> returnData = new HashMap<String, String[]>();
+        Event returnData = new Event();
         XMLEvent xmlEvent;
         int eType;
         String key = null;
@@ -190,7 +191,7 @@ public class ResultsReaderXml extends ResultsReader {
                     if (--level == 0) {
                         String[] valuesArray = 
                                 values.toArray(new String[values.size()]);
-                        returnData.put(key, valuesArray);
+                        returnData.putArray(key, valuesArray);
                         
                         key = null;
                         values.clear();
