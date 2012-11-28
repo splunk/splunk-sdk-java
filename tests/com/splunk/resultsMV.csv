@@ -1,0 +1,3 @@
+"_bkt","_cd","_indextime","_raw","_serial","_si","_sourcetype","_subsecond","_time",host,index,linecount,source,sourcetype,"splunk_server"
+"_internal~115~BC509B13-C34D-4A69-B216-488806E9EA63","115:4933",1354063445,"11-27-2012 16:44:05.208 -0800 INFO  Metrics - group=udpin_connections, *:9999, sourcePort=9999, _udp_bps=0.00, _udp_kbps=0.00, _udp_avg_thruput=0.00, _udp_kprocessed=0.00, _udp_eps=0.00",0,"dfoster-mbp17.local
+_internal",splunkd,".208","2012-11-27T16:44:05.208-08:00","dfoster-mbp17.local","_internal",1,"/Applications/splunkbeta_140868_rc7/var/log/splunk/metrics.log",splunkd,"dfoster-mbp17.local"
