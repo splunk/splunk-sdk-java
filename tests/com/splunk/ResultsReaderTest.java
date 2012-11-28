@@ -58,33 +58,27 @@ public class ResultsReaderTest extends SDKTestCase {
         ResultsReaderXml reader = new ResultsReaderXml(input);
         Map<String, String> expected = new HashMap<String, String>();
 
-        expected.clear();
         expected.put("series", "twitter");
         expected.put("sum(kb)", "14372242.758775");
-        assertEquals(expected, reader.getNextEvent());
-
-        expected.clear();
+        assertNextEventEquals(expected, reader);
+        
         expected.put("series", "splunkd");
         expected.put("sum(kb)", "267802.333926");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "flurry");
         expected.put("sum(kb)", "12576.454102");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunkd_access");
         expected.put("sum(kb)", "5979.036338");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunk_web_access");
         expected.put("sum(kb)", "5838.935649");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
         assertNull(reader.getNextEvent());
-        
         reader.close();
     }
 
@@ -94,15 +88,13 @@ public class ResultsReaderTest extends SDKTestCase {
         ResultsReaderXml reader = new ResultsReaderXml(input);
         Map<String, String> expected = new HashMap<String, String>();
 
-        expected.clear();
         expected.put(
                 "_raw",
                 "07-13-2012 09:27:27.307 -0700 INFO  Metrics - group=search_concurrency, system total, active_hist_searches=0, active_realtime_searches=0"
         );
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
         assertNull(reader.getNextEvent());
-        
         reader.close();
     }
 
@@ -112,40 +104,34 @@ public class ResultsReaderTest extends SDKTestCase {
         ResultsReaderCsv reader = new ResultsReaderCsv(input);
         Map<String, String> expected = new HashMap<String, String>();
 
-        expected.clear();
         expected.put("series", "twitter");
         expected.put("sum(kb)", "14372242.758775");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunkd");
         expected.put("sum(kb)", "267802.333926");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunkd_access");
         expected.put("sum(kb)", "5979.036338");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
         assertNull(reader.getNextEvent());
-        
         reader.close();
     }
 
     @Test
     public void testReadCsvFromOneshot() throws Exception {
-        InputStream input = service.oneshot("search index=_internal | head 1 | stats count", Args.create("output_mode", "csv"));
-        assertNotNull("Failed to find results.csv", input);
-        
+        InputStream input = service.oneshot(
+                "search index=_internal | head 1 | stats count",
+                Args.create("output_mode", "csv"));
         ResultsReaderCsv reader = new ResultsReaderCsv(input);
         Map<String, String> expected = new HashMap<String, String>();
 
-        expected.clear();
         expected.put("count", "1");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
         assertNull(reader.getNextEvent());
-        
         reader.close();
     }
 
@@ -155,24 +141,20 @@ public class ResultsReaderTest extends SDKTestCase {
         ResultsReaderJson reader = new ResultsReaderJson(input);
         Map<String, String> expected = new HashMap<String, String>();
 
-        expected.clear();
         expected.put("series", "twitter");
         expected.put("sum(kb)", "14372242.758775");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunkd");
         expected.put("sum(kb)", "267802.333926");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunkd_access");
         expected.put("sum(kb)", "5979.036338");
         expected.put("mvfield", "1,2");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
         assertNull(reader.getNextEvent());
-        
         reader.close();
     }
 
@@ -184,23 +166,26 @@ public class ResultsReaderTest extends SDKTestCase {
         ResultsReaderJson reader = new ResultsReaderJson(input);
         Map<String, String> expected = new HashMap<String, String>();
 
-        expected.clear();
         expected.put("series", "twitter");
         expected.put("sum(kb)", "14372242.758775");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunkd");
         expected.put("sum(kb)", "267802.333926");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
-        expected.clear();
         expected.put("series", "splunkd_access");
         expected.put("sum(kb)", "5979.036338");
-        assertEquals(expected, reader.getNextEvent());
+        assertNextEventEquals(expected, reader);
 
         assertNull(reader.getNextEvent());
-        
         reader.close();
+    }
+    
+    private void assertNextEventEquals(
+            Map<String, String> expected,
+            ResultsReader reader) throws IOException {
+        assertEquals(expected, reader.getNextEvent());
+        expected.clear();
     }
 }
