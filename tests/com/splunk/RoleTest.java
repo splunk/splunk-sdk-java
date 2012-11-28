@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class RoleTest extends SDKTestCase {
             role.setSearchDiskQuota(9000);
             role.setSearchFilter("*");
             role.setSearchIndexesAllowed(new String[] { "*" });
-            role.setSearchIndexesDefault(new String[] { "main" });
+            role.setSearchIndexesDefault(new String[] { "main", "_internal" });
             role.setSearchJobsQuota(49);
             
             role.setRealTimeSearchJobsQuota(99);
@@ -46,7 +47,10 @@ public class RoleTest extends SDKTestCase {
             assertEquals(9000, role.getSearchDiskQuota());
             assertEquals("*", role.getSearchFilter());
             assertEquals(new String[] { "*" }, role.getSearchIndexesAllowed());
-            assertEquals(new String[] { "main" }, role.getSearchIndexesDefault());
+            List<String> defaultIndexes = Arrays.asList(role.getSearchIndexesDefault());
+            assertEquals(2, defaultIndexes.size());
+            assertTrue(defaultIndexes.contains("main"));
+            assertTrue(defaultIndexes.contains("_internal"));
             assertEquals(49, role.getSearchJobsQuota());
             
             assertEquals(99, role.getRealTimeSearchJobsQuota());
