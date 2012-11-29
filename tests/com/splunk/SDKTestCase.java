@@ -198,6 +198,12 @@ public abstract class SDKTestCase extends TestCase {
         }
         return false;
     }
+    
+    private void markAsRestartRequired() {
+        service.getMessages().create(
+                "restart_required",
+                "Unit test called markAsRestartRequired().");
+    }
 
     public void splunkRestart() {
         if (!restartRequired()) {
@@ -211,8 +217,12 @@ public abstract class SDKTestCase extends TestCase {
         if (response.getStatus() != 200) {
             fail("Restart command failed: " + response.getContent());
         }
+        
+        // (This status will be cleared when Splunk actually restarts.)
+        markAsRestartRequired();
 
-        // Wait for splunkd to go down.
+        // Wait for splunkd to come back up fresh.
+        // (And update 'service'.)
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
                 tries = 20;
@@ -222,33 +232,13 @@ public abstract class SDKTestCase extends TestCase {
             @Override
             public boolean predicate() {
                 try {
-                    new Socket(service.getHost(), service.getPort()).close();
-                    return false;
-                } catch (Exception e) {
-                    return true;
-                }
-            }
-        });
-
-        // Wait for splunkd to come back up.
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            {
-                tries = 20;
-                pauseTime = 1000;
-            }
-            
-            @Override
-            public boolean predicate() {
-                try {
-                    Service.connect(command.opts);
-                    return true;
+                    service = Service.connect(command.opts);
+                    return !restartRequired();
                 } catch (Exception e) {
                     return false;
                 }
             }
         });
-
-        connect();
     }
     
     // === Misc ===
