@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +32,32 @@ public class ResultsReaderTest extends SDKTestCase {
     public void setUp() throws Exception {
         super.setUp();
     }
-	
+    
     private InputStream openResource(String path) {
+        if (path.startsWith("splunk_search:")) {
+            path = path.substring("splunk_search:".length());
+            
+            String[] pathComponents = path.split("/");
+            String searchType = pathComponents[0];
+            String outputMode = pathComponents[1];
+            String search = pathComponents[2];
+            
+            Args resultsArgs = new Args("output_mode", outputMode);
+            if (searchType.equals("blocking")) {
+                Job job = service.getJobs().create(
+                        search,
+                        new Args("exec_mode", "blocking"));
+                return job.getResults(resultsArgs);
+            }
+            else if (searchType.equals("oneshot")) {
+                return service.oneshot(search, resultsArgs);
+            }
+            else {
+                throw new IllegalArgumentException(
+                        "Unrecognized search type: " + searchType);
+            }
+        }
+        
         InputStream input = getClass().getResourceAsStream(path);
         assertNotNull("Could not open " + path, input);
         return input;
@@ -184,6 +209,7 @@ public class ResultsReaderTest extends SDKTestCase {
     public void testReadMultivalueXmlCsvJson() throws IOException {
         // These results were generated from "search index=_internal | head 1",
         // with the output formats {xml, csv, json}.
+        String search = "search index=_internal | head 1";
         
         testReadMultivalue(
                 ResultsReaderXml.class, "resultsMV.xml");
@@ -202,6 +228,20 @@ public class ResultsReaderTest extends SDKTestCase {
                 ResultsReaderJson.class, "resultsMVOneshot4.json");
         testReadMultivalue(
                 ResultsReaderJson.class, "resultsMVOneshot5.json");
+        
+        testReadMultivalue(
+                ResultsReaderXml.class, "splunk_search:blocking/xml/" + search);
+        testReadMultivalue(
+                ResultsReaderCsv.class, "splunk_search:blocking/csv/" + search);
+        testReadMultivalue(
+                ResultsReaderJson.class, "splunk_search:blocking/json/" + search);
+        
+        testReadMultivalue(
+                ResultsReaderXml.class, "splunk_search:oneshot/xml/" + search);
+        testReadMultivalue(
+                ResultsReaderCsv.class, "splunk_search:oneshot/csv/" + search);
+        testReadMultivalue(
+                ResultsReaderJson.class, "splunk_search:oneshot/json/" + search);
     }
     
     private void testReadMultivalue(
@@ -210,12 +250,32 @@ public class ResultsReaderTest extends SDKTestCase {
         
         String delimiter = (type == ResultsReaderXml.class) ? "," : "\n";
         
+        String expectedHostname;
+        if (filename.startsWith("splunk_search:")) {
+            // If accessing a live Splunk instance, use the real hostname
+            try {
+                InetAddress splunkAddress = InetAddress.getByName(
+                        service.getHost());
+                if (splunkAddress.isLoopbackAddress()) {
+                    splunkAddress = InetAddress.getLocalHost();
+                }
+                expectedHostname = splunkAddress.getHostName();
+            } catch (java.net.UnknownHostException e) {
+                throw new RuntimeException(
+                        "Could not lookup Splunk's hostname.", e);
+            }
+        }
+        else {
+            // ...otherwise use the hostname in the test data
+            expectedHostname = "dfoster-mbp17.local";
+        }
+        
         // Test legacy getNextEvent() interface on 2-valued and 1-valued fields
         {
             ResultsReader reader = createResultsReader(type, openResource(filename));
             
             HashMap<String, String> firstResult = reader.getNextEvent();
-            assertEquals("dfoster-mbp17.local" + delimiter + "_internal", firstResult.get("_si"));
+            assertEquals(expectedHostname + delimiter + "_internal", firstResult.get("_si"));
             assertEquals("_internal", firstResult.get("index"));
             
             assertNull("Expected exactly one result.", reader.getNextEvent());
@@ -228,7 +288,7 @@ public class ResultsReaderTest extends SDKTestCase {
             
             Event firstResult = reader.getNextEvent();
             assertEquals(
-                    new String[] {"dfoster-mbp17.local", "_internal"},
+                    new String[] {expectedHostname, "_internal"},
                     firstResult.getArray("_si", delimiter));
             assertEquals(
                     new String[] {"_internal"},
