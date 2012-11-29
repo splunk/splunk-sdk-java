@@ -25,13 +25,13 @@ import java.util.regex.Pattern;
  * {@link ResultsReader#getNextEvent()}.
  * 
  * An event maps each field name to a list of zero of more values.
- * If accessed as a {@link Map}, the values are encoded as a delimited
- * string. If accessed via {@link #getArray(String, String)} or 
- * {@link #getArray(String)}, the values are returned as a {@code String[]}.
+ * These values can be accessed as either an array (via {@link #getArray} or
+ * as a delimited string (via {@link #get}). It is recommended to access as an
+ * array when possible.
  * 
  * The delimiter for field values depends on the underlying result format.
  * If the underlying format does not specify a delimiter, such as with
- * {@link ResultsReaderXml}, the delimiter is comma (,). 
+ * {@link ResultsReaderXml}, the delimiter is comma (,).
  */
 public class Event extends HashMap<String, String> {
     private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
@@ -39,6 +39,9 @@ public class Event extends HashMap<String, String> {
     /**
      * Returns the single value or delimited set of values for the specified
      * field name, or {@code null} if the specified field is not present.
+     * 
+     * When getting a multi-valued field, {@link #getArray(String)} or
+     * {@link #getArray(String, String)} is recommended instead.
      */
     public String get(String key) {
         return super.get(key);
@@ -57,10 +60,14 @@ public class Event extends HashMap<String, String> {
     
     /**
      * Sets the value(s) for the specified field name.
+     * 
+     * The value delimiter is assumed to be comma (,).
      */
     public void putArray(String key, String[] values) {
-        super.put(key, Util.join(",", values)); // for backward compatibility
         arrayValues.put(key, values);
+        
+        // For backward compatibility with the Map interface
+        super.put(key, Util.join(",", values));
     }
     
     /**
