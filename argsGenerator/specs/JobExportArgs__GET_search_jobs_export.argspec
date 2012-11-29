@@ -15,6 +15,13 @@
 # Ignore errors related to this. The first version wins.
 !SET ignore_duplicates 1
 # 
+# Some arguments from included endpoints do not apply. Ignore them.
+!SUPPRESS id
+!SUPPRESS count
+!SUPPRESS f
+!SUPPRESS offset
+!SUPPRESS search
+# 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% Unique to this endpoint %%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

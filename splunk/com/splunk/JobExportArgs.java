@@ -256,8 +256,7 @@ public class JobExportArgs extends Args {
     }
     
     /**
-     * Sets the time to wait between running the MapReduce phase on accumulated 
-     * map values.
+     * Sets the time to wait between running the MapReduce phase on accumulated map values.
      * 
      * @param reduceFrequency
      *      The time to wait, in seconds.
@@ -284,14 +283,14 @@ public class JobExportArgs extends Args {
      */
     public void setRemoteServerList(String[] remoteServerList) {
         StringBuilder csv = new StringBuilder();
-            for (int i = 0, n = remoteServerList.length; i < n; i++) {
-                if (i != 0) {
-                    csv.append(",");
-                }
-                csv.append(remoteServerList[i]);
+        for (int i = 0, n = remoteServerList.length; i < n; i++) {
+            if (i != 0) {
+                csv.append(",");
             }
-            
-            this.put("remote_server_list", String.valueOf(csv));
+            csv.append(remoteServerList[i]);
+        }
+        
+        this.put("remote_server_list", String.valueOf(csv));
     }
     
     /**
@@ -305,8 +304,7 @@ public class JobExportArgs extends Args {
     }
     
     /**
-     * Indicates whether the indexer blocks if the queue for this search is 
-     * full. Only applies to real-time searches.
+     * Indicates whether the indexer blocks if the queue for this search is full. Only applies to real-time searches.
      * 
      * @param realtimeBlocking
      *      {@code true} to block the indexer for a full queue, {@code false} if not.
@@ -336,8 +334,7 @@ public class JobExportArgs extends Args {
     }
     
     /**
-     * Sets the number indicating the queue size (in events) that the indexer 
-     * should use for this search. Only applies to real-time searches.
+     * Sets the number indicating the queue size (in events) that the indexer should use for this search. Only applies to real-time searches.
      * 
      * @param realtimeQueueSize
      *      The queue size, in events.
@@ -407,7 +404,7 @@ public class JobExportArgs extends Args {
     }
     
     /**
-     * Sets a UTC time format. 
+     * Sets a UTC time format.
      * 
      * @param outputTimeFormat
      *      A UTC time format.
