@@ -43,8 +43,6 @@
 
 * The `JobCollection` class has been added as a specialized collection class for jobs.
 
-* The `Util` class has been added to provide string utilities.
-
 * You can now programatically remove indexes using the `IndexCollection.remove` method 
   (requires Splunk 5.0+).
 
