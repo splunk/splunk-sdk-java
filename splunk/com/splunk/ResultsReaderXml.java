@@ -21,6 +21,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
 import java.io.PushbackReader;
@@ -104,9 +107,9 @@ public class ResultsReaderXml extends ResultsReader {
         
         super.close();
     }
-
+    
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws IOException {
+    @Override public Event getNextEvent() throws IOException {
         XMLEvent xmlEvent;
         int eType;
 
@@ -146,13 +149,14 @@ public class ResultsReaderXml extends ResultsReader {
         return null;
     }
 
-    private HashMap<String, String> getResultKVPairs()
+    private Event getResultKVPairs()
             throws IOException, XMLStreamException {
-        HashMap<String, String> returnData = new HashMap<String, String>();
+        
+        Event returnData = new Event();
         XMLEvent xmlEvent;
         int eType;
         String key = null;
-        StringBuilder value = new StringBuilder();
+        List<String> values = new ArrayList<String>();
         int level = 0;
 
         // Event results are flat, so extract k/v pairs based on XML indentation
@@ -173,22 +177,23 @@ public class ResultsReaderXml extends ResultsReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     if (xmlEvent.asEndElement()
-                        .getName()
-                        .getLocalPart()
-                        .equals("result"))
-
+                            .getName()
+                            .getLocalPart()
+                            .equals("result"))
                         return returnData;
+                    
                     if (--level == 0) {
-                        returnData.put(key, value.toString());
-                        value.setLength(0); //clear
+                        String[] valuesArray = 
+                                values.toArray(new String[values.size()]);
+                        returnData.putArray(key, valuesArray);
+                        
                         key = null;
+                        values.clear();
                     }
                     break;
                 case XMLStreamConstants.CHARACTERS:
                     if (level > 1) {
-                        // Multi-values delimiter is comma.
-                        if (value.length() > 0) value.append(",");
-                        value.append(xmlEvent.asCharacters().getData());
+                        values.add(xmlEvent.asCharacters().getData());
                     }
                     break;
                 default:

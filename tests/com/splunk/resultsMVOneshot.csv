@@ -1,0 +1,4 @@
+
+"_bkt","_cd","_indextime","_raw","_serial","_si","_sourcetype","_subsecond","_time",host,index,linecount,source,sourcetype,"splunk_server"
+"_internal~114~BC509B13-C34D-4A69-B216-488806E9EA63","114:33623",1354062581,"127.0.0.1 - admin [27/Nov/2012:16:29:39.149 -0800] ""GET /services/messages?count=-1 HTTP/1.1"" 200 1998 - - - 1ms",0,"dfoster-mbp17.local
+_internal","splunkd_access",".149","2012-11-27T16:29:39.149-08:00","dfoster-mbp17.local","_internal",1,"/Applications/splunkbeta_140868_rc7/var/log/splunk/splunkd_access.log","splunkd_access","dfoster-mbp17.local"

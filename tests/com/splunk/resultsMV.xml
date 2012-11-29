@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<results preview='0'>
+<meta>
+<fieldOrder>
+<field>_bkt</field>
+<field>_cd</field>
+<field>_indextime</field>
+<field>_raw</field>
+<field>_serial</field>
+<field>_si</field>
+<field>_sourcetype</field>
+<field>_subsecond</field>
+<field>_time</field>
+<field>host</field>
+<field>index</field>
+<field>linecount</field>
+<field>source</field>
+<field>sourcetype</field>
+<field>splunk_server</field>
+</fieldOrder>
+</meta>
+	<result offset='0'>
+		<field k='_bkt'>
+			<value><text>_internal~115~BC509B13-C34D-4A69-B216-488806E9EA63</text></value>
+		</field>
+		<field k='_cd'>
+			<value><text>115:4502</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1354063414</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>11-27-2012 16:43:34.271 -0800 INFO  Metrics - group=udpin_connections, *:9999, sourcePort=9999, _udp_bps=0.00, _udp_kbps=0.00, _udp_avg_thruput=0.00, _udp_kprocessed=0.00, _udp_eps=0.00</v></field>
+		<field k='_serial'>
+			<value><text>0</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>dfoster-mbp17.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.271</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-11-27T16:43:34.271-08:00</text></value>
+		</field>
+		<field k='host'>
+			<value><text>dfoster-mbp17.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Applications/splunkbeta_140868_rc7/var/log/splunk/metrics.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>dfoster-mbp17.local</text></value>
+		</field>
+	</result>
+</results>
