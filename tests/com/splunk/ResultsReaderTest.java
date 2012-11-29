@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class ResultsReaderTest extends SDKTestCase {
 
@@ -250,32 +251,20 @@ public class ResultsReaderTest extends SDKTestCase {
         
         String delimiter = (type == ResultsReaderXml.class) ? "," : "\n";
         
-        String expectedHostname;
-        if (filename.startsWith("splunk_search:")) {
-            // If accessing a live Splunk instance, use the real hostname
-            try {
-                InetAddress splunkAddress = InetAddress.getByName(
-                        service.getHost());
-                if (splunkAddress.isLoopbackAddress()) {
-                    splunkAddress = InetAddress.getLocalHost();
-                }
-                expectedHostname = splunkAddress.getHostName();
-            } catch (java.net.UnknownHostException e) {
-                throw new RuntimeException(
-                        "Could not lookup Splunk's hostname.", e);
-            }
-        }
-        else {
-            // ...otherwise use the hostname in the test data
-            expectedHostname = "dfoster-mbp17.local";
-        }
-        
         // Test legacy getNextEvent() interface on 2-valued and 1-valued fields
         {
             ResultsReader reader = createResultsReader(type, openResource(filename));
             
             HashMap<String, String> firstResult = reader.getNextEvent();
-            assertEquals(expectedHostname + delimiter + "_internal", firstResult.get("_si"));
+            {
+                String siDelimited = firstResult.get("_si");
+                String[] siArray = siDelimited.split(Pattern.quote(delimiter));
+                assertEquals(2, siArray.length);
+                // (siArray[0] should be the locally-determined hostname of
+                //  splunkd, but there is no good way to test this
+                //  consistently.)
+                assertEquals("_internal", siArray[1]);
+            }
             assertEquals("_internal", firstResult.get("index"));
             
             assertNull("Expected exactly one result.", reader.getNextEvent());
@@ -287,9 +276,14 @@ public class ResultsReaderTest extends SDKTestCase {
             ResultsReader reader = createResultsReader(type, openResource(filename));
             
             Event firstResult = reader.getNextEvent();
-            assertEquals(
-                    new String[] {expectedHostname, "_internal"},
-                    firstResult.getArray("_si", delimiter));
+            {
+                String[] siArray = firstResult.getArray("_si", delimiter);
+                assertEquals(2, siArray.length);
+                // (siArray[0] should be the locally-determined hostname of
+                //  splunkd, but there is no good way to test this
+                //  consistently.)
+                assertEquals("_internal", siArray[1]);
+            }
             assertEquals(
                     new String[] {"_internal"},
                     firstResult.getArray("index", delimiter));
