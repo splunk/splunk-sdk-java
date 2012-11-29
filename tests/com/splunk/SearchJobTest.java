@@ -19,8 +19,6 @@ package com.splunk;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.splunk.JobEventsArgs.OutputMode;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -514,6 +512,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testEnablePreview() {
         installApplicationFromTestData("sleep_command");
+        
         String query = "search index=_internal | sleep 10";
         Args args = new Args();
         args.put("earliest_time", "-1m");
@@ -544,6 +543,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testDisablePreview() {
         installApplicationFromTestData("sleep_command");
+        
         String query = "search index=_internal | sleep 10";
         Args args = new Args();
         args.put("earliest_time", "-1m");
@@ -568,16 +568,17 @@ public class SearchJobTest extends SDKTestCase {
                 return !job.isPreviewEnabled();
             }
         });
-
+        
         job.cancel();
     }
 
     @Test
     public void testSetPriority() {
+        installApplicationFromTestData("sleep_command");
+        
         // Note that you can only *decrease* the priority of a job unless
         // splunkd is running as root.This is because Splunk jobs
         // are tied up with operating system processes and their priorities.
-        installApplicationFromTestData("sleep_command");
         String query = "search index=_internal | sleep 10";
         Args args = new Args();
         args.put("earliest_time", "-1m");
@@ -605,6 +606,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testPause() {
         installApplicationFromTestData("sleep_command");
+        
         String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
 
@@ -629,6 +631,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testUnpause() {
         installApplicationFromTestData("sleep_command");
+        
         String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
 
@@ -653,6 +656,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testFinalize() {
         installApplicationFromTestData("sleep_command");
+        
         String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
 

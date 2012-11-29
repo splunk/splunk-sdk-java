@@ -79,6 +79,7 @@ public abstract class SDKTestCase extends TestCase {
         if (restartRequired()) {
             fail("Test left Splunk in a state that required restart.");
         }
+        
         // We delete the apps we installed for capabilities after checking
         // for restarts that might be required, since deleting an app
         // triggers a restart (but one that we can safely ignore).
@@ -94,14 +95,11 @@ public abstract class SDKTestCase extends TestCase {
 
     protected static String createTimestamp() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
-        Date date = new Date();
-        return dateFormat.format(date);
+        return dateFormat.format(new Date());
     }
 
     protected static String createTemporaryName() {
-        UUID u = UUID.randomUUID();
-        String name = "delete-me-" + u.toString();
-        return name;
+        return "delete-me-" + UUID.randomUUID().toString();
     }
     
     // === Asserts ===
@@ -172,6 +170,7 @@ public abstract class SDKTestCase extends TestCase {
         args.put("name", appPath);
         args.put("update", "1");
         service.post("apps/appinstall", args);
+        
         installedApps.add(applicationName);
     }
     
