@@ -113,7 +113,11 @@ public class ApplicationTest extends SDKTestCase {
     public void testArchive() {
         ApplicationArchive archive = application.archive();
         assertEquals(applicationName, archive.getAppName());
-        assertTrue(new File(archive.getFilePath()).exists());
+        {
+            String filePath = archive.getFilePath();
+            assertTrue(filePath.contains("/") || filePath.contains("\\"));
+            assertTrue(filePath.endsWith(applicationName + ".spl"));
+        }
         assertFalse(archive.getRefresh());
         assertTrue(archive.getUrl() != null);
     }
