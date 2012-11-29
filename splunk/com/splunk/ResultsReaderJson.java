@@ -159,7 +159,7 @@ public class ResultsReaderJson extends ResultsReader {
             }
             if (jsonReader.peek() == JsonToken.STRING) {
                 String delimitedValues = jsonReader.nextString();
-                returnData.put(name, delimitedValues);
+                returnData.putDelimited(name, delimitedValues);
             }
             if (jsonReader.peek() == JsonToken.END_OBJECT) {
                 jsonReader.endObject();

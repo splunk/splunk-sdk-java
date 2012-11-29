@@ -36,15 +36,9 @@ import java.util.regex.Pattern;
 public class Event extends HashMap<String, String> {
     private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
     
-    /**
-     * Returns the single value or delimited set of values for the specified
-     * field name, or {@code null} if the specified field is not present.
-     * 
-     * When getting a multi-valued field, {@link #getArray(String)} or
-     * {@link #getArray(String, String)} is recommended instead.
-     */
-    public String get(String key) {
-        return super.get(key);
+    // Prevent non-SDK instantiation.
+    Event() {
+        // nothing
     }
     
     /**
@@ -54,7 +48,7 @@ public class Event extends HashMap<String, String> {
      * When setting a multi-valued field, {@link #putArray(String, String[])}
      * is recommended instead.
      */
-    public String put(String key, String valueOrDelimitedValues) {
+    String putDelimited(String key, String valueOrDelimitedValues) {
         return super.put(key, valueOrDelimitedValues);
     }
     
@@ -63,11 +57,22 @@ public class Event extends HashMap<String, String> {
      * 
      * The value delimiter is assumed to be comma (,).
      */
-    public void putArray(String key, String[] values) {
+    void putArray(String key, String[] values) {
         arrayValues.put(key, values);
         
         // For backward compatibility with the Map interface
         super.put(key, Util.join(",", values));
+    }
+    
+    /**
+     * Returns the single value or delimited set of values for the specified
+     * field name, or {@code null} if the specified field is not present.
+     * 
+     * When getting a multi-valued field, {@link #getArray(String)} or
+     * {@link #getArray(String, String)} is recommended instead.
+     */
+    public String get(String key) {
+        return super.get(key);
     }
     
     /**
@@ -113,5 +118,32 @@ public class Event extends HashMap<String, String> {
             return null;
         }
         return delimitedValues.split(Pattern.quote(delimiter));
+    }
+    
+    // === Read Only ===
+    
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public Object clone() {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public String put(String key, String value) {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public void putAll(Map<? extends String, ? extends String> m) {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public String remove(Object key) {
+        throw new UnsupportedOperationException();
     }
 }

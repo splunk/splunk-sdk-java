@@ -76,7 +76,7 @@ public class ResultsReaderCsv extends ResultsReader {
             int count = 0;
             for (String key : keys) {
                 String delimitedValues = line[count++];
-                returnData.put(key, delimitedValues);
+                returnData.putDelimited(key, delimitedValues);
             }
         }
 

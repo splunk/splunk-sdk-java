@@ -249,6 +249,51 @@ public class ResultsReaderTest extends SDKTestCase {
         }
     }
     
+    @Test
+    public void testEventIsReadOnly() {
+        Event event = new Event();
+        
+        try {
+            event.clear();
+            fail("Expected UnsupportedOperationException.");
+        }
+        catch (UnsupportedOperationException e) {
+            // Good
+        }
+        
+        try {
+            event.clone();
+            fail("Expected UnsupportedOperationException.");
+        }
+        catch (UnsupportedOperationException e) {
+            // Good
+        }
+        
+        try {
+            event.put(null, null);
+            fail("Expected UnsupportedOperationException.");
+        }
+        catch (UnsupportedOperationException e) {
+            // Good
+        }
+        
+        try {
+            event.putAll(null);
+            fail("Expected UnsupportedOperationException.");
+        }
+        catch (UnsupportedOperationException e) {
+            // Good
+        }
+        
+        try {
+            event.remove(null);
+            fail("Expected UnsupportedOperationException.");
+        }
+        catch (UnsupportedOperationException e) {
+            // Good
+        }
+    }
+    
     // === Utility ===
     
     private void assertNextEventEquals(
