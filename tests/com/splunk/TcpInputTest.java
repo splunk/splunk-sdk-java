@@ -105,6 +105,8 @@ public class TcpInputTest extends SDKTestCase {
         socket.close();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 20; }
+            
             @Override
             public boolean predicate() {
                 index.refresh();
