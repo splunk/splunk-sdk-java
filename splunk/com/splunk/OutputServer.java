@@ -150,16 +150,6 @@ public class OutputServer extends Entity {
     public void setSslPassword(String sslPassword) {
         setCacheValue("sslPassword", sslPassword);
     }
-
-    /**
-     * Sets the path to the root certificate authority file.
-     *
-     * @param sslRootCAPath The path to the root certificate authority file.
-     * @deprecated Use {@link #setSslRootCAPath(String)} instead.
-     */
-    public void setsslRootCAPath(String sslRootCAPath) {
-        this.setSslRootCAPath(sslRootCAPath);
-    }
     
     /**
      * Sets the path to the root certificate authority file.

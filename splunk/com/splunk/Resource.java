@@ -30,10 +30,6 @@ public abstract class Resource {
     /* Initialized by constructor. */
     protected Service service;
     protected String path;
-    /**
-     * @deprecated No replacement. This field is unused by the SDK.
-     */
-    protected String partialPath;
     protected Args refreshArgs;
     
     /* Initialized by {@link #load()}. */
@@ -70,7 +66,6 @@ public abstract class Resource {
         this.service = service;
         this.path = service.fullpath(
             path, namespace.size() == 0 ? null : namespace);
-        this.partialPath = path;
         this.refreshArgs = args;
     }
     

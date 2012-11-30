@@ -406,6 +406,7 @@ public class Entity extends Resource implements Map<String, Object> {
      *
      * @param args The arguments to update.
      */
+    @Override
     public void update(Map<String, Object> args) {
         if (!toUpdate.isEmpty() || !args.isEmpty()) {
             // Merge cached setters and live args together before updating.
@@ -413,7 +414,11 @@ public class Entity extends Resource implements Map<String, Object> {
                     new LinkedHashMap<String, Object>();
             mergedArgs.putAll(toUpdate);
             mergedArgs.putAll(args);
-            
+
+            if (mergedArgs.containsKey("name")) {
+                throw new IllegalStateException("Cannot set 'name' on an existing entity.");
+            }
+
             service.post(actionPath("edit"), mergedArgs);
             toUpdate.clear();
             invalidate();

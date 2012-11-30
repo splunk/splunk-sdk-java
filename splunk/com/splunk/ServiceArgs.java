@@ -97,6 +97,14 @@ public class ServiceArgs extends Args {
     }
     
     /**
+     * @param password
+     *      The password to use when logging in.
+     */
+    public void setPassword(String password) {
+    	this.put("password", password);
+    }
+    
+    /**
      * @param port
      *      The port number of the service.
      */
@@ -121,5 +129,13 @@ public class ServiceArgs extends Args {
     public void setToken(String token) {
         this.token = token; // for backward compatibility
         this.put("token", token);
+    }
+    
+    /**
+     * @param username
+     *     The username to use when logging in.
+     */
+    public void setUsername(String username) {
+    	this.put("username", username);
     }
 }

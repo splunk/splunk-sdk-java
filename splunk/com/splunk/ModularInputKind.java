@@ -33,9 +33,10 @@ public class ModularInputKind extends Entity {
      * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
      */
-    public ModularInputKind(Service service, String path) {
+    ModularInputKind(Service service, String path) {
         super(service, path);
-        Map<String, Map<String, Map<String,String>>> endpoint = (Map<String, Map<String, Map<String,String>>>)get("endpoint");
+        Map<String, Map<String, Map<String,String>>> endpoint =
+                (Map<String, Map<String, Map<String,String>>>)get("endpoint");
         this.args = endpoint.get("args");
     }
 
@@ -85,11 +86,7 @@ public class ModularInputKind extends Entity {
      * @return A string containing the description.
      */
     public String getDescription() {
-        if (containsKey("description")) {
-            return getString("description");
-        } else {
-            return "";
-        }
+        return getString("description", null);
     }
 
     /**
@@ -99,11 +96,7 @@ public class ModularInputKind extends Entity {
      * @return A string containing the title.
      */
     public String getTitle() {
-        if (containsKey("title")) {
-            return getString("title");
-        } else {
-            return super.getTitle();
-        }
+        return getString("title", null);
     }
 
     /**

@@ -195,13 +195,4 @@ public class TcpSplunkInput extends PortInput {
     public void setHost(String host) {
         setCacheValue("host", host);
     }
-
-    /**
-     * Sets a restriction to accept inputs from the specified host only.
-     *
-     * @param restrictToHost The host.
-     */
-    public void setRestrictToHost(String restrictToHost) {
-        setCacheValue("restrictToHost", restrictToHost);
-    }
 }
