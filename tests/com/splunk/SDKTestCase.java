@@ -231,7 +231,7 @@ public abstract class SDKTestCase extends TestCase {
             @Override
             public boolean predicate() {
                 try {
-                    service = Service.connect(command.opts);
+                    connect();
                     return !restartRequired();
                 } catch (Exception e) {
                     return false;
