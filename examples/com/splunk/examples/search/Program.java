@@ -18,7 +18,6 @@ package com.splunk.examples.search;
 
 import com.splunk.*;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -60,7 +59,7 @@ public class Program {
         }
     }
 
-    static void run(String[] args) throws Exception  {
+    static void run(String[] args) throws Exception {
         Command command = Command.splunk("search");
         command.addRule("count", Integer.class, resultsCount);
         command.addRule("earliest_time", String.class, earliestTimeText);
@@ -119,12 +118,10 @@ public class Program {
 
         // Check the syntax of the query.
         try {
-            Args parseArgs = new Args("parse_only", true);
-            service.parse(query, parseArgs);
+            service.parse(query, new Args("parse_only", true));
         }
         catch (HttpException e) {
-            String detail = e.getDetail();
-            Command.error("query '%s' is invalid: %s", query, detail);
+            Command.error("query '%s' is invalid: %s", query, e.getDetail());
         }
 
         // Create a search job for the given query & query arguments.
@@ -141,9 +138,8 @@ public class Program {
         Job job = service.getJobs().create(query, queryArgs);
 
         // Wait until results are available.
-        boolean status = false;
+        boolean didPrintAStatusLine = false;
         while (!job.isDone()) {
-
             // If no outputs are available, optionally print status
             if (verbose && job.isReady()) {
                 float progress = job.getDoneProgress() * 100.0f;
@@ -153,21 +149,20 @@ public class Program {
                 System.out.format(
                     "\r%03.1f%% done -- %d scanned -- %d matched -- %d results",
                     progress, scanned, matched, results);
-                status = true;
+                didPrintAStatusLine = true;
             }
 
             Thread.sleep(1000);
         }
-
-        if (status) System.out.println("");
-
-        InputStream stream = null;
+        if (didPrintAStatusLine)
+            System.out.println("");
 
         Args outputArgs = new Args();
         outputArgs.put("count", resultsCount);
         outputArgs.put("offset", offset);
         outputArgs.put("output_mode", outputMode);
 
+        InputStream stream;
         if (output.equals("results"))
             stream = job.getResults(outputArgs);
         else if (output.equals("events"))
@@ -180,53 +175,57 @@ public class Program {
             stream = job.getSummary(outputArgs);
         else if (output.equals("timeline"))
             stream = job.getTimeline(outputArgs);
-        else assert(false);
+        else
+            throw new IllegalArgumentException(
+                    "Unrecognized output type: " + output);
 
-        boolean useReader = false;
-        if (command.opts.containsKey("reader")) {
-            useReader = true;
-        }
-
+        boolean useReader = command.opts.containsKey("reader");
         if (useReader) {
-            HashMap<String, String> map;
+            ResultsReader resultsReader;
+            if (outputMode.equals("xml"))
+                resultsReader = new ResultsReaderXml(stream);
+            else if (outputMode.equals("json"))
+                resultsReader = new ResultsReaderJson(stream);
+            else if (outputMode.equals("csv"))
+                resultsReader = new ResultsReaderCsv(stream);
+            else
+                throw new IllegalArgumentException(
+                        "Unrecognized output mode: " + outputMode);
+            
             try {
-                // NOTE: The JSON and CSV results readers requires an external
-                // jar (gson-2.1.jar, opencsv-2.3.jar) for json and csv parsing.
-                // You need to include these jars (which are in the lib/ directory
-                // of the SDK) in your classpath to run this.
-                ResultsReader resultsReader;
-                if (outputMode.equals("xml"))
-                    resultsReader = new ResultsReaderXml(stream);
-                else if (outputMode.equals("json")) {
-                    resultsReader = new ResultsReaderJson(stream);
-                } else {
-                    resultsReader = new ResultsReaderCsv(stream);
-                }
-                while ((map = resultsReader.getNextEvent()) != null) {
+                HashMap<String, String> event;
+                while ((event = resultsReader.getNextEvent()) != null) {
                     System.out.println("EVENT:********");
-                    for (String key: map.keySet())
-                        System.out.println("  " + key + " --> " + map.get(key));
+                    for (String key : event.keySet())
+                        System.out.println("  " + key + " --> " + event.get(key));
                 }
+            }
+            finally {
                 resultsReader.close();
-            } catch (IOException e) {
-                System.out.println("I/O exception: " + e);
             }
         }
         else {
             InputStreamReader reader = new InputStreamReader(stream, "UTF8");
-            OutputStreamWriter writer = new OutputStreamWriter(System.out);
-
-            int size = 1024;
-            char[] buffer = new char[size];
-            while (true) {
-                int count = reader.read(buffer);
-                if (count == -1) break;
-                writer.write(buffer, 0, count);
+            try {
+                OutputStreamWriter writer = new OutputStreamWriter(System.out);
+                try {
+                    int size = 1024;
+                    char[] buffer = new char[size];
+                    while (true) {
+                        int count = reader.read(buffer);
+                        if (count == -1) break;
+                        writer.write(buffer, 0, count);
+                    }
+        
+                    writer.write("\n");
+                }
+                finally {
+                    writer.close();
+                }
             }
-
-            writer.write("\n");
-            writer.close();
-            reader.close();
+            finally {
+                reader.close();
+            }
         }
 
         job.cancel();

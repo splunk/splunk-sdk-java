@@ -47,13 +47,12 @@ public class Command {
     // Whether or not this is a help request
     public Boolean help = false;
 
-    public static final HashMap<String, Object> defaultValues = new HashMap<String, Object>() {
-    	{
-    		put("scheme", "https");
-    		put("host", "localhost");
-    		put("port", 8089);
-    	}
-    };
+    public static final HashMap<String, Object> defaultValues = new HashMap<String, Object>();
+    {
+        defaultValues.put("scheme", "https");
+        defaultValues.put("host", "localhost");
+        defaultValues.put("port", 8089);
+    }
     
     Command(String appName) { 
         this.appName = appName;
@@ -77,6 +76,7 @@ public class Command {
     }
 
     // Initialize with default Splunk command options.
+    @SuppressWarnings("static-access")  // OptionBuilder API requires this
     public Command init() {
         rules.addOption("h",  "help", false, "Display this help message");
         rules.addOption(null, "host", true, "Host name (default localhost)");
@@ -100,6 +100,7 @@ public class Command {
         return this;
     }
 
+    @SuppressWarnings("static-access")  // OptionBuilder API requires this
     public Command addRule(String name, Class argType, String description) {
         rules.addOption(
             OptionBuilder
@@ -115,7 +116,7 @@ public class Command {
     public Command load(String path) {
         FileReader fileReader;
         try {
-           fileReader = new FileReader(path);
+            fileReader = new FileReader(path);
         }
         catch (FileNotFoundException e) { return this; }
 
