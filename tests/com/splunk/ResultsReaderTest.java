@@ -50,7 +50,7 @@ public class ResultsReaderTest extends SDKTestCase {
                 return job.getResults(resultsArgs);
             }
             else if (searchType.equals("oneshot")) {
-                return service.oneshot(search, resultsArgs);
+                return service.oneshotSearch(search, resultsArgs);
             }
             else {
                 throw new IllegalArgumentException(
@@ -147,7 +147,7 @@ public class ResultsReaderTest extends SDKTestCase {
 
     @Test
     public void testReadCsvFromOneshot() throws Exception {
-        InputStream input = service.oneshot(
+        InputStream input = service.oneshotSearch(
                 "search index=_internal | head 1 | stats count",
                 Args.create("output_mode", "csv"));
         ResultsReaderCsv reader = new ResultsReaderCsv(input);

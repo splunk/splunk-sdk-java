@@ -271,7 +271,7 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals(true, savedSearch.getRunOnStartup());
         assertEquals(null, savedSearch.getVsid());
         
-        assertEquals(11, savedSearch.getDispatchReduceFreq());
+        assertEquals(11, savedSearch.getDispatchReduceFrequency());
         assertEquals(true, savedSearch.getDispatchRtBackfill());
         assertEquals(false, savedSearch.getRestartOnSearchPeerAdd());
         assertEquals(true, savedSearch.isDisabled());

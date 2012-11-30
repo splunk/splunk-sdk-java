@@ -99,7 +99,7 @@ class Util {
         }
         return returnValue;
     }
-    
+
     /**
      * Throws an IllegalArgumentException if the specified namespace
      * is a wildcarded namespace.

@@ -603,10 +603,21 @@ public class IndexTest extends SDKTestCase {
         assertTrue(getResultCountOfIndex() == 0);
     }
     
+    @Test
+    public void testUpdateNameShouldFail() {
+        try {
+            index.update(new Args("name", createTemporaryName()));
+            fail("Expected IllegalStateException.");
+        }
+        catch (IllegalStateException e) {
+            // Good
+        }
+    }
+    
     // === Utility ===
 
     private int getResultCountOfIndex() {
-        InputStream results = service.oneshot("search index=" + indexName);
+        InputStream results = service.oneshotSearch("search index=" + indexName);
         try {
             ResultsReaderXml resultsReader = new ResultsReaderXml(results);
             

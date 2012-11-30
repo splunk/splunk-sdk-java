@@ -61,7 +61,7 @@ public class Program {
 
         // This is the simplest form of searching splunk. Note that input and
         // output args are allowed, but they are not shown in this example.
-        InputStream stream = service.search(query);
+        InputStream stream = service.oneshotSearch(query);
 
         InputStreamReader reader = new InputStreamReader(stream, "UTF8");
         OutputStreamWriter writer = new OutputStreamWriter(System.out);

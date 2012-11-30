@@ -351,12 +351,6 @@ public class InputCrudTest extends InputTest {
             assertFalse("dns".equals(tcpSplunkInput.getConnectionHost()));
             tcpSplunkInput.setConnectionHost("dns");
             tcpSplunkInput.setHost("myhost");
-            if (service.versionCompare("4.3") >= 0) {
-                // Behavioral difference between 4.3 and earlier versions
-                if (!WORKAROUND_KNOWN_BUGS) {   // SPL-57233
-                    tcpSplunkInput.setRestrictToHost("four.five.com");
-                }
-            }
             tcpSplunkInput.setSSL(false);
             tcpSplunkInput.update();
 

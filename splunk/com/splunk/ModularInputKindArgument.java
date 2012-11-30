@@ -23,7 +23,7 @@ import java.util.Map;
  * specialized to represent arguments for modular input kinds.
  */
 public class ModularInputKindArgument extends HashMap<String,String> {
-    public enum ModularInputKindArgumentType { Number, String, Boolean };
+    public enum Type { NUMBER, STRING, BOOLEAN };
 
     /**
      * Class constructor.
@@ -42,29 +42,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      * @return The description.
      */
     public String getDescription() {
-        String description = get("description");
-        if (description != null) {
-            return description;
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Returns a Boolean that is extracted from the specified field.
-     *
-     * @param fieldName The field name.
-     * @return A Boolean from the specified field.
-     */
-    protected boolean getBoolean(String fieldName) {
-        String r = get(fieldName);
-        if (r.equals("1")) {
-            return true;
-        } else if (r.equals("0")) {
-            return false;
-        } else {
-            throw new IllegalStateException("Expected 1 or 0; found: " + r);
-        }
+        return get("description");
     }
 
     /**
@@ -75,7 +53,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      * {@code false} if not.
      */
     public boolean getRequiredOnCreate() {
-        return getBoolean("required_on_create");
+        return Value.toBoolean(get("required_on_create"));
     }
 
     /**
@@ -86,7 +64,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      * {@code false} if not.
      */
     public boolean getRequiredOnEdit() {
-        return getBoolean("required_on_edit");
+        return Value.toBoolean(get("required_on_edit"));
     }
 
     /**
@@ -95,14 +73,14 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      * @return A member of the {@code ModularInputKindArgumentType} enumeration 
      * ({@code Number}, {@code Boolean}, or {@code String}).
      */
-    public ModularInputKindArgumentType getType() {
+    public Type getType() {
         String type = get("data_type");
         if (type.equals("number")) {
-            return ModularInputKindArgumentType.Number;
+            return Type.NUMBER;
         } else if (type.equals("boolean")) {
-            return ModularInputKindArgumentType.Boolean;
+            return Type.BOOLEAN;
         } else if (type.equals("string")) {
-            return ModularInputKindArgumentType.String;
+            return Type.STRING;
         } else {
             throw new IllegalStateException("Invalid data_type value: " + type);
         }

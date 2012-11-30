@@ -143,6 +143,22 @@
 
 * The `Entity.toUpdate` field is no longer public.
 
+* The `Service.search(query)` and `Service.search(query, args)` methods now return
+  a search job instead of blocking and returning results. 
+  The `Service.search(query, inputArgs, outputArgs)` has been removed.
+
+* Method OutputServer.setsslRootCAPPath has been renamed to setSslRootCAPPath.
+
+* Method SavedSearch.getDispatchReduceFreq, which returned a String, has been replaced
+  with getDispatchReduceFrequency, which returns an integer.
+
+* setRestrictToHost has been removed from TCP and UDP inputs.
+
+* Settings.setMgmtHostPort renamed to setMgmtPort, and Settings.getMgmtPort now returns
+  an integer.
+
+* The `Service.oneshot` method has been renamed to `Service.oneshotSearch`.
+
 ### Bug fixes
 
 * The `Service.versionCompare` method has been fixed to work as expected.

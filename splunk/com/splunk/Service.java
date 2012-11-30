@@ -126,6 +126,8 @@ public class Service extends BaseService {
         this.port = Args.<Integer>get(args,  "port",   args.port != null   ? args.port   : DEFAULT_PORT);
         this.scheme = Args.<String>get(args, "scheme", args.scheme != null ? args.scheme : DEFAULT_SCHEME);
         this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
+        this.username = (String)args.get("username");
+        this.password = (String)args.get("password");
     }
 
     /**
@@ -141,6 +143,8 @@ public class Service extends BaseService {
         this.port = Args.<Integer>get(args, "port", DEFAULT_PORT);
         this.scheme = Args.<String>get(args, "scheme", DEFAULT_SCHEME);
         this.token = Args.<String>get(args, "token", null);
+        this.username = (String)args.get("username");
+        this.password = (String)args.get("password");
     }
 
     /**
@@ -154,9 +158,7 @@ public class Service extends BaseService {
     public static Service connect(Map<String, Object> args) {
         Service service = new Service(args);
         if (args.containsKey("username")) {
-            String username = Args.get(args, "username", null);
-            String password = Args.get(args, "password", null);
-            service.login(username, password);
+        	service.login();
         }
         return service;
     }
@@ -1005,6 +1007,21 @@ public class Service extends BaseService {
     }
 
     /**
+     * Authenticates the {@code Service} instance with the username and password
+     * specified when the instance was created.
+     * 
+     * @return The current {@code Service} instance.
+     */
+    public Service login() {
+    	if (this.username == null || this.password == null) {
+    		throw new IllegalStateException("Missing username or password.");
+    	}
+    	else {
+    		return login(this.username, this.password);
+    	}
+    }
+    
+    /**
      * Authenticates the {@code Service} instance with a username and password.
      *
      * @param username The Splunk account username.
@@ -1047,8 +1064,8 @@ public class Service extends BaseService {
      * @param query The search query.
      * @return The search results.
      */
-    public InputStream oneshot(String query) {
-        return oneshot(query, null);
+    public InputStream oneshotSearch(String query) {
+        return oneshotSearch(query, null);
     }
 
     /**
@@ -1067,7 +1084,7 @@ public class Service extends BaseService {
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
      */
-    public InputStream oneshot(String query, Map args) {
+    public InputStream oneshotSearch(String query, Map args) {
     	args = Args.create(args);
         args.put("search", query);
         args.put("exec_mode", "oneshot");
@@ -1092,8 +1109,8 @@ public class Service extends BaseService {
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
      */
-    public InputStream oneshot(String query, Args args) {
-    	return oneshot(query, (Map<String, Object>)args);
+    public InputStream oneshotSearch(String query, Args args) {
+    	return oneshotSearch(query, (Map<String, Object>)args);
     }
 
     /**
@@ -1143,45 +1160,29 @@ public class Service extends BaseService {
     }
 
     /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
+     * Creates an asynchronous search using the given query. Use this
+     * method for simple searches.
      *
      * @param query The search query.
-     * @return The search results.
+     * @return The search job.
      */
-    public InputStream search(String query) {
+    public Job search(String query) {
         return search(query, null);
     }
 
     /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
+     * Creates an asynchronous search job using the given query and
+     * search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments.
-     * @return The search results.
+     * @param args The search arguments.
+     * @return The search job.
      */
-    public InputStream search(String query, Map inputArgs) {
-        return search(query, inputArgs, null);
-    }
-
-    /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
-     *
-     * @param query The search query.
-     * @param inputArgs The search arguments.
-     * @param outputArgs The output qualifier arguments.
-     * @return The search results.
-     */
-    public InputStream search(String query, Map inputArgs, Map outputArgs) {
-        inputArgs = Args.create(inputArgs);
-        inputArgs.put("search", query);
-        // always block until results are ready.
-        inputArgs.put("exec_mode", "blocking");
-        
-        Job job = this.getJobs().create(query, inputArgs);
-        return job.getResults(outputArgs);
+    public Job search(String query, Map<String, Object> args) {
+        args = Args.create(args);
+        args.put("search", query);        
+        Job job = this.getJobs().create(query, args);
+        return job;
     }
 
     /**

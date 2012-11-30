@@ -18,6 +18,7 @@ package com.splunk;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
 * The {@code LicensePool} class represents a license pool, which is made up 
@@ -78,8 +79,9 @@ public class LicensePool extends Entity {
      *
      * @return A map from each slave GUID to the number of bytes it is using.
      */
-    public HashMap<String, Long> getSlavesUsageBytes() {
-    	HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
+    public Map<String, Long> getSlavesUsageBytes() {
+    	@SuppressWarnings("unchecked")
+        HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
     	if (values == null) {
     		values = new HashMap<String, Object>();
     	}
@@ -166,13 +168,6 @@ public class LicensePool extends Entity {
      * array with a single asterisk element ("*").
      */
     public void setSlaves(String[] slaves) {
-    	StringBuilder sb = new StringBuilder();
-    	for(int i = 0; i < slaves.length; i++) {
-    		sb.append(slaves[i]);
-    		if (i < slaves.length - 1) {
-    			sb.append(",");
-    		}
-    	}
-    	setSlaves(sb.toString());
+    	setSlaves(Util.join(",", slaves));
     }
 }
