@@ -151,8 +151,6 @@ public class Command {
         catch (ParseException e) {
             error(e.getMessage());
         }
-        
-        this.opts.putAll(defaultValues);
 
         // Unpack the cmdline into a simple Map of options and optionally
         // assign values to any corresponding fields found in the Command class.
@@ -227,8 +225,8 @@ public class Command {
 
     // Load the default options file (.splunkrc) if it exists
     public Command splunkrc() {
-        String home = System.getProperty("user.home");
-        load(home + File.separator + ".splunkrc");
+        this.opts.putAll(defaultValues);
+        load(System.getProperty("user.home") + File.separator + ".splunkrc");
         return this;
     }
 }
