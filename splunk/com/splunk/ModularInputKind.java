@@ -86,7 +86,7 @@ public class ModularInputKind extends Entity {
      * @return A string containing the description.
      */
     public String getDescription() {
-        return getString("description");
+        return getString("description", null);
     }
 
     /**
@@ -96,7 +96,7 @@ public class ModularInputKind extends Entity {
      * @return A string containing the title.
      */
     public String getTitle() {
-        return getString("title");
+        return getString("title", null);
     }
 
     /**

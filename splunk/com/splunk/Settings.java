@@ -194,8 +194,8 @@ public class Settings extends Entity {
      * @param mgmtHostPort The port for the 
      * management interface.
      */
-    public void setMgmtHostPort(int mgmtHostPort) {
-        setCacheValue("mgmtHostPort", mgmtHostPort);
+    public void setMgmtPort(int port) {
+        setCacheValue("mgmtHostPort", port);
     }
 
     /**

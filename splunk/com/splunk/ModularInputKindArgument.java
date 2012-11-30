@@ -53,7 +53,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      * {@code false} if not.
      */
     public boolean getRequiredOnCreate() {
-        return Value.toBoolean("required_on_create");
+        return Value.toBoolean(get("required_on_create"));
     }
 
     /**
@@ -64,7 +64,7 @@ public class ModularInputKindArgument extends HashMap<String,String> {
      * {@code false} if not.
      */
     public boolean getRequiredOnEdit() {
-        return Value.toBoolean("required_on_edit");
+        return Value.toBoolean(get("required_on_edit"));
     }
 
     /**

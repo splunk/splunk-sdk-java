@@ -905,17 +905,6 @@ public class SavedSearch extends Entity {
     public int getDispatchMaxTime() {
         return getInteger("dispatch.max_time");
     }
-
-    /**
-     * Returns how frequently Splunk runs the MapReduce reduce phase
-     * on accumulated map values.
-     *
-     * @return The reduce frequency.
-     * @deprecated Use {@link #getDispatchReduceFrequency()} instead.
-     */
-    public int getDispatchReduceFreq() {
-        return getDispatchReduceFrequency();
-    }
     
     /**
      * Returns how frequently Splunk runs the MapReduce reduce phase
@@ -2206,12 +2195,6 @@ public class SavedSearch extends Entity {
         // Add required arguments if not already present
         if (!args.containsKey("search")) {
             args = Args.create(args).add("search", getSearch());
-        }
-
-        // Throw an exception if trying to set the name, since it
-        // won't work, but will silently fail on Splunk's end.
-        if (args.containsKey("name")) {
-            throw new IllegalStateException("Cannot set 'name' on a saved search.");
         }
 
         super.update(args);

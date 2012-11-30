@@ -101,24 +101,6 @@ class Util {
     }
 
     /**
-     * Join the paths in {@code pathComponents} into a cross
-     * platform file reference. So {@code joinPath({"etc","apps","boris"})}
-     * will be the same as {@code new File("etc/apps/boris")} on
-     * Unix, or {@code new File("etc\\apps\\boris")} on Windows.
-     */
-    public static File joinPath(String[] pathComponents) {
-        if (pathComponents.length == 0) {
-            return new File("");
-        } else {
-            File file = new File(pathComponents[0]);
-            for (int i = 1; i < pathComponents.length; i++) {
-                file = new File(file, pathComponents[i]);
-            }
-            return file;
-        }
-    }
-    
-    /**
      * Throws an IllegalArgumentException if the specified namespace
      * is a wildcarded namespace.
      */

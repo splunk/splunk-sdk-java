@@ -227,15 +227,6 @@ public class UdpInput extends PortInput {
     }
 
     /**
-     * Sets a restriction to accept inputs from the specified host only.
-     *
-     * @param restrictToHost The host.
-     */
-    public void setRestrictToHost(String restrictToHost) {
-        setCacheValue("restrictToHost", restrictToHost);
-    }
-
-    /**
      * Sets the initial value for the source key for events from this 
      * input. The source key is used during parsing and indexing. The 
      * <b>source</b> field is used for searches. As a convenience, the source 

@@ -85,8 +85,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         assertEquals("Test \"Input\" - 1", test1.getTitle());
 
         ModularInputKind test2 = inputKinds.get("test2");
-        String expectedDescription2 = "";
-        assertEquals(expectedDescription2, test2.getDescription());
+        assertEquals(null, test2.getDescription());
         assertEquals("test2", test2.getTitle());
     }
 
@@ -100,8 +99,8 @@ public class ModularInputKindsTest extends SDKTestCase {
 
         Map<String,String> expectedValues = new HashMap<String,String>();
         expectedValues.put("key_id", "The key of the system");
-        expectedValues.put("no_description", "");
-        expectedValues.put("empty_description", "");
+        expectedValues.put("no_description", null);
+        expectedValues.put("empty_description", null);
 
         for (String key : expectedValues.keySet()) {
             assertTrue(test1.hasArgument(key));
@@ -120,11 +119,11 @@ public class ModularInputKindsTest extends SDKTestCase {
 
         ModularInputKindArgument arg;
 
-        Map<String,ModularInputKindArgument.ModularInputKindArgumentType> expectedValues =
-                new HashMap<String,ModularInputKindArgument.ModularInputKindArgumentType>();
-        expectedValues.put("number_field", ModularInputKindArgument.ModularInputKindArgumentType.Number);
-        expectedValues.put("boolean_field", ModularInputKindArgument.ModularInputKindArgumentType.Boolean);
-        expectedValues.put("string_field", ModularInputKindArgument.ModularInputKindArgumentType.String);
+        Map<String,ModularInputKindArgument.Type> expectedValues =
+                new HashMap<String,ModularInputKindArgument.Type>();
+        expectedValues.put("number_field", ModularInputKindArgument.Type.NUMBER);
+        expectedValues.put("boolean_field", ModularInputKindArgument.Type.BOOLEAN);
+        expectedValues.put("string_field", ModularInputKindArgument.Type.STRING);
 
         for (String key : expectedValues.keySet()) {
             assertTrue(test1.hasArgument(key));

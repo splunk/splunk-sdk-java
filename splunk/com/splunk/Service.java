@@ -1064,8 +1064,8 @@ public class Service extends BaseService {
      * @param query The search query.
      * @return The search results.
      */
-    public InputStream oneshot(String query) {
-        return oneshot(query, null);
+    public InputStream oneshotSearch(String query) {
+        return oneshotSearch(query, null);
     }
 
     /**
@@ -1084,7 +1084,7 @@ public class Service extends BaseService {
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
      */
-    public InputStream oneshot(String query, Map args) {
+    public InputStream oneshotSearch(String query, Map args) {
     	args = Args.create(args);
         args.put("search", query);
         args.put("exec_mode", "oneshot");

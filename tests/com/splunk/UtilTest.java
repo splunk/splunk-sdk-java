@@ -74,15 +74,6 @@ public class UtilTest extends SDKTestCase {
     }
 
     @Test
-    public void testJoinPath() {
-        String[] pathComponents = {"a", "b"};
-        Assert.assertEquals(
-                new File(new File("a"), "b"),
-                Util.joinPath(pathComponents)
-        );
-    }
-
-    @Test
     public void testArgs() {
     	Args args = Args.create();
     	assertTrue(args != null);
