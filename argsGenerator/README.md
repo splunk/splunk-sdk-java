@@ -21,7 +21,7 @@ auto_cancel
 AutoCancel
 int
 Sets the number of seconds of inactivity after which to automatically cancel a job. A value of 0 means never auto-cancel.
----
+-
 The number of seconds after which to cancel a job.
 ===
 ```
@@ -73,7 +73,7 @@ The rest of the file is a series of argument definitions:
 << method description line #1 >>
 << method description line .. >>
 << method description line #n >>
----
+-
 << parameter description line #1 >>
 << parameter description line .. >>
 << parameter description line #n >>
@@ -102,7 +102,7 @@ dispatch.earliest_time
 DispatchEarliestTime
 Date
 Sets the earliest time for this search. 
----
+-
 A date that specifies the earliest time for this search.
 !CODE
         String javaFormatString =    "yyyy-MM-dd'T'HH:mm:ss.SSSZ";

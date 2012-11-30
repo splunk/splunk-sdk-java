@@ -100,7 +100,7 @@ try:
         param_description_lines = []
         saw_description_separator = False
         for line in description_lines:
-            if line == '---\n':
+            if line.startswith('-'):
                 saw_description_separator = True
                 continue
             
