@@ -1180,9 +1180,9 @@ public class Service extends BaseService {
      */
     public Job search(String query, Map<String, Object> args) {
         args = Args.create(args);
-        args.put("search", query);        
-        Job job = this.getJobs().create(query, args);
-        return job;
+        args.put("search", query);
+        
+        return this.getJobs().create(query, args);
     }
 
     /**

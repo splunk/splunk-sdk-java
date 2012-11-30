@@ -59,23 +59,30 @@ public class Program {
             Command.error("query '%s' is invalid: %s", query, detail);
         }
 
-        // This is the simplest form of searching splunk. Note that input and
-        // output args are allowed, but they are not shown in this example.
+        // This is the simplest form of searching splunk. Note that additional
+        // arguments are allowed, but they are not shown in this example.
         InputStream stream = service.oneshotSearch(query);
 
         InputStreamReader reader = new InputStreamReader(stream, "UTF8");
-        OutputStreamWriter writer = new OutputStreamWriter(System.out);
-
-        int size = 1024;
-        char[] buffer = new char[size];
-        while (true) {
-            int count = reader.read(buffer);
-            if (count == -1) break;
-            writer.write(buffer, 0, count);
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(System.out);
+            try {
+                int size = 1024;
+                char[] buffer = new char[size];
+                while (true) {
+                    int count = reader.read(buffer);
+                    if (count == -1) break;
+                    writer.write(buffer, 0, count);
+                }
+        
+                writer.write("\n");
+            }
+            finally {
+                writer.close();
+            }
         }
-
-        writer.write("\n");
-        writer.close();
-        reader.close();
+        finally {
+            reader.close();
+        }
     }
 }
