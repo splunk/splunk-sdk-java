@@ -59,26 +59,26 @@ public class TcpInputTest extends SDKTestCase {
 
     @Test
     public void testGetters() throws IOException {
-    	final Socket socket = tcpInput.attach();
+        final Socket socket = tcpInput.attach();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
-            	TcpConnections connections = tcpInput.connections();
-            	String connection = connections.getConnection();
-            	String servername = connections.getServername();
-            	
-            	if (connection == null && servername == null) {
-            		return false;
-            	}
-            	
-            	try {
-					socket.close();
-				} catch (IOException e) {
-					fail("Should not throw!");
-				} 
-            	
-            	return true;
+                TcpConnections connections = tcpInput.connections();
+                String connection = connections.getConnection();
+                String servername = connections.getServername();
+                
+                if (connection == null && servername == null) {
+                    return false;
+                }
+                
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    fail("Should not throw!");
+                } 
+                
+                return true;
             }
         });
     

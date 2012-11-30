@@ -44,12 +44,12 @@ public class LicenseTest extends SDKTestCase {
     
     @Test
     public void testStacks() throws Exception {
-    	EntityCollection<LicenseStack> stacks = service.getLicenseStacks();
-    	for (LicenseStack stack : stacks.values()) {
-    		assertTrue(stack.getQuota() >= 0);
-    		assertTrue(!stack.getType().isEmpty());
-    		assertTrue(!stack.getLabel().isEmpty());
-    	}
+        EntityCollection<LicenseStack> stacks = service.getLicenseStacks();
+        for (LicenseStack stack : stacks.values()) {
+            assertTrue(stack.getQuota() >= 0);
+            assertTrue(!stack.getType().isEmpty());
+            assertTrue(!stack.getLabel().isEmpty());
+        }
     }
     
     @Test

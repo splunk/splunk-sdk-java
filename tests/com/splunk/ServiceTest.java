@@ -56,30 +56,30 @@ public class ServiceTest extends SDKTestCase {
     // Make a few simple requests and make sure the results look ok.
     @Test
     public void testReceiver() {
-    	Receiver receiver = service.getReceiver();
+        Receiver receiver = service.getReceiver();
 
-    	final Index index = service.getIndexes().get("main");
+        final Index index = service.getIndexes().get("main");
         final int originalEventCount = index.getTotalEventCount();
         
         try {
-			Socket socket1 = receiver.attach();
-			OutputStream stream = socket1.getOutputStream();
+            Socket socket1 = receiver.attach();
+            OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon1!\r\n";
             stream.write(s.getBytes("UTF8"));
-		} catch (IOException e) {
-			fail("Exception on attach");
-		}
+        } catch (IOException e) {
+            fail("Exception on attach");
+        }
         
         try {
-			Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
-			OutputStream stream = socket1.getOutputStream();
+            Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
+            OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon2!\r\n";
             stream.write(s.getBytes("UTF8"));
-		} catch (IOException e) {
-			fail("Exception on attach");
-		}
+        } catch (IOException e) {
+            fail("Exception on attach");
+        }
 
         receiver.submit("Boris the mad baboon3!\r\n");
         receiver.submit(Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon4!\r\n");
@@ -157,12 +157,12 @@ public class ServiceTest extends SDKTestCase {
 
     private void checkLoggedIn(Service service) {
         ResponseMessage response;
-    	response = service.get("/services/authentication/users");
+        response = service.get("/services/authentication/users");
         checkResponse(response);
     }
     
     protected void checkNotLoggedIn(Service service) {
-    	try {
+        try {
             service.get("/services/authentication/users");
             fail("Expected HttpException");
         }
@@ -194,58 +194,58 @@ public class ServiceTest extends SDKTestCase {
     
     @Test
     public void testLoginWithoutArguments() {
-    	ServiceArgs args = new ServiceArgs();
-    	args.setHost((String) command.opts.get("host"));
-    	args.setPort((Integer) command.opts.get("port"));
-    	args.setScheme((String) command.opts.get("scheme"));
-    	args.setUsername((String) command.opts.get("username"));
-    	args.setPassword((String) command.opts.get("password"));
-    	Service service = new Service(args);
-    	
-    	checkNotLoggedIn(service);
-    	
-    	service.login();
-    	checkLoggedIn(service);
-    	
-    	service.logout();
-    	checkNotLoggedIn(service);
+        ServiceArgs args = new ServiceArgs();
+        args.setHost((String) command.opts.get("host"));
+        args.setPort((Integer) command.opts.get("port"));
+        args.setScheme((String) command.opts.get("scheme"));
+        args.setUsername((String) command.opts.get("username"));
+        args.setPassword((String) command.opts.get("password"));
+        Service service = new Service(args);
+        
+        checkNotLoggedIn(service);
+        
+        service.login();
+        checkLoggedIn(service);
+        
+        service.logout();
+        checkNotLoggedIn(service);
     }
     
     @Test
     public void testLoginWithArgumentsOverridesServiceArgs() {
-    	ServiceArgs args = new ServiceArgs();
-    	args.setHost((String) command.opts.get("host"));
-    	args.setPort((Integer) command.opts.get("port"));
-    	args.setScheme((String) command.opts.get("scheme"));
-    	args.setUsername("I can't possibly be a user");
-    	args.setPassword("This password is nonsense.");
-    	Service service = new Service(args);
-    	
-    	checkNotLoggedIn(service);
-    	
-    	service.login(
-    		(String) command.opts.get("username"),
-    		(String) command.opts.get("password")
-    	);
-    	checkLoggedIn(service);
-    	
-    	service.logout();
-    	checkNotLoggedIn(service);
+        ServiceArgs args = new ServiceArgs();
+        args.setHost((String) command.opts.get("host"));
+        args.setPort((Integer) command.opts.get("port"));
+        args.setScheme((String) command.opts.get("scheme"));
+        args.setUsername("I can't possibly be a user");
+        args.setPassword("This password is nonsense.");
+        Service service = new Service(args);
+        
+        checkNotLoggedIn(service);
+        
+        service.login(
+            (String) command.opts.get("username"),
+            (String) command.opts.get("password")
+        );
+        checkLoggedIn(service);
+        
+        service.logout();
+        checkNotLoggedIn(service);
     }
     
     @Test
     public void testLoginWithoutAnyUsernameFails() {
-    	ServiceArgs args = new ServiceArgs();
-    	args.setHost((String) command.opts.get("host"));
-    	args.setPort((Integer) command.opts.get("port"));
-    	args.setScheme((String) command.opts.get("scheme"));
-    	Service service = new Service(args);
-    	
-    	try {
-    		service.login();
-    		fail("Expected IllegalStateException");
-    	}
-    	catch (IllegalStateException e) {}
+        ServiceArgs args = new ServiceArgs();
+        args.setHost((String) command.opts.get("host"));
+        args.setPort((Integer) command.opts.get("port"));
+        args.setScheme((String) command.opts.get("scheme"));
+        Service service = new Service(args);
+        
+        try {
+            service.login();
+            fail("Expected IllegalStateException");
+        }
+        catch (IllegalStateException e) {}
     }
     
     @Test
@@ -458,8 +458,8 @@ public class ServiceTest extends SDKTestCase {
     
             // Probe
             {
-            	String tz = user.getTz();
-            	
+                String tz = user.getTz();
+                
                 user.setDefaultApp("search");
                 user.setEmail("none@noway.com");
                 user.setPassword("new-password");
@@ -592,27 +592,27 @@ public class ServiceTest extends SDKTestCase {
 
         Job job = service.search(QUERY, new Args());
         while (!job.isDone()) {
-        	sleep(50);
+            sleep(50);
         }
         
         InputStream jobOutput = job.getResults();
         try {
-        	ResultsReaderXml resultsReader = new ResultsReaderXml(jobOutput);
+            ResultsReaderXml resultsReader = new ResultsReaderXml(jobOutput);
         
-        	Map<String, String> event;
-        	int nEvents = 0;
+            Map<String, String> event;
+            int nEvents = 0;
         
-        	do {
-        		event = resultsReader.getNextEvent();
-        		if (event != null) {
-        			nEvents += 1;
-        		}
-        	} while (event != null);
+            do {
+                event = resultsReader.getNextEvent();
+                if (event != null) {
+                    nEvents += 1;
+                }
+            } while (event != null);
         
-        	assertEquals(10, nEvents);
+            assertEquals(10, nEvents);
         }
         finally {
-        	jobOutput.close();
+            jobOutput.close();
         }
     }
     
@@ -621,27 +621,27 @@ public class ServiceTest extends SDKTestCase {
         service.oneshotSearch(QUERY); // throws no exception
         
         InputStream jobOutput = service.oneshotSearch(
-        	QUERY,
+            QUERY,
             new Args("output_mode", "json")
         );
  
         try {
-        	ResultsReaderJson resultsReader = new ResultsReaderJson(jobOutput);
+            ResultsReaderJson resultsReader = new ResultsReaderJson(jobOutput);
         
-        	Map<String, String> event;
-        	int nEvents = 0;
+            Map<String, String> event;
+            int nEvents = 0;
         
-        	do {
-        		event = resultsReader.getNextEvent();
-        		if (event != null) {
-        			nEvents += 1;
-        		}
-        	} while (event != null);
+            do {
+                event = resultsReader.getNextEvent();
+                if (event != null) {
+                    nEvents += 1;
+                }
+            } while (event != null);
         
-        	assertEquals(10, nEvents);
+            assertEquals(10, nEvents);
         }
         finally {
-        	jobOutput.close();
+            jobOutput.close();
         }
     }
     

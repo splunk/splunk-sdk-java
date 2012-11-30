@@ -51,13 +51,13 @@ public class InputTest extends SDKTestCase {
 
     @Test
     public void testRemoveFromCollection() {
-    	Args namespace = Args.create();
-    	namespace.put("owner", "nobody");
-    	namespace.put("app", "search");
+        Args namespace = Args.create();
+        namespace.put("owner", "nobody");
+        namespace.put("app", "search");
 
-    	inputs.create("2911", InputKind.Tcp);
-    	assertTrue(inputs.containsKey("2911"));
-    	inputs.remove("2911", namespace);
+        inputs.create("2911", InputKind.Tcp);
+        assertTrue(inputs.containsKey("2911"));
+        inputs.remove("2911", namespace);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {

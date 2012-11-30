@@ -75,24 +75,24 @@ public class UtilTest extends SDKTestCase {
 
     @Test
     public void testArgs() {
-    	Args args = Args.create();
-    	assertTrue(args != null);
-    	assertTrue(args instanceof Args);
-    	
-    	assertTrue(Args.encode((String)null).equals(""));
+        Args args = Args.create();
+        assertTrue(args != null);
+        assertTrue(args instanceof Args);
+        
+        assertTrue(Args.encode((String)null).equals(""));
     }
 
     @Test
     public void testValue() {
-    	assertEquals(1024, Value.toByteCount("1KB"));
-    	assertEquals(1024 * 1024, Value.toByteCount("1MB"));
-    	assertEquals(1024 * 1024 * 1024, Value.toByteCount("1GB"));
-    	
-    	try {
-    		Value.toByteCount("0GGGGB");
-    		fail("Should error!");
-    	} catch(Exception e) {
-    		// nothing
-    	}
+        assertEquals(1024, Value.toByteCount("1KB"));
+        assertEquals(1024 * 1024, Value.toByteCount("1MB"));
+        assertEquals(1024 * 1024 * 1024, Value.toByteCount("1GB"));
+        
+        try {
+            Value.toByteCount("0GGGGB");
+            fail("Should error!");
+        } catch(Exception e) {
+            // nothing
+        }
     }
 }

@@ -279,7 +279,7 @@ public class SavedSearchTest extends SDKTestCase {
     
     @Test
     public void testScheduled() {
-    	SavedSearch savedSearch = this.savedSearches.create(createTemporaryName(), "search index=_internal | head 1");
+        SavedSearch savedSearch = this.savedSearches.create(createTemporaryName(), "search index=_internal | head 1");
         
         assertFalse(savedSearch.isScheduled());
         savedSearch.setCronSchedule("*/5 * * * *");
@@ -292,17 +292,17 @@ public class SavedSearchTest extends SDKTestCase {
     
     @Test
     public void testCreateWithNoSearch() {
-    	try {
-    		this.savedSearches.create(createTemporaryName());
-    		fail("Should've thrown!");
-    	} catch (Exception e) {
-    		assertTrue(true);
-    	}
+        try {
+            this.savedSearches.create(createTemporaryName());
+            fail("Should've thrown!");
+        } catch (Exception e) {
+            assertTrue(true);
+        }
     }
 
     @Test
     public void testAcknowledge() {
-    	savedSearch.acknowledge();
+        savedSearch.acknowledge();
     }
 
     @Test

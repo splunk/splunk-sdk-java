@@ -64,13 +64,13 @@ public class LicensePool extends Entity {
      * specified.
      */
     public String[] getSlaves() {
-    	if (toUpdate.containsKey("slaves")) {
-    		String value = (String)toUpdate.get("slaves");
-    		return value.split(",");
-    	}
-    	else {
-    		return getStringArray("slaves", null);
-    	}
+        if (toUpdate.containsKey("slaves")) {
+            String value = (String)toUpdate.get("slaves");
+            return value.split(",");
+        }
+        else {
+            return getStringArray("slaves", null);
+        }
     }
 
     /**
@@ -80,20 +80,20 @@ public class LicensePool extends Entity {
      * @return A map from each slave GUID to the number of bytes it is using.
      */
     public Map<String, Long> getSlavesUsageBytes() {
-    	@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
-    	if (values == null) {
-    		values = new HashMap<String, Object>();
-    	}
-    	
-    	HashMap<String, Long> usageBytes = new HashMap<String, Long>();
-    	
-    	for(String key : values.keySet()) {
-    		String value = (String)values.get(key);
-    		usageBytes.put(key, Long.parseLong(value));
-    	}
+        if (values == null) {
+            values = new HashMap<String, Object>();
+        }
         
-    	return usageBytes;
+        HashMap<String, Long> usageBytes = new HashMap<String, Long>();
+        
+        for(String key : values.keySet()) {
+            String value = (String)values.get(key);
+            usageBytes.put(key, Long.parseLong(value));
+        }
+        
+        return usageBytes;
     }
 
     /**
@@ -168,6 +168,6 @@ public class LicensePool extends Entity {
      * array with a single asterisk element ("*").
      */
     public void setSlaves(String[] slaves) {
-    	setSlaves(Util.join(",", slaves));
+        setSlaves(Util.join(",", slaves));
     }
 }

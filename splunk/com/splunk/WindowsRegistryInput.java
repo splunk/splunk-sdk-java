@@ -103,18 +103,18 @@ public class WindowsRegistryInput extends Input {
      * @return An array of regex strings for event types.
      */
     public String[] getType() {
-    	if (toUpdate.containsKey("type")) {
-    		String value = (String)toUpdate.get("type");
-    		if (value.contains("|")) {
-    			return value.split("\\|");
-    		}
-    		else {
-    			return new String[]{value};
-    		}
-    	}
-    	else {
-    		return getStringArray("type", new String[]{});
-    	}
+        if (toUpdate.containsKey("type")) {
+            String value = (String)toUpdate.get("type");
+            if (value.contains("|")) {
+                return value.split("\\|");
+            }
+            else {
+                return new String[]{value};
+            }
+        }
+        else {
+            return getStringArray("type", new String[]{});
+        }
     }
 
     /**

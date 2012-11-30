@@ -158,7 +158,7 @@ public class Service extends BaseService {
     public static Service connect(Map<String, Object> args) {
         Service service = new Service(args);
         if (args.containsKey("username")) {
-        	service.login();
+            service.login();
         }
         return service;
     }
@@ -1013,12 +1013,12 @@ public class Service extends BaseService {
      * @return The current {@code Service} instance.
      */
     public Service login() {
-    	if (this.username == null || this.password == null) {
-    		throw new IllegalStateException("Missing username or password.");
-    	}
-    	else {
-    		return login(this.username, this.password);
-    	}
+        if (this.username == null || this.password == null) {
+            throw new IllegalStateException("Missing username or password.");
+        }
+        else {
+            return login(this.username, this.password);
+        }
     }
     
     /**
@@ -1085,7 +1085,7 @@ public class Service extends BaseService {
      * @return The search results.
      */
     public InputStream oneshotSearch(String query, Map args) {
-    	args = Args.create(args);
+        args = Args.create(args);
         args.put("search", query);
         args.put("exec_mode", "oneshot");
         
@@ -1110,7 +1110,7 @@ public class Service extends BaseService {
      * @return The search results.
      */
     public InputStream oneshotSearch(String query, Args args) {
-    	return oneshotSearch(query, (Map<String, Object>)args);
+        return oneshotSearch(query, (Map<String, Object>)args);
     }
 
     /**

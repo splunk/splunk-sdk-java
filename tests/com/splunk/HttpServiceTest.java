@@ -96,10 +96,10 @@ public class HttpServiceTest extends SDKTestCase {
         
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
-			stream.write("HELLO".getBytes("UTF-8"));
-		} catch (Exception e) {
-			fail("Exception!");
-		}
+            stream.write("HELLO".getBytes("UTF-8"));
+        } catch (Exception e) {
+            fail("Exception!");
+        }
         
         assertNull(request.getContent());
         request.setContent(stream);
@@ -108,19 +108,19 @@ public class HttpServiceTest extends SDKTestCase {
 
     @Test
     public void testResponseMessage() {
-    	ResponseMessage response = new ResponseMessage(200);
-    	assertEquals(response.getStatus(), 200);
-    	assertTrue(response.getHeader() != null);
+        ResponseMessage response = new ResponseMessage(200);
+        assertEquals(response.getStatus(), 200);
+        assertTrue(response.getHeader() != null);
     }
 
     @Test
     public void testDelete() {
-    	Args deleteArgs = Args.create("output_mode", "json");
-    	try {
-    		httpService.delete("/search/jobs/foobar_doesntexist", deleteArgs);
-    	} catch (HttpException e) {
-    		assertEquals(404, e.getStatus());
-        	assertNotNull(e.getDetail());
-    	}
+        Args deleteArgs = Args.create("output_mode", "json");
+        try {
+            httpService.delete("/search/jobs/foobar_doesntexist", deleteArgs);
+        } catch (HttpException e) {
+            assertEquals(404, e.getStatus());
+            assertNotNull(e.getDetail());
+        }
     }
 }

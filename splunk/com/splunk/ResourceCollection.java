@@ -300,7 +300,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public T put(String key, T value) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -309,7 +309,7 @@ public class ResourceCollection<T extends Resource>
      * @param map The set of mappings to copy into this map.
      */
     public void putAll(Map<? extends String, ? extends T> map) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /** {@inheritDoc} */

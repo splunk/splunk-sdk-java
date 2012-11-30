@@ -101,7 +101,7 @@ public class ServiceArgs extends Args {
      *      The password to use when logging in.
      */
     public void setPassword(String password) {
-    	this.put("password", password);
+        this.put("password", password);
     }
     
     /**
@@ -136,6 +136,6 @@ public class ServiceArgs extends Args {
      *     The username to use when logging in.
      */
     public void setUsername(String username) {
-    	this.put("username", username);
+        this.put("username", username);
     }
 }
