@@ -537,7 +537,23 @@ public class SearchJobTest extends SDKTestCase {
             }
         });
 
+        final String sid = job.getSid();
         job.cancel();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                jobs.refresh();
+                return !jobs.containsKey(sid);
+            }
+        });
+        
+        // On Windows, the sleep command in our search
+        // will delay the actual end of the job process
+        // by up to 50ms. We wait for 100ms to give it a chance
+        // to die.
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {}
     }
 
     @Test
@@ -569,7 +585,23 @@ public class SearchJobTest extends SDKTestCase {
             }
         });
         
+        final String sid = job.getSid();
         job.cancel();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                jobs.refresh();
+                return !jobs.containsKey(sid);
+            }
+        });
+        
+        // On Windows, the sleep command in our search
+        // will delay the actual end of the job process
+        // by up to 50ms. We wait for 100ms to give it a chance
+        // to die.
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {}
     }
 
     @Test
