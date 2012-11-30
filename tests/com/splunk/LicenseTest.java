@@ -85,7 +85,6 @@ public class LicenseTest extends SDKTestCase {
         }
         assertFalse(licenses.containsKey("sdk-test"));
 
-        // FIXME: What is this magic number?
         String licenseKey = "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101";
         if (licenses.containsKey(licenseKey)) {
             licenses.remove(licenseKey);

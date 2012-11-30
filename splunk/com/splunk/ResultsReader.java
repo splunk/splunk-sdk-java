@@ -17,7 +17,6 @@
 package com.splunk;
 
 import java.io.*;
-import java.util.HashMap;
 
 /**
  * The {@code ResultsReader} class is a base class that represents a streaming 
@@ -41,7 +40,7 @@ public abstract class ResultsReader {
     /**
      * Closes the reader and returns resources.
      *
-     * @throws Exception on Exception
+     * @throws IOException If an IO exception occurs.
      */
     public void close() throws IOException {
         if (inputStreamReader != null)
@@ -52,8 +51,11 @@ public abstract class ResultsReader {
     /**
      * Returns the next event in the event stream.
      *
-     * @return The hash map of key-value pairs for an entire event.
-     * @throws Exception on Exception.
+     * @return The map of key-value pairs for an event.
+     *         The format of multi-item values is implementation-specific.
+     *         It is recommended that callers use the methods on
+     *         {@link Event} to interpret multi-item values.
+     * @throws IOException If an IO exception occurs.
      */
-    public abstract HashMap<String, String> getNextEvent() throws IOException;
+    public abstract Event getNextEvent() throws IOException;
 }

@@ -29,6 +29,11 @@
     - `Job.getSummary` method
     - `SavedSearch.dispatch` method
 
+* `ResultsReader.getNextEvent` now returns an `Event` object, which provides
+  better handling for multi-value fields. This change is backward-compatible
+  with older code that expects a `HashMap<String, String>`. However this new
+  `Event` object is read-only.
+
 * Modular input functionality has been implemented (requiring Splunk 5.0+) 
   and the following classes have been added:
     - `ModularInputKind`
@@ -36,7 +41,7 @@
   
   The `InputCollection` class also now handles arbitrary input kinds represented by modular inputs.
   You can call `InputCollection.getInputKinds` to get the set of `InputKinds` on the connected Splunk instance.
-    
+
 * The `ReceiverBehavior` interface has been added to work with output streams.
 
 * The `IndexCollection` class has been added as a specialized collection class for indexes.
@@ -108,6 +113,9 @@
 * The `get`, `remove`, and `contains` methods for entity collections now throw
   an exception when a wildcarded namespace is passed, rather than incorrectly
   returning an empty list or taking no action.
+
+* The `HashMap` (and `Event`) returned by `ResultsReader.getNextEvent` is now
+  read-only.
 
 * The `SavedSearch.getDispatchMaxTime` method previously returned a `String`, but now
   returns an `int`.
