@@ -78,12 +78,12 @@ directory and enter:
 
 or
 
-> ant dist
+    ant dist
 
 This builds all the .class files and the jars. If you just want to build
 the .class files, you can run
 
-> ant build
+    ant build
 
 To remove all build artifacts from the repository, enter:
 
