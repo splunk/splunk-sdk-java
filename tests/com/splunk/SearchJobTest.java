@@ -72,13 +72,13 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testBlockingSearch() {
-        assertEquals(10, countEvents(service.oneshot(QUERY)));
+        assertEquals(10, countEvents(service.oneshotSearch(QUERY)));
     }
 
     @Test
     public void testOneshotWithGarbageFails() {
         try {
-            service.oneshot("syntax-error");
+            service.oneshotSearch("syntax-error");
             fail("Expected an exception from oneshot with garbage.");
         } catch (HttpException e) {
             assertEquals(400, e.getStatus());

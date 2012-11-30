@@ -406,7 +406,6 @@ public class Entity extends Resource implements Map<String, Object> {
      *
      * @param args The arguments to update.
      */
-    @Override
     public void update(Map<String, Object> args) {
         if (!toUpdate.isEmpty() || !args.isEmpty()) {
             // Merge cached setters and live args together before updating.

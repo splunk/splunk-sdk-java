@@ -146,7 +146,7 @@ public class ResultsReaderTest extends SDKTestCase {
 
     @Test
     public void testReadCsvFromOneshot() throws Exception {
-        InputStream input = service.oneshot("search index=_internal | head 1 | stats count", Args.create("output_mode", "csv"));
+        InputStream input = service.oneshotSearch("search index=_internal | head 1 | stats count", Args.create("output_mode", "csv"));
         assertNotNull("Failed to find results.csv", input);
         ResultsReaderCsv reader = new ResultsReaderCsv(input);
         Map <String, String> expected, found;

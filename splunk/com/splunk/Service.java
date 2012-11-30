@@ -1109,8 +1109,8 @@ public class Service extends BaseService {
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
      */
-    public InputStream oneshot(String query, Args args) {
-    	return oneshot(query, (Map<String, Object>)args);
+    public InputStream oneshotSearch(String query, Args args) {
+    	return oneshotSearch(query, (Map<String, Object>)args);
     }
 
     /**

@@ -111,7 +111,7 @@ public class Program {
 
         // Execute the oneshot query, which returns the stream (i.e. there is
         // no search job created, just a one time search)
-        InputStream stream = service.oneshot(query, queryArgs);
+        InputStream stream = service.oneshotSearch(query, queryArgs);
 
         boolean rawData = true;
         if (command.opts.containsKey("raw")) {

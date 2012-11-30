@@ -152,6 +152,8 @@
 * Settings.setMgmtHostPort renamed to setMgmtPort, and Settings.getMgmtPort now returns
   an integer.
 
+* The `Service.oneshot` method has been renamed to `Service.oneshotSearch`.
+
 ### Bug fixes
 
 * The `Service.versionCompare` method has been fixed to work as expected.

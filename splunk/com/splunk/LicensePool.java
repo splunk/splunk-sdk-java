@@ -80,7 +80,8 @@ public class LicensePool extends Entity {
      * @return A map from each slave GUID to the number of bytes it is using.
      */
     public Map<String, Long> getSlavesUsageBytes() {
-    	HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
+    	@SuppressWarnings("unchecked")
+        HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
     	if (values == null) {
     		values = new HashMap<String, Object>();
     	}

@@ -614,7 +614,7 @@ public class IndexTest extends SDKTestCase {
     // === Utility ===
 
     private int getResultCountOfIndex() {
-        InputStream results = service.oneshot("search index=" + indexName);
+        InputStream results = service.oneshotSearch("search index=" + indexName);
         try {
             ResultsReaderXml resultsReader = new ResultsReaderXml(results);
             

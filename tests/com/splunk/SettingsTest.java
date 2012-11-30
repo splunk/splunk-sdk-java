@@ -138,13 +138,13 @@ public class SettingsTest extends SDKTestCase {
         Settings settings = service.getSettings();
         int managementPort = settings.getMgmtPort();
         
-        settings.setMgmtHostPort(29111);
+        settings.setMgmtPort(29111);
         settings.update();
         settings.refresh();
         
         assertEquals(29111, settings.getMgmtPort());
         
-        settings.setMgmtHostPort(managementPort);
+        settings.setMgmtPort(managementPort);
         settings.update();
         splunkRestart();
     }

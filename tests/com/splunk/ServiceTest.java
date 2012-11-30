@@ -618,9 +618,9 @@ public class ServiceTest extends SDKTestCase {
     
     @Test
     public void testOneshot() throws IOException {
-        service.oneshot(QUERY); // throws no exception
+        service.oneshotSearch(QUERY); // throws no exception
         
-        InputStream jobOutput = service.oneshot(
+        InputStream jobOutput = service.oneshotSearch(
         	QUERY,
             new Args("output_mode", "json")
         );
