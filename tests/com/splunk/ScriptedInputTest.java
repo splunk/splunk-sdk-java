@@ -33,12 +33,25 @@ public class ScriptedInputTest extends SDKTestCase {
         assertFalse(InputCollection.matchesInputName(
                 InputKind.Script, "abc", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
         ));
+        
+        assertTrue(InputCollection.matchesInputName(
+                InputKind.Script, "abc.py", "$SPLUNK_HOME\\etc\\apps\\boris\\bin\\abc.py"
+        ));
+        assertFalse(InputCollection.matchesInputName(
+                InputKind.Script, "abc", "$SPLUNK_HOME\\etc\\apps\\boris\\bin\\abc.py"
+        ));
     }
     
     @Test
     public void testEntity() {
     	InputCollection inputs = service.getInputs();
-    	inputs.create("$SPLUNK_HOME/etc/apps/search/bin/rangemap.py", InputKind.Script, Args.create("interval", "0"));
+    	inputs.create(
+    	        joinServerPath(new String[] {
+    	                "$SPLUNK_HOME", "etc", "apps", "search", "bin",
+    	                "rangemap.py",
+    	        }),
+    	        InputKind.Script,
+    	        Args.create("interval", "0"));
     	inputs.refresh();
     	
     	ScriptInput input = (ScriptInput)inputs.get("rangemap.py");

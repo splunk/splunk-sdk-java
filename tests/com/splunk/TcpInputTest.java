@@ -157,6 +157,9 @@ public class TcpInputTest extends SDKTestCase {
         Input scriptInput = new Input(service, "data/inputs/script/$SPLUNK_HOME/etc/apps/myapp/bin/myscript.py");
         assertEquals(InputKind.Script, scriptInput.getKind());
         
+        Input scriptInputWin = new Input(service, "data/inputs/script/$SPLUNK_HOME\\etc\\apps\\myapp\\bin\\myscript.py");
+        assertEquals(InputKind.Script, scriptInputWin.getKind());
+        
         Input tcpRawInput = new Input(service, "data/inputs/tcp/raw/6666");
         assertEquals(InputKind.Tcp, tcpRawInput.getKind());
         

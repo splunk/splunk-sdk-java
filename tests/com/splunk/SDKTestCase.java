@@ -277,8 +277,24 @@ public abstract class SDKTestCase extends TestCase {
         else if (osName.equals("Darwin")) {
             filename = "/var/log/system.log";
         } else {
-            throw new RuntimeException("OS: " + osName + " not supported");
+            throw new RuntimeException("OS " + osName + " not recognized");
         }
         return filename;
+    }
+    
+    protected static String joinServerPath(String[] components) {
+        String separator;
+        String osName = service.getInfo().getOsName();
+        if (osName.equals("Windows"))
+            separator = "\\";
+        else if (osName.equals("Linux"))
+            separator = "/";
+        else if (osName.equals("Darwin")) {
+            separator = "/";
+        } else {
+            throw new RuntimeException("OS " + osName + " not recognized");
+        }
+        
+        return Util.join(separator, components);
     }
 }
