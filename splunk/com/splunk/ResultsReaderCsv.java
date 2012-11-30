@@ -22,8 +22,6 @@ import com.splunk.ResultsReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResultsReaderCsv extends ResultsReader {
 
@@ -76,7 +74,7 @@ public class ResultsReaderCsv extends ResultsReader {
             int count = 0;
             for (String key : keys) {
                 String delimitedValues = line[count++];
-                returnData.putDelimited(key, delimitedValues);
+                returnData.putSingleOrDelimited(key, delimitedValues);
             }
         }
 

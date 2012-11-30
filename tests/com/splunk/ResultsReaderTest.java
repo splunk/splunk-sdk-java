@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -220,6 +219,8 @@ public class ResultsReaderTest extends SDKTestCase {
                 ResultsReaderJson.class, "resultsMV4.json");
         testReadMultivalue(
                 ResultsReaderJson.class, "resultsMV5.json");
+        testReadMultivalue(
+                ResultsReaderJson.class, "resultsMVFuture.json", ",");
         
         testReadMultivalue(
                 ResultsReaderXml.class, "resultsMVOneshot.xml");
@@ -229,6 +230,8 @@ public class ResultsReaderTest extends SDKTestCase {
                 ResultsReaderJson.class, "resultsMVOneshot4.json");
         testReadMultivalue(
                 ResultsReaderJson.class, "resultsMVOneshot5.json");
+        testReadMultivalue(
+                ResultsReaderJson.class, "resultsMVOneshotFuture.json", ",");
         
         testReadMultivalue(
                 ResultsReaderXml.class, "splunk_search:blocking/xml/" + search);
@@ -249,7 +252,18 @@ public class ResultsReaderTest extends SDKTestCase {
             Class<? extends ResultsReader> type,
             String filename) throws IOException {
         
+        // For our particular test data, the multi-value delimiter
+        // for the "_si" field (which is being checked) is a newline
+        // for those ResultsReaders that care about delimiters.
         String delimiter = (type == ResultsReaderXml.class) ? "," : "\n";
+        
+        testReadMultivalue(type, filename, delimiter);
+    }
+    
+    private void testReadMultivalue(
+            Class<? extends ResultsReader> type,
+            String filename,
+            String delimiter) throws IOException {
         
         // Test legacy getNextEvent() interface on 2-valued and 1-valued fields
         {

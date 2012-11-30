@@ -17,8 +17,6 @@
 package com.splunk;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The {@code ResultsReader} class is a base class that represents a streaming 
@@ -60,14 +58,4 @@ public abstract class ResultsReader {
      * @throws IOException If an IO exception occurs.
      */
     public abstract Event getNextEvent() throws IOException;
-    
-    /**
-     * Returns the next event in the event stream.
-     *
-     * @return The map of key-value(s) pairs for an event.
-     * @throws IOException If an IO exception occurs.
-     */
-    public final Map<String, String[]> getNextEvent2() throws IOException {
-        throw new UnsupportedOperationException();
-    }
 }

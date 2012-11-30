@@ -48,7 +48,7 @@ public class Event extends HashMap<String, String> {
      * When setting a multi-valued field, {@link #putArray(String, String[])}
      * is recommended instead.
      */
-    String putDelimited(String key, String valueOrDelimitedValues) {
+    String putSingleOrDelimited(String key, String valueOrDelimitedValues) {
         return super.put(key, valueOrDelimitedValues);
     }
     
@@ -83,6 +83,11 @@ public class Event extends HashMap<String, String> {
      * delimiter. Therefore this method should only be used for results
      * returned by {@link ResultsReaderXml}. For other readers, use
      * {@link #getArray(String, String)} instead.
+     * 
+     * If the underlying {@link ResultsReader} has no delimiter, the original
+     * array of values is returned. If it <i>does</i> have a delimiter,
+     * the single/delimited value is assumed to be a single value and is
+     * returned as a single-valued array.
      */
     public String[] getArray(String key) {
         String[] arrayValue = arrayValues.get(key);
@@ -106,6 +111,11 @@ public class Event extends HashMap<String, String> {
      * 
      * The delimiter is ignored for {@link ResultsReader} implementations
      * that do not require a delimiter, such as {@link ResultsReaderXml}.
+     * 
+     * If the underlying {@link ResultsReader} has no delimiter, the original
+     * array of values is returned (and the specified delimiter is ignored).
+     * If it <i>does</i> have a delimiter, the single/delimited value is split
+     * based on the specified delimiter and returned as an array.
      */
     public String[] getArray(String key, String delimiter) {
         String[] arrayValue = arrayValues.get(key);

@@ -19,10 +19,8 @@ package com.splunk;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
@@ -167,6 +165,7 @@ public class ResultsReaderXml extends ResultsReader {
             eType = xmlEvent.getEventType();
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
+                    @SuppressWarnings("unchecked")
                     Iterator<Attribute> attrIttr =
                         xmlEvent.asStartElement().getAttributes();
                     if (level == 0) {

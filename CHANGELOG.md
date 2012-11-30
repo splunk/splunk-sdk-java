@@ -31,7 +31,8 @@
 
 * `ResultsReader.getNextEvent` now returns an `Event` object, which provides
   better handling for multi-value fields. This change is backward-compatible
-  with code that expects a `HashMap<String, String>`.
+  with older code that expects a `HashMap<String, String>`. However this new
+  `Event` object is read-only.
 
 * Modular input functionality has been implemented (requiring Splunk 5.0+) 
   and the following classes have been added:
