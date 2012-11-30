@@ -164,18 +164,7 @@ public class InputCrudTest extends InputTest {
     
     @Test
     public void testMonitorInputCrud() {
-        // Locate the system log, which our test input will monitor
-        final String filename;
-        String osName = service.getInfo().getOsName();
-        if (osName.equals("Windows"))
-            filename = "C:\\Windows\\WindowsUpdate.log";
-        else if (osName.equals("Linux"))
-            filename = "/var/log/messages";
-        else if (osName.equals("Darwin")) {
-            filename = "/var/log/system.log";
-        } else {
-            throw new RuntimeException("OS: " + osName + " not supported");
-        }
+        final String filename = locateSystemLog();
         
         // Create variants
         try {

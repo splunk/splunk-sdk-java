@@ -21,17 +21,7 @@ import org.junit.Test;
 public class UploadTest extends SDKTestCase {
     @Test
     public void testOneshot() {
-        String filename;
-        String osName = service.getInfo().getOsName();
-        if (osName.equals("Windows")) {
-            filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
-        } else if (osName.equals("Linux")) {
-            filename = "/var/log/messages";
-        } else if (osName.equals("Darwin")) {
-            filename = "/var/log/system.log";
-        } else {
-            throw new Error("OS: " + osName + " not supported");
-        }
+        String filename = locateSystemLog();
 
         service.getUploads().create(filename);
         
