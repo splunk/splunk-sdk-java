@@ -68,8 +68,7 @@ public class PortInputTest extends InputTest {
     @Test
     public void testRestrictToHostCausesError() {
         try {
-            tcpInput.setCacheValue("restrictToHost", "boris");
-            tcpInput.update();
+            tcpInput.update(new Args("restrictToHost", "boris"));
             fail("Expected an UnsupportedOperationException.");
         }
         catch (UnsupportedOperationException e) {}

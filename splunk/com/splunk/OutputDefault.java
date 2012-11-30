@@ -171,6 +171,13 @@ public class OutputDefault extends Entity {
     public boolean isCompressed() {
         return getBoolean("compressed", false);
     }
+    
+    @Override
+    protected boolean isNameChangeAllowed() {
+        // The "name" property is actually required by the underlying POST
+        // request that update() uses
+        return true;
+    }
 
     /**
      * Indicates whether the index filter for this forwarder is disabled.

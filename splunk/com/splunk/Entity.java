@@ -331,6 +331,15 @@ public class Entity extends Resource implements Map<String, Object> {
     public boolean isDisabled() {
         return getBoolean("disabled", false);
     }
+    
+    /**
+     * Returns whether this entity's name can be changed via {@link #update}.
+     * 
+     * Most entity names cannot be changed in this way.
+     */
+    protected boolean isNameChangeAllowed() {
+        return false;
+    }
 
     /** {@inheritDoc} */
     public Set<String> keySet() {
@@ -414,7 +423,7 @@ public class Entity extends Resource implements Map<String, Object> {
             mergedArgs.putAll(toUpdate);
             mergedArgs.putAll(args);
 
-            if (mergedArgs.containsKey("name")) {
+            if (mergedArgs.containsKey("name") && !isNameChangeAllowed()) {
                 throw new IllegalStateException("Cannot set 'name' on an existing entity.");
             }
 

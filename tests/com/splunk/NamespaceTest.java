@@ -21,6 +21,13 @@ import org.junit.Test;
 public class NamespaceTest extends SDKTestCase {
     @Test
     public void testStaticNamespace() {
+        assertEquals(
+                "This test is not valid when Service owner is overridden.",
+                null, service.getOwner());
+        assertEquals(
+                "This test is not valid when Service app is overridden.",
+                null, service.getApp());
+        
         Args namespace = new Args();
 
         // syntactic tests
