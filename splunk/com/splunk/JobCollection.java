@@ -51,7 +51,7 @@ public class JobCollection extends EntityCollection<Job> {
      * Creates a search with a UTF8 pre-encoded search request.
      * <p>
      * <b>Note:</b> You can't create a "oneshot" search using this method. 
-     * Instead, use the {@link Service#oneshot} method.
+     * Instead, use the {@link Service#oneshotSearch} method.
      *
      * @param query The search query.
      * @return The unique search identifier (SID).
@@ -64,7 +64,7 @@ public class JobCollection extends EntityCollection<Job> {
      * Creates a search.
      * <p>
      * <b>Note:</b> You can't create a "oneshot" search using this method. 
-     * Instead, use the {@link Service#oneshot} method.
+     * Instead, use the {@link Service#oneshotSearch} method.
      *
      * @param query The search query.
      * @param args Additional arguments for this job (see {@link JobArgs}).
@@ -99,7 +99,7 @@ public class JobCollection extends EntityCollection<Job> {
      * Creates a search.
      * <p>
      * <b>Note:</b> You can't create a "oneshot" search using this method. 
-     * Instead, use the {@link Service#oneshot} method.
+     * Instead, use the {@link Service#oneshotSearch} method.
      *
      * @param query The search query.
      * @param args Additional arguments for this job (see {@link JobArgs}).

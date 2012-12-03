@@ -1008,7 +1008,7 @@ public class Service extends BaseService {
 
     /**
      * Authenticates the {@code Service} instance with the username and password
-     * specified when the instance was created.
+     * that were specified when the instance was created.
      * 
      * @return The current {@code Service} instance.
      */
@@ -1022,7 +1022,8 @@ public class Service extends BaseService {
     }
     
     /**
-     * Authenticates the {@code Service} instance with a username and password.
+     * Authenticates the {@code Service} instance with a specified username and 
+     * password.
      *
      * @param username The Splunk account username.
      * @param password The password for the username.

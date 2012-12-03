@@ -191,8 +191,7 @@ public class Settings extends Entity {
      * Sets the management port for splunkd.
      * The default value is {@code 8089}.
      *
-     * @param mgmtHostPort The port for the 
-     * management interface.
+     * @param port The port for the management interface.
      */
     public void setMgmtPort(int port) {
         setCacheValue("mgmtHostPort", port);
