@@ -21,17 +21,17 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Wraps an individual event or result returned by
- * {@link ResultsReader#getNextEvent()}.
+ * The {@code Event} class wraps an individual event or result that was returned
+ * by the {@link ResultsReader#getNextEvent} method.
  * 
  * An event maps each field name to a list of zero of more values.
- * These values can be accessed as either an array (via {@link #getArray} or
- * as a delimited string (via {@link #get}). It is recommended to access as an
- * array when possible.
- * 
+ * These values can be accessed as either an array (using the {@link #getArray} 
+ * method) or as a delimited string (using the {@link #get} method). We 
+ * recommend accessing values as an array when possible.
+ * <br><br>
  * The delimiter for field values depends on the underlying result format.
- * If the underlying format does not specify a delimiter, such as with
- * {@link ResultsReaderXml}, the delimiter is comma (,).
+ * If the underlying format does not specify a delimiter, such as with the
+ * {@link ResultsReaderXml} class, the delimiter is a comma (,).
  */
 public class Event extends HashMap<String, String> {
     private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
@@ -45,17 +45,23 @@ public class Event extends HashMap<String, String> {
      * Sets the single value or delimited set of values for the specified
      * field name.
      * 
-     * When setting a multi-valued field, {@link #putArray(String, String[])}
-     * is recommended instead.
+     * When setting a multi-valued field, use the 
+     * {@link #putArray(String, String[])} method instead.
+     * 
+     * @param key The field name.
+     * @param valueOrDelimitedValues The single values or delimited set of 
+     * values.
      */
     String putSingleOrDelimited(String key, String valueOrDelimitedValues) {
         return super.put(key, valueOrDelimitedValues);
     }
     
     /**
-     * Sets the value(s) for the specified field name.
-     * 
-     * The value delimiter is assumed to be comma (,).
+     * Sets the values for the specified field name, with the assumption that 
+     * the value delimiter is a comma (,).
+     *
+     * @param key The field name.
+     * @param values The delimited set of values.
      */
     void putArray(String key, String[] values) {
         arrayValues.put(key, values);
@@ -68,26 +74,33 @@ public class Event extends HashMap<String, String> {
      * Returns the single value or delimited set of values for the specified
      * field name, or {@code null} if the specified field is not present.
      * 
-     * When getting a multi-valued field, {@link #getArray(String)} or
-     * {@link #getArray(String, String)} is recommended instead.
+     * When getting a multi-valued field, use the {@link #getArray(String)} or
+     * {@link #getArray(String, String)} method instead.
+     *
+     * @param key The field name.
+     * @return The single value or delimited set of values.
      */
     public String get(String key) {
         return super.get(key);
     }
     
     /**
-     * Gets the value(s) for the specified field name.
-     * 
+     * Gets the values for the specified field name.
+     * <br><br>
      * <b>Caution:</b> This variant of {@link #getArray(String, String)} is
      * unsafe for {@link ResultsReader} implementations that require a
-     * delimiter. Therefore this method should only be used for results
-     * returned by {@link ResultsReaderXml}. For other readers, use
-     * {@link #getArray(String, String)} instead.
-     * 
-     * If the underlying {@link ResultsReader} has no delimiter, the original
-     * array of values is returned. If it <i>does</i> have a delimiter,
-     * the single/delimited value is assumed to be a single value and is
-     * returned as a single-valued array.
+     * delimiter. Therefore, this method should only be used for results that
+     * are returned by {@link ResultsReaderXml}. For other readers, use the 
+     * {@link #getArray(String, String)} method instead.
+     * <br><br>
+     * If the underlying {@link ResultsReader} object has no delimiter, the 
+     * original array of values is returned. If the object <i>does</i> have a 
+     * delimiter, the single/delimited value is assumed to be a single value and
+     * is returned as a single-valued array.
+     *
+     * @param key The field name.
+     * @return The original array of values if there is no delimiter, or the 
+     * single-valued array.
      */
     public String[] getArray(String key) {
         String[] arrayValue = arrayValues.get(key);
@@ -103,19 +116,25 @@ public class Event extends HashMap<String, String> {
     }
     
     /**
-     * Gets the value(s) for the specified field name.
+     * Gets the values for the specified field name.
      * 
      * The delimiter must be determined empirically based on the search
      * string and the data format of the index. The delimiter can differ
-     * between fields in the same {@link Event}.
+     * between fields in the same {@link Event} object.
      * 
      * The delimiter is ignored for {@link ResultsReader} implementations
      * that do not require a delimiter, such as {@link ResultsReaderXml}.
      * 
-     * If the underlying {@link ResultsReader} has no delimiter, the original
-     * array of values is returned (and the specified delimiter is ignored).
-     * If it <i>does</i> have a delimiter, the single/delimited value is split
-     * based on the specified delimiter and returned as an array.
+     * If the underlying {@link ResultsReader} object has no delimiter, the 
+     * original array of values is returned (and the specified delimiter is 
+     * ignored). If the object <i>does</i> have a delimiter, the 
+     * single/delimited value is split based on the specified delimiter and is
+     * returned as an array.
+     *
+     * @param key The field name.
+     * @param delimiter The delimiter.
+     * @return The original array of values if there is no delimiter, or the 
+     * array of values split by delimiter.
      */
     public String[] getArray(String key, String delimiter) {
         String[] arrayValue = arrayValues.get(key);

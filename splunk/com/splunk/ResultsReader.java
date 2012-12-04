@@ -19,9 +19,8 @@ package com.splunk;
 import java.io.*;
 
 /**
- * The {@code ResultsReader} class is a base class that represents a streaming 
- * reader for Splunk search results. See {@link ResultsReaderXml}, which is 
- * probably more useful to you.
+ * The {@code ResultsReader} class is a base class for the streaming readers 
+ * for Splunk search results. 
  */
 public abstract class ResultsReader {
     InputStreamReader inputStreamReader = null;
@@ -31,7 +30,7 @@ public abstract class ResultsReader {
      *
      * @param inputStream The unread return input stream from a Splunk query or 
      * export.
-     * @throws IOException If an IO exception occurs.
+     * @throws IOException On IO exception.
      */
     public ResultsReader(InputStream inputStream) throws IOException {
         inputStreamReader = new InputStreamReader(inputStream, "UTF8");
@@ -40,7 +39,7 @@ public abstract class ResultsReader {
     /**
      * Closes the reader and returns resources.
      *
-     * @throws IOException If an IO exception occurs.
+     * @throws IOException On IO exception.
      */
     public void close() throws IOException {
         if (inputStreamReader != null)
@@ -53,9 +52,9 @@ public abstract class ResultsReader {
      *
      * @return The map of key-value pairs for an event.
      *         The format of multi-item values is implementation-specific.
-     *         It is recommended that callers use the methods on
-     *         {@link Event} to interpret multi-item values.
-     * @throws IOException If an IO exception occurs.
+     *         We recommend using the methods from the
+     *         {@link Event} class to interpret multi-item values.
+     * @throws IOException On IO exception.
      */
     public abstract Event getNextEvent() throws IOException;
 }

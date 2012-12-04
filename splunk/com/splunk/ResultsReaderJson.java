@@ -27,17 +27,22 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@code ResultsReaderJson} class represents a streaming JSON reader for 
+ * Splunk search results. This class requires the gson-2.1.jar file in your 
+ * build path.
+ */
 public class ResultsReaderJson extends ResultsReader {
     private JsonReader jsonReader = null;
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * Construct a streaming JSON reader for the event stream. One should only
+     * Constructs a streaming JSON reader for the event stream. You should only
      * attempt to parse a JSON stream with the JSON reader. Using a non-JSON
-     * stream will yield unpredictable results.
+     * stream yields unpredictable results.
      *
-     * @param inputStream The stream to be parsed.
+     * @param inputStream The stream to parse.
      * @throws Exception On exception.
      */
     public ResultsReaderJson(InputStream inputStream) throws IOException {

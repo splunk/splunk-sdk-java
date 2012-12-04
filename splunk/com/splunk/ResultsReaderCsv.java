@@ -23,19 +23,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
 
+/**
+ * The {@code ResultsReaderCsv} class represents a streaming CSV reader for 
+ * Splunk search results. This class requires the opencsv-2.3.jar file in your 
+ * build path.
+ */
 public class ResultsReaderCsv extends ResultsReader {
 
     private CSVReader csvReader = null;
     private String[] keys;
 
     /**
-     * Class Constructor.
+     * Class constructor.
      *
-     * Construct a streaming CSV reader for the event stream. One should only
+     * Constructs a streaming CSV reader for the event stream. You should only
      * attempt to parse an CSV stream with the CSV reader. Using a non-CSV
-     * stream will yield unpredictable results.
+     * stream yields unpredictable results.
      *
-     * @param inputStream The stream to be parsed.
+     * @param inputStream The stream to parse.
      * @throws Exception On exception.
      */
     public ResultsReaderCsv(InputStream inputStream) throws IOException {

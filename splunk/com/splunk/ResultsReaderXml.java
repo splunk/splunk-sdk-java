@@ -40,12 +40,12 @@ public class ResultsReaderXml extends ResultsReader {
      * Constructs a streaming XML reader for the event stream. You should only
      * attempt to parse an XML stream with the XML reader. Unpredictable results
      * may occur if you use a non-XML stream.
-     *
-     * The pushback reader tweaks export streams, which generates non-strict XML 
+     * <br>
+     * The pushback reader tweaks export streams to generate non-strict XML 
      * at the beginning of the stream. The streaming reader ignores preview 
      * data, and only extracts finalized data.
      *
-     * @param inputStream The stream to be parsed.
+     * @param inputStream The stream to parse.
      * @throws Exception On exception.
      */
     public ResultsReaderXml(InputStream inputStream) throws IOException {
