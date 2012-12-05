@@ -61,9 +61,12 @@
   have been added, allowing you to immediately enable or disable the configuration.
 
 * The following methods have been added to the `Index` class:
-    - `bucketRebuildMemoryHint`
-    - `maxTimeUnreplicatedNoAcks`
-    - `maxTimeUnreplicatedWithAcks`
+    - `getBucketRebuildMemoryHint`
+    - `getMaxTimeUnreplicatedNoAcks`
+    - `getMaxTimeUnreplicatedWithAcks`
+    - `setBucketRebuildMemoryHint`
+    - `setMaxTimeUnreplicatedNoAcks`
+    - `setMaxTimeUnreplicatedWithAcks`
 
 ### Breaking changes
 
@@ -114,20 +117,22 @@
   an exception when a wildcarded namespace is passed, rather than incorrectly
   returning an empty list or taking no action.
 
-* The `HashMap` (and `Event`) returned by `ResultsReader.getNextEvent` is now
+* The `HashMap` and `Event` objects returned by `ResultsReader.getNextEvent` are now
   read-only.
 
 * The `SavedSearch.getDispatchMaxTime` method previously returned a `String`, but now
   returns an `int`.
 
 * The `LicensePool.getSlavesUsageBytes` method now returns a map from each slave
-  GUID to its license usage, instead of returning an `long`.
+  GUID to its license usage, instead of returning a `long`.
+
+* The `Service.oneshot` method has been renamed to `Service.oneshotSearch`.
 
 * The `Service.oneshot(String query, Map inputArgs, Map outputArgs)` overload
   has been removed, because `outputArgs` had no effect.
 
 * The `SavedSearch.setArgsWildcard` method has been removed. If you want to set
-  any `args.{argname}` parameters, call `savedSearch.update` with the values set
+  any `args.{argname}` parameters, call `SavedSearch.update` with the values set
   in the map.
 
 * The `SavedSearch.setActionWildcard` method has been removed. Use the specific
@@ -145,19 +150,18 @@
 
 * The `Service.search(query)` and `Service.search(query, args)` methods now return
   a search job instead of blocking and returning results. 
-  The `Service.search(query, inputArgs, outputArgs)` has been removed.
+  
+* The `Service.search(query, inputArgs, outputArgs)` overload has been removed.
 
-* Method OutputServer.setsslRootCAPPath has been renamed to setSslRootCAPPath.
+* The `OutputServer.setsslRootCAPPath` method has been renamed to `setSslRootCAPPath`.
 
-* Method SavedSearch.getDispatchReduceFreq, which returned a String, has been replaced
-  with getDispatchReduceFrequency, which returns an integer.
+* The `SavedSearch.getDispatchReduceFreq` method, which returned a `String`, has been replaced
+  with `getDispatchReduceFrequency`, which returns an `int`.
 
-* setRestrictToHost has been removed from TCP and UDP inputs.
+* The `setRestrictToHost` method has been removed from the `TcpInput` and `UdpInput` classes.
 
-* Settings.setMgmtHostPort renamed to setMgmtPort, and Settings.getMgmtPort now returns
-  an integer.
-
-* The `Service.oneshot` method has been renamed to `Service.oneshotSearch`.
+* The `Settings.setMgmtHostPort` method has been renamed to `setMgmtPort` and this method now returns
+  an `int`.
 
 ### Bug fixes
 
@@ -171,13 +175,13 @@
 The following list contains the main features that have been deprecated (trivial
 changes are not included): 
 
-* The `ServiceArgs` public fields have been deprecated in favor of the new setter 
+* The public fields in the `ServiceArgs` class have been deprecated in favor of the new setter 
   methods to maintain consistency with the new *args* subclasses.
 
 * The `Application.isManageable` and `Application.setManageable` methods have been deprecated
-  for Splunk 5.0 and later.
+  in Splunk 5.0 and later.
 
-* The `DistributedConfiguration.getServerTimeout` method has been deprecated for Splunk 5.0 and later.
+* The `DistributedConfiguration.getServerTimeout` method has been deprecated in Splunk 5.0 and later.
 
 
 ## Version 0.8.0 (beta)
