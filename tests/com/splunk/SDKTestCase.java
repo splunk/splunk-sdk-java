@@ -139,6 +139,11 @@ public abstract class SDKTestCase extends TestCase {
     
     // === Test Data Installation ===
 
+    public boolean hasTestData() {
+        String collectionName = "sdk-app-collection";
+        return service.getApplications().containsKey("sdk-app-collection");
+    }
+
     public void installApplicationFromTestData(String applicationName) {
         String collectionName = "sdk-app-collection";
         if (!service.getApplications().containsKey("sdk-app-collection")) {

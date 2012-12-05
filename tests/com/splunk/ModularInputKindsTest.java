@@ -17,6 +17,7 @@ package com.splunk;
 
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -24,17 +25,13 @@ import java.util.*;
 public class ModularInputKindsTest extends SDKTestCase {
     private ResourceCollection<ModularInputKind> inputKinds;
 
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        if (service.versionIsAtLeast("5.0")) {
+    public void checkModularInputKind(ModularInputKind m) {
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
             installApplicationFromTestData("modular-inputs");
             inputKinds = service.getModularInputKinds();
         }
-    }
-    
-    public void checkModularInputKind(ModularInputKind m) {
-        if (service.versionIsEarlierThan("5.0")) { return; }
 
         if (m.getName().equals("test1")) {
             assertEquals("Test \"Input\" - 1", m.getTitle());
@@ -48,7 +45,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testListInputKinds() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
 
         for (ModularInputKind kind : inputKinds.values()) {
             checkModularInputKind(kind);
@@ -57,8 +59,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testInputByName() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
-
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
         ModularInputKind m;
         m = inputKinds.get("test1");
         checkModularInputKind(m);
@@ -68,8 +74,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testNonexistantArg() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
-
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
         ModularInputKind test1 = inputKinds.get("test1");
         assertFalse(test1.hasArgument("nonexistant_argument"));
         assertNull(test1.getArgument("nonexistant_argument"));
@@ -77,8 +87,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testInputKindDescriptionAndTitle() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
-
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
         ModularInputKind test1 = inputKinds.get("test1");
         String expectedDescription1 = "A description of test input 1 with special characters: //;!*%";
         assertEquals(expectedDescription1, test1.getDescription());
@@ -91,7 +105,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testArgDescription() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
 
         ModularInputKind test1 = inputKinds.get("test1");
 
@@ -113,7 +132,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testArgDataType() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
 
         ModularInputKind test1 = inputKinds.get("test1");
 
@@ -134,7 +158,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testRequiredOnCreate() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
 
         ModularInputKind test1 = inputKinds.get("test1");
 
@@ -153,7 +182,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testRequiredOnEdit() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
 
         ModularInputKind test1 = inputKinds.get("test1");
 
@@ -172,7 +206,12 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     @Test
     public void testGetArguments() {
-        if (service.versionIsEarlierThan("5.0")) { return; }
+        if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
+            return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            inputKinds = service.getModularInputKinds();
+        }
 
         ModularInputKind test1 = inputKinds.get("test1");
         Map<String, ModularInputKindArgument> args = test1.getArguments();

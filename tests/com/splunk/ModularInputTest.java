@@ -21,10 +21,15 @@ import org.junit.Test;
 public class ModularInputTest extends InputTest {
     @Test
     public void testModularInputKinds() {
-        if (service.versionCompare("5.0") < 0) {
+        if (service.versionCompare("5.0") < 0 || !hasTestData()) {
             return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            // Will not pick up the new inputs unless a restart is done.
+            // Nevertheless Splunk does not request a restart after app installation.
+            uncheckedSplunkRestart();
+            inputs.refresh();
         }
-        ensureModularInputsTestDataInstalled();
         
         boolean hasTest2 = false;
         for (InputKind inputKind : inputs.getInputKinds()) {
@@ -37,11 +42,16 @@ public class ModularInputTest extends InputTest {
     
     @Test
     public void testListModularInputs() {
-        if (service.versionCompare("5.0") < 0) {
+        if (service.versionCompare("5.0") < 0 || !hasTestData()) {
             return;
+        } else {
+            installApplicationFromTestData("modular-inputs");
+            // Will not pick up the new inputs unless a restart is done.
+            // Nevertheless Splunk does not request a restart after app installation.
+            uncheckedSplunkRestart();
+            inputs.refresh();
         }
-        ensureModularInputsTestDataInstalled();
-        
+
         assertFalse(inputs.isEmpty());
         
         String inputName = createTemporaryName();
@@ -58,13 +68,5 @@ public class ModularInputTest extends InputTest {
             }
         }
         assertTrue("Modular input did not show up in list.", inputFound);
-    }
-    
-    private void ensureModularInputsTestDataInstalled() {
-        installApplicationFromTestData("modular-inputs");
-        // Will not pick up the new inputs unless a restart is done.
-        // Nevertheless Splunk does not request a restart after app installation.
-        uncheckedSplunkRestart();
-        inputs.refresh();
     }
 }

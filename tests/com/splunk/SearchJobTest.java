@@ -531,6 +531,10 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testEnablePreview() {
+        if (!hasTestData()) {
+            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
         installApplicationFromTestData("sleep_command");
         
         String query = "search index=_internal | sleep 10";
@@ -563,6 +567,10 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testDisablePreview() {
+        if (!hasTestData()) {
+            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
         installApplicationFromTestData("sleep_command");
         
         String query = "search index=_internal | sleep 10";
@@ -615,6 +623,10 @@ public class SearchJobTest extends SDKTestCase {
     
     @Test
     public void testSetPriority() {
+        if (!hasTestData()) {
+            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
         installApplicationFromTestData("sleep_command");
         
         // Note that you can only *decrease* the priority of a job unless
@@ -646,6 +658,10 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testPause() {
+        if (!hasTestData()) {
+            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
         installApplicationFromTestData("sleep_command");
         
         String query = "search index=_internal | sleep 10";
@@ -671,6 +687,10 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testUnpause() {
+        if (!hasTestData()) {
+            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
         installApplicationFromTestData("sleep_command");
         
         String query = "search index=_internal | sleep 10";
@@ -696,6 +716,10 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testFinalize() {
+        if (!hasTestData()) {
+            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
         installApplicationFromTestData("sleep_command");
         
         String query = "search index=_internal | sleep 10";

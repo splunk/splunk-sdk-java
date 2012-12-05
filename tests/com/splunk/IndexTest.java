@@ -535,6 +535,11 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testUpload() throws Exception {
+        if (!hasTestData()) {
+            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
+
         installApplicationFromTestData("file_to_upload");
         
         assertTrue(getResultCountOfIndex() == 0);
