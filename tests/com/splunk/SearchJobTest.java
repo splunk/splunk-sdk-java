@@ -28,7 +28,8 @@ import java.util.HashMap;
 
 public class SearchJobTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
-    private static final String SUMMARY_FIELD_MAGIC_4x = "<field k='host' c='10' nc='0' dc='1' exact='1' relevant='0'>";
+    private static final String SUMMARY_FIELD_MAGIC_42 = "<field k='index' c='10' nc='0' dc='1' exact='1'>";
+    private static final String SUMMARY_FIELD_MAGIC_43 = "<field k='host' c='10' nc='0' dc='1' exact='1' relevant='0'>";
     private static final String SUMMARY_FIELD_MAGIC_5x = "<field k=\"host\" c=\"10\" nc=\"0\" dc=\"1\" exact=\"1\" relevant=\"0\">";
 
     private JobCollection jobs;
@@ -359,6 +360,12 @@ public class SearchJobTest extends SDKTestCase {
     public void testCancel() {
         Job job = jobs.create(QUERY);
 
+        while (!job.isReady()) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {}
+        }
+
         String sid = job.getSid();
 
         jobs.refresh();
@@ -372,6 +379,12 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testCancelIsIdempotent() {
         Job job = jobs.create(QUERY);
+
+        while (!job.isReady()) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {}
+        }
 
         String sid = job.getSid();
 
@@ -387,6 +400,12 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testCursorTime() {
         Job job = jobs.create(QUERY);
+
+        while (!job.isReady()) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {}
+        }
 
         String sid = job.getSid();
 
@@ -462,7 +481,8 @@ public class SearchJobTest extends SDKTestCase {
 
         // Ensure at least one field comes back
         String response = inputStreamToString(job.getSummary());
-        if (!response.contains(SUMMARY_FIELD_MAGIC_4x) &&
+        if (!response.contains(SUMMARY_FIELD_MAGIC_42) &&
+                !response.contains(SUMMARY_FIELD_MAGIC_43) &&
                 !response.contains(SUMMARY_FIELD_MAGIC_5x)) {
             fail("Couldn't find <field> in response: " + response);
         }
@@ -519,6 +539,7 @@ public class SearchJobTest extends SDKTestCase {
         args.put("priority", 5);
         args.put("latest_time", "now");
         final Job job = jobs.create(query, args);
+
         assertFalse(job.isPreviewEnabled());
         
         job.enablePreview();
@@ -684,8 +705,13 @@ public class SearchJobTest extends SDKTestCase {
 
         job.finish();
 
-        job.refresh();
-        assertTrue(job.isFinalized());
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                job.refresh();
+                return job.isFinalized();
+            }
+        });
 
         job.cancel();
     }

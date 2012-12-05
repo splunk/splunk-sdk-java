@@ -140,7 +140,9 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch.setAlertExpires("23h");
         savedSearch.setAlertSeverity(6);
         savedSearch.setAlertSuppress(true);
-        savedSearch.setAlertSuppressFields("host");
+        if (service.versionIsAtLeast("4.3")) {
+            savedSearch.setAlertSuppressFields("host");
+        }
         savedSearch.setAlertSuppressPeriod("1m");
         savedSearch.setAlertThreshold("50%");
         savedSearch.setAlertTrack("0");
@@ -237,7 +239,11 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals("65", savedSearch.getActionSummaryIndexTtl());
         assertEquals(savedSearch.isVisible(), !isVisible);
         assertNull(savedSearch.getNextScheduledTime());
-        assertEquals("search search index=boris abcd", savedSearch.getQualifiedSearch());
+        if (service.versionIsEarlierThan("4.3")) {
+            assertEquals("search  search index=boris abcd", savedSearch.getQualifiedSearch());
+        } else {
+            assertEquals("search search index=boris abcd", savedSearch.getQualifiedSearch());
+        }
         
         assertEquals("greater than", savedSearch.getAlertComparator());
         assertEquals("*", savedSearch.getAlertCondition());
@@ -245,7 +251,9 @@ public class SavedSearchTest extends SDKTestCase {
         assertEquals("23h", savedSearch.getAlertExpires());
         assertEquals(6, savedSearch.getAlertSeverity());
         assertEquals(true, savedSearch.getAlertSuppress());
-        assertEquals("host", savedSearch.getAlertSuppressFields());
+        if (service.versionIsAtLeast("4.3")) {
+            assertEquals("host", savedSearch.getAlertSuppressFields());
+        }
         assertEquals("1m", savedSearch.getAlertSuppressPeriod());
         assertEquals("50%", savedSearch.getAlertThreshold());
         // NOTE: Always returns "0" or "1". Never "auto". Vince notified.

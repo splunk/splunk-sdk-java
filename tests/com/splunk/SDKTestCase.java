@@ -79,13 +79,16 @@ public abstract class SDKTestCase extends TestCase {
         if (restartRequired()) {
             fail("Test left Splunk in a state that required restart.");
         }
-        
-        // We delete the apps we installed for capabilities after checking
-        // for restarts that might be required, since deleting an app
-        // triggers a restart (but one that we can safely ignore).
-        for (String applicationName : installedApps) {
-            service.getApplications().remove(applicationName);
-            clearRestartMessage();
+
+        // Cannot delete applications in Splunk 4.2.
+        if (service.versionIsAtLeast("4.3")) {
+            // We delete the apps we installed for capabilities after checking
+            // for restarts that might be required, since deleting an app
+            // triggers a restart (but one that we can safely ignore).
+            for (String applicationName : installedApps) {
+                service.getApplications().remove(applicationName);
+                clearRestartMessage();
+            }
         }
 
         super.tearDown();

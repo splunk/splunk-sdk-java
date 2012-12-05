@@ -59,6 +59,10 @@ public class TcpInputTest extends SDKTestCase {
 
     @Test
     public void testGetters() throws IOException {
+        if (service.versionIsEarlierThan("4.3")) {
+            return; // Doesn't seem to work on Splunk 4.2.
+        }
+
         final Socket socket = tcpInput.attach();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -105,7 +109,7 @@ public class TcpInputTest extends SDKTestCase {
         socket.close();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            { tries = 20; }
+            { tries = 50; }
             
             @Override
             public boolean predicate() {

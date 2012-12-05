@@ -44,17 +44,21 @@ public class ScriptedInputTest extends SDKTestCase {
     
     @Test
     public void testEntity() {
+        // In Splunk 4.2, we can't use $SPLUNK_HOME in the path to the
+        // script, so we have to fetch $SPLUNK_HOME separately and interpolate
+        // it ourselves.
+        String splunkHome = service.getSettings().getSplunkHome();
         InputCollection inputs = service.getInputs();
         inputs.create(
                 joinServerPath(new String[] {
-                        "$SPLUNK_HOME", "etc", "apps", "search", "bin",
-                        "rangemap.py",
+                        splunkHome, "etc", "apps", "search", "bin",
+                        "bucketdir.py",
                 }),
                 InputKind.Script,
                 Args.create("interval", "0"));
         inputs.refresh();
         
-        ScriptInput input = (ScriptInput)inputs.get("rangemap.py");
+        ScriptInput input = (ScriptInput)inputs.get("bucketdir.py");
         assertNotNull(input);
         
         input.getEndTime();

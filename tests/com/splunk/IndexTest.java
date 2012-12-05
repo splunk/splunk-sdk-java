@@ -591,6 +591,10 @@ public class IndexTest extends SDKTestCase {
         // Make sure the index is not empty.
         index.submit("Hello world");
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            {
+                tries = 50;
+            }
+
             @Override
             public boolean predicate() {
                 return getResultCountOfIndex() == 1;

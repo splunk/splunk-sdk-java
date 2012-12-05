@@ -89,6 +89,10 @@ public class ServiceTest extends SDKTestCase {
         receiver.log("main", Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon8!\r\n");
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            {
+                tries = 50;
+            }
+
             @Override
             public boolean predicate() {
                 index.refresh();
@@ -476,10 +480,14 @@ public class ServiceTest extends SDKTestCase {
                 assertEquals("none@noway.com", user.getEmail());
                 assertEquals("SDK-name", user.getRealName());
                 assertEquals(1, user.getRoles().length);
-                assertEquals("Pacific/Midway", user.getTz());
+                if (service.versionIsAtLeast("4.3")) {
+                    assertEquals("Pacific/Midway", user.getTz());
+                }
                 assertTrue(contains(user.getRoles(), "power"));
                 
-                user.setTz(tz == null ? "" : tz);
+                if (service.versionIsAtLeast("4.3")) {
+                    user.setTz(tz == null ? "" : tz);
+                }
                 user.setRoles(new String[] {"power"});
                 user.update();
                 user.refresh();
