@@ -1,6 +1,6 @@
 # Args Class Generator
 
-This tool is used to generate custom `Args` subclasses based on the REST API documentation for the associated endpoint.
+This tool generates custom `Args` subclasses based on the REST API documentation for the associated endpoint.
 
 
 ## Example Usage
@@ -12,7 +12,7 @@ This tool is used to generate custom `Args` subclasses based on the REST API doc
 
 ## Quickstart
 
-For each class that you wish to generate, an `.argspec` file must be created that defines the specific parameters supported by the Args class, along with its Java datatype and documentation.
+For each class that you want to generate, an `.argspec` file must be created that defines the specific parameters supported by the Args class, along with its Java datatype and documentation.
 
 For example, the specification:
 
@@ -54,7 +54,7 @@ The user must manually:
 
 ## Argument Specification Format
 
-Any line that begins with `#` is an comment and will be ignored. Blank lines are significant (and are not ignored).
+Any line that begins with `#` is a comment and will be ignored. Blank lines are significant (and are not ignored).
 
 Any line at the beginning of the file that begins with `!` is a directive and will change the behavior of the generator. For example:
 
