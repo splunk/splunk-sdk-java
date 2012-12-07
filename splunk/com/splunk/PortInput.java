@@ -19,11 +19,11 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Superclass of Inputs that are bound to a particular port and that can be
- * host-restricted.
+ * The {@code PortInput} class represents a superclass of inputs that are bound 
+ * to a particular port and can be host restricted.
  * 
- * This collects common functionality to minimize duplication. It is not part
- * of the public API.
+ * This class collects common functionality to minimize duplication and is not 
+ * part of the public API.
  */
 abstract class PortInput extends Input {
     
@@ -49,8 +49,8 @@ abstract class PortInput extends Input {
     /**
      * {@inheritDoc}
      * 
-     * Overrides update() to additionally update this input's path if the
-     * 'restrictToHost' property is changed.
+     * Overrides the {@code update} method to additionally update this input's 
+     * path if the {@code RestrictToHost} property is changed.
      */
     @Override
     public void update(Map<String, Object> args) {
