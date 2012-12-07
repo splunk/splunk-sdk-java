@@ -48,7 +48,7 @@ resources to your computer. For example, use the following command:
 
     git clone https://github.com/splunk/splunk-sdk-java.git
     
-You can also [download the JAR file](***LINK***) to include the Splunk Java SDK
+You can also download just the JAR file to include the Splunk Java SDK
 in your applications.
 
 #### Java and Ant
