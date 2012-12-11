@@ -140,9 +140,9 @@
 * The `Service.oneshot(String query, Map inputArgs, Map outputArgs)` overload
   has been removed, because `outputArgs` had no effect.
 
-* The `SavedSearch.setArgsWildcard` method has been removed. If you want to set
-  any `args.{argname}` parameters, call `SavedSearch.update` with the values set
-  in the map.
+* The `SavedSearch.setArgsWildcard` method has been removed. To set a wildcard
+  parameter, specify it as a key-value pair in a map and pass it to the 
+  `SavedSearch.dispatch(java.util.Map args)` method.
 
 * The `SavedSearch.setActionWildcard` method has been removed. Use the specific
   setters to update these parameters.
