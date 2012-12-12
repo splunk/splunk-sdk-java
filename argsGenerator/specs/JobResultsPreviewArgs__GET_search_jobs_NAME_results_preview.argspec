@@ -1,0 +1,39 @@
+# TODO: Improve docs: Formatting of the description differs from that of
+#       GET search/jobs/{search_id}/results_preview. Otherwise all other parameters are identical.
+count
+Count
+int
+Sets the maximum number of results to return. 
+-
+The maximum number of results. To return all available results, specify 0.
+===
+# TODO: Improve docs: Why isn't "field_list" deprecated when there is "f" present?
+f
+FieldList
+String[]-MULTIPLE
+Sets a list of fields to return for the event set. 
+-
+A list of fields.
+===
+offset
+Offset
+int
+Specifies the index of the first result (inclusive) from which to begin returning data. This value is 0-indexed.<p>In Splunk 4.1+, negative offsets are allowed and are added to the count to compute the absolute offset (for example, offset=-1 is the last available offset). Offsets in the results are always absolute and never negative. The default value is 0.
+-
+The index of the first result to return.
+===
+# TODO: Improve docs: The referenced document does not actually document the enum constants.
+output_mode
+OutputMode
+OutputMode
+Sets the format of the output.
+-
+The output format.
+===
+search
+Search
+String
+Sets the post-processing search to apply to results. 
+-
+The post-processing search query.
+===

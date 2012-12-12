@@ -1,0 +1,18 @@
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+earliest_time
+EarliestTime
+String
+Sets the earliest time for which to display the scheduled times for scheduled searches (not just the next run time).
+-
+The earliest time.
+===
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+latest_time
+LatestTime
+String
+Sets the latest time until which to display the scheduled times for scheduled searches (not just the next run time). 
+-
+The latest time.
+===

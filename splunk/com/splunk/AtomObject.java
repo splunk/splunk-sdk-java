@@ -26,8 +26,8 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamConstants;
 
 /**
- * The {@code AtomObject} class represents a generic Atom object. This is a
- * common base class shared by {@code AtomFeed} and {@code AtomEntry}.
+ * The {@code AtomObject} class represents a generic Atom object. This class is
+ * a common base class shared by {@code AtomFeed} and {@code AtomEntry}.
  */
 public class AtomObject {
     /** The value of the Atom {@code <id>} element. */
@@ -43,13 +43,13 @@ public class AtomObject {
     public String updated;
 
     /**
-     * Instantiates the XMLStreamReader, advances to root element and 
-     * validates root document structure. This is shared initialization code 
-     * for both the AtomFeed and AtomEntry parsers.
+     * Instantiates the XMLStreamReader, advances to the root element and 
+     * validates the root document structure. This initialization code is shared
+     * by the {@code AtomFeed} and {@code AtomEntry} parsers.
      *
-     * @param input The input stream
-     * @return An {@code XMLStreamReader} initialized reader advances to first
-     *         element of the document.
+     * @param input The input stream.
+     * @return An {@code XMLStreamReader} initialized reader, advanced to the
+     *         first element of the document.
      */
     protected static XMLStreamReader createReader(InputStream input) {
         XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -63,7 +63,7 @@ public class AtomObject {
             reader = factory.createXMLStreamReader(input);
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         assert reader.getEventType() == XMLStreamConstants.START_DOCUMENT;
@@ -107,9 +107,9 @@ public class AtomObject {
 
     /**
      * Initializes the current instance from the given XML element by calling
-     * {@code init} on each child of the XML element.
+     * the {@code init} method on each child of the XML element.
      *
-     * @param reader The XML reader
+     * @param reader The XML reader.
      */
     void load(XMLStreamReader reader, String localName) {
         assert isStartElement(reader, localName);
@@ -128,7 +128,7 @@ public class AtomObject {
     }
 
     /**
-     * Parse the element at the current cursor position and consume the
+     * Parses the element at the current cursor position and reads the
      * corresponding end element.
      *
      * @param reader The XML reader.
@@ -139,11 +139,11 @@ public class AtomObject {
     }
 
     /**
-     * Parse and return the text value for the element at the current cursor
-     * position and consume the corresponding end element.
+     * Parses and returns the text value of the element at the current cursor
+     * position and reads the corresponding end element.
      *
      * @param reader The XML reader.
-     * @return the element's text value.
+     * @return The element's text value.
      */
     protected String parseText(XMLStreamReader reader) {
         assert reader.isStartElement();
@@ -169,7 +169,7 @@ public class AtomObject {
             return reader.getElementText();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -195,7 +195,7 @@ public class AtomObject {
             while (reader.isWhiteSpace()); // Ignore whitespace
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -234,7 +234,7 @@ public class AtomObject {
             reader.nextTag();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

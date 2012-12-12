@@ -80,9 +80,9 @@ public class DeploymentServerClass extends Entity {
 
     /**
      * Returns the filter type that is applied first. If {@code filterType} is 
-     * whitelist, all whitelist filters are applied first, followed by blacklist
-     * filters. If {@code filterType} is blacklist, all blacklist filters are
-     * applied first, followed by whitelist filters.
+     * "whitelist", all whitelist filters are applied first, followed by 
+     * blacklist filters. If {@code filterType} is "blacklist", all blacklist 
+     * filters are applied first, followed by whitelist filters.
      *
      * @return The filter type.
      */
@@ -195,8 +195,7 @@ public class DeploymentServerClass extends Entity {
      * <li>"blacklist" applies the blacklist filters first, followed by 
      * whitelist filters. </li></ul>
      *
-     * @param filterType The filter type to apply first ("whitelist" or 
-     * "blacklist").
+     * @param filterType The filter type to apply first.
      */
     public void setFilterType(String filterType) {
         setCacheValue("filterType", filterType);
@@ -210,25 +209,7 @@ public class DeploymentServerClass extends Entity {
      */
     public void setRepositoryLocation(String location) {
         setCacheValue("repositoryLocation", location);
-    }
 
-    /**
-     * Sets the location on the deployment client where the content that is 
-     * being deployed should be installed. 
-     *
-     * @param location The location (path) for installing content.
-     */
-    public void setTargetRepositoryLocation(String location) {
-        setCacheValue("targetRepositoryLocation", location);
-    }
-
-    /**
-     * Sets the working folder used by the deployment server.
-     *
-     * @param location The working folder.
-     */
-    public void setTmpFolder(String location) {
-        setCacheValue("tmpFolder", location);
     }
 
     /**

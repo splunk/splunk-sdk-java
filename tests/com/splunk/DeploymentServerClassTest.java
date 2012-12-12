@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -16,101 +16,121 @@
 
 package com.splunk;
 
+import org.junit.Before;
 import org.junit.Test;
 
-public class DeploymentServerClassTest extends SplunkTestCase {
-    final static String assertRoot = "Deployment Server Class assert: ";
+public class DeploymentServerClassTest extends SDKTestCase {
+    private EntityCollection<DeploymentServerClass> classes;
+    private String serverClassName;
+    private DeploymentServerClass serverClass;
 
-    @Test public void testDeploymentServerClass() throws Exception {
-        Service service = connect();
+    @Before @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
-        EntityCollection<DeploymentServerClass> deploymentServerClasses =
-                service.getDeploymentServerClasses();
-        DeploymentServerClass deploymentServerClass;
+        classes = service.getDeploymentServerClasses();
 
-        Args args = new Args();
-        for (int i=0; i< 10; i++)
-            args.put(String.format("blacklist.%d", i),
-                     String.format("bad%d.splunk.com", i));
-        args.put("continueMatching", false);
-        args.put("filterType","whitelist");
-        for (int i=0; i< 10; i++)
-            args.put(String.format("whitelist.%d", i),
-                     String.format("good%d.splunk.com", i));
+        // Create a temporary deployment serverclass.
+        serverClassName = createTemporaryName();
+        serverClass = classes.create(serverClassName);
+        // NOTE: We cannot delete server classes via the
+        // REST API, so randomly named ones will just accumulate.
+    }
 
-        // create or get
-        if (!deploymentServerClasses.containsKey("sdk-tests")) {
-            deploymentServerClass =
-                    deploymentServerClasses.create("sdk-tests", args);
-        } else {
-            deploymentServerClass = deploymentServerClasses.get("sdk-tests");
-            deploymentServerClass.update(args);
+    @Test
+    public void testCreate() {
+        assertTrue(classes.containsKey(serverClassName));
+    }
+
+    @Test
+    public void testDisable() {
+        if (serverClass.isDisabled()) {
+            serverClass.enable();
+            serverClass.refresh();
+            assertFalse(serverClass.isDisabled());
         }
 
-        // check for sanity
-        for (int i=0; i< 10; i++)
-            assertEquals(assertRoot + "#1",
-                String.format("bad%d.splunk.com", i),
-                deploymentServerClass.getBlacklistByIndex(i));
-        assertEquals(assertRoot + "#2",
-            args.get("continueMatching"),
-            deploymentServerClass.getContinueMatching());
-        assertEquals(assertRoot + "#3",
-            args.get("filterType"), deploymentServerClass.getFilterType());
-        for (int i=0; i< 10; i++)
-            assertEquals(assertRoot + "#4",
-                String.format("good%d.splunk.com", i),
-                deploymentServerClass.getWhitelistByIndex(i));
-        String filter = deploymentServerClass.getFilterType();
+        serverClass.disable();
+        serverClass.refresh();
+        assertTrue(serverClass.isDisabled());
+    }
 
-        // modify
-        // N.B. paths are OS specific, and not tested here.
-        // and updates to black and whitelist are all or nothing.
-        for (int i=0; i< 10; i++)
-            deploymentServerClass.setBlacklistByIndex(i,
-                    String.format("maybe%d.splunk.com", i));
-        deploymentServerClass.setContinueMatching(true);
-        deploymentServerClass.setFilterType("blacklist");
-        for (int i=0; i< 10; i++)
-            deploymentServerClass.setWhitelistByIndex(i,
-                    String.format("maybe%d.splunk.com", i));
-        deploymentServerClass.update();
-
-        // check update
-        for (int i=0; i< 10; i++)
-            assertEquals(assertRoot + "#5",
-                String.format("maybe%d.splunk.com", i),
-                deploymentServerClass.getBlacklistByIndex(i));
-        assertTrue(assertRoot + "#6",
-            deploymentServerClass.getContinueMatching());
-        assertEquals(assertRoot + "#7",
-            "blacklist", deploymentServerClass.getFilterType());
-        for (int i=0; i< 10; i++)
-            assertEquals(assertRoot + "#8",
-                String.format("maybe%d.splunk.com", i),
-                deploymentServerClass.getWhitelistByIndex(i));
-
-        // cleanup & restore sane values
-        for (int i=0; i< 10; i++)
-            deploymentServerClass.setBlacklistByIndex(i,
-                    String.format("bad%d.splunk.com", i));
-        deploymentServerClass.setContinueMatching(false);
-        deploymentServerClass.setFilterType(filter);
-        for (int i=0; i< 10; i++)
-            deploymentServerClass.setWhitelistByIndex(i,
-                    String.format("good%d.splunk.com", i));
-
-        for (DeploymentServerClass deploymentServerClass1:
-                deploymentServerClasses.values()) {
-            assertTrue(assertRoot + "#9",
-                deploymentServerClass1.getRepositoryLocation().length() > 0);
-            deploymentServerClass1.getBlacklist();
-            deploymentServerClass1.getEndpoint();
-            deploymentServerClass1.getTargetRepositoryLocation();
-            deploymentServerClass1.getTmpFolder();
-            deploymentServerClass1.getWhitelist();
+    @Test
+    public void testEnable() {
+        if (!serverClass.isDisabled()) {
+            serverClass.disable();
+            serverClass.refresh();
+            assertTrue(serverClass.isDisabled());
         }
 
-        // N.B. No REST endpoint to delete a deployment server class.
+        serverClass.enable();
+        serverClass.refresh();
+        assertFalse(serverClass.isDisabled());
+    }
+
+    @Test
+    public void testBlacklist() {
+        String[] blacklist = {"bad1.splunk.com", "bad2.splunk.com"};
+
+        for (int i = 0; i < blacklist.length; i++) {
+            serverClass.setBlacklistByIndex(i, blacklist[i]);
+        }
+
+        serverClass.update();
+        serverClass.refresh();
+
+        for (int i = 0; i < blacklist.length; i++) {
+            assertEquals(blacklist[i], serverClass.getBlacklistByIndex(i));
+        }
+
+        assertEquals(Util.join(",", blacklist), serverClass.getBlacklist());
+    }
+
+    @Test
+    public void testWhitelist() {
+        String[] whitelist = {"bad1.splunk.com", "bad2.splunk.com"};
+
+        for (int i = 0; i < whitelist.length; i++) {
+            serverClass.setWhitelistByIndex(i, whitelist[i]);
+        }
+
+        serverClass.update();
+        serverClass.refresh();
+
+        for (int i = 0; i < whitelist.length; i++) {
+            assertEquals(whitelist[i], serverClass.getWhitelistByIndex(i));
+        }
+
+        assertEquals(Util.join(",", whitelist), serverClass.getWhitelist());
+    }
+
+    @Test
+    public void testContinueMatching() {
+        assertFalse(serverClass.getContinueMatching());
+        serverClass.setContinueMatching(true);
+        serverClass.update();
+        serverClass.refresh();
+        assertTrue(serverClass.getContinueMatching());
+    }
+
+    @Test
+    public void testEndpoint() {
+        serverClass.setEndPoint("boris the mad baboon");
+        serverClass.update();
+        serverClass.refresh();
+        assertEquals("boris the mad baboon", serverClass.getEndpoint());
+    }
+
+    @Test
+    public void testFilterType() {
+        serverClass.setFilterType("whitelist");
+        serverClass.update();
+        serverClass.refresh();
+        assertEquals("whitelist", serverClass.getFilterType());
+
+        serverClass.setFilterType("blacklist");
+        serverClass.refresh();
+        assertEquals("blacklist", serverClass.getFilterType());
     }
 }
+

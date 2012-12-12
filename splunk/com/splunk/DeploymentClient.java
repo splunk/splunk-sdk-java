@@ -42,12 +42,13 @@ public class DeploymentClient extends Entity {
             return path + "/deployment-client";
         return super.actionPath(action);
     }
-    /** {@inheritDoc} */
+    
+    /** Not supported for this endpoint. */
     @Override public void disable() {
         throw new UnsupportedOperationException();
     }
 
-    /** {@inheritDoc} */
+    /** Not supported for this endpoint. */
     @Override public void enable() {
         throw new UnsupportedOperationException();
     }
@@ -83,8 +84,8 @@ public class DeploymentClient extends Entity {
     /**
      * Sets whether to enable or disable the deployment client.
      * <p>
-     * <b>Note:</b> You must restart Splunk for this setting to take effect.
-     * However, to avoid restarting Splunk, you can use the 
+     * <b>Note:</b> Using this method requires you to restart Splunk before this 
+     * setting takes effect. To avoid restarting Splunk, use the 
      * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
      * take effect immediately. 
      * @see Entity#disable

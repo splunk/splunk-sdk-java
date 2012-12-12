@@ -19,11 +19,11 @@ package com.splunk;
 import java.util.*;
 
 /**
- * The {@code Entity} class is a base class for all Splunk entity resources.
+ * The {@code Entity} class represents a Splunk entity.
  */
 public class Entity extends Resource implements Map<String, Object> {
     private Record content;
-    public HashMap<String, Object> toUpdate = new HashMap<String, Object>();
+    protected HashMap<String, Object> toUpdate = new LinkedHashMap<String, Object>();
 
     /**
      * Class constructor.
@@ -48,8 +48,6 @@ public class Entity extends Resource implements Map<String, Object> {
             return path;
         if (action.equals("enable"))
             return path + "/enable";
-        if (action.equals("reload"))
-            return path + "/_reload";
         if (action.equals("remove"))
             return path;
         throw new IllegalArgumentException("Invalid action: " + action);
@@ -298,8 +296,9 @@ public class Entity extends Resource implements Map<String, Object> {
      * @return The string array value associated with the specified key.
      */
     String[] getStringArray(String key) {
-        if (toUpdate.containsKey(key))
-            return getStringArray(toUpdate.get(key).toString());
+        if (toUpdate.containsKey(key)) {
+            return (String[])toUpdate.get(key);
+        }
         return getContent().getStringArray(key);
     }
 
@@ -313,7 +312,7 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     String[] getStringArray(String key, String[] defaultValue) {
         if (toUpdate.containsKey(key))
-            return getStringArray(toUpdate.get(key).toString());
+            return getStringArray(key);
         return getContent().getStringArray(key, defaultValue);
     }
 
@@ -331,6 +330,15 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     public boolean isDisabled() {
         return getBoolean("disabled", false);
+    }
+    
+    /**
+     * Returns whether this entity's name can be changed via {@link #update}.
+     * 
+     * Most entity names cannot be changed in this way.
+     */
+    protected boolean isNameChangeAllowed() {
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -379,14 +387,6 @@ public class Entity extends Resource implements Map<String, Object> {
         return this;
     }
 
-    /**
-     * Performs this entity's reload action.
-     */
-    public void reload() {
-        service.get(actionPath("reload"));
-        invalidate();
-    }
-
     /** {@inheritDoc} */
     public Object remove(Object key) {
         throw new UnsupportedOperationException();
@@ -416,25 +416,30 @@ public class Entity extends Resource implements Map<String, Object> {
      * @param args The arguments to update.
      */
     public void update(Map<String, Object> args) {
-        // Merge cached setters and live args together before updating.
-        HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
-        mergedArgs.putAll(toUpdate);
-        mergedArgs.putAll(args);
-        service.post(actionPath("edit"), mergedArgs);
-        toUpdate.clear();
-        invalidate();
+        if (!toUpdate.isEmpty() || !args.isEmpty()) {
+            // Merge cached setters and live args together before updating.
+            Map<String, Object> mergedArgs = 
+                    new LinkedHashMap<String, Object>();
+            mergedArgs.putAll(toUpdate);
+            mergedArgs.putAll(args);
+
+            if (mergedArgs.containsKey("name") && !isNameChangeAllowed()) {
+                throw new IllegalStateException("Cannot set 'name' on an existing entity.");
+            }
+
+            service.post(actionPath("edit"), mergedArgs);
+            toUpdate.clear();
+            invalidate();
+        }
     }
 
     /**
      * Updates the entity with the accumulated arguments, established by the
      * individual setter methods for each specific entity class.
      */
+    @SuppressWarnings("unchecked")
     public void update() {
-        if (toUpdate.size() > 0) {
-            service.post(actionPath("edit"), toUpdate);
-            toUpdate.clear();
-            invalidate();
-        }
+        update(Collections.EMPTY_MAP);
     }
 
     /**

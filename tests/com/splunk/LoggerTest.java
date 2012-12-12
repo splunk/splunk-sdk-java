@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -18,37 +18,61 @@ package com.splunk;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-public class LoggerTest extends SplunkTestCase {
-    final static String assertRoot = "Logger assert: ";
-
-    @Test public void testLogger() throws Exception {
-        Service service = connect();
-
-        List<String> expected = Arrays.asList(
+public class LoggerTest extends SDKTestCase {
+    private static final List<String> VALID_LEVELS = Arrays.asList(
             "INFO", "WARN", "ERROR", "DEBUG", "CRIT");
+    
+    // NOTE: Ideally we would create our own logger instead of using an existing
+    //       one. However there is no REST API call to create a Logger, and
+    //       we can't use an app to install one, either.
+    private static final String TEST_LOGGER_NAME = "AuditLogger";
+    
+    private Logger logger;
+    private String originalLoggerLevel;
+    
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        
+        logger = service.getLoggers().get(TEST_LOGGER_NAME);
+        originalLoggerLevel = logger.getLevel();
+    }
 
-        EntityCollection<Logger> serviceLoggers = service.getLoggers();
-        for (Logger ent: serviceLoggers.values()) {
-            assertTrue(assertRoot + "#1", expected.contains(ent.getLevel()));
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        logger.setLevel(originalLoggerLevel);
+        
+        super.tearDown();
+    }
+    
+    @Test
+    public void testDefaultLoggersHaveValidLevels() {
+        for (Logger curLogger : service.getLoggers().values()) {
+            assertTrue(VALID_LEVELS.contains(curLogger.getLevel()));
         }
-
-        Logger logger = serviceLoggers.get("AuditLogger");
-        String saved = logger.getLevel();
-        Args update = new Args();
-
-        // set with setters
-        for (String level: expected) {
-            logger.setLevel(level);
+    }
+    
+    @Test
+    public void testLevelSetter() {
+        for (String curLevel : VALID_LEVELS) {
+            logger.setLevel(curLevel);
             logger.update();
-            assertEquals(assertRoot + "#2", level, logger.getLevel());
+            assertEquals(curLevel, logger.getLevel());
         }
-
-        // restore with map technique
-        update.clear();
-        update.put("level", saved);
-        logger.update(update);
-        assertEquals(assertRoot + "#3", saved, logger.getLevel());
+    }
+    
+    @Test
+    public void testLevelUpdate() {
+        for (String curLevel : VALID_LEVELS) {
+            logger.update(new Args("level", curLevel));
+            assertEquals(curLevel, logger.getLevel());
+        }
     }
 }

@@ -17,32 +17,31 @@
 package com.splunk;
 
 import java.io.*;
-import java.util.HashMap;
 
-public abstract  class ResultsReader {
+/**
+ * The {@code ResultsReader} class is a base class for the streaming readers 
+ * for Splunk search results. 
+ */
+public abstract class ResultsReader {
     InputStreamReader inputStreamReader = null;
 
     /**
      * Class constructor.
      *
-     * @param inputStream The input stream (unread) return stream from a Splunk
-     * query or export.
-     * @throws IOException If an IO exception occurs.
+     * @param inputStream The unread return input stream from a Splunk query or 
+     * export.
+     * @throws IOException On IO exception.
      */
-    public ResultsReader(InputStream inputStream) throws Exception {
-        try {
-            inputStreamReader = new
-                InputStreamReader(inputStream, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) { assert false; }
+    public ResultsReader(InputStream inputStream) throws IOException {
+        inputStreamReader = new InputStreamReader(inputStream, "UTF8");
     }
 
     /**
      * Closes the reader and returns resources.
      *
-     * @throws Exception on Exception
+     * @throws IOException On IO exception.
      */
-    public void close() throws Exception {
+    public void close() throws IOException {
         if (inputStreamReader != null)
             inputStreamReader.close();
         inputStreamReader = null;
@@ -51,10 +50,11 @@ public abstract  class ResultsReader {
     /**
      * Returns the next event in the event stream.
      *
-     * @return The hash map of key-value pairs for an entire event.
-     * @throws Exception on Exception.
+     * @return The map of key-value pairs for an event.
+     *         The format of multi-item values is implementation-specific.
+     *         We recommend using the methods from the
+     *         {@link Event} class to interpret multi-item values.
+     * @throws IOException On IO exception.
      */
-    public HashMap<String, String> getNextEvent() throws Exception {
-        return null;
-    }
+    public abstract Event getNextEvent() throws IOException;
 }

@@ -16,15 +16,20 @@
 
 package com.splunk;
 
+/**
+ * Thrown for Splunk responses that return an error status code.
+ */
 public class SplunkException extends RuntimeException {
     private int code;
     private String text;
 
-    public static int JOB_NOTREADY = 1;
-    public static int TIMEOUT = 2;
-    public static int AMBIGUOUS = 3;
+    public static final int JOB_NOTREADY = 1;
+    public static final int TIMEOUT = 2;
+    public static final int AMBIGUOUS = 3;
+    public static final int INTERRUPTED = 4;
 
     SplunkException(int code, String text) {
+        super(text);
         this.code = code;
         this.text = text;
     }

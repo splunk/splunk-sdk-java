@@ -1,0 +1,129 @@
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+dispatch.now
+DispatchNow
+String
+Sets a time that dispatches the search as though the specified time were the current time.
+-
+A string with the specified time.
+===
+dispatch.buckets
+DispatchBuckets
+int
+Sets the maximum number of timeline buckets. 
+-
+The maximum number of timeline buckets.
+===
+dispatch.earliest_time
+DispatchEarliestTime
+String
+Specifies the earliest time for this search. This value can be a relative or absolute time. If this value is an absolute time, use {@link #setDispatchTimeFormat} to format the value.
+-
+A time string that specifies the earliest time for this search.
+===
+dispatch.earliest_time
+DispatchEarliestTime
+Date
+Sets the earliest time for this search. 
+-
+A date that specifies the earliest time for this search.
+!CODE
+        // Documented format:        "%FT%T.%Q%:z"
+        // strftime original format: "%FT%T.%Q%:z"
+        // strftime expanded format: "%Y-%m-%dT%H:%M:%S.%Q%:z"
+        String javaFormatString =    "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+        String timeString = new SimpleDateFormat(javaFormatString).format(dispatchEarliestTime);
+        this.put("dispatch.earliest_time", timeString);
+===
+dispatch.latest_time
+DispatchLatestTime
+String
+Specifies the latest time for this search. This value can be a relative or absolute time. If this value is an absolute time, use {@link #setDispatchTimeFormat} to format the value.
+-
+A time string that specifies the latest time for this search.
+===
+dispatch.latest_time
+DispatchLatestTime
+Date
+Sets the latest time for this search. 
+-
+A date that specifies the latest time for this saved search.
+!CODE
+        // Documented format:        "%FT%T.%Q%:z"
+        // strftime original format: "%FT%T.%Q%:z"
+        // strftime expanded format: "%Y-%m-%dT%H:%M:%S.%Q%:z"
+        String javaFormatString =    "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+        String timeString = new SimpleDateFormat(javaFormatString).format(dispatchLatestTime);
+        this.put("dispatch.latest_time", timeString);
+===
+dispatch.lookups
+DispatchLookups
+boolean
+Indicates whether to enable lookups for this search.
+-
+{@code true} to enable lookups, {@code false} if not.
+===
+dispatch.max_count
+DispatchMaximumCount
+int
+Sets the maximum number of results before finalizing the search. 
+-
+The maximum number of results.
+===
+dispatch.max_time
+DispatchMaximumTime
+int
+Sets the the maximum amount of time before finalizing the search.
+-
+The maximum amount of time, in seconds. 
+===
+dispatch.reduce_freq
+DispatchReduceFrequency
+int
+Set the frequency for how often Splunk should run the MapReduce reduce phase on accumulated map values.
+-
+The frequency, in seconds.
+===
+dispatch.rt_backfill
+DispatchRealTimeBackfill
+boolean
+Indicates whether to back fill the real-time window for this search. This value only applies to real-time searches. 
+-
+{@code true} to back fill the real-time window, {@code false} if not.
+===
+dispatch.spawn_process
+DispatchSpawnProcess
+boolean
+Indicates whether the search should run in a separate spawned process. Searches against indexes must run in a separate process.
+-
+{@code true} to run the search in a separate process, {@code false} if not.
+===
+dispatch.time_format
+DispatchTimeFormat
+String
+Sets a time format for Splunk to use to specify the earliest and latest times.
+-
+A time format string. 
+===
+dispatch.ttl
+# The TTL acronym is not expanded here to be consistent with Job.getTtl
+DispatchTtl
+String
+Indicates the time to live (TTL) for the artifacts of the scheduled search, if no actions are triggered. If an action is triggered, Splunk changes the TTL to that action's TTL. If multiple actions are triggered, Splunk applies the maximum TTL to the artifacts. To set the action's TTL, refer to alert_actions.conf.spec.
+-
+The time to live, in seconds. If the value is a number followed by "p", it is the number of scheduled search periods.
+===
+trigger_actions
+TriggerActions
+boolean
+Indicates whether to trigger alert actions.
+-
+{@code true} to trigger alert actions, {@code false} if not.
+===
+force_dispatch
+ForceDispatch
+boolean
+Indicates whether to start a new search, even if another instance of this search is already running.
+-
+{@code true} to start a new search, {@code false} if not.
+===

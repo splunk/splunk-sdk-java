@@ -18,11 +18,50 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class MetadataTest extends SplunkTestCase {
-
-    void checkMetadata(Entity entity) {
+public class MetadataTest extends SDKTestCase {
+    @Test
+    public void testMetadataGettersOfDefaultEntities() {
+        testMetadataGetters(service.getApplications());
+        testMetadataGetters(service.getDeploymentClient());
+        testMetadataGetters(service.getDeploymentServerClasses());
+        testMetadataGetters(service.getDeploymentTenants());
+        testMetadataGetters(service.getDistributedConfiguration());
+        testMetadataGetters(service.getDistributedPeers());
+        testMetadataGetters(service.getEventTypes());
+        testMetadataGetters(service.getFiredAlertGroups());
+        testMetadataGetters(service.getIndexes());
+        testMetadataGetters(service.getInfo());
+        testMetadataGetters(service.getInputs());
+        testMetadataGetters(service.getJobs());
+        testMetadataGetters(service.getLicenseGroups());
+        testMetadataGetters(service.getLicensePools());
+        testMetadataGetters(service.getLicenseSlaves());
+        testMetadataGetters(service.getLicenseStacks());
+        testMetadataGetters(service.getLicenses());
+        testMetadataGetters(service.getLoggers());
+        testMetadataGetters(service.getMessages());
+        testMetadataGetters(service.getOutputDefault());
+        testMetadataGetters(service.getOutputGroups());
+        testMetadataGetters(service.getOutputServers());
+        testMetadataGetters(service.getOutputSyslogs());
+        testMetadataGetters(service.getPasswords());
+        testMetadataGetters(service.getRoles());
+        testMetadataGetters(service.getSavedSearches());
+        testMetadataGetters(service.getSettings());
+        testMetadataGetters(service.getUsers());
+    }
+    
+    private void testMetadataGetters(
+            EntityCollection<? extends Entity> entityCollection) {
+        for (Entity entity : entityCollection.values()) {
+            testMetadataGetters(entity);
+        }
+    }
+    
+    private void testMetadataGetters(Entity entity) {
         EntityMetadata metadata = entity.getMetadata();
         if (metadata == null) return;
+        
         metadata.canChangePermissions();
         metadata.canShareApp();
         metadata.canShareGlobal();
@@ -33,43 +72,5 @@ public class MetadataTest extends SplunkTestCase {
         metadata.getPermissions();
         metadata.getSharing();
         metadata.isModifiable();
-    }
-
-    void checkMetadata(EntityCollection entityCollection) {
-        for (Object entity : entityCollection.values())
-            checkMetadata((Entity)entity);
-    }
-
-    @Test public void testMetadata() {
-        Service service = connect();
-
-        checkMetadata(service.getApplications());
-        checkMetadata(service.getDeploymentClient());
-        checkMetadata(service.getDeploymentServerClasses());
-        checkMetadata(service.getDeploymentTenants());
-        checkMetadata(service.getDistributedConfiguration());
-        checkMetadata(service.getDistributedPeers());
-        checkMetadata(service.getEventTypes());
-        checkMetadata(service.getFiredAlertGroups());
-        checkMetadata(service.getIndexes());
-        checkMetadata(service.getInfo());
-        checkMetadata(service.getInputs());
-        checkMetadata(service.getJobs());
-        checkMetadata(service.getLicenseGroups());
-        checkMetadata(service.getLicensePools());
-        checkMetadata(service.getLicenseSlaves());
-        checkMetadata(service.getLicenseStacks());
-        checkMetadata(service.getLicenses());
-        checkMetadata(service.getLoggers());
-        checkMetadata(service.getMessages());
-        checkMetadata(service.getOutputDefault());
-        checkMetadata(service.getOutputGroups());
-        checkMetadata(service.getOutputServers());
-        checkMetadata(service.getOutputSyslogs());
-        checkMetadata(service.getPasswords());
-        checkMetadata(service.getRoles());
-        checkMetadata(service.getSavedSearches());
-        checkMetadata(service.getSettings());
-        checkMetadata(service.getUsers());
     }
 }

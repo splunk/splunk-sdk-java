@@ -16,10 +16,12 @@
 
 package com.splunk;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
- * The {@code WindowsRegistryInput} class represents a Windows Registry input.
+ * The {@code WindowsRegistryInput} class represents a Windows Registry data 
+ * input.
  */
 public class WindowsRegistryInput extends Input {
 
@@ -74,8 +76,7 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns the input kind for this Windows Registry input.
-     * @see InputKind
+     * Returns the input kind for this input.
      *
      * @return The input kind.
      */
@@ -95,14 +96,25 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Returns the regular expression (regex) that is compared to registry
+     * Returns the regular expressions (regexes) that are compared to registry
      * event types for this Windows Registry input. Only types that match
-     * this regex are monitored.
-     *
-     * @return The registry type regex, or {@code null} if not specified.
+     * at least one of the regexes are monitored.
+     * 
+     * @return An array of regex strings for event types.
      */
-    public String getType() {
-        return getString("type", null);
+    public String[] getType() {
+        if (toUpdate.containsKey("type")) {
+            String value = (String)toUpdate.get("type");
+            if (value.contains("|")) {
+                return value.split("\\|");
+            }
+            else {
+                return new String[]{value};
+            }
+        }
+        else {
+            return getStringArray("type", new String[]{});
+        }
     }
 
     /**
@@ -117,13 +129,14 @@ public class WindowsRegistryInput extends Input {
 
     /**
      * Sets whether this input is enabled or disabled.
-     * You can also do this using the {@code Entity.disable} and 
-     * {@code Entity.enable} methods. 
-     * @see Entity#disable
-     * @see Entity#enable
+     * <p>
+     * <b>Note:</b> Using this method requires you to restart Splunk before this
+     * setting takes effect. To avoid restarting Splunk, use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
      *
-     * @param disabled {@code true} to disabled to script input,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable this input, {@code false} to 
+     * enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
@@ -158,25 +171,26 @@ public class WindowsRegistryInput extends Input {
     }
 
     /**
-     * Sets the process regular expression (regex) that is compared to process 
+     * Sets the regular expression (regex) that is compared to process 
      * names when including or excluding events for this Windows Registry input.
      * Changes are only collected if a process name matches this regex. 
      *
-     * @param proc The process regex.
+     * @param proc The process names regex.
      */
     public void setProc(String proc) {
         setCacheValue("proc", proc);
     }
-
+    
     /**
-     * Sets the regular expression (regex) that is compared to registry
+     * Sets the regular expressions (regexes) that are compared to registry
      * event types for this Windows Registry input. Only types that match
-     * this regex are monitored.
+     * at least one regex are monitored.
      *
-     * @param type The type regex.
+     * @param regexes An array of regex strings for event types.
      */
-    public void setType(String type) {
-        setCacheValue("type", type);
+    public void setType(String[] regexes) {
+        String val = Util.join("|", regexes);
+        setCacheValue("type", val);
     }
 
     /**
@@ -194,7 +208,7 @@ public class WindowsRegistryInput extends Input {
             args = Args.create(args).add("proc", getProc());
         }
         if (!args.containsKey("type")) {
-            args = Args.create(args).add("type", getType());
+            args = Args.create(args).add("type", Util.join("|", getType()));
         }
         super.update(args);
     }
@@ -215,7 +229,7 @@ public class WindowsRegistryInput extends Input {
             setCacheValue("proc", getProc());
         }
         if (toUpdate.size() > 0 && !toUpdate.containsKey("type")) {
-            setCacheValue("type", getType());
+            setCacheValue("type", Util.join("|", getType()));
         }
         super.update();
     }

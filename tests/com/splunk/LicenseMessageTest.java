@@ -19,23 +19,20 @@ package com.splunk;
 import java.util.Date;
 import org.junit.Test;
 
-public class LicenseMessageTest extends SplunkTestCase {
-    final static String assertRoot = "License Message assert: ";
-
-    @Test public void testLicenseMessage() throws Exception {
-        Service service = connect();
-
+public class LicenseMessageTest extends SDKTestCase {
+    @Test
+    public void testLicenseMessage() throws Exception {
         EntityCollection<LicenseMessage> licenseMessages =
             service.getLicenseMessages();
+        
         if (licenseMessages.values().size() == 0) {
-            System.out.println("WARNING: no license messages found");
+            System.out.println("WARNING: No license messages found to test.");
             return;
         }
 
-        // Test for sane data in licenses
         for (LicenseMessage licenseMessage: licenseMessages.values()) {
-            assertTrue(assertRoot + "#1",
-                licenseMessage.getCreationTime().after(new Date(0)));
+            // Test getters
+            assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
             licenseMessage.getCategory();
             licenseMessage.getDescription();
             licenseMessage.getPoolId();

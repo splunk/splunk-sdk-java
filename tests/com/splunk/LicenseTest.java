@@ -16,95 +16,100 @@
 
 package com.splunk;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.junit.Test;
 
-public class LicenseTest extends SplunkTestCase {
-    final static String assertRoot = "License assert: ";
+public class LicenseTest extends SDKTestCase {
+    // List of features, empirically created
+    private static final List<String> KNOWN_FEATURES = Arrays.asList(
+        "Auth", "FwdData", "RcvData", "DeployClient", "SplunkWeb",
+        "SyslogOutputProcessor", "SigningProcessor", "LocalSearch",
+        "DistSearch", "RcvSearch", "ScheduledSearch", "Alerting",
+        "DeployServer", "SigningProcessor", "SyslogOutputProcessor",
+        "AllowDuplicateKeys", "CanBeRemoteMaster");
 
-    @Test public void testLicense() throws Exception {
-        Service service = connect();
+    // List of groupids, empirically created
+    private static final List<String> KNOWN_GROUP_IDS = Arrays.asList(
+        "Forwarder", "Enterprise", "Free", "Trial");
 
+    // List of statuses, empirically created
+    private static final List<String> KNOWN_STATUSES = Arrays.asList("VALID", "EXPIRED");
+
+    // List of types, empirically created
+    private static final List<String> KNOWN_TYPES = Arrays.asList(
+        "forwarder", "enterprise", "free", "download-trial");
+    
+    @Test
+    public void testStacks() throws Exception {
+        EntityCollection<LicenseStack> stacks = service.getLicenseStacks();
+        for (LicenseStack stack : stacks.values()) {
+            assertTrue(stack.getQuota() >= 0);
+            assertTrue(!stack.getType().isEmpty());
+            assertTrue(!stack.getLabel().isEmpty());
+        }
+    }
+    
+    @Test
+    public void testDefaultLicensesHaveKnownProperties() throws Exception {
         EntityCollection<License> licenses = service.getLicenses();
-
-        // List of features, empirically created
-        List<String> features = Arrays.asList(
-            "Auth", "FwdData", "RcvData", "DeployClient", "SplunkWeb",
-            "SyslogOutputProcessor", "SigningProcessor", "LocalSearch",
-            "DistSearch", "RcvSearch", "ScheduledSearch", "Alerting",
-            "DeployServer", "SigningProcessor", "SyslogOutputProcessor",
-            "AllowDuplicateKeys", "CanBeRemoteMaster");
-
-        // List of groupids, empirically created
-        List<String> groups = Arrays.asList(
-            "Forwarder", "Enterprise", "Free", "Trial");
-
-        // List of statuses, empirically created
-        List<String> stati = Arrays.asList("VALID", "EXPIRED");
-
-        // List of types, empirically created
-        List<String> types = Arrays.asList(
-            "forwarder", "enterprise", "free", "download-trial");
 
         // Test for sane data in licenses
         for (License license: licenses.values()) {
-            assertTrue(assertRoot + "#1",
-                license.getCreationTime().after(new Date(0)));
-            assertTrue(assertRoot + "#2",
-                license.getExpirationTime().after(new Date(0)));
-            assertTrue(assertRoot + "#3", license.getQuota() > 0);
-            assertEquals(assertRoot + "#4", 64,
-                license.getLicenseHash().length());
+            assertTrue(license.getCreationTime().after(new Date(0)));
+            assertTrue(license.getExpirationTime().after(new Date(0)));
+            assertTrue(license.getQuota() > 0);
+            assertEquals(64, license.getLicenseHash().length());
             for (String feature: license.getFeatures()) {
-                assertTrue(assertRoot + "#5", features.contains(feature));
+                assertTrue(KNOWN_FEATURES.contains(feature));
             }
-            assertTrue(assertRoot + "#6", groups.contains(license.getGroupId()));
-            assertTrue(assertRoot + "#7", license.getLabel().length() > 0);
-            assertNotSame(assertRoot + "#8", 0, license.getMaxViolations());
-            assertTrue(assertRoot + "#9", stati.contains(license.getStatus()));
-            assertTrue(assertRoot + "#10", types.contains(license.getType()));
+            assertTrue(KNOWN_GROUP_IDS.contains(license.getGroupId()));
+            assertTrue(license.getLabel().length() > 0);
+            assertNotSame(0, license.getMaxViolations());
+            assertTrue(KNOWN_STATUSES.contains(license.getStatus()));
+            assertTrue(KNOWN_TYPES.contains(license.getType()));
             license.getSourceTypes();
             license.getStackId();
             license.getWindowPeriod();
         }
+    }
 
+    @Test
+    public void testCreateDelete() throws Exception {
+        EntityCollection<License> licenses = service.getLicenses();
+        
         if (licenses.containsKey("sdk-test")) {
             licenses.remove("sdk-test");
         }
-        assertFalse(assertRoot + "#11", licenses.containsKey("sdk-test"));
+        assertFalse(licenses.containsKey("sdk-test"));
 
         String licenseKey = "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101";
         if (licenses.containsKey(licenseKey)) {
             licenses.remove(licenseKey);
         }
         assertFalse(licenses.containsKey(licenseKey));
-
-        // Create
-        FileReader fileReader;
-        char [] buffer = new char[2048];
+        
+        // Read test license from disk
+        byte[] licensePayload = new byte[2048];
+        InputStream licenseStream = getClass().getResourceAsStream("splunk.license");
+        assertNotNull("Could not find splunk.license.", licenseStream);
         try {
-            File file = new File(
-                "tests" + File.separator + "com" + File.separator +
-                "splunk" + File.separator + "splunk.license");
-            fileReader = new FileReader(file.getAbsolutePath());
+            licenseStream.read(licensePayload);
         }
-        catch (FileNotFoundException e) {
-            System.out.println("WARNING: can't find test splunk.license file");
-            return;
+        finally {
+            licenseStream.close();
         }
-
-        BufferedReader reader = new BufferedReader(fileReader);
-        reader.read(buffer);
-        Args args = new Args("payload", new String(buffer));
-        licenses.create("sdk-test", args);
-        assertTrue(assertRoot + "#12", licenses.containsKey(licenseKey));
+        
+        // Create
+        licenses.create("sdk-test", new Args("payload", new String(licensePayload)));
+        
+        // Remove
+        assertTrue(licenses.containsKey(licenseKey));
         licenses.remove(licenseKey);
-        assertFalse(assertRoot + "#13", licenses.containsKey(licenseKey));
+        assertFalse(licenses.containsKey(licenseKey));
+        
+        clearRestartMessage();
     }
 }

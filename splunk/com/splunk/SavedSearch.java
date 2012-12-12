@@ -28,7 +28,7 @@ public class SavedSearch extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The resource path.
+     * @param path The saved searches endpoint.
      */
     SavedSearch(Service service, String path) {
         super(service, path);
@@ -66,7 +66,15 @@ public class SavedSearch extends Entity {
     /**
      * Runs the saved search using dispatch arguments.
      *
-     * @param args Dispatch arguments.
+     * @param args Dispatch arguments: <ul>
+     * <li>"dispatch.now": A time string that is used to dispatch the search as 
+     * though the specified time were the current time.</li>
+     * <li>"dispatch.*": Overwrites the value of the search field specified in 
+     * "*".</li>
+     * <li>"trigger_actions": A Boolean that indicates whether to trigger alert 
+     * actions.</li>
+     * <li>"force_dispatch": A Boolean that indicates whether to start a new 
+     * search if another instance of this search is already running.</li></ul>
      * @return The search job.
      */
     public Job dispatch(Map args) throws InterruptedException {
@@ -84,6 +92,18 @@ public class SavedSearch extends Entity {
         }
 
         return job;
+    }
+    
+    /**
+     * Runs the saved search using dispatch arguments.
+     *
+     * @param args Dispatch arguments (see {@link SavedSearchDispatchArgs}).
+     * @return The search job.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public Job dispatch(SavedSearchDispatchArgs args) throws InterruptedException {
+        return dispatch((Map<String, Object>) args);
     }
 
     /**
@@ -146,11 +166,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @return The search command (or pipeline).
      */
@@ -375,7 +395,6 @@ public class SavedSearch extends Entity {
     /**
      * Indicates whether columns should be sorted from least wide to most wide,
      * left to right.
-     *
      * This value is only used when {@code ActionEmailFormat} is "plain".
      * @see #getActionEmailFormat
      *
@@ -407,7 +426,6 @@ public class SavedSearch extends Entity {
     /**
      * Returns the host name used in the web link (URL) that is sent in
      * populate-lookup alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @return The hostname used in the URL.
@@ -533,7 +551,7 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Returns the file name of the script to call.
+     * Returns the filename of the script to call.
      *
      * @return The filename of the script.
      */
@@ -608,11 +626,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @return The search command (or pipeline).
      */
@@ -884,28 +902,40 @@ public class SavedSearch extends Entity {
      *
      * @return The maximum amount of time, in seconds.
      */
-    public String getDispatchMaxTime() {
-        return getString("dispatch.max_time");
+    public int getDispatchMaxTime() {
+        return getInteger("dispatch.max_time");
     }
-
+    
     /**
      * Returns how frequently Splunk runs the MapReduce reduce phase
      * on accumulated map values.
      *
      * @return The reduce frequency.
      */
-    public int getDispatchReduceFreq() {
+    public int getDispatchReduceFrequency() {
         return getInteger("dispatch.reduce_freq");
     }
 
     /**
      * Indicates whether to back fill the real-time window for this search.
-     * This attribute is only valid for real-time searches.
+     * This attribute only applies to real-time searches.
+     *
+     * @return {@code true} if Splunk back fills the real-time window,
+     * {@code false} if not.
+     * @deprecated Use {@link #getDispatchRealTimeBackfill()} instead.
+     */
+    public boolean getDispatchRtBackfill() {
+        return getDispatchRealTimeBackfill();
+    }
+    
+    /**
+     * Indicates whether to back fill the real-time window for this search.
+     * This attribute only applies to real-time searches.
      *
      * @return {@code true} if Splunk back fills the real-time window,
      * {@code false} if not.
      */
-    public boolean getDispatchRtBackfill() {
+    public boolean getDispatchRealTimeBackfill() {
         return getBoolean("dispatch.rt_backfill", false);
     }
 
@@ -977,7 +1007,7 @@ public class SavedSearch extends Entity {
      * @return The qualified search.
      */
     public String getQualifiedSearch() {
-        return getString("qualfiedSearch", null);
+        return getString("qualifiedSearch", null);
     }
 
     /**
@@ -1033,9 +1063,9 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Returns the search expression for this saved search.
+     * Returns the search query for this saved search.
      *
-     * @return The search expression.
+     * @return The search query.
      */
     public String getSearch() {
         return getString("search");
@@ -1169,7 +1199,7 @@ public class SavedSearch extends Entity {
      * Sets the carbon copy (CC) email address to use for email alerts.
      * @see #isActionEmail
      *
-     * @param cc The carbon copy email address.
+     * @param cc The CC email address.
      */
     public void setActionEmailCc(String cc) {
         setCacheValue("action.email.cc", cc);
@@ -1177,11 +1207,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Returns the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1210,7 +1240,6 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the host name used in the web link (URL) to send in email alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1405,7 +1434,6 @@ public class SavedSearch extends Entity {
     /**
      * Sets whether columns should be sorted from least wide to most wide,
      * left to right.
-     *
      * This value is only used when {@code ActionEmailFormat} is "plain".
      * @see #getActionEmailFormat
      *
@@ -1437,7 +1465,6 @@ public class SavedSearch extends Entity {
     /**
      * Sets the host name used in the web link (URL) to send in populate-lookup
      * alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1492,11 +1519,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1506,7 +1533,6 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the host name to use in the web link (URL) to send in RSS alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1560,11 +1586,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1585,7 +1611,6 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the host name used in the web link (URL) to send in script alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1649,11 +1674,11 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets the search command (or pipeline) that runs the action.
-     *
+     * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in $. For example, use $name$ to reference the saved
-     * search name, or use $search$ to reference the search query.
+     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
      */
@@ -1664,7 +1689,6 @@ public class SavedSearch extends Entity {
     /**
      * Sets the host name used in the web link (URL) to send in summary-index
      * alerts.
-     *
      * Valid forms are "hostname" and "protocol://hostname:port".
      *
      * @param hostname The host name to use in the URL.
@@ -1736,15 +1760,6 @@ public class SavedSearch extends Entity {
      */
     public void setActions(String actions) {
         setCacheValue("actions", actions);
-    }
-
-    /**
-     * Sets the wildcard argument that accepts any action.
-     *
-     * @param action The wildcard argument.
-     */
-    public void setActionWildcard(String action) {
-        setCacheValue("action.*", action);
     }
 
     /**
@@ -1877,17 +1892,6 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Sets the wildcard argument that accepts any saved search template
-     * argument, such as "args.username=foobar" when the search is {@code search
-     * $username$}.
-     *
-     * @param wildcard The wildcard argument.
-     */
-    public void setArgsWildcard(String wildcard) {
-        setCacheValue("args.*", wildcard);
-    }
-
-    /**
      * Sets the cron schedule for running this saved search.
      *
      * @param cronSchedule The schedule, as a valid cron-style string.
@@ -1920,8 +1924,18 @@ public class SavedSearch extends Entity {
      * Sets the maximum number of timeline buckets.
      *
      * @param buckets The maximum number of timeline buckets.
+     * @deprecated Use {@link #setDispatchBuckets(int)} instead.
      */
     public void setDispatchBuckets(String buckets) {
+        setDispatchBuckets(Integer.parseInt(buckets));
+    }
+    
+    /**
+     * Sets the maximum number of timeline buckets.
+     *
+     * @param buckets The maximum number of timeline buckets.
+     */
+    public void setDispatchBuckets(int buckets) {
         setCacheValue("dispatch.buckets", buckets);
     }
 
@@ -1986,7 +2000,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Sets whether to back fill the real-time window for this search.
-     * This attribute is only valid for real-time searches.
+     * This attribute only applies to real-time searches.
      *
      * @param backfill {@code true} if Splunk back fills the real-time window,
      * {@code false} if not.
@@ -2026,15 +2040,6 @@ public class SavedSearch extends Entity {
      */
     public void setDispatchTtl(String format) {
         setCacheValue("dispatch.ttl", format);
-    }
-
-    /**
-     * Sets the wildcard argument that accepts any dispatch-related argument.
-     *
-     * @param wildcard The wildcard argument.
-     */
-    public void setDispatchWildcard(String wildcard) {
-        setCacheValue("dispatch.*", wildcard);
     }
 
     /**
@@ -2126,8 +2131,23 @@ public class SavedSearch extends Entity {
      *
      * @param restart {@code true} to restart a real-time search, {@code false}
      * if not.
+     * @deprecated Use {@link #setRestartOnSearchPeerAdd(boolean)} instead.
      */
     public void setRestartOnSearchpeerAdd(boolean restart) {
+        setRestartOnSearchPeerAdd(restart);
+    }
+    
+    /**
+     * Sets whether a real-time search managed by the scheduler is
+     * restarted when a search peer becomes available for this saved search.
+     * <p>
+     * <b>Note:</b> The peer can be one that is newly added or one that has
+     * become available after being down.
+     *
+     * @param restart {@code true} to restart a real-time search, {@code false}
+     * if not.
+     */
+    public void setRestartOnSearchPeerAdd(boolean restart) {
         setCacheValue("restart_on_searchpeer_add", restart);
     }
 
@@ -2146,9 +2166,9 @@ public class SavedSearch extends Entity {
     }
 
     /**
-     * Sets the search expression for this saved search.
+     * Sets the search query for this saved search.
      *
-     * @param search The search expression.
+     * @param search The search query.
      */
     public void setSearch(String search) {
         setCacheValue("search", search);
@@ -2176,6 +2196,7 @@ public class SavedSearch extends Entity {
         if (!args.containsKey("search")) {
             args = Args.create(args).add("search", getSearch());
         }
+
         super.update(args);
     }
 

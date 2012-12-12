@@ -33,6 +33,8 @@ import java.util.Map.Entry;
  * ({@code http} or {@code https}).
  */
 public class HttpService {
+    // For debugging purposes
+    private static final boolean VERBOSE_REQUESTS = false;
 
     private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
 
@@ -54,7 +56,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/0.1");
+        put("User-Agent", "splunk-sdk-java/1.0");
         put("Accept", "*/*");
     }};
 
@@ -88,8 +90,8 @@ public class HttpService {
      *
      * @param host The host name of the service.
      * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service
-     *        ({@code http} or {@code https}).
+     * @param scheme Scheme for accessing the service ({@code http} or 
+     * {@code https}).
      */
     public HttpService(String host, int port, String scheme) {
         this.host = host;
@@ -172,14 +174,14 @@ public class HttpService {
      * Constructs a fully-qualified URL for this service using a given path.
      *
      * @param path The path to qualify.
-     * @return Fully-qualified URL.
+     * @return The fully-qualified URL for the service.
      */
     public URL getUrl(String path) {
         try {
             return new URL(getPrefix() + path);
         }
         catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -267,7 +269,7 @@ public class HttpService {
             cn = (HttpURLConnection)url.openConnection();
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
         if(cn instanceof HttpsURLConnection) {
             ((HttpsURLConnection)cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
@@ -282,7 +284,7 @@ public class HttpService {
             cn.setRequestMethod(method);
         }
         catch (ProtocolException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         // Add headers from request message
@@ -303,23 +305,25 @@ public class HttpService {
             if (content != null) {
                 cn.setDoOutput(true);
                 OutputStream stream = cn.getOutputStream();
-                OutputStreamWriter writer = new OutputStreamWriter(stream);
+                OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF8");
                 writer.write((String)content);
                 writer.close();
             }
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
-        // System.out.format("%s %s => ", method, url.toString());
+        if (VERBOSE_REQUESTS) {
+            System.out.format("%s %s => ", method, url.toString());
+        }
 
         // Execute the request
         try {
             cn.connect();
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         int status;
@@ -327,7 +331,7 @@ public class HttpService {
             status = cn.getResponseCode();
         }
         catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         InputStream input = null;
@@ -340,7 +344,12 @@ public class HttpService {
 
         ResponseMessage response = new ResponseMessage(status, input);
 
-        // System.out.format("%d\n", status);
+        if (VERBOSE_REQUESTS) {
+            System.out.format("%d\n", status);
+            if (method.equals("POST")) {
+                System.out.println("    " + request.getContent());
+            }
+        }
 
         if (status >= 400)
             throw HttpException.create(response);

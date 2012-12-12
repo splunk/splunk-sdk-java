@@ -1,0 +1,72 @@
+# TODO: Make Date version.
+# TODO: Improve docs: "respectively"?
+earliest_time
+EarliestTime
+String
+Specifies the earliest time in the time range to search. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The earliest time. 
+===
+f
+FieldList
+String[]-MULTIPLE
+Sets a list of fields to return for the event set. 
+-
+A list of fields.
+===
+histogram
+Histogram
+boolean
+Indicates whether to add histogram data to the summary output. 
+-
+{@code true} to add histogram data, {@code false} if not.
+===
+# TODO: Make Date version.
+# TODO: Improve docs: "respectively"?
+latest_time
+LatestTime
+String
+Specifies the latest time in the time range to search. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The latest time. 
+===
+min_freq
+MinimumFrequency
+double
+Sets the fraction of results for each key that this key must occur in to be displayed.
+-
+The frequency, as a fraction (a value between 0 and 1).
+===
+# TODO: Improve docs: The description and default value contradict each other.
+output_time_format
+OutputTimeFormat
+String
+Sets a UTC time format. 
+-
+A UTC time format.
+===
+search
+Search
+String
+Sets a search query to filter the response. The response matches field values against the search query. For example, "foo" matches any object that has "foo" as a substring in a field, and "field_name=field_value" restricts the match to a single field.
+-
+A search substring.
+===
+# TODO: Improve docs: The default value specified does not match that of the description.
+#       (It is missing a trailing S). The description version is probably right.
+# TODO: Improve docs: Are you sure this is the default? This time format lacks time zone and millisecond resolution.
+# TODO: Improve docs: There is no {start,end}_time. Perhaps {earliest,latest}_time was intended?
+time_format
+TimeFormat
+String
+Specifies an expression to convert a formatted time string from {start,end}_time into UTC seconds. The default format is "%m/%d/%Y:%H:%M:%S". 
+-
+The time format.
+===
+top_count
+TopCount
+int
+Sets for each key how many of the most frequent items to return.
+-
+The number of items to return.
+===

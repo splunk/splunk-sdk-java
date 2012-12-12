@@ -35,7 +35,7 @@ import java.util.Map;
  * by constructing the {@code Service} instance using the {@code connect}
  * method, which both creates and authenticates the instance.
  */
-public class Service extends HttpService {
+public class Service extends BaseService {
     /** The current app context. */
     protected String app = null;
 
@@ -109,14 +109,25 @@ public class Service extends HttpService {
      *
      * @param args The {@code ServiceArgs} to initialize the service.
      */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    @SuppressWarnings("deprecation")
     public Service(ServiceArgs args) {
         super();
-        this.app = args.app;
-        this.host = args.host == null ? DEFAULT_HOST : args.host;
-        this.owner = args.owner;
-        this.port = args.port == null ? DEFAULT_PORT : args.port;
-        this.scheme = args.scheme == null ? DEFAULT_SCHEME : args.scheme;
-        this.token = args.token;
+        // NOTE: Must read the deprecated fields for backward compatibility.
+        //       (Consider the case where the fields are initialized directly,
+        //        rather than using the new setters.)
+        // NOTE: Must also read the underlying dictionary for forward compatibility.
+        //       (Consider the case where the user calls Map.put() directly,
+        //        rather than using the new setters.)
+        this.app = Args.<String>get(args,    "app",    args.app != null    ? args.app    : null);
+        this.host = Args.<String>get(args,   "host",   args.host != null   ? args.host   : DEFAULT_HOST);
+        this.owner = Args.<String>get(args,  "owner",  args.owner != null  ? args.owner  : null);
+        this.port = Args.<Integer>get(args,  "port",   args.port != null   ? args.port   : DEFAULT_PORT);
+        this.scheme = Args.<String>get(args, "scheme", args.scheme != null ? args.scheme : DEFAULT_SCHEME);
+        this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
+        this.username = (String)args.get("username");
+        this.password = (String)args.get("password");
     }
 
     /**
@@ -132,6 +143,8 @@ public class Service extends HttpService {
         this.port = Args.<Integer>get(args, "port", DEFAULT_PORT);
         this.scheme = Args.<String>get(args, "scheme", DEFAULT_SCHEME);
         this.token = Args.<String>get(args, "token", null);
+        this.username = (String)args.get("username");
+        this.password = (String)args.get("password");
     }
 
     /**
@@ -145,9 +158,7 @@ public class Service extends HttpService {
     public static Service connect(Map<String, Object> args) {
         Service service = new Service(args);
         if (args.containsKey("username")) {
-            String username = Args.get(args, "username", null);
-            String password = Args.get(args, "password", null);
-            service.login(username, password);
+            service.login();
         }
         return service;
     }
@@ -168,13 +179,32 @@ public class Service extends HttpService {
      * endpoint, which streams results back in an input stream.
      *
      * @param search The search query to run.
-     * @param args Additional search arguments.
+     * @param args Additional search arguments. 
+     * For a list of possible parameters, see
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ#savedsearchparams" 
+     * target="_blank">Saved search parameters</a> on 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ" 
+     * target="_blank">dev.splunk.com</a>. 
      * @return The {@code InputStream} object that contains the search results.
      */
     public InputStream export(String search, Map args) {
         args = Args.create(args).add("search", search);
         ResponseMessage response = get("search/jobs/export", args);
         return response.getContent();
+    }
+    
+    /**
+     * Runs a search with arguments using the {@code search/jobs/export}
+     * endpoint, which streams results back in an input stream.
+     *
+     * @param search The search query to run.
+     * @param args Additional search arguments (see {@code JobExportArgs}).
+     * @return The {@code InputStream} object that contains the search results.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public InputStream export(String search, JobExportArgs args) {
+        return export(search, (Map<String, Object>) args);
     }
 
     /**
@@ -271,14 +301,14 @@ public class Service extends HttpService {
      * @return The configurations collection.
      */
     public ConfCollection getConfs() {
-        return new ConfCollection(this);
+        return getConfs(null);
     }
 
     /**
      * Returns the collection of configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return The configurations collection.
      */
     public ConfCollection getConfs(Args args) {
@@ -310,15 +340,14 @@ public class Service extends HttpService {
      * @return The configuration of deployment servers.
      */
     public EntityCollection<DeploymentServer> getDeploymentServers() {
-        return new EntityCollection<DeploymentServer>(
-            this, "deployment/server", DeploymentServer.class);
+        return getDeploymentServers(null);
     }
 
     /**
-     * Returns the configuration of all deployment servers.
+     * Returns the collection of deployment servers.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return The configuration of deployment servers.
      */
     public EntityCollection<DeploymentServer> getDeploymentServers(Args args) {
@@ -332,19 +361,18 @@ public class Service extends HttpService {
      * @return A collection of class configurations.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(){
-        return new EntityCollection<DeploymentServerClass>(
-            this, "deployment/serverclass", DeploymentServerClass.class);
+        return getDeploymentServerClasses(null);
     }
 
     /**
      * Returns a collection of class configurations for a deployment server.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of server class configurations.
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(
-            Args args){
+            Args args) {
         return new EntityCollection<DeploymentServerClass>(
             this, "deployment/serverclass", DeploymentServerClass.class, args);
     }
@@ -355,15 +383,14 @@ public class Service extends HttpService {
      * @return A collection of multi-tenant configurations.
      */
     public EntityCollection<DeploymentTenant> getDeploymentTenants() {
-        return new EntityCollection<DeploymentTenant>(
-            this, "deployment/tenants", DeploymentTenant.class);
+        return getDeploymentTenants(null);
     }
 
     /**
      * Returns a collection of multi-tenant configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of multi-tenant configurations.
      */
     public EntityCollection<DeploymentTenant> getDeploymentTenants(Args args) {
@@ -389,8 +416,7 @@ public class Service extends HttpService {
      * @return A collection of search peers.
      */
     public EntityCollection<DistributedPeer> getDistributedPeers() {
-        return new EntityCollection<DistributedPeer>(
-            this, "search/distributed/peers", DistributedPeer.class);
+        return getDistributedPeers(null);
     }
 
     /**
@@ -399,8 +425,8 @@ public class Service extends HttpService {
      * The Splunk server where the search originates is referred to as the
      * <i>search head</i>.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search peers.
      */
     public EntityCollection<DistributedPeer> getDistributedPeers(Args args) {
@@ -415,14 +441,14 @@ public class Service extends HttpService {
      * @return A collection of saved event types.
      */
     public EventTypeCollection getEventTypes() {
-        return new EventTypeCollection(this);
+        return getEventTypes(null);
     }
 
     /**
      * Returns a collection of saved event types.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of saved event types.
      */
     public EventTypeCollection getEventTypes(Args args) {
@@ -435,17 +461,17 @@ public class Service extends HttpService {
      * @return A collection of fired alerts.
      */
     public FiredAlertGroupCollection getFiredAlertGroups() {
-        return new FiredAlertGroupCollection(this);
+        return getFiredAlertsGroups(null);
     }
 
     /**
      * Returns a collection of alerts that have been fired by the service.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of fired alerts.
      */
-    public FiredAlertGroupCollection getFiredAlerts(Args args) {
+    public FiredAlertGroupCollection getFiredAlertsGroups(Args args) {
         return new FiredAlertGroupCollection(this, args);
     }
 
@@ -454,20 +480,32 @@ public class Service extends HttpService {
      *
      * @return A collection of indexes.
      */
-    public EntityCollection<Index> getIndexes() {
-        return new EntityCollection<Index>(this, "data/indexes", Index.class);
+    public IndexCollection getIndexes() {
+        return getIndexes((IndexCollectionArgs)null);
+    }
+    
+    /**
+     * Returns a collection of Splunk indexes.
+     *
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link IndexCollectionArgs}.
+     * @return A collection of indexes.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public IndexCollection getIndexes(IndexCollectionArgs args) {
+        return getIndexes((Args)args);
     }
 
     /**
      * Returns a collection of Splunk indexes.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link IndexCollectionArgs}.
      * @return A collection of indexes.
      */
-    public EntityCollection<Index> getIndexes(Args args) {
-        return new EntityCollection<Index>(
-            this, "data/indexes", Index.class, args);
+    public IndexCollection getIndexes(Args args) {
+        return new IndexCollection(this, args);
     }
 
     /**
@@ -485,14 +523,14 @@ public class Service extends HttpService {
      * @return A collection of inputs.
      */
     public InputCollection getInputs() {
-        return new InputCollection(this);
+        return getInputs(null);
     }
 
     /**
      * Returns a collection of configured inputs.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of inputs.
      */
     public InputCollection getInputs(Args args) {
@@ -505,14 +543,27 @@ public class Service extends HttpService {
      * @return A collection of search jobs.
      */
     public JobCollection getJobs() {
-        return new JobCollection(this);
+        return getJobs((CollectionArgs)null);
+    }
+    
+    /**
+     * Returns a collection of current search jobs.
+     *
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
+     * @return A collection of search jobs.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public JobCollection getJobs(CollectionArgs args) {
+        return getJobs((Args)args);
     }
 
     /**
      * Returns a collection of current search jobs.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search jobs.
      */
     public JobCollection getJobs(Args args) {
@@ -525,15 +576,14 @@ public class Service extends HttpService {
      * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups() {
-        return new EntityCollection<LicenseGroup>(
-            this, "licenser/groups", LicenseGroup.class);
+        return getLicenseGroups(null);
     }
 
     /**
      * Returns a collection of license group configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups(Args args) {
@@ -547,15 +597,14 @@ public class Service extends HttpService {
      * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages() {
-        return new EntityCollection<LicenseMessage>(
-            this, "licenser/messages", LicenseMessage.class);
+        return getLicenseMessages(null);
     }
 
     /**
      * Returns a collection of messages from the licenser.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages(Args args) {
@@ -580,14 +629,14 @@ public class Service extends HttpService {
      * @return A collection of licenser pool configurations.
      */
     public LicensePoolCollection getLicensePools() {
-        return new LicensePoolCollection(this);
+        return getLicensePools(null);
     }
 
     /**
      * Returns a collection of licenser pool configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser pool configurations.
      */
     public LicensePoolCollection getLicensePools(Args args) {
@@ -600,15 +649,14 @@ public class Service extends HttpService {
      * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves() {
-        return new EntityCollection<LicenseSlave>(
-            this, "licenser/slaves", LicenseSlave.class);
+        return getLicenseSlaves(null);
     }
 
     /**
      * Returns a collection of slaves reporting to this license master.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves(Args args) {
@@ -622,15 +670,14 @@ public class Service extends HttpService {
      * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks() {
-        return new EntityCollection<LicenseStack>(
-            this, "licenser/stacks", LicenseStack.class);
+        return getLicenseStacks(null);
     }
 
     /**
      * Returns a collection of license stack configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks(Args args) {
@@ -644,15 +691,14 @@ public class Service extends HttpService {
      * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses() {
-        return new EntityCollection<License>(
-            this, "licenser/licenses", License.class);
+        return getLicenses(null);
     }
 
     /**
      * Returns a collection of licenses for this service.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses(Args args) {
@@ -666,15 +712,14 @@ public class Service extends HttpService {
      * @return A collection of logging categories.
      */
     public EntityCollection<Logger> getLoggers() {
-        return new EntityCollection<Logger>(
-            this, "server/logger", Logger.class);
+        return getLoggers(null);
     }
 
     /**
      * Returns a collection of service logging categories and their status.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of logging categories.
      */
     public EntityCollection<Logger> getLoggers(Args args) {
@@ -688,18 +733,39 @@ public class Service extends HttpService {
      * @return A collection of system messages.
      */
     public MessageCollection getMessages() {
-        return new MessageCollection(this);
+        return getMessages(null);
     }
 
     /**
      * Returns a collection of system messages.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of system messages.
      */
     public MessageCollection getMessages(Args args) {
         return new MessageCollection(this, args);
+    }
+    
+    /**
+     * Returns a collection of modular inputs.
+     *
+     * @return A collection of modular inputs.
+     */
+    public ResourceCollection<ModularInputKind> getModularInputKinds() {
+        return getModularInputKinds(null);
+    }
+
+    /**
+     * Returns a collection of modular inputs.
+     *
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
+     * @return A collection of modular inputs.
+     */
+    public ResourceCollection<ModularInputKind> getModularInputKinds(Args args) {
+        return new ResourceCollection<ModularInputKind>(
+                this, "data/modular-inputs", ModularInputKind.class, args);
     }
 
     /**
@@ -717,15 +783,14 @@ public class Service extends HttpService {
      * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups() {
-        return new EntityCollection<OutputGroup>(
-            this, "data/outputs/tcp/group", OutputGroup.class);
+        return getOutputGroups(null);
     }
 
     /**
      * Returns a collection of output group configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups(Args args) {
@@ -739,15 +804,14 @@ public class Service extends HttpService {
      * @return A collection of data-forwarding configurations.
      */
     public EntityCollection<OutputServer> getOutputServers() {
-        return new EntityCollection<OutputServer>(
-            this, "data/outputs/tcp/server", OutputServer.class);
+        return getOutputServers(null);
     }
 
     /**
      * Returns a collection of data-forwarding configurations.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of data-forwarding configurations.
      */
     public EntityCollection<OutputServer> getOutputServers(Args args) {
@@ -762,16 +826,15 @@ public class Service extends HttpService {
      * @return A collection of syslog forwarders.
      */
     public EntityCollection<OutputSyslog> getOutputSyslogs() {
-        return new EntityCollection<OutputSyslog>(
-            this, "data/outputs/tcp/syslog", OutputSyslog.class);
+        return getOutputSyslogs(null);
     }
 
     /**
      * Returns a collection of configurations for forwarding data in standard
      * syslog format.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of syslog forwarders.
      */
     public EntityCollection<OutputSyslog> getOutputSyslogs(Args args) {
@@ -795,15 +858,15 @@ public class Service extends HttpService {
      * @return A collection of passwords.
      */
     public PasswordCollection getPasswords() {
-        return new PasswordCollection(this);
+        return getPasswords(null);
     }
 
     /**
      * Returns a collection of passwords. This collection is used for managing
      * secure credentials.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of passwords.
      */
     public PasswordCollection getPasswords(Args args) {
@@ -825,15 +888,14 @@ public class Service extends HttpService {
      * @return A collection of user roles.
      */
     public EntityCollection<Role> getRoles() {
-        return new EntityCollection<Role>(
-            this, "authentication/roles", Role.class);
+        return getRoles(null);
     }
 
     /**
      * Returns a collection of Splunk user roles.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of user roles.
      */
     public EntityCollection<Role> getRoles(Args args) {
@@ -847,14 +909,27 @@ public class Service extends HttpService {
      * @return A collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches() {
-        return new SavedSearchCollection(this);
+        return getSavedSearches((SavedSearchCollectionArgs)null);
+    }
+    
+    /**
+     * Returns a collection of saved searches.
+     *
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link SavedSearchCollectionArgs}.
+     * @return A collection of saved searches.
+     */
+    // NOTE: This overload exists primarily to provide better documentation
+    //       for the "args" parameter.
+    public SavedSearchCollection getSavedSearches(SavedSearchCollectionArgs args) {
+        return getSavedSearches((Args)args);
     }
 
     /**
      * Returns a collection of saved searches.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of saved searches.
      */
     public SavedSearchCollection getSavedSearches(Args args) {
@@ -886,8 +961,7 @@ public class Service extends HttpService {
      * @return A collection of in-progress oneshot uploads
      */
     public EntityCollection<Upload> getUploads() {
-        return new EntityCollection<Upload>(
-            this, "data/inputs/oneshot", Upload.class);
+        return getUploads(null);
     }
 
     /**
@@ -897,8 +971,7 @@ public class Service extends HttpService {
      * optional arguments for this endpoint.
      * @return A collection of in-progress oneshot uploads
      */
-    public EntityCollection<Upload>
-    getUploads(Args namespace) {
+    public EntityCollection<Upload> getUploads(Args namespace) {
         return new EntityCollection<Upload>(
             this, "data/inputs/oneshot", Upload.class, namespace);
     }
@@ -919,14 +992,14 @@ public class Service extends HttpService {
      * @return A collection of users.
      */
     public UserCollection getUsers() {
-        return new UserCollection(this);
+        return getUsers(null);
     }
 
     /**
      * Returns a collection of Splunk users.
      *
-     * @param args Optional arguments, such as "count" and "offset" for 
-     * pagination.
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of users.
      */
     public UserCollection getUsers(Args args) {
@@ -934,7 +1007,24 @@ public class Service extends HttpService {
     }
 
     /**
-     * Authenticates the {@code Service} instance with a username and password.
+     * Authenticates the {@code Service} instance with the username and password
+     * that were specified when the instance was created.
+     * 
+     * @return The current {@code Service} instance.
+     */
+    public Service login() {
+        if (this.username == null || this.password == null) {
+            throw new IllegalStateException("Missing username or password.");
+        }
+        else {
+            return login(this.username, this.password);
+        }
+    }
+    
+    /**
+     * Authenticates the {@code Service} instance with a specified username and 
+     * password. Note that these values override any previously-set values for 
+     * username and password.
      *
      * @param username The Splunk account username.
      * @param password The password for the username.
@@ -976,35 +1066,53 @@ public class Service extends HttpService {
      * @param query The search query.
      * @return The search results.
      */
-    public InputStream oneshot(String query) {
-       return oneshot(query, null, null);
+    public InputStream oneshotSearch(String query) {
+        return oneshotSearch(query, null);
     }
 
     /**
      * Creates a oneshot synchronous search using search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments.
+     * @param args The search arguments:<ul>
+     * <li>"output_mode": Specifies the output format of the results (XML, JSON,
+     * or CSV).</li>
+     * <li>"earliest_time": Specifies the earliest time in the time range to 
+     * search. The time string can be a UTC time (with fractional seconds), a 
+     * relative time specifier (to now), or a formatted time string.</li>
+     * <li>"latest_time": Specifies the latest time in the time range to search.
+     * The time string can be a UTC time (with fractional seconds), a relative 
+     * time specifier (to now), or a formatted time string.</li>
+     * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
      */
-    public InputStream oneshot(String query, Map inputArgs) {
-        return oneshot(query, inputArgs, null);
-    }
-
-    /**
-     * Creates a oneshot synchronous search using search arguments.
-     *
-     * @param query The search query.
-     * @param inputArgs The search arguments.
-     * @param outputArgs The output qualifier arguments.
-     * @return The search results.
-     */
-    public InputStream oneshot(String query, Map inputArgs, Map outputArgs) {
-        inputArgs = Args.create(inputArgs);
-        inputArgs.put("search", query);
-        inputArgs.put("exec_mode", "oneshot");
-        ResponseMessage response = post("search/jobs", inputArgs);
+    public InputStream oneshotSearch(String query, Map args) {
+        args = Args.create(args);
+        args.put("search", query);
+        args.put("exec_mode", "oneshot");
+        
+        ResponseMessage response = post("search/jobs", args);
         return response.getContent();
+    }
+
+    /**
+     * Creates a oneshot synchronous search using search arguments.
+     *
+     * @param query The search query.
+     * @param args The search arguments:<ul>
+     * <li>"output_mode": Specifies the output format of the results (XML, JSON,
+     * or CSV).</li>
+     * <li>"earliest_time": Specifies the earliest time in the time range to 
+     * search. The time string can be a UTC time (with fractional seconds), a 
+     * relative time specifier (to now), or a formatted time string.</li>
+     * <li>"latest_time": Specifies the latest time in the time range to search.
+     * The time string can be a UTC time (with fractional seconds), a relative 
+     * time specifier (to now), or a formatted time string.</li>
+     * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
+     * @return The search results.
+     */
+    public InputStream oneshotSearch(String query, Args args) {
+        return oneshotSearch(query, (Map<String, Object>)args);
     }
 
     /**
@@ -1054,44 +1162,29 @@ public class Service extends HttpService {
     }
 
     /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
+     * Creates an asynchronous search using the given query. Use this
+     * method for simple searches.
      *
      * @param query The search query.
-     * @return The search results.
+     * @return The search job.
      */
-    public InputStream search(String query) {
-       return search(query, null, null);
+    public Job search(String query) {
+        return search(query, null);
     }
 
     /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
+     * Creates an asynchronous search job using the given query and
+     * search arguments.
      *
      * @param query The search query.
-     * @param inputArgs The search arguments.
-     * @return The search results.
+     * @param args The search arguments.
+     * @return The search job.
      */
-    public InputStream search(String query, Map inputArgs) {
-        return search(query, inputArgs, null);
-    }
-
-    /**
-     * Creates a simplified synchronous search using search arguments. Use this
-     * method for simple searches. For output control arguments, use jobs.
-     *
-     * @param query The search query.
-     * @param inputArgs The search arguments.
-     * @param outputArgs The output qualifier arguments.
-     * @return The search results.
-     */
-    public InputStream search(String query, Map inputArgs, Map outputArgs) {
-        inputArgs = Args.create(inputArgs);
-        inputArgs.put("search", query);
-        // always block until results are ready.
-        inputArgs.put("exec_mode", "blocking");
-        Job job = this.getJobs().create(query, inputArgs);
-        return job.getResults(outputArgs);
+    public Job search(String query, Map<String, Object> args) {
+        args = Args.create(args);
+        args.put("search", query);
+        
+        return this.getJobs().create(query, args);
     }
 
     /**
@@ -1120,34 +1213,66 @@ public class Service extends HttpService {
         this.token = value;
     }
 
-    // returns -1, 0, 1 comparing current Splunk version string to right version
-    // string for less than, equal to or greater than
-    public int versionCompare(String right) {
+    /**
+     * Returns true if this Splunk instance's version is no earlier than
+     * the version specified in {@code version}.
+     *
+     * So when called on a Splunk 4.3.2 instance:
+     *   * {@code versionIsAtLeast("4.3.2")} is {@code true}.
+     *   * {@code versionIsAtLeast("4.1.0")} is {@code true}.
+     *   * {@code versionIsAtLeast("5.0.0")} is {@code false}.
+     *
+     * @param version The version to compare this Splunk instance's version against.
+     * @return {@code true} if this Splunk instance's version is equal or
+     *         greater than {@code version}; {@code false} otherwise.
+     */
+    boolean versionIsAtLeast(String version) {
+        return versionCompare(version) >= 0;
+    }
 
-        // short cut for equality.
-        if (this.version.equals(right)) return 0;
+    /**
+     * Returns true if this Splunk instance's version is earlier than
+     * the version specified in {@code version}.
+     *
+     * So when called on a Splunk 4.3.2 instance:
+     *   * {@code versionIsEarlierThan("4.3.2")} is {@code false}.
+     *   * {@code versionIsEarlierThan("4.1.0")} is {@code false}.
+     *   * {@code versionIsEarlierThan("5.0.0")} is {@code true}.
+     *
+     * @param version The version to compare this Splunk instance's version against.
+     * @return {@code true} if this Splunk instance's version is less
+     *         than {@code version}; {@code false} otherwise.
+     */
+    boolean versionIsEarlierThan(String version) {
+        return versionCompare(version) < 0;
+    }
 
-        // if not the same, break down into individual digits for comparison.
-        String[] leftDigits = this.version.split(".");
-        String[] rightDigits = right.split(".");
-        int i=0;
-
-        for (; i<leftDigits.length; i++) {
-            // No more right side, left side is bigger
-            if (i == rightDigits.length) return 1;
-            // left side smaller>?
-            if (Integer.parseInt(leftDigits[i]) <
-                Integer.parseInt(leftDigits[1])) {
+    /**
+     * Returns {@code -1} if {@code this.version &lt; otherVersion}.
+     * Returns {@code  0} if {@code this.version &eq; otherVersion}.
+     * Returns {@code  1} if {@code this.version &gt; otherVersion}.
+     * 
+     * @param otherVersion The version to compare this Splunk instance's version against. 
+     * @return {@code -1} if {@code this.version &lt; otherVersion},
+     *         {@code  0} if {@code this.version &eq; otherVersion}, or
+     *         {@code  1} if {@code this.version &gt; otherVersion}.
+     */
+    public int versionCompare(String otherVersion) {
+        String[] components1 = this.version.split("\\.");
+        String[] components2 = otherVersion.split("\\.");
+        int numComponents = Math.max(components1.length, components2.length);
+        
+        for (int i = 0; i < numComponents; i++) {
+            int c1 = (i < components1.length)
+                    ? Integer.parseInt(components1[i], 10) : 0;
+            int c2 = (i < components2.length)
+                    ? Integer.parseInt(components2[i], 10) : 0;
+            if (c1 < c2) {
                 return -1;
-            }
-            // left side bigger?
-            if (Integer.parseInt(leftDigits[i]) >
-                    Integer.parseInt(leftDigits[1])) {
+            } else if (c1 > c2) {
                 return 1;
             }
         }
-        // we got to the end of the left side, and not equal, right side
-        // most be larger by having more digits.
-        return -1;
+        return 0;
     }
 }

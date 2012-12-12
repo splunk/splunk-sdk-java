@@ -1,0 +1,18 @@
+[
+	{
+		"_cd": "187:18991",
+		"_indextime": "1354063535",
+		"_raw": "11-27-2012 16:45:34.924 -0800 INFO  WatchedFile - Will begin reading at offset=22899111 for file='/Applications/splunk_434/var/log/splunk/metrics.log'.",
+		"_serial": "0",
+		"_si": "dfoster-mbp17.local\n_internal",
+		"_sourcetype": "splunkd",
+		"_subsecond": ".924",
+		"_time": "2012-11-27T16:45:34.924-08:00",
+		"host": "dfoster-mbp17.local",
+		"index": "_internal",
+		"linecount": "1",
+		"source": "/Applications/splunk_434/var/log/splunk/splunkd.log",
+		"sourcetype": "splunkd",
+		"splunk_server": "dfoster-mbp17.local"
+	}
+]

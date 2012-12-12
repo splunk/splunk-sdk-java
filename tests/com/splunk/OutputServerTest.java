@@ -18,28 +18,20 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class OutputServerTest extends SplunkTestCase {
-    @Test public void testOutputServer() throws Exception {
-        Service service = connect();
-
+public class OutputServerTest extends SDKTestCase {
+    @Test
+    public void testOutputServer() throws Exception {
         EntityCollection<OutputServer> outputServers =
                 service.getOutputServers();
 
         if (outputServers.values().size() == 0) {
-            System.out.println("WARNING: OutputServer not configured");
+            System.out.println("WARNING: No OutputServers to test");
             return;
         }
 
-        for (OutputServer outputServer: outputServers.values()) {
-            OutputServerAllConnections outputServerAllConnections =
-                    outputServer.allConnections();
-            outputServerAllConnections.getDestHost();
-            outputServerAllConnections.getDestIp();
-            outputServerAllConnections.getDestPort();
-            outputServerAllConnections.getSourcePort();
-            outputServerAllConnections.getStatus();
-
-            // things we an get
+        for (OutputServer outputServer : outputServers.values()) {
+            // Getters throw no exceptions
+            // NOTE: No corresponding setters.
             outputServer.getDestHost();
             outputServer.getDestIp();
             outputServer.getDestPort();
@@ -47,8 +39,8 @@ public class OutputServerTest extends SplunkTestCase {
             outputServer.getSourcePort();
             outputServer.getStatus();
 
-            // things we can set.
-            // NOTE well, these are only writable, so we cannot check.
+            // Setters throw no exceptions.
+            // NOTE: No corresponding getters.
             /*
             outputServer.setMethod();
             outputServer.setSslAltNameToCheck();
@@ -56,9 +48,18 @@ public class OutputServerTest extends SplunkTestCase {
             outputServer.setSslCipher();
             outputServer.setSslCommonNameToCheck();
             outputServer.setSslPassword();
-            outputServer.setsslRootCAPath();
+            outputServer.setSslRootCAPath();
             outputServer.setSslVerifyServerCert();
             */
+            
+            // Getter on "allCollections" endpoint throw no exceptions
+            OutputServerAllConnections outputServerAllConnections =
+                    outputServer.allConnections();
+            outputServerAllConnections.getDestHost();
+            outputServerAllConnections.getDestIp();
+            outputServerAllConnections.getDestPort();
+            outputServerAllConnections.getSourcePort();
+            outputServerAllConnections.getStatus();
         }
     }
 }

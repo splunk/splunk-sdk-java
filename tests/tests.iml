@@ -16,8 +16,11 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="util" />
     <orderEntry type="module" module-name="splunk" />
-    <orderEntry type="module" module-name="splunk-sdk" />
+    <orderEntry type="library" name="commons-cli-1.2" level="project" />
+    <orderEntry type="library" name="gson" level="project" />
+    <orderEntry type="library" name="opencsv" level="project" />
   </component>
 </module>
 

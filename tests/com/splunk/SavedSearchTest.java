@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2012 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -16,163 +16,65 @@
 
 package com.splunk;
 
-import java.io.IOException;
-
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-public class SavedSearchTest extends SplunkTestCase {
-    final static String assertRoot = "Saved Search assert: ";
+public class SavedSearchTest extends SDKTestCase {
+    SavedSearchCollection savedSearches;
+    String savedSearchName;
+    SavedSearch savedSearch;
+    String query = "search index=_internal * earliest=-1m | head 3";
 
-    @Test public void testSavedSearches() {
-        Service service = connect();
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
-        SavedSearchCollection savedSearches = service.getSavedSearches();
+        savedSearchName = createTemporaryName();
+        savedSearches = service.getSavedSearches();
+        savedSearch = savedSearches.create(savedSearchName, query);
 
-        // Iterate saved searches and make sure we can read them.
-        for (SavedSearch savedSearch : savedSearches.values()) {
-            // Resource properties
-            savedSearch.getName();
-            savedSearch.getTitle();
-            savedSearch.getPath();
-
-            // SavedSearch properties get
-            savedSearch.getActionEmailAuthPassword();
-            savedSearch.getActionEmailAuthUsername();
-            savedSearch.getActionEmailSendResults();
-            savedSearch.getActionEmailBcc();
-            savedSearch.getActionEmailCc();
-            savedSearch.getActionEmailCommand();
-            savedSearch.getActionEmailFormat();
-            savedSearch.getActionEmailInline();
-            savedSearch.getActionEmailMailServer();
-            savedSearch.getActionEmailMaxResults();
-            savedSearch.getActionEmailMaxTime();
-            savedSearch.getActionEmailReportPaperOrientation();
-            savedSearch.getActionEmailReportPaperSize();
-            savedSearch.getActionEmailReportServerEnabled();
-            savedSearch.getActionEmailReportServerUrl();
-            savedSearch.getActionEmailSendPdf();
-            savedSearch.getActionEmailSendResults();
-            savedSearch.getActionEmailSubject();
-            savedSearch.getActionEmailTo();
-            savedSearch.getActionEmailTrackAlert();
-            savedSearch.getActionEmailTtl();
-            savedSearch.getActionEmailUseSsl();
-            savedSearch.getActionEmailUseTls();
-            savedSearch.getActionEmailWidthSortColumns();
-            savedSearch.getActionPopulateLookupCommand();
-            savedSearch.getActionPopulateLookupDest();
-            savedSearch.getActionPopulateLookupHostname();
-            savedSearch.getActionPopulateLookupMaxResults();
-            savedSearch.getActionPopulateLookupMaxTime();
-            savedSearch.getActionPopulateLookupTrackAlert();
-            savedSearch.getActionPopulateLookupTtl();
-            savedSearch.getActionRssCommand();
-            savedSearch.getActionRssHostname();
-            savedSearch.getActionRssMaxResults();
-            savedSearch.getActionRssMaxTime();
-            savedSearch.getActionRssTrackAlert();
-            savedSearch.getActionRssTtl();
-            savedSearch.getActionScriptCommand();
-            savedSearch.getActionScriptFilename();
-            savedSearch.getActionScriptHostname();
-            savedSearch.getActionScriptMaxResults();
-            savedSearch.getActionScriptMaxTime();
-            savedSearch.getActionScriptTrackAlert();
-            savedSearch.getActionScriptTtl();
-            savedSearch.getActionSummaryIndexName();
-            savedSearch.getActionSummaryIndexCommand();
-            savedSearch.getActionSummaryIndexHostname();
-            savedSearch.getActionSummaryIndexInline();
-            savedSearch.getActionSummaryIndexMaxResults();
-            savedSearch.getActionSummaryIndexMaxTime();
-            savedSearch.getActionSummaryIndexTrackAlert();
-            savedSearch.getActionSummaryIndexTtl();
-            savedSearch.getAlertDigestMode();
-            savedSearch.getAlertExpires();
-            savedSearch.getAlertSeverity();
-            savedSearch.getAlertSuppress();
-            savedSearch.getAlertSuppressFields();
-            savedSearch.getAlertSuppressPeriod();
-            savedSearch.getAlertTrack();
-            savedSearch.getAlertComparator();
-            savedSearch.getAlertCondition();
-            savedSearch.getAlertThreshold();
-            savedSearch.getAlertType();
-            savedSearch.getCronSchedule();
-            savedSearch.getDescription();
-            savedSearch.getDispatchBuckets();
-            savedSearch.getDispatchEarliestTime();
-            savedSearch.getDispatchLatestTime();
-            savedSearch.getDispatchLookups();
-            savedSearch.getDispatchMaxCount();
-            savedSearch.getDispatchMaxTime();
-            savedSearch.getDispatchReduceFreq();
-            savedSearch.getDispatchRtBackfill();
-            savedSearch.getDispatchSpawnProcess();
-            savedSearch.getDispatchTimeFormat();
-            savedSearch.getDispatchTtl();
-            savedSearch.getDisplayView();
-            savedSearch.getMaxConcurrent();
-            savedSearch.getNextScheduledTime();
-            savedSearch.getQualifiedSearch();
-            savedSearch.getRealtimeSchedule();
-            savedSearch.getRequestUiDispatchApp();
-            savedSearch.getRequestUiDispatchView();
-            savedSearch.getRestartOnSearchPeerAdd();
-            savedSearch.getRunOnStartup();
-            savedSearch.getSearch();
-            savedSearch.getVsid();
-            savedSearch.isActionEmail();
-            savedSearch.isActionPopulateLookup();
-            savedSearch.isActionRss();
-            savedSearch.isActionScript();
-            savedSearch.isActionSummaryIndex();
-            savedSearch.isDigestMode();
-            savedSearch.isDisabled();
-            savedSearch.isScheduled();
-            savedSearch.isVisible();
-        }
+        savedSearches.refresh();
+        assertTrue(savedSearches.containsKey(savedSearchName));
     }
 
-    @Test public void testSavedSearchCrud() {
-        Service service = connect();
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        // Remove this run's saved search.
+        for (Job j : savedSearch.history()) {
+            j.cancel();
+        }
+        savedSearch.remove();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                savedSearches.refresh();
+                return !savedSearches.containsKey(savedSearchName);
+            }
+        });
 
-        SavedSearchCollection savedSearches = service.getSavedSearches();
+        // Remove any previously created saved searches that
+        // somehow escaped.
+        for (SavedSearch s : savedSearches.values()) {
+            if (s.getName().startsWith("delete-me")) {
+                for (Job j : s.history()) {
+                    j.cancel();
+                }
+                s.remove();
+            }
+        }
 
-        // Ensure test starts in a known good state
-        if (savedSearches.containsKey("sdk-test1"))
-            savedSearches.remove("sdk-test1");
-        assertFalse(assertRoot + "#1", savedSearches.containsKey("sdk-test1"));
+        super.tearDown();
+    }
 
-        SavedSearch savedSearch;
-        String search = "search index=sdk-tests * earliest=-1m";
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testUpdate() {
+        boolean isVisible = savedSearch.isVisible();
+        savedSearch.setIsVisible(!isVisible);
 
-        // Create a saved search
-        savedSearches.create("sdk-test1", search);
-        assertTrue(assertRoot + "#2", savedSearches.containsKey("sdk-test1"));
-
-        // Read the saved search
-        savedSearch = savedSearches.get("sdk-test1");
-        assertTrue(assertRoot + "#3", savedSearch.isVisible());
-        // CONSIDER: Test some additinal default property values.
-
-        // Update search properties, but don't specify required args to test
-        // pulling them from the existing object
-        savedSearch.update(new Args("is_visible", false));
-        savedSearch.refresh();
-        assertFalse(assertRoot + "#4", savedSearch.isVisible());
-
-        // Delete the saved search
-        savedSearches.remove("sdk-test1");
-        assertFalse(assertRoot + "#5", savedSearches.containsKey("sdk-test1"));
-
-        // Create a saved search with some additional arguments
-        savedSearch = savedSearches.create(
-            "sdk-test1", search, new Args("is_visible", false));
-        assertFalse(assertRoot + "#6", savedSearch.isVisible());
-
-        // set email params
         savedSearch.setActionEmailAuthPassword("sdk-password");
         savedSearch.setActionEmailAuthUsername("sdk-username");
         savedSearch.setActionEmailBcc("sdk-bcc@splunk.com");
@@ -213,8 +115,8 @@ public class SavedSearchTest extends SplunkTestCase {
         savedSearch.setActionRssMaxTime("30s");
         savedSearch.setActionRssTrackAlert(false);
         savedSearch.setActionRssTtl("63");
+        savedSearch.setActionScriptFilename("foo.sh");
         savedSearch.setActionScriptCommand("$name4$");
-        //savedSearch.setActionScriptFilename(String  filename);
         savedSearch.setActionScriptHostname("dummy4.host.com");
         savedSearch.setActionScriptMaxResults(104);
         savedSearch.setActionScriptMaxTime("40s");
@@ -229,217 +131,277 @@ public class SavedSearchTest extends SplunkTestCase {
         savedSearch.setActionSummaryIndexTrackAlert(false);
         savedSearch.setActionSummaryIndexTtl("65");
         savedSearch.setActions(
-            "rss,email,populate_lookup,script,summary_index");
-        savedSearch.setSearch(search);
+                "rss,email,populate_lookup,script,summary_index");
+        savedSearch.setSearch("search index=boris abcd");
+        
+        savedSearch.setAlertComparator("greater than");
+        savedSearch.setAlertCondition("*");
+        savedSearch.setAlertDigestMode(true);   // false causes side effects
+        savedSearch.setAlertExpires("23h");
+        savedSearch.setAlertSeverity(6);
+        savedSearch.setAlertSuppress(true);
+        if (service.versionIsAtLeast("4.3")) {
+            savedSearch.setAlertSuppressFields("host");
+        }
+        savedSearch.setAlertSuppressPeriod("1m");
+        savedSearch.setAlertThreshold("50%");
+        savedSearch.setAlertTrack("0");
+        savedSearch.setAlertType("number of events");
+        savedSearch.setCronSchedule("*/5 * * * *");
+        savedSearch.setDescription("Cake!");
+        savedSearch.setDispatchBuckets("100");
+        savedSearch.setDispatchEarliestTime("-100s@s");
+        savedSearch.setDispatchLatestTime("-1s@s");
+        savedSearch.setDispatchLookups(false);
+        savedSearch.setDispatchMaxCount(100000);
+        savedSearch.setDispatchMaxTime(120);
+        savedSearch.setDispatchSpawnProcess(true);
+        savedSearch.setDispatchTimeFormat("%FT%T.%Q");
+        savedSearch.setDispatchTtl("3p");
+        savedSearch.setDisplayView("flash_timeline");
+        savedSearch.setMaxConcurrent(2);
+        savedSearch.setRealtimeSchedule(false);
+        savedSearch.setRequestUiDispatchApp("foo");
+        savedSearch.setRequestUiDispatchView("bar");
+        savedSearch.setRunOnStartup(true);
+        // TODO: Create a vsid to test this properly
+        savedSearch.setVsid("");
+        
+        savedSearch.setDispatchReduceFrequency(11);
+        savedSearch.setDispatchRealTimeBackfill(true);
+        savedSearch.setRestartOnSearchpeerAdd(false);
+        savedSearch.setDisabled(true);
 
         savedSearch.update();
+        savedSearch.refresh();
 
-        // check
-        assertTrue(assertRoot + "#7", savedSearch.isActionEmail());
-        assertTrue(assertRoot + "#8", savedSearch.isActionPopulateLookup());
-        assertTrue(assertRoot + "#9", savedSearch.isActionRss());
-        assertTrue(assertRoot + "#10", savedSearch.isActionScript());
-        assertTrue(assertRoot + "#11", savedSearch.isActionSummaryIndex());
-        assertTrue(assertRoot + "#12", savedSearch.isDigestMode());
+        assertTrue(savedSearch.isActionEmail());
+        assertTrue(savedSearch.isActionPopulateLookup());
+        assertTrue(savedSearch.isActionRss());
+        assertTrue(savedSearch.isActionScript());
+        assertTrue(savedSearch.isActionSummaryIndex());
+        assertTrue(savedSearch.isDigestMode());
 
-        assertEquals(assertRoot + "#12", "sdk-password",
-            savedSearch.getActionEmailAuthPassword());
-        assertEquals(assertRoot + "#13", "sdk-username",
-            savedSearch.getActionEmailAuthUsername());
-        assertEquals(assertRoot + "#14", "sdk-bcc@splunk.com",
-            savedSearch.getActionEmailBcc());
-        assertEquals(assertRoot + "#15", "sdk-cc@splunk.com",
-            savedSearch.getActionEmailCc());
-        assertEquals(assertRoot + "#16", "$name1$",
-            savedSearch.getActionEmailCommand());
-        assertEquals(assertRoot + "#17", "text",
-            savedSearch.getActionEmailFormat());
-        assertEquals(assertRoot + "#18", "sdk@splunk.com",
-            savedSearch.getActionEmailFrom());
-        assertEquals(assertRoot + "#19", "dummy1.host.com",
-            savedSearch.getActionEmailHostname());
-        assertTrue(assertRoot + "#20", savedSearch.getActionEmailInline());
-        assertEquals(assertRoot + "#21", "splunk.com",
-            savedSearch.getActionEmailMailServer());
-        assertEquals(assertRoot + "#22", 101,
-            savedSearch.getActionEmailMaxResults());
-        assertEquals(assertRoot + "#23", "10s",
-            savedSearch.getActionEmailMaxTime());
-        assertEquals(assertRoot + "#24", "dummy",
-            savedSearch.getActionEmailPdfView());
-        assertEquals(assertRoot + "#25", "*",
-            savedSearch.getActionEmailPreProcessResults());
-        assertEquals(assertRoot + "#26", "landscape",
-            savedSearch.getActionEmailReportPaperOrientation());
-        assertEquals(assertRoot + "#27", "letter",
-            savedSearch.getActionEmailReportPaperSize());
-        assertFalse(assertRoot + "#28",
-            savedSearch.getActionEmailReportServerEnabled());
-        assertEquals(assertRoot + "#29", "splunk.com",
-            savedSearch.getActionEmailReportServerUrl());
-        assertFalse(assertRoot + "#30", savedSearch.getActionEmailSendPdf());
-        assertFalse(assertRoot + "#31",
-            savedSearch.getActionEmailSendResults());
-        assertEquals(assertRoot + "#32", "sdk-subject",
-            savedSearch.getActionEmailSubject());
-        assertEquals(assertRoot + "#33", "sdk-to@splunk.com",
-            savedSearch.getActionEmailTo());
-        assertFalse(assertRoot + "#34", savedSearch.getActionEmailTrackAlert());
-        assertEquals(assertRoot + "#35", "61", savedSearch.getActionEmailTtl());
-        assertFalse(assertRoot + "#36", savedSearch.getActionEmailUseSsl());
-        assertFalse(assertRoot + "#37", savedSearch.getActionEmailUseTls());
-        assertFalse(assertRoot + "#38",
-            savedSearch.getActionEmailWidthSortColumns());
-        assertEquals(assertRoot + "#39", "$name2$",
-            savedSearch.getActionPopulateLookupCommand());
-        assertEquals(assertRoot + "#40", "dummypath",
-            savedSearch.getActionPopulateLookupDest());
-        assertEquals(assertRoot + "#41", "dummy2.host.com",
-            savedSearch.getActionPopulateLookupHostname());
-        assertEquals(assertRoot + "#42", 102,
-            savedSearch.getActionPopulateLookupMaxResults());
-        assertEquals(assertRoot + "#43", "20s",
-            savedSearch.getActionPopulateLookupMaxTime());
-        assertFalse(assertRoot + "#44",
-            savedSearch.getActionPopulateLookupTrackAlert());
-        assertEquals(assertRoot + "#45", "62",
-            savedSearch.getActionPopulateLookupTtl());
-        assertEquals(assertRoot + "#46", "$name3$",
-            savedSearch.getActionRssCommand());
-        assertEquals(assertRoot + "#47", "dummy3.host.com",
-            savedSearch.getActionRssHostname());
-        assertEquals(assertRoot + "#48", 103,
-            savedSearch.getActionRssMaxResults());
-        assertEquals(assertRoot + "#49", "30s",
-            savedSearch.getActionRssMaxTime());
-        assertFalse(assertRoot + "#50", savedSearch.getActionRssTrackAlert());
-        assertEquals(assertRoot + "#51", "63", savedSearch.getActionRssTtl());
-        assertEquals(assertRoot + "#52", "$name4$",
-            savedSearch.getActionScriptCommand());
-        //savedSearch.setActionScriptFilename(String  filename);
-        assertEquals(assertRoot + "#53", "dummy4.host.com",
-            savedSearch.getActionScriptHostname());
-        assertEquals(assertRoot + "#54", 104,
-            savedSearch.getActionScriptMaxResults());
-        assertEquals(assertRoot + "#55", "40s",
-            savedSearch.getActionScriptMaxTime());
-        assertFalse(assertRoot + "#56",
-            savedSearch.getActionScriptTrackAlert());
-        assertEquals(assertRoot + "#57", "64",
-            savedSearch.getActionScriptTtl());
-        assertEquals(assertRoot + "#58", "default",
-            savedSearch.getActionSummaryIndexName());
-        assertEquals(assertRoot + "#59", "$name5$",
-            savedSearch.getActionSummaryIndexCommand());
-        assertEquals(assertRoot + "#60", "dummy5.host.com",
-            savedSearch.getActionSummaryIndexHostname());
-        assertFalse(assertRoot + "#61",
-            savedSearch.getActionSummaryIndexInline());
-        assertEquals(assertRoot + "#62", 105,
-            savedSearch.getActionSummaryIndexMaxResults());
-        assertEquals(assertRoot + "#63", "50s",
-            savedSearch.getActionSummaryIndexMaxTime());
-        assertFalse(assertRoot + "#64",
-            savedSearch.getActionSummaryIndexTrackAlert());
-        assertEquals(assertRoot + "#65", "65",
-            savedSearch.getActionSummaryIndexTtl());
-
-        // Delete the saved search - using alternative method
+        assertEquals("sdk-password", savedSearch.getActionEmailAuthPassword());
+        assertEquals("sdk-username", savedSearch.getActionEmailAuthUsername());
+        assertEquals("sdk-bcc@splunk.com", savedSearch.getActionEmailBcc());
+        assertEquals("sdk-cc@splunk.com", savedSearch.getActionEmailCc());
+        assertEquals("$name1$", savedSearch.getActionEmailCommand());
+        assertEquals("text", savedSearch.getActionEmailFormat());
+        assertEquals("sdk@splunk.com", savedSearch.getActionEmailFrom());
+        assertEquals("dummy1.host.com", savedSearch.getActionEmailHostname());
+        assertTrue(savedSearch.getActionEmailInline());
+        assertEquals("splunk.com", savedSearch.getActionEmailMailServer());
+        assertEquals(101, savedSearch.getActionEmailMaxResults());
+        assertEquals("10s", savedSearch.getActionEmailMaxTime());
+        assertEquals("dummy", savedSearch.getActionEmailPdfView());
+        assertEquals("*", savedSearch.getActionEmailPreProcessResults());
+        assertEquals("landscape", savedSearch.getActionEmailReportPaperOrientation());
+        assertEquals("letter", savedSearch.getActionEmailReportPaperSize());
+        assertFalse(savedSearch.getActionEmailReportServerEnabled());
+        assertEquals("splunk.com", savedSearch.getActionEmailReportServerUrl());
+        assertFalse(savedSearch.getActionEmailSendPdf());
+        assertFalse(savedSearch.getActionEmailSendResults());
+        assertEquals("sdk-subject", savedSearch.getActionEmailSubject());
+        assertEquals("sdk-to@splunk.com", savedSearch.getActionEmailTo());
+        assertFalse(savedSearch.getActionEmailTrackAlert());
+        assertEquals("61", savedSearch.getActionEmailTtl());
+        assertFalse(savedSearch.getActionEmailUseSsl());
+        assertFalse(savedSearch.getActionEmailUseTls());
+        assertFalse(savedSearch.getActionEmailWidthSortColumns());
+        assertEquals("$name2$", savedSearch.getActionPopulateLookupCommand());
+        assertEquals("dummypath", savedSearch.getActionPopulateLookupDest());
+        assertEquals("dummy2.host.com", savedSearch.getActionPopulateLookupHostname());
+        assertEquals(102, savedSearch.getActionPopulateLookupMaxResults());
+        assertEquals("20s", savedSearch.getActionPopulateLookupMaxTime());
+        assertFalse(savedSearch.getActionPopulateLookupTrackAlert());
+        assertEquals("62", savedSearch.getActionPopulateLookupTtl());
+        assertEquals("$name3$", savedSearch.getActionRssCommand());
+        assertEquals("dummy3.host.com", savedSearch.getActionRssHostname());
+        assertEquals(103, savedSearch.getActionRssMaxResults());
+        assertEquals("30s", savedSearch.getActionRssMaxTime());
+        assertFalse(savedSearch.getActionRssTrackAlert());
+        assertEquals("63", savedSearch.getActionRssTtl());
+        assertEquals("foo.sh", savedSearch.getActionScriptFilename());
+        assertEquals("$name4$", savedSearch.getActionScriptCommand());
+        assertEquals("dummy4.host.com", savedSearch.getActionScriptHostname());
+        assertEquals(104, savedSearch.getActionScriptMaxResults());
+        assertEquals("40s", savedSearch.getActionScriptMaxTime());
+        assertFalse(savedSearch.getActionScriptTrackAlert());
+        assertEquals("64", savedSearch.getActionScriptTtl());
+        assertEquals("default", savedSearch.getActionSummaryIndexName());
+        assertEquals("$name5$", savedSearch.getActionSummaryIndexCommand());
+        assertEquals("dummy5.host.com", savedSearch.getActionSummaryIndexHostname());
+        assertFalse(savedSearch.getActionSummaryIndexInline());
+        assertEquals(105, savedSearch.getActionSummaryIndexMaxResults());
+        assertEquals("50s", savedSearch.getActionSummaryIndexMaxTime());
+        assertFalse(savedSearch.getActionSummaryIndexTrackAlert());
+        assertEquals("65", savedSearch.getActionSummaryIndexTtl());
+        assertEquals(savedSearch.isVisible(), !isVisible);
+        assertNull(savedSearch.getNextScheduledTime());
+        if (service.versionIsEarlierThan("4.3")) {
+            assertEquals("search  search index=boris abcd", savedSearch.getQualifiedSearch());
+        } else {
+            assertEquals("search search index=boris abcd", savedSearch.getQualifiedSearch());
+        }
+        
+        assertEquals("greater than", savedSearch.getAlertComparator());
+        assertEquals("*", savedSearch.getAlertCondition());
+        assertEquals(true, savedSearch.getAlertDigestMode());
+        assertEquals("23h", savedSearch.getAlertExpires());
+        assertEquals(6, savedSearch.getAlertSeverity());
+        assertEquals(true, savedSearch.getAlertSuppress());
+        if (service.versionIsAtLeast("4.3")) {
+            assertEquals("host", savedSearch.getAlertSuppressFields());
+        }
+        assertEquals("1m", savedSearch.getAlertSuppressPeriod());
+        assertEquals("50%", savedSearch.getAlertThreshold());
+        // NOTE: Always returns "0" or "1". Never "auto". Vince notified.
+        assertEquals("0", savedSearch.getAlertTrack());
+        assertEquals("number of events", savedSearch.getAlertType());
+        assertEquals("*/5 * * * *", savedSearch.getCronSchedule());
+        assertEquals("Cake!", savedSearch.getDescription());
+        assertEquals(100, savedSearch.getDispatchBuckets());
+        assertEquals("-100s@s", savedSearch.getDispatchEarliestTime());
+        assertEquals("-1s@s", savedSearch.getDispatchLatestTime());
+        assertEquals(false, savedSearch.getDispatchLookups());
+        assertEquals(100000, savedSearch.getDispatchMaxCount());
+        // NOTE: Should be int to match setter. See DVPL-1268.
+        assertEquals(120, savedSearch.getDispatchMaxTime());
+        assertEquals(true, savedSearch.getDispatchSpawnProcess());
+        assertEquals("%FT%T.%Q", savedSearch.getDispatchTimeFormat());
+        assertEquals("3p", savedSearch.getDispatchTtl());
+        assertEquals("flash_timeline", savedSearch.getDisplayView());
+        assertEquals(2, savedSearch.getMaxConcurrent());
+        assertEquals(false, savedSearch.getRealtimeSchedule());
+        assertEquals("foo", savedSearch.getRequestUiDispatchApp());
+        assertEquals("bar", savedSearch.getRequestUiDispatchView());
+        assertEquals(true, savedSearch.getRunOnStartup());
+        assertEquals(null, savedSearch.getVsid());
+        
+        assertEquals(11, savedSearch.getDispatchReduceFrequency());
+        assertEquals(true, savedSearch.getDispatchRtBackfill());
+        assertEquals(false, savedSearch.getRestartOnSearchPeerAdd());
+        assertEquals(true, savedSearch.isDisabled());
+    }
+    
+    @Test
+    public void testScheduled() {
+        SavedSearch savedSearch = this.savedSearches.create(createTemporaryName(), "search index=_internal | head 1");
+        
+        assertFalse(savedSearch.isScheduled());
+        savedSearch.setCronSchedule("*/5 * * * *");
+        savedSearch.setIsScheduled(true);
+        savedSearch.update();
+        assertTrue(savedSearch.isScheduled());
+        
         savedSearch.remove();
-        savedSearches.refresh();
-        assertFalse(assertRoot + "#66", savedSearches.containsKey("sdk-test1"));
+    }
+    
+    @Test
+    public void testCreateWithNoSearch() {
+        try {
+            this.savedSearches.create(createTemporaryName());
+            fail("Should've thrown!");
+        } catch (Exception e) {
+            assertTrue(true);
+        }
     }
 
-    @Test public void testDispatch() throws IOException, InterruptedException {
-        Service service = connect();
-
-        SavedSearchCollection savedSearches = service.getSavedSearches();
-
-        // Ensure test starts in a known good state
-        if (savedSearches.containsKey("sdk-test1"))
-            savedSearches.remove("sdk-test1");
-        assertFalse(assertRoot + "#67", savedSearches.containsKey("sdk-test1"));
-
-        String search = "search index=sdk-tests * earliest=-1m";
-
-        // Create a saved search
-        SavedSearch savedSearch = savedSearches.create("sdk-test1", search);
-
-        Job job;
-
-        // Dispatch the saved search and wait for results.
-        job = savedSearch.dispatch();
-        wait(job);
-        job.getResults().close();
-        job.cancel();
-
-        // Dispatch with some additional search options
-        job = savedSearch.dispatch(new Args("dispatch.buckets", 100));
-        wait(job);
-        job.getTimeline().close();
-        job.cancel();
-
-        // Delete the saved search
-        savedSearches.remove("sdk-test1");
-        assertFalse(assertRoot + "#68", savedSearches.containsKey("sdk-test1"));
+    @Test
+    public void testAcknowledge() {
+        savedSearch.acknowledge();
     }
 
-    boolean contains(Job[] history, String sid) {
-        for (int i = 0; i < history.length; ++i)
-            if (history[i].getSid().equals(sid))
-                return true;
-        return false;
+    @Test
+    public void testUpdateWithBogusKeysFails() {
+        try {
+            Args args = new Args("borisTheMadBaboon", "Arrgh!");
+            savedSearch.update(args);
+            fail("Expected an exception.");
+        } catch (Exception e) {}
     }
 
-    @Test public void testHistory() throws InterruptedException {
-        Service service = connect();
+    @Test
+    public void testCannotUpdateName() {
+        String newName = savedSearchName + "-alteration";
+        try {
+            Args args = new Args("name", newName);
+            savedSearch.update(args);
+            savedSearch.refresh();
+            fail("Expected exception to be raised when trying to update name.");
+        } catch (Exception e) {}
+    }
 
-        SavedSearchCollection savedSearches = service.getSavedSearches();
+    @Test
+    public void testDispatch() {
+        final JobCollection jobs = service.getJobs();
 
-        // Ensure test starts in a known good state
-        if (savedSearches.containsKey("sdk-test1"))
-            savedSearches.remove("sdk-test1");
-        assertFalse(assertRoot + "#69", savedSearches.containsKey("sdk-test1"));
+        SavedSearchDispatchArgs args = new SavedSearchDispatchArgs();
+        args.setDispatchBuckets(100);
 
-        String search = "search index=sdk-tests * earliest=-1m";
+        try {
+            final Job job = savedSearch.dispatch(args);
 
-        // Create a saved search
-        SavedSearch savedSearch = savedSearches.create("sdk-test1", search);
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return job.isReady();
+                }
+            });
 
-        // Clear the history - even though we have a newly create saved search
-        // its possible there was a previous saved search with the same name
-        // that had a matching history.
-        Job[] history = savedSearch.history();
-        for (Job job : history) job.cancel();
+            assertTrue(jobs.containsKey(job.getSid()));
+        } catch (InterruptedException e) {
+            fail(e.toString());
+        }
+    }
 
-        history = savedSearch.history();
-        assertEquals(assertRoot + "#70", 0, history.length);
+    @Test
+    public void testDispatchWithoutOptions() {
+        final JobCollection jobs = service.getJobs();
 
-        Job job1 = savedSearch.dispatch();
-        ready(job1);
-        history = savedSearch.history();
-        assertEquals(assertRoot + "#71", 1, history.length);
-        assertTrue(contains(history, job1.getSid()));
+        try {
+            final Job job = savedSearch.dispatch();
 
-        Job job2 = savedSearch.dispatch();
-        ready(job2);
-        history = savedSearch.history();
-        assertEquals(assertRoot + "#72", 2, history.length);
-        assertTrue(assertRoot + "#73", contains(history, job1.getSid()));
-        assertTrue(assertRoot + "#74", contains(history, job2.getSid()));
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return job.isReady();
+                }
+            });
 
-        job1.cancel();
-        history = savedSearch.history();
-        assertEquals(assertRoot + "#75", 1, history.length);
-        assertTrue(assertRoot + "#76", contains(history, job2.getSid()));
+            assertTrue(jobs.containsKey(job.getSid()));
+        } catch (InterruptedException e) {
+            fail(e.toString());
+        }
+    }
 
-        job2.cancel();
-        history = savedSearch.history();
-        assertEquals(assertRoot + "#77", 0, history.length);
+    @Test
+    public void testHistory() {
+        savedSearch.refresh();
+        Job[] oldJobs = savedSearch.history();
 
-        // Delete the saved search
-        savedSearches.remove("sdk-test1");
-        assertFalse(assertRoot + "#78", savedSearches.containsKey("sdk-test1"));
+        try {
+            final Job job = savedSearch.dispatch();
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return job.isReady();
+                }
+            });
+
+            assertEquals(oldJobs.length + 1, savedSearch.history().length);
+
+            boolean isFound = false;
+            for (Job j : savedSearch.history()) {
+                if (j.getSid().equals(job.getSid())) {
+                    isFound = true;
+                }
+            }
+            assertTrue(isFound);
+
+        } catch (InterruptedException e) {
+            fail(e.toString());
+        }
     }
 }
-

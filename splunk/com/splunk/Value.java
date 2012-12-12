@@ -112,7 +112,7 @@ class Value {
         try {
             return new Date(Long.parseLong(value)*1000);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

@@ -18,27 +18,14 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class UploadTest extends SplunkTestCase {
-    @Test public void testOneshot() {
-
-        Service service = connect();
-
-        ServiceInfo info = service.getInfo();
-        String filename;
-        if (info.getOsName().equals("Windows"))
-            filename = "C:\\Windows\\WindowsUpdate.log"; // normally here
-        else if (info.getOsName().equals("Linux"))
-            filename = "/var/log/messages";
-        else if (info.getOsName().equals("Darwin")) {
-            filename = "/var/log/system.log";
-        } else {
-            throw new Error("OS: " + info.getOsName() + " not supported");
-        }
+public class UploadTest extends SDKTestCase {
+    @Test
+    public void testOneshot() {
+        String filename = locateSystemLog();
 
         service.getUploads().create(filename);
-        EntityCollection<Upload> oneshots = service.getUploads();
-
-        for (Upload oneshot: oneshots.values()) {
+        
+        for (Upload oneshot : service.getUploads().values()) {
             oneshot.getBytesIndexed();
             oneshot.getOffset();
             oneshot.getSize();

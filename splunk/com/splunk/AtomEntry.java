@@ -60,7 +60,7 @@ public class AtomEntry extends AtomObject {
             reader.close();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         return result;
@@ -156,7 +156,7 @@ public class AtomEntry extends AtomObject {
     }
 
     /**
-     * Parse a {@code <list>} element and return a {@code List} object
+     * Parses a {@code <list>} element and returns a {@code List} object
      * containing the parsed values.
      *
      * @param reader The XML reader.
@@ -198,11 +198,13 @@ public class AtomEntry extends AtomObject {
 
     /**
      * Parses the value contained by the element at the current cursor position
-     * of the given reader. Note: this function takes the parent element as 
-     * its starting point so that it can correctly match the end element. The 
-     * function will consume the start element and its corresponding end 
-     * element and will return the contained value and the cursor will be 
-     * located at the next element to be parsed.
+     * of the given reader. 
+     * <p>
+     * <b>Note:</b> This function takes the parent element as its starting point
+     * so that it can correctly match the end element. The function takes the
+     * start element and its corresponding end element, then returns the 
+     * contained value. The cursor is then located at the next element to be 
+     * parsed.
      *
      * @param reader The XML reader to parse.
      * @return An object containing the parsed values. If the source was a text

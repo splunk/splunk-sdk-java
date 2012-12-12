@@ -119,10 +119,11 @@ public class OutputDefault extends Entity {
      * Returns the frequency that specifies how often to send a heartbeat packet
      * to the receiving server.
      * <p>
-     * <b>Note:</b> This field is only used when {@code sendCookedData} is
+     * <b>Note:</b> This field is only used when {@code SendCookedData} is
      * {@code true}.
      *
      * @see #getSendCookedData
+     * @see #setSendCookedData
      * @return The heartbeat frequency, in seconds.
      */
     public int getHeartbeatFrequency() {
@@ -170,6 +171,13 @@ public class OutputDefault extends Entity {
     public boolean isCompressed() {
         return getBoolean("compressed", false);
     }
+    
+    @Override
+    protected boolean isNameChangeAllowed() {
+        // The "name" property is actually required by the underlying POST
+        // request that update() uses
+        return true;
+    }
 
     /**
      * Indicates whether the index filter for this forwarder is disabled.
@@ -212,6 +220,7 @@ public class OutputDefault extends Entity {
      * <b>Note:</b> Heartbeats are only sent when {@code SendCookedData} is 
      * {@code true}. 
      * @see #getSendCookedData
+     * @see #setSendCookedData
      *
      * @param frequency The frequency, in seconds. 
      */
@@ -290,7 +299,7 @@ public class OutputDefault extends Entity {
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
         if (!args.containsKey("name")) {
-            args = Args.create(args).add("search", "tcpout");
+            args = Args.create(args).add("name", "tcpout");
         }
         super.update(args);
     }

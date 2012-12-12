@@ -27,7 +27,7 @@ public class Role extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The resource path.
+     * @param path The role endpoint.
      */
     Role(Service service, String path) {
         super(service, path);
@@ -55,17 +55,17 @@ public class Role extends Entity {
     /**
      * Returns an array of capabilities imported for this role.
      *
-     * @return An array of capabilities.
+     * @return An array of imported capabilities.
      */
     public String[] getImportedCapabilities() {
         return getStringArray("imported_capabilities", null);
     }
 
     /**
-     * Returns an array of roles used to import attributes from, such as
-     * capabilities and allowed indexes to search.
+     * Returns an array of roles to import attributes from, such as capabilities
+     * and allowed indexes to search.
      *
-     * @return An array of roles.
+     * @return An array of imported roles.
      */
     public String[] getImportedRoles() {
         return getStringArray("imported_roles", null);
@@ -76,9 +76,20 @@ public class Role extends Entity {
      * with this role is allowed to run.
      *
      * @return The imported quota for real-time search jobs.
+     * @deprecated Use {@link #getImportedRealTimeSearchJobsQuota()} instead.
      */
     public int getImportedRtSearchJobsQuota() {
         return getInteger("imported_rtSrchJobsQuota");
+    }
+    
+    /**
+     * Returns the maximum number of concurrent real-time search jobs a user
+     * with this role is allowed to run.
+     *
+     * @return The imported quota for real-time search jobs.
+     */
+    public int getImportedRealTimeSearchJobsQuota() {
+        return getImportedRtSearchJobsQuota();
     }
 
     /**
@@ -132,15 +143,35 @@ public class Role extends Entity {
     public int getImportedSearchJobsQuota() {
         return getInteger("imported_srchJobsQuota");
     }
+    
+    /**
+     * Returns the maximum time span of a search, in seconds. 
+     *
+     * @return The maximum time span of a search, in seconds. 
+     */
+    public int getImportedSearchTimeWindow() {
+        return getInteger("imported_srchTimeWin");
+    }
 
     /**
      * Returns the maximum number of concurrent real-time search jobs a user
      * with this role is allowed to run.
      *
      * @return Maximum number of concurrent real-time search jobs.
+     * @deprecated Use {@link #getRealTimeSearchJobsQuota()} instead.
      */
     public int getRtSearchJobsQuota() {
         return getInteger("rtSrchJobsQuota");
+    }
+    
+    /**
+     * Returns the maximum number of concurrent real-time search jobs a user
+     * with this role is allowed to run.
+     *
+     * @return Maximum number of concurrent real-time search jobs.
+     */
+    public int getRealTimeSearchJobsQuota() {
+        return getRtSearchJobsQuota();
     }
 
     /**
@@ -169,7 +200,7 @@ public class Role extends Entity {
      * Returns an array of indexes that a user with this role has permissions
      * to search.
      *
-     * @return Array of allowed indexes.
+     * @return An array of allowed indexes.
      */
     public String[] getSearchIndexesAllowed() {
         return getStringArray("srchIndexesAllowed", null);
@@ -200,17 +231,29 @@ public class Role extends Entity {
      * this role.
      *
      * @return Maximum time span of a search, in seconds.
+     * @deprecated Use {@link #getSearchTimeWindow()} instead.
      */
     public int getSearchTimeWin() {
         return getInteger("srchTimeWin");
     }
+    
+    /**
+     * Returns the maximum time span of a search that is allowed for users in
+     * this role.
+     *
+     * @return Maximum time span of a search, in seconds.
+     */
+    public int getSearchTimeWindow() {
+        return getSearchTimeWin();
+    }
 
     /**
-     * Sets a list of capabilities assigned to this role. For a list of possible 
-     * capabilities, see the 
-     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTaccess#POST_authorization.2Froles"
-     * target="_blank">POST authorization/roles endpoint</a> in the REST API 
-     * documentation.
+     * Assigns an array of capabilities to this role. For a list of possible 
+     * capabilities, see 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ7#capabilities"
+     * target="_blank">Capabilities</a> on
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ7" 
+     * target="_blank">dev.splunk.com</a>.
      *
      * @param capabilities An array of capabilities.
      */
@@ -219,17 +262,17 @@ public class Role extends Entity {
     }
 
     /**
-     * Sets a capability assigned to this role. Use this method to set a single
-     * capability. For a list of possible 
-     * capabilities, see the 
-     * <a href="http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTaccess#POST_authorization.2Froles"
-     * target="_blank">POST authorization/roles endpoint</a> in the REST API 
-     * documentation.
+     * Assigns a single capability to this role. 
+     * For a list of possible capabilities, see 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ7#capabilities"
+     * target="_blank">Capabilities</a> on
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ7" 
+     * target="_blank">dev.splunk.com</a>.
      *
      * @param capability The capability to set.
      */
     public void setCapabilities(String capability) {
-        setCacheValue("capabilities", new String [] { capability });
+        setCapabilities(new String[] { capability });
     }
 
     /**
@@ -245,7 +288,7 @@ public class Role extends Entity {
     /**
      * Sets a list of roles to import attributes from, such as capabilities and 
      * allowed indexes to search. In combining multiple roles, the effective 
-     * value for each attribute is value with the broadest permissions. 
+     * value for each attribute is the value with the broadest permissions. 
      * <p>
      * Default Splunk roles are:
      * <p><ul>
@@ -280,7 +323,7 @@ public class Role extends Entity {
      * @param importedRole A role from which to import attributes.
      */
     public void setImportedRoles(String importedRole) {
-        setCacheValue("imported_roles", new String [] { importedRole });
+        setImportedRoles(new String[] { importedRole });
     }
 
     /**
@@ -332,7 +375,7 @@ public class Role extends Entity {
      * @param indexAllowed The allowed index.
      */
     public void setSearchIndexesAllowed(String indexAllowed) {
-        setCacheValue("srchIndexesAllowed", new String [] { indexAllowed });
+        setSearchIndexesAllowed(new String[] { indexAllowed });
     }
 
     /**
@@ -352,7 +395,7 @@ public class Role extends Entity {
      * @param srchIndexDefault The default index.
      */
     public void setSearchIndexesDefault(String srchIndexDefault) {
-        setCacheValue("srchIndexesDefault", new String [] { srchIndexDefault });
+        setSearchIndexesDefault(new String[] { srchIndexDefault });
     }
 
     /**

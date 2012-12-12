@@ -188,14 +188,13 @@ public class Settings extends Entity {
     }
 
     /**
-     * Sets the management host and port for splunkd.
-     * The default value is {@code 127.0.0.1:8089}.
+     * Sets the management port for splunkd.
+     * The default value is {@code 8089}.
      *
-     * @param mgmtHostPort The host name or IP address and port for the 
-     * management interface.
+     * @param port The port for the management interface.
      */
-    public void setMgmtHostPort(String mgmtHostPort) {
-        setCacheValue("mgmtHostPort", mgmtHostPort);
+    public void setMgmtPort(int port) {
+        setCacheValue("mgmtHostPort", port);
     }
 
     /**
@@ -206,7 +205,7 @@ public class Settings extends Entity {
      * free space on the file system where the dispatch directory is stored
      * ({@code $SPLUNK_HOME/var/run/splunk/dispatch}).
      *
-     * @param minFreeSpace The minimum free space, in MB.
+     * @param minFreeSpace The minimum free space, in megabytes.
      */
     public void setMinimumFreeSpace(int minFreeSpace) {
         setCacheValue("minFreeSpace", minFreeSpace);
@@ -248,8 +247,8 @@ public class Settings extends Entity {
     /**
      * Sets whether to start Splunk Web. 
      *
-     * @param startwebserver {@code true} to enable Splunk Web, {@code false} to
-     * disable it. 
+     * @param startwebserver {@code true} to start Splunk Web, {@code false} if
+     * not. 
      */
     public void setStartWebServer(boolean startwebserver) {
         setCacheValue("startwebserver", startwebserver);

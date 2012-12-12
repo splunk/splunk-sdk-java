@@ -16,7 +16,9 @@
 
 package com.splunk;
 
+import java.lang.UnsupportedOperationException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
@@ -47,9 +49,39 @@ public class Index extends Entity {
     }
 
     /**
+     * Writes events to this index, reusing the connection. 
+     * This method passes an output stream connected to the index to the 
+     * {@code run} method of the {@code ReceiverBehavior} object, then handles 
+     * setting up and tearing down the socket.
+     * <p>
+     * For an example of how to use this method, see 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" target="_blank">How to 
+     * get data into Splunk using the Java SDK</a> on 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
+     * target="_blank">dev.splunk.com</a>.
+     * 
+     * @param behavior The body of a {@code try} block as an anonymous 
+     * implementation of the {@code ReceiverBehavior} interface.
+     */
+    public void attachWith(ReceiverBehavior behavior) throws IOException {
+        Socket socket = null;
+        OutputStream output = null;
+        try {
+            socket = attach();
+            output = socket.getOutputStream();
+            behavior.run(output);
+            output.flush();
+        } finally {
+            if (output != null) { output.close(); }
+            if (socket != null) { socket.close(); }
+        }
+    }
+
+    /**
      * Creates a writable socket to this index.
      *
-     * @param args Optional arguments to the streaming endpoint.
+     * @param args Optional arguments for this stream. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
      * @throws IOException
      */
@@ -59,39 +91,54 @@ public class Index extends Entity {
     }
 
     /**
-     * Cleans this index, removing all events.
+     * Cleans this index, which removes all events from it.
      *
      * @param maxSeconds The maximum number of seconds to wait before returning.
-     * -1 means to wait forever.
+     * A value of -1 means to wait forever.
+     * @throws SplunkException If cleaning timed out or
+     * if the thread was interrupted.
      * @return This index.
      */
     public Index clean(int maxSeconds) {
         Args saved = new Args();
         saved.put("maxTotalDataSizeMB", getMaxTotalDataSizeMB());
         saved.put("frozenTimePeriodInSecs", getFrozenTimePeriodInSecs());
-
-        Args reset = new Args();
-        reset.put("maxTotalDataSizeMB", "1");
-        reset.put("frozenTimePeriodInSecs", "1");
-        update(reset);
-        rollHotBuckets();
-
-        while (maxSeconds != 0) {
-            try {
-                Thread.sleep(1000); // 1000ms (1 second sleep)
-                maxSeconds = maxSeconds - 1;
+        try {
+            Args reset = new Args();
+            reset.put("maxTotalDataSizeMB", "1");
+            reset.put("frozenTimePeriodInSecs", "1");
+            update(reset);
+            rollHotBuckets();
+            
+            long startTime = System.currentTimeMillis();
+            long endTime = startTime + (maxSeconds * 1000);
+            while (true) {
+                long timeLeft = endTime - System.currentTimeMillis();
+                if (timeLeft <= 0) {
+                    break;
+                }
+                Thread.sleep(Math.min(1000, timeLeft));
+                
+                if (this.getTotalEventCount() == 0) {
+                    return this;
+                }
+                refresh();
             }
-            catch (InterruptedException e) {
-                return this; // eat
-            }
-            if (this.getTotalEventCount() == 0) {
-                update(saved);
-                return this;
-            }
-            refresh();
+            
+            throw new SplunkException(SplunkException.TIMEOUT,
+                                      "Index cleaning timed out");
         }
-        throw new SplunkException(SplunkException.TIMEOUT,
-                                  "Index cleaning timed out");
+        catch (InterruptedException e)
+        {
+            SplunkException f = new SplunkException(
+                    SplunkException.INTERRUPTED,
+                    "Index cleaning interrupted.");
+            f.initCause(e);
+            throw f;
+        }
+        finally {
+            update(saved);
+        }
     }
 
     /**
@@ -115,11 +162,10 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the block sign size for this index. This value defines the number
-     * of events that make up a block for block signatures. A value of 0 means
-     * block signing is disabled.
+     * Returns the number of events that make up a block for block signatures. 
      *
-     * @return The block sign size.
+     * @return The block sign size. A value of 0 means block signing has been 
+     * disabled.
      */
     public int getBlockSignSize() {
         return getInteger("blockSignSize");
@@ -135,11 +181,24 @@ public class Index extends Entity {
     }
 
     /**
+     * Returns the suggested size of the .tsidx file for the bucket rebuild 
+     * process. 
+     * Valid values are: "auto", a positive integer, or a positive 
+     * integer followed by "KB", "MB", or "GB". 
+     *
+     * @return The suggested size of the .tsidx file for the bucket rebuild 
+     * process.
+     */
+    public String getBucketRebuildMemoryHint() {
+        return getString("bucketRebuildMemoryHint");
+    }
+
+    /**
      * Returns the absolute file path to the cold database for this index.
      * This value may contain shell expansion terms.
      *
-     * @return The colddbs's absolute file path, or {@code null} if not
-     * specified.
+     * @return The absolute file path to the cold database, or {@code null} if
+     * not specified.
      */
     public String getColdPath() {
         return getString("coldPath", null);
@@ -149,8 +208,8 @@ public class Index extends Entity {
      * Returns the expanded absolute file path to the cold database for this
      * index.
      *
-     * @return The colddbs's expanded absolute file path, or {@code null} if not
-     * specified.
+     * @return The expanded absolute file path to the cold database, or 
+     * {@code null} if not specified.
      */
     public String getColdPathExpanded() {
         return getString("coldPath_expanded", null);
@@ -284,10 +343,10 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the time (as annotated by a postfix {@code m, s, h}, or
-     * {@code d}) that if a warm or cold bucket is older, do not create or
-     * rebuild its bloomfilter. An example would be {@code 30d}, for 30 days.
-     *
+     * Returns the time that indicates a bucket age. When a warm or cold bucket 
+     * is older than this, Splunk does not create or rebuild its bloomfilter.  
+     * The valid format is <i>number</i> followed by a time unit ("s", "m", "h",
+     * or "d"). For example, "30d" for 30 days.
      */
     public String getMaxBloomBackfillBucketAge() {
         return getString("maxBloomBackfillBucketAge", null);
@@ -386,13 +445,35 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the maximum size for this index. If an index
+     * Returns the maximum size of this index. If an index
      * grows larger than this value, the oldest data is frozen.
      *
      * @return The maximum index size, in MB.
      */
     public int getMaxTotalDataSizeMB() {
         return getInteger("maxTotalDataSizeMB");
+    }
+
+    /**
+     * Returns the upper limit, in seconds, for how long an event can sit in a
+     * raw slice. This value applies only when replication is enabled for this 
+     * index, and is ignored otherwise.<br>
+     * If there are any acknowledged events sharing this raw slice, the 
+     * {@code MaxTimeUnreplicatedWithAcksparamater} applies instead.
+     * @see #getMaxTimeUnreplicatedWithAcks
+     */
+    public int getMaxTimeUnreplicatedNoAcks() {
+        return getInteger("maxTimeUnreplicatedNoAcks");
+    }
+
+    /**
+     * Returns the upper limit, in seconds, for how long an event can sit 
+     * unacknowledged in a raw slice. This value only applies when indexer 
+     * acknowledgement is enabled on forwarders and replication is enabled with 
+     * clustering.
+     */
+    public int getMaxTimeUnreplicatedWithAcks() {
+        return getInteger("maxTimeUnreplicatedWithAcks");
     }
 
     /**
@@ -418,7 +499,7 @@ public class Index extends Entity {
     /**
      * Returns the frequency at which Splunkd forces a filesystem sync while
      * compressing journal slices for this index.
-     *
+     * <p>
      * A value of "disable" disables this feature completely, while a value of 0
      * forces a file-system sync after completing compression of every journal
      * slice.
@@ -537,21 +618,20 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns a value that specifies the number of events that trigger the
-     * indexer to sync events.  This is a global value, not an index by index
-     * value.
+     * Returns the number of events that trigger the indexer to sync events. 
+     * This value is global, not a per-index value.
      *
-     * @return The sync attribute.
+     * @return The number of events that trigger the indexer to sync events.
      */
     public int getSync() {
         return getInteger("sync");
     }
 
     /**
-     * Indicates whether the sync operation is invoked before the file
+     * Indicates whether the sync operation is called before the file
      * descriptor is closed on metadata updates.
      *
-     * @return {@code true} if the sync operation is invoked before the file
+     * @return {@code true} if the sync operation is called before the file
      * descriptor is closed on metadata updates, {@code false} if not.
      */
     public boolean getSyncMeta() {
@@ -622,6 +702,9 @@ public class Index extends Entity {
      * <b>Note:</b> Indexing performance degrades when this parameter is set to
      * {@code true}.
      *
+     * In Splunk 5.0 and later, this is a global property and cannot be set on
+     * a per-index basis.
+     *
      * @param assure {@code true} to ensure UTF8 encoding, {@code false} if not.
      */
     public void setAssureUTF8(boolean assure) {
@@ -629,13 +712,29 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the number of events that make up a block for block signatures.
+     * Sets the number of events that make up a block for block signatures. A 
+     * value of 100 is recommended. A value of 0 disables block signing for this
+     * index.
      *
-     * @param value The event count for block signing. A value of 100 is
-     * recommended. A value of 0 disables block signing for this index.
+     * @param value The event count for block signing. 
      */
     public void setBlockSignSize(int value) {
         setCacheValue("blockSignSize", value);
+    }
+
+
+    /**
+     * Sets the suggested size of the .tsidx file for the bucket rebuild 
+     * process.
+     *
+     * Valid values are: "auto", a positive integer, or a positive 
+     * integer followed by "KB", "MB", or "GB". 
+     *
+     * @param value The suggested size of the .tsidx file for the bucket rebuild 
+     * process.
+     */
+    public void setBucketRebuildMemoryHint(String value) {
+        setCacheValue("bucketRebuildMemoryHint", value);
     }
 
     /**
@@ -705,11 +804,11 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the time (as annotated by a postfix {@code m, s, h}, or {@code d})
-     * that if a warm or cold bucket is older, do not create or rebuild its
-     * bloomfilter. An example would be {@code 30d}, for 30 days.
-     *
-     * @param time The time, as annotated.
+     * Sets the time that indicates a bucket age. When a warm or cold bucket 
+     * is older than this, Splunk does not create or rebuild its bloomfilter.  
+     * The valid format is <i>number</i> followed by a time unit ("s", "m", "h",
+     * or "d"). For example, "30d" for 30 days.
+     * @param time The time that indicates a bucket age.
      */
     public void setMaxBloomBackfillBucketAge(String time) {
         setCacheValue("maxBloomBackfillBucketAge", time);
@@ -814,6 +913,36 @@ public class Index extends Entity {
         setCacheValue("maxMetaEntries", entries);
     }
 
+
+    /**
+     * Sets the upper limit for how long an event can sit in a
+     * raw slice. This value applies only when replication is enabled for this 
+     * index, and is ignored otherwise.<br>
+     * If there are any acknowledged events sharing this raw slice, the 
+     * {@code MaxTimeUnreplicatedWithAcksparamater} applies instead.
+     * 
+     * @param value The upper limit, in seconds. A value of 0 disables this 
+     * setting.
+     */
+    public void setMaxTimeUnreplicatedNoAcks(int value) {
+        setCacheValue("maxTimeUnreplicatedNoAcks", value);
+    }
+
+    /**
+     * Sets the upper limit for how long an event can sit unacknowledged in a 
+     * raw slice. This value only applies when indexer acknowledgement is 
+     * enabled on forwarders and replication is enabled with clustering.
+     * <p>
+     * This number should not exceed the acknowledgement timeout configured on 
+     * any forwarder. 
+     * 
+     * @param value The upper limit, in seconds. A value of 0 disables this 
+     * setting (not recommended).
+     */
+    public void setMaxTimeUnreplicatedWithAcks(int value) {
+        setCacheValue("maxTimeUnreplicatedWithAcks", value);
+    }
+
     /**
      * Sets the maximum size for this index. If an index grows larger than this
      * value, the oldest data is frozen.
@@ -862,11 +991,9 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the future event-time quarantine for this index. Events that are
-     * newer than now plus this value are quarantined.
-     * <p>
-     * This mechanism helps to prevent main hot buckets from being polluted with
-     * fringe events.
+     * Sets a quarantine for events that are timestamped in the future to help
+     * prevent main hot buckets from being polluted with fringe events. Events
+     * that are newer than "now" plus this value are quarantined.
      *
      * @param window The future event-time quarantine, in seconds.
      */
@@ -875,11 +1002,9 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets the past event-time quarantine for this index. Events that are older
-     * than now minus this value are quarantined.
-     * <p>
-     * This mechanism helps to prevent main hot buckets from being polluted with
-     * fringe events.
+     * Sets a quarantine for events that are timestamped in the past to help
+     * prevent main hot buckets from being polluted with fringe events. Events
+     * that are older than "now" plus this value are quarantined.
      *
      * @param window The past event-time quarantine, in seconds.
      */
@@ -925,7 +1050,7 @@ public class Index extends Entity {
     }
 
     /**
-     * Sets whether the sync operation is invoked before the file descriptor is
+     * Sets whether the sync operation is called before the file descriptor is
      * closed on metadata updates.
      * <p>
      * This functionality improves the integrity of metadata files, especially
@@ -934,7 +1059,7 @@ public class Index extends Entity {
      * <b>WARNING:</b> This is an advanced parameter. Only change it if you are
      * instructed to do so by Splunk Support.
      * </blockquote>
-     * @param sync {@code true} to invoke the sync operation before the file
+     * @param sync {@code true} to call the sync operation before the file
      * descriptor is closed on metadata updates, {@code false} if not.
      */
     public void setSyncMeta(boolean sync) {
@@ -954,7 +1079,7 @@ public class Index extends Entity {
     /**
      * Submits an event to this index through an HTTP POST request.
      *
-     * @param data The event data that was posted.
+     * @param data The event data to post.
      */
     public void submit(String data) {
         Receiver receiver = service.getReceiver();
@@ -964,8 +1089,9 @@ public class Index extends Entity {
     /**
      * Submits an event to this index through an HTTP POST request.
      *
-     * @param args Optional arguments for the simple receivers endpoint.
-     * @param data The event data that was posted.
+     * @param args Optional arguments for this request. Valid parameters are: 
+     * "host", "host_regex", "source", and "sourcetype".
+     * @param data The event data to post.
      */
     public void submit(Args args, String data) {
         Receiver receiver = service.getReceiver();
@@ -977,7 +1103,7 @@ public class Index extends Entity {
      * <p>
      * <b>Note:</b> This file must be directly accessible by the Splunk server.
      *
-     * @param filename The uploaded file.
+     * @param filename The path and filename.
      */
     public void upload(String filename) {
         EntityCollection<Upload> uploads = service.getUploads();

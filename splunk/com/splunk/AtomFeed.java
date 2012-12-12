@@ -62,18 +62,18 @@ public class AtomFeed extends AtomObject {
             reader.close();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
 
         return result;
     }
 
     /**
-     * Create a new {@code AtomFeed} instance based on a given XML element.
+     * Creates a new {@code AtomFeed} instance based on a given XML element.
      *
-     * @param input The XML stream
+     * @param input The XML stream.
      * @return An {@code AtomFeed} instance representing the parsed element.
-     * @throws RuntimeException if a parse error occurs
+     * @throws RuntimeException The runtime exception if a parse error occurs.
      */
     static AtomFeed parse(XMLStreamReader input) {
         AtomFeed feed = AtomFeed.create();

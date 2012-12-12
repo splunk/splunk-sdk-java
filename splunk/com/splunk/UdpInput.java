@@ -16,10 +16,15 @@
 
 package com.splunk;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
 /**
- * The {@code UdpInput} class represents a UDP input.
+ * The {@code UdpInput} class represents a UDP data input.
  */
-public class UdpInput extends Input {
+public class UdpInput extends PortInput {
 
     /**
      * Class constructor.
@@ -32,9 +37,9 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns an object that contains the inbound raw TCP connections.
+     * Returns an object that contains the inbound UDP connections.
      *
-     * @return The TCP connections object.
+     * @return The UDP connections object.
      */
     public UdpConnections connections() {
         return new UdpConnections(service, path + "/connections");
@@ -79,8 +84,7 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Returns the input kind for this UDP input.
-     * @see InputKind
+     * Returns the input kind for this input.
      *
      * @return The input kind.
      */
@@ -99,10 +103,11 @@ public class UdpInput extends Input {
     }
 
     /**
-     * @deprecated Returns the value of the {@code _rcvbuf} attribute for this 
+     * Returns the value of the {@code _rcvbuf} attribute for this 
      * UDP input.
      *
      * @return The {@code _rcvbuf} value.
+     * @deprecated This is not used anymore. No replacement.
      */
     public int getRcvBuf() {
         return getInteger("_rcvbuf");
@@ -128,21 +133,21 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Indicates whether Splunk prepends a timestamp and hostname to
+     * Indicates whether Splunk prepends a timestamp and host name to
      * incoming events.
      *
-     * @return {@code true} if Splunk does <i>not</i> prepend a timestamp and
-     * hostname to incoming events, {@code false} if it does.
+     * @return {@code true} if Splunk does not prepend a timestamp and
+     * host name to incoming events, {@code false} if it does.
      */
     public boolean getNoAppendingTimeStamp() {
         return getBoolean("no_appending_timestamp", false);
     }
 
     /**
-     * Indicates whether Splunk removes the priority field from incoming
+     * Indicates whether Splunk removes the <b>priority</b> field from incoming
      * events. 
      *
-     * @return {@code true} if Splunk does <i>not</i> remove the priority field 
+     * @return {@code true} if Splunk does not remove the <b>priority</b> field 
      * from incoming syslog events, {@code false} if it does.
      */
     public boolean getNoPriorityStripping() {
@@ -150,7 +155,8 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Sets the {@code from-host} for the remote server that is sending data.
+     * Sets the value of the <b>from-host</b> field for the remote server that 
+     * is sending data.
      * Valid values are: <ul>
      * <li>"ip": Sets the host to the IP address of the remote server sending 
      * data.</li>
@@ -184,11 +190,11 @@ public class UdpInput extends Input {
     }
 
     /**
-     * Sets whether Splunk should prepend a timestamp and hostname to incoming
+     * Sets whether Splunk should prepend a timestamp and host name to incoming
      * events.
      *
      * @param no_appending_timestamp {@code true} to <i>not</i> prepend a 
-     * timestamp and hostname to incoming events, {@code false} to prepend that
+     * timestamp and host name to incoming events, {@code false} to prepend that
      * information.
      */
     public void setNoAppendingTimeStamp(boolean no_appending_timestamp) {
@@ -209,24 +215,15 @@ public class UdpInput extends Input {
     /**
      * Sets how the input processor should deposit the events it reads. Valid 
      * values are:<ul>
-     * <li>{@code parsingQueue}: Applies props.conf and other parsing rules to 
+     * <li>"parsingQueue": Applies props.conf and other parsing rules to 
      * your data.</li>
-     * <li>{@code indexQueue}: Sends your data directly into the index.</li>
+     * <li>"indexQueue": Sends your data directly into the index.</li>
      * </ul>
      *
      * @param queue The queue-processing type.
      */
     public void setQueue(String queue) {
         setCacheValue("queue", queue);
-    }
-
-    /**
-     * Sets a restriction to accept inputs from the specified host only.
-     *
-     * @param restrictToHost The host.
-     */
-    public void setRestrictToHost(String restrictToHost) {
-        setCacheValue("restrictToHost", restrictToHost);
     }
 
     /**
@@ -254,5 +251,20 @@ public class UdpInput extends Input {
      */
     public void setSourceType(String sourcetype) {
         setCacheValue("sourcetype", sourcetype);
+    }
+
+    /**
+     * Send a string to this UDP input.
+     *
+     * @param eventBody The text to send.
+     */
+    public void submit(String eventBody) throws IOException {
+        DatagramSocket socket = new DatagramSocket();
+        InetAddress address = InetAddress.getByName(this.service.getHost());
+        int port = this.getPort();
+        byte[] buffer = eventBody.getBytes("UTF8");
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
+        socket.send(packet);
+        socket.close();
     }
 }

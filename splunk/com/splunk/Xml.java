@@ -17,11 +17,9 @@
 package com.splunk;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 /**
  * The {@code Xml} class represents a collection of XML utilities.
@@ -41,12 +39,10 @@ public class Xml {
                 DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(false);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            InputSource inputSource = new InputSource();
-            inputSource.setCharacterStream(new InputStreamReader(input));
-            return builder.parse(inputSource);
+            return builder.parse(input);
         }
         catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 }

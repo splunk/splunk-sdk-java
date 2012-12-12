@@ -16,14 +16,20 @@
 
 package com.splunk;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
 import java.io.PushbackReader;
 
+/**
+ * The {@code ResultsReaderXml} class represents a streaming XML reader for 
+ * Splunk search results.
+ */
 public class ResultsReaderXml extends ResultsReader {
 
     private XMLEventReader xmlReader = null;
@@ -34,15 +40,15 @@ public class ResultsReaderXml extends ResultsReader {
      * Constructs a streaming XML reader for the event stream. You should only
      * attempt to parse an XML stream with the XML reader. Unpredictable results
      * may occur if you use a non-XML stream.
-     *
-     * The pushback reader tweaks export streams, which generates non-strict XML 
+     * <br>
+     * The pushback reader tweaks export streams to generate non-strict XML 
      * at the beginning of the stream. The streaming reader ignores preview 
      * data, and only extracts finalized data.
      *
-     * @param inputStream The stream to be parsed.
+     * @param inputStream The stream to parse.
      * @throws Exception On exception.
      */
-    public ResultsReaderXml(InputStream inputStream) throws Exception {
+    public ResultsReaderXml(InputStream inputStream) throws IOException {
         super(inputStream);
         PushbackReader pushbackReader =
             new PushbackReader(inputStreamReader, 256);
@@ -79,18 +85,29 @@ public class ResultsReaderXml extends ResultsReader {
 
         // Attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
-        xmlReader = inputFactory.createXMLEventReader(pushbackReader);
+        try {
+            xmlReader = inputFactory.createXMLEventReader(pushbackReader);
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /** {@inheritDoc} */
-    @Override public void close() throws Exception {
-        super.close();
-        if (xmlReader != null) xmlReader.close();
+    @Override public void close() throws IOException {
+        if (xmlReader != null) {
+            try {
+                xmlReader.close();
+            } catch (XMLStreamException e) {
+                throw new RuntimeException(e);
+            }
+        }
         xmlReader = null;
+        
+        super.close();
     }
-
+    
     /** {@inheritDoc} */
-    @Override public HashMap<String, String> getNextEvent() throws Exception {
+    @Override public Event getNextEvent() throws IOException {
         XMLEvent xmlEvent;
         int eType;
 
@@ -116,25 +133,28 @@ public class ResultsReaderXml extends ResultsReader {
                 }
             }
         }
-        catch (XMLStreamException exception) {
+        catch (XMLStreamException e) {
             // Because we cannot stuff trailing information into the stream,
             // we expect an XMLStreamingException that contains our
             // corresponding end-of-document </doc> that we injected into the
             // front of the stream. Any other exception we rethrow.
-            if (exception.getMessage().contains("</doc>")) {
+            if (e.getMessage().contains("</doc>")) {
                 return null;
             }
-            throw exception;
+            
+            throw new RuntimeException(e);
         }
         return null;
     }
 
-    private HashMap<String, String> getResultKVPairs() throws Exception {
-        HashMap<String, String> returnData = new HashMap<String, String>();
+    private Event getResultKVPairs()
+            throws IOException, XMLStreamException {
+        
+        Event returnData = new Event();
         XMLEvent xmlEvent;
         int eType;
         String key = null;
-        StringBuilder value = new StringBuilder();
+        List<String> values = new ArrayList<String>();
         int level = 0;
 
         // Event results are flat, so extract k/v pairs based on XML indentation
@@ -145,6 +165,7 @@ public class ResultsReaderXml extends ResultsReader {
             eType = xmlEvent.getEventType();
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
+                    @SuppressWarnings("unchecked")
                     Iterator<Attribute> attrIttr =
                         xmlEvent.asStartElement().getAttributes();
                     if (level == 0) {
@@ -155,22 +176,23 @@ public class ResultsReaderXml extends ResultsReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     if (xmlEvent.asEndElement()
-                        .getName()
-                        .getLocalPart()
-                        .equals("result"))
-
+                            .getName()
+                            .getLocalPart()
+                            .equals("result"))
                         return returnData;
+                    
                     if (--level == 0) {
-                        returnData.put(key, value.toString());
-                        value.setLength(0); //clear
+                        String[] valuesArray = 
+                                values.toArray(new String[values.size()]);
+                        returnData.putArray(key, valuesArray);
+                        
                         key = null;
+                        values.clear();
                     }
                     break;
                 case XMLStreamConstants.CHARACTERS:
                     if (level > 1) {
-                        // Multi-values delimiter is comma.
-                        if (value.length() > 0) value.append(",");
-                        value.append(xmlEvent.asCharacters().getData());
+                        values.add(xmlEvent.asCharacters().getData());
                     }
                     break;
                 default:

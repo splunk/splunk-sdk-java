@@ -61,7 +61,7 @@ public class OutputGroup extends Entity {
      * @return The server list.
      */
     public String[] getServers() {
-        return getStringArray("servers");
+        return getString("servers").split(",");
     }
 
     /**
@@ -207,7 +207,7 @@ public class OutputGroup extends Entity {
     @Override public void update(Map<String, Object> args) {
         // Add required arguments if not already present
         if (!args.containsKey("servers")) {
-            args = Args.create(args).add("servers", getServers());
+            args = Args.create(args).add("servers", getString("servers"));
         }
         super.update(args);
     }
@@ -219,7 +219,7 @@ public class OutputGroup extends Entity {
         // If not present in the update keys, add required attribute as long
         // as one pre-existing update pair exists
         if (toUpdate.size() > 0 && !toUpdate.containsKey("servers")) {
-            setCacheValue("servers", getServers());
+            setCacheValue("servers", getString("servers"));
         }
         super.update();
     }

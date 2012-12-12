@@ -16,6 +16,10 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
 * The {@code LicensePool} class represents a license pool, which is made up 
 * of a single license master and zero or more license slave instances of Splunk 
@@ -28,7 +32,7 @@ public class LicensePool extends Entity {
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The license group endpoint.
+     * @param path The license pool endpoint.
      */
     LicensePool(Service service, String path) {
         super(service, path);
@@ -37,7 +41,7 @@ public class LicensePool extends Entity {
     /**
      * Returns the description of this license pool.
      *
-     * @return This description, or {@code null} if not specified.
+     * @return The description, or {@code null} if not specified.
      */
     public String getDescription() {
         return getString("description", null);
@@ -60,17 +64,36 @@ public class LicensePool extends Entity {
      * specified.
      */
     public String[] getSlaves() {
-        return getStringArray("slaves", null);
+        if (toUpdate.containsKey("slaves")) {
+            String value = (String)toUpdate.get("slaves");
+            return value.split(",");
+        }
+        else {
+            return getStringArray("slaves", null);
+        }
     }
 
     /**
      * Returns the usage of indexing volume by slave licenses in this license
      * pool.
      *
-     * @return The overall license slave usage, in bytes.
+     * @return A map from each slave GUID to the number of bytes it is using.
      */
-    public long getSlavesUsageBytes() {
-        return getLong("salves_usage_bytes", 0);
+    public Map<String, Long> getSlavesUsageBytes() {
+        @SuppressWarnings("unchecked")
+        HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
+        if (values == null) {
+            values = new HashMap<String, Object>();
+        }
+        
+        HashMap<String, Long> usageBytes = new HashMap<String, Long>();
+        
+        for(String key : values.keySet()) {
+            String value = (String)values.get(key);
+            usageBytes.put(key, Long.parseLong(value));
+        }
+        
+        return usageBytes;
     }
 
     /**
@@ -136,5 +159,15 @@ public class LicensePool extends Entity {
      */
     public void setSlaves(String slaves) {
         setCacheValue("slaves", slaves);
+    }
+
+    /**
+     * Sets the list of slaves that are members of this license pool.
+     *
+     * @param slaves The array of slaves. To accept all slaves, use an 
+     * array with a single asterisk element ("*").
+     */
+    public void setSlaves(String[] slaves) {
+        setSlaves(Util.join(",", slaves));
     }
 }

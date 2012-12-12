@@ -21,8 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * The {@code ResourceCollection} class represents a collection of Splunk
- * resources.
+ * The {@code ResourceCollection} abstract base class represents a collection of
+ * Splunk resources.
  *
  * @param <T> The type of members of the collection.
  */
@@ -51,8 +51,8 @@ public class ResourceCollection<T extends Resource>
      * @param service The connected {@code Service} instance.
      * @param path The target endpoint.
      * @param itemClass The class of this resource item.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link CollectionArgs}).
      */
     ResourceCollection(
             Service service, String path, Class itemClass, Args args) {
@@ -76,10 +76,12 @@ public class ResourceCollection<T extends Resource>
      *
      * @param key The key to look up.
      * @param namespace The namespace to constrain the search to.
-     * @return {@code true} if the constrained key exists, {@code false} if not.
+     * @return {@code true} if the key exists, {@code false} if not.
      */
     public boolean containsKey(Object key, Args namespace) {
+        Util.ensureNamespaceIsExact(namespace);
         validate();
+        
         LinkedList<T> entities = items.get(key);
         if (entities == null || entities.size() == 0) return false;
         String pathMatcher = service.fullpath("", namespace);
@@ -103,7 +105,7 @@ public class ResourceCollection<T extends Resource>
     static Class[] itemSig = new Class[] { Service.class, String.class };
 
     /**
-     * Creates a collection member (or <i>item</i>).
+     * Creates a collection member.
      *
      * @param itemClass The class of the member to create.
      * @param path The path to the member resource.
@@ -138,11 +140,11 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Creates a collection member (or <i>item</i>) corresponding to a given
+     * Creates a collection member corresponding to a given
      * Atom entry. This base implementation uses the class object that was
      * passed in when the generic {@code ResourceCollection} was created.
      * Subclasses may override this method to provide alternative means of
-     * instantiating collection items.
+     * instantiating collection members.
      *
      * @param entry The {@code AtomEntry} corresponding to the member to
      * instantiate.
@@ -163,13 +165,13 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Gets a the value of {@code key} if it exists within this collection.
+     * Gets the value of a given key, if it exists within this collection.
      *
      * @param key The key to look up.
      * @return The value indexed by the key, or {@code null} if it doesn't 
      * exist.
-     * @throws SplunkException if there is more than one value represented by
-     * this key.
+     * @throws SplunkException The exception to throw if there is more than one 
+     * value represented by this key.
      */
     public T get(Object key) {
         validate();
@@ -183,7 +185,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Gets a the value of a scoped, namespace-constrained key if it exists 
+     * Gets a the value of a scoped, namespace-constrained key, if it exists 
      * within this collection.
      *
      * @param key The key to look up.
@@ -192,7 +194,9 @@ public class ResourceCollection<T extends Resource>
      * exist.
      */
     public T get(Object key, Args namespace) {
+        Util.ensureNamespaceIsExact(namespace);
         validate();
+        
         LinkedList<T> entities = items.get(key);
         if (entities == null || entities.size() == 0) return null;
         String pathMatcher = service.fullpath("", namespace);
@@ -214,9 +218,9 @@ public class ResourceCollection<T extends Resource>
     }
     
     /**
-     * Returns the value to use as the item key from a given Atom entry.
+     * Returns the value to use as the key from a given Atom entry.
      * Subclasses may override this value for collections that use something
-     * other than title as the key.
+     * other than "title" as the key.
      *
      * @param entry The {@code AtomEntry} corresponding to the collection
      * member.
@@ -227,7 +231,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Returns the value to use as the item path from a given Atom entry.
+     * Returns the value to use as the member's path from a given Atom entry.
      * Subclasses may override this value to support alternative methods of
      * determining a member's path.
      *
@@ -296,7 +300,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public T put(String key, T value) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -305,7 +309,7 @@ public class ResourceCollection<T extends Resource>
      * @param map The set of mappings to copy into this map.
      */
     public void putAll(Map<? extends String, ? extends T> map) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /** {@inheritDoc} */
@@ -355,7 +359,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     /**
-     * Returns the number of values a specific key represents.
+     * Returns the number of values that a specific key represents.
      *
      * @param key The key to look up.
      * @return The number of entity values represented by the key.

@@ -15,7 +15,10 @@
  */
 
 package com.splunk;
-
+/**
+ * The {@code FiredAlertGroupCollection} class represents a collection of fired 
+ * alert groups.
+ */
 public class FiredAlertGroupCollection
     extends EntityCollection<FiredAlertGroup>{
 
@@ -32,8 +35,8 @@ public class FiredAlertGroupCollection
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param args Arguments to use when you instantiate the entity, such as 
-     * "count" and "offset".
+     * @param args Collection arguments that specify the number of entities to 
+     * return and how to sort them (see {@link CollectionArgs}).
      */
     FiredAlertGroupCollection(Service service, Args args) {
         super(service, "alerts/fired_alerts", FiredAlertGroup.class, args);

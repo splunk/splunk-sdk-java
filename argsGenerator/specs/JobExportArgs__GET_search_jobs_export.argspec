@@ -1,0 +1,372 @@
+# This endpoint is unusual in that most of its arguments are copied straight
+# from other endpoints. In particular:
+#   * POST search/jobs
+#   * GET search/jobs/{search_id}/events
+#   * GET search/jobs/{search_id}/results
+# 
+# Sections of arguments that have been copied from other files are clearly
+# marked by comments.
+# 
+# %%%%%%%%%%%%%%%%%%
+# %%% DIRECTIVES %%%
+# %%%%%%%%%%%%%%%%%%
+# 
+# Some arguments are defined multiple times by different copied sections.
+# Ignore errors related to this. The first version wins.
+!SET ignore_duplicates 1
+# 
+# Some arguments from included endpoints do not apply. Ignore them.
+!SUPPRESS id
+!SUPPRESS count
+!SUPPRESS f
+!SUPPRESS offset
+!SUPPRESS search
+# 
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% Unique to this endpoint %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+index_earliest
+IndexEarliest
+String
+Specifies the earliest time in the time range to search, based on the index time. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The earliest time. 
+===
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+index_latest
+IndexLatest
+String
+Specifies the latest time in the time range to search, based on the index time. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The latest time. 
+===
+output_mode
+OutputMode
+OutputMode
+Sets the format of the output.
+-
+The output format.
+===
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% Subset of arguments from POST search/jobs %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+auto_cancel
+AutoCancel
+int
+Sets the number of seconds of inactivity after which to automatically cancel a job. A value of 0 means never auto-cancel.
+-
+The number of seconds after which to cancel a job.
+===
+auto_finalize_ec
+AutoFinalizeEventCount
+int
+Sets the number of events to process after which to auto-finalize the search. A value of 0 means no limit.
+-
+The number of events.
+===
+auto_pause
+AutoPause
+int
+Sets the number of seconds of inactivity after which to automatically pause a job. A value of 0 means never auto-pause.
+-
+The number of seconds after which to pause.
+===
+# TODO: Make Date version.
+earliest_time
+EarliestTime
+String
+Specifies the earliest time in the time range to search. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The earliest time. 
+===
+enable_lookups
+EnableLookups
+boolean
+Indicates whether to enable lookups for this search. Enabling lookups might slow searches significantly depending on the nature of the lookups.
+-
+{@code true} to enable lookups, {@code false} if not.
+===
+force_bundle_replication
+ForceBundleReplication
+boolean
+Specifies whether this search should cause (and wait depending on the value of {@code setSynchronizeBundleReplication}) bundle synchronization with all search peers.
+-
+{@code true} if this search should cause bundle synchronization, {@code false} if not.
+===
+id
+Id
+String
+Sets a search ID (SID). If unspecified, a random ID is generated. 
+-
+The search ID.
+===
+# TODO: Make Date version.
+latest_time
+LatestTime
+String
+Specifies the latest time in the time range to search. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The latest time. 
+===
+max_time
+MaximumTime
+int
+Sets the number of seconds to run this search before finalizing. Specify 0 to never finalize.
+-
+The maximum time, in seconds.
+===
+namespace
+Namespace
+String
+Specifies the application namespace in which to restrict searches. 
+-
+The namespace.
+===
+# TODO: Improve docs: What is the accepted time format?
+# TODO: Make Date version.
+now
+Now
+String
+Specifies a time string that sets the absolute time used for any relative time specifier in the search. This value defaults to the current system time.<p> You can specify a relative time modifier for this parameter. For example, specify +2d to specify the current time plus two days. If you specify a relative time modifier both in this parameter and in the search string, the search string modifier takes precedence.<p>For information about relative time modifiers, see <a href="http://docs.splunk.com/Documentation/Splunk/latest/SearchReference/SearchTimeModifiers" target="_blank">Time modifiers for search</a> in the Search Reference. 
+-
+A time string.
+===
+reduce_freq
+ReduceFrequency
+int
+Sets the time to wait between running the MapReduce phase on accumulated map values.
+-
+The time to wait, in seconds.
+===
+reload_macros
+ReloadMacros
+boolean
+Indicates whether to reload macro definitions from the macros.conf configuration file.
+-
+{@code true} to reload macro definitions, {@code false} if not.
+===
+remote_server_list
+RemoteServerList
+String[]-CSV
+Sets a list of (possibly wildcarded) servers from which to pull raw events. This same server list is used in subsearches.
+-
+A list of servers.
+===
+rf
+RequiredFieldList
+String[]-MULTIPLE
+Sets one or more required fields to the search. These fields, even if not referenced or used directly by the search, are still included by the events and summary endpoints. Splunk Web uses these fields to prepopulate panels in the Search view.
+-
+The list of fields.
+===
+rt_blocking
+RealtimeBlocking
+boolean
+Indicates whether the indexer blocks if the queue for this search is full. Only applies to real-time searches.
+-
+{@code true} to block the indexer for a full queue, {@code false} if not.
+===
+rt_indexfilter
+RealtimeIndexFilter
+boolean
+Indicates whether the indexer pre-filters events. Only applies to real-time searches.
+-
+{@code true} to pre-filter events, {@code false} if not.
+===
+rt_maxblocksecs
+RealtimeMaximumBlockSeconds
+int
+Sets the number of seconds indicating the maximum time to block. A value of 0 means no limit. For real-time searches with "rt_blocking" set to {@code true}.
+-
+The maximum time to block, in seconds.
+===
+rt_queue_size
+RealtimeQueueSize
+int
+Sets the number indicating the queue size (in events) that the indexer should use for this search. Only applies to real-time searches.
+-
+The queue size, in events.
+===
+search_listener
+SearchListener
+String
+Sets a string that registers a search state listener with the search. Use the format: {@code search_state;results_condition;http_method;uri;}<p>For example:<p>{@code search_listener=onResults;true;POST;/servicesNS/admin/search/saved/search/foobar/notify;}
+-
+The search listener string.
+===
+search_mode
+SearchMode
+SearchMode
+Sets the search mode ("normal" or "realtime").
+-
+The search mode.
+===
+sync_bundle_replication
+SynchronizeBundleReplication
+boolean
+Indicates whether this search should wait for bundle replication to complete.
+-
+{@code true} to wait for bundle replication, {@code false} if not.
+===
+# TODO: Improve docs: There is no {start,end}_time. Perhaps {earliest,latest}_time was intended?
+time_format
+TimeFormat
+String
+Sets the format for converting a formatted time string from {start,end}_time into UTC seconds. The default value is ISO-8601.
+-
+The time format string.
+===
+timeout
+Timeout
+int
+Sets the number of seconds to keep this search after processing has stopped.
+-
+The timeout, in seconds.
+===
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% GET search/jobs/{search_id}/events %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# NOTE: The entire contents of this specification have been copied to
+#       JobExportArgs__GET_search_jobs_export.argspec, which should be
+#       updated (and regenerated) to reflect changes made to this file.
+#
+count
+Count
+int
+Sets the maximum number of results to return. To return all available results, specify 0. The default value is 100.
+-
+The maximum number of results. 
+===
+# TODO: Make Date version.
+earliest_time
+EarliestTime
+String
+Specifies the earliest time in the time range to search. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The earliest time. 
+===
+f
+FieldList
+String[]-MULTIPLE
+Sets a list of fields to return for the event set. 
+-
+A list of fields.
+===
+# TODO: Make Date version.
+latest_time
+LatestTime
+String
+Specifies the latest time in the time range to search. The time string can be a UTC time (with fractional seconds), a relative time specifier (to now), or a formatted time string.
+-
+The latest time. 
+===
+max_lines
+MaximumLines
+int
+Sets the maximum number of lines that any single event's <b>_raw</b> field should contain.
+-
+The maximum number of lines. For no limit, specify 0.
+===
+offset
+Offset
+int
+Specifies the index of the first result (inclusive) from which to begin returning data. This value is 0-indexed.<p>In Splunk 4.1+, negative offsets are allowed and are added to the count to compute the absolute offset (for example, offset=-1 is the last available offset). Offsets in the results are always absolute and never negative. The default value is 0.
+-
+The index of the first result to return.
+===
+# TODO: Improve docs: The referenced document does not actually document the enum constants.
+output_mode
+OutputMode
+OutputMode
+Sets the format of the output.
+-
+The output format.
+===
+output_time_format
+OutputTimeFormat
+String
+Sets a UTC time format.
+-
+A UTC time format.
+===
+search
+Search
+String
+Sets the post-processing search to apply to results. 
+-
+The post-processing search query.
+===
+# TODO: Improve docs: What are the valid values for this parameter?
+segmentation
+Segmentation
+String
+Sets the type of segmentation to perform on the data, including an option to perform k/v segmentation.
+-
+The segmentation type.
+===
+# TODO: Are you sure this is the default? This time format lacks time zone and millisecond resolution.
+# TODO: Improve docs: There is no {start,end}_time. Perhaps {earliest,latest}_time was intended?
+time_format
+TimeFormat
+String
+Specifies an expression to convert a formatted time string from {start,end}_time into UTC seconds. The default format is "%m/%d/%Y:%H:%M:%S". 
+-
+The time format.
+===
+# TODO: Improve docs: What effect does each value have?
+truncation_mode
+TruncationMode
+TruncationMode
+Specifies how to truncate lines to achieve the value in {@link #setMaximumLines}.
+-
+The truncation mode.
+===
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%% GET search/jobs/{search_id}/results %%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# NOTE: The entire contents of this specification have been copied to
+#       JobExportArgs__GET_search_jobs_export.argspec, which should be
+#       updated (and regenerated) to reflect changes made to this file.
+#
+# TODO: Improve docs: Formatting of the description differs from that of
+#       GET search/jobs/{search_id}/results. Otherwise all other parameters are identical.
+count
+Count
+int
+Sets the maximum number of results to return. 
+-
+The maximum number of results. To return all available results, specify 0.
+===
+# TODO: Improve docs: Why isn't "field_list" deprecated when there is "f" present?
+f
+FieldList
+String[]-MULTIPLE
+Sets a list of fields to return for the event set. 
+-
+A list of fields.
+===
+offset
+Offset
+int
+Specifies the index of the first result (inclusive) from which to begin returning data. This value is 0-indexed.<p>In Splunk 4.1+, negative offsets are allowed and are added to the count to compute the absolute offset (for example, offset=-1 is the last available offset). Offsets in the results are always absolute and never negative. The default value is 0.
+-
+The index of the first result to return.
+===
+# TODO: Improve docs: The referenced document does not actually document the enum constants.
+output_mode
+OutputMode
+OutputMode
+Sets the format of the output.
+-
+The output format.
+===
+search
+Search
+String
+Sets the post-processing search to apply to results. 
+-
+The post-processing search query.
+===

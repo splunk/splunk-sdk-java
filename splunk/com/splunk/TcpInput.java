@@ -16,21 +16,58 @@
 
 package com.splunk;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+
 /**
- * The {@code TcpInput} class represents a TCP raw input. This differs from a
- * TCP <i>cooked</i> input in that this TCP input is in raw form, and is not
+ * The {@code TcpInput} class represents a raw TCP data input. This differs from
+ * a <i>cooked</i> TCP input in that this TCP input is in raw form, and is not
  * processed (or "cooked").
  */
-public class TcpInput extends Input {
+public class TcpInput extends PortInput {
 
     /**
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
-     * @param path The TCP raw input endpoint.
+     * @param path The raw TCP input endpoint.
      */
     TcpInput(Service service, String path) {
         super(service, path);
+    }
+
+    /**
+     * Returns a socket attached to this raw TCP input.
+     */
+    public Socket attach() throws IOException {
+        return new Socket(this.service.getHost(), this.getPort());
+    }
+
+    /**
+     * Submits events to this raw TCP input, reusing the connection.
+     *
+     * This method passes an output stream connected to the index to the 
+     * {@code run} method of the {@code ReceiverBehavior} object, then handles 
+     * setting up and tearing down the socket.
+     * For an example of how to use this method, see 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" target="_blank">How to 
+     * get data into Splunk using the Java SDK</a> on 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
+     * target="_blank">dev.splunk.com</a>. 
+     */
+    public void attachWith(ReceiverBehavior behavior) throws IOException {
+        Socket socket = null;
+        OutputStream output = null;
+        try {
+            socket = attach();
+            output = socket.getOutputStream();
+            behavior.run(output);
+            output.flush();
+        } finally {
+            if (output != null) { output.close(); }
+            if (socket != null) { socket.close(); }
+        }
     }
 
     /**
@@ -53,7 +90,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the group of this TCP input.
+     * Returns the group of this raw TCP input.
      *
      * @return The group.
      */
@@ -62,7 +99,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the source host of this TCP input where this indexer gets its
+     * Returns the source host of this raw TCP input where this indexer gets its
      * data.
      *
      * @return The source host, or {@code null} if not specified.
@@ -72,7 +109,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the index name of this TCP input.
+     * Returns the index name of this raw TCP input.
      *
      * @return The index name, or {@code null} if not specified.
      */
@@ -81,8 +118,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the input kind of this TCP input.
-     * @see InputKind
+     * Returns the input kind of this input. 
      *
      * @return The input kind.
      */
@@ -91,7 +127,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the queue for this TCP input. Valid values are:
+     * Returns the queue for this raw TCP input. Valid values are:
      * "parsingQueue" and "indexQueue".
      *
      * @return The queue, or {@code null} if not specified.
@@ -111,8 +147,8 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the incoming host restriction for this TCP input. When specified, 
-     * this input only accepts data from the specified host. 
+     * Returns the incoming host restriction for this raw TCP input. When 
+     * specified, this input only accepts data from the specified host. 
      *
      * @return The incoming host restriction, or {@code null} if not specified.
      */
@@ -121,8 +157,8 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the initial source key for this TCP input. Typically this value 
-     * is the input file path.
+     * Returns the initial source key for this raw TCP input. Typically this 
+     * value is the input file path.
      *
      * @return The source key, or {@code null} if not specified.
      */
@@ -131,7 +167,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Returns the source type for events from this TCP input.
+     * Returns the source type for events from this raw TCP input.
      *
      * @return The source type, or {@code null} if not specified.
      */
@@ -140,10 +176,9 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Indicates whether this TCP input is using secure socket layer (SSL).
+     * Indicates whether this raw TCP input is using secure socket layer (SSL).
      *
-     * @return {@code true} if this TCP input is using SSL, {@code false} if
-     * not.
+     * @return {@code true} if this input is using SSL, {@code false} if not.
      */
     public boolean getSSL() {
         return getBoolean("SSL", false);
@@ -159,8 +194,8 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Sets the {@code from-host} for the remote server that is sending data.
-     * Valid values are: <ul>
+     * Sets the value for the <b>from-host</b> field for the remote server that
+     * is sending data. Valid values are: <ul>
      * <li>"ip": Sets the host to the IP address of the remote server sending 
      * data.</li>
      * <li>"dns": Sets the host to the reverse DNS entry for the IP address of 
@@ -176,13 +211,14 @@ public class TcpInput extends Input {
 
     /**
      * Sets whether this input is enabled or disabled.
-     * You can also do this using the {@code Entity.disable} and 
-     * {@code Entity.enable} methods. 
-     * @see Entity#disable
-     * @see Entity#enable
+     * <p>
+     * <b>Note:</b> Using this method requires you to restart Splunk before this
+     * setting takes effect. To avoid restarting Splunk, use the 
+     * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
+     * take effect immediately. 
      *
-     * @param disabled {@code true} to disabled to script input,
-     * {@code false} to enable.
+     * @param disabled {@code true} to disable this input, {@code false} to 
+     * enable it.
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
@@ -207,12 +243,35 @@ public class TcpInput extends Input {
     }
 
     /**
+     * Submit a single event to this raw TCP input by opening the connection, 
+     * submitting the event, and closing the connection. To submit multiple 
+     * events, use {@code attachWith} to open a single connection.
+     * @see #attachWith
+     *
+     * @param eventBody A string that contains the event.
+     */
+    public void submit(String eventBody) throws IOException {
+        Socket socket = null;
+        OutputStream output = null;
+        try {
+            socket = attach();
+            output = socket.getOutputStream();
+            output.write(eventBody.getBytes("UTF8"));
+            output.flush();
+            output.close();
+            socket.close();
+        } finally {
+            if (output != null) { output.close(); }
+            if (socket != null) { socket.close(); }
+        }
+    }
+
+    /**
      * Sets how the input processor should deposit the events it reads. Valid 
      * values are:<ul>
-     * <li>{@code parsingQueue}: Applies props.conf and other parsing rules to 
-     * your data.</li>
-     * <li>{@code indexQueue}: Sends your data directly into the index.</li>
-     * </ul>
+     * <li>"parsingQueue": Applies props.conf and other parsing rules to your 
+     * data.</li>
+     * <li>"indexQueue": Sends your data directly into the index.</li></ul>
      *
      * @param queue The queue-processing type.
      */
@@ -234,15 +293,6 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Sets a restriction to accept inputs from the specified host only.
-     *
-     * @param restrictToHost The host.
-     */
-    public void setRestrictToHost(String restrictToHost) {
-        setCacheValue("restrictToHost", restrictToHost);
-    }
-
-    /**
      * Sets the initial value for the source key for events from this 
      * input. The source key is used during parsing and indexing. The 
      * <b>source</b> field is used for searches. As a convenience, the source 
@@ -261,7 +311,7 @@ public class TcpInput extends Input {
     }
 
     /**
-     * Sets the source type for events from this input.
+     * Sets the source type for events from this raw TCP input.
      *
      * @param sourcetype The source type.
      */

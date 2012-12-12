@@ -45,13 +45,40 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
+     * Disable distributed search on this Splunk instance.
+     *
+     * Requires restarting Splunk before it takes effect.
+     */
+    @Override
+    public void disable() {
+        Args args = new Args();
+        args.put("disabled", "1");
+        update(args);
+    }
+
+    /**
+     * Enable distributed search on this Splunk instance.
+     *
+     * Requires restarting Splunk before it takes effect.
+     */
+    @Override
+    public void enable() {
+        Args args = new Args();
+        args.put("disabled", "0");
+        update(args);
+    }
+
+    /**
      * Indicates whether Splunk automatically adds all discovered servers.
+     *
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @return {@code true} if Splunk automatically adds servers, {@code false}
      * if not.
      */
+    @Deprecated
     public boolean getAutoAddServers() {
-        return getBoolean("autoAddServers");
+        return getBoolean("autoAddServers", false);
     }
 
     /**
@@ -92,38 +119,47 @@ public class DistributedConfiguration extends Entity {
      * servers are not rechecked. The default is 60 seconds.
      */
     public int getCheckTimedOutServersFrequency() {
-        return getInteger("checkTimedOutServersFrequency");
+        return getInteger("checkTimedOutServersFrequency", 60);
     }
 
     /**
      * Returns the period between heartbeat checks on other servers' health.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return The heartbeat period, in seconds. If 0, heartbeat checks are
      * disabled.
      */
+    @Deprecated
     public int getHeartbeatFrequency() {
-        return getInteger("heartbeatFrequency");
+        return getInteger("heartbeatFrequency", 0);
     }
 
     /**
      * Returns the multicast address where each Splunk server sends and 
      * listens for heartbeat messages.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return The multicast address for discovery and heartbeat messages, 
      * or {@code null} if not available.
      */
+    @Deprecated
     public String getHeartbeatMcastAddress() {
-        return getString("heartbeatMcastAddr", null);
+        return getString("heartbeatMcastAddr", "224.0.0.37");
     }
 
     /**
      * Returns the port where each Splunk server sends and listens for heartbeat
      * messages.
      *
-     * @return The heartbeat port.
+     * @deprecated Deprecated since Splunk 5.0.
+     *
+     * @return The heartbeat port, or -1 if not specified.
      */
+    @Deprecated
     public int getHeartbeatPort() {
-        return getInteger("heartbeatPort");
+        return getInteger("heartbeatPort", 8888);
     }
 
     /**
@@ -144,7 +180,7 @@ public class DistributedConfiguration extends Entity {
      * distributed configuration, {@code false} if not.
      */
     public boolean getRemovedTimedOutServers() {
-        return getBoolean("removedTimedOutServers");
+        return getBoolean("removedTimedOutServers", false);
     }
 
     /**
@@ -181,8 +217,7 @@ public class DistributedConfiguration extends Entity {
 
     /**
      * Indicates whether this server uses bundle replication to share
-     * search-time configuration with search peers. 
-     * 
+     * search-time configuration with search peers.
      * <p>
      * <b>Note:</b> If set to {@code false}, the search head assumes that the
      * search peers can access the correct bundles using an NFS share.
@@ -191,7 +226,7 @@ public class DistributedConfiguration extends Entity {
      * {@code false} if not.
      */
     public boolean getShareBundles() {
-        return getBoolean("shareBundles");
+        return getBoolean("shareBundles", true);
     }
 
     /**
@@ -200,30 +235,36 @@ public class DistributedConfiguration extends Entity {
      * setting is used for building a node that only merges the results from 
      * other servers.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return {@code true} if the server does not participate as a server in
      * any search, {@code false} if it does.
      */
+    @Deprecated
     public boolean getSkipOurselves() {
-        return getBoolean("skipOurselves");
+        return getBoolean("skipOurselves", false);
     }
 
     /**
-     * Returns the time-out period for gathering a search peer's basic info 
-     * (/services/server/info).
+     * Returns the time-out period for gathering a search peer's basic information.
      *
      * @return The time-out period, in seconds.
+     * @see ServiceInfo
      */
     public int getStatusTimeout() {
-        return getInteger("statusTimeout");
+        return getInteger("statusTimeout", 10);
     }
 
     /**
      * Returns the time-to-live (ttl) of heartbeat messages.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @return The time-to-live of heartbeat messages.
      */
+    @Deprecated
     public int getTtl() {
-        return getInteger("ttl");
+        return getInteger("ttl", 1);
     }
 
     /**
@@ -233,15 +274,18 @@ public class DistributedConfiguration extends Entity {
      * disabled.
      */
     public boolean isDistSearchEnabled() {
-        return getBoolean("dist_search_enabled");
+        return getBoolean("dist_search_enabled", true);
     }
 
     /**
-     * Sets whether to automatically add discovered servers. 
+     * Sets whether to automatically add discovered servers.
+     *
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @param autoAdd {@code true} to add servers automatically, {@code false} 
      * if not. 
      */
+    @Deprecated
     public void setAutoAddServers(boolean autoAdd) {
         setCacheValue("autoAddServers", autoAdd);
     }
@@ -292,8 +336,8 @@ public class DistributedConfiguration extends Entity {
     /**
      * Sets whether the distributed configuration is enabled or disabled. 
      * <p>
-     * <b>Note:</b> You must restart Splunk for this setting to take effect.
-     * However, to avoid restarting Splunk, you can use the 
+     * <b>Note:</b> Using this method requires you to restart Splunk before this 
+     * setting takes effect. To avoid restarting Splunk, use the 
      * {@code Entity.disable} and {@code Entity.enable} methods instead, which 
      * take effect immediately. 
      * @see Entity#disable
@@ -309,9 +353,12 @@ public class DistributedConfiguration extends Entity {
     /**
      * Sets the heartbeat frequency between peers.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @param seconds The time for peer heartbeats, in seconds. If set to 0,
      * heartbeat messages are disabled.
      */
+    @Deprecated
     public void setHeartbeatFrequency(int seconds) {
         setCacheValue("heartbeatFrequency", seconds);
     }
@@ -320,8 +367,11 @@ public class DistributedConfiguration extends Entity {
      * Sets the heartbeat multicast address. This address is used for server
      * auto discovery. The default address is "224.0.0.37".
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @param mCastAddress The multicast address for server auto discovery.
      */
+    @Deprecated
     public void setHeartbeatMcastAddr(String mCastAddress) {
         setCacheValue("heartbeatMcastAddr", mCastAddress);
     }
@@ -329,8 +379,11 @@ public class DistributedConfiguration extends Entity {
     /**
      * Sets the port where Splunk sends and listens for heartbeat messages.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @param port The heartbeat port.
      */
+    @Deprecated
     public void setHeartbeatPort(int port) {
         setCacheValue("heartbeatPort", port);
     }
@@ -390,8 +443,8 @@ public class DistributedConfiguration extends Entity {
      *
      * If set to {@code false}, the search head assumes that the search peers
      * can access the correct bundles using an NFS share and have correctly
-     * configured the options listed under "SEARCH HEAD BUNDLE MOUNTING 
-     * OPTIONS".
+     * configured the options for mounted_bundles and bundles_location in the 
+     * distsearch.conf file.
      *
      * @param shareBundles {@code true} to share search-time configuration
      * with peers, {@code false} if not.
@@ -405,18 +458,22 @@ public class DistributedConfiguration extends Entity {
      * other call. This setting is used for building a node that only merges the
      * results from other servers.
      *
+     * @deprecated Deprecated since Splunk 5.0.
+     *
      * @param skipOurselves {@code true} to skip participation, {@code false} to
      * participate as a server in searches and calls.
      */
+    @Deprecated
     public void setSkipOurselves(boolean skipOurselves) {
         setCacheValue("skipOurselves", skipOurselves);
     }
 
     /**
      * Sets the time-out period for connecting to a search peer for getting its
-     * basic info (/services/server/info).
+     * basic information.
      *
      * @param seconds The connection time-out period, in seconds.
+     * @see ServiceInfo
      */
     public void setStatusTimeout(int seconds) {
         setCacheValue("statusTimeout", seconds);
@@ -426,13 +483,15 @@ public class DistributedConfiguration extends Entity {
      * Sets the time-to-live (ttl) of heartbeat messages. Increasing this number
      * allows UDP packets to spread beyond the current sub-net to the specified
      * number of hops.
-     *
-     * <p>
-     * <b>Note:</b> This feature only works when routers along the way are 
+     * 
+     * <b>Note:</b> This feature only works when routers along the way are
      * configured to pass UDP multicast packets.
+     * 
+     * @deprecated Deprecated since Splunk 5.0.
      *
      * @param value The time-to-live value of heartbeat messages.
      */
+    @Deprecated
     public void setTTL(int value) {
         setCacheValue("ttl", value);
     }

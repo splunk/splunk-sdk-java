@@ -1,0 +1,63 @@
+app
+App
+String
+Sets the app context in which to list the collection.
+-
+The app context in which to list the collection. A {@code null} value indicates no app context, and a value of {@code "-"} indicates an app wildcard.
+===
+owner
+Owner
+String
+Sets the owner context in which to list the collection.
+-
+The owner context in which to list the collection. A value of {@code "-"} indicates a wildcard, and a {@code null} value indicates no owner context.
+===
+sharing
+Sharing
+String
+Sets the sharing context in which to list the collection.
+-
+The sharing context in which to list the collection. Valid values are "user", "app", "global", and "system".
+===
+count
+Count
+int
+Sets the maximum number of entries to return.
+-
+The maximum number of entries to return. To return all entries, specify 0.
+===
+offset
+Offset
+int
+Sets the index of the first entry to return.
+-
+The index of the first entry to return.
+===
+search
+Search
+String
+Sets a search query to filter the response. The response matches field values against the search query. For example, "foo" matches any object that has "foo" as a substring in a field, and "field_name=field_value" restricts the match to a single field.
+-
+A search query to filter the response. 
+===
+sort_dir
+SortDirection
+SortDirection
+Sets the direction to sort entries.
+-
+The sorting order--ascending or descending.
+===
+sort_key
+SortKey
+String
+Sets the field to use for sorting. 
+-
+The field to sort by.
+===
+sort_mode
+SortMode
+SortMode
+Sets the mode to use for sorting.
+-
+The collating sequence for sorting entries.
+===

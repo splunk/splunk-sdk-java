@@ -18,10 +18,15 @@ package com.splunk;
 
 import org.junit.Test;
 
-public class PasswordTest extends SplunkTestCase {
-    final static String assertRoot = "Password assert: ";
-
-    void checkPassword(Password password) {
+public class PasswordTest extends SDKTestCase {
+    @Test
+    public void testGettersOfDefaultPasswords() {
+        for (Password password : service.getPasswords().values()) {
+            testGettersOf(password);
+        }
+    }
+    
+    private void testGettersOf(Password password) {
         password.getClearPassword();
         password.getEncryptedPassword();
         password.getPassword();
@@ -29,15 +34,8 @@ public class PasswordTest extends SplunkTestCase {
         password.getUsername();
     }
 
-    @Test public void testPasswords() {
-        Service service = connect();
-        for (Password password : service.getPasswords().values())
-            checkPassword(password);
-    }
-
-    @Test public void testPasswordCrud() {
-        Service service = connect();
-
+    @Test
+    public void testPasswordCrud() {
         PasswordCollection passwords = service.getPasswords();
 
         String name = "sdk-test";
@@ -46,47 +44,50 @@ public class PasswordTest extends SplunkTestCase {
 
         if (passwords.containsKey(name))
             passwords.remove(name);
-        assertFalse(assertRoot + "#1", passwords.containsKey(name));
+        assertFalse(passwords.containsKey(name));
 
         Password password;
 
         // Create a password without realm
         password = passwords.create(name, value);
-        assertTrue(assertRoot + "#2", passwords.containsKey(name));
-        assertEquals(assertRoot + "#3", name, password.getUsername());
-        assertEquals(assertRoot + "#4", value, password.getClearPassword());
-        assertEquals(assertRoot + "#5", null, password.getRealm());
-
-        Args args;
+        assertTrue(passwords.containsKey(name));
+        assertEquals(name, password.getUsername());
+        assertEquals(value, password.getClearPassword());
+        assertEquals(null, password.getRealm());
 
         // Update the password
-        args = new Args("password", "foobar");
-        password.update(args);
-        assertTrue(assertRoot + "#6", passwords.containsKey(name));
-        assertEquals(assertRoot + "#7", name, password.getUsername());
-        assertEquals(assertRoot + "#8", "foobar", password.getClearPassword());
-        assertEquals(assertRoot + "#9", null, password.getRealm());
+        password.update(new Args("password", "foobar"));
+        assertTrue(passwords.containsKey(name));
+        assertEquals(name, password.getUsername());
+        assertEquals("foobar", password.getClearPassword());
+        assertEquals(null, password.getRealm());
 
         passwords.remove(name);
         assertFalse(passwords.containsKey(name));
 
         // Create a password with a realm
         password = passwords.create(name, value, realm);
-        assertTrue(assertRoot + "#10", passwords.containsKey(name));
-        assertEquals(assertRoot + "#11", name, password.getUsername());
-        assertEquals(assertRoot + "#12", value, password.getClearPassword());
-        assertEquals(assertRoot + "#13", realm, password.getRealm());
+        assertTrue(passwords.containsKey(name));
+        assertEquals(name, password.getUsername());
+        assertEquals(value, password.getClearPassword());
+        assertEquals(realm, password.getRealm());
 
         // Update the password
-        args = new Args("password", "bizbaz");
-        password.update(args);
-        assertTrue(assertRoot + "#14", passwords.containsKey(name));
-        assertEquals(assertRoot + "#15", name, password.getUsername());
-        assertEquals(assertRoot + "#16", "bizbaz", password.getClearPassword());
-        assertEquals(assertRoot + "#17", realm, password.getRealm());
+        password.update(new Args("password", "bizbaz"));
+        assertTrue(passwords.containsKey(name));
+        assertEquals(name, password.getUsername());
+        assertEquals("bizbaz", password.getClearPassword());
+        assertEquals(realm, password.getRealm());
 
+        assertTrue(password.getEncryptedPassword().length() > 0);
+        assertEquals(password.getName(), name);
+        assertTrue(password.getPassword().length() > 0);
+        
+        password.setPassword("booyah");
+        password.update();
+        assertTrue(password.getPassword().length() > 0);
+        
         passwords.remove(name);
-        assertFalse(assertRoot + "#18", passwords.containsKey(name));
+        assertFalse(passwords.containsKey(name));
     }
 }
-
