@@ -19,9 +19,9 @@ same technology used by the Splunk product to build exciting new applications
 that are enabled by Splunk's unique capabilities.
 
 
-## Getting started with the Splunk Java SDK
+## Getting started with the Splunk SDK for Java
 
-The Splunk Java SDK contains library code and examples that show how to 
+The Splunk SDK for Java contains library code and examples that show how to 
 programmatically interact with Splunk for a variety of scenarios including 
 searching, saved searches, data inputs, and many more, along with building 
 complete applications. 
@@ -32,7 +32,7 @@ in-depth information be sure to visit the
 
 ### Requirements
 
-Here's what you need to get going with the Splunk Java SDK.
+Here's what you need to get going with the Splunk SDK for Java.
 
 #### Splunk
 
@@ -41,14 +41,14 @@ If you haven't already installed Splunk, download it
 Splunk and system requirements, see 
 [Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). 
 
-#### Splunk Java SDK
+#### Splunk SDK for Java
 
-Get the Splunk Java SDK from [GitHub](https://github.com/) and clone the 
+Get the Splunk SDK for Java from [GitHub](https://github.com/) and clone the 
 resources to your computer. For example, use the following command: 
 
     git clone https://github.com/splunk/splunk-sdk-java.git
     
-You can also download just the JAR file to include the Splunk Java SDK
+You can also download just the JAR file to include the Splunk SDK for Java
 in your applications.
 
 #### Java and Ant
@@ -100,7 +100,7 @@ To build the documentation for the SDK, enter:
 
 ### Examples and unit tests
 
-The Splunk Java SDK includes several examples and unit tests that are run at 
+The Splunk SDK for Java includes several examples and unit tests that are run at 
 the command line. 
 
 #### Set up the .splunkrc file
@@ -192,12 +192,12 @@ To run the units from anywhere in the repository, enter:
     ant test -find
 
 It's also possible to run the units within Java IDEs such as IntelliJ and 
-Eclipse. For example, to open the Splunk Java SDK project in Eclipse: 
+Eclipse. For example, to open the Splunk SDK for Java project in Eclipse: 
 
   1. Click **File**, **Import**. 
   2. Click **General**, **Existing Projects into Workspace**, then click 
      **Next**. 
-  3. In **Select root directory**, type the path to the Splunk Java SDK root
+  3. In **Select root directory**, type the path to the Splunk SDK for Java root
      directory (or click **Browse** to locate it), then click **Finish**.
 
 #### Measure code coverage
@@ -279,9 +279,9 @@ If you need to know more:
 
 * For all things developer with Splunk, your main resource is the [Splunk Developer Portal](http://dev.splunk.com).
 
-* For conceptual and how-to documentation, see the [Overview of the Splunk Java SDK](http://dev.splunk.com/view/SP-CAAAECN).
+* For conceptual and how-to documentation, see the [Overview of the Splunk SDK for Java](http://dev.splunk.com/view/SP-CAAAECN).
 
-* For API reference documentation, see the [Splunk Java SDK Reference](http://docs.splunk.com/Documentation/JavaSDK).
+* For API reference documentation, see the [Splunk SDK for Java Reference](http://docs.splunk.com/Documentation/JavaSDK).
 
 * For more about the Splunk REST API, see the [REST API Reference](http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI).
 
@@ -337,7 +337,7 @@ If you would like to contribute to the SDK, go here for more information:
 
 1. You will be granted support if you or your company are already covered 
    under an existing maintenance/support agreement. Send an email to 
-   _support@splunk.com_ and include "Splunk Java SDK" in the subject line. 
+   _support@splunk.com_ and include "Splunk SDK for Java" in the subject line. 
 
 2. If you are not covered under an existing maintenance/support agreement, you 
    can find help through the broader community at:
