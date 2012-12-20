@@ -293,7 +293,7 @@
                 <file file="${coverage.dir}/coverage_report.exec" />
             </executiondata>
 
-            <structure name="Splunk Java SDK">
+            <structure name="Splunk SDK for Java">
                 <classfiles>
                     <fileset dir="${build.splunk}" />
                 </classfiles>

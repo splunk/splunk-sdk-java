@@ -1,4 +1,4 @@
-# Splunk Java SDK Changelog
+# Splunk SDK for Java Changelog
  
 ## Version 1.0
 
@@ -280,7 +280,7 @@ changes are not included):
 * Added a namespacing feature as optional arguments (`app`, `owner`, `sharing`)
   to the collection's `create` and `get` methods. For more information about
   namespaces, see
-  ["Overview of the Splunk Java SDK"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN)
+  ["Overview of the Splunk SDK for Java"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN)
   on the Developer Portal.
 
   The following example shows how to use the optional namespace to restrict
@@ -386,4 +386,4 @@ changes are not included):
 
 ## Version 0.1.0 (preview)
 
-Initial Splunk Java SDK release.
+Initial Splunk SDK for Java release.
