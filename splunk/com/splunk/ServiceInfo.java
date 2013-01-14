@@ -22,7 +22,7 @@ package com.splunk;
  */
 public class ServiceInfo extends Entity {
     ServiceInfo(Service service) {
-        super(service, "server/info");
+        super(service, "/services/server/info");
     }
 
     /**
