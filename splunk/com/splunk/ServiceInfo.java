@@ -22,6 +22,10 @@ package com.splunk;
  */
 public class ServiceInfo extends Entity {
     ServiceInfo(Service service) {
+        // We have to use an absolute path here, since
+        // server/info returns HTTP code 403 if it is
+        // used with any namespace specifier besides
+        // /services (i.e., don't use of servicesNS).
         super(service, "/services/server/info");
     }
 
