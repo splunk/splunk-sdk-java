@@ -669,4 +669,18 @@ public class ServiceTest extends SDKTestCase {
         }
         return job;
     }
+
+    @Test
+    public void testLoginWithNamespace() {
+        Args loginArgs = new Args();
+        loginArgs.add("username", command.opts.get("username"));
+        loginArgs.add("password", command.opts.get("password"));
+        loginArgs.add("sharing", "user");
+        loginArgs.add("owner", "admin");
+        loginArgs.add("app", "search");
+        loginArgs.add("host", command.opts.get("host"));
+        loginArgs.add("port", command.opts.get("port"));
+
+        Service.connect(loginArgs);
+    }
 }

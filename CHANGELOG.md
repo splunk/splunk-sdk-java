@@ -1,5 +1,13 @@
 # Splunk SDK for Java Changelog
- 
+
+## Version 1.0.1
+
+### Bug fixes
+
+* ServiceInfo now always uses /services instead of the Service's default
+  namespace for its HTTP requests, to work around a bug in Splunk that
+  returns a 403 when server/info is accessed via certain namespaces.
+
 ## Version 1.0
 
 ### New features and APIs
