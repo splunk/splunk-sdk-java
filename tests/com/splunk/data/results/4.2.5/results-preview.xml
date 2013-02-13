@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>_indextime</field>
+<field>_kv</field>
+<field>_raw</field>
+<field>_serial</field>
+<field>_sourcetype</field>
+<field>_subsecond</field>
+<field>_time</field>
+<field>active_streams</field>
+<field>blocking</field>
+<field>bytes</field>
+<field>client_app</field>
+<field>clientip</field>
+<field>component</field>
+<field>count</field>
+<field>date_hour</field>
+<field>date_mday</field>
+<field>date_minute</field>
+<field>date_month</field>
+<field>date_second</field>
+<field>date_wday</field>
+<field>date_year</field>
+<field>date_zone</field>
+<field>display_row_numbers</field>
+<field>earliest</field>
+<field>enable_event_actions</field>
+<field>enable_field_actions</field>
+<field>entity_name</field>
+<field>eventtype</field>
+<field>field_list</field>
+<field>file</field>
+<field>fillcontents</field>
+<field>filter</field>
+<field>host</field>
+<field>ident</field>
+<field>index</field>
+<field>length</field>
+<field>linecount</field>
+<field>log_level</field>
+<field>max_block_secs</field>
+<field>max_lines</field>
+<field>max_lines_constraint</field>
+<field>max_pages</field>
+<field>message</field>
+<field>method</field>
+<field>min_freq</field>
+<field>min_lines</field>
+<field>offset</field>
+<field>other</field>
+<field>output_mode</field>
+<field>output_time_format</field>
+<field>punct</field>
+<field>q</field>
+<field>queue_size</field>
+<field>referer</field>
+<field>referer_domain</field>
+<field>req_time</field>
+<field>reverse_order</field>
+<field>root</field>
+<field>s</field>
+<field>segmentation</field>
+<field>show_empty_fields</field>
+<field>sid</field>
+<field>source</field>
+<field>sourcetype</field>
+<field>spent</field>
+<field>splunk_server</field>
+<field>status</field>
+<field>time_format</field>
+<field>timeendpos</field>
+<field>timestartpos</field>
+<field>truncation_mode</field>
+<field>uri</field>
+<field>uri_path</field>
+<field>uri_query</field>
+<field>user</field>
+<field>useragent</field>
+<field>version</field>
+</fieldOrder>
+</meta>
+	<result offset='0'>
+		<field k='_indextime'>
+			<value><text>1355947338</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>12-19-2012 12:02:18.172 -0800 INFO  IndexProcessor - rtsearch connection established, filter = &apos;[ AND <sg h='1'>index::_internal</sg> <sg h='1'>search</sg> ]&apos;, active_streams = 1, queue_size = 10000, blocking = FALSE, max_block_secs = 0</v></field>
+		<field k='_serial'>
+			<value><text>0</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.172</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T12:02:18.172-08:00</text></value>
+		</field>
+		<field k='active_streams'>
+			<value><text>1</text></value>
+		</field>
+		<field k='blocking'>
+			<value><text>FALSE</text></value>
+		</field>
+		<field k='component'>
+			<value><text>IndexProcessor</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>12</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>2</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>18</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>-480</text></value>
+		</field>
+		<field k='eventtype'>
+			<value><text>splunkd-log</text></value>
+		</field>
+		<field k='filter'>
+			<value><text>&apos;[ AND index::_internal search ]&apos;</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='max_block_secs'>
+			<value><text>0</text></value>
+		</field>
+		<field k='message'>
+			<value><text>rtsearch connection established, filter = &apos;[ AND index::_internal search ]&apos;, active_streams = 1, queue_size = 10000, blocking = FALSE, max_block_secs = 0</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::._-____-___,__=_&apos;[__::__]&apos;,__=_,__=_,__=_,__=</text></value>
+		</field>
+		<field k='queue_size'>
+			<value><text>10000</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.2.5.6/var/log/splunk/splunkd.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>29</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>11</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='_indextime'>
+			<value><text>1355947338</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>2012-12-19 12:02:18,066 - admin	<sg h='1'>search</sg> <sg h='1'>search</sg> index=_internal | head 10</v></field>
+		<field k='_serial'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>searches</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.066</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T12:02:18.066-08:00</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>12</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>2</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>18</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>local</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::,_-_t__=_|__</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.2.5.6/var/log/splunk/searches.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>searches</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>24</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>11</text></value>
+		</field>
+	</result>
+</results>

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>method</field>
+<field>count(_raw)</field>
+</fieldOrder>
+</meta>
+	<result offset='0'>
+		<field k='method'>
+			<value><text>GET</text></value>
+		</field>
+		<field k='count(_raw)'>
+			<value><text>3544</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='method'>
+			<value><text>POST</text></value>
+		</field>
+		<field k='count(_raw)'>
+			<value><text>437</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>method</field>
+<field>count(_raw)</field>
+</fieldOrder>
+</meta>
+	<result offset='0'>
+		<field k='method'>
+			<value><text>GET</text></value>
+		</field>
+		<field k='count(_raw)'>
+			<value><text>3544</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='method'>
+			<value><text>POST</text></value>
+		</field>
+		<field k='count(_raw)'>
+			<value><text>437</text></value>
+		</field>
+	</result>
+</results>
+<results preview='0'>
+<meta>
+<fieldOrder>
+<field>method</field>
+<field>count(_raw)</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND index::_internal ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="/Users/fross/splunks/splunk-5.0.2/etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='method'>
+			<value><text>GET</text></value>
+		</field>
+		<field k='count(_raw)'>
+			<value><text>3544</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='method'>
+			<value><text>POST</text></value>
+		</field>
+		<field k='count(_raw)'>
+			<value><text>437</text></value>
+		</field>
+	</result>
+</results>

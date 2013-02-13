@@ -16,13 +16,16 @@
 
 package com.splunk;
 
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class ResultsReaderTest extends SDKTestCase {
@@ -32,50 +35,53 @@ public class ResultsReaderTest extends SDKTestCase {
     public void setUp() throws Exception {
         super.setUp();
     }
-    
-    private InputStream openResource(String path) {
-        if (path.startsWith("splunk_search:")) {
-            path = path.substring("splunk_search:".length());
-            
-            String[] pathComponents = path.split("/");
-            String searchType = pathComponents[0];
-            String outputMode = pathComponents[1];
-            String search = pathComponents[2];
-            
-            Args resultsArgs = new Args("output_mode", outputMode);
-            if (searchType.equals("blocking")) {
-                Job job = service.getJobs().create(
-                        search,
-                        new Args("exec_mode", "blocking"));
-                return job.getResults(resultsArgs);
-            }
-            else if (searchType.equals("oneshot")) {
-                return service.oneshotSearch(search, resultsArgs);
-            }
-            else {
-                throw new IllegalArgumentException(
-                        "Unrecognized search type: " + searchType);
-            }
+
+    public class ExpectedAtomFeed {
+        public class AtomMetadata {
+            String title, id, updated;
+            class Generator { String build, version; }
+            Generator generator;
+            String author;
+            Map<String,String> links;
+            String totalResults;
+            String itemsPerPage;
+            String startIndex;
+            class Message { String type; String message; };
+            List<Message> messages;
         }
-        
-        InputStream input = getClass().getResourceAsStream(path);
-        assertNotNull("Could not open " + path, input);
-        return input;
+        AtomMetadata metadata;
     }
+
+    public class ExpectedAtomFeeds extends HashMap<String,AtomFeed> {};
+
 
     @Test
     public void testAtomFeed() {
-        InputStream input = openResource("jobs.xml");
-        AtomFeed feed = AtomFeed.parseStream(input);
-        assertEquals(131, feed.entries.size());
-        AtomEntry entry = feed.entries.get(0);
-        assertEquals("2012-08-22T20:10:28.000-07:00", entry.updated);
-        assertTrue(entry.content.containsKey("cursorTime"));
-        assertEquals("1969-12-31T16:00:00.000-08:00", entry.content.getString("cursorTime"));
-        assertTrue(entry.content.containsKey("diskUsage"));
-        assertEquals(90112, entry.content.getInteger("diskUsage"));
-        assertEquals(true, entry.content.getBoolean("isDone"));
+        Gson reader = new Gson();
+        InputStream stream = openResource("data/atom_test_data.json");
+        Map j = reader.fromJson(streamToString(stream), Map.class);
+        for (String key : (Set<String>)j.keySet()) {
+            InputStream xmlStream = openResource("data/atom/" + key + ".xml");
+            AtomFeed feed = AtomFeed.parseStream(xmlStream);
+            Map expected = (Map<String, Object>)j.get(key);
+            Map<String, Object> metadata = (Map<String, Object>)expected.get("metadata");
+            assertEquals(metadata.get("itemsPerPage"), feed.itemsPerPage);
+        }
     }
+
+    //    @Test
+//    public void testAtomFeed() {
+//        InputStream input = openResource("jobs.xml");
+//        AtomFeed feed = AtomFeed.parseStream(input);
+//        assertEquals(131, feed.entries.size());
+//        AtomEntry entry = feed.entries.get(0);
+//        assertEquals("2012-08-22T20:10:28.000-07:00", entry.updated);
+//        assertTrue(entry.content.containsKey("cursorTime"));
+//        assertEquals("1969-12-31T16:00:00.000-08:00", entry.content.getString("cursorTime"));
+//        assertTrue(entry.content.containsKey("diskUsage"));
+//        assertEquals(90112, entry.content.getInteger("diskUsage"));
+//        assertEquals(true, entry.content.getBoolean("isDone"));
+//    }
 
     @Test
     public void testResults() throws IOException {
