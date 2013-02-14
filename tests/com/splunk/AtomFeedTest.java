@@ -25,7 +25,10 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * [Insert documentation here]
+ * Test the parsing of Atom feeds.
+ *
+ * All the raw XML to parse is in the data/atom/ directory, and the expected
+ * behavior is specified in the data/atom_test_data.json file.
  */
 @RunWith(Parameterized.class)
 public class AtomFeedTest extends SDKTestCase {
@@ -75,11 +78,7 @@ public class AtomFeedTest extends SDKTestCase {
             } else {
                 assertNull(foundEntry.content);
             }
-
-
         }
-
-        // And check messages
     }
 
     @Parameterized.Parameters(name="{0}")

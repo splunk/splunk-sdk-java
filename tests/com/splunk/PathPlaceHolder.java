@@ -17,7 +17,8 @@
 package com.splunk;
 
 /**
- * [Insert documentation here]
+ * This is a class used solely to get the path to resource like XML and JSON
+ * files in the test suite in static methods of other classes.
  */
 public class PathPlaceHolder {
 }
