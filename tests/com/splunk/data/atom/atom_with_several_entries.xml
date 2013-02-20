@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This is to override browser formatting; see server.conf[httpServer] to disable. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .-->
+<?xml-stylesheet type="text/xml" href="/static/atom.xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:s="http://dev.splunk.com/ns/rest" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <title>localapps</title>
+  <id>https://localhost:8089/services/apps/local</id>
+  <updated>2012-12-19T15:27:58-08:00</updated>
+  <generator version="140437"/>
+  <author>
+    <name>Splunk</name>
+  </author>
+  <link href="/services/apps/local/_new" rel="create"/>
+  <link href="/services/apps/local/_reload" rel="_reload"/>
+  <opensearch:totalResults>12</opensearch:totalResults>
+  <opensearch:itemsPerPage>30</opensearch:itemsPerPage>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <s:messages/>
+  <entry>
+    <title>gettingstarted</title>
+    <id>https://localhost:8089/services/apps/local/gettingstarted</id>
+    <updated>2012-12-19T15:27:58-08:00</updated>
+    <link href="/services/apps/local/gettingstarted" rel="alternate"/>
+    <author>
+      <name>system</name>
+    </author>
+    <link href="/services/apps/local/gettingstarted" rel="list"/>
+    <link href="/services/apps/local/gettingstarted/_reload" rel="_reload"/>
+    <link href="/services/apps/local/gettingstarted" rel="edit"/>
+    <link href="/services/apps/local/gettingstarted" rel="remove"/>
+    <link href="/services/apps/local/gettingstarted/disable" rel="disable"/>
+    <link href="/services/apps/local/gettingstarted/package" rel="package"/>
+    <content type="text/xml">
+      <s:dict>
+        <s:key name="author">Splunk</s:key>
+        <s:key name="check_for_updates">1</s:key>
+        <s:key name="configured">1</s:key>
+        <s:key name="description">Get started with Splunk.  This app introduces you to many of Splunk's features.  You'll learn how to use Splunk to index data, search and investigate, add knowledge, monitor and alert, report and analyze.</s:key>
+        <s:key name="disabled">0</s:key>
+        <s:key name="eai:acl"><s:dict><s:key name="app"></s:key><s:key name="can_change_perms">1</s:key><s:key name="can_list">1</s:key><s:key name="can_share_app">1</s:key><s:key name="can_share_global">1</s:key><s:key name="can_share_user">0</s:key><s:key name="can_write">1</s:key><s:key name="modifiable">1</s:key><s:key name="owner">system</s:key><s:key name="perms"><s:dict><s:key name="read"><s:list><s:item>*</s:item></s:list></s:key><s:key name="write"><s:list><s:item>power</s:item></s:list></s:key></s:dict></s:key><s:key name="removable">0</s:key><s:key name="sharing">app</s:key></s:dict></s:key>
+        <s:key name="label">Getting started</s:key>
+        <s:key name="manageable">0</s:key>
+        <s:key name="state_change_requires_restart">0</s:key>
+        <s:key name="version">1.0</s:key>
+        <s:key name="visible">1</s:key>
+      </s:dict>
+    </content>
+  </entry>
+  <entry>
+    <title>launcher</title>
+    <id>https://localhost:8089/services/apps/local/launcher</id>
+    <updated>2012-12-19T15:27:58-08:00</updated>
+    <link href="/services/apps/local/launcher" rel="alternate"/>
+    <author>
+      <name>system</name>
+    </author>
+    <link href="/services/apps/local/launcher" rel="list"/>
+    <link href="/services/apps/local/launcher/_reload" rel="_reload"/>
+    <link href="/services/apps/local/launcher" rel="edit"/>
+    <link href="/services/apps/local/launcher" rel="remove"/>
+    <link href="/services/apps/local/launcher/package" rel="package"/>
+    <content type="text/xml">
+      <s:dict>
+        <s:key name="check_for_updates">1</s:key>
+        <s:key name="configured">1</s:key>
+        <s:key name="disabled">0</s:key>
+        <s:key name="eai:acl"><s:dict><s:key name="app"></s:key><s:key name="can_change_perms">1</s:key><s:key name="can_list">1</s:key><s:key name="can_share_app">1</s:key><s:key name="can_share_global">1</s:key><s:key name="can_share_user">0</s:key><s:key name="can_write">1</s:key><s:key name="modifiable">1</s:key><s:key name="owner">system</s:key><s:key name="perms"><s:dict><s:key name="read"><s:list><s:item>*</s:item></s:list></s:key><s:key name="write"><s:list><s:item>power</s:item></s:list></s:key></s:dict></s:key><s:key name="removable">0</s:key><s:key name="sharing">app</s:key></s:dict></s:key>
+        <s:key name="label">Home</s:key>
+        <s:key name="manageable">0</s:key>
+        <s:key name="state_change_requires_restart">0</s:key>
+        <s:key name="visible">1</s:key>
+      </s:dict>
+    </content>
+  </entry>
+  <entry>
+    <title>learned</title>
+    <id>https://localhost:8089/services/apps/local/learned</id>
+    <updated>2012-12-19T15:27:58-08:00</updated>
+    <link href="/services/apps/local/learned" rel="alternate"/>
+    <author>
+      <name>system</name>
+    </author>
+    <link href="/services/apps/local/learned" rel="list"/>
+    <link href="/services/apps/local/learned/_reload" rel="_reload"/>
+    <link href="/services/apps/local/learned" rel="edit"/>
+    <link href="/services/apps/local/learned" rel="remove"/>
+    <link href="/services/apps/local/learned/disable" rel="disable"/>
+    <link href="/services/apps/local/learned/package" rel="package"/>
+    <content type="text/xml">
+      <s:dict>
+        <s:key name="check_for_updates">1</s:key>
+        <s:key name="configured">0</s:key>
+        <s:key name="disabled">0</s:key>
+        <s:key name="eai:acl"><s:dict><s:key name="app"></s:key><s:key name="can_change_perms">1</s:key><s:key name="can_list">1</s:key><s:key name="can_share_app">1</s:key><s:key name="can_share_global">1</s:key><s:key name="can_share_user">0</s:key><s:key name="can_write">1</s:key><s:key name="modifiable">1</s:key><s:key name="owner">system</s:key><s:key name="perms"><s:dict><s:key name="read"><s:list><s:item>*</s:item></s:list></s:key><s:key name="write"><s:list><s:item>*</s:item></s:list></s:key></s:dict></s:key><s:key name="removable">0</s:key><s:key name="sharing">app</s:key></s:dict></s:key>
+        <s:key name="label">learned</s:key>
+        <s:key name="manageable">1</s:key>
+        <s:key name="state_change_requires_restart">0</s:key>
+        <s:key name="visible">0</s:key>
+      </s:dict>
+    </content>
+  </entry>
+</feed>

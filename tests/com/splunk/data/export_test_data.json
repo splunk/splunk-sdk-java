@@ -1,0 +1,358 @@
+{
+    "4.2.5": {
+        "with_preview": [
+            {
+                "is_preview": true,
+                "fields": ["method", "count(_raw)"],
+                "messages": [
+                    {
+                        "type": "DEBUG",
+                        "value": "base lispy: [ AND index::_internal ]"
+                    },
+                    {
+                        "type": "DEBUG",
+                        "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.2.5.6/etc\""
+                    }
+                ],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "16"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "3"
+                    }
+                ]
+            },
+            {
+                "is_preview": true,
+                "fields": ["method", "count(_raw)"],
+                "messages": [
+                    {
+                        "type": "DEBUG",
+                        "value": "base lispy: [ AND index::_internal ]"
+                    },
+                    {
+                        "type": "DEBUG",
+                        "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.2.5.6/etc\""
+                    }
+                ],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "16"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "7"
+                    }
+                ]
+            },
+            {
+                "is_preview": false,
+                "fields": ["method", "count(_raw)"],
+                "messages": [
+                    {
+                        "type": "DEBUG",
+                        "value": "base lispy: [ AND index::_internal ]"
+                    },
+                    {
+                        "type": "DEBUG",
+                        "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.2.5.6/etc\""
+                    }
+                ],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "16"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "7"
+                    }
+                ]
+            }
+        ],
+        "without_preview": {
+            "is_preview": false,
+            "fields": ["method", "count(_raw)"],
+            "messages": [
+                {
+                    "type": "DEBUG",
+                    "value": "base lispy: [ AND index::_internal ]"
+                },
+                {
+                    "type": "DEBUG",
+                    "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.2.5.6/etc\""
+                }
+            ],
+            "results": [
+                {
+                    "method": "GET",
+                    "count(_raw)": "16"
+                },
+                {
+                    "method": "POST",
+                    "count(_raw)": "7"
+                }
+            ]
+        }
+    },
+    "4.3.5": {
+        "with_preview": [
+            {
+                "is_preview": true,
+                "fields": ["method", "count(_raw)"],
+                "messages": [
+                    {
+                        "type": "DEBUG",
+                        "value": "base lispy: [ AND index::_internal ]"
+                    },
+                    {
+                        "type": "DEBUG",
+                        "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.3.5/etc\""
+                    }
+                ],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "37"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "5"
+                    }
+                ]
+            },
+            {
+                "is_preview": true,
+                "fields": ["method", "count(_raw)"],
+                "messages": [
+                    {
+                        "type": "DEBUG",
+                        "value": "base lispy: [ AND index::_internal ]"
+                    },
+                    {
+                        "type": "DEBUG",
+                        "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.3.5/etc\""
+                    }
+                ],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "41"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "6"
+                    }
+                ]
+            },
+            {
+                "is_preview": false,
+                "fields": ["method", "count(_raw)"],
+                "messages": [
+                    {
+                        "type": "DEBUG",
+                        "value": "base lispy: [ AND index::_internal ]"
+                    },
+                    {
+                        "type": "DEBUG",
+                        "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.3.5/etc\""
+                    }
+                ],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "41"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "6"
+                    }
+                ]
+            }
+        ],
+        "without_preview": {
+            "is_preview": false,
+            "fields": ["method", "count(_raw)"],
+            "messages": [
+                {
+                    "type": "DEBUG",
+                    "value": "base lispy: [ AND index::_internal ]"
+                },
+                {
+                    "type": "DEBUG",
+                    "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-4.3.5/etc\""
+                }
+            ],
+            "results": [
+                {
+                    "method": "GET",
+                    "count(_raw)": "41"
+                },
+                {
+                    "method": "POST",
+                    "count(_raw)": "6"
+                }
+            ]
+        }
+    },
+    "5.0.1": {
+        "nonreporting": {
+                "is_preview": false,
+                "fields": ["_bkt", "_cd", "_indextime", "_raw", "_serial", "_si",
+                    "_sourcetype", "_subsecond", "_time", "host", "index",
+                    "linecount", "source", "sourcetype", "splunk_server"],
+                "results": [
+                    {
+                        "_bkt": "_internal~1~BC03CEFB-A9C5-4DF5-9D8D-2558AD6E6EA9",
+                        "_cd": "1:4419005",
+                        "_indextime": "1360608181",
+                        "_raw": "02-11-2013 10:43:01.060 -0800 INFO  Metrics - group=tpool, name=indexertpool, qsize=0, workers=6, qwork_units=0",
+                        "_serial": "0",
+                        "_si": ["fross-mbp15.local", "_internal"],
+                        "_sourcetype": "splunkd",
+                        "_subsecond": ".060",
+                        "_time": "2013-02-11 10:43:01.060 PST",
+                        "host": "fross-mbp15.local",
+                        "index": "_internal",
+                        "linecount": "1",
+                        "source": "/Users/fross/splunks/splunk-5.0.2/var/log/splunk/metrics.log",
+                        "sourcetype": "splunkd",
+                        "splunk_server": "fross-mbp15.local"
+                    },
+                    {
+                        "_bkt": "_internal~1~BC03CEFB-A9C5-4DF5-9D8D-2558AD6E6EA9",
+                        "_cd": "1:4418999",
+                        "_indextime": "1360608181",
+                        "_raw": "02-11-2013 10:43:01.060 -0800 INFO  Metrics - group=tpool, name=bundlereplthreadpool, qsize=0, workers=0, qwork_units=0",
+                        "_serial": "1",
+                        "_si": ["fross-mbp15.local", "_internal"],
+                        "_sourcetype": "splunkd",
+                        "_subsecond": ".060",
+                        "_time": "2013-02-11 10:43:01.060 PST",
+                        "host": "fross-mbp15.local",
+                        "index": "_internal",
+                        "linecount": "1",
+                        "source": "/Users/fross/splunks/splunk-5.0.2/var/log/splunk/metrics.log",
+                        "sourcetype": "splunkd",
+                        "splunk_server": "fross-mbp15.local"
+                    },
+                    {
+                        "_bkt": "_internal~1~BC03CEFB-A9C5-4DF5-9D8D-2558AD6E6EA9",
+                        "_cd": "1:4418632",
+                        "_indextime": "1360608170",
+                        "_raw": "127.0.0.1 - admin [11/Feb/2013:10:42:49.790 -0800] \"POST /services/search/jobs/export HTTP/1.1\" 200 440404 - - - 257ms",
+                        "_serial": "51",
+                        "_si": ["fross-mbp15.local", "_internal"],
+                        "_sourcetype": "splunkd_access",
+                        "_subsecond": ".790",
+                        "_time": "2013-02-11 10:42:49.790 PST",
+                        "host": "fross-mbp15.local",
+                        "index": "_internal",
+                        "linecount": "1",
+                        "source": "/Users/fross/splunks/splunk-5.0.2/var/log/splunk/splunkd_access.log",
+                        "sourcetype": "splunkd_access",
+                        "splunk_server": "fross-mbp15.local"
+                    },
+                    {
+                        "_bkt": "_internal~1~BC03CEFB-A9C5-4DF5-9D8D-2558AD6E6EA9",
+                        "_cd": "1:4418626",
+                        "_indextime": "1360608157",
+                        "_raw": "127.0.0.1 - admin [11/Feb/2013:10:42:36.527 -0800] \"POST /services/search/jobs/export HTTP/1.1\" 200 4937 - - - 219ms",
+                        "_serial": "52",
+                        "_si": ["fross-mbp15.local", "_internal"],
+                        "_sourcetype": "splunkd_access",
+                        "_subsecond": ".527",
+                        "_time": "2013-02-11 10:42:36.527 PST",
+                        "host": "fross-mbp15.local",
+                        "index": "_internal",
+                        "linecount": "1",
+                        "source": "/Users/fross/splunks/splunk-5.0.2/var/log/splunk/splunkd_access.log",
+                        "sourcetype": "splunkd_access",
+                        "splunk_server": "fross-mbp15.local"
+                    }
+             ]
+        },
+        "with_preview": [
+            {
+                "is_preview": true,
+                "fields": ["method", "count(_raw)"],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "3544"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "437"
+                    }
+                ]
+            },
+            {
+                "is_preview": true,
+                "fields": ["method", "count(_raw)"],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "3544"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "437"
+                    }
+                ]
+            },
+            {
+                "is_preview": false,
+                "fields": ["method", "count(_raw)"],
+                "messages": [
+                    {
+                        "type": "DEBUG",
+                        "value": "base lispy: [ AND index::_internal ]"
+                    },
+                    {
+                        "type": "DEBUG",
+                        "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-5.0.2/etc\""
+                    }
+                ],
+                "results": [
+                    {
+                        "method": "GET",
+                        "count(_raw)": "3544"
+                    },
+                    {
+                        "method": "POST",
+                        "count(_raw)": "437"
+                    }
+                ]
+            }
+        ],
+        "without_preview": {
+            "is_preview": false,
+            "fields": ["method", "count(_raw)"],
+            "messages": [
+                {
+                    "type": "DEBUG",
+                    "value": "base lispy: [ AND index::_internal ]"
+                },
+                {
+                    "type": "DEBUG",
+                    "value": "search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-5.0.2/etc\""
+                }
+            ],
+            "results": [
+                {
+                    "method": "GET",
+                    "count(_raw)": "3544"
+                },
+                {
+                    "method": "POST",
+                    "count(_raw)": "437"
+                }
+            ]
+        }
+    }
+}
