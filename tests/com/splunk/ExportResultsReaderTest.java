@@ -32,7 +32,7 @@ import java.util.*;
  * and the data/export_test_data.json file (for the expected results of parsing).
  */
 @RunWith(Parameterized.class)
-public class ExportTest extends SDKTestCase {
+public class ExportResultsReaderTest extends SDKTestCase {
     private static Gson reader = new Gson();
     private static Map<String, Object> expectedData = reader.fromJson(
             streamToString(openResource("data/export_test_data.json")),
@@ -41,10 +41,8 @@ public class ExportTest extends SDKTestCase {
 
     private String version;
 
-    public ExportTest(String version) {
+    public ExportResultsReaderTest(String version) {
         this.version = version;
-        Map<String, Object> versionData =
-                (Map<String, Object>)expectedData.get(version);
     }
 
     @Parameterized.Parameters(name="from version {0}")

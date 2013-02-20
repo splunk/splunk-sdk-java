@@ -47,36 +47,37 @@ public class AtomFeedTest extends SDKTestCase {
 
     @Test
     public void testAtomFeed() {
-        Map<String, Object> metadata = (Map<String, Object>)expectedFeed.get("metadata");
-        AtomFeed found = AtomFeed.parseStream(this.xmlStream);
+        Map<String, Object> expectedMetadata = (Map<String, Object>)expectedFeed.get("metadata");
+        AtomFeed actualFeed = AtomFeed.parseStream(this.xmlStream);
 
-        assertEquals(metadata.get("itemsPerPage"), found.itemsPerPage);
-        assertEquals(metadata.get("startIndex"), found.startIndex);
-        assertEquals(metadata.get("totalResults"), found.totalResults);
-        // generator
+        assertEquals(expectedMetadata.get("itemsPerPage"), actualFeed.itemsPerPage);
+        assertEquals(expectedMetadata.get("startIndex"), actualFeed.startIndex);
+        assertEquals(expectedMetadata.get("totalResults"), actualFeed.totalResults);
+
+        // The generator header is ignored by AtomFeed, so we don't test it.
 
         List<Map<String, Object>> expectedEntries = (List<Map<String, Object>>)expectedFeed.get("entries");
-        List<AtomEntry> foundEntries = (List<AtomEntry>)found.entries;
-        for (int i = 0; i < foundEntries.size(); i++) {
-            AtomEntry foundEntry = foundEntries.get(i);
+        List<AtomEntry> actualEntries = (List<AtomEntry>)actualFeed.entries;
+        for (int i = 0; i < actualEntries.size(); i++) {
+            AtomEntry actualEntry = actualEntries.get(i);
             Map<String, Object> expectedEntry = expectedEntries.get(i);
-            assertEquals(expectedEntry.get("id"), foundEntry.id);
-            assertEquals(expectedEntry.get("title"), foundEntry.title);
-            assertEquals(expectedEntry.get("updated"), foundEntry.updated);
+            assertEquals(expectedEntry.get("id"), actualEntry.id);
+            assertEquals(expectedEntry.get("title"), actualEntry.title);
+            assertEquals(expectedEntry.get("updated"), actualEntry.updated);
             // "author" is not parsed.
             Map<String, String> expectedLinks = (Map<String, String>)expectedEntry.get("links");
-            for (String linkName : foundEntry.links.keySet()) {
-                assertEquals(expectedLinks.get(linkName), foundEntry.links.get(linkName));
+            for (String linkName : actualEntry.links.keySet()) {
+                assertEquals(expectedLinks.get(linkName), actualEntry.links.get(linkName));
             }
             if (expectedEntry.containsKey("content")) {
                 Map<String, Object> expectedContent = (Map<String, Object>)expectedEntry.get("content");
-                for (String key : foundEntry.content.keySet()) {
+                for (String key : actualEntry.content.keySet()) {
                     if (!key.startsWith("eai:")) {
-                        assertEquals("Mismatch on " + key, expectedContent.get(key), foundEntry.content.get(key));
+                        assertEquals("Mismatch on " + key, expectedContent.get(key), actualEntry.content.get(key));
                     }
                 }
             } else {
-                assertNull(foundEntry.content);
+                assertNull(actualEntry.content);
             }
         }
     }

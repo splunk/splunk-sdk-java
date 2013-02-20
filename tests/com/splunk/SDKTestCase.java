@@ -21,7 +21,6 @@ import org.junit.After;
 import org.junit.Before;
 
 import java.io.InputStream;
-import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public abstract class SDKTestCase extends TestCase {
     protected Command command;
 
     public static String streamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
@@ -136,7 +135,7 @@ public abstract class SDKTestCase extends TestCase {
             }
         }
 
-        InputStream input = PathPlaceHolder.class.getResourceAsStream(path);
+        InputStream input = ResourceRoot.class.getResourceAsStream(path);
         assertNotNull("Could not open " + path, input);
         return input;
     }
