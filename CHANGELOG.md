@@ -1,12 +1,19 @@
 # Splunk SDK for Java Changelog
 
-## Version 1.0.1
+## Version 1.1.0
 
+### Breaking changes
+
+* All search jobs default to having the option 'segmentation=none' unless
+  specifically specified otherwise. This prevents Splunk from inserting
+  tags to specify highlighting search terms in the results from the search.
+	
 ### Bug fixes
 
 * ServiceInfo now always uses /services instead of the Service's default
   namespace for its HTTP requests, to work around a bug in Splunk that
   returns a 403 when server/info is accessed via certain namespaces.
+
 
 ## Version 1.0
 
