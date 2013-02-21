@@ -2,20 +2,20 @@
 
 ## Version 1.1
 
-### New features and APIs
+### Breaking changes
 
-* Specialized classes to read search results streams from `Job.export` methods.
-    - `MultiResultsReaderXml`
-    - `MultiResultsReaderJson`
+* All search jobs default to having the option 'segmentation=none' unless
+  specifically specified otherwise. This prevents Splunk from inserting
+  tags to specify highlighting search terms in the results from the search.
+
+### New features and APIs
 
 * `ResultsReader` classes now support  `Iterable` and `Iterator` interfaces.
 
 * A new method on `Event` class to return event raw data preserving 
   segmentation information.
     - `getSegmentedRaw`
-
-
-
+	
 ### Bug fixes
 
 * ServiceInfo now always uses /services instead of the Service's default
