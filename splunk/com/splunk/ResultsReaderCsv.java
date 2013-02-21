@@ -17,11 +17,11 @@
 package com.splunk;
 
 import au.com.bytecode.opencsv.CSVReader;
-import com.splunk.ResultsReader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * The {@code ResultsReaderCsv} class represents a streaming CSV reader for 
@@ -44,7 +44,12 @@ public class ResultsReaderCsv extends ResultsReader {
      * @throws Exception On exception.
      */
     public ResultsReaderCsv(InputStream inputStream) throws IOException {
-        super(inputStream);
+        this(inputStream, false);
+    }
+
+    public ResultsReaderCsv(InputStream inputStream, boolean isMultiReader)
+            throws IOException {
+        super(inputStream, isMultiReader);
         csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF8"));
         // initial line contains the keys, except for oneshot -- which contains
         // a blank line, and then the key list.
@@ -61,9 +66,26 @@ public class ResultsReaderCsv extends ResultsReader {
             csvReader.close();
         csvReader = null;
     }
-    
-    /** {@inheritDoc} */
-    @Override public Event getNextEvent() throws IOException {
+
+    /**
+     * This method is not supported on this class.
+     * @return N/A
+     */
+    public boolean isPreview(){
+        throw new UnsupportedOperationException(
+                "isPreview() is not supported by this subclass.");
+    }
+
+    /**
+     * This method is not supported on this class.
+     * @return N/A
+     */
+    public Collection<String> getFields(){
+        throw new UnsupportedOperationException(
+                "getFields() is not supported by this subclass.");
+    }
+
+    Event getNextInner() throws IOException {
         Event returnData = null;
         String[] line;
 

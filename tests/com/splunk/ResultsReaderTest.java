@@ -361,7 +361,95 @@ public class ResultsReaderTest extends SDKTestCase {
             // Good
         }
     }
-    
+
+    @Test
+    public void testPreviewSingleReaderXmlIter() throws Exception {
+        testPreviewSingleReader(true);
+    }
+
+    @Test
+    public void testPreviewSingleReaderXmlGetNext() throws Exception {
+        testPreviewSingleReader(false);
+    }
+
+    private void testPreviewSingleReader(boolean useIter) throws IOException {
+        ResultsReaderXml reader = new ResultsReaderXml(
+                openResource("results-preview.xml"));
+
+        assertTrue(reader.isPreview());
+
+        String[] fieldNameArray = new String[0];
+        fieldNameArray = reader.getFields().toArray(fieldNameArray);
+        assertEquals(101, fieldNameArray.length);
+        assertEquals(fieldNameArray[99], "useragent");
+
+        int index = 0;
+        Event lastEvent = null;
+        if (useIter){
+            for (Event event : reader) {
+                lastEvent = event;
+                index ++;
+            }
+        } else {
+            Event event;
+            while ((event = reader.getNextEvent()) != null) {
+                lastEvent = event;
+                index ++;
+            }
+        }
+        assertEquals("1355946614", lastEvent.get("_indextime"));
+        assertEquals(10, index);
+
+        reader.close();
+    }
+
+    @Test
+    public void testExportMultiReaderXml() throws Exception {
+        ExportResultsStream stream = new ExportResultsStream(
+                openResource("resultsMultiple.xml"));
+
+        MultiResultsReaderXml multiReader = new MultiResultsReaderXml(stream);
+
+        int indexResultSet = 0;
+        final int countResultSet = 18;
+        for(SearchResults results : multiReader){
+            if (indexResultSet == countResultSet -1 ){
+                assertFalse(results.isPreview());
+            }
+
+            int indexEvent = 0;
+            for (Event event : results){
+                if (indexResultSet == 1 && indexEvent == 1) {
+                    assertEquals("andy-pc", event.get("host"));
+                    assertEquals("3", event.get("count"));
+                }
+
+                if (indexResultSet == countResultSet - 2 && indexEvent == 3) {
+                    assertEquals("andy-pc", event.get("host"));
+                    assertEquals("135", event.get( "count"));
+                }
+
+                indexEvent++;
+            }
+
+            switch (indexResultSet) {
+                case 0:
+                    assertEquals(indexEvent, 1);
+                    break;
+                case 1:
+                    assertEquals(indexEvent, 3);
+                    break;
+                default:
+                    assertEquals(indexEvent, 5);
+                    break;
+            }
+            indexResultSet ++;
+        }
+        multiReader.close();
+
+        assertEquals(indexResultSet, countResultSet);
+    }
+
     // === Utility ===
     
     private void assertNextEventEquals(

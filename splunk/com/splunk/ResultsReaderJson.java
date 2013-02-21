@@ -18,13 +18,13 @@ package com.splunk;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
-import com.splunk.ResultsReader;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -46,7 +46,12 @@ public class ResultsReaderJson extends ResultsReader {
      * @throws Exception On exception.
      */
     public ResultsReaderJson(InputStream inputStream) throws IOException {
-        super(inputStream);
+        this(inputStream, false);
+    }
+
+    public ResultsReaderJson(InputStream inputStream, boolean isMultiReader)
+            throws IOException {
+        super(inputStream, isMultiReader);
         jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF8"));
         // if stream is empty, return a null reader.
         try {
@@ -115,9 +120,26 @@ public class ResultsReaderJson extends ResultsReader {
             jsonReader.close();
         jsonReader = null;
     }
-    
-    /** {@inheritDoc} */
-    @Override public Event getNextEvent() throws IOException {
+
+    /**
+     * This method is not supported on this class.
+     * @return N/A
+     */
+    public boolean isPreview(){
+        throw new UnsupportedOperationException(
+                "isPreview() is not supported by this subclass.");
+    }
+
+    /**
+     * This method is not supported on this class.
+     * @return N/A
+     */
+    public Collection<String> getFields(){
+        throw new UnsupportedOperationException(
+                "getFields() is not supported by this subclass.");
+    }
+
+    Event getNextInner() throws IOException {
         Event returnData = null;
         String name = null;
         List<String> values = new ArrayList<String>();

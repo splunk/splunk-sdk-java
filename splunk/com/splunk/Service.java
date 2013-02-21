@@ -190,7 +190,7 @@ public class Service extends BaseService {
     public InputStream export(String search, Map args) {
         args = Args.create(args).add("search", search);
         ResponseMessage response = get("search/jobs/export", args);
-        return response.getContent();
+        return new ExportResultsStream(response.getContent());
     }
     
     /**
