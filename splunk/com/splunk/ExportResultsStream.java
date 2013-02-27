@@ -16,17 +16,14 @@
 
 package com.splunk;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 // Represent a stream constructed by Service.export.
-class ExportResultsStream extends InputStream {
-    private InputStream stream;
+class ExportResultsStream extends FilterInputStream {
+    private InputStream in;
     public ExportResultsStream(InputStream stream) {
-        this.stream = stream;
-    }
-
-    public int read() throws IOException {
-        return stream.read();
+        super(stream);                                 
     }
 }

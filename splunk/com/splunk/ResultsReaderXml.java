@@ -29,12 +29,13 @@ import javax.xml.stream.events.*;
 import java.io.PushbackReader;
 
 /**
- * The {@code ResultsReaderXml} class represents a streaming XML reader for 
- * Splunk search results. For export, it skips any previews,
- * which can be read with {@code MultiResultsReaderXml}.
+ * The {@code ResultsReaderXml} class represents a streaming XML reader for
+ * Splunk search results. When passed a stream from an export endpoint,
+ * it skips any preview events in the stream. The preview events can be
+ * accessed using MultiResultsReaderXml."
  */
 public class ResultsReaderXml
-        extends  ResultsReader<ResultsReaderXml> {
+    extends ResultsReader<ResultsReaderXml> {
 
     private XMLEventReader xmlReader = null;
     private ArrayList<String> fields = new ArrayList<String>();
@@ -59,9 +60,9 @@ public class ResultsReaderXml
 
     ResultsReaderXml(
             InputStream inputStream,
-            boolean isMultiReader)
+            boolean isInMultiReader)
             throws IOException {
-        super(inputStream, isMultiReader);
+        super(inputStream, isInMultiReader);
         PushbackReader pushbackReader =
             new PushbackReader(inputStreamReader, 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -92,7 +93,7 @@ public class ResultsReaderXml
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
             xmlReader = inputFactory.createXMLEventReader(pushbackReader);
-            readyForIterable();
+            finishInitialization();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
@@ -118,14 +119,14 @@ public class ResultsReaderXml
     }
 
     /** {@inheritDoc} */
-    public Collection<String> getFields(){
+    public Collection<String> getFields() {
         return fields;
     }
 
-    @Override protected Event getNextInner() throws IOException {
+    @Override Event getNextElementRaw() throws IOException {
         try {
             Event event = null;
-            XMLEvent xmlEvent = readIntoElementAtSameLevel("result");
+            XMLEvent xmlEvent = readToStartOfElementAtSameLevelWithName("result");
             if (xmlEvent != null) {
                 event = getResultKVPairs();
             }
@@ -135,11 +136,14 @@ public class ResultsReaderXml
         }
     }
 
+    // Read preview flag and field name list, and position in the middle of
+    // the result element for reading actual results later.
+    // Return value indicates whether the cachedElement 'results' element is found.
     boolean readIntoNextResultsElement()
             throws XMLStreamException, IOException {
         XMLEvent xmlEvent = null;
         try {
-            xmlEvent = readToFollowing("results");
+            xmlEvent = readToStartOfElementWithName("results");
         } catch (XMLStreamException e) {
             // Because we cannot stuff trailing information into the stream,
             // we expect an XMLStreamingException that contains our
@@ -165,17 +169,16 @@ public class ResultsReaderXml
             isPreview = true;
         }
 
+        // Read <meta> element.
         final String meta = "meta";
-        if (readIntoElementAtSameLevel(meta) != null) {
-            if (readIntoElementAtSameLevel("fieldOrder") != null) {
-                readFields();
-            }
-            readToEnd(meta);
-        }
+        if (readToStartOfElementAtSameLevelWithName(meta) != null)
+            readFieldOrderElement();
+        readToEndElementWithName(meta);
         return true;
     }
 
-    XMLEvent readToFollowing(String name) throws XMLStreamException {
+    XMLEvent readToStartOfElementWithName(String elementName)
+        throws XMLStreamException {
         while (xmlReader.hasNext()) {
             XMLEvent xmlEvent = xmlReader.nextEvent();
             int eType = xmlEvent.getEventType();
@@ -187,14 +190,14 @@ public class ResultsReaderXml
             if(startElement
                     .getName()
                     .getLocalPart()
-                    .equals(name)){
+                    .equals(elementName)){
                 return xmlEvent;
             }
         }
         return null;
     }
 
-    void readToEnd(String name) throws XMLStreamException {
+    void readToEndElementWithName(String elementName) throws XMLStreamException {
         XMLEvent xmlEvent;
         int eType;
 
@@ -208,7 +211,7 @@ public class ResultsReaderXml
                     if (xmlEvent.asEndElement()
                             .getName()
                             .getLocalPart()
-                            .equals(name)) {
+                            .equals(elementName)) {
                         return;
                     }
                     break;
@@ -217,10 +220,11 @@ public class ResultsReaderXml
             }
         }
 
-        throw new RuntimeException("End tag of " + name + " not found.");
+        throw new RuntimeException("End tag of " + elementName + " not found.");
     }
 
-    XMLEvent readIntoElementAtSameLevel(String name) throws XMLStreamException {
+    XMLEvent readToStartOfElementAtSameLevelWithName(String elementName)
+        throws XMLStreamException {
         XMLEvent xmlEvent;
         int eType;
         int level = 0;
@@ -230,14 +234,14 @@ public class ResultsReaderXml
             eType = xmlEvent.getEventType();
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (level++ >  0){
+                    if (level++ > 0){
                         continue;
                     }
                     StartElement startElement = xmlEvent.asStartElement();
                     if(startElement
                             .getName()
                             .getLocalPart()
-                            .equals(name)){
+                            .equals(elementName)) {
                         return xmlEvent;
                     }
                     break;
@@ -251,18 +255,18 @@ public class ResultsReaderXml
             }
         }
 
-        throw new RuntimeException("Parent end element not found:" + name);
+        throw new RuntimeException("Parent end element not found:" + elementName);
     }
 
     // At the end, move off the end element of 'fieldOrder'
-    private void readFields()
+    private void readFieldOrderElement()
             throws IOException, XMLStreamException {
         XMLEvent xmlEvent;
         int eType;
         int level = 0;
 
-        // Event results are flat, so extract k/v pairs based on XML indentation
-        // level throwing away the uninteresting non-data.
+        if (readToStartOfElementAtSameLevelWithName("fieldOrder") == null)
+            return;
 
         while (xmlReader.hasNext()) {
             xmlEvent = xmlReader.nextEvent();
@@ -350,7 +354,7 @@ public class ResultsReaderXml
         throw new RuntimeException("End tag of 'result' not found.");
     }
 
-    @Override boolean moveToNextSetStreamPosition() throws IOException{
+    @Override boolean advanceStreamToNextSet() throws IOException {
         try {
             return readIntoNextResultsElement();
         } catch (XMLStreamException e) {
