@@ -16,114 +16,21 @@
 
 package com.splunk;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.*;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * Test aspects of results readers not covered by the atom, results, and export test data.
+ *
+ * Note: some of these tests predate the introduction of the atom, results, and export test
+ * data, and may overlap with tests in that set.
+ */
 public class ResultsReaderTest extends SDKTestCase {
-
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
-    
-    private InputStream openResource(String path) {
-        if (path.startsWith("splunk_search:")) {
-            path = path.substring("splunk_search:".length());
-            
-            String[] pathComponents = path.split("/");
-            String searchType = pathComponents[0];
-            String outputMode = pathComponents[1];
-            String search = pathComponents[2];
-            
-            Args resultsArgs = new Args("output_mode", outputMode);
-            if (searchType.equals("blocking")) {
-                Job job = service.getJobs().create(
-                        search,
-                        new Args("exec_mode", "blocking"));
-                return job.getResults(resultsArgs);
-            }
-            else if (searchType.equals("oneshot")) {
-                return service.oneshotSearch(search, resultsArgs);
-            }
-            else {
-                throw new IllegalArgumentException(
-                        "Unrecognized search type: " + searchType);
-            }
-        }
-        
-        InputStream input = getClass().getResourceAsStream(path);
-        assertNotNull("Could not open " + path, input);
-        return input;
-    }
-
-    @Test
-    public void testAtomFeed() {
-        InputStream input = openResource("jobs.xml");
-        AtomFeed feed = AtomFeed.parseStream(input);
-        assertEquals(131, feed.entries.size());
-        AtomEntry entry = feed.entries.get(0);
-        assertEquals("2012-08-22T20:10:28.000-07:00", entry.updated);
-        assertTrue(entry.content.containsKey("cursorTime"));
-        assertEquals("1969-12-31T16:00:00.000-08:00", entry.content.getString("cursorTime"));
-        assertTrue(entry.content.containsKey("diskUsage"));
-        assertEquals(90112, entry.content.getInteger("diskUsage"));
-        assertEquals(true, entry.content.getBoolean("isDone"));
-    }
-
-    @Test
-    public void testResults() throws IOException {
-        InputStream input = openResource("results.xml");
-        ResultsReaderXml reader = new ResultsReaderXml(input);
-        Map<String, String> expected = new HashMap<String, String>();
-
-        expected.put("series", "twitter");
-        expected.put("sum(kb)", "14372242.758775");
-        assertNextEventEquals(expected, reader);
-        
-        expected.put("series", "splunkd");
-        expected.put("sum(kb)", "267802.333926");
-        assertNextEventEquals(expected, reader);
-
-        expected.put("series", "flurry");
-        expected.put("sum(kb)", "12576.454102");
-        assertNextEventEquals(expected, reader);
-
-        expected.put("series", "splunkd_access");
-        expected.put("sum(kb)", "5979.036338");
-        assertNextEventEquals(expected, reader);
-
-        expected.put("series", "splunk_web_access");
-        expected.put("sum(kb)", "5838.935649");
-        assertNextEventEquals(expected, reader);
-
-        assertNull(reader.getNextEvent());
-        reader.close();
-    }
-
-    @Test
-    public void testReadRawField() throws IOException {
-        InputStream input = openResource("raw_field.xml");
-        ResultsReaderXml reader = new ResultsReaderXml(input);
-        Map<String, String> expected = new HashMap<String, String>();
-
-        expected.put(
-                "_raw",
-                "07-13-2012 09:27:27.307 -0700 INFO  Metrics - group=search_concurrency, system total, active_hist_searches=0, active_realtime_searches=0"
-        );
-        assertNextEventEquals(expected, reader);
-
-        assertNull(reader.getNextEvent());
-        reader.close();
-    }
-
     @Test
     public void testReadCsv() throws Exception {
         InputStream input = openResource("results.csv");
@@ -256,7 +163,7 @@ public class ResultsReaderTest extends SDKTestCase {
         reader.close();
     }
     
-    public void testReadMultivalueXmlCsvJson() throws IOException {
+    public void testReadMultivalueCsvJson() throws IOException {
         // These results were generated from "search index=_internal | head 1",
         // with the output formats {xml, csv, json}.
         String search = "search index=_internal | head 1";

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This is to override browser formatting; see server.conf[httpServer] to disable. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .-->
+<?xml-stylesheet type="text/xml" href="/static/atom.xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:s="http://dev.splunk.com/ns/rest">
+  <title>services</title>
+  <id>https://localhost:8089/services/</id>
+  <updated>2012-12-20T09:48:01-08:00</updated>
+  <generator version="140437"/>
+  <author>
+    <name>Splunk</name>
+  </author>
+  <entry>
+    <title>alerts</title>
+    <id>https://localhost:8089/services/alerts</id>
+    <updated>2012-12-20T09:48:01-08:00</updated>
+    <link href="/services/alerts" rel="alternate"/>
+  </entry>
+  <entry>
+    <title>apps</title>
+    <id>https://localhost:8089/services/apps</id>
+    <updated>2012-12-20T09:48:01-08:00</updated>
+    <link href="/services/apps" rel="alternate"/>
+  </entry>
+  <entry>
+    <title>auth</title>
+    <id>https://localhost:8089/services/auth</id>
+    <updated>2012-12-20T09:48:01-08:00</updated>
+    <link href="/services/auth" rel="alternate"/>
+  </entry>
+</feed>
