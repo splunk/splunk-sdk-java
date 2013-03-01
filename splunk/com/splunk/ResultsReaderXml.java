@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -171,9 +172,10 @@ public class ResultsReaderXml
 
         // Read <meta> element.
         final String meta = "meta";
-        if (readToStartOfElementAtSameLevelWithName(meta) != null)
+        if (readToStartOfElementAtSameLevelWithName(meta) != null) {
             readFieldOrderElement();
-        readToEndElementWithName(meta);
+            readToEndElementWithName(meta);
+        }
         return true;
     }
 
@@ -316,12 +318,25 @@ public class ResultsReaderXml
             eType = xmlEvent.getEventType();
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
-                   @SuppressWarnings("unchecked")
+                    final StartElement startElement = xmlEvent.asStartElement();
+                    @SuppressWarnings("unchecked")
                     Iterator<Attribute> attrIttr =
-                        xmlEvent.asStartElement().getAttributes();
+                        startElement.getAttributes();
                     if (level == 0) {
                         if (attrIttr.hasNext())
                             key =  attrIttr.next().getValue();
+                    } else if (level == 1 &&
+                            key.equals("_raw") &&
+                            startElement
+                                .getName()
+                                .getLocalPart()
+                                .equals("v")) {
+                        StringBuilder asString = new StringBuilder();
+                        StringBuilder asXml = new StringBuilder();
+                        readWholeElement(startElement, asString, asXml);
+                        values.add(asString.toString());
+                        returnData.putRawAsXml(asXml.toString());
+                        level--;
                     }
                     level++;
                     break;
@@ -365,6 +380,42 @@ public class ResultsReaderXml
             // com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.load(XMLEntityScanner.java:1748)
             return false;
         }
+    }
+
+    void readWholeElement(
+            StartElement startElement,
+            StringBuilder asString,
+            StringBuilder asXml)
+        throws IOException, XMLStreamException {
+        ByteArrayOutputStream byteArrayOutputStream =
+                new ByteArrayOutputStream();
+        XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().
+                createXMLEventWriter(byteArrayOutputStream);
+        XMLEvent xmlEvent = startElement;
+        int level = 0;
+        do {
+            xmlWriter.add(xmlEvent);
+            int eType = xmlEvent.getEventType();
+            switch (eType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    level++;
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (--level == 0) {
+                        xmlWriter.close();
+                        asXml.append(byteArrayOutputStream.toString());
+                        byteArrayOutputStream.close();
+                        return;
+                    }
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    asString.append(xmlEvent.asCharacters().getData());
+                 default:
+                    break;
+            }
+            xmlEvent = xmlReader.nextEvent();
+        } while (xmlReader.hasNext());
+        throw new RuntimeException("Invalid XML format.");
     }
 }
 

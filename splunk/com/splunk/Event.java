@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
  */
 public class Event extends HashMap<String, String> {
     private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
+    private String rawAsXml;
     
     // Prevent non-SDK instantiation.
     Event() {
@@ -69,7 +70,15 @@ public class Event extends HashMap<String, String> {
         // For backward compatibility with the Map interface
         super.put(key, Util.join(",", values));
     }
-    
+
+    /**
+     * Sets the value for the XML element for '_raw' field. It is only used by
+     * {@link ResultsReaderXml}
+     * @param value The text of the XML element.
+     */
+    void putRawAsXml(String value) {
+        rawAsXml = value;
+    }
     /**
      * Returns the single value or delimited set of values for the specified
      * field name, or {@code null} if the specified field is not present.
@@ -148,7 +157,18 @@ public class Event extends HashMap<String, String> {
         }
         return delimitedValues.split(Pattern.quote(delimiter));
     }
-    
+
+    /**
+     * Gets the value for the XML element for '_raw' field. It is only available
+     * with {@link ResultsReaderXml}.
+     */
+    public String getRawAsXml() {
+        if (rawAsXml == null) {
+            throw new UnsupportedOperationException(
+                "The value is not available. Use ResultsReaderXml instead.");
+        }
+        return rawAsXml;
+    }
     // === Read Only ===
     
     @Override

@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -63,7 +64,8 @@ public class ExportResultsReaderTest extends SDKTestCase {
         Map<String, Object> expectedResultsSet = (Map<String, Object>)thisVersion.get("without_preview");
         List<Map<String, Object>> expectedEvents = (List<Map<String, Object>>)expectedResultsSet.get("results");
 
-        InputStream xmlStream = openResource("data/export/" + this.version + "/export_results.xml");
+        InputStream xmlStream = new ExportResultsStream(
+                openResource("data/export/" + this.version + "/export_results.xml"));
         ResultsReaderXml resultsReader = new ResultsReaderXml(xmlStream);
 
         for (int i = 0; i < expectedEvents.size(); i++) {
@@ -100,7 +102,7 @@ public class ExportResultsReaderTest extends SDKTestCase {
     }
 
     @Test
-    public void testExportNonreporting() throws IOException {
+    public void testExportNonreporting() throws IOException, XMLStreamException {
         Map<String, Object> thisVersion = (Map<String, Object>)expectedData.get(this.version);
         if (!thisVersion.containsKey("nonreporting")) {
             return; // No test case
@@ -111,21 +113,6 @@ public class ExportResultsReaderTest extends SDKTestCase {
         InputStream xmlStream = openResource("data/export/" + this.version + "/nonreporting.xml");
         ResultsReaderXml resultsReader = new ResultsReaderXml(xmlStream);
 
-        for (Map<String, Object> expectedEvent : expectedEvents) {
-            Event foundEvent = resultsReader.getNextEvent();
-            assertNotNull("Did not parse as many events from the XML as expected.", foundEvent);
-            assertEquals(expectedEvent.keySet(), foundEvent.keySet());
-            for (String key : expectedEvent.keySet()) {
-                assertTrue(foundEvent.containsKey(key));
-                if (expectedEvent.get(key) instanceof List) {
-                    assertEquals(
-                            expectedEvent.get(key),
-                            Arrays.asList(foundEvent.getArray(key))
-                    );
-                } else {
-                    assertEquals(expectedEvent.get(key), foundEvent.get(key));
-                }
-            }
-        }
+        ResultsTest.VerifyResultsReader(resultsReader, expectedEvents);
     }
 }
