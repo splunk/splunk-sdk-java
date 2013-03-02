@@ -77,7 +77,9 @@ public class ResultsReaderTest extends SDKTestCase {
 
     @Test
     public void testReadFromExportJson() throws Exception {
-        verifyMultiReader(getExportStreamJson());
+        if (service.versionIsAtLeast("5.0.0")) {
+            verifyMultiReader(getExportStreamJson());
+        }
     }
 
     @Test
