@@ -63,12 +63,12 @@ abstract class StreamIterableBase<T> implements Iterable<T> {
      * @return null if the end is reached.
      * @throws IOException
      */
-    abstract T getNextElement() throws IOException;
+    abstract T pureGet() throws IOException;
 
     private void cacheNextElement() {
         if (!nextElementCached) {
             try {
-                cachedElement = getNextElement();
+                cachedElement = pureGet();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

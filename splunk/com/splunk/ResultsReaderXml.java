@@ -16,9 +16,7 @@
 
 package com.splunk;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,7 +25,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
-import java.io.PushbackReader;
 
 /**
  * The {@code ResultsReaderXml} class represents a streaming XML reader for
@@ -124,7 +121,7 @@ public class ResultsReaderXml
         return fields;
     }
 
-    @Override Event getNextElementRaw() throws IOException {
+    @Override Event pureGetFromSingleSet() throws IOException {
         try {
             Event event = null;
             XMLEvent xmlEvent = readToStartOfElementAtSameLevelWithName("result");
@@ -332,10 +329,10 @@ public class ResultsReaderXml
                                 .getLocalPart()
                                 .equals("v")) {
                         StringBuilder asString = new StringBuilder();
-                        StringBuilder asXml = new StringBuilder();
+                        StringWriter asXml = new StringWriter();
                         readWholeElement(startElement, asString, asXml);
                         values.add(asString.toString());
-                        returnData.putRawAsXml(asXml.toString());
+                        returnData.putSegmentedRaw(asXml.toString());
                         level--;
                     }
                     level++;
@@ -382,15 +379,25 @@ public class ResultsReaderXml
         }
     }
 
+    /**
+     * Read the whole element including those contained in the outer element.
+     * @param startElement start element (tag) of the outer element.
+     * @param asString output builder that the element's inner-text
+     *                 will be appended to, with markup removed and
+     *                 characters un-escaped
+     * @param asXml    output builder that full xml including markups
+     *                 will be appended to. Characters are escaped as
+     *                 needed.
+     * @throws IOException
+     * @throws XMLStreamException
+     */
     void readWholeElement(
             StartElement startElement,
             StringBuilder asString,
-            StringBuilder asXml)
-        throws IOException, XMLStreamException {
-        ByteArrayOutputStream byteArrayOutputStream =
-                new ByteArrayOutputStream();
+            StringWriter asXml)
+            throws IOException, XMLStreamException {
         XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().
-                createXMLEventWriter(byteArrayOutputStream);
+                createXMLEventWriter(asXml);
         XMLEvent xmlEvent = startElement;
         int level = 0;
         do {
@@ -403,14 +410,12 @@ public class ResultsReaderXml
                 case XMLStreamConstants.END_ELEMENT:
                     if (--level == 0) {
                         xmlWriter.close();
-                        asXml.append(byteArrayOutputStream.toString());
-                        byteArrayOutputStream.close();
                         return;
                     }
                     break;
                 case XMLStreamConstants.CHARACTERS:
                     asString.append(xmlEvent.asCharacters().getData());
-                 default:
+                default:
                     break;
             }
             xmlEvent = xmlReader.nextEvent();

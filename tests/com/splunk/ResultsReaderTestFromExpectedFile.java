@@ -35,7 +35,7 @@ import java.util.*;
  * behavior is specified in the data/resultsreader_test_data.json file.
  */
 @RunWith(Parameterized.class)
-public class ResultsTest extends SDKTestCase {
+public class ResultsReaderTestFromExpectedFile extends SDKTestCase {
     private static Gson reader = new Gson();
     private static Map<String, Object> expectedData =
         reader.fromJson(
@@ -49,7 +49,7 @@ public class ResultsTest extends SDKTestCase {
     private String testName;
     private InputStream xmlStream;
 
-    public ResultsTest(String version, String testName) {
+    public ResultsReaderTestFromExpectedFile(String version, String testName) {
         this.version = version;
         this.testName = testName;
         this.xmlStream = openResource(
@@ -78,10 +78,10 @@ public class ResultsTest extends SDKTestCase {
         ResultsReaderXml resultsReader = new ResultsReaderXml(this.xmlStream);
         List<Map<String, Object>> expectedEvents =
             (List<Map<String, Object>>)this.expectedResultsSet.get("results");
-        VerifyResultsReader(resultsReader, expectedEvents);
+        verifyResultsReader(resultsReader, expectedEvents);
     }
 
-    static void VerifyResultsReader(
+    static void verifyResultsReader(
             ResultsReaderXml resultsReader,
             List<Map<String, Object>> expectedEvents)
             throws IOException, XMLStreamException {
@@ -92,7 +92,7 @@ public class ResultsTest extends SDKTestCase {
                     foundEvent);
             Set<String> expectedKeys = expectedEvent.keySet();
             final String keyRawXml = "RAW_XML";
-            final String rawAsXml = foundEvent.getRawAsXml();
+            final String rawAsXml = foundEvent.getSegmentedRaw();
             assertEquals(expectedEvent.get(keyRawXml), rawAsXml);
             verifyXml(rawAsXml);
             expectedKeys.remove(keyRawXml);

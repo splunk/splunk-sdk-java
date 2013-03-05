@@ -85,7 +85,7 @@ public class ResultsReaderCsv extends ResultsReader {
        return keys;
     }
 
-    @Override Event getNextElementRaw() throws IOException {
+    @Override Event pureGetFromSingleSet() throws IOException {
         Event returnData = null;
         String[] line;
 

@@ -113,6 +113,6 @@ public class ExportResultsReaderTest extends SDKTestCase {
         InputStream xmlStream = openResource("data/export/" + this.version + "/nonreporting.xml");
         ResultsReaderXml resultsReader = new ResultsReaderXml(xmlStream);
 
-        ResultsTest.VerifyResultsReader(resultsReader, expectedEvents);
+        ResultsReaderTestFromExpectedFile.verifyResultsReader(resultsReader, expectedEvents);
     }
 }

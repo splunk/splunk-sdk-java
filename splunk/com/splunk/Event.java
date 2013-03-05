@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  */
 public class Event extends HashMap<String, String> {
     private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
-    private String rawAsXml;
+    private String segmentedRaw;
     
     // Prevent non-SDK instantiation.
     Event() {
@@ -76,8 +76,8 @@ public class Event extends HashMap<String, String> {
      * {@link ResultsReaderXml}
      * @param value The text of the XML element.
      */
-    void putRawAsXml(String value) {
-        rawAsXml = value;
+    void putSegmentedRaw(String value) {
+        segmentedRaw = value;
     }
     /**
      * Returns the single value or delimited set of values for the specified
@@ -159,15 +159,24 @@ public class Event extends HashMap<String, String> {
     }
 
     /**
-     * Gets the value for the XML element for '_raw' field. It is only available
-     * with {@link ResultsReaderXml}.
+     * Gets the XML markup for '_raw' field value.
+     * It is only available with {@link ResultsReaderXml}.
+     * <p>
+     * The return value is different than that of {@code get("_raw")}
+     * in that it is an XML fragment which includes all markups such as 'sg'
+     * tags, the outer tag, and has characters escaped for XML as needed.
+     * An example is below.
+     * Returned by {@code get("_raw")}:
+     * "http://localhost:8000/en-US/app/search/flashtimeline?q=search%20search%20index%3D_internal%20%7C%20head%2010&earliest=rt-1h&latest=rt"
+     * Returned by this method:
+     * <v xml:space="preserve" trunc="0">"http://localhost:8000/en-US/app/<sg h=\"1\">search</sg>/flashtimeline?q=<sg h=\"1\">search</sg>%20<sg h=\"1\">search</sg>%20index%3D_internal%20%7C%20head%2010&amp;earliest=rt-1h&amp;latest=rt"</v>
      */
-    public String getRawAsXml() {
-        if (rawAsXml == null) {
+    public String getSegmentedRaw() {
+        if (segmentedRaw == null) {
             throw new UnsupportedOperationException(
                 "The value is not available. Use ResultsReaderXml instead.");
         }
-        return rawAsXml;
+        return segmentedRaw;
     }
     // === Read Only ===
     
