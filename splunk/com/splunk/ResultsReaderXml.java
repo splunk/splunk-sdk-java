@@ -66,9 +66,42 @@ public class ResultsReaderXml
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         // At initialization, skip everything in the start until we get to the
-        // first-non preview data "<results preview='0'>", and then the first
-        // real event data which starts as "<result offset='0'>". Push back
-        // into the stream an opening <doc> tag, and parse the file.
+        // first-non preview data "<results",
+        // Push back into the stream an opening <doc> tag, and parse the file.
+        // We do this because the XML parser requires a single root element.
+        // Below is an example of an input stream, with a single 'results'
+        // element. With a stream from an export point, there can be
+        // multiple ones.
+        //
+        //        <?xml version='1.0' encoding='UTF-8'?>
+        //        <results preview='0'>
+        //        <meta>
+        //        <fieldOrder>
+        //        <field>series</field>
+        //        <field>sum(kb)</field>
+        //        </fieldOrder>
+        //        </meta>
+        //        <messages>
+        //        <msg type='DEBUG'>base lispy: [ AND ]</msg>
+        //        <msg type='DEBUG'>search context: user='admin', app='search', bs-pathname='/some/path'</msg>
+        //        </messages>
+        //        <result offset='0'>
+        //        <field k='series'>
+        //        <value><text>twitter</text></value>
+        //        </field>
+        //        <field k='sum(kb)'>
+        //        <value><text>14372242.758775</text></value>
+        //        </field>
+        //        </result>
+        //        <result offset='1'>
+        //        <field k='series'>
+        //        <value><text>splunkd</text></value>
+        //        </field>
+        //        <field k='sum(kb)'>
+        //        <value><text>267802.333926</text></value>
+        //        </field>
+        //        </result>
+        //        </results>
 
         String findToken = "<results";
         String accumulator = "";
@@ -121,7 +154,7 @@ public class ResultsReaderXml
         return fields;
     }
 
-    @Override Event pureGetFromSingleSet() throws IOException {
+    @Override Event getNextEventInCurrentSet() throws IOException {
         try {
             Event event = null;
             XMLEvent xmlEvent = readToStartOfElementAtSameLevelWithName("result");

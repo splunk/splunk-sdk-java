@@ -218,7 +218,7 @@ public class ResultsReaderJson extends ResultsReader {
                 "getFields() is not supported by this subclass.");
     }
 
-    @Override Event pureGetFromSingleSet() throws IOException {
+    @Override Event getNextEventInCurrentSet() throws IOException {
         if (exportHelper != null) {
             // If the last row has been passed and moveToNextStreamPosition
             // has not been called, end the current set.

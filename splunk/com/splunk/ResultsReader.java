@@ -23,7 +23,7 @@ import java.io.*;
  *
  * All result readers support both the Iterator interface and
  * getNextEvent method. They share the same underlying implementation
- * of pureGet(). The iterator interface is supported through
+ * of getNextElement(). The iterator interface is supported through
  * the base class, StreamIterableBase (which is also used by
  * multi result readers).
  *
@@ -49,6 +49,8 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
         extends StreamIterableBase<Event>
         implements SearchResults {
     InputStreamReader inputStreamReader = null;
+    // Default should be false which will result in no result set skipping
+    // or concatenation.
     boolean isPreview;
     boolean isExportStream;
     boolean isInMultiReader;
@@ -81,7 +83,7 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
      * @throws IOException On IO exception.
      */
     final public Event getNextEvent() throws IOException {
-        return pureGet();
+        return getNextElement();
     }
 
     /**
@@ -91,17 +93,33 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
      * @return  null if the end is reached
      * @throws IOException On IO exception.
      */
-    final Event pureGet() throws IOException {
+    final Event getNextElement() throws IOException {
         Event event = null;
         while (true) {
-            event = pureGetFromSingleSet();
+            event = getNextEventInCurrentSet();
+
+            // If we actually managed to get an event, then we break and return it
             if (event != null)
                 break;
+
+            // We don't concatenate across previews across sets, since each set
+            // might be a snapshot at a given time or a summary result with
+            // partial data from a reporting search
+            // (for example "count by host"). So if this is a preview,
+            // break. Null return indicating the end of the set.
             if (isPreview)
                 break;
+
+            // If we did not advance to next set, i.e. the end of stream is
+            // reached, break. Null return indicating the end of the set.
             if (!advanceStreamToNextSet())
                 break;
-            assert (!isPreview()) :
+
+            // We have advanced to the next set. isPreview() is for that set.
+            // It should not be a preview. Splunk should never return a preview
+            // after final results which we might have concatenated together
+            // across sets.
+            assert (!isPreview) :
                 "Preview result set should never be after a final set.";
         }
         return event;
@@ -110,22 +128,15 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
     /*
      * Get the next event in the current result set.
      */
-    abstract Event pureGetFromSingleSet() throws IOException;
+    abstract Event getNextEventInCurrentSet() throws IOException;
 
     /*
      * Return false if the end is reached.
      */
     final boolean resetIteratorToNextSet() throws IOException {
-        // Throw away any not-null cached element.
-        cachedElement = null;
-        // If the end of stream is reached, null element in the cache
-        // should be used. Setting nextElementCached to true in that case,
-        // so the iteration will return null in the cache without trying to
-        // read next element from the stream.
-        // Otherwise, if pureGet is called by the iterator
-        // the underlying reader may throw which can be confusing.
-        nextElementCached = !advanceStreamToNextSet();
-        return !nextElementCached;
+        boolean hasMoreResults = advanceStreamToNextSet();
+        resetIteration(hasMoreResults);
+        return hasMoreResults;
     }
 
     /*

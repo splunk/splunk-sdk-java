@@ -172,8 +172,10 @@ public class Event extends HashMap<String, String> {
      * <v xml:space="preserve" trunc="0">"http://localhost:8000/en-US/app/<sg h=\"1\">search</sg>/flashtimeline?q=<sg h=\"1\">search</sg>%20<sg h=\"1\">search</sg>%20index%3D_internal%20%7C%20head%2010&amp;earliest=rt-1h&amp;latest=rt"</v>
      */
     public String getSegmentedRaw() {
-        if (segmentedRaw == null) {
-            throw new UnsupportedOperationException(
+       if (segmentedRaw == null) {
+           // ResultsReaderXml will always set this to not null. Using this
+           // method for other result reader is not supported.
+           throw new UnsupportedOperationException(
                 "The value is not available. Use ResultsReaderXml instead.");
         }
         return segmentedRaw;

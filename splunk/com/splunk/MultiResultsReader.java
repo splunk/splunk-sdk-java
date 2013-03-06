@@ -34,7 +34,7 @@ class MultiResultsReader<T extends ResultsReader>
         resultsReader.close();
     }
 
-    final protected T pureGet() {
+    protected final T getNextElement() {
         try {
             if (!resultsReader.resetIteratorToNextSet()) {
                 return null;

@@ -333,7 +333,7 @@ public class ResultsReaderTest extends SDKTestCase {
 
     private void testPreviewSingleReaderXml(boolean useIter) throws Exception {
         ResultsReaderXml reader = new ResultsReaderXml(
-            openResource("results-preview.xml"));
+            openResource("resultsPreview.xml"));
 
         assertTrue(reader.isPreview());
 

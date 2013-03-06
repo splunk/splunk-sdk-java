@@ -90,21 +90,22 @@ public class ResultsReaderTestFromExpectedFile extends SDKTestCase {
             assertNotNull(
                     "Did not parse as many events from the XML as expected.",
                     foundEvent);
-            Set<String> expectedKeys = expectedEvent.keySet();
-            final String keyRawXml = "RAW_XML";
-            final String rawAsXml = foundEvent.getSegmentedRaw();
-            assertEquals(expectedEvent.get(keyRawXml), rawAsXml);
-            verifyXml(rawAsXml);
-            expectedKeys.remove(keyRawXml);
+            final String segmentedRaw = foundEvent.getSegmentedRaw();
+            final String keySegmentedRaw = "RAW_XML";
+            assertEquals(expectedEvent.get(keySegmentedRaw), segmentedRaw);
+            verifyXml(segmentedRaw);
+            Map<String, Object> expectedFields =
+                    (Map<String,Object>)expectedEvent.get("fields");
+            Set<String> expectedKeys = expectedFields.keySet();
             assertEquals(expectedKeys, foundEvent.keySet());
-            for (String key : expectedEvent.keySet()) {
+            for (String key : expectedFields.keySet()) {
                 assertTrue(foundEvent.containsKey(key));
-                if (expectedEvent.get(key) instanceof List) {
+                if (expectedFields.get(key) instanceof List) {
                     assertEquals(
-                            expectedEvent.get(key),
+                            expectedFields.get(key),
                             Arrays.asList(foundEvent.getArray(key)));
                 } else {
-                    assertEquals(expectedEvent.get(key), foundEvent.get(key));
+                    assertEquals(expectedFields.get(key), foundEvent.get(key));
                 }
             }
         }
