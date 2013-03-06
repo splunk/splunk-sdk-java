@@ -115,7 +115,7 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
             if (!advanceStreamToNextSet())
                 break;
 
-            // We have advanced to the next set. isPreview() is for that set.
+            // We have advanced to the next set. isPreview is for that set.
             // It should not be a preview. Splunk should never return a preview
             // after final results which we might have concatenated together
             // across sets.
@@ -134,8 +134,15 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
      * Return false if the end is reached.
      */
     final boolean resetIteratorToNextSet() throws IOException {
+
+        // Get to the beginning of the next set in the stream
+        // skipping remaining event(s) if any in the current set.
         boolean hasMoreResults = advanceStreamToNextSet();
+
+        // Reset the iterator so that it would either fetch a new
+        // element for the next iteration or stop.
         resetIteration(hasMoreResults);
+
         return hasMoreResults;
     }
 
