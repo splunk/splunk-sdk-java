@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.io.*;
+import java.util.Iterator;
 
 /*
  * Summary of class relationships and control flow
@@ -84,6 +85,15 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
      */
     final public Event getNextEvent() throws IOException {
         return getNextElement();
+    }
+
+    /**
+     * Returns an iterator over the events from this reader.
+     * @return an Iterator.
+     */
+    @Override
+    public final Iterator<Event> iterator() {
+        return super.iterator();
     }
 
     /**

@@ -29,7 +29,7 @@ abstract class StreamIterableBase<T> implements Iterable<T> {
     private T cachedElement;
     private boolean nextElementCached;
 
-    public final Iterator<T> iterator() {
+    public Iterator<T> iterator() {
 
         return new Iterator<T>() {
 
