@@ -21,6 +21,15 @@
     <orderEntry type="library" name="commons-cli-1.2" level="project" />
     <orderEntry type="library" name="gson" level="project" />
     <orderEntry type="library" name="opencsv" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/junit-4.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
