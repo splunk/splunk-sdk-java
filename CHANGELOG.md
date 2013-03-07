@@ -4,29 +4,28 @@
 
 ### Breaking changes
 
-* All search jobs default to having the option 'segmentation=none' unless
-  specifically specified otherwise. This prevents Splunk from inserting
-  tags to specify highlighting search terms in the results from the search.
-
+* The default setting for all search jobs is now `segmentation=none` unless 
+  you explicitly set it otherwise. This setting returns results as a raw-text
+  string rather than a string in XML format. 
+  
 ### New features and APIs
 
-* New classes, `MultiResultsReaderXml` and `MultiResultsReaderJson`, for
-  reading multiple result sets in search result stream from `Service.Export` 
-  methods.
+* New classes have been added, `MultiResultsReaderXml` and `MultiResultsReaderJson`, 
+  to read search results streams with multiple result sets from `Service.Export` methods.
  
-* `ResultsReader` classes now support  `Iterable` and `Iterator` interfaces.
+* The `ResultsReader` classes now support `Iterable` and `Iterator` interfaces.
 
-* A new method on `Event` class to return event raw data preserving 
-  segmentation information.
-    - `getSegmentedRaw`
-	
+* The `Event.getSegmentedRaw` method has been added to return raw data from events, preserving 
+  segmentation information. 
+  	
 ### Bug fixes
 
-* ServiceInfo now always uses /services instead of the Service's default
-  namespace for its HTTP requests, to work around a bug in Splunk that
-  returns a 403 when server/info is accessed via certain namespaces.
+* The `ServiceInfo` class now uses the `services/*` endpoint rather than the 
+  default namespace (`servicesNS/*`) for HTTP requests. This change is a workaround to 
+  avoid a bug in Splunk that returns a 403 error when the `server/info` endpoint 
+  is accessed using certain namespaces.
 
-* `ResultsReaderXml` can now read search results streams from
+* The `ResultsReaderXml` class can now read search results streams from the
   `Job.getResultsPreview` method.
 
 ## Version 1.0
