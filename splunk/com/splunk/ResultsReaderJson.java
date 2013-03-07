@@ -48,7 +48,7 @@ public class ResultsReaderJson extends ResultsReader {
      * stream yields unpredictable results.
      *
      * @param inputStream The stream to parse.
-     * @throws Exception On exception.
+     * @throws IOException
      */
     public ResultsReaderJson(InputStream inputStream) throws IOException {
         this(inputStream, false);

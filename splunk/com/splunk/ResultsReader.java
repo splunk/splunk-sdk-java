@@ -46,7 +46,7 @@ import java.util.Iterator;
  * The {@code ResultsReader} class is a base class for the streaming readers
  * for Splunk search results. It should not be used to get previews from export.
  */
-public abstract class ResultsReader<T extends ResultsReader<T>>
+public abstract class ResultsReader
         extends StreamIterableBase<Event>
         implements SearchResults {
     InputStreamReader inputStreamReader = null;
@@ -54,7 +54,7 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
     // or concatenation.
     boolean isPreview;
     boolean isExportStream;
-    boolean isInMultiReader;
+    private boolean isInMultiReader;
 
     ResultsReader(InputStream inputStream, boolean isInMultiReader)
             throws IOException {
@@ -104,7 +104,7 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
      * @throws IOException On IO exception.
      */
     final Event getNextElement() throws IOException {
-        Event event = null;
+        Event event;
         while (true) {
             event = getNextEventInCurrentSet();
 
@@ -157,27 +157,33 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
     }
 
     /*
-    * Return false if the end is reached.
-    */
+     * Return false if the end is reached.
+     */
     boolean advanceStreamToNextSet() throws IOException {
         // Indicate that no more sets are available
         // Subclasses can override this method to support
         // MultiResultsReader.
         return false;
-    };
+    }
 
-    // This method is used by constructors of result readers to do
-    // the following for single reader:
-    // 1. Obtain the preview flag and the field list.
-    // 2. Skip any previews for export.
+    /*
+     * This method is used by constructors of result readers to do
+     * the following for single reader:
+     * 1. Obtain the preview flag and the field list.
+     * 2. Skip any previews for export.
+     */
     final void finishInitialization() throws IOException {
         if (isInMultiReader)
             return;
 
         while (true) {
-            if (!advanceStreamToNextSet())
-                throw new RuntimeException(
-                        "No result set found.");
+            if (!advanceStreamToNextSet()) {
+                // Terminating the iteration.
+                // This avoids future callings into the underlying reader
+                // to get events, which may result in exceptions.
+                resetIteration(false);
+                break;
+            }
 
             if (!isExportStream)
                 break;

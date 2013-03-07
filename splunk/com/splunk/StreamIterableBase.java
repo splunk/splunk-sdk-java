@@ -66,8 +66,8 @@ abstract class StreamIterableBase<T> implements Iterable<T> {
     abstract T getNextElement() throws IOException;
 
     /**
-     * Interrupt the iteration and set the iterator to
-     * either the initial state or the end.
+     * Interrupt the iteration by setting the iterator to
+     * either the initial state or the end state.
      * @param hasMoreResults Whether or not there are more results.
      */
     void resetIteration(boolean hasMoreResults) {
@@ -75,9 +75,8 @@ abstract class StreamIterableBase<T> implements Iterable<T> {
         cachedElement = null;
         // If there's no more results, i.e., the end is reached,
         // set nextElementCached to true so that
-        // the iteration will return null in the cache without trying to
-        // get the next element.
-        // Otherwise, if getNextElement is called by the iterator
+        // the iterator will not try to get the next element.
+        // Otherwise, if getNextElement is called by the iterator,
         // the underlying reader may throw which can be confusing.
         nextElementCached = !hasMoreResults;
     }

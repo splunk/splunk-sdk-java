@@ -176,9 +176,9 @@ public class Event extends HashMap<String, String> {
            // ResultsReaderXml will always set this to not null. Using this
            // method for other result reader is not supported.
            throw new UnsupportedOperationException(
-                "The value is not available. Use ResultsReaderXml instead.");
-        }
-        return segmentedRaw;
+               "The value is not available. Use ResultsReaderXml instead.");
+       }
+       return segmentedRaw;
     }
     // === Read Only ===
     

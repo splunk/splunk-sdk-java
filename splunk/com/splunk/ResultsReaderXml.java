@@ -33,7 +33,7 @@ import javax.xml.stream.events.*;
  * accessed using MultiResultsReaderXml."
  */
 public class ResultsReaderXml
-    extends ResultsReader<ResultsReaderXml> {
+    extends ResultsReader {
 
     private XMLEventReader xmlReader = null;
     private ArrayList<String> fields = new ArrayList<String>();
@@ -50,7 +50,7 @@ public class ResultsReaderXml
      * data, and only extracts finalized data.
      *
      * @param inputStream The stream to parse.
-     * @throws Exception On exception.
+     * @throws IOException
      */
     public ResultsReaderXml(InputStream inputStream) throws IOException {
         this(inputStream, false);

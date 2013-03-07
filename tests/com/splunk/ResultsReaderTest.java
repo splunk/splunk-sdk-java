@@ -401,7 +401,7 @@ public class ResultsReaderTest extends SDKTestCase {
     }
 
     private void testExportSingleReader(
-            ResultsReader<? extends ResultsReader> reader)
+            ResultsReader reader)
             throws Exception{
 
         int indexEvent = 0;
