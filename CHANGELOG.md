@@ -1,12 +1,20 @@
 # Splunk SDK for Java Changelog
 
-## Version 1.1.0
+## Version 1.1
 
 ### Breaking changes
 
 * All search jobs default to having the option 'segmentation=none' unless
   specifically specified otherwise. This prevents Splunk from inserting
   tags to specify highlighting search terms in the results from the search.
+
+### New features and APIs
+
+* `ResultsReader` classes now support  `Iterable` and `Iterator` interfaces.
+
+* A new method on `Event` class to return event raw data preserving 
+  segmentation information.
+    - `getSegmentedRaw`
 	
 ### Bug fixes
 
@@ -14,6 +22,8 @@
   namespace for its HTTP requests, to work around a bug in Splunk that
   returns a 403 when server/info is accessed via certain namespaces.
 
+* `ResultsReaderXml` can now read search results streams from
+  `Job.getResultsPreview` method.
 
 ## Version 1.0
 

@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 /**
@@ -76,7 +77,9 @@ public class ResultsReaderTest extends SDKTestCase {
 
     @Test
     public void testReadFromExportJson() throws Exception {
-        verifyMultiReader(getExportStreamJson());
+        if (service.versionIsAtLeast("5.0.0")) {
+            verifyMultiReader(getExportStreamJson());
+        }
     }
 
     @Test
@@ -330,7 +333,7 @@ public class ResultsReaderTest extends SDKTestCase {
 
     private void testPreviewSingleReaderXml(boolean useIter) throws Exception {
         ResultsReaderXml reader = new ResultsReaderXml(
-            openResource("results-preview.xml"));
+            openResource("resultsPreview.xml"));
 
         assertTrue(reader.isPreview());
 
@@ -398,7 +401,7 @@ public class ResultsReaderTest extends SDKTestCase {
     }
 
     private void testExportSingleReader(
-            ResultsReader<? extends ResultsReader> reader)
+            ResultsReader reader)
             throws Exception{
 
         int indexEvent = 0;

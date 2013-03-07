@@ -26,10 +26,10 @@ import java.util.NoSuchElementException;
  * @param <T>  Type of elements.
  */
 abstract class StreamIterableBase<T> implements Iterable<T> {
-    protected T cachedElement;
-    protected boolean nextElementCached;
+    private T cachedElement;
+    private boolean nextElementCached;
 
-    public final Iterator<T> iterator() {
+    public Iterator<T> iterator() {
 
         return new Iterator<T>() {
 
@@ -64,6 +64,22 @@ abstract class StreamIterableBase<T> implements Iterable<T> {
      * @throws IOException
      */
     abstract T getNextElement() throws IOException;
+
+    /**
+     * Interrupt the iteration by setting the iterator to
+     * either the initial state or the end state.
+     * @param hasMoreResults Whether or not there are more results.
+     */
+    void resetIteration(boolean hasMoreResults) {
+        // Throw away any not-null cached element.
+        cachedElement = null;
+        // If there's no more results, i.e., the end is reached,
+        // set nextElementCached to true so that
+        // the iterator will not try to get the next element.
+        // Otherwise, if getNextElement is called by the iterator,
+        // the underlying reader may throw which can be confusing.
+        nextElementCached = !hasMoreResults;
+    }
 
     private void cacheNextElement() {
         if (!nextElementCached) {
