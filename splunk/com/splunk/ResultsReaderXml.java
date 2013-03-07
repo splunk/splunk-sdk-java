@@ -406,8 +406,13 @@ public class ResultsReaderXml
             throw new RuntimeException(e);
         } catch (NullPointerException e) {
             // Invalid xml (<doc> and multiple <results> may results in
-            // this exception in the xml reader at:
+            // this exception in the xml reader with JDK 1.6 at:
             // com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.load(XMLEntityScanner.java:1748)
+            return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // Invalid xml (<doc> and multiple <results> may results in
+            // this exception in the xml reader with JDK 1.7 at:
+            // com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.endEntity(XMLDocumentFragmentScannerImpl.java:904)
             return false;
         }
     }

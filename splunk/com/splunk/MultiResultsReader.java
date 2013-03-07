@@ -23,8 +23,7 @@ import java.util.Iterator;
 // subclasses of MultiResultReader. For example, MultiResultsReaderXml
 // references ResultsReaderXml.
 public class MultiResultsReader<T extends ResultsReader>
-        extends StreamIterableBase<SearchResults>
-        implements Iterable<SearchResults> {
+        extends StreamIterableBase<SearchResults> {
     private T resultsReader;
 
     MultiResultsReader(T resultsReader) throws IOException {
