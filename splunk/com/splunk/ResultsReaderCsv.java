@@ -43,7 +43,7 @@ public class ResultsReaderCsv extends ResultsReader {
      * stream yields unpredictable results.
      *
      * @param inputStream The stream to parse.
-     * @throws Exception On exception.
+     * @throws IOException
      */
     public ResultsReaderCsv(InputStream inputStream) throws IOException {
         super(inputStream, false);
@@ -85,7 +85,13 @@ public class ResultsReaderCsv extends ResultsReader {
        return keys;
     }
 
-    @Override Event getNextElementRaw() throws IOException {
+    /*
+     * Multiple result sets are not supported by this reader.
+     * This function will read the entire stream.
+     * An application won't reach here with a stream from
+     * an export endpoint. The constructor will throw in that case.
+     */
+    @Override Event getNextEventInCurrentSet() throws IOException {
         Event returnData = null;
         String[] line;
 

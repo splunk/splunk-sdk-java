@@ -1,0 +1,457 @@
+{
+  "atom_with_feed": {
+    "metadata": {
+      "title": "localapps",
+      "id": "https://localhost:8089/servicesNS/nobody/system/apps/local",
+      "updated": "2012-12-19T11:07:48-08:00",
+      "generator": {"build": "144175", "version": "5.0.2"},
+      "author": "Splunk",
+      "links": {
+        "create": "/servicesNS/nobody/system/apps/local/_new",
+        "_reload": "/servicesNS/nobody/system/apps/local/_reload"
+      },
+      "totalResults": "1",
+      "itemsPerPage": "30",
+      "startIndex": "0",
+      "messages": []
+    },
+    "entries": [
+      {
+        "title": "gettingstarted",
+        "id": "https://localhost:8089/servicesNS/nobody/system/apps/local/gettingstarted",
+        "updated": "2012-12-19T11:07:48-08:00",
+        "author": "nobody",
+        "links": {
+          "alternate": "/servicesNS/nobody/system/apps/local/gettingstarted",
+          "list": "/servicesNS/nobody/system/apps/local/gettingstarted",
+          "_reload": "/servicesNS/nobody/system/apps/local/gettingstarted/_reload",
+          "edit": "/servicesNS/nobody/system/apps/local/gettingstarted",
+          "remove": "/servicesNS/nobody/system/apps/local/gettingstarted",
+          "disable": "/servicesNS/nobody/system/apps/local/gettingstarted/disable",
+          "package": "/servicesNS/nobody/system/apps/local/gettingstarted/package"
+        },
+        "content": {
+          "author": "Splunk",
+          "check_for_updates": "1",
+          "configured": "1",
+          "description": "Get started with Splunk.  This app introduces you to many of Splunk's features.  You'll learn how to use Splunk to index data, search and investigate, add knowledge, monitor and alert, report and analyze.",
+          "disabled": "0",
+          "eai:acl": {
+            "app": "system",
+            "can_change_perms": "1",
+            "can_list": "1",
+            "can_share_app": "1",
+            "can_share_global": "1",
+            "can_share_user": "0",
+            "can_write": "1",
+            "modifiable": "1",
+            "owner": "nobody",
+            "perms": {
+              "read": ["*"],
+              "write": ["power"]
+            },
+            "removable": "0",
+            "sharing": "app"
+          },
+          "eai:attributes": {
+            "optionalFields": ["author", "check_for_updates",
+                               "configured", "description",
+                               "label", "manageable", "version",
+                               "visible"],
+            "requiredFields": [],
+            "wildcardFields": []
+          },
+          "label": "Getting started",
+          "manageable": "1",
+          "state_change_requires_restart": "0",
+          "version": "1.0",
+          "visible": "1"
+        }
+      }
+    ]
+  },
+  "atom_without_feed": {
+    "metadata": {},
+    "entries": [
+      {
+        "title": "| metadata type=sources | search totalCount>0 | rename totalCount as Count recentTime as \"Last Update\" | table source Count \"Last Update\" | fieldformat Count=tostring(Count, \"commas\") | fieldformat \"Last Update\"=strftime('Last Update', \"%c\")",
+        "id": "https://localhost:8089/services/search/jobs/rt_1355944187.129",
+        "updated": "2012-12-19T11:09:52.000-08:00",
+        "published": "2012-12-19T11:09:47.000-08:00",
+        "links": {
+          "alternate": "/services/search/jobs/rt_1355944187.129",
+          "search.log": "/services/search/jobs/rt_1355944187.129/search.log",
+          "events": "/services/search/jobs/rt_1355944187.129/events",
+          "results": "/services/search/jobs/rt_1355944187.129/results",
+          "results_preview": "/services/search/jobs/rt_1355944187.129/results_preview",
+          "timeline": "/services/search/jobs/rt_1355944187.129/timeline",
+          "summary": "/services/search/jobs/rt_1355944187.129/summary",
+          "control": "/services/search/jobs/rt_1355944187.129/control"
+        },
+        "author": "admin",
+        "content": {
+          "cursorTime": "1969-12-31T16:00:00.000-08:00",
+          "delegate": "",
+          "diskUsage": "49152",
+          "dispatchState": "RUNNING",
+          "doneProgress": "1.00000",
+          "dropCount": "0",
+          "earliestTime": "1969-12-31T16:00:00.000-08:00",
+          "eventAvailableCount": "0",
+          "eventCount": "0",
+          "eventFieldCount": "0",
+          "eventIsStreaming": "1",
+          "eventIsTruncated": "1",
+          "eventSearch": "",
+          "eventSorting": "none",
+          "isDone": "0",
+          "isFailed": "0",
+          "isFinalized": "0",
+          "isPaused": "0",
+          "isPreviewEnabled": "1",
+          "isRealTimeSearch": "1",
+          "isRemoteTimeline": "0",
+          "isSaved": "0",
+          "isSavedSearch": "0",
+          "isZombie": "0",
+          "keywords": "",
+          "label": "",
+          "latestTime": "1969-12-31T16:00:00.000-08:00",
+          "meanPreviewPeriod": "1.708000",
+          "numPreviews": "3",
+          "pid": "11902",
+          "priority": "5",
+          "remoteSearch": "metadata  gather=false type=sources  update_period=0",
+          "reportSearch": "metadata  type=sources  | search totalCount>0  | rename  totalCount as Count recentTime as \"Last Update\"  | table  source Count \"Last Update\" ",
+          "resultCount": "0",
+          "resultIsStreaming": "0",
+          "resultPreviewCount": "5",
+          "runDuration": "5.124000",
+          "scanCount": "0",
+          "sid": "rt_1355944187.129",
+          "statusBuckets": "0",
+          "ttl": "599",
+          "performance": {
+            "command.metadata": {
+              "duration_secs": "4.995000",
+              "invocations": "9",
+              "input_count": "0",
+              "output_count": "6"
+            },
+            "command.metadata.execute_input": {
+              "duration_secs": "0.009000",
+              "invocations": "9"
+            },
+            "dispatch.check_disk_usage": {
+              "duration_secs": "0.001000",
+              "invocations": "1"
+            },
+            "dispatch.createProviderQueue": {
+              "duration_secs": "0.005000",
+              "invocations": "1"
+            },
+            "dispatch.evaluate": {
+              "duration_secs": "0.028000",
+              "invocations": "1"
+            },
+            "dispatch.evaluate.fieldformat": {
+              "duration_secs": "0.002000",
+              "invocations": "2"
+            },
+            "dispatch.evaluate.metadata": {
+              "duration_secs": "0.003000",
+              "invocations": "1"
+            },
+            "dispatch.evaluate.rename": {
+              "duration_secs": "0.001000",
+              "invocations": "1"
+            },
+            "dispatch.evaluate.search": {
+              "duration_secs": "0.021000",
+              "invocations": "1"
+            },
+            "dispatch.evaluate.table": {
+              "duration_secs": "0.001000",
+              "invocations": "1"
+            },
+            "dispatch.fetch": {
+              "duration_secs": "4.996000",
+              "invocations": "9"
+            },
+            "dispatch.preview": {
+              "duration_secs": "0.088000",
+              "invocations": "3"
+            },
+            "dispatch.preview.command.rename": {
+              "duration_secs": "0.004000",
+              "invocations": "3",
+              "input_count": "15",
+              "output_count": "15"
+            },
+            "dispatch.preview.command.search": {
+              "duration_secs": "0.057000",
+              "invocations": "3",
+              "input_count": "15",
+              "output_count": "15"
+            },
+            "dispatch.preview.command.search.filter": {
+              "duration_secs": "0.003000",
+              "invocations": "3"
+            },
+            "dispatch.preview.command.table": {
+              "duration_secs": "0.013000",
+              "invocations": "3",
+              "input_count": "15",
+              "output_count": "30"
+            },
+            "dispatch.preview.metadata.execute_output": {
+              "duration_secs": "0.003000",
+              "invocations": "3"
+            },
+            "dispatch.preview.write_results_to_disk": {
+              "duration_secs": "0.015000",
+              "invocations": "3"
+            },
+            "dispatch.stream.local": {
+              "duration_secs": "4.996000",
+              "invocations": "9"
+            },
+            "dispatch.writeStatus": {
+              "duration_secs": "0.013000",
+              "invocations": "6"
+            },
+            "startup.handoff": {
+              "duration_secs": "0.138000",
+              "invocations": "1"
+            }
+          },
+          "messages": {},
+          "request": {
+            "auto_cancel": "90",
+            "earliest_time": "rt",
+            "latest_time": "rt",
+            "max_count": "100000",
+            "search": "| metadata type=sources | search totalCount>0 | rename totalCount as Count recentTime as \"Last Update\" | table source Count \"Last Update\" | fieldformat Count=tostring(Count, \"commas\") | fieldformat \"Last Update\"=strftime('Last Update', \"%c\")",
+            "status_buckets": "0",
+            "time_format": "%s.%Q",
+            "ui_dispatch_app": "search",
+            "ui_dispatch_view": "dashboard_live"
+          },
+          "eai:acl": {
+            "perms": {
+              "read": ["admin"],
+              "write": ["admin"]
+            },
+            "owner": "admin",
+            "modifiable": "1",
+            "sharing": "global",
+            "app": "search",
+            "can_write": "1"
+          },
+          "searchProviders": ["fross-mbp15.local"]
+        }
+      }
+    ]
+  },
+  "atom_with_several_entries": {
+    "metadata": {
+      "title": "localapps",
+      "id": "https://localhost:8089/services/apps/local",
+      "updated": "2012-12-19T15:27:58-08:00",
+      "generator": {"version": "140437"},
+      "author": "Splunk",
+      "links": {
+        "create": "/services/apps/local/_new",
+        "_reload": "/services/apps/local/_reload"
+      },
+      "totalResults": "12",
+      "itemsPerPage": "30",
+      "startIndex": "0",
+      "messages": []
+    },
+    "entries": [
+      {
+        "title": "gettingstarted",
+        "id": "https://localhost:8089/services/apps/local/gettingstarted",
+        "updated": "2012-12-19T15:27:58-08:00",
+        "author": "system",
+        "links": {
+          "alternate": "/services/apps/local/gettingstarted",
+          "list": "/services/apps/local/gettingstarted",
+          "_reload": "/services/apps/local/gettingstarted/_reload",
+          "edit": "/services/apps/local/gettingstarted",
+          "remove": "/services/apps/local/gettingstarted",
+          "disable": "/services/apps/local/gettingstarted/disable",
+          "package": "/services/apps/local/gettingstarted/package"
+        },
+        "content": {
+          "author": "Splunk",
+          "check_for_updates": "1",
+          "configured": "1",
+          "description": "Get started with Splunk.  This app introduces you to many of Splunk's features.  You'll learn how to use Splunk to index data, search and investigate, add knowledge, monitor and alert, report and analyze.",
+          "disabled": "0",
+          "eai:acl": {
+            "app": "",
+            "can_change_perms": "1",
+            "can_list": "1",
+            "can_share_app": "1",
+            "can_share_global": "1",
+            "can_share_user": "0",
+            "can_write": "1",
+            "modifiable": "1",
+            "owner": "system",
+            "perms": {
+              "read": ["*"],
+              "write": ["power"]
+            },
+            "removable": "0",
+            "sharing": "app"
+          },
+          "label": "Getting started",
+          "manageable": "0",
+          "state_change_requires_restart": "0",
+          "version": "1.0",
+          "visible": "1"
+        }
+      },
+      {
+        "title": "launcher",
+        "id": "https://localhost:8089/services/apps/local/launcher",
+        "updated": "2012-12-19T15:27:58-08:00",
+        "author": "system",
+        "links": {
+          "alternate": "/services/apps/local/launcher",
+          "list": "/services/apps/local/launcher",
+          "_reload": "/services/apps/local/launcher/_reload",
+          "edit": "/services/apps/local/launcher",
+          "remove": "/services/apps/local/launcher",
+          "package": "/services/apps/local/launcher/package"
+        },
+        "content": {
+          "check_for_updates": "1",
+          "configured": "1",
+          "disabled": "0",
+          "eai:acl": {
+            "app": "",
+            "can_change_perms": "1",
+            "can_list": "1",
+            "can_share_app": "1",
+            "can_share_global": "1",
+            "can_share_user": "0",
+            "can_write": "1",
+            "modifiable": "1",
+            "owner": "system",
+            "perms": {
+              "read": ["*"],
+              "write": ["power"]
+            },
+            "removable": "0",
+            "sharing": "app"
+          },
+          "label": "Home",
+          "manageable": "0",
+          "state_change_requires_restart": "0",
+          "visible": "1"
+        }
+      },
+
+      {
+        "title": "learned",
+        "id": "https://localhost:8089/services/apps/local/learned",
+        "updated": "2012-12-19T15:27:58-08:00",
+        "author": "system",
+        "links": {
+          "alternate": "/services/apps/local/learned",
+          "list": "/services/apps/local/learned",
+          "_reload": "/services/apps/local/learned/_reload",
+          "edit": "/services/apps/local/learned",
+          "remove": "/services/apps/local/learned",
+          "disable": "/services/apps/local/learned/disable",
+          "package": "/services/apps/local/learned/package"
+        },
+        "content": {
+          "check_for_updates": "1",
+          "configured": "0",
+          "disabled": "0",
+          "eai:acl": {
+            "app": "",
+            "can_change_perms": "1",
+            "can_list": "1",
+            "can_share_app": "1",
+            "can_share_global": "1",
+            "can_share_user": "0",
+            "can_write": "1",
+            "modifiable": "1",
+            "owner": "system",
+            "perms": {"read": ["*"], "write": ["*"]},
+            "removable": "0",
+            "sharing": "app"
+          },
+          "label": "learned",
+          "manageable": "1",
+          "state_change_requires_restart": "0",
+          "visible": "0"
+        }
+      }
+    ]
+  },
+  "atom_with_simple_entries": {
+    "metadata": {
+      "title": "services",
+      "id": "https://localhost:8089/services/",
+      "updated": "2012-12-20T09:48:01-08:00",
+      "generator": {"version": "140437"},
+      "author": "Splunk",
+      "links": {},
+      "messages": []
+    },
+    "entries": [
+      {
+        "title": "alerts",
+        "id": "https://localhost:8089/services/alerts",
+        "updated": "2012-12-20T09:48:01-08:00",
+        "links": {
+          "alternate": "/services/alerts"
+        }
+      },
+      {
+        "title": "apps",
+        "id": "https://localhost:8089/services/apps",
+        "updated": "2012-12-20T09:48:01-08:00",
+        "links": {
+          "alternate": "/services/apps"
+        }
+      },
+      {
+        "title": "auth",
+        "id": "https://localhost:8089/services/auth",
+        "updated": "2012-12-20T09:48:01-08:00",
+        "links": {
+          "alternate": "/services/auth"
+        }
+      }
+    ]
+  },
+  "atom_feed_with_message": {
+    "metadata": {
+      "title": "roles",
+      "id": "https://localhost:8089/services/authorization/roles",
+      "updated": "2013-01-22T08:52:24-08:00",
+      "generator": {"build": "146385", "version": "5.0.2"},
+      "author": "Splunk",
+      "links": {
+        "create": "/services/authorization/roles/_new"
+      },
+      "startIndex": "0",
+      "totalResults": "0",
+      "itemsPerPage": "30",
+      "messages": [
+        {
+          "type": "WARN",
+          "message": "This role will be disabled after the Enterprise Trial License expires"
+        }
+      ]
+    },
+    "entries": []
+  }
+}

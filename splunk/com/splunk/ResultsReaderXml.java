@@ -16,8 +16,7 @@
 
 package com.splunk;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
-import java.io.PushbackReader;
 
 /**
  * The {@code ResultsReaderXml} class represents a streaming XML reader for
@@ -35,7 +33,7 @@ import java.io.PushbackReader;
  * accessed using MultiResultsReaderXml."
  */
 public class ResultsReaderXml
-    extends ResultsReader<ResultsReaderXml> {
+    extends ResultsReader {
 
     private XMLEventReader xmlReader = null;
     private ArrayList<String> fields = new ArrayList<String>();
@@ -52,7 +50,7 @@ public class ResultsReaderXml
      * data, and only extracts finalized data.
      *
      * @param inputStream The stream to parse.
-     * @throws Exception On exception.
+     * @throws IOException
      */
     public ResultsReaderXml(InputStream inputStream) throws IOException {
         this(inputStream, false);
@@ -68,9 +66,42 @@ public class ResultsReaderXml
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         // At initialization, skip everything in the start until we get to the
-        // first-non preview data "<results preview='0'>", and then the first
-        // real event data which starts as "<result offset='0'>". Push back
-        // into the stream an opening <doc> tag, and parse the file.
+        // first-non preview data "<results",
+        // Push back into the stream an opening <doc> tag, and parse the file.
+        // We do this because the XML parser requires a single root element.
+        // Below is an example of an input stream, with a single 'results'
+        // element. With a stream from an export point, there can be
+        // multiple ones.
+        //
+        //        <?xml version='1.0' encoding='UTF-8'?>
+        //        <results preview='0'>
+        //        <meta>
+        //        <fieldOrder>
+        //        <field>series</field>
+        //        <field>sum(kb)</field>
+        //        </fieldOrder>
+        //        </meta>
+        //        <messages>
+        //        <msg type='DEBUG'>base lispy: [ AND ]</msg>
+        //        <msg type='DEBUG'>search context: user='admin', app='search', bs-pathname='/some/path'</msg>
+        //        </messages>
+        //        <result offset='0'>
+        //        <field k='series'>
+        //        <value><text>twitter</text></value>
+        //        </field>
+        //        <field k='sum(kb)'>
+        //        <value><text>14372242.758775</text></value>
+        //        </field>
+        //        </result>
+        //        <result offset='1'>
+        //        <field k='series'>
+        //        <value><text>splunkd</text></value>
+        //        </field>
+        //        <field k='sum(kb)'>
+        //        <value><text>267802.333926</text></value>
+        //        </field>
+        //        </result>
+        //        </results>
 
         String findToken = "<results";
         String accumulator = "";
@@ -123,7 +154,7 @@ public class ResultsReaderXml
         return fields;
     }
 
-    @Override Event getNextElementRaw() throws IOException {
+    @Override Event getNextEventInCurrentSet() throws IOException {
         try {
             Event event = null;
             XMLEvent xmlEvent = readToStartOfElementAtSameLevelWithName("result");
@@ -171,9 +202,10 @@ public class ResultsReaderXml
 
         // Read <meta> element.
         final String meta = "meta";
-        if (readToStartOfElementAtSameLevelWithName(meta) != null)
+        if (readToStartOfElementAtSameLevelWithName(meta) != null) {
             readFieldOrderElement();
-        readToEndElementWithName(meta);
+            readToEndElementWithName(meta);
+        }
         return true;
     }
 
@@ -316,12 +348,25 @@ public class ResultsReaderXml
             eType = xmlEvent.getEventType();
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
-                   @SuppressWarnings("unchecked")
+                    final StartElement startElement = xmlEvent.asStartElement();
+                    @SuppressWarnings("unchecked")
                     Iterator<Attribute> attrIttr =
-                        xmlEvent.asStartElement().getAttributes();
+                        startElement.getAttributes();
                     if (level == 0) {
                         if (attrIttr.hasNext())
                             key =  attrIttr.next().getValue();
+                    } else if (level == 1 &&
+                            key.equals("_raw") &&
+                            startElement
+                                .getName()
+                                .getLocalPart()
+                                .equals("v")) {
+                        StringBuilder asString = new StringBuilder();
+                        StringWriter asXml = new StringWriter();
+                        readWholeElement(startElement, asString, asXml);
+                        values.add(asString.toString());
+                        returnData.putSegmentedRaw(asXml.toString());
+                        level--;
                     }
                     level++;
                     break;
@@ -365,6 +410,50 @@ public class ResultsReaderXml
             // com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.load(XMLEntityScanner.java:1748)
             return false;
         }
+    }
+
+    /**
+     * Read the whole element including those contained in the outer element.
+     * @param startElement start element (tag) of the outer element.
+     * @param asString output builder that the element's inner-text
+     *                 will be appended to, with markup removed and
+     *                 characters un-escaped
+     * @param asXml    output builder that full xml including markups
+     *                 will be appended to. Characters are escaped as
+     *                 needed.
+     * @throws IOException
+     * @throws XMLStreamException
+     */
+    void readWholeElement(
+            StartElement startElement,
+            StringBuilder asString,
+            StringWriter asXml)
+            throws IOException, XMLStreamException {
+        XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().
+                createXMLEventWriter(asXml);
+        XMLEvent xmlEvent = startElement;
+        int level = 0;
+        do {
+            xmlWriter.add(xmlEvent);
+            int eType = xmlEvent.getEventType();
+            switch (eType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    level++;
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (--level == 0) {
+                        xmlWriter.close();
+                        return;
+                    }
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    asString.append(xmlEvent.asCharacters().getData());
+                default:
+                    break;
+            }
+            xmlEvent = xmlReader.nextEvent();
+        } while (xmlReader.hasNext());
+        throw new RuntimeException("Invalid XML format.");
     }
 }
 
