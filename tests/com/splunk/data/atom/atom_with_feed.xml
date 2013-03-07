@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This is to override browser formatting; see server.conf[httpServer] to disable. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .-->
+<?xml-stylesheet type="text/xml" href="/static/atom.xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:s="http://dev.splunk.com/ns/rest" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <title>localapps</title>
+  <id>https://localhost:8089/servicesNS/nobody/system/apps/local</id>
+  <updated>2012-12-19T11:07:48-08:00</updated>
+  <generator build="144175" version="5.0.2"/>
+  <author>
+    <name>Splunk</name>
+  </author>
+  <link href="/servicesNS/nobody/system/apps/local/_new" rel="create"/>
+  <link href="/servicesNS/nobody/system/apps/local/_reload" rel="_reload"/>
+  <opensearch:totalResults>1</opensearch:totalResults>
+  <opensearch:itemsPerPage>30</opensearch:itemsPerPage>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <s:messages/>
+  <entry>
+    <title>gettingstarted</title>
+    <id>https://localhost:8089/servicesNS/nobody/system/apps/local/gettingstarted</id>
+    <updated>2012-12-19T11:07:48-08:00</updated>
+    <link href="/servicesNS/nobody/system/apps/local/gettingstarted" rel="alternate"/>
+    <author>
+      <name>nobody</name>
+    </author>
+    <link href="/servicesNS/nobody/system/apps/local/gettingstarted" rel="list"/>
+    <link href="/servicesNS/nobody/system/apps/local/gettingstarted/_reload" rel="_reload"/>
+    <link href="/servicesNS/nobody/system/apps/local/gettingstarted" rel="edit"/>
+    <link href="/servicesNS/nobody/system/apps/local/gettingstarted" rel="remove"/>
+    <link href="/servicesNS/nobody/system/apps/local/gettingstarted/disable" rel="disable"/>
+    <link href="/servicesNS/nobody/system/apps/local/gettingstarted/package" rel="package"/>
+    <content type="text/xml">
+      <s:dict>
+        <s:key name="author">Splunk</s:key>
+        <s:key name="check_for_updates">1</s:key>
+        <s:key name="configured">1</s:key>
+        <s:key name="description">Get started with Splunk.  This app introduces you to many of Splunk's features.  You'll learn how to use Splunk to index data, search and investigate, add knowledge, monitor and alert, report and analyze.</s:key>
+        <s:key name="disabled">0</s:key>
+        <s:key name="eai:acl">
+          <s:dict>
+            <s:key name="app">system</s:key>
+            <s:key name="can_change_perms">1</s:key>
+            <s:key name="can_list">1</s:key>
+            <s:key name="can_share_app">1</s:key>
+            <s:key name="can_share_global">1</s:key>
+            <s:key name="can_share_user">0</s:key>
+            <s:key name="can_write">1</s:key>
+            <s:key name="modifiable">1</s:key>
+            <s:key name="owner">nobody</s:key>
+            <s:key name="perms">
+              <s:dict>
+                <s:key name="read">
+                  <s:list>
+                    <s:item>*</s:item>
+                  </s:list>
+                </s:key>
+                <s:key name="write">
+                  <s:list>
+                    <s:item>power</s:item>
+                  </s:list>
+                </s:key>
+              </s:dict>
+            </s:key>
+            <s:key name="removable">0</s:key>
+            <s:key name="sharing">app</s:key>
+          </s:dict>
+        </s:key>
+        <s:key name="eai:attributes">
+          <s:dict>
+            <s:key name="optionalFields">
+              <s:list>
+                <s:item>author</s:item>
+                <s:item>check_for_updates</s:item>
+                <s:item>configured</s:item>
+                <s:item>description</s:item>
+                <s:item>label</s:item>
+                <s:item>manageable</s:item>
+                <s:item>version</s:item>
+                <s:item>visible</s:item>
+              </s:list>
+            </s:key>
+            <s:key name="requiredFields">
+              <s:list/>
+            </s:key>
+            <s:key name="wildcardFields">
+              <s:list/>
+            </s:key>
+          </s:dict>
+        </s:key>
+        <s:key name="label">Getting started</s:key>
+        <s:key name="manageable">1</s:key>
+        <s:key name="state_change_requires_restart">0</s:key>
+        <s:key name="version">1.0</s:key>
+        <s:key name="visible">1</s:key>
+      </s:dict>
+    </content>
+  </entry>
+</feed>
+

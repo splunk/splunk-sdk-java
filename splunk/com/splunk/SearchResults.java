@@ -23,7 +23,7 @@ import java.util.Collection;
  */
 public interface SearchResults extends Iterable<Event> {
     /**
-     * Indicates whether the results are a preview.
+     * Indicates whether the results are a preview from an unfinished search.
      * @return {@code true} if the results are a preview, {@code false} if not.
      */
     public boolean isPreview();
@@ -31,6 +31,8 @@ public interface SearchResults extends Iterable<Event> {
     /**
      * Returns a collection of field names in the results.
      * @return a collection of field names.
+     * <p>
+     * Note that any given result will contain a subset of these fields.
      */
     public Collection<String> getFields();
 }

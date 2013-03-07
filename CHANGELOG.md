@@ -1,12 +1,29 @@
 # Splunk SDK for Java Changelog
 
-## Version 1.0.1
+## Version 1.1
+
+### New features and APIs
+
+* Specialized classes to read search results streams from `Job.export` methods.
+    - `MultiResultsReaderXml`
+    - `MultiResultsReaderJson`
+
+* `ResultsReader` classes now support  `Iterable` and `Iterator` interfaces.
+
+* A new method on `Event` class to return event raw data preserving 
+  segmentation information.
+    - `getSegmentedRaw`
+
+
 
 ### Bug fixes
 
 * ServiceInfo now always uses /services instead of the Service's default
   namespace for its HTTP requests, to work around a bug in Splunk that
   returns a 403 when server/info is accessed via certain namespaces.
+
+* `ResultsReaderXml` can now read search results streams from
+  `Job.getResultsPreview` method.
 
 ## Version 1.0
 
