@@ -17,18 +17,44 @@
 package com.splunk;
 
 import java.io.*;
+import java.util.Iterator;
+
+/*
+ * Summary of class relationships and control flow
+ *
+ * All result readers support both the Iterator interface and
+ * getNextEvent method. They share the same underlying implementation
+ * of getNextElement(). The iterator interface is supported through
+ * the base class, StreamIterableBase (which is also used by
+ * multi result readers).
+ *
+ * Some result readers support multiple result sets in the input stream.
+ * A result set can be skipped, or combined with the
+ * previous result set with newer events returned through the same
+ * iterator used for the older events even through they are in different result
+ * sets.
+ *
+ * Such a result reader is also used by a multi result reader which
+ * returns an iterator over the result sets, with one result set returned
+ * in one iteration, as SearchResults. SearchResults is an interface consisting
+ * of getters of preview flag, field name list, and an iterator over events.
+ * Unlike ResultReader, SearchResults does not have a close method. Only the
+ * containing multi reader needs to be closed by an application.
+ */
 
 /**
  * The {@code ResultsReader} class is a base class for the streaming readers
  * for Splunk search results. It should not be used to get previews from export.
  */
-public abstract class ResultsReader<T extends ResultsReader<T>>
+public abstract class ResultsReader
         extends StreamIterableBase<Event>
         implements SearchResults {
     InputStreamReader inputStreamReader = null;
+    // Default should be false which will result in no result set skipping
+    // or concatenation.
     boolean isPreview;
     boolean isExportStream;
-    boolean isInMultiReader;
+    private boolean isInMultiReader;
 
     ResultsReader(InputStream inputStream, boolean isInMultiReader)
             throws IOException {
@@ -49,7 +75,7 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
     }
 
     /**
-     * Returns the cachedElement event in the event stream.
+     * Returns the next event in the event stream.
      *
      * @return The map of key-value pairs for an event.
      *         The format of multi-item values is implementation-specific.
@@ -59,54 +85,105 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
      */
     final public Event getNextEvent() throws IOException {
         return getNextElement();
-    };
+    }
 
+    /**
+     * Returns an iterator over the events from this reader.
+     * @return an Iterator.
+     */
+    @Override
+    public final Iterator<Event> iterator() {
+        return super.iterator();
+    }
+
+    /**
+     * Return the next event while moving onto the the next set
+     * automatically when needed, i.e., concatenating final results
+     * across multiple sets.
+     * @return  null if the end is reached
+     * @throws IOException On IO exception.
+     */
     final Event getNextElement() throws IOException {
-        Event event = null;
-        while ((event = getNextElementRaw()) == null &&
-            !isPreview) {
-            if (!advanceIteratorToNextSet())
-                return null;
-            // Concat final results across result sets.
-            assert (!isPreview()) :
-                "Final result set should never be after preview.";
+        Event event;
+        while (true) {
+            event = getNextEventInCurrentSet();
+
+            // If we actually managed to get an event, then we break and return it
+            if (event != null)
+                break;
+
+            // We don't concatenate across previews across sets, since each set
+            // might be a snapshot at a given time or a summary result with
+            // partial data from a reporting search
+            // (for example "count by host"). So if this is a preview,
+            // break. Null return indicating the end of the set.
+            if (isPreview)
+                break;
+
+            // If we did not advance to next set, i.e. the end of stream is
+            // reached, break. Null return indicating the end of the set.
+            if (!advanceStreamToNextSet())
+                break;
+
+            // We have advanced to the next set. isPreview is for that set.
+            // It should not be a preview. Splunk should never return a preview
+            // after final results which we might have concatenated together
+            // across sets.
+            assert (!isPreview) :
+                "Preview result set should never be after a final set.";
         }
-         return event;
+        return event;
     }
 
-    abstract Event getNextElementRaw() throws IOException;
+    /*
+     * Get the next event in the current result set.
+     */
+    abstract Event getNextEventInCurrentSet() throws IOException;
 
-    final boolean advanceIteratorToNextSet() throws IOException {
-        // Throw away any not-null cached element.
-        cachedElement = null;
-        // If the end of stream is reached, null element in the cache
-        // should be used.
-        // Otherwise, if getNextElement is called by the iterator
-        // the underlying reader may throw which can be confusing.
-        nextElementCached = !advanceStreamToNextSet();
-        // The advancement happened if and only if the cache is cleared.
-        return !nextElementCached;
+    /*
+     * Return false if the end is reached.
+     */
+    final boolean resetIteratorToNextSet() throws IOException {
+
+        // Get to the beginning of the next set in the stream
+        // skipping remaining event(s) if any in the current set.
+        boolean hasMoreResults = advanceStreamToNextSet();
+
+        // Reset the iterator so that it would either fetch a new
+        // element for the next iteration or stop.
+        resetIteration(hasMoreResults);
+
+        return hasMoreResults;
     }
 
+    /*
+     * Return false if the end is reached.
+     */
     boolean advanceStreamToNextSet() throws IOException {
         // Indicate that no more sets are available
         // Subclasses can override this method to support
         // MultiResultsReader.
         return false;
-    };
+    }
 
-    // This method is used by constructors of result readers to do
-    // the following for single reader:
-    // 1. Obtain the preview flag and the field list.
-    // 2. Skip any previews for export.
+    /*
+     * This method is used by constructors of result readers to do
+     * the following for single reader:
+     * 1. Obtain the preview flag and the field list.
+     * 2. Skip any previews for export.
+     */
     final void finishInitialization() throws IOException {
         if (isInMultiReader)
             return;
 
         while (true) {
-            if (!advanceIteratorToNextSet())
-                throw new RuntimeException(
-                        "No result set found.");
+            if (!advanceStreamToNextSet()) {
+                // Terminating the iteration.
+                // This avoids future callings into the underlying reader
+                // to get events, which may result in exceptions.
+                resetIteration(false);
+                break;
+            }
 
             if (!isExportStream)
                 break;

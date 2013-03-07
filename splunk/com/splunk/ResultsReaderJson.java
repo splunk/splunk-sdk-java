@@ -48,7 +48,7 @@ public class ResultsReaderJson extends ResultsReader {
      * stream yields unpredictable results.
      *
      * @param inputStream The stream to parse.
-     * @throws Exception On exception.
+     * @throws IOException
      */
     public ResultsReaderJson(InputStream inputStream) throws IOException {
         this(inputStream, false);
@@ -67,9 +67,11 @@ public class ResultsReaderJson extends ResultsReader {
 
     // Advance in the json stream, reading meta data if available, and
     // get ready for readEvent method.
+    // Return false if end of stream is encountered.
     boolean advanceIntoNextSetBeforeEvent() throws IOException {
-         // In Splunk 5.0 export, each result is in its own top level object.
-        // In Splunk 5.0 none export, the results are
+        // In Splunk 5.0 from the export endpoint,
+        // each result is in its own top level object.
+        // In Splunk 5.0 not from the export endpoint, the results are
         // an array at that object's key "results".
         // In Splunk 4.3, the
         // array was the top level returned. So if we find an object
@@ -89,6 +91,13 @@ public class ResultsReaderJson extends ResultsReader {
                         "is not supported by this class. " +
                         "Use the XML search output format, " +
                         "and an XML result reader instead.");
+                /*
+                 * We're on Splunk 5 with a single-reader not from
+                 * an export endpoint
+                 * Below is an example of an input stream.
+                 *      {"preview":true,"offset":0,"lastrow":true,"result":{"host":"Andy-PC","count":"62"}}
+                 *      {"preview":true,"offset":0,"result":{"host":"Andy-PC","count":"1682"}}
+                 */
                 // Read into first result object of the cachedElement set.
                 while (true) {
                     boolean endPassed = exportHelper.lastRow;
@@ -100,8 +109,14 @@ public class ResultsReaderJson extends ResultsReader {
                 }
                 return true;
             }
-            // Single-reader not from export
+            // Single-reader not from an export endpoint
             if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+                 /*
+                  * We're on Splunk 5 with a single-reader not from
+                  * an export endpoint
+                  * Below is an example of an input stream.
+                  *     {"preview":false,"init_offset":0,"messages":[{"type":"DEBUG","text":"base lispy: [ AND index::_internal ]"},{"type":"DEBUG","text":"search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-5.0/etc\""}],"results":[{"sum(kb)":"14372242.758775","series":"twitter"},{"sum(kb)":"267802.333926","series":"splunkd"},{"sum(kb)":"5979.036338","series":"splunkd_access"}]}
+                  */
                 jsonReader.beginObject();
                 String key;
                 while (true) {
@@ -116,6 +131,23 @@ public class ResultsReaderJson extends ResultsReader {
                     }
                 }
             } else { // We're on Splunk 4.x, and we just need to start the array.
+                /*
+                 * Below is an example of an input stream
+                 *   [
+                 *       {
+                 *           "sum(kb)":"14372242.758775",
+                 *               "series":"twitter"
+                 *       },
+                 *       {
+                 *           "sum(kb)":"267802.333926",
+                 *               "series":"splunkd"
+                 *       },
+                 *       {
+                 *           "sum(kb)":"5979.036338",
+                 *               "series":"splunkd_access"
+                 *       }
+                 *   ]
+                 */
                 jsonReader.beginArray();
                 return true;
             }
@@ -186,7 +218,7 @@ public class ResultsReaderJson extends ResultsReader {
                 "getFields() is not supported by this subclass.");
     }
 
-    @Override Event getNextElementRaw() throws IOException {
+    @Override Event getNextEventInCurrentSet() throws IOException {
         if (exportHelper != null) {
             // If the last row has been passed and moveToNextStreamPosition
             // has not been called, end the current set.
@@ -277,14 +309,18 @@ public class ResultsReaderJson extends ResultsReader {
         }
     }
 
+    /**
+     * Contains code only used for streams from the export endpoint.
+     */
     private class ExportHelper {
         boolean lastRow = true;
         boolean inRow;
 
         ExportHelper() { }
 
+        // Return false if end of stream is encountered.
         private boolean readIntoRow() throws IOException {
-            if ( inRow)
+            if (inRow)
                 return true;
             if (jsonReader.peek() == JsonToken.END_DOCUMENT)
                 return false;
@@ -295,20 +331,21 @@ public class ResultsReaderJson extends ResultsReader {
             lastRow = false;
             while (jsonReader.hasNext()) {
                 String key = jsonReader.nextName();
-                if (key.equals("preview"))
+                if (key.equals("preview")) {
                     readPreviewFlag();
-                else if (key.equals("lastrow"))
+                } else if (key.equals("lastrow")) {
                     lastRow = jsonReader.nextBoolean();
-                else if (key.equals("result"))
-                   return true;
-                else
+                } else if (key.equals("result")) {
+                    return true;
+                } else {
                     skipEntity();
+                }
             }
             return false;
         }
                            
         private void skipRestOfRow() throws IOException {
-            if (! inRow)
+            if (!inRow)
                 return;
             inRow = false;
             while (jsonReader.peek() != JsonToken.END_OBJECT) {
