@@ -17,21 +17,23 @@
 package com.splunk;
 
 import au.com.bytecode.opencsv.CSVReader;
-import com.splunk.ResultsReader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * The {@code ResultsReaderCsv} class represents a streaming CSV reader for 
+ * The {@code ResultsReaderCsv} class represents a streaming CSV reader for
  * Splunk search results. This class requires the opencsv-2.3.jar file in your 
  * build path.
  */
 public class ResultsReaderCsv extends ResultsReader {
 
     private CSVReader csvReader = null;
-    private String[] keys;
+    private List<String> keys;
 
     /**
      * Class constructor.
@@ -44,14 +46,21 @@ public class ResultsReaderCsv extends ResultsReader {
      * @throws Exception On exception.
      */
     public ResultsReaderCsv(InputStream inputStream) throws IOException {
-        super(inputStream);
+        super(inputStream, false);
+        if (isExportStream)
+            throw new UnsupportedOperationException(
+                "A stream from an export endpoint is not supported " +
+                "by a CSV result reader. Use another search output "+
+                "format instead. "
+            );
         csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF8"));
-        // initial line contains the keys, except for oneshot -- which contains
+        // initial line contains the keyArray, except for oneshot -- which contains
         // a blank line, and then the key list.
-        keys = csvReader.readNext();
-        if (keys.length == 1 && keys[0].trim().equals("")) {
-            keys = csvReader.readNext();
+        String[] keyArray = csvReader.readNext();
+        if (keyArray.length == 1 && keyArray[0].trim().equals("")) {
+            keyArray = csvReader.readNext();
         }
+        keys = Arrays.asList(keyArray);
     }
 
     /** {@inheritDoc} */
@@ -61,9 +70,22 @@ public class ResultsReaderCsv extends ResultsReader {
             csvReader.close();
         csvReader = null;
     }
-    
+
+    /**
+     * This method is not supported on this class.
+     * @return N/A
+     */
+    public boolean isPreview(){
+        throw new UnsupportedOperationException(
+                "isPreview() is not supported by this subclass.");
+    }
+
     /** {@inheritDoc} */
-    @Override public Event getNextEvent() throws IOException {
+    public Collection<String> getFields(){
+       return keys;
+    }
+
+    @Override Event getNextElementRaw() throws IOException {
         Event returnData = null;
         String[] line;
 

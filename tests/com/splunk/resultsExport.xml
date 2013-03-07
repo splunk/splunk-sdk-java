@@ -1,0 +1,907 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>62</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>1682</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>3</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>1495</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>232</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>2766</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>133</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>2579</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>1786</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>3543</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>133</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>3356</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>3184</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>4242</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>133</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>4055</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>4446</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>4873</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>133</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>4686</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>9222</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>7261</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>133</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>7074</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>11722</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>10039</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>9377</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>12668</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>11176</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>10323</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>13996</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>28317</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>11651</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16034</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>29336</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>13689</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>19382</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>31010</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>17037</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>20432</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>31535</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>18087</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>23862</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>33250</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>21517</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>27080</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>34859</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>24735</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>28092</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>35365</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>25747</text></value>
+		</field>
+	</result>
+</results>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>29732</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>36185</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>30641</text></value>
+		</field>
+	</result>
+</results>
+<results preview='0'>
+<meta>
+<fieldOrder>
+<field>host</field>
+<field>count</field>
+</fieldOrder>
+</meta>
+<messages>
+  <msg type="DEBUG">base lispy: [ AND ]</msg>
+  <msg type="DEBUG">search context: user="admin", app="search", bs-pathname="C:\Program Files\Splunk\etc"</msg>
+</messages>
+
+	<result offset='0'>
+		<field k='host'>
+			<value><text>172.16.35.130</text></value>
+		</field>
+		<field k='count'>
+			<value><text>16</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='host'>
+			<value><text>ANDY-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>29732</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='host'>
+			<value><text>Andy-PC</text></value>
+		</field>
+		<field k='count'>
+			<value><text>36185</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='host'>
+			<value><text>andy-pc</text></value>
+		</field>
+		<field k='count'>
+			<value><text>135</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='host'>
+			<value><text>three.four.com</text></value>
+		</field>
+		<field k='count'>
+			<value><text>35994</text></value>
+		</field>
+	</result>
+</results>
