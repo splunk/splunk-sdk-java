@@ -10,6 +10,10 @@
 
 ### New features and APIs
 
+* New classes, `MultiResultsReaderXml` and `MultiResultsReaderJson`, for
+  reading multiple result sets in search result stream from `Service.Export` 
+  methods.
+ 
 * `ResultsReader` classes now support  `Iterable` and `Iterator` interfaces.
 
 * A new method on `Event` class to return event raw data preserving 
