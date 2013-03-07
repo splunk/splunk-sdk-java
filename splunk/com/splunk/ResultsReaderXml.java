@@ -19,20 +19,26 @@ package com.splunk;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
 import java.io.PushbackReader;
 
 /**
- * The {@code ResultsReaderXml} class represents a streaming XML reader for 
- * Splunk search results.
+ * The {@code ResultsReaderXml} class represents a streaming XML reader for
+ * Splunk search results. When passed a stream from an export endpoint,
+ * it skips any preview events in the stream. The preview events can be
+ * accessed using MultiResultsReaderXml."
  */
-public class ResultsReaderXml extends ResultsReader {
+public class ResultsReaderXml
+    extends ResultsReader<ResultsReaderXml> {
 
     private XMLEventReader xmlReader = null;
+    private ArrayList<String> fields = new ArrayList<String>();
 
     /**
      * Class constructor.
@@ -49,7 +55,14 @@ public class ResultsReaderXml extends ResultsReader {
      * @throws Exception On exception.
      */
     public ResultsReaderXml(InputStream inputStream) throws IOException {
-        super(inputStream);
+        this(inputStream, false);
+    }
+
+    ResultsReaderXml(
+            InputStream inputStream,
+            boolean isInMultiReader)
+            throws IOException {
+        super(inputStream, isInMultiReader);
         PushbackReader pushbackReader =
             new PushbackReader(inputStreamReader, 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -59,26 +72,19 @@ public class ResultsReaderXml extends ResultsReader {
         // real event data which starts as "<result offset='0'>". Push back
         // into the stream an opening <doc> tag, and parse the file.
 
-        ArrayList<String> findInOrder = new ArrayList<String>();
-        findInOrder.add(0, "<results preview='0'>");
-        findInOrder.add(1, "<result offset=");
+        String findToken = "<results";
         String accumulator = "";
         int index = 0;
         while (true) {
             int data = pushbackReader.read();
             if (data < 0) return;
             accumulator = accumulator + (char)data;
-            if (findInOrder.get(index).equals(accumulator)) {
-                if (index == findInOrder.size()-1) {
-                    String putBackString = "<doc>" + findInOrder.get(index);
+            if ("<results".equals(accumulator)) {
+                    String putBackString = "<doc>" + findToken;
                     char putBackBytes[] = putBackString.toCharArray();
                     pushbackReader.unread(putBackBytes);
                     break;
-                }
-                else {
-                    index += 1;
-                }
-            } else if (!findInOrder.get(index).startsWith(accumulator)) {
+            } else if (!findToken.startsWith(accumulator)) {
                 accumulator = "";
             }
         }
@@ -87,6 +93,7 @@ public class ResultsReaderXml extends ResultsReader {
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
             xmlReader = inputFactory.createXMLEventReader(pushbackReader);
+            finishInitialization();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
@@ -102,51 +109,195 @@ public class ResultsReaderXml extends ResultsReader {
             }
         }
         xmlReader = null;
-        
+
         super.close();
     }
-    
+
     /** {@inheritDoc} */
-    @Override public Event getNextEvent() throws IOException {
-        XMLEvent xmlEvent;
-        int eType;
+    public boolean isPreview() {
+        return isPreview;
+    }
 
-        if (xmlReader == null)
-            return null;
+    /** {@inheritDoc} */
+    public Collection<String> getFields() {
+        return fields;
+    }
 
+    @Override Event getNextElementRaw() throws IOException {
         try {
-            while (xmlReader.hasNext()) {
-                xmlEvent = xmlReader.nextEvent();
-                eType = xmlEvent.getEventType();
-                while (eType != XMLStreamConstants.END_DOCUMENT) {
-                    if (eType == XMLStreamConstants.START_ELEMENT &&
-                            xmlEvent.asStartElement()
-                                .getName()
-                                .getLocalPart()
-                                .equals("result")) {
-                        return getResultKVPairs();
-                    }
-                    if (xmlReader.hasNext()) {
-                        xmlEvent = xmlReader.nextEvent();
-                        eType = xmlEvent.getEventType();
-                    }
-                }
+            Event event = null;
+            XMLEvent xmlEvent = readToStartOfElementAtSameLevelWithName("result");
+            if (xmlEvent != null) {
+                event = getResultKVPairs();
             }
+            return event;
+        } catch (XMLStreamException e) {
+           throw new RuntimeException(e);
         }
-        catch (XMLStreamException e) {
+    }
+
+    // Read preview flag and field name list, and position in the middle of
+    // the result element for reading actual results later.
+    // Return value indicates whether the cachedElement 'results' element is found.
+    boolean readIntoNextResultsElement()
+            throws XMLStreamException, IOException {
+        XMLEvent xmlEvent = null;
+        try {
+            xmlEvent = readToStartOfElementWithName("results");
+        } catch (XMLStreamException e) {
             // Because we cannot stuff trailing information into the stream,
             // we expect an XMLStreamingException that contains our
             // corresponding end-of-document </doc> that we injected into the
             // front of the stream. Any other exception we rethrow.
-            if (e.getMessage().contains("</doc>")) {
-                return null;
+            if (!(e.getMessage().contains("</doc>") ||
+                e.getMessage().contains(
+                    "XML document structures must start and end within the same entity."))) {
+                throw e;
             }
-            
-            throw new RuntimeException(e);
+        }
+        if (xmlEvent == null) {
+            return false;
+        }
+
+        if (xmlEvent != null &&
+            xmlEvent.asStartElement()
+                .getAttributeByName(QName.valueOf("preview"))
+                .getValue()
+                .equals("0") ){
+            isPreview = false;
+        } else {
+            isPreview = true;
+        }
+
+        // Read <meta> element.
+        final String meta = "meta";
+        if (readToStartOfElementAtSameLevelWithName(meta) != null)
+            readFieldOrderElement();
+        readToEndElementWithName(meta);
+        return true;
+    }
+
+    XMLEvent readToStartOfElementWithName(String elementName)
+        throws XMLStreamException {
+        while (xmlReader.hasNext()) {
+            XMLEvent xmlEvent = xmlReader.nextEvent();
+            int eType = xmlEvent.getEventType();
+            if (eType != XMLStreamConstants.START_ELEMENT){
+                continue;
+            }
+
+            StartElement startElement = xmlEvent.asStartElement();
+            if(startElement
+                    .getName()
+                    .getLocalPart()
+                    .equals(elementName)){
+                return xmlEvent;
+            }
         }
         return null;
     }
 
+    void readToEndElementWithName(String elementName) throws XMLStreamException {
+        XMLEvent xmlEvent;
+        int eType;
+
+        while (xmlReader.hasNext()) {
+            xmlEvent = xmlReader.nextEvent();
+            eType = xmlEvent.getEventType();
+            switch (eType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (xmlEvent.asEndElement()
+                            .getName()
+                            .getLocalPart()
+                            .equals(elementName)) {
+                        return;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        throw new RuntimeException("End tag of " + elementName + " not found.");
+    }
+
+    XMLEvent readToStartOfElementAtSameLevelWithName(String elementName)
+        throws XMLStreamException {
+        XMLEvent xmlEvent;
+        int eType;
+        int level = 0;
+
+        while (xmlReader.hasNext()) {
+            xmlEvent = xmlReader.nextEvent();
+            eType = xmlEvent.getEventType();
+            switch (eType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    if (level++ > 0){
+                        continue;
+                    }
+                    StartElement startElement = xmlEvent.asStartElement();
+                    if(startElement
+                            .getName()
+                            .getLocalPart()
+                            .equals(elementName)) {
+                        return xmlEvent;
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (level-- == 0) {
+                        return  null;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        throw new RuntimeException("Parent end element not found:" + elementName);
+    }
+
+    // At the end, move off the end element of 'fieldOrder'
+    private void readFieldOrderElement()
+            throws IOException, XMLStreamException {
+        XMLEvent xmlEvent;
+        int eType;
+        int level = 0;
+
+        if (readToStartOfElementAtSameLevelWithName("fieldOrder") == null)
+            return;
+
+        while (xmlReader.hasNext()) {
+            xmlEvent = xmlReader.nextEvent();
+            eType = xmlEvent.getEventType();
+            switch (eType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    level++;
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (xmlEvent.asEndElement()
+                            .getName()
+                            .getLocalPart()
+                            .equals("fieldOrder")) {
+                        return;
+                    }
+                    level--;
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    if (level == 1) {
+                        fields.add(xmlEvent.asCharacters().getData());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        throw new RuntimeException("End tag of fieldOrder not found.");
+    }
+
+    // At the end, move off the end tag of 'result'
     private Event getResultKVPairs()
             throws IOException, XMLStreamException {
         
@@ -165,7 +316,7 @@ public class ResultsReaderXml extends ResultsReader {
             eType = xmlEvent.getEventType();
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
-                    @SuppressWarnings("unchecked")
+                   @SuppressWarnings("unchecked")
                     Iterator<Attribute> attrIttr =
                         xmlEvent.asStartElement().getAttributes();
                     if (level == 0) {
@@ -199,6 +350,21 @@ public class ResultsReaderXml extends ResultsReader {
                     break;
             }
         }
-        return returnData;
+
+        throw new RuntimeException("End tag of 'result' not found.");
+    }
+
+    @Override boolean advanceStreamToNextSet() throws IOException {
+        try {
+            return readIntoNextResultsElement();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        } catch (NullPointerException e) {
+            // Invalid xml (<doc> and multiple <results> may results in
+            // this exception in the xml reader at:
+            // com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.load(XMLEntityScanner.java:1748)
+            return false;
+        }
     }
 }
+
