@@ -34,7 +34,7 @@ public class MultiResultsReaderJson
      * Unpredictable results may occur if you use a non-XML stream.
      *
      * @param inputStream The stream to parse.
-     * @throws IOException On exception.
+     * @throws IOException
      */
     public MultiResultsReaderJson(InputStream inputStream) throws IOException {
         super(new ResultsReaderJson(inputStream, true));
