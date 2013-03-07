@@ -20,27 +20,36 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Helper class for iterator over readers that only support a get operation
+ * with null return indicating the end.
+ * @param <T>  Type of elements.
+ */
 abstract class StreamIterableBase<T> implements Iterable<T> {
-    /** {@inheritDoc} */
-    private T next;
-    protected boolean onNext;
+    protected T cachedElement;
+    protected boolean nextElementCached;
 
-    public Iterator<T> iterator(){
+    public final Iterator<T> iterator() {
 
-        return new Iterator<T>(){
+        return new Iterator<T>() {
 
             public boolean hasNext() {
-                getOnNext();
-                return next != null;
+                cacheNextElement();
+                return cachedElement != null;
             }
 
             public T next()  {
-                getOnNext();
-                if (next == null) {
+                cacheNextElement();
+                // Once reaching the end, don't advance any more.
+                // Otherwise underlying reader may throw
+                // which can be confusing.
+                if (cachedElement == null) {
                     throw new NoSuchElementException();
                 }
-                onNext = false;
-                return next;
+                else {
+                    nextElementCached = false;
+                }
+                return cachedElement;
             }
 
             public void remove() {
@@ -49,17 +58,21 @@ abstract class StreamIterableBase<T> implements Iterable<T> {
         };
     }
 
-    abstract T getNext() throws IOException;
+    /**
+     * Get the next element.
+     * @return null if the end is reached.
+     * @throws IOException
+     */
+    abstract T getNextElement() throws IOException;
 
-    private void getOnNext() {
-        if (!onNext)
-        {
+    private void cacheNextElement() {
+        if (!nextElementCached) {
             try {
-                next = getNext();
+                cachedElement = getNextElement();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            onNext = true;
+            nextElementCached = true;
         }
     }
 }

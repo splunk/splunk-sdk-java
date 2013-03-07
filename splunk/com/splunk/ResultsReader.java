@@ -19,33 +19,22 @@ package com.splunk;
 import java.io.*;
 
 /**
- * The {@code ResultsReader} class is a base class for the streaming readers 
- * for Splunk search results. It should be used to get previews from export.
+ * The {@code ResultsReader} class is a base class for the streaming readers
+ * for Splunk search results. It should not be used to get previews from export.
  */
 public abstract class ResultsReader<T extends ResultsReader<T>>
         extends StreamIterableBase<Event>
         implements SearchResults {
-    protected InputStreamReader inputStreamReader = null;
-    protected boolean isPreview;
-    private boolean isExport;
-    private boolean isMultiReader;
+    InputStreamReader inputStreamReader = null;
+    boolean isPreview;
+    boolean isExportStream;
+    boolean isInMultiReader;
 
-    /**
-     * Class constructor.
-     *
-     * @param inputStream The unread return input stream from a Splunk query or
-     * export.
-     * @throws IOException On IO exception.
-     */
-    public ResultsReader(InputStream inputStream) throws IOException {
-        this(inputStream, false);
-    }
-
-    ResultsReader(InputStream inputStream, boolean isMultiReader)
+    ResultsReader(InputStream inputStream, boolean isInMultiReader)
             throws IOException {
         inputStreamReader = new InputStreamReader(inputStream, "UTF8");
-        isExport = inputStream instanceof ExportResultsStream;
-        this.isMultiReader = isMultiReader;
+        isExportStream = inputStream instanceof ExportResultsStream;
+        this.isInMultiReader = isInMultiReader;
     }
 
     /**
@@ -60,7 +49,7 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
     }
 
     /**
-     * Returns the next event in the event stream.
+     * Returns the cachedElement event in the event stream.
      *
      * @return The map of key-value pairs for an event.
      *         The format of multi-item values is implementation-specific.
@@ -68,58 +57,62 @@ public abstract class ResultsReader<T extends ResultsReader<T>>
      *         {@link Event} class to interpret multi-item values.
      * @throws IOException On IO exception.
      */
-    public Event getNextEvent() throws IOException {
-        return getNext();
+    final public Event getNextEvent() throws IOException {
+        return getNextElement();
     };
 
-    abstract Event getNextInner() throws IOException;
-
-    Event getNext() throws IOException {
+    final Event getNextElement() throws IOException {
         Event event = null;
-        while ((event = getNextInner()) == null &&
+        while ((event = getNextElementRaw()) == null &&
             !isPreview) {
-            if (!moveToNextSet()) {
+            if (!advanceIteratorToNextSet())
                 return null;
-            }
+            // Concat final results across result sets.
             assert (!isPreview()) :
                 "Final result set should never be after preview.";
         }
          return event;
     }
 
-    boolean moveToNextSet() throws IOException {
-        onNext = false;
-        return moveToNextSetStreamPosition();
+    abstract Event getNextElementRaw() throws IOException;
+
+    final boolean advanceIteratorToNextSet() throws IOException {
+        // Throw away any not-null cached element.
+        cachedElement = null;
+        // If the end of stream is reached, null element in the cache
+        // should be used.
+        // Otherwise, if getNextElement is called by the iterator
+        // the underlying reader may throw which can be confusing.
+        nextElementCached = !advanceStreamToNextSet();
+        // The advancement happened if and only if the cache is cleared.
+        return !nextElementCached;
     }
 
-    boolean moveToNextSetStreamPosition() throws IOException {
+    boolean advanceStreamToNextSet() throws IOException {
         // Indicate that no more sets are available
         // Subclasses can override this method to support
         // MultiResultsReader.
         return false;
     };
 
-    // This method has two purposes:
+    // This method is used by constructors of result readers to do
+    // the following for single reader:
     // 1. Obtain the preview flag and the field list.
     // 2. Skip any previews for export.
-    void readyForIterable() throws IOException {
-        if (isMultiReader) {
+    final void finishInitialization() throws IOException {
+        if (isInMultiReader)
             return;
-        }
 
         while (true) {
-            if (!moveToNextSet()) {
+            if (!advanceIteratorToNextSet())
                 throw new RuntimeException(
                         "No result set found.");
-            }
 
-            if (!isExport){
+            if (!isExportStream)
                 break;
-            }
 
-            if (!isPreview) {
+            if (!isPreview)
                 break;
-            }
         }
     }
 }

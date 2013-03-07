@@ -18,6 +18,9 @@ package com.splunk;
 
 import java.io.IOException;
 
+// Using <T extends ResultsReader> is to allow specialization of T in
+// subclasses of MultiResultReader. For example, MultiResultsReaderXml
+// references ResultsReaderXml.
 class MultiResultsReader<T extends ResultsReader>
         extends StreamIterableBase<SearchResults>
         implements Iterable<SearchResults> {
@@ -27,13 +30,13 @@ class MultiResultsReader<T extends ResultsReader>
         this.resultsReader = resultsReader;
     }
 
-    void close() throws IOException {
+    final void close() throws IOException {
         resultsReader.close();
     }
 
-    protected T getNext() {
+    final protected T getNextElement() {
         try {
-            if (!resultsReader.moveToNextSet())  {
+            if (!resultsReader.advanceIteratorToNextSet()) {
                 return null;
             }
             return resultsReader;

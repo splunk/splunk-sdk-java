@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -127,6 +128,13 @@ public class ResultsReaderTest extends SDKTestCase {
     public void testReadCsv() throws Exception {
         InputStream input = openResource("results.csv");
         ResultsReaderCsv reader = new ResultsReaderCsv(input);
+
+        String[] fields = new String[0];
+        fields = reader.getFields().toArray(fields);
+        assertEquals(2, fields.length);
+        assertEquals("sum(kb)", fields[0]);
+        assertEquals("series", fields[1]);
+
         Map<String, String> expected = new HashMap<String, String>();
 
         expected.put("series", "twitter");
@@ -158,6 +166,48 @@ public class ResultsReaderTest extends SDKTestCase {
 
         assertNull(reader.getNextEvent());
         reader.close();
+    }
+
+    @Test
+    public void testReadFromExportJson() throws Exception {
+        verifyMultiReader(getExportStreamJson());
+    }
+
+    @Test
+    public void testReadFromExportXml() throws Exception {
+        verifyMultiReader(getExportStreamXml());
+    }
+
+    private void verifyMultiReader(
+                MultiResultsReader<? extends ResultsReader> reader)
+                throws Exception {
+
+        SearchResults singleResults = null;
+        for(SearchResults results : reader) {
+            singleResults = results;
+            break;
+        }
+
+        Event singleEvent = null;
+        for(Event event : singleResults) {
+            singleEvent = event;
+        }
+
+       assertEquals("1", singleEvent.get("count"));
+    }
+
+    private MultiResultsReader getExportStreamJson() throws IOException {
+        return new MultiResultsReaderJson(
+            service.export(
+                "search index=_internal | head 1 | stats count",
+                Args.create("output_mode", "json")));
+    }
+
+    private MultiResultsReader getExportStreamXml() throws IOException {
+        return new MultiResultsReaderXml(
+            service.export(
+                "search index=_internal | head 1 | stats count",
+                Args.create("output_mode", "xml")));
     }
 
     @Test
@@ -364,17 +414,17 @@ public class ResultsReaderTest extends SDKTestCase {
 
     @Test
     public void testPreviewSingleReaderXmlIter() throws Exception {
-        testPreviewSingleReader(true);
+        testPreviewSingleReaderXml(true);
     }
 
     @Test
     public void testPreviewSingleReaderXmlGetNext() throws Exception {
-        testPreviewSingleReader(false);
+        testPreviewSingleReaderXml(false);
     }
 
-    private void testPreviewSingleReader(boolean useIter) throws IOException {
+    private void testPreviewSingleReaderXml(boolean useIter) throws Exception {
         ResultsReaderXml reader = new ResultsReaderXml(
-                openResource("results-preview.xml"));
+            openResource("results-preview.xml"));
 
         assertTrue(reader.isPreview());
 
@@ -403,22 +453,84 @@ public class ResultsReaderTest extends SDKTestCase {
         reader.close();
     }
 
+    final String resultsExportXml = "resultsExport.xml";
+
+    @Test
+    public void testExportSingleReaderXml() throws Exception {
+        testExportSingleReader(
+                new ResultsReaderXml(
+                        getExportResultsStream(resultsExportXml)));
+    }
+
     @Test
     public void testExportMultiReaderXml() throws Exception {
-        ExportResultsStream stream = new ExportResultsStream(
-                openResource("resultsMultiple.xml"));
+        testExportMultiReader(
+            new MultiResultsReaderXml(
+                getExportResultsStream(resultsExportXml)),
+            18);
+    }
 
-        MultiResultsReaderXml multiReader = new MultiResultsReaderXml(stream);
+    final String resultsExportJson = "resultsExport.json";
 
+    @Test
+    public void testExportSingleReaderJson() throws Exception {
+        testExportSingleReader(
+            new ResultsReaderJson(
+                getExportResultsStream(resultsExportJson)));
+    }
+
+    @Test
+    public void testExportMultiReaderJson() throws Exception {
+        ExportResultsStream stream = getExportResultsStream(resultsExportJson);
+        MultiResultsReaderJson multiReader = new MultiResultsReaderJson(stream);
+        testExportMultiReader(multiReader, 15);
+    }
+
+    private ExportResultsStream getExportResultsStream(String fileName) {
+        return new ExportResultsStream(
+            openResource(fileName));
+    }
+
+    private void testExportSingleReader(
+            ResultsReader<? extends ResultsReader> reader)
+            throws Exception{
+
+        int indexEvent = 0;
+        for (Event event : reader){
+            if (indexEvent == 0) {
+                assertEquals("172.16.35.130", event.get("host"));
+                assertEquals("16", event.get("count"));
+            }
+
+            if (indexEvent == 4) {
+                assertEquals("three.four.com", event.get("host"));
+                assertEquals("35994", event.get( "count"));
+            }
+
+            indexEvent++;
+        }
+
+        assertEquals(5, indexEvent);
+
+        reader.close();
+    }
+
+    private void testExportMultiReader(
+        MultiResultsReader<? extends ResultsReader> multiReader,
+        int countResultSet)
+        throws Exception{
         int indexResultSet = 0;
-        final int countResultSet = 18;
-        for(SearchResults results : multiReader){
-            if (indexResultSet == countResultSet -1 ){
+        SearchResults firstResults = null;
+        for(SearchResults results : multiReader) {
+            if (firstResults == null)
+                firstResults = results;
+
+            if (indexResultSet == countResultSet -1) {
                 assertFalse(results.isPreview());
             }
 
             int indexEvent = 0;
-            for (Event event : results){
+            for (Event event : results) {
                 if (indexResultSet == 1 && indexEvent == 1) {
                     assertEquals("andy-pc", event.get("host"));
                     assertEquals("3", event.get("count"));
@@ -443,11 +555,20 @@ public class ResultsReaderTest extends SDKTestCase {
                     assertEquals(indexEvent, 5);
                     break;
             }
-            indexResultSet ++;
+            indexResultSet++;
         }
-        multiReader.close();
 
         assertEquals(indexResultSet, countResultSet);
+
+        // firstResults should be empty since the multi-reader has passed it
+        // and there should be no exception.
+        int count = 0;
+        for (Event eventL : firstResults) {
+            count++;
+        }
+        assertEquals(0, count);
+
+        multiReader.close();
     }
 
     // === Utility ===

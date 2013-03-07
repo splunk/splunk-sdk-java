@@ -20,23 +20,23 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * The {@code MultiResultsReaderXml} class represents a streaming XML reader for
- * Splunk search results. It supports the export endpoint which may return
+ * The {@code MultiResultsReaderJson} class represents a streaming JSON reader
+ * for Splunk search results. It supports the export endpoint which may return
  * one of more previews before final results.
  */
-public class MultiResultsReaderXml
-        extends MultiResultsReader<ResultsReaderXml> {
+public class MultiResultsReaderJson
+        extends MultiResultsReader<ResultsReaderJson> {
     /**
      * Class constructor.
      *
-     * Constructs a streaming XML reader for the event stream. You should only
-     * attempt to parse an XML stream with the XML reader. Unpredictable results
-     * may occur if you use a non-XML stream.
+     * Constructs a streaming JSON reader for the event stream. You should only
+     * attempt to parse an JSON stream with the JSON reader.
+     * Unpredictable results may occur if you use a non-XML stream.
      *
      * @param inputStream The stream to parse.
-     * @throws Exception On exception.
+     * @throws IOException On exception.
      */
-    public MultiResultsReaderXml(InputStream inputStream) throws IOException {
-        super(new ResultsReaderXml(inputStream, true));
+    public MultiResultsReaderJson(InputStream inputStream) throws IOException {
+        super(new ResultsReaderJson(inputStream, true));
     }
 }
