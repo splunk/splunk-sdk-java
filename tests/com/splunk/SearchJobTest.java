@@ -113,6 +113,58 @@ public class SearchJobTest extends SDKTestCase {
         }
     }
 
+    // Splunk can include <sg> tags in and similar XML elements in its output to show user interfaces
+    // what terms in the results were matched so they can be called out in the user interface. The following
+    // six tests check that oneshot, export, and normal searches all, by default, have such highlighting turned
+    // off, and it can be turned on for all of them.
+    @Test
+    public void testOneshotHasNoSgByDefault() throws IOException {
+        InputStream input = service.oneshotSearch("search index=_internal GET | head 3");
+        String data = streamToString(input);
+        assertFalse(data.contains("<sg"));
+    }
+
+    @Test
+    public void testOneshotCanEnableSg() throws IOException {
+        JobArgs args = new JobArgs();
+        args.put("segmentation", "raw");
+        InputStream input = service.oneshotSearch("search index=_internal GET | head 3", args);
+        String data = streamToString(input);
+        assertTrue(data.contains("<sg"));
+    }
+
+    @Test
+    public void testExportHasNoSgByDefault() throws IOException {
+        InputStream input = service.export("search index=_internal GET | head 3");
+        String data = streamToString(input);
+        assertFalse(data.contains("<sg"));
+    }
+
+    @Test
+    public void testExportCanEnableSg() throws IOException {
+        JobArgs args = new JobArgs();
+        args.put("segmentation", "raw");
+        InputStream input = service.export("search index=_internal GET | head 3", args);
+        String data = streamToString(input);
+        assertTrue(data.contains("<sg"));
+    }
+
+    @Test
+    public void testJobHasNoSgByDefault() throws IOException {
+        Job job = service.getJobs().create("search index=_internal GET | head 3");
+        String data = streamToString(job.getResults());
+        assertFalse(data.contains("<sg"));
+    }
+
+    @Test
+    public void testJobCanEnableSg() throws IOException {
+        JobArgs args = new JobArgs();
+        args.put("segmentation", "raw");
+        Job job = service.getJobs().create("search index=_internal GET | head 3", args);
+        String data = streamToString(job.getResults());
+        assertTrue(data.contains("<sg"));
+    }
+
     @Test
     public void testExportArgs() throws IOException {
         JobExportArgs args = new JobExportArgs();

@@ -32,7 +32,7 @@
 
     <!-- Short names for all the external libraries that get
          referenced multiple times. -->
-    <property name="junit" location="lib/junit-4.8.1.jar"/>
+    <property name="junit" location="lib/junit-4.11.jar"/>
     <property name="gson" location="lib/gson-2.1.jar"/>
     <property name="opencsv" location="lib/opencsv-2.3.jar"/>
 
@@ -78,6 +78,7 @@
                 <pathelement location="${build.splunk}"/>
                 <pathelement location="${build.util}"/>
                 <pathelement location="${junit}"/>
+                <pathelement location="${gson}"/>
             </classpath>
         </javac>
         <mkdir dir="${build.tests}/test_data"/>

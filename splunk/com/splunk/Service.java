@@ -189,6 +189,10 @@ public class Service extends BaseService {
      */
     public InputStream export(String search, Map args) {
         args = Args.create(args).add("search", search);
+        // By default don't highlight search terms in the output.
+        if (!args.containsKey("segmentation")) {
+            args.put("segmentation", "none");
+        }
         ResponseMessage response = get("search/jobs/export", args);
         return new ExportResultsStream(response.getContent());
     }
@@ -1090,7 +1094,12 @@ public class Service extends BaseService {
         args = Args.create(args);
         args.put("search", query);
         args.put("exec_mode", "oneshot");
-        
+
+        // By default, don't highlight search terms in the search output.
+        if (!args.containsKey("segmentation")) {
+            args.put("segmentation", "none");
+        }
+
         ResponseMessage response = post("search/jobs", args);
         return response.getContent();
     }
@@ -1182,8 +1191,7 @@ public class Service extends BaseService {
      */
     public Job search(String query, Map<String, Object> args) {
         args = Args.create(args);
-        args.put("search", query);
-        
+
         return this.getJobs().create(query, args);
     }
 
