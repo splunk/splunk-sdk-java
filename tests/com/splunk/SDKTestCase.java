@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 
-import java.net.Socket;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +48,11 @@ public abstract class SDKTestCase extends TestCase {
     protected List<String> installedApps;
 
     protected Command command;
+
+    public static String streamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
 
     public void connect() {
         if (service != null) {
@@ -104,7 +109,37 @@ public abstract class SDKTestCase extends TestCase {
     protected static String createTemporaryName() {
         return "delete-me-" + UUID.randomUUID().toString();
     }
-    
+
+    protected static InputStream openResource(String path) {
+        if (path.startsWith("splunk_search:")) {
+            path = path.substring("splunk_search:".length());
+
+            String[] pathComponents = path.split("/");
+            String searchType = pathComponents[0];
+            String outputMode = pathComponents[1];
+            String search = pathComponents[2];
+
+            Args resultsArgs = new Args("output_mode", outputMode);
+            if (searchType.equals("blocking")) {
+                Job job = service.getJobs().create(
+                        search,
+                        new Args("exec_mode", "blocking"));
+                return job.getResults(resultsArgs);
+            }
+            else if (searchType.equals("oneshot")) {
+                return service.oneshotSearch(search, resultsArgs);
+            }
+            else {
+                throw new IllegalArgumentException(
+                        "Unrecognized search type: " + searchType);
+            }
+        }
+
+        InputStream input = ResourceRoot.class.getResourceAsStream(path);
+        assertNotNull("Could not open " + path, input);
+        return input;
+    }
+
     // === Asserts ===
 
     public static abstract class EventuallyTrueBehavior {

@@ -1,0 +1,1057 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<results preview='1'>
+<meta>
+<fieldOrder>
+<field>_cd</field>
+<field>_indextime</field>
+<field>_kv</field>
+<field>_raw</field>
+<field>_serial</field>
+<field>_si</field>
+<field>_sourcetype</field>
+<field>_subsecond</field>
+<field>_time</field>
+<field>active_hist_searches</field>
+<field>active_realtime_searches</field>
+<field>app</field>
+<field>appCodeName</field>
+<field>appName</field>
+<field>browser</field>
+<field>bytes</field>
+<field>class</field>
+<field>client_app</field>
+<field>clientip</field>
+<field>component</field>
+<field>count</field>
+<field>date_hour</field>
+<field>date_mday</field>
+<field>date_minute</field>
+<field>date_month</field>
+<field>date_second</field>
+<field>date_wday</field>
+<field>date_year</field>
+<field>date_zone</field>
+<field>delimiter</field>
+<field>display_row_numbers</field>
+<field>drop_count</field>
+<field>earliest</field>
+<field>enable_event_actions</field>
+<field>enable_field_actions</field>
+<field>entity_name</field>
+<field>eventtype</field>
+<field>field_list</field>
+<field>fields</field>
+<field>file</field>
+<field>fillcontents</field>
+<field>group</field>
+<field>host</field>
+<field>ident</field>
+<field>index</field>
+<field>jobStatus</field>
+<field>latest</field>
+<field>line</field>
+<field>linecount</field>
+<field>log_level</field>
+<field>max_lines</field>
+<field>max_lines_constraint</field>
+<field>max_time</field>
+<field>mean_preview_period</field>
+<field>message</field>
+<field>message_level</field>
+<field>method</field>
+<field>min_freq</field>
+<field>min_lines</field>
+<field>name</field>
+<field>namespace</field>
+<field>offset</field>
+<field>other</field>
+<field>output_mode</field>
+<field>output_time_format</field>
+<field>platform</field>
+<field>prefix</field>
+<field>punct</field>
+<field>q</field>
+<field>referer</field>
+<field>referer_domain</field>
+<field>req_time</field>
+<field>requestid</field>
+<field>reverse_order</field>
+<field>root</field>
+<field>s</field>
+<field>search</field>
+<field>segmentation</field>
+<field>show_empty_fields</field>
+<field>sid</field>
+<field>sortDir</field>
+<field>sortKey</field>
+<field>sort_dir</field>
+<field>sort_key</field>
+<field>source</field>
+<field>sourcetype</field>
+<field>spent</field>
+<field>splunk_server</field>
+<field>staticFields</field>
+<field>status</field>
+<field>time_format</field>
+<field>timeendpos</field>
+<field>timestartpos</field>
+<field>truncation_mode</field>
+<field>uri</field>
+<field>uri_path</field>
+<field>uri_query</field>
+<field>user</field>
+<field>userAgent</field>
+<field>useragent</field>
+<field>version</field>
+</fieldOrder>
+</meta>
+	<result offset='0'>
+		<field k='_cd'>
+			<value><text>54:8568</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946537</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>2012-12-19 11:48:55,424 INFO	[50d21a262616082d0] root:535 - CONFIG: mrsparkle_path (str): /Users/fross/splunks/splunk-4.3.5/share/<sg h='1'>search</sg>/mrsparkle</v></field>
+		<field k='_serial'>
+			<value><text>731</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.424</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:48:55.424-08:00</text></value>
+		</field>
+		<field k='component'>
+			<value><text>root</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>48</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>55</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>local</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='line'>
+			<value><text>535</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>CONFIG: mrsparkle_path (str): /Users/fross/splunks/splunk-4.3.5/share/search/mrsparkle</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::,_t[]_:_-_:__():_////-..///</text></value>
+		</field>
+		<field k='requestid'>
+			<value><text>50d21a262616082d0</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/web_service.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>24</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='1'>
+		<field k='_cd'>
+			<value><text>54:8562</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946537</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>2012-12-19 11:48:55,424 INFO	[50d21a262616082d0] root:535 - CONFIG: module_dir (str): share/splunk/<sg h='1'>search</sg>_mrsparkle/modules</v></field>
+		<field k='_serial'>
+			<value><text>732</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.424</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:48:55.424-08:00</text></value>
+		</field>
+		<field k='component'>
+			<value><text>root</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>48</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>55</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>local</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='line'>
+			<value><text>535</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>CONFIG: module_dir (str): share/splunk/search_mrsparkle/modules</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::,_t[]_:_-_:__():_///</text></value>
+		</field>
+		<field k='requestid'>
+			<value><text>50d21a262616082d0</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/web_service.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>24</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='2'>
+		<field k='_cd'>
+			<value><text>54:8674</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946537</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>2012-12-19 11:48:55,425 INFO	[50d21a262616082d0] root:535 - CONFIG: template_dir (str): share/splunk/<sg h='1'>search</sg>_mrsparkle/templates</v></field>
+		<field k='_serial'>
+			<value><text>728</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.425</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:48:55.425-08:00</text></value>
+		</field>
+		<field k='component'>
+			<value><text>root</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>48</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>55</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>local</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='line'>
+			<value><text>535</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>CONFIG: template_dir (str): share/splunk/search_mrsparkle/templates</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::,_t[]_:_-_:__():_///</text></value>
+		</field>
+		<field k='requestid'>
+			<value><text>50d21a262616082d0</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/web_service.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>24</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='3'>
+		<field k='_cd'>
+			<value><text>54:8662</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946537</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>2012-12-19 11:48:55,425 INFO	[50d21a262616082d0] root:535 - CONFIG: staticdir (str): /Users/fross/splunks/splunk-4.3.5/share/splunk/<sg h='1'>search</sg>_mrsparkle/exposed</v></field>
+		<field k='_serial'>
+			<value><text>729</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.425</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:48:55.425-08:00</text></value>
+		</field>
+		<field k='component'>
+			<value><text>root</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>48</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>55</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>local</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='line'>
+			<value><text>535</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>CONFIG: staticdir (str): /Users/fross/splunks/splunk-4.3.5/share/splunk/search_mrsparkle/exposed</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::,_t[]_:_-_:__():_////-..////</text></value>
+		</field>
+		<field k='requestid'>
+			<value><text>50d21a262616082d0</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/web_service.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>24</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='4'>
+		<field k='_cd'>
+			<value><text>54:8651</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946537</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>2012-12-19 11:48:55,425 INFO	[50d21a262616082d0] root:535 - CONFIG: static_dir (str): share/splunk/<sg h='1'>search</sg>_mrsparkle/exposed</v></field>
+		<field k='_serial'>
+			<value><text>730</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.425</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:48:55.425-08:00</text></value>
+		</field>
+		<field k='component'>
+			<value><text>root</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>48</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>55</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>local</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='line'>
+			<value><text>535</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>CONFIG: static_dir (str): share/splunk/search_mrsparkle/exposed</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::,_t[]_:_-_:__():_///</text></value>
+		</field>
+		<field k='requestid'>
+			<value><text>50d21a262616082d0</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/web_service.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunk_web_service</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>24</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='5'>
+		<field k='_cd'>
+			<value><text>54:9267</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946552</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>12-19-2012 11:49:12.313 -0800 INFO  Metrics - group=<sg h='1'>search</sg>_concurrency, system total, active_hist_searches=0, active_realtime_searches=0</v></field>
+		<field k='_serial'>
+			<value><text>726</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.313</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:49:12.313-08:00</text></value>
+		</field>
+		<field k='active_hist_searches'>
+			<value><text>0</text></value>
+		</field>
+		<field k='active_realtime_searches'>
+			<value><text>0</text></value>
+		</field>
+		<field k='component'>
+			<value><text>Metrics</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>49</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>12</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>-480</text></value>
+		</field>
+		<field k='group'>
+			<value><text>search_concurrency</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>group=search_concurrency, system total, active_hist_searches=0, active_realtime_searches=0</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::._-____-_=,__,_=,_=</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/metrics.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>29</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='6'>
+		<field k='_cd'>
+			<value><text>54:9262</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946552</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>12-19-2012 11:49:12.313 -0800 INFO  Metrics - group=realtime_<sg h='1'>search</sg>_data, system total, drop_count=0</v></field>
+		<field k='_serial'>
+			<value><text>727</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.313</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:49:12.313-08:00</text></value>
+		</field>
+		<field k='component'>
+			<value><text>Metrics</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>49</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>12</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>-480</text></value>
+		</field>
+		<field k='drop_count'>
+			<value><text>0</text></value>
+		</field>
+		<field k='group'>
+			<value><text>realtime_search_data</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>group=realtime_search_data, system total, drop_count=0</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::._-____-_=,__,_=</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/metrics.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>29</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='7'>
+		<field k='_cd'>
+			<value><text>54:9769</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946583</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>12-19-2012 11:49:43.322 -0800 INFO  Metrics - group=<sg h='1'>search</sg>_concurrency, system total, active_hist_searches=0, active_realtime_searches=0</v></field>
+		<field k='_serial'>
+			<value><text>724</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.322</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:49:43.322-08:00</text></value>
+		</field>
+		<field k='active_hist_searches'>
+			<value><text>0</text></value>
+		</field>
+		<field k='active_realtime_searches'>
+			<value><text>0</text></value>
+		</field>
+		<field k='component'>
+			<value><text>Metrics</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>49</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>43</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>-480</text></value>
+		</field>
+		<field k='group'>
+			<value><text>search_concurrency</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>group=search_concurrency, system total, active_hist_searches=0, active_realtime_searches=0</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::._-____-_=,__,_=,_=</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/metrics.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>29</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='8'>
+		<field k='_cd'>
+			<value><text>54:9764</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946583</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>12-19-2012 11:49:43.322 -0800 INFO  Metrics - group=realtime_<sg h='1'>search</sg>_data, system total, drop_count=0</v></field>
+		<field k='_serial'>
+			<value><text>725</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.322</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:49:43.322-08:00</text></value>
+		</field>
+		<field k='component'>
+			<value><text>Metrics</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>49</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>43</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>-480</text></value>
+		</field>
+		<field k='drop_count'>
+			<value><text>0</text></value>
+		</field>
+		<field k='group'>
+			<value><text>realtime_search_data</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>group=realtime_search_data, system total, drop_count=0</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::._-____-_=,__,_=</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/metrics.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>29</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+	<result offset='9'>
+		<field k='_cd'>
+			<value><text>54:10097</text></value>
+		</field>
+		<field k='_indextime'>
+			<value><text>1355946614</text></value>
+		</field>
+		<field k='_kv'>
+			<value><text>1</text></value>
+		</field>
+		<field k='_raw'><v xml:space='preserve' trunc='0'>12-19-2012 11:50:14.351 -0800 INFO  Metrics - group=<sg h='1'>search</sg>_concurrency, system total, active_hist_searches=0, active_realtime_searches=0</v></field>
+		<field k='_serial'>
+			<value><text>722</text></value>
+		</field>
+		<field k='_si'>
+			<value><text>fross-mbp15.local</text></value>
+			<value><text>_internal</text></value>
+		</field>
+		<field k='_sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='_subsecond'>
+			<value><text>.351</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-12-19T11:50:14.351-08:00</text></value>
+		</field>
+		<field k='active_hist_searches'>
+			<value><text>0</text></value>
+		</field>
+		<field k='active_realtime_searches'>
+			<value><text>0</text></value>
+		</field>
+		<field k='component'>
+			<value><text>Metrics</text></value>
+		</field>
+		<field k='date_hour'>
+			<value><text>11</text></value>
+		</field>
+		<field k='date_mday'>
+			<value><text>19</text></value>
+		</field>
+		<field k='date_minute'>
+			<value><text>50</text></value>
+		</field>
+		<field k='date_month'>
+			<value><text>december</text></value>
+		</field>
+		<field k='date_second'>
+			<value><text>14</text></value>
+		</field>
+		<field k='date_wday'>
+			<value><text>wednesday</text></value>
+		</field>
+		<field k='date_year'>
+			<value><text>2012</text></value>
+		</field>
+		<field k='date_zone'>
+			<value><text>-480</text></value>
+		</field>
+		<field k='group'>
+			<value><text>search_concurrency</text></value>
+		</field>
+		<field k='host'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='index'>
+			<value h='1'><text>_internal</text></value>
+		</field>
+		<field k='linecount'>
+			<value><text>1</text></value>
+		</field>
+		<field k='log_level'>
+			<value><text>INFO</text></value>
+		</field>
+		<field k='message'>
+			<value><text>group=search_concurrency, system total, active_hist_searches=0, active_realtime_searches=0</text></value>
+		</field>
+		<field k='punct'>
+			<value><text>--_::._-____-_=,__,_=,_=</text></value>
+		</field>
+		<field k='source'>
+			<value><text>/Users/fross/splunks/splunk-4.3.5/var/log/splunk/metrics.log</text></value>
+		</field>
+		<field k='sourcetype'>
+			<value><text>splunkd</text></value>
+		</field>
+		<field k='splunk_server'>
+			<value><text>fross-mbp15.local</text></value>
+		</field>
+		<field k='timeendpos'>
+			<value><text>29</text></value>
+		</field>
+		<field k='timestartpos'>
+			<value><text>0</text></value>
+		</field>
+	</result>
+</results>
