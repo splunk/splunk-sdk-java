@@ -23,7 +23,7 @@ import java.util.Iterator;
  * The {@code MultiResultsReader} class represents a streaming reader
  * for Splunk search results. Using {@code <T extends ResultsReader>} allows
  * specialization of {@code T} in subclasses of {@code MultiResultsReader}, such
- * as {@link MultiResultsReaderXml}.
+ * as {@link MultiResultsReaderXml} and {@link MultiResultsReaderJson}.
  */
 public class MultiResultsReader<T extends ResultsReader>
         extends StreamIterableBase<SearchResults> {
