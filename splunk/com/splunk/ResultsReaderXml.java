@@ -16,15 +16,19 @@
 
 package com.splunk;
 
-import java.io.*;
+import javax.xml.namespace.QName;
+import javax.xml.stream.*;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.*;
-import javax.xml.stream.events.*;
 
 /**
  * The {@code ResultsReaderXml} class represents a streaming XML reader for
@@ -169,7 +173,7 @@ public class ResultsReaderXml
 
     // Reads the preview flag and field name list, and position in the middle of
     // the result element for reading actual results later.
-    // Return value indicates whether the cachedElement 'results' element is found.
+    // Return value indicates whether the next 'results' element is found.
     boolean readIntoNextResultsElement()
             throws XMLStreamException, IOException {
         XMLEvent xmlEvent = null;

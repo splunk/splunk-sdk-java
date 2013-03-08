@@ -103,7 +103,7 @@ public class ResultsReaderJson extends ResultsReader {
                  *      {"preview":true,"offset":0,"lastrow":true,"result":{"host":"Andy-PC","count":"62"}}
                  *      {"preview":true,"offset":0,"result":{"host":"Andy-PC","count":"1682"}}
                  */
-                // Read into first result object of the cachedElement set.
+                // Read into first result object of the next set.
                 while (true) {
                     boolean endPassed = exportHelper.lastRow;
                     exportHelper.skipRestOfRow();
@@ -167,7 +167,7 @@ public class ResultsReaderJson extends ResultsReader {
     }
 
     /**
-     * Skip the cachedElement value, whether it is atomic or compound, in the JSON
+     * Skip the next value, whether it is atomic or compound, in the JSON
      * stream.
      */
     private void skipEntity() throws IOException {

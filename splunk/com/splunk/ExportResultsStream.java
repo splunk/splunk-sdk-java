@@ -17,7 +17,6 @@
 package com.splunk;
 
 import java.io.FilterInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -26,8 +25,7 @@ import java.io.InputStream;
  * 
  */
 class ExportResultsStream extends FilterInputStream {
-    private InputStream in;
     public ExportResultsStream(InputStream stream) {
-        super(stream);                                 
+        super(stream);
     }
 }
