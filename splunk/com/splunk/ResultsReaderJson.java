@@ -30,7 +30,8 @@ import java.util.List;
 /**
  * The {@code ResultsReaderJson} class represents a streaming JSON reader for
  * Splunk search results. This class requires the gson-2.1.jar file in your 
- * build path.
+ * build path. If you want to access the preview events, use the 
+ * {@link MultiResultsReaderJson} class.
  */
 public class ResultsReaderJson extends ResultsReader {
     private JsonReader jsonReader;
