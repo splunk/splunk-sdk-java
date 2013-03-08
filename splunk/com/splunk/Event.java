@@ -23,12 +23,12 @@ import java.util.regex.Pattern;
 /**
  * The {@code Event} class wraps an individual event or result that was returned
  * by the {@link ResultsReader#getNextEvent} method.
- * 
+ * <p>
  * An event maps each field name to a list of zero of more values.
  * These values can be accessed as either an array (using the {@link #getArray} 
  * method) or as a delimited string (using the {@link #get} method). We 
  * recommend accessing values as an array when possible.
- * <br><br>
+ * <p>
  * The delimiter for field values depends on the underlying result format.
  * If the underlying format does not specify a delimiter, such as with the
  * {@link ResultsReaderXml} class, the delimiter is a comma (,).

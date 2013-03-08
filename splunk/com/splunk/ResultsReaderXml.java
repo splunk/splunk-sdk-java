@@ -28,9 +28,9 @@ import javax.xml.stream.events.*;
 
 /**
  * The {@code ResultsReaderXml} class represents a streaming XML reader for
- * Splunk search results. When passed a stream from an export endpoint,
- * it skips any preview events in the stream. The preview events can be
- * accessed using MultiResultsReaderXml."
+ * Splunk search results. When a stream from an export search is passed to this
+ * reader, it skips any preview events in the stream. If you want to access the
+ * preview events, use the {@link MultiResultsReaderXml} class.
  */
 public class ResultsReaderXml
     extends ResultsReader {
@@ -42,14 +42,14 @@ public class ResultsReaderXml
      * Class constructor.
      *
      * Constructs a streaming XML reader for the event stream. You should only
-     * attempt to parse an XML stream with the XML reader. Unpredictable results
-     * may occur if you use a non-XML stream.
+     * attempt to parse an XML stream with this reader. If you attempt to parse 
+     * a different type of stream, unpredictable results may occur. 
      * <br>
-     * The pushback reader tweaks export streams to generate non-strict XML 
+     * The pushback reader modifies export streams to generate non-strict XML 
      * at the beginning of the stream. The streaming reader ignores preview 
      * data, and only extracts finalized data.
      *
-     * @param inputStream The stream to parse.
+     * @param inputStream The XML stream to parse.
      * @throws IOException
      */
     public ResultsReaderXml(InputStream inputStream) throws IOException {
@@ -167,7 +167,7 @@ public class ResultsReaderXml
         }
     }
 
-    // Read preview flag and field name list, and position in the middle of
+    // Reads the preview flag and field name list, and position in the middle of
     // the result element for reading actual results later.
     // Return value indicates whether the cachedElement 'results' element is found.
     boolean readIntoNextResultsElement()

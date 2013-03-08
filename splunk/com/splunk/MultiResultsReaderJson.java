@@ -21,8 +21,8 @@ import java.io.InputStream;
 
 /**
  * The {@code MultiResultsReaderJson} class represents a streaming JSON reader
- * for Splunk search results. It supports the export endpoint which may return
- * one of more previews before final results.
+ * for Splunk search results. This reader supports streams from export searches, 
+ * which might return one of more previews before returning final results.
  */
 public class MultiResultsReaderJson
         extends MultiResultsReader<ResultsReaderJson> {
@@ -30,10 +30,10 @@ public class MultiResultsReaderJson
      * Class constructor.
      *
      * Constructs a streaming JSON reader for the event stream. You should only
-     * attempt to parse an JSON stream with the JSON reader.
-     * Unpredictable results may occur if you use a non-XML stream.
+     * attempt to parse a JSON stream with this reader. Unpredictable results
+     * may occur if you try to parse a stream with a different format.
      *
-     * @param inputStream The stream to parse.
+     * @param inputStream The JSON stream to parse.
      * @throws IOException
      */
     public MultiResultsReaderJson(InputStream inputStream) throws IOException {

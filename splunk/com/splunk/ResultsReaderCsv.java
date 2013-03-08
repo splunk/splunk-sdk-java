@@ -39,10 +39,10 @@ public class ResultsReaderCsv extends ResultsReader {
      * Class constructor.
      *
      * Constructs a streaming CSV reader for the event stream. You should only
-     * attempt to parse an CSV stream with the CSV reader. Using a non-CSV
-     * stream yields unpredictable results.
+     * attempt to parse a CSV stream with this reader. If you attempt to parse 
+     * a different type of stream, unpredictable results may occur. 
      *
-     * @param inputStream The stream to parse.
+     * @param inputStream The CSV stream to parse.
      * @throws IOException
      */
     public ResultsReaderCsv(InputStream inputStream) throws IOException {
@@ -54,8 +54,8 @@ public class ResultsReaderCsv extends ResultsReader {
                 "format instead. "
             );
         csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF8"));
-        // initial line contains the keyArray, except for oneshot -- which contains
-        // a blank line, and then the key list.
+        // initial line contains the keyArray, except for oneshot -- which 
+        // contains a blank line, and then the key list.
         String[] keyArray = csvReader.readNext();
         if (keyArray.length == 1 && keyArray[0].trim().equals("")) {
             keyArray = csvReader.readNext();
@@ -72,8 +72,8 @@ public class ResultsReaderCsv extends ResultsReader {
     }
 
     /**
-     * This method is not supported on this class.
-     * @return N/A
+     * This method is not supported.
+     * @return Not applicable.
      */
     public boolean isPreview(){
         throw new UnsupportedOperationException(
@@ -87,9 +87,9 @@ public class ResultsReaderCsv extends ResultsReader {
 
     /*
      * Multiple result sets are not supported by this reader.
-     * This function will read the entire stream.
+     * This function reads the entire stream.
      * An application won't reach here with a stream from
-     * an export endpoint. The constructor will throw in that case.
+     * an /export endpoint. The constructor will throw an error in that case.
      */
     @Override Event getNextEventInCurrentSet() throws IOException {
         Event returnData = null;

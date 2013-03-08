@@ -44,10 +44,10 @@ public class ResultsReaderJson extends ResultsReader {
      * Class constructor.
      *
      * Constructs a streaming JSON reader for the event stream. You should only
-     * attempt to parse a JSON stream with the JSON reader. Using a non-JSON
-     * stream yields unpredictable results.
+     * attempt to parse a JSON stream with this reader. If you attempt to parse 
+     * a different type of stream, unpredictable results may occur. 
      *
-     * @param inputStream The stream to parse.
+     * @param inputStream The JSON stream to parse.
      * @throws IOException
      */
     public ResultsReaderJson(InputStream inputStream) throws IOException {
@@ -210,8 +210,8 @@ public class ResultsReaderJson extends ResultsReader {
     }
 
     /**
-     * This method is not supported on this class.
-     * @return N/A
+     * This method is not supported.
+     * @return Not applicable.
      */
     public Collection<String> getFields(){
         throw new UnsupportedOperationException(

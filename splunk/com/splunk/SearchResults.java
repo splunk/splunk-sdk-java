@@ -29,8 +29,8 @@ public interface SearchResults extends Iterable<Event> {
     public boolean isPreview();
 
     /**
-     * Returns a collection of field names in the results.
-     * @return a collection of field names.
+     * Returns a collection of field names from the results.
+     * @return A collection of field names.
      * <p>
      * Note that any given result will contain a subset of these fields.
      */
