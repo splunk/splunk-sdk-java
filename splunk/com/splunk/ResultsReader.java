@@ -44,7 +44,8 @@ import java.util.Iterator;
 
 /**
  * The {@code ResultsReader} class is a base class for the streaming readers
- * for Splunk search results. It should not be used to get previews from export.
+ * for Splunk search results. This class should not be used to retrieve preview
+ * results for an export search.
  */
 public abstract class ResultsReader
         extends StreamIterableBase<Event>
@@ -97,10 +98,11 @@ public abstract class ResultsReader
     }
 
     /**
-     * Return the next event while moving onto the the next set
-     * automatically when needed, i.e., concatenating final results
+     * Returns the next event while moving to the next set
+     * automatically when needed, such as concatenating final results
      * across multiple sets.
-     * @return  null if the end is reached
+     * 
+     * @return  null {@code null} if the end is reached.
      * @throws IOException On IO exception.
      */
     final Event getNextElement() throws IOException {

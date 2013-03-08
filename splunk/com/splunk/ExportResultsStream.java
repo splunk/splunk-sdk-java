@@ -20,7 +20,11 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-// Represent a stream constructed by Service.export.
+/**
+ * The {@code ExportResultsStream} class represents a stream constructed by the
+ * {@link Service#export} method.
+ * 
+ */
 class ExportResultsStream extends FilterInputStream {
     private InputStream in;
     public ExportResultsStream(InputStream stream) {
