@@ -164,8 +164,8 @@ public class Service extends BaseService {
     }
 
     /**
-     * Runs a search using the {@code search/jobs/export} endpoint, which
-     * streams results back in an input stream.
+     * Runs an export search (using the {@code search/jobs/export} endpoint), 
+     * and streams results back in an input stream.
      *
      * @param search The search query to run.
      * @return The {@code InputStream} object that contains the search results.
@@ -175,8 +175,8 @@ public class Service extends BaseService {
     }
 
     /**
-     * Runs a search with arguments using the {@code search/jobs/export}
-     * endpoint, which streams results back in an input stream.
+     * Runs an export search with arguments (using the {@code search/jobs/export}
+     * endpoint), and streams results back in an input stream.
      *
      * @param search The search query to run.
      * @param args Additional search arguments. 
@@ -198,8 +198,8 @@ public class Service extends BaseService {
     }
     
     /**
-     * Runs a search with arguments using the {@code search/jobs/export}
-     * endpoint, which streams results back in an input stream.
+     * Runs an export search with arguments (using the {@code search/jobs/export}
+     * endpoint), and streams results back in an input stream.
      *
      * @param search The search query to run.
      * @param args Additional search arguments (see {@code JobExportArgs}).
@@ -224,12 +224,12 @@ public class Service extends BaseService {
     }
 
     /**
-     * Ensures that the given path is fully qualified, prepending a path
-     * prefix if necessarry. The path prefix is constructed using the
+     * Ensures that a given path is fully qualified, prepending a path
+     * prefix if necessary. The path prefix is constructed using the
      * current owner and app context when available.
      *
      * @param path The path to verify.
-     * @param namespace The name space dictionary (<i>app, owner, sharing</i>).
+     * @param namespace The namespace dictionary (<i>app, owner, sharing</i>).
      * @return A fully-qualified resource path.
      */
     public String fullpath(String path, Args namespace) {
@@ -1256,14 +1256,17 @@ public class Service extends BaseService {
     }
 
     /**
-     * Returns {@code -1} if {@code this.version &lt; otherVersion}.
-     * Returns {@code  0} if {@code this.version &eq; otherVersion}.
-     * Returns {@code  1} if {@code this.version &gt; otherVersion}.
+     * Returns a value indicating how the version of this Splunk instance 
+     * compares to a given version: 
+     * <ul>
+     * <li>{@code -1} if this version < the given version</li>
+     * <li>{@code  0} if this version = the given version</li>
+     * <li>{@code  1} if this version > the given version</li>
+     * </ul>
      * 
-     * @param otherVersion The version to compare this Splunk instance's version against. 
-     * @return {@code -1} if {@code this.version &lt; otherVersion},
-     *         {@code  0} if {@code this.version &eq; otherVersion}, or
-     *         {@code  1} if {@code this.version &gt; otherVersion}.
+     * @param otherVersion The other version to compare to. 
+     * @return -1 if this version is less than, 0 if this version is equal to, 
+     *         or 1 if this version is greater than the given version.
      */
     public int versionCompare(String otherVersion) {
         String[] components1 = this.version.split("\\.");
