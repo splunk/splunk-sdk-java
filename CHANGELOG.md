@@ -22,7 +22,7 @@
 
 * The `ServiceInfo` class now uses the `services/*` endpoint rather than the 
   default namespace (`servicesNS/*`) for HTTP requests. This change is a workaround to 
-  avoid a bug in Splunk that returns a 403 error when the `server/info` endpoint 
+  avoid a bug in Splunk that returns HTTP code 403 when the `server/info` endpoint 
   is accessed using certain namespaces.
 
 * The `ResultsReaderXml` class can now read search results streams from the

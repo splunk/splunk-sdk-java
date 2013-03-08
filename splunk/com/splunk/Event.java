@@ -23,12 +23,12 @@ import java.util.regex.Pattern;
 /**
  * The {@code Event} class wraps an individual event or result that was returned
  * by the {@link ResultsReader#getNextEvent} method.
- * 
+ * <p>
  * An event maps each field name to a list of zero of more values.
  * These values can be accessed as either an array (using the {@link #getArray} 
  * method) or as a delimited string (using the {@link #get} method). We 
  * recommend accessing values as an array when possible.
- * <br><br>
+ * <p>
  * The delimiter for field values depends on the underlying result format.
  * If the underlying format does not specify a delimiter, such as with the
  * {@link ResultsReaderXml} class, the delimiter is a comma (,).
@@ -72,13 +72,14 @@ public class Event extends HashMap<String, String> {
     }
 
     /**
-     * Sets the value for the XML element for '_raw' field. It is only used by
-     * {@link ResultsReaderXml}
+     * Sets the value for the XML element for the {@code _raw} field. This value
+     * is only used by the {@link ResultsReaderXml} class.
      * @param value The text of the XML element.
      */
     void putSegmentedRaw(String value) {
         segmentedRaw = value;
     }
+
     /**
      * Returns the single value or delimited set of values for the specified
      * field name, or {@code null} if the specified field is not present.
@@ -159,17 +160,20 @@ public class Event extends HashMap<String, String> {
     }
 
     /**
-     * Gets the XML markup for '_raw' field value.
-     * It is only available with {@link ResultsReaderXml}.
+     * Gets the XML markup for the {@code "_raw"} field value. This value
+     * is only used by the {@link ResultsReaderXml} class.
      * <p>
      * The return value is different than that of {@code get("_raw")}
-     * in that it is an XML fragment which includes all markups such as 'sg'
-     * tags, the outer tag, and has characters escaped for XML as needed.
-     * An example is below.
-     * Returned by {@code get("_raw")}:
-     * "http://localhost:8000/en-US/app/search/flashtimeline?q=search%20search%20index%3D_internal%20%7C%20head%2010&earliest=rt-1h&latest=rt"
-     * Returned by this method:
-     * <v xml:space="preserve" trunc="0">"http://localhost:8000/en-US/app/<sg h=\"1\">search</sg>/flashtimeline?q=<sg h=\"1\">search</sg>%20<sg h=\"1\">search</sg>%20index%3D_internal%20%7C%20head%2010&amp;earliest=rt-1h&amp;latest=rt"</v>
+     * in that this segmented raw value is an XML fragment that includes all 
+     * markup such as XML tags and escaped characters.
+     * <p>
+     * For example, {@code get("_raw")} returns this:
+     * <p>
+     * {@code "http://localhost:8000/en-US/app/search/flashtimeline?q=search%20search%20index%3D_internal%20%7C%20head%2010&earliest=rt-1h&latest=rt"}
+     * <p>
+     * The {@code getSegmentedRaw} method returns this:
+     * <p>
+     * {@code <v xml:space="preserve" trunc="0">"http://localhost:8000/en-US/app/<sg h=\"1\">search</sg>/flashtimeline?q=<sg h=\"1\">search</sg>%20<sg h=\"1\">search</sg>%20index%3D_internal%20%7C%20head%2010&amp;earliest=rt-1h&amp;latest=rt"</v>}
      */
     public String getSegmentedRaw() {
        if (segmentedRaw == null) {

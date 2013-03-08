@@ -21,8 +21,8 @@ import java.io.InputStream;
 
 /**
  * The {@code MultiResultsReaderXml} class represents a streaming XML reader for
- * Splunk search results. It supports the export endpoint which may return
- * one of more previews before final results.
+ * Splunk search results. This reader supports streams from export searches, 
+ * which might return one of more previews before returning final results.
  */
 public class MultiResultsReaderXml
         extends MultiResultsReader<ResultsReaderXml> {
@@ -30,10 +30,10 @@ public class MultiResultsReaderXml
      * Class constructor.
      *
      * Constructs a streaming XML reader for the event stream. You should only
-     * attempt to parse an XML stream with the XML reader. Unpredictable results
-     * may occur if you use a non-XML stream.
+     * attempt to parse an XML stream with this reader. Unpredictable results
+     * may occur if you try to parse a stream with a different format.
      *
-     * @param inputStream The stream to parse.
+     * @param inputStream The XML stream to parse.
      * @throws IOException
      */
     public MultiResultsReaderXml(InputStream inputStream) throws IOException {
