@@ -50,8 +50,7 @@ public abstract class ResultsReader
         extends StreamIterableBase<Event>
         implements SearchResults {
     InputStreamReader inputStreamReader = null;
-    // Default should be false which will result in no result set skipping
-    // or concatenation.
+    // Default should be false which will result in no result set skipping.
     boolean isPreview;
     boolean isExportStream;
     private boolean isInMultiReader;

@@ -69,6 +69,10 @@ public class ResultsReaderJson extends ResultsReader {
     // get ready for readEvent method.
     // Return false if end of stream is encountered.
     boolean advanceIntoNextSetBeforeEvent() throws IOException {
+        // jsonReader will be set to null once the end is reached.
+        if (jsonReader == null)
+            return false;
+
         // In Splunk 5.0 from the export endpoint,
         // each result is in its own top level object.
         // In Splunk 5.0 not from the export endpoint, the results are
@@ -299,14 +303,7 @@ public class ResultsReaderJson extends ResultsReader {
     }
 
     @Override boolean advanceStreamToNextSet() throws IOException{
-        try {
-            return advanceIntoNextSetBeforeEvent();
-        } catch (NullPointerException e) {
-            // Invalid xml (<doc> and multiple <results> may results in
-            // this exception in the xml reader at:
-            // com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.load(XMLEntityScanner.java:1748)
-            return false;
-        }
+        return advanceIntoNextSetBeforeEvent();
     }
 
     /**

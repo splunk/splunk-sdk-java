@@ -30,7 +30,7 @@ import javax.xml.stream.events.*;
  * The {@code ResultsReaderXml} class represents a streaming XML reader for
  * Splunk search results. When passed a stream from an export endpoint,
  * it skips any preview events in the stream. The preview events can be
- * accessed using MultiResultsReaderXml."
+ * accessed using MultiResultsReaderXml.
  */
 public class ResultsReaderXml
     extends ResultsReader {
