@@ -19,28 +19,28 @@ package com.splunk;
 import java.io.*;
 import java.util.Iterator;
 
-/*
- * Summary of class relationships and control flow
- *
- * All result readers support both the Iterator interface and
- * getNextEvent method. They share the same underlying implementation
- * of getNextElement(). The iterator interface is supported through
- * the base class, StreamIterableBase (which is also used by
- * multi result readers).
- *
- * Some result readers support multiple result sets in the input stream.
- * A result set can be skipped, or combined with the
- * previous result set with newer events returned through the same
- * iterator used for the older events even through they are in different result
- * sets.
- *
- * Such a result reader is also used by a multi result reader which
- * returns an iterator over the result sets, with one result set returned
- * in one iteration, as SearchResults. SearchResults is an interface consisting
- * of getters of preview flag, field name list, and an iterator over events.
- * Unlike ResultReader, SearchResults does not have a close method. Only the
- * containing multi reader needs to be closed by an application.
- */
+
+ // Summary of class relationships and control flow
+ // 
+ // All result readers support both the Iterator interface and
+ // getNextEvent method. They share the same underlying implementation
+ // of getNextElement(). The iterator interface is supported through
+ // the base class, StreamIterableBase (which is also used by
+ // multi result readers).
+ // 
+ // Some result readers support multiple result sets in the input stream.
+ // A result set can be skipped, or combined with the
+ // previous result set with newer events returned through the same
+ // iterator used for the older events even through they are in different result
+ // sets.
+ // 
+ // Such a result reader is also used by a multi result reader which
+ // returns an iterator over the result sets, with one result set returned
+ // in one iteration, as SearchResults. SearchResults is an interface consisting
+ // of getters of preview flag, field name list, and an iterator over events.
+ // Unlike ResultReader, SearchResults does not have a close method. Only the
+ // containing multi reader needs to be closed by an application.
+ 
 
 /**
  * The {@code ResultsReader} class is a base class for the streaming readers
