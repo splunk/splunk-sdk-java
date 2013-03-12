@@ -18,6 +18,7 @@ package com.splunk;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -303,9 +304,7 @@ public class Job extends Entity {
      * @return The event {@code InputStream} IO handle.
      */
     public InputStream getEvents(Map args) {
-        checkReady();
-        ResponseMessage response = service.get(path + "/events", args);
-        return response.getContent();
+        return getEventsMethod("/events", args);
     }
     
     /**
@@ -344,6 +343,22 @@ public class Job extends Entity {
     public String getEventSorting() {
         checkReady();
         return getString("eventSorting");
+    }
+
+    private InputStream getEventsMethod(String methodPath, Map args) {
+        checkReady();
+
+        if (args == null) {
+            args = new HashMap<String, Object>();
+        }
+        if (!args.containsKey("segmentation")) {
+            // By default, don't include notations in the results to highlight
+            // search terms (i.e., <sg> elements in XML output).
+            args.put("segmentation", "none");
+        }
+
+        ResponseMessage response = service.get(path + methodPath, args);
+        return response.getContent();
     }
 
     /**
@@ -498,9 +513,7 @@ public class Job extends Entity {
      * @return The results {@code InputStream} IO handle.
      */
     public InputStream getResults(Map args) {
-        checkReady();
-        ResponseMessage response = service.get(path + "/results", args);
-        return response.getContent();
+        return getEventsMethod("/results", args);
     }
     
     /**
@@ -539,9 +552,7 @@ public class Job extends Entity {
      * @return The preview results {@code InputStream} IO handle.
      */
     public InputStream getResultsPreview(Map args) {
-        checkReady();
-        ResponseMessage response = service.get(path + "/results_preview", args);
-        return response.getContent();
+        return getEventsMethod("/results_preview", args);
     }
     
     /**

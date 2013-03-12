@@ -75,11 +75,6 @@ public class JobCollection extends EntityCollection<Job> {
             if (args.get("exec_mode").equals("oneshot"))
                 throw new RuntimeException(oneShotNotAllowed);
         }
-        if (args != null && !args.containsKey("segmentation")) {
-            // By default, don't include notations in the results to highlight
-            // search terms (i.e., <sg> elements in XML output).
-            args.put("segmentation", "none");
-        }
         args = Args.create(args).add("search", query);
         ResponseMessage response = service.post(path, args);
         assert(response.getStatus() == 201);
