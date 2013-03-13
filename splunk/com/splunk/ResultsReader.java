@@ -180,6 +180,7 @@ public abstract class ResultsReader
             return;
 
         while (true) {
+            // Stop if no more set is available
             if (!advanceStreamToNextSet()) {
                 // Terminating the iteration.
                 // This avoids future callings into the underlying reader
@@ -188,9 +189,12 @@ public abstract class ResultsReader
                 break;
             }
 
+            // No skipping of result sets if the stream
+            // is not from an export endpoint.
             if (!isExportStream)
                 break;
 
+            // Skipping ends at any file results.
             if (!isPreview)
                 break;
         }

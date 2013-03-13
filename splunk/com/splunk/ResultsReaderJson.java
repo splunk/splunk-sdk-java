@@ -310,6 +310,8 @@ public class ResultsReaderJson extends ResultsReader {
      * Contains code only used for streams from the export endpoint.
      */
     private class ExportHelper {
+        // Initial value must be true so that
+        // the first row is treated as the start of a new set.
         boolean lastRow = true;
         boolean inRow;
 

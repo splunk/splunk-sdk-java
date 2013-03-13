@@ -367,7 +367,7 @@ public class ResultsReaderXml
                                 .equals("v")) {
                         StringBuilder asString = new StringBuilder();
                         StringWriter asXml = new StringWriter();
-                        readWholeElement(startElement, asString, asXml);
+                        readSubtree(startElement, asString, asXml);
                         values.add(asString.toString());
                         returnData.putSegmentedRaw(asXml.toString());
                         level--;
@@ -433,7 +433,7 @@ public class ResultsReaderXml
      * @throws IOException
      * @throws XMLStreamException
      */
-    void readWholeElement(
+    void readSubtree(
             StartElement startElement,
             StringBuilder asString,
             StringWriter asXml)
