@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SearchJobTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
@@ -152,16 +153,18 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testJobHasNoSgByDefault() throws IOException {
         Job job = service.getJobs().create("search index=_internal GET | head 3");
+        waitUntilDone(job);
         String data = streamToString(job.getResults());
         assertFalse(data.contains("<sg"));
     }
 
     @Test
     public void testJobCanEnableSg() throws IOException {
-        JobArgs args = new JobArgs();
+        Job job = service.getJobs().create("search index=_internal GET | head 3");
+        waitUntilDone(job);
+        Map<String, String> args = new HashMap<String, String>();
         args.put("segmentation", "raw");
-        Job job = service.getJobs().create("search index=_internal GET | head 3", args);
-        String data = streamToString(job.getResults());
+        String data = streamToString(job.getResults(args));
         assertTrue(data.contains("<sg"));
     }
 

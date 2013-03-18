@@ -43,13 +43,10 @@ Splunk and system requirements, see
 
 #### Splunk SDK for Java
 
-Get the Splunk SDK for Java from [GitHub](https://github.com/) and clone the 
-resources to your computer. For example, use the following command: 
+[Get the Splunk SDK for Java](http://dev.splunk.com/view/SP-CAAAECN)&mdash;download the SDK as a ZIP, then extract the files and build the SDK. Or, download the JAR and add it to your project.
 
-    git clone https://github.com/splunk/splunk-sdk-java.git
-    
-You can also download just the JAR file to include the Splunk SDK for Java
-in your applications.
+If you want to contribute to the SDK, clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java).
+
 
 #### Java and Ant
 
