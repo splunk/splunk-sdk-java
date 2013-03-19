@@ -159,6 +159,11 @@ public class ResultsReaderXml
     }
 
     @Override Event getNextEventInCurrentSet() throws IOException {
+        // Handle empty stream or other cases where xmlReader is
+        // not constructed.
+        if (xmlReader == null) {
+            return null;
+        }
         try {
             Event event = null;
             XMLEvent xmlEvent = readToStartOfElementAtSameLevelWithName("result");
@@ -259,25 +264,34 @@ public class ResultsReaderXml
         throw new RuntimeException("End tag of " + elementName + " not found.");
     }
 
+    /**
+     * Read to the next start element with the specified name
+     * at the same level. The reader stops
+     * past that element if found, or before the end element of the
+     * current level.
+     * @param elementName Name of the element.
+     * @return  The found start element or null if none is found.
+     * @throws XMLStreamException
+     */
     XMLEvent readToStartOfElementAtSameLevelWithName(String elementName)
         throws XMLStreamException {
         XMLEvent xmlEvent;
         int eType;
         int level = 0;
-
         while (xmlReader.hasNext()) {
-            xmlEvent = xmlReader.nextEvent();
+            xmlEvent = xmlReader.peek();
             eType = xmlEvent.getEventType();
             switch (eType) {
                 case XMLStreamConstants.START_ELEMENT:
                     if (level++ > 0){
-                        continue;
+                        break;
                     }
                     StartElement startElement = xmlEvent.asStartElement();
                     if(startElement
                             .getName()
                             .getLocalPart()
                             .equals(elementName)) {
+                        xmlReader.nextEvent();
                         return xmlEvent;
                     }
                     break;
@@ -289,6 +303,7 @@ public class ResultsReaderXml
                 default:
                     break;
             }
+            xmlReader.nextEvent();
         }
 
         throw new RuntimeException("Parent end element not found:" + elementName);
@@ -404,6 +419,11 @@ public class ResultsReaderXml
     }
 
     @Override boolean advanceStreamToNextSet() throws IOException {
+        // Handle empty stream or other cases where xmlReader is
+        // not constructed.
+        if (xmlReader == null) {
+            return false;
+        }
         try {
             return readIntoNextResultsElement();
         } catch (XMLStreamException e) {

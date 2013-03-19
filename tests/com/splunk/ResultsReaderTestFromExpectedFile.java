@@ -90,10 +90,12 @@ public class ResultsReaderTestFromExpectedFile extends SDKTestCase {
             assertNotNull(
                     "Did not parse as many events from the XML as expected.",
                     foundEvent);
-            final String segmentedRaw = foundEvent.getSegmentedRaw();
-            final String keySegmentedRaw = "RAW_XML";
-            assertEquals(expectedEvent.get(keySegmentedRaw), segmentedRaw);
-            verifyXml(segmentedRaw);
+            if (foundEvent.containsKey("_raw")) {
+                final String segmentedRaw = foundEvent.getSegmentedRaw();
+                final String keySegmentedRaw = "RAW_XML";
+                assertEquals(expectedEvent.get(keySegmentedRaw), segmentedRaw);
+                verifyXml(segmentedRaw);
+            }
             Map<String, Object> expectedFields =
                     (Map<String,Object>)expectedEvent.get("fields");
             Set<String> expectedKeys = expectedFields.keySet();
@@ -109,6 +111,7 @@ public class ResultsReaderTestFromExpectedFile extends SDKTestCase {
                 }
             }
         }
+        assertNull(resultsReader.getNextEvent());
     }
 
     // Verify XML by round-tripping.
