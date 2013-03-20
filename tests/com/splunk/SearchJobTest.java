@@ -120,6 +120,10 @@ public class SearchJobTest extends SDKTestCase {
     // off, and it can be turned on for all of them.
     @Test
     public void testOneshotHasNoSgByDefault() throws IOException {
+        if (service.versionIsEarlierThan("5.0.0")) {
+            System.out.println("'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
+            return;
+        }
         InputStream input = service.oneshotSearch("search index=_internal GET | head 3");
         String data = streamToString(input);
         assertFalse(data.contains("<sg"));
@@ -136,6 +140,10 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testExportHasNoSgByDefault() throws IOException {
+        if (service.versionIsEarlierThan("5.0.0")) {
+            System.out.println("'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
+            return;
+        }
         InputStream input = service.export("search index=_internal GET | head 3");
         String data = streamToString(input);
         assertFalse(data.contains("<sg"));
@@ -152,6 +160,10 @@ public class SearchJobTest extends SDKTestCase {
 
     @Test
     public void testJobHasNoSgByDefault() throws IOException {
+        if (service.versionIsEarlierThan("5.0.0")) {
+            System.out.println("'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
+            return;
+        }
         Job job = service.getJobs().create("search index=_internal GET | head 3");
         waitUntilDone(job);
         String data = streamToString(job.getResults());

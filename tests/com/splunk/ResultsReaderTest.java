@@ -77,9 +77,11 @@ public class ResultsReaderTest extends SDKTestCase {
 
     @Test
     public void testReadFromExportJson() throws Exception {
-        if (service.versionIsAtLeast("5.0.0")) {
-            verifyMultiReader(getExportStreamJson());
+        if (service.versionIsEarlierThan("5.0.0")) {
+            System.out.println("Export from Splunk 4.x (or earlier) is not supported by JSON result reader; skipping test.");
+            return;
         }
+        verifyMultiReader(getExportStreamJson());
     }
 
     @Test
