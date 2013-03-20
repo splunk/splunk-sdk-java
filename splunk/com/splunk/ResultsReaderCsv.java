@@ -50,8 +50,8 @@ public class ResultsReaderCsv extends ResultsReader {
         if (isExportStream)
             throw new UnsupportedOperationException(
                 "A stream from an export endpoint is not supported " +
-                "by a CSV result reader. Use another search output "+
-                "format instead. "
+                "by a CSV result reader. Use XML or JSON search output "+
+                "format and matching reader instead."
             );
         csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF8"));
         // initial line contains the keyArray, except for oneshot -- which 
