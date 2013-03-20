@@ -121,7 +121,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testOneshotHasNoSgByDefault() throws IOException {
         if (service.versionIsEarlierThan("5.0.0")) {
-            System.out.println("'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
+            System.out.println("WARNING: 'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
             return;
         }
         InputStream input = service.oneshotSearch("search index=_internal GET | head 3");
@@ -141,7 +141,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testExportHasNoSgByDefault() throws IOException {
         if (service.versionIsEarlierThan("5.0.0")) {
-            System.out.println("'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
+            System.out.println("WARNING: 'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
             return;
         }
         InputStream input = service.export("search index=_internal GET | head 3");
@@ -161,7 +161,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testJobHasNoSgByDefault() throws IOException {
         if (service.versionIsEarlierThan("5.0.0")) {
-            System.out.println("'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
+            System.out.println("WARNING: 'segmentation=none' has no impact on Splunk 4.3.5 (or earlier); skipping test.");
             return;
         }
         Job job = service.getJobs().create("search index=_internal GET | head 3");
@@ -610,7 +610,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testEnablePreview() {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
         installApplicationFromTestData("sleep_command");
@@ -646,7 +646,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testDisablePreview() {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
         installApplicationFromTestData("sleep_command");
@@ -702,7 +702,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testSetPriority() {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
         installApplicationFromTestData("sleep_command");
@@ -737,7 +737,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testPause() {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
         installApplicationFromTestData("sleep_command");
@@ -766,7 +766,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testUnpause() {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
         installApplicationFromTestData("sleep_command");
@@ -795,7 +795,7 @@ public class SearchJobTest extends SDKTestCase {
     @Test
     public void testFinalize() {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
         installApplicationFromTestData("sleep_command");
