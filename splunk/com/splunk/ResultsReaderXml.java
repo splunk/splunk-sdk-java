@@ -265,12 +265,12 @@ public class ResultsReaderXml
     }
 
     /**
-     * Read to the next start element with the specified name
-     * at the same level. The reader stops
-     * past that element if found, or before the end element of the
-     * current level.
-     * @param elementName Name of the element.
-     * @return  The found start element or null if none is found.
+     * Reads to the next specified start element at the same level. The reader 
+     * stops past that element if it is found. Otherwise, the reader stops 
+     * before the end element of the current level.
+     * 
+     * @param elementName The name of the start element.
+     * @return  The start element, or {@code null} if not found.
      * @throws XMLStreamException
      */
     XMLEvent readToStartOfElementAtSameLevelWithName(String elementName)
