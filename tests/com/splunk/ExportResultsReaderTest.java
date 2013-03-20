@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static junit.framework.TestCase.assertNotNull;
+
 /**
  * Test loading of data from the export endpoints.
  *
@@ -33,10 +35,12 @@ import java.util.*;
  * and the data/export_test_data.json file (for the expected results of parsing).
  */
 @RunWith(Parameterized.class)
-public class ExportResultsReaderTest extends SDKTestCase {
+public class ExportResultsReaderTest {
     private static Gson reader = new Gson();
     private static Map<String, Object> expectedData = reader.fromJson(
-            streamToString(openResource("data/export_test_data.json")),
+            SDKTestCase.streamToString(
+                    SDKTestCase.openResource(
+                            "data/export_test_data.json")),
             Map.class
     );
 
@@ -65,7 +69,8 @@ public class ExportResultsReaderTest extends SDKTestCase {
         List<Map<String, Object>> expectedEvents = (List<Map<String, Object>>)expectedResultsSet.get("results");
 
         InputStream xmlStream = new ExportResultsStream(
-                openResource("data/export/" + this.version + "/export_results.xml"));
+                SDKTestCase.openResource(
+                        "data/export/" + this.version + "/export_results.xml"));
         ResultsReaderXml resultsReader = new ResultsReaderXml(xmlStream);
 
         ResultsReaderTestFromExpectedFile.verifyResultsReader(resultsReader, expectedEvents);
@@ -79,7 +84,8 @@ public class ExportResultsReaderTest extends SDKTestCase {
         }
         List<Map<String, Object>> expectedResultsSets = (List<Map<String, Object>>)thisVersion.get("with_preview");
 
-        InputStream xmlStream = openResource("data/export/" + this.version + "/export_results.xml");
+        InputStream xmlStream = SDKTestCase.openResource(
+                "data/export/" + this.version + "/export_results.xml");
         // Some kind of results reader here...
 
         for (Map<String, Object> expectedResultsSet : expectedResultsSets) {
@@ -97,7 +103,8 @@ public class ExportResultsReaderTest extends SDKTestCase {
         Map<String, Object> expectedResultsSet = (Map<String, Object>)thisVersion.get("nonreporting");
         List<Map<String, Object>> expectedEvents = (List<Map<String, Object>>)expectedResultsSet.get("results");
 
-        InputStream xmlStream = openResource("data/export/" + this.version + "/nonreporting.xml");
+        InputStream xmlStream = SDKTestCase.openResource(
+                "data/export/" + this.version + "/nonreporting.xml");
         ResultsReaderXml resultsReader = new ResultsReaderXml(xmlStream);
 
         ResultsReaderTestFromExpectedFile.verifyResultsReader(resultsReader, expectedEvents);
