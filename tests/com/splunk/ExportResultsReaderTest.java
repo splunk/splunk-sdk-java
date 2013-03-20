@@ -43,7 +43,6 @@ public class ExportResultsReaderTest extends SDKTestCase {
     private String version;
 
     public ExportResultsReaderTest(String version) {
-        super(version);
         this.version = version;
     }
 

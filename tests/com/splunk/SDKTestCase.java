@@ -49,13 +49,6 @@ public abstract class SDKTestCase extends TestCase {
 
     protected Command command;
 
-    public SDKTestCase() {
-    }
-
-    public SDKTestCase(String name) {
-        super(name);
-    }
-
     public static String streamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
