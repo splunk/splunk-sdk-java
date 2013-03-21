@@ -20,7 +20,8 @@ import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 
 import java.io.InputStream;
 import java.util.*;
@@ -36,8 +37,8 @@ public class AtomFeedTest {
     private static Gson reader = new Gson();
     private static Map<String, Object> expectedData = reader.fromJson(
             SDKTestCase.streamToString(
-                    SDKTestCase.openResource(
-                            "data/atom_test_data.json")),
+                SDKTestCase.openResource(
+                    "data/atom_test_data.json")),
             Map.class);
 
     private Map<String, Object> expectedFeed;

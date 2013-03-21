@@ -39,8 +39,8 @@ public class ExportResultsReaderTest {
     private static Gson reader = new Gson();
     private static Map<String, Object> expectedData = reader.fromJson(
             SDKTestCase.streamToString(
-                    SDKTestCase.openResource(
-                            "data/export_test_data.json")),
+                SDKTestCase.openResource(
+                    "data/export_test_data.json")),
             Map.class
     );
 

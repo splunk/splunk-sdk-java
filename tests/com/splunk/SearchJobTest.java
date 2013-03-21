@@ -352,7 +352,7 @@ public class SearchJobTest extends SDKTestCase {
         ResultsReaderCsv reader = new ResultsReaderCsv(input);
 
         int count = 0;
-        while(true) {
+        while (true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
                 assertEquals(found.get("_raw").split("\n").length, 1);

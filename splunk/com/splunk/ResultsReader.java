@@ -139,7 +139,8 @@ public abstract class ResultsReader
     }
 
     /*
-     * Get the next event in the current result set.
+     * Get the next event in the current result set. Return null
+     * if the end is reached.
      */
     abstract Event getNextEventInCurrentSet() throws IOException;
 

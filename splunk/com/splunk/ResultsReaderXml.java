@@ -269,12 +269,13 @@ public class ResultsReaderXml
      * at the same level. The reader stops
      * past that element if found, or before the end element of the
      * current level.
+     *
      * @param elementName Name of the element.
-     * @return  The found start element or null if none is found.
+     * @return The found start element or null if none is found.
      * @throws XMLStreamException
      */
     XMLEvent readToStartOfElementAtSameLevelWithName(String elementName)
-        throws XMLStreamException {
+            throws XMLStreamException {
         XMLEvent xmlEvent;
         int eType;
         int level = 0;
@@ -287,7 +288,7 @@ public class ResultsReaderXml
                         break;
                     }
                     StartElement startElement = xmlEvent.asStartElement();
-                    if(startElement
+                    if (startElement
                             .getName()
                             .getLocalPart()
                             .equals(elementName)) {
