@@ -18,64 +18,151 @@ package com.splunk;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
-import com.splunk.ResultsReader;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
- * The {@code ResultsReaderJson} class represents a streaming JSON reader for 
+ * The {@code ResultsReaderJson} class represents a streaming JSON reader for
  * Splunk search results. This class requires the gson-2.1.jar file in your 
- * build path.
+ * build path. If you want to access the preview events, use the 
+ * {@link MultiResultsReaderJson} class.
  */
 public class ResultsReaderJson extends ResultsReader {
-    private JsonReader jsonReader = null;
+    private JsonReader jsonReader;
+    // Helper object that will only be constructed if the reader is handling
+    // json format used by export.
+    private ExportHelper exportHelper;
+    // Whether the 'preview' flag is read
+    private boolean previewFlagRead;
 
     /**
      * Class constructor.
      *
      * Constructs a streaming JSON reader for the event stream. You should only
-     * attempt to parse a JSON stream with the JSON reader. Using a non-JSON
-     * stream yields unpredictable results.
+     * attempt to parse a JSON stream with this reader. If you attempt to parse 
+     * a different type of stream, unpredictable results may occur. 
      *
-     * @param inputStream The stream to parse.
-     * @throws Exception On exception.
+     * @param inputStream The JSON stream to parse.
+     * @throws IOException
      */
     public ResultsReaderJson(InputStream inputStream) throws IOException {
-        super(inputStream);
+        this(inputStream, false);
+    }
+
+    ResultsReaderJson(InputStream inputStream, boolean isInMultiReader)
+            throws IOException {
+        super(inputStream, isInMultiReader);
         jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF8"));
         // if stream is empty, return a null reader.
-        try {
-            if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
-                // In Splunk 5.0, JSON output is an object, and the results are
-                // an array at that object's key "results". In Splunk 4.3, the
-                // array was the top level returned. So if we find an object
-                // at top level, we step into it until we find the right key,
-                // then leave it in that state to iterate over.
-                jsonReader.beginObject();
+        jsonReader.setLenient(true);
+        if (isExportStream || isInMultiReader)
+            exportHelper = new ExportHelper();
+        finishInitialization();
+    }
 
+    // Advance in the json stream, reading meta data if available, and
+    // get ready for readEvent method.
+    // Return false if end of stream is encountered.
+    boolean advanceIntoNextSetBeforeEvent() throws IOException {
+        // jsonReader will be set to null once the end is reached.
+        if (jsonReader == null)
+            return false;
+
+        // In Splunk 5.0 from the export endpoint,
+        // each result is in its own top level object.
+        // In Splunk 5.0 not from the export endpoint, the results are
+        // an array at that object's key "results".
+        // In Splunk 4.3, the
+        // array was the top level returned. So if we find an object
+        // at top level, we step into it until we find the right key,
+        // then leave it in that state to iterate over.
+        try {
+            // Json single-reader depends on 'isExport' flag to function.
+            // It does not support a stream from a file saved from
+            // a stream from an export endpoint.
+            // Json multi-reader assumes export format thus does not support
+            // a stream from none export endpoints.
+            if (exportHelper != null) {
+                if (jsonReader.peek() == JsonToken.BEGIN_ARRAY)
+                    throw new UnsupportedOperationException(
+                        "A stream from an export endpoint of " +
+                        "a Splunk 4.x server in the JSON output format " +
+                        "is not supported by this class. " +
+                        "Use the XML search output format, " +
+                        "and an XML result reader instead.");
+                /*
+                 * We're on a stream from an export endpoint
+                 * Below is an example of an input stream.
+                 *      {"preview":true,"offset":0,"lastrow":true,"result":{"host":"Andy-PC","count":"62"}}
+                 *      {"preview":true,"offset":0,"result":{"host":"Andy-PC","count":"1682"}}
+                 */
+                // Read into first result object of the next set.
+                while (true) {
+                    boolean endPassed = exportHelper.lastRow;
+                    exportHelper.skipRestOfRow();
+                    if (!exportHelper.readIntoRow())
+                        return false;
+                    if (endPassed)
+                        break;
+                }
+                return true;
+            }
+            // Single-reader not from an export endpoint
+            if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+                 /*
+                  * We're on Splunk 5 with a single-reader not from
+                  * an export endpoint
+                  * Below is an example of an input stream.
+                  *     {"preview":false,"init_offset":0,"messages":[{"type":"DEBUG","text":"base lispy: [ AND index::_internal ]"},{"type":"DEBUG","text":"search context: user=\"admin\", app=\"search\", bs-pathname=\"/Users/fross/splunks/splunk-5.0/etc\""}],"results":[{"sum(kb)":"14372242.758775","series":"twitter"},{"sum(kb)":"267802.333926","series":"splunkd"},{"sum(kb)":"5979.036338","series":"splunkd_access"}]}
+                  */
+                jsonReader.beginObject();
                 String key;
                 while (true) {
                     key = jsonReader.nextName();
-                    if (key.equals("results")) {
+                    if (key.equals("preview"))
+                        readPreviewFlag();
+                    else if (key.equals("results")) {
                         jsonReader.beginArray();
-                        return;
+                        return true;
                     } else {
                         skipEntity();
                     }
                 }
             } else { // We're on Splunk 4.x, and we just need to start the array.
+                /*
+                 * Below is an example of an input stream
+                 *   [
+                 *       {
+                 *           "sum(kb)":"14372242.758775",
+                 *               "series":"twitter"
+                 *       },
+                 *       {
+                 *           "sum(kb)":"267802.333926",
+                 *               "series":"splunkd"
+                 *       },
+                 *       {
+                 *           "sum(kb)":"5979.036338",
+                 *               "series":"splunkd_access"
+                 *       }
+                 *   ]
+                 */
                 jsonReader.beginArray();
-                return;
+                return true;
             }
         } catch (EOFException e) {
-            jsonReader = null;
-            return;
+            return false;
         }
+    }
+
+    private void readPreviewFlag() throws IOException {
+        isPreview = jsonReader.nextBoolean();
+        previewFlagRead = true;
     }
 
     /**
@@ -115,9 +202,49 @@ public class ResultsReaderJson extends ResultsReader {
             jsonReader.close();
         jsonReader = null;
     }
-    
+
     /** {@inheritDoc} */
-    @Override public Event getNextEvent() throws IOException {
+    public boolean isPreview(){
+        if (!previewFlagRead)
+            throw new UnsupportedOperationException(
+                "isPreview() is not supported " +
+                "with a stream from a Splunk 4.x server by this class. " +
+                "Use the XML format and an XML result reader instead.");
+        return isPreview;
+    }
+
+    /**
+     * This method is not supported.
+     * @return Not applicable.
+     */
+    public Collection<String> getFields(){
+        throw new UnsupportedOperationException(
+                "getFields() is not supported by this subclass.");
+    }
+
+    @Override Event getNextEventInCurrentSet() throws IOException {
+        if (exportHelper != null) {
+            // If the last row has been passed and moveToNextStreamPosition
+            // has not been called, end the current set.
+            if (exportHelper.lastRow && !exportHelper.inRow ) {
+                return null;
+            }
+            exportHelper.readIntoRow();
+        }
+
+        Event returnData = readEvent();
+
+        if (exportHelper != null) {
+            exportHelper.skipRestOfRow();
+            return returnData;
+        }
+        // Single reader not from export
+        if (returnData == null)
+            close();
+        return returnData;
+    }
+
+    private Event readEvent() throws IOException {
         Event returnData = null;
         String name = null;
         List<String> values = new ArrayList<String>();
@@ -150,11 +277,11 @@ public class ResultsReaderJson extends ResultsReader {
                     }
                 }
                 jsonReader.endArray();
-                
-                String[] valuesArray = 
-                        values.toArray(new String[values.size()]);
+
+                String[] valuesArray =
+                    values.toArray(new String[values.size()]);
                 returnData.putArray(name, valuesArray);
-                
+
                 values.clear();
             }
             if (jsonReader.peek() == JsonToken.NAME) {
@@ -173,5 +300,57 @@ public class ResultsReaderJson extends ResultsReader {
             }
         }
         return returnData;
+    }
+
+    @Override boolean advanceStreamToNextSet() throws IOException{
+        return advanceIntoNextSetBeforeEvent();
+    }
+
+    /**
+     * Contains code only used for streams from the export endpoint.
+     */
+    private class ExportHelper {
+        // Initial value must be true so that
+        // the first row is treated as the start of a new set.
+        boolean lastRow = true;
+        boolean inRow;
+
+        ExportHelper() { }
+
+        // Return false if end of stream is encountered.
+        private boolean readIntoRow() throws IOException {
+            if (inRow)
+                return true;
+            if (jsonReader.peek() == JsonToken.END_DOCUMENT)
+                return false;
+            inRow = true;
+            jsonReader.beginObject();
+            // lastrow name and value pair does not appear if the row
+            // is not the last in the set.
+            lastRow = false;
+            while (jsonReader.hasNext()) {
+                String key = jsonReader.nextName();
+                if (key.equals("preview")) {
+                    readPreviewFlag();
+                } else if (key.equals("lastrow")) {
+                    lastRow = jsonReader.nextBoolean();
+                } else if (key.equals("result")) {
+                    return true;
+                } else {
+                    skipEntity();
+                }
+            }
+            return false;
+        }
+                           
+        private void skipRestOfRow() throws IOException {
+            if (!inRow)
+                return;
+            inRow = false;
+            while (jsonReader.peek() != JsonToken.END_OBJECT) {
+                skipEntity();
+            }
+            jsonReader.endObject();
+        }
     }
 }

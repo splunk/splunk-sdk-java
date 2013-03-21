@@ -1,5 +1,37 @@
-# Splunk Java SDK Changelog
+# Splunk SDK for Java Changelog
+
+## Version 1.1
+
+### Breaking changes
+
+* The default setting for all search jobs is now `segmentation=none` unless 
+  you explicitly set it otherwise. This setting returns results as a raw-text
+  string rather than a string in XML format.
+  
+* The `ResultReaderCsv` class no longer supports streams from the `Service.export` method. 
+  Instead, use the `ResultReaderXml` class with XML output, or use the `ResultReaderJson` 
+  class with JSON output.
+  
+### New features and APIs
+
+* New classes have been added, `MultiResultsReaderXml` and `MultiResultsReaderJson`, 
+  to read search results streams with multiple result sets from `Service.Export` methods.
  
+* The `ResultsReader` classes now support `Iterable` and `Iterator` interfaces.
+
+* The `Event.getSegmentedRaw` method has been added to return raw data from events, preserving 
+  segmentation information. 
+  	
+### Bug fixes
+
+* The `ServiceInfo` class now uses the `services/*` endpoint rather than the 
+  default namespace (`servicesNS/*`) for HTTP requests. This change is a workaround to 
+  avoid a bug in Splunk that returns HTTP code 403 when the `server/info` endpoint 
+  is accessed using certain namespaces.
+
+* The `ResultsReaderXml` class can now read search results streams from the
+  `Job.getResultsPreview` method.
+
 ## Version 1.0
 
 ### New features and APIs
@@ -280,7 +312,7 @@ changes are not included):
 * Added a namespacing feature as optional arguments (`app`, `owner`, `sharing`)
   to the collection's `create` and `get` methods. For more information about
   namespaces, see
-  ["Overview of the Splunk Java SDK"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN)
+  ["Overview of the Splunk SDK for Java"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN)
   on the Developer Portal.
 
   The following example shows how to use the optional namespace to restrict
@@ -386,4 +418,4 @@ changes are not included):
 
 ## Version 0.1.0 (preview)
 
-Initial Splunk Java SDK release.
+Initial Splunk SDK for Java release.

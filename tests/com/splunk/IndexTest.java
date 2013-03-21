@@ -536,7 +536,7 @@ public class IndexTest extends SDKTestCase {
     @Test
     public void testUpload() throws Exception {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
 

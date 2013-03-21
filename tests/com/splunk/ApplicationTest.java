@@ -89,7 +89,7 @@ public class ApplicationTest extends SDKTestCase {
     @Test
     public void testForSetupPresent() throws Exception {
         if (!hasTestData()) {
-            System.out.println("sdk-app-collection not installed in Splunk; skipping test.");
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
         installApplicationFromTestData("has_setup_xml");

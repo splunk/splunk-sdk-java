@@ -18,7 +18,7 @@
 
 <project name="splunk-sdk-java" basedir="." default="dist" xmlns:jacoco="antlib:org.jacoco.ant"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="antlib:org.jacoco.ant ">
-    <property name="version.number" value="1.0"/>
+    <property name="version.number" value="1.1"/>
 
     <!-- Paths within the repository that are referenced
          multiple times. -->
@@ -32,7 +32,7 @@
 
     <!-- Short names for all the external libraries that get
          referenced multiple times. -->
-    <property name="junit" location="lib/junit-4.8.1.jar"/>
+    <property name="junit" location="lib/junit-4.11.jar"/>
     <property name="gson" location="lib/gson-2.1.jar"/>
     <property name="opencsv" location="lib/opencsv-2.3.jar"/>
 
@@ -78,6 +78,7 @@
                 <pathelement location="${build.splunk}"/>
                 <pathelement location="${build.util}"/>
                 <pathelement location="${junit}"/>
+                <pathelement location="${gson}"/>
             </classpath>
         </javac>
         <mkdir dir="${build.tests}/test_data"/>
@@ -160,8 +161,8 @@
     <target name="dist" depends="build, javadoc">
         <mkdir dir="${dist}"/>
 
-        <!-- splunk.jar -->
-        <jar destfile="${dist}/splunk.jar">
+        <!-- Splunk SDK jar -->
+        <jar destfile="${dist}/splunk-${version.number}.jar">
             <fileset dir="${build.splunk}"
                      includes="**/*.class"/>
 
@@ -293,7 +294,7 @@
                 <file file="${coverage.dir}/coverage_report.exec" />
             </executiondata>
 
-            <structure name="Splunk Java SDK">
+            <structure name="Splunk SDK for Java">
                 <classfiles>
                     <fileset dir="${build.splunk}" />
                 </classfiles>

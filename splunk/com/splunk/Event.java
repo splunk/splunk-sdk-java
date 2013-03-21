@@ -23,18 +23,19 @@ import java.util.regex.Pattern;
 /**
  * The {@code Event} class wraps an individual event or result that was returned
  * by the {@link ResultsReader#getNextEvent} method.
- * 
+ * <p>
  * An event maps each field name to a list of zero of more values.
  * These values can be accessed as either an array (using the {@link #getArray} 
  * method) or as a delimited string (using the {@link #get} method). We 
  * recommend accessing values as an array when possible.
- * <br><br>
+ * <p>
  * The delimiter for field values depends on the underlying result format.
  * If the underlying format does not specify a delimiter, such as with the
  * {@link ResultsReaderXml} class, the delimiter is a comma (,).
  */
 public class Event extends HashMap<String, String> {
     private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
+    private String segmentedRaw;
     
     // Prevent non-SDK instantiation.
     Event() {
@@ -69,7 +70,16 @@ public class Event extends HashMap<String, String> {
         // For backward compatibility with the Map interface
         super.put(key, Util.join(",", values));
     }
-    
+
+    /**
+     * Sets the value for the XML element for the {@code _raw} field. This value
+     * is only used by the {@link ResultsReaderXml} class.
+     * @param value The text of the XML element.
+     */
+    void putSegmentedRaw(String value) {
+        segmentedRaw = value;
+    }
+
     /**
      * Returns the single value or delimited set of values for the specified
      * field name, or {@code null} if the specified field is not present.
@@ -148,7 +158,32 @@ public class Event extends HashMap<String, String> {
         }
         return delimitedValues.split(Pattern.quote(delimiter));
     }
-    
+
+    /**
+     * Gets the XML markup for the {@code "_raw"} field value. This value
+     * is only used by the {@link ResultsReaderXml} class.
+     * <p>
+     * The return value is different than that of {@code get("_raw")}
+     * in that this segmented raw value is an XML fragment that includes all 
+     * markup such as XML tags and escaped characters.
+     * <p>
+     * For example, {@code get("_raw")} returns this:
+     * <p>
+     * {@code "http://localhost:8000/en-US/app/search/flashtimeline?q=search%20search%20index%3D_internal%20%7C%20head%2010&earliest=rt-1h&latest=rt"}
+     * <p>
+     * The {@code getSegmentedRaw} method returns this:
+     * <p>
+     * {@code <v xml:space="preserve" trunc="0">"http://localhost:8000/en-US/app/<sg h=\"1\">search</sg>/flashtimeline?q=<sg h=\"1\">search</sg>%20<sg h=\"1\">search</sg>%20index%3D_internal%20%7C%20head%2010&amp;earliest=rt-1h&amp;latest=rt"</v>}
+     */
+    public String getSegmentedRaw() {
+       if (segmentedRaw == null) {
+           // ResultsReaderXml will always set this to not null. Using this
+           // method for other result reader is not supported.
+           throw new UnsupportedOperationException(
+               "The value is not available. Use ResultsReaderXml instead.");
+       }
+       return segmentedRaw;
+    }
     // === Read Only ===
     
     @Override

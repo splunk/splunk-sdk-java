@@ -52,7 +52,7 @@ public class TcpInput extends PortInput {
      * setting up and tearing down the socket.
      * For an example of how to use this method, see 
      * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" target="_blank">How to 
-     * get data into Splunk using the Java SDK</a> on 
+     * get data into Splunk</a> on 
      * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
      * target="_blank">dev.splunk.com</a>. 
      */
