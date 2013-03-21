@@ -1215,7 +1215,9 @@ public class Service extends BaseService {
      * Provides a session token for use by this {@code Service} instance. 
      * Session tokens can be shared across multiple {@code Service} instances.
      *
-     * @param value The session token.
+     * @param value The session token, which is a basic authorization header in 
+     * the format "Basic <i>sessiontoken</i>", where <i>sessiontoken</i> is the 
+     * Base64-encoded "username:password" string.
      */
     public void setToken(String value) {
         this.token = value;

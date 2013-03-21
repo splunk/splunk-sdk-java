@@ -21,29 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
 
-
- // Summary of class relationships and control flow
- // 
- // All result readers support both the Iterator interface and
- // getNextEvent method. They share the same underlying implementation
- // of getNextElement(). The iterator interface is supported through
- // the base class, StreamIterableBase (which is also used by
- // multi result readers).
- // 
- // Some result readers support multiple result sets in the input stream.
- // A result set can be skipped, or combined with the
- // previous result set with newer events returned through the same
- // iterator used for the older events even through they are in different result
- // sets.
- // 
- // Such a result reader is also used by a multi result reader which
- // returns an iterator over the result sets, with one result set returned
- // in one iteration, as SearchResults. SearchResults is an interface consisting
- // of getters of preview flag, field name list, and an iterator over events.
- // Unlike ResultReader, SearchResults does not have a close method. Only the
- // containing multi reader needs to be closed by an application.
- 
-
 /**
  * The {@code ResultsReader} class is a base class for the streaming readers
  * for Splunk search results. This class should not be used to retrieve preview
@@ -180,6 +157,7 @@ public abstract class ResultsReader
             return;
 
         while (true) {
+            // Stop if no more set is available
             if (!advanceStreamToNextSet()) {
                 // Terminating the iteration.
                 // This avoids future callings into the underlying reader
@@ -188,9 +166,12 @@ public abstract class ResultsReader
                 break;
             }
 
+            // No skipping of result sets if the stream
+            // is not from an export endpoint.
             if (!isExportStream)
                 break;
 
+            // Skipping ends at any file results.
             if (!isPreview)
                 break;
         }

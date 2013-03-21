@@ -6,7 +6,11 @@
 
 * The default setting for all search jobs is now `segmentation=none` unless 
   you explicitly set it otherwise. This setting returns results as a raw-text
-  string rather than a string in XML format. 
+  string rather than a string in XML format.
+  
+* The `ResultReaderCsv` class no longer supports streams from the `Service.export` method. 
+  Instead, use the `ResultReaderXml` class with XML output, or use the `ResultReaderJson` 
+  class with JSON output.
   
 ### New features and APIs
 

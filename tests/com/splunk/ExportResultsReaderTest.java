@@ -56,7 +56,7 @@ public class ExportResultsReaderTest extends SDKTestCase {
     }
 
     @Test
-    public void testExportWithoutPreview() throws IOException {
+    public void testExportWithoutPreview() throws IOException, XMLStreamException {
         Map<String, Object> thisVersion = (Map<String, Object>)expectedData.get(this.version);
         if (!thisVersion.containsKey("without_preview")) {
             return; // No test case
@@ -68,20 +68,7 @@ public class ExportResultsReaderTest extends SDKTestCase {
                 openResource("data/export/" + this.version + "/export_results.xml"));
         ResultsReaderXml resultsReader = new ResultsReaderXml(xmlStream);
 
-        for (int i = 0; i < expectedEvents.size(); i++) {
-            Map<String, Object> expectedEvent = expectedEvents.get(i);
-            Event foundEvent = resultsReader.getNextEvent();
-
-            assertEquals(expectedEvent.keySet(), foundEvent.keySet());
-            for (String key : expectedEvent.keySet()) {
-                assertTrue(foundEvent.containsKey(key));
-                if (expectedEvent.get(key) instanceof List) {
-                    assertEquals(expectedEvent.get(key), Arrays.asList(foundEvent.getArray(key)));
-                } else {
-                    assertEquals(expectedEvent.get(key), foundEvent.get(key));
-                }
-            }
-        }
+        ResultsReaderTestFromExpectedFile.verifyResultsReader(resultsReader, expectedEvents);
     }
 
     @Test

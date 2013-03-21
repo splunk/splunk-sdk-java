@@ -97,8 +97,7 @@ public class ResultsReaderJson extends ResultsReader {
                         "Use the XML search output format, " +
                         "and an XML result reader instead.");
                 /*
-                 * We're on Splunk 5 with a single-reader not from
-                 * an export endpoint
+                 * We're on a stream from an export endpoint
                  * Below is an example of an input stream.
                  *      {"preview":true,"offset":0,"lastrow":true,"result":{"host":"Andy-PC","count":"62"}}
                  *      {"preview":true,"offset":0,"result":{"host":"Andy-PC","count":"1682"}}
@@ -311,6 +310,8 @@ public class ResultsReaderJson extends ResultsReader {
      * Contains code only used for streams from the export endpoint.
      */
     private class ExportHelper {
+        // Initial value must be true so that
+        // the first row is treated as the start of a new set.
         boolean lastRow = true;
         boolean inRow;
 
