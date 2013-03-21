@@ -274,7 +274,7 @@ public class ResultsReaderXml
      * @throws XMLStreamException
      */
     XMLEvent readToStartOfElementAtSameLevelWithName(String elementName)
-        throws XMLStreamException {
+            throws XMLStreamException {
         XMLEvent xmlEvent;
         int eType;
         int level = 0;
@@ -287,7 +287,7 @@ public class ResultsReaderXml
                         break;
                     }
                     StartElement startElement = xmlEvent.asStartElement();
-                    if(startElement
+                    if (startElement
                             .getName()
                             .getLocalPart()
                             .equals(elementName)) {

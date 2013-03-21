@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_util" default="compile.module.util">
+  <dirname property="module.util.basedir" file="${ant.file.module_util}"/>
+  
+  <property name="module.jdk.home.util" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.util" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.util" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.util" value="${compiler.args}"/>
+  
+  <property name="util.output.dir" value="${module.util.basedir}/../out/production/util"/>
+  <property name="util.testoutput.dir" value="${module.util.basedir}/../out/test/util"/>
+  
+  <path id="util.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="util.module.production.classpath">
+    <path refid="${module.jdk.classpath.util}"/>
+    <pathelement location="${basedir}/lib/junit-4.8.1.jar"/>
+    <pathelement location="${splunk.output.dir}"/>
+    <path refid="library.commons-cli-1.2.classpath"/>
+  </path>
+  
+  <path id="util.runtime.production.module.classpath">
+    <pathelement location="${util.output.dir}"/>
+    <pathelement location="${basedir}/lib/junit-4.8.1.jar"/>
+    <path refid="splunk.runtime.production.module.classpath"/>
+    <path refid="library.commons-cli-1.2.classpath"/>
+  </path>
+  
+  <path id="util.module.classpath">
+    <path refid="${module.jdk.classpath.util}"/>
+    <pathelement location="${util.output.dir}"/>
+    <pathelement location="${basedir}/lib/junit-4.8.1.jar"/>
+    <pathelement location="${splunk.testoutput.dir}"/>
+    <pathelement location="${splunk.output.dir}"/>
+    <path refid="library.commons-cli-1.2.classpath"/>
+  </path>
+  
+  <path id="util.runtime.module.classpath">
+    <pathelement location="${util.testoutput.dir}"/>
+    <pathelement location="${util.output.dir}"/>
+    <pathelement location="${basedir}/lib/junit-4.8.1.jar"/>
+    <path refid="splunk.runtime.module.classpath"/>
+    <path refid="library.commons-cli-1.2.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.util">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.util">
+    <patternset refid="excluded.from.module.util"/>
+  </patternset>
+  
+  <path id="util.module.sourcepath">
+    <dirset dir="${module.util.basedir}/../../splunk-sdk-java">
+      <include name="util"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.util" depends="compile.module.util.production,compile.module.util.tests" description="Compile module util"/>
+  
+  <target name="compile.module.util.production" depends="register.custom.compilers,compile.module.splunk" description="Compile module util; production classes">
+    <mkdir dir="${util.output.dir}"/>
+    <javac2 destdir="${util.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.util}/javac">
+      <compilerarg line="${compiler.args.util}"/>
+      <bootclasspath refid="util.module.bootclasspath"/>
+      <classpath refid="util.module.production.classpath"/>
+      <src refid="util.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.util"/>
+    </javac2>
+    
+    <copy todir="${util.output.dir}">
+      <fileset dir="${module.util.basedir}">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.util.tests" depends="register.custom.compilers,compile.module.util.production" description="compile module util; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.util" description="cleanup module">
+    <delete dir="${util.output.dir}"/>
+    <delete dir="${util.testoutput.dir}"/>
+  </target>
+</project>

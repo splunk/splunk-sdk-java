@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static junit.framework.TestCase.*;
+
 /**
  * Test the parsing of XML from results endpoints.
  *
@@ -35,12 +37,12 @@ import java.util.*;
  * behavior is specified in the data/resultsreader_test_data.json file.
  */
 @RunWith(Parameterized.class)
-public class ResultsReaderTestFromExpectedFile extends SDKTestCase {
+public class ResultsReaderTestFromExpectedFile {
     private static Gson reader = new Gson();
     private static Map<String, Object> expectedData =
         reader.fromJson(
-            streamToString(
-                openResource(
+            SDKTestCase.streamToString(
+                SDKTestCase.openResource(
                     "data/resultsreader_test_data.json")),
                 Map.class);
 
@@ -52,7 +54,7 @@ public class ResultsReaderTestFromExpectedFile extends SDKTestCase {
     public ResultsReaderTestFromExpectedFile(String version, String testName) {
         this.version = version;
         this.testName = testName;
-        this.xmlStream = openResource(
+        this.xmlStream = SDKTestCase.openResource(
                 "data/results/" + version + "/" + testName + ".xml");
         Map<String, Object> versionData =
                 (Map<String, Object>)expectedData.get(version);
