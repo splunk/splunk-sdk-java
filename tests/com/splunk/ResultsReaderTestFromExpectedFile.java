@@ -125,10 +125,13 @@ public class ResultsReaderTestFromExpectedFile extends SDKTestCase {
                 createXMLEventWriter(byteArrayOutputStream);
         writer.add(reader);
         writer.close();
-        assertEquals(
-                xml,
-                // remove <?xml version="1.0" encoding="UTF-8"?>
-                byteArrayOutputStream.toString().substring(38));
+        
+        String xmlWithDtd = byteArrayOutputStream.toString();
+        int lengthOfDtd = xmlWithDtd.indexOf(">") + 1;
+        // remove the XML DTD <?xml version="1.0" encoding="UTF-8"?>
+        String xmlWithoutDtd = xmlWithDtd.substring(lengthOfDtd);
+
+        assertEquals(xml, xmlWithoutDtd);
         byteArrayInputStream.close();
     }
 }
