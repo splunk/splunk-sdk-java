@@ -130,12 +130,12 @@ public class ResultsReaderTestFromExpectedFile {
                 createXMLEventWriter(byteArrayOutputStream);
         writer.add(reader);
         writer.close();
-       
+        
         String xmlWithDtd = byteArrayOutputStream.toString();
         int lengthOfDtd = xmlWithDtd.indexOf(">") + 1;
         String dtd = xmlWithDtd.substring(0, lengthOfDtd);
         assertTrue("Expected xml to have a DTD", dtd.startsWith("<?"));
-        // remove the XML DTD <?xml version="1.0" encoding="UTF-8"?>
+        // Remove the XML DTD
         String xmlWithoutDtd = xmlWithDtd.substring(lengthOfDtd);
 
         assertEquals(xml, xmlWithoutDtd);
