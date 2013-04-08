@@ -904,7 +904,7 @@ public class Service extends BaseService {
      */
     public EntityCollection<Role> getRoles(Args args) {
         return new EntityCollection<Role>(
-            this, "authentication/roles", Role.class, args);
+            this, "authorization/roles", Role.class, args);
     }
 
     /**
