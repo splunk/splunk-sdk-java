@@ -1167,7 +1167,7 @@ public class Service extends BaseService {
      * @return The restart response message.
      */
     public ResponseMessage restart() {
-        return get("server/control/restart");
+        return post("server/control/restart");
     }
 
     /**
@@ -1207,7 +1207,9 @@ public class Service extends BaseService {
      * @return The HTTP response.
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
-        request.getHeader().put("Authorization", token);
+        if (token != null) {
+            request.getHeader().put("Authorization", token);
+        }
         return super.send(fullpath(path), request);
     }
 
