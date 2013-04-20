@@ -16,16 +16,30 @@
 
 package com.splunk;
 
-import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.Socket;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
@@ -178,7 +192,12 @@ public class HttpService {
      */
     public URL getUrl(String path) {
         try {
-            return new URL(getPrefix() + path);
+        	if (Service.DEFAULT_SCHEME.equals(getScheme())) {
+        		return new URL(getScheme(), getHost(), getPort(), path, new sun.net.www.protocol.https.Handler());
+        	}
+        	else {
+				return new URL(getPrefix() + path);
+			}
         }
         catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -289,8 +308,11 @@ public class HttpService {
 
         // Add headers from request message
         Map<String, String> header = request.getHeader();
-        for (Entry<String, String> entry : header.entrySet())
-            cn.setRequestProperty(entry.getKey(), entry.getValue());
+        for (Entry<String, String> entry : header.entrySet()) {
+        	if (entry.getKey() != null && entry.getValue() != null) {
+        		cn.setRequestProperty(entry.getKey(), entry.getValue());
+        	}
+        }
 
         // Add default headers that were absent from the request message
         for (Entry<String, String> entry : defaultHeader.entrySet()) {
