@@ -37,12 +37,18 @@ public class HttpService {
     private static final boolean VERBOSE_REQUESTS = false;
 
     private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
+    
+    private static String HTTPS_SCHEME = "https";
+    private static String HTTP_SCHEME = "http";
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
             return true;
         }
     };
+    
+    /** A variable to hold an optional custom HTTPS handler */
+    protected URLStreamHandler httpsHandler = null;
 
     /** The scheme used to access the service. */
     protected String scheme = "https";
@@ -97,6 +103,23 @@ public class HttpService {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
+    }
+    
+    /**
+     * Constructs a new {@code HttpService} instance using the given host,
+     * port, and scheme, and instructing it to use the specified HTTPS handler.
+     *
+     * @param host The host name of the service.
+     * @param port The port number of the service.
+     * @param scheme Scheme for accessing the service ({@code http} or 
+     * {@code https}).
+     */
+    public HttpService(String host, int port, String scheme, 
+    		URLStreamHandler httpsHandler) {
+        this.host = host;
+        this.port = port;
+        this.scheme = scheme;
+        this.httpsHandler = httpsHandler;
     }
 
     // Returns the count of arguments in the given {@code args} map.
@@ -178,7 +201,15 @@ public class HttpService {
      */
     public URL getUrl(String path) {
         try {
-            return new URL(getPrefix() + path);
+        	if (getScheme() == HTTPS_SCHEME && httpsHandler != null) {
+        		// This branch is not currently covered by unit tests as I 
+        		// could not figure out a generic way to get the default
+        		// HTTPS handler.
+        		return new URL(getScheme(), getHost(), getPort(), path, 
+        				httpsHandler);
+        	} else {
+        		return new URL(getScheme(), getHost(), getPort(), path);
+        	}
         }
         catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage(), e);

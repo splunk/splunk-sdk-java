@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.net.URLStreamHandler;
+
 /**
  * The {@code ServiceArgs} class contains a collection of arguments that are 
  * used to initialize a Splunk {@code Service} instance.
@@ -85,6 +87,14 @@ public class ServiceArgs extends Args {
     public void setHost(String host) {
         this.host = host; // for backward compatibility
         this.put("host", host);
+    }
+    
+    /**
+     * @param httpsHandler
+     *      A URLStreamHandler to handle HTTPS requests for the service.
+     */
+    public void setHTTPSHandler(URLStreamHandler handler) {
+    	this.put("httpsHandler", handler);
     }
     
     /**

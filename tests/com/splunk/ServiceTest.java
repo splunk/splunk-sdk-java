@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URLStreamHandler;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -294,7 +295,7 @@ public class ServiceTest extends SDKTestCase {
         testGetters(job);
         job.cancel();
     }
-    
+        
     // Perform some non-intrusive inspection of the given Job object.
     private void testGetters(Job job) {
         ready(job);
