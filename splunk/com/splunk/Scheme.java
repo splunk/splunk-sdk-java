@@ -16,11 +16,12 @@ import java.util.List;
 
 
 /**
- * Created with IntelliJ IDEA.
- * User: fross
- * Date: 6/18/13
- * Time: 10:11 AM
- * To change this template use File | Settings | File Templates.
+ * Class representing the metadata for a modular input kind.
+ *
+ * A Scheme specifies a title, description, several options of how Splunk should run modular inputs of this
+ * kind, and a set of arguments which define a particular modular input's properties.
+ *
+ * The primary use of Scheme is to abstract away the construction of XML to feed to Splunk.
  */
 class Scheme {
     private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -33,7 +34,7 @@ class Scheme {
     protected String title;
 
     // Human readable description of this modular input kind.
-    protected String description;
+    protected String description = null;
 
     // Should this script be called by Splunk to validate the configuration of modular inputs of this kind?
     // If false, then Splunk does some basic sanity checking.
@@ -49,97 +50,109 @@ class Scheme {
     // A List of all the arguments that this modular input kind takes.
     protected List<Argument> arguments;
 
-    public Scheme(String title, String description) {
+    public Scheme(String title) {
         this.title = title;
-        this.description = description;
         this.arguments = new ArrayList<Argument>();
     }
 
+    /*
+     * Return the title of this modular input kind.
+     */
     public String getTitle() {
         return title;
     }
 
+    /*
+     * Set the title of this modular input kind.
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /*
+     * Get the human readable description of this modular input kind.
+     */
     public String getDescription() {
         return description;
     }
 
+    /*
+     * Set the human readable description of this modular input kind.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /*
+     * Return whether Splunk should use the modular input kind script to validate the arguments
+     * of a particular modular input (true) or use the validation predicates specified by the arguments (false).
+     */
     public boolean isUseExternalValidation() {
         return useExternalValidation;
     }
 
+    /*
+     * Specify whether Splunk should use the modular input kind script to validate the arguments
+     * of a particular modular input (true) or use the validation predicates specified by the arguments (false).
+     */
     public void setUseExternalValidation(boolean useExternalValidation) {
         this.useExternalValidation = useExternalValidation;
     }
 
+    /*
+     * Return whether Splunk should run all modular inputs of this kind via one instance of the script
+     * or start an instance for each modular input.
+     */
     public boolean isUseSingleInstance() {
         return useSingleInstance;
     }
 
+    /*
+     * Specify whether Splunk should run all modular inputs of this kind via one instance of the script
+     * or start an instance for each modular input.
+     */
     public void setUseSingleInstance(boolean useSingleInstance) {
         this.useSingleInstance = useSingleInstance;
     }
 
+    /*
+     * Return whether this modular input kind will send events to Splunk as XML (the default and preferred
+     * value) or plain text.
+     */
     public StreamingMode getStreamingMode() {
         return streamingMode;
     }
 
+    /*
+     * Specify whether this modular input kind will send events to Splunk as XML (the default and preferred
+     * value) or plain text.
+     */
     public void setStreamingMode(StreamingMode streamingMode) {
         this.streamingMode = streamingMode;
     }
 
+    /*
+     * Return all the arguments to this modular input kind.
+     */
     public List<Argument> getArguments() {
         return arguments;
     }
 
+    /*
+     * Replace the current list of arguments with the specified one.
+     */
     public void setArguments(List<Argument> arguments) {
         this.arguments = new ArrayList<Argument>(arguments);
     }
 
+    /*
+     * Append an argument to those this modular input kind takes.
+     */
     public void addArgument(Argument argument) {
         this.arguments.add(argument);
     }
 
-    public static class StringBufferOutputStream extends OutputStream
-    {
-        private StringBuffer textBuffer = new StringBuffer();
-
-        /**
-         *
-         */
-        public StringBufferOutputStream()
-        {
-            super();
-        }
-
-        /*
-         * @see java.io.OutputStream#write(int)
-         */
-        public void write(int b) throws IOException
-        {
-            char a = (char)b;
-            textBuffer.append(a);
-        }
-
-        public String toString()
-        {
-            return textBuffer.toString();
-        }
-
-        public void clear()
-        {
-            textBuffer.delete(0, textBuffer.length());
-        }
-    }
-
-    public String toXML() throws ParserConfigurationException, TransformerException {
+    public Document toXml() throws ParserConfigurationException, TransformerException {
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document doc = documentBuilder.newDocument();
 
@@ -147,12 +160,14 @@ class Scheme {
         doc.appendChild(root);
 
         Element title = doc.createElement("title");
-        title.appendChild(doc.createTextNode("abcd"));
+        title.appendChild(doc.createTextNode(this.title));
         root.appendChild(title);
 
-        Element description = doc.createElement("description");
-        description.appendChild(doc.createTextNode("쎼 and 쎶 and <&> für"));
-        root.appendChild(description);
+        if (this.description != null) {
+            Element description = doc.createElement("description");
+            description.appendChild(doc.createTextNode(this.description));
+            root.appendChild(description);
+        }
 
         Element useExternalValidation = doc.createElement("use_external_validation");
         useExternalValidation.appendChild(doc.createTextNode(Boolean.toString(this.useExternalValidation)));
@@ -172,18 +187,10 @@ class Scheme {
         Element args = doc.createElement("args");
         endpoint.appendChild(args);
 
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
-        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
+        for (Argument arg : this.arguments) {
+            arg.addToDocument(doc, args);
+        }
 
-        DOMSource source = new DOMSource(doc);
-        StringBufferOutputStream buffer = new StringBufferOutputStream();
-        StreamResult result = new StreamResult(buffer);
-        transformer.transform(source, result);
-        String xml = result.getOutputStream().toString();
-        return xml;
+        return doc;
     }
 }
