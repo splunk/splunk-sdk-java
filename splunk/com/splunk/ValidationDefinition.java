@@ -9,30 +9,28 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * InputDefinition encodes the XML defining inputs that Splunk passes to
- * a modular input script as a Java object.
+ * Class representing the XML sent by Splunk for external validation of a new modular input.
  */
-public class InputDefinition {
+public class ValidationDefinition {
     private String serverHost;
     private String serverUri;
     private String checkpointDir;
     private String sessionKey;
-    private Map<String, List<Parameter>> inputs;
+    private String name;
+    private List<Parameter> parameters;
 
-    // Package private on purpose
-    InputDefinition() {
-        inputs = new HashMap<String, List<Parameter>>();
+    // Package private on purpose.
+    ValidationDefinition() {
+        super();
     }
 
     /**
      * Set the name of the server on which this modular input is being run.
      */
-    public void setServerHost(String serverHost) {
+    void setServerHost(String serverHost) {
         this.serverHost = serverHost;
     }
 
@@ -46,7 +44,7 @@ public class InputDefinition {
     /**
      * @param serverUri The URI to reach the server on which this modular input is being run.
      */
-    public void setServerUri(String serverUri) {
+    void setServerUri(String serverUri) {
         this.serverUri = serverUri;
     }
 
@@ -60,7 +58,7 @@ public class InputDefinition {
     /**
      * @param checkpointDir The path to write checkpoint files in.
      */
-    public void setCheckpointDir(String checkpointDir) {
+    void setCheckpointDir(String checkpointDir) {
         this.checkpointDir = checkpointDir;
     }
 
@@ -74,7 +72,7 @@ public class InputDefinition {
     /**
      * @param sessionKey A session key that can be used to access splunkd's REST API.
      */
-    public void setSessionKey(String sessionKey) {
+    void setSessionKey(String sessionKey) {
         this.sessionKey = sessionKey;
     }
 
@@ -85,42 +83,64 @@ public class InputDefinition {
         return sessionKey;
     }
 
-    /**
-     * Add an input to the set of inputs on this InputDefinition.
-     *
-     * @param name The name of this input (e.g., foobar://this-input-name).
-     * @param parameters A list of Parameter objects giving the settings for this input.
-     */
-    public void addInput(String name, List<Parameter> parameters) {
-        this.inputs.put(name, parameters);
+    void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * @return A map of all the inputs specified in this InputDefinition.
+     * @return The name of the proposed modular input instance.
      */
-    public Map<String, List<Parameter>> getInputs() {
-        return this.inputs;
+    public String getName() {
+        return this.name;
     }
 
     /**
-     * Parse a stream containing XML into an InputDefinition.
+     * @param parameters a list of Parameter objects giving the proposed configuration.
+     */
+    public void setParameters(List<Parameter> parameters) {
+        this.parameters = parameters;
+    }
+
+    /**
+     * @return The parameters on the proposed input.
+     */
+    public List<Parameter> getParameters() {
+        return this.parameters;
+    }
+
+    /**
+     * Create a ValidationDefinition from a provided stream containing XML. The XML typically will look like
      *
-     * @param stream The stream containing XML to parse.
-     * @return an InputDefinition object.
+     * <items>
+     *     <server_host>myHost</server_host>
+     *     <server_uri>https://127.0.0.1:8089</server_uri>
+     *     <session_key>123102983109283019283</session_key>
+     *     <checkpoint_dir>/opt/splunk/var/lib/splunk/modinputs</checkpoint_dir>
+     *     <item name="myScheme">
+     *         <param name="param1">value1</param>
+     *         <param_list name="param2">
+     *             <value>value2</value>
+     *             <value>value3</value>
+     *             <value>value4</value>
+     *         </param_list>
+     *     </item>
+     * </items>
+     *
+     * @param stream containing XML to parse.
+     * @return a ValidationDefinition.
      * @throws ParserConfigurationException if there are errors in setting up the parser (which indicates system
      *           configuration issues).
      * @throws IOException if there is an error in reading from the stream.
      * @throws SAXException when the XML is invalid.
-     * @throws MalformedDataException when the XML does specify a valid set of inputs.
+     * @throws MalformedDataException when the XML does not meet the required schema.
      */
-    public static InputDefinition parseDefinition(InputStream stream) throws ParserConfigurationException,
-            IOException, SAXException, MalformedDataException {
+    public static ValidationDefinition parseDefinition(InputStream stream) throws ParserConfigurationException, IOException, SAXException, MalformedDataException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringElementContentWhitespace(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document doc = documentBuilder.parse(stream);
 
-        InputDefinition definition = new InputDefinition();
+        ValidationDefinition definition = new ValidationDefinition();
         for (Node node = doc.getDocumentElement().getFirstChild(); node != null; node = node.getNextSibling()) {
             if (node.getNodeType() == node.TEXT_NODE) {
                 continue;
@@ -144,18 +164,12 @@ public class InputDefinition {
                         node,
                         "Expected a text value in element session_key"
                 ));
-            } else if (node.getNodeName() == "configuration") {
-                for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-                    if (child.getNodeType() == child.TEXT_NODE) {
-                        continue;
-                    }
-                    if (child.getNodeName() != "stanza") {
-                        throw new MalformedDataException("Expected stanza element; found " + child.getNodeName());
-                    }
-                    String name = child.getAttributes().getNamedItem("name").getNodeValue();
-                    List<Parameter> parameter = Parameter.nodeToParameterList(child);
-                    definition.addInput(name, parameter);
-                }
+            } else if (node.getNodeName() == "item") {
+                String name = node.getAttributes().getNamedItem("name").getNodeValue();
+                definition.setName(name);
+
+                List<Parameter> parameter = Parameter.nodeToParameterList(node);
+                definition.setParameters(parameter);
             }
         }
 
@@ -164,15 +178,15 @@ public class InputDefinition {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof InputDefinition)) {
+        if (!(other instanceof ValidationDefinition)) {
             return false;
         }
-        InputDefinition that = (InputDefinition)other;
+        ValidationDefinition that = (ValidationDefinition)other;
         boolean parametersEqual = true;
         return this.getServerUri().equals(that.getServerUri()) &&
                 this.getServerHost().equals(that.getServerHost()) &&
                 this.getCheckpointDir().equals(that.getCheckpointDir()) &&
                 this.getSessionKey().equals(that.getSessionKey()) &&
-                this.getInputs().equals(that.getInputs());
+                this.getParameters().equals(that.getParameters());
     }
 }
