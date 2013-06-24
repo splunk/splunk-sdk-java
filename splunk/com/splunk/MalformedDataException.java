@@ -1,11 +1,8 @@
 package com.splunk;
 
 /**
- * Created with IntelliJ IDEA.
- * User: fross
- * Date: 6/21/13
- * Time: 1:12 PM
- * To change this template use File | Settings | File Templates.
+ * Exception thrown when parsing XML which is syntactically valid, but does not
+ * match the schema expected by the Splunk SDK for Java.
  */
 public class MalformedDataException extends Exception {
     public MalformedDataException(String s) {

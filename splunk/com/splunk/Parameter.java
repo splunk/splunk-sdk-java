@@ -5,9 +5,40 @@ import org.w3c.dom.Node;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parameter is a base class for parameters of modular inputs. It has two subclasses, SingleValueParameter
+ * and MultiValueParameter.
+ *
+ * All parameters should be constructed with the static nodeToParameterList method, which takes an XML org.w3c.dom.Node
+ * object as its argument and returns a list of Parameter objects, single valued or multi valued as needed.
+ */
 public abstract class Parameter {
     public abstract String getName();
 
+    // Package private to enforce using the nodeToParameterList function to create Parameter objects.
+    Parameter() {
+        super();
+    }
+
+    /**
+     * Generate a list of Parameter objects from an org.w3c.dom.Node object containing a set of parameters. The node
+     * may be any element, but is expected to contain elements param or param_list, as in
+     *
+     * <stanza name="foobar://aaa">
+     *     <param name="param1">value1</param>
+     *     <param name="param2">value2</param>
+     *     <param name="disabled">0</param>
+     *     <param name="index">default</param>
+     *     <param_list name="multiValue">
+     *         <value>value1</value>
+     *         <value>value2</value>
+     *     </param_list>
+     * </stanza>
+     *
+     * @param node an org.w3c.dom.Node object containing the parameter list as children.
+     * @return a list of Parameter objects extracted from the XML.
+     * @throws MalformedDataException if the XML does not specify a valid parameter list.
+     */
     public static List<Parameter> nodeToParameterList(Node node) throws MalformedDataException {
         List<Parameter> parameters = new ArrayList<Parameter>();
 

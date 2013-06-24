@@ -1,17 +1,18 @@
 package com.splunk;
 
 /**
- * Created with IntelliJ IDEA.
- * User: fross
- * Date: 6/21/13
- * Time: 3:46 PM
- * To change this template use File | Settings | File Templates.
+ * Class representing a parameter as part of a modular input instance that
+ * contains only a single value. This corresponds to XML fragments of the form
+ *
+ * <param name="param1">value11</param>
+ *
  */
 public class SingleValueParameter extends Parameter {
-    String name;
-    String value;
+    protected String name;
+    protected String value;
 
-    public SingleValueParameter(String name, String value) {
+    // Package private by design.
+    SingleValueParameter(String name, String value) {
         this.name = name;
         this.value = value;
     }
