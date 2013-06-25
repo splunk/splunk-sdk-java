@@ -10,11 +10,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * Created with IntelliJ IDEA.
- * User: fross
- * Date: 6/25/13
- * Time: 10:51 AM
- * To change this template use File | Settings | File Templates.
+ * Event represents an event or fragment of an event to be written by this modular input to Splunk.
+ *
+ * To write an Event to an XML stream, call its writeOn method with an XMLStreamWriter object to write to.
+ * The Event must have at least the data field set or writeOn will throw a MalformedDataException. All other
+ * fields are optional. If you omit the time field, the writeOn method will fill in the current time when it is called.
  */
 public class Event {
     protected Date time = null;
@@ -29,6 +29,7 @@ public class Event {
 
     public Event() {}
 
+    // Helper method to write a single field to an XMLStreamWriter object only if it is not null.
     protected void writeFieldOn(XMLStreamWriter out, String name, String value) throws XMLStreamException {
         if (value != null) {
             out.writeStartElement(name);
@@ -37,6 +38,13 @@ public class Event {
         }
     }
 
+    /**
+     * Write this event to the given XMLStreamWriter.
+     *
+     * @param out The XMLStreamWriter to append to.
+     * @throws XMLStreamException if there is a problem in the XMLStreamWriter.
+     * @throws MalformedDataException if you have not specified data for this event.
+     */
     public void writeOn(XMLStreamWriter out) throws XMLStreamException, MalformedDataException {
         if (data == null) {
             throw new MalformedDataException("Events must have at least the data field set to be written to XML.");

@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 public class ModularInputComponentClassTest {
 
@@ -372,5 +373,70 @@ public class ModularInputComponentClassTest {
         Document expected = resourceToXmlDocument("modularinput/data/event_maximal.xml");
 
         assertXmlEqual(expected, found);
+    }
+
+    @Test
+    public void testEventWriterWithMaximalEvents() throws XMLStreamException, TransformerException,
+            ParserConfigurationException, MalformedDataException {
+        StringBufferOutputStream out = new StringBufferOutputStream();
+        StringBufferOutputStream err = new StringBufferOutputStream();
+
+        EventWriter ew = new EventWriter(out, err);
+
+        Event event = new Event();
+        event.setStanza("fubar");
+        event.setData("This is a test of the emergency broadcast system.");
+        event.setHost("localhost");
+        event.setIndex("main");
+        event.setSource("hilda");
+        event.setSourceType("misc");
+        event.setTime(new Date());
+        event.setDone(true);
+        event.setUnbroken(true);
+        ew.writeEvent(event);
+
+        Document found = stringToXmlDocument(out.toString() + "</stream>");
+        Document expected = resourceToXmlDocument("modularinput/data/stream_with_one_event.xml");
+
+        assertXmlEqual(expected, found);
+        Assert.assertEquals("", err.toString());
+
+        err.clear();
+
+        ew.writeEvent(event);
+        ew.close();
+
+        found = stringToXmlDocument(out.toString());
+        expected = resourceToXmlDocument("modularinput/data/stream_with_two_events.xml");
+        assertXmlEqual(expected, found);
+    }
+
+    @Test
+    public void testEventWriterWithBadEvent() throws XMLStreamException {
+        StringBufferOutputStream out = new StringBufferOutputStream();
+        StringBufferOutputStream err = new StringBufferOutputStream();
+
+        EventWriter ew = new EventWriter(out, err);
+
+        Event event = new Event();
+        try {
+            ew.writeEvent(event);
+        } catch (MalformedDataException e) {
+            Assert.assertTrue(err.toString().startsWith("WARNING"));
+            return;
+        }
+        Assert.fail();
+    }
+
+    @Test
+    public void testEventWriterErrorLogging() throws XMLStreamException, IOException {
+        StringBufferOutputStream out = new StringBufferOutputStream();
+        StringBufferOutputStream err = new StringBufferOutputStream();
+
+        EventWriter ew = new EventWriter(out, err);
+
+        ew.log(Level.SEVERE, "Something happened!");
+
+        Assert.assertEquals("SEVERE Something happened!\n", err.toString());
     }
 }
