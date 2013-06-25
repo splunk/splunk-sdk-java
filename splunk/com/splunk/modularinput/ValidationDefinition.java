@@ -1,5 +1,6 @@
-package com.splunk;
+package com.splunk.modularinput;
 
+import com.splunk.modularinput.Parameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;

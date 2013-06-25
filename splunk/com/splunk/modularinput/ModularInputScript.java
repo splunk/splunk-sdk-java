@@ -1,4 +1,4 @@
-package com.splunk;
+package com.splunk.modularinput;
 
 /**
  * ModularInputScript is an abstract base class for implementing modular inputs. Subclasses
@@ -44,5 +44,5 @@ public abstract class ModularInputScript {
      *
      * @param ew An object with methods to write events and log messages to Splunk.
      */
-    public abstract void streamEvents(EventWriter ew);
+    public abstract void streamEvents(InputDefinition inputs, EventWriter ew);
 }

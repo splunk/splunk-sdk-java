@@ -110,7 +110,7 @@ public abstract class SDKTestCase extends TestCase {
         return "delete-me-" + UUID.randomUUID().toString();
     }
 
-    protected static InputStream openResource(String path) {
+    public static InputStream openResource(String path) {
         if (path.startsWith("splunk_search:")) {
             path = path.substring("splunk_search:".length());
 

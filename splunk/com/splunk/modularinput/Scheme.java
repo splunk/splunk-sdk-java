@@ -1,5 +1,6 @@
-package com.splunk;
+package com.splunk.modularinput;
 
+import com.splunk.Argument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

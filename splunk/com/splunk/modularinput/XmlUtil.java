@@ -1,5 +1,6 @@
-package com.splunk;
+package com.splunk.modularinput;
 
+import com.splunk.modularinput.MalformedDataException;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 

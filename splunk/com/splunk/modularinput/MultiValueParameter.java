@@ -1,4 +1,6 @@
-package com.splunk;
+package com.splunk.modularinput;
+
+import com.splunk.modularinput.Parameter;
 
 import java.util.ArrayList;
 import java.util.List;

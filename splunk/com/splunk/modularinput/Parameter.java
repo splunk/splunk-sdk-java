@@ -1,5 +1,9 @@
-package com.splunk;
+package com.splunk.modularinput;
 
+import com.splunk.modularinput.MalformedDataException;
+import com.splunk.modularinput.MultiValueParameter;
+import com.splunk.modularinput.SingleValueParameter;
+import com.splunk.modularinput.XmlUtil;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -37,7 +41,7 @@ public abstract class Parameter {
      *
      * @param node an org.w3c.dom.Node object containing the parameter list as children.
      * @return a list of Parameter objects extracted from the XML.
-     * @throws MalformedDataException if the XML does not specify a valid parameter list.
+     * @throws com.splunk.modularinput.MalformedDataException if the XML does not specify a valid parameter list.
      */
     public static List<Parameter> nodeToParameterList(Node node) throws MalformedDataException {
         List<Parameter> parameters = new ArrayList<Parameter>();

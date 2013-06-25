@@ -1,4 +1,6 @@
-package com.splunk;
+package com.splunk.modularinput;
+
+import com.splunk.modularinput.Parameter;
 
 /**
  * Class representing a parameter as part of a modular input instance that

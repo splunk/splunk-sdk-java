@@ -1,14 +1,20 @@
-package com.splunk;
+package com.splunk.modularinput;
 
+import com.splunk.Argument;
+import com.splunk.modularinput.Parameter;
+import com.splunk.SDKTestCase;
+import com.splunk.modularinput.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import sun.management.jmxremote.SingleEntryRegistry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -17,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ModularInputComponentClassTest {
@@ -113,7 +120,7 @@ public class ModularInputComponentClassTest {
         Scheme scheme = new Scheme("abcd");
 
         Document generatedDocument = scheme.toXml();
-        Document expectedDocument = resourceToXmlDocument("data/modular_input/scheme_with_defaults.xml");
+        Document expectedDocument = resourceToXmlDocument("modularinput/data/scheme_with_defaults.xml");
 
         assertXmlEqual(expectedDocument, generatedDocument);
     }
@@ -138,7 +145,7 @@ public class ModularInputComponentClassTest {
         scheme.addArgument(arg2);
 
         Document generatedDocument = scheme.toXml();
-        Document expectedDocument = resourceToXmlDocument("data/modular_input/scheme_without_defaults.xml");
+        Document expectedDocument = resourceToXmlDocument("modularinput/data/scheme_without_defaults.xml");
 
         assertXmlEqual(expectedDocument, generatedDocument);
     }
@@ -194,7 +201,7 @@ public class ModularInputComponentClassTest {
         Document generatedDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         argument.addToDocument(generatedDoc, generatedDoc);
 
-        Document expectedDoc = resourceToXmlDocument("data/modular_input/argument_with_defaults.xml");
+        Document expectedDoc = resourceToXmlDocument("modularinput/data/argument_with_defaults.xml");
 
         assertXmlEqual(expectedDoc, generatedDoc);
     }
@@ -211,7 +218,7 @@ public class ModularInputComponentClassTest {
         Document generatedDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         argument.addToDocument(generatedDoc, generatedDoc);
 
-        Document expectedDoc = resourceToXmlDocument("data/modular_input/argument_without_defaults.xml");
+        Document expectedDoc = resourceToXmlDocument("modularinput/data/argument_without_defaults.xml");
 
         assertXmlEqual(expectedDoc, generatedDoc);
     }
@@ -225,7 +232,7 @@ public class ModularInputComponentClassTest {
         expectedDefinition.setCheckpointDir("/opt/splunk/var/lib/splunk/modinputs");
         expectedDefinition.setSessionKey("123102983109283019283");
 
-        InputStream stream = SDKTestCase.openResource("data/modular_input/conf_with_0_inputs.xml");
+        InputStream stream = SDKTestCase.openResource("modularinput/data/conf_with_0_inputs.xml");
         InputDefinition foundDefinition = InputDefinition.parseDefinition(stream);
 
         Assert.assertTrue(expectedDefinition.equals(foundDefinition));
@@ -262,7 +269,7 @@ public class ModularInputComponentClassTest {
         }});
         expectedDefinition.addInput("foobar://bbb", parameters);
 
-        InputStream stream = SDKTestCase.openResource("data/modular_input/conf_with_2_inputs.xml");
+        InputStream stream = SDKTestCase.openResource("modularinput/data/conf_with_2_inputs.xml");
         InputDefinition foundDefinition = InputDefinition.parseDefinition(stream);
 
         Assert.assertTrue(expectedDefinition.equals(foundDefinition));
@@ -271,7 +278,7 @@ public class ModularInputComponentClassTest {
     @Test
     public void testInputDefinitionWithMalformedXml() throws ParserConfigurationException, SAXException, IOException {
         try {
-            InputStream stream = SDKTestCase.openResource("data/modular_input/conf_with_invalid_inputs.xml");
+            InputStream stream = SDKTestCase.openResource("modularinput/data/conf_with_invalid_inputs.xml");
             InputDefinition foundDefinition = InputDefinition.parseDefinition(stream);
         } catch (MalformedDataException e) {
             Assert.assertTrue(true);
@@ -283,7 +290,7 @@ public class ModularInputComponentClassTest {
     @Test
     public void testValidationParser() throws ParserConfigurationException, SAXException, MalformedDataException,
             IOException {
-        InputStream stream = SDKTestCase.openResource("data/modular_input/validation.xml");
+        InputStream stream = SDKTestCase.openResource("modularinput/data/validation.xml");
         ValidationDefinition found = ValidationDefinition.parseDefinition(stream);
 
         ValidationDefinition expected = new ValidationDefinition();
@@ -308,5 +315,62 @@ public class ModularInputComponentClassTest {
         expected.setParameters(parameters);
 
         Assert.assertTrue(expected.equals(found));
+    }
+
+    @Test
+    public void testEventWithoutEnoughFields() throws XMLStreamException {
+        StringBufferOutputStream sb = new StringBufferOutputStream();
+        XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(sb);
+
+        Event event = new Event();
+
+        try {
+            event.writeOn(writer);
+        } catch (MalformedDataException e) {
+            Assert.assertTrue(true);
+            return;
+        }
+        Assert.fail();
+    }
+
+    @Test
+    public void testMinimalEvent() throws XMLStreamException, MalformedDataException, TransformerException,
+            ParserConfigurationException {
+        StringBufferOutputStream sb = new StringBufferOutputStream();
+        XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(sb);
+
+        Event event = new Event();
+        event.setStanza("fubar");
+        event.setData("This is a test of the emergency broadcast system.");
+        event.writeOn(writer);
+        Document found = stringToXmlDocument(sb.toString());
+
+        Document expected = resourceToXmlDocument("modularinput/data/event_minimal.xml");
+
+        assertXmlEqual(expected, found);
+    }
+
+    @Test
+    public void testMaximalEvent() throws MalformedDataException, XMLStreamException, TransformerException,
+            ParserConfigurationException {
+        StringBufferOutputStream sb = new StringBufferOutputStream();
+        XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(sb);
+
+        Event event = new Event();
+        event.setStanza("fubar");
+        event.setData("This is a test of the emergency broadcast system.");
+        event.setHost("localhost");
+        event.setIndex("main");
+        event.setSource("hilda");
+        event.setSourceType("misc");
+        event.setTime(new Date());
+        event.setDone(true);
+        event.setUnbroken(true);
+        event.writeOn(writer);
+        Document found = stringToXmlDocument(sb.toString());
+
+        Document expected = resourceToXmlDocument("modularinput/data/event_maximal.xml");
+
+        assertXmlEqual(expected, found);
     }
 }

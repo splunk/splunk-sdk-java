@@ -1,4 +1,4 @@
-package com.splunk;
+package com.splunk.modularinput;
 
 /**
  * Exception thrown when parsing XML which is syntactically valid, but does not
