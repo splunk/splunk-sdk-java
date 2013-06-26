@@ -1,9 +1,6 @@
 package com.splunk.modularinput;
 
-import com.splunk.Argument;
-import com.splunk.modularinput.Parameter;
 import com.splunk.SDKTestCase;
-import com.splunk.modularinput.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.*;
@@ -78,7 +75,7 @@ public class ModularInputComponentClassTest {
         try {
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new AssertionError("Parser configuration failed: " + e.toString());
+            throw new AssertionError("Parser configuration failed: " + e.toString(), e);
         }
 
         InputStream resource = SDKTestCase.openResource(path);
@@ -86,9 +83,9 @@ public class ModularInputComponentClassTest {
             Document doc = documentBuilder.parse(resource);
             return doc;
         } catch (SAXException e) {
-            throw new AssertionError("Could not parse XML file at " + path);
+            throw new AssertionError("Could not parse XML file at " + path, e);
         } catch (IOException e) {
-            throw new AssertionError("Could not read XML file at " + path);
+            throw new AssertionError("Could not read XML file at " + path, e);
         }
     }
 
@@ -108,10 +105,10 @@ public class ModularInputComponentClassTest {
             return generatedDoc;
         } catch (SAXException e) {
             e.printStackTrace();
-            throw new AssertionError("Error parsing XML passed to function: " + e.toString());
+            throw new AssertionError("Error parsing XML passed to function: " + e.toString(), e);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new AssertionError("Error reading XML passed to function: " + e.toString());
+            throw new AssertionError("Error reading XML passed to function: " + e.toString(), e);
         }
     }
 
@@ -230,7 +227,7 @@ public class ModularInputComponentClassTest {
         InputDefinition expectedDefinition = new InputDefinition();
         expectedDefinition.setServerHost("tiny");
         expectedDefinition.setServerUri("https://127.0.0.1:8089");
-        expectedDefinition.setCheckpointDir("/opt/splunk/var/lib/splunk/modinputs");
+        expectedDefinition.setCheckpointDir("/some/dir");
         expectedDefinition.setSessionKey("123102983109283019283");
 
         InputStream stream = SDKTestCase.openResource("modularinput/data/conf_with_0_inputs.xml");
@@ -245,7 +242,7 @@ public class ModularInputComponentClassTest {
         InputDefinition expectedDefinition = new InputDefinition();
         expectedDefinition.setServerHost("tiny");
         expectedDefinition.setServerUri("https://127.0.0.1:8089");
-        expectedDefinition.setCheckpointDir("/opt/splunk/var/lib/splunk/modinputs");
+        expectedDefinition.setCheckpointDir("/some/dir");
         expectedDefinition.setSessionKey("123102983109283019283");
 
         List<Parameter> parameters = new ArrayList<Parameter>();
@@ -326,7 +323,7 @@ public class ModularInputComponentClassTest {
         Event event = new Event();
 
         try {
-            event.writeOn(writer);
+            event.writeTo(writer);
         } catch (MalformedDataException e) {
             Assert.assertTrue(true);
             return;
@@ -343,7 +340,7 @@ public class ModularInputComponentClassTest {
         Event event = new Event();
         event.setStanza("fubar");
         event.setData("This is a test of the emergency broadcast system.");
-        event.writeOn(writer);
+        event.writeTo(writer);
         Document found = stringToXmlDocument(sb.toString());
 
         Document expected = resourceToXmlDocument("modularinput/data/event_minimal.xml");
@@ -367,7 +364,7 @@ public class ModularInputComponentClassTest {
         event.setTime(new Date());
         event.setDone(true);
         event.setUnbroken(true);
-        event.writeOn(writer);
+        event.writeTo(writer);
         Document found = stringToXmlDocument(sb.toString());
 
         Document expected = resourceToXmlDocument("modularinput/data/event_maximal.xml");
@@ -438,5 +435,48 @@ public class ModularInputComponentClassTest {
         ew.log(Level.SEVERE, "Something happened!");
 
         Assert.assertEquals("SEVERE Something happened!\n", err.toString());
+    }
+
+    /**
+     * Tries the known cases supported by XmlUtil.normalizeBoolean, and asserts that it throws an error
+     * when passed an unknown case.
+     */
+    @Test
+    public void testNormalizeBoolean() throws MalformedDataException {
+        String[] trueValues = new String[] {"true", "t", "TRUE  ", "y", "  YeS", "1", "ON"};
+        String[] falseValues = new String[] {"false", "f", "FALSE  ", "   oFF", "no", "0", "n"};
+        String[] invalidValues = new String[] {null, "boris", "fal"};
+
+        for (String s : trueValues) {
+            Assert.assertTrue(XmlUtil.normalizeBoolean(s));
+        }
+
+        for (String s : falseValues) {
+            Assert.assertFalse(XmlUtil.normalizeBoolean(s));
+        }
+
+        boolean fail;
+        for (String s : invalidValues) {
+            fail = true;
+            try {
+                XmlUtil.normalizeBoolean(null);
+            } catch (MalformedDataException e) {
+                fail = false;
+            } finally {
+                Assert.assertFalse(fail);
+            }
+        }
+    }
+
+    /**
+     * Test the methods on SingleValueParameter to coerce its value to a boolean or various kinds of numbers.
+     */
+    @Test
+    public void testCoercionMethods() throws MalformedDataException {
+        Assert.assertEquals(true, new SingleValueParameter("name", "TRuE  ").getBoolean());
+        Assert.assertEquals(5,    new SingleValueParameter("name", "5").getInt());
+        Assert.assertEquals(27, new SingleValueParameter("name", "27").getLong());
+        Assert.assertEquals(5.2, new SingleValueParameter("name", "5.2").getFloat(), 1e-6);
+        Assert.assertEquals(5.2, new SingleValueParameter("name", "5.2").getDouble(), 1e-6);
     }
 }

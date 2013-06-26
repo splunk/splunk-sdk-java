@@ -125,32 +125,32 @@ public class InputDefinition {
         for (Node node = doc.getDocumentElement().getFirstChild(); node != null; node = node.getNextSibling()) {
             if (node.getNodeType() == node.TEXT_NODE) {
                 continue;
-            } else if (node.getNodeName() == "server_host") {
+            } else if (node.getNodeName().equals("server_host")) {
                 definition.setServerHost(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element server_host"
                 ));
-            } else if (node.getNodeName() == "server_uri") {
+            } else if (node.getNodeName().equals("server_uri")) {
                 definition.setServerUri(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element server_uri"
                 ));
-            } else if (node.getNodeName() == "checkpoint_dir") {
+            } else if (node.getNodeName().equals("checkpoint_dir")) {
                 definition.setCheckpointDir(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element checkpoint_dir"
                 ));
-            } else if (node.getNodeName() == "session_key") {
+            } else if (node.getNodeName().equals("session_key")) {
                 definition.setSessionKey(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element session_key"
                 ));
-            } else if (node.getNodeName() == "configuration") {
+            } else if (node.getNodeName().equals("configuration")) {
                 for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
                     if (child.getNodeType() == child.TEXT_NODE) {
                         continue;
                     }
-                    if (child.getNodeName() != "stanza") {
+                    if (!child.getNodeName().equals("stanza")) {
                         throw new MalformedDataException("Expected stanza element; found " + child.getNodeName());
                     }
                     String name = child.getAttributes().getNamedItem("name").getNodeValue();
@@ -169,11 +169,19 @@ public class InputDefinition {
             return false;
         }
         InputDefinition that = (InputDefinition)other;
-        boolean parametersEqual = true;
         return this.getServerUri().equals(that.getServerUri()) &&
                 this.getServerHost().equals(that.getServerHost()) &&
                 this.getCheckpointDir().equals(that.getCheckpointDir()) &&
                 this.getSessionKey().equals(that.getSessionKey()) &&
                 this.getInputs().equals(that.getInputs());
+    }
+
+    @Override
+    public int hashCode() {
+        return (this.getServerUri() == null ? 0 : this.getServerUri().hashCode()) ^
+                (this.getServerHost() == null ? 0 : this.getServerHost().hashCode()) ^
+                (this.getCheckpointDir() == null ? 0 : this.getCheckpointDir().hashCode()) ^
+                (this.getSessionKey() == null ? 0 : this.getSessionKey().hashCode()) ^
+                (this.getInputs() == null ? 0 : this.getInputs().hashCode());
     }
 }

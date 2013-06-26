@@ -34,18 +34,26 @@ public class EventWriter {
         this.outputStream.writeStartElement("stream");
     }
 
-    public synchronized void writeEvent(Event event) throws MalformedDataException, XMLStreamException {
+    public synchronized void synchronizedWriteEvent(Event event) throws MalformedDataException, XMLStreamException {
+        writeEvent(event);
+    }
+
+    public void writeEvent(Event event) throws MalformedDataException, XMLStreamException {
         try {
-            event.writeOn(outputStream);
+            event.writeTo(outputStream);
         } catch (MalformedDataException e) {
             try {
                 log(Level.WARNING, e.toString());
-            } catch (IOException ioe) {}
+            } catch (IOException ioe) { /* If we reach this, there's nothing good to do. */ }
             throw e;
         }
     }
 
-    public synchronized void log(Level severity, String errorMessage) throws IOException {
+    public synchronized void synchronizedLog(Level severity, String errorMessage) throws IOException {
+        log(severity, errorMessage);
+    }
+
+    public void log(Level severity, String errorMessage) throws IOException {
         errorStream.write(severity.toString() + " " + errorMessage + "\n");
         errorStream.flush();
     }

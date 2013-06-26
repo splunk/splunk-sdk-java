@@ -1,20 +1,15 @@
 package com.splunk.modularinput;
 
-import sun.util.calendar.Gregorian;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Event represents an event or fragment of an event to be written by this modular input to Splunk.
  *
- * To write an Event to an XML stream, call its writeOn method with an XMLStreamWriter object to write to.
- * The Event must have at least the data field set or writeOn will throw a MalformedDataException. All other
- * fields are optional. If you omit the time field, the writeOn method will fill in the current time when it is called.
+ * To write an Event to an XML stream, call its writeTo method with an XMLStreamWriter object to write to.
+ * The Event must have at least the data field set or writeTo will throw a MalformedDataException. All other
+ * fields are optional. If you omit the time field, the writeTo method will fill in the current time when it is called.
  */
 public class Event {
     protected Date time = null;
@@ -30,7 +25,7 @@ public class Event {
     public Event() {}
 
     // Helper method to write a single field to an XMLStreamWriter object only if it is not null.
-    protected void writeFieldOn(XMLStreamWriter out, String name, String value) throws XMLStreamException {
+    protected void writeFieldTo(XMLStreamWriter out, String name, String value) throws XMLStreamException {
         if (value != null) {
             out.writeStartElement(name);
             out.writeCharacters(value);
@@ -45,7 +40,7 @@ public class Event {
      * @throws XMLStreamException if there is a problem in the XMLStreamWriter.
      * @throws MalformedDataException if you have not specified data for this event.
      */
-    public void writeOn(XMLStreamWriter out) throws XMLStreamException, MalformedDataException {
+    public void writeTo(XMLStreamWriter out) throws XMLStreamException, MalformedDataException {
         if (data == null) {
             throw new MalformedDataException("Events must have at least the data field set to be written to XML.");
         }
@@ -58,12 +53,12 @@ public class Event {
 
         long epoch_time = time != null ? time.getTime() : System.currentTimeMillis();
 
-        writeFieldOn(out, "time", Long.toString(epoch_time/1000));
-        writeFieldOn(out, "source", getSource());
-        writeFieldOn(out, "sourceType", getSourceType());
-        writeFieldOn(out, "index", getIndex());
-        writeFieldOn(out, "host", getHost());
-        writeFieldOn(out, "data", getData());
+        writeFieldTo(out, "time", Long.toString(epoch_time / 1000));
+        writeFieldTo(out, "source", getSource());
+        writeFieldTo(out, "sourceType", getSourceType());
+        writeFieldTo(out, "index", getIndex());
+        writeFieldTo(out, "host", getHost());
+        writeFieldTo(out, "data", getData());
 
         if (!isUnbroken() && isDone()) {
             out.writeStartElement("done");

@@ -1,6 +1,5 @@
 package com.splunk.modularinput;
 
-import com.splunk.modularinput.MalformedDataException;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
@@ -21,5 +20,24 @@ public class XmlUtil {
         } else {
             return ((Text)child).getData();
         }
+    }
+
+    static boolean normalizeBoolean(String s) throws MalformedDataException {
+        if (s == null) {
+            throw new MalformedDataException("Cannot interpret null as a boolean.");
+        }
+
+        String value = s.trim().toLowerCase();
+
+        if (value.equals("true") || value.equals("t") || value.equals("on") ||
+                value.equals("yes") || value.equals("y") || value.equals("1")) {
+            return true;
+        } else if (value.equals("false") || value.equals("f") || value.equals("off") ||
+                value.equals("no") || value.equals("n") || value.equals("0")) {
+            return false;
+        } else {
+            throw new MalformedDataException("Cannot interpret string \"" + value + "\" as a boolean.");
+        }
+
     }
 }

@@ -1,9 +1,5 @@
 package com.splunk.modularinput;
 
-import com.splunk.modularinput.MalformedDataException;
-import com.splunk.modularinput.MultiValueParameter;
-import com.splunk.modularinput.SingleValueParameter;
-import com.splunk.modularinput.XmlUtil;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;

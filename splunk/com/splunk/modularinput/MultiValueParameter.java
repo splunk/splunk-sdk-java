@@ -1,7 +1,5 @@
 package com.splunk.modularinput;
 
-import com.splunk.modularinput.Parameter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +13,8 @@ import java.util.List;
  * </param_list>
  */
 public class MultiValueParameter extends Parameter {
-    protected String name;
-    protected List<String> values;
+    private final String name;
+    private final List<String> values;
 
     // Note: package private constructor by design so parameters cannot be instantiated by the user.
     MultiValueParameter(String name) {
@@ -51,5 +49,11 @@ public class MultiValueParameter extends Parameter {
             MultiValueParameter that = (MultiValueParameter)other;
             return this.values.equals(that.values) && this.name.equals(that.name);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return (this.name == null ? 0 : this.name.hashCode()) ^
+                (this.values == null ? 0 : this.values.hashCode());
     }
 }

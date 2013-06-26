@@ -1,6 +1,5 @@
 package com.splunk.modularinput;
 
-import com.splunk.modularinput.Parameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -84,6 +83,9 @@ public class ValidationDefinition {
         return sessionKey;
     }
 
+    /**
+     * @param name The name of the proposed modular input instance.
+     */
     void setName(String name) {
         this.name = name;
     }
@@ -145,27 +147,27 @@ public class ValidationDefinition {
         for (Node node = doc.getDocumentElement().getFirstChild(); node != null; node = node.getNextSibling()) {
             if (node.getNodeType() == node.TEXT_NODE) {
                 continue;
-            } else if (node.getNodeName() == "server_host") {
+            } else if (node.getNodeName().equals("server_host")) {
                 definition.setServerHost(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element server_host"
                 ));
-            } else if (node.getNodeName() == "server_uri") {
+            } else if (node.getNodeName().equals("server_uri")) {
                 definition.setServerUri(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element server_uri"
                 ));
-            } else if (node.getNodeName() == "checkpoint_dir") {
+            } else if (node.getNodeName().equals("checkpoint_dir")) {
                 definition.setCheckpointDir(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element checkpoint_dir"
                 ));
-            } else if (node.getNodeName() == "session_key") {
+            } else if (node.getNodeName().equals("session_key")) {
                 definition.setSessionKey(XmlUtil.textInNode(
                         node,
                         "Expected a text value in element session_key"
                 ));
-            } else if (node.getNodeName() == "item") {
+            } else if (node.getNodeName().equals("item")) {
                 String name = node.getAttributes().getNamedItem("name").getNodeValue();
                 definition.setName(name);
 
@@ -183,11 +185,20 @@ public class ValidationDefinition {
             return false;
         }
         ValidationDefinition that = (ValidationDefinition)other;
-        boolean parametersEqual = true;
         return this.getServerUri().equals(that.getServerUri()) &&
                 this.getServerHost().equals(that.getServerHost()) &&
                 this.getCheckpointDir().equals(that.getCheckpointDir()) &&
                 this.getSessionKey().equals(that.getSessionKey()) &&
                 this.getParameters().equals(that.getParameters());
     }
+
+    @Override
+    public int hashCode() {
+        return (this.getServerUri() == null ? 0 : this.getServerUri().hashCode()) ^
+                (this.getServerHost() == null ? 0 : this.getServerHost().hashCode()) ^
+                (this.getCheckpointDir() == null ? 0 : this.getCheckpointDir().hashCode()) ^
+                (this.getSessionKey() == null ? 0 : this.getSessionKey().hashCode()) ^
+                (this.getParameters() == null ? 0 : this.getParameters().hashCode());
+    }
+
 }

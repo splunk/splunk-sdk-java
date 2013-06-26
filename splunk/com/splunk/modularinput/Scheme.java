@@ -1,17 +1,11 @@
 package com.splunk.modularinput;
 
-import com.splunk.Argument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +18,7 @@ import java.util.List;
  *
  * The primary use of Scheme is to abstract away the construction of XML to feed to Splunk.
  */
-class Scheme {
+public class Scheme {
     private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
     public enum StreamingMode { SIMPLE, XML };
@@ -56,35 +50,35 @@ class Scheme {
         this.arguments = new ArrayList<Argument>();
     }
 
-    /*
+    /**
      * Return the title of this modular input kind.
      */
     public String getTitle() {
         return title;
     }
 
-    /*
+    /**
      * Set the title of this modular input kind.
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /*
+    /**
      * Get the human readable description of this modular input kind.
      */
     public String getDescription() {
         return description;
     }
 
-    /*
+    /**
      * Set the human readable description of this modular input kind.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    /*
+    /**
      * Return whether Splunk should use the modular input kind script to validate the arguments
      * of a particular modular input (true) or use the validation predicates specified by the arguments (false).
      */
@@ -92,7 +86,7 @@ class Scheme {
         return useExternalValidation;
     }
 
-    /*
+    /**
      * Specify whether Splunk should use the modular input kind script to validate the arguments
      * of a particular modular input (true) or use the validation predicates specified by the arguments (false).
      */
@@ -100,7 +94,7 @@ class Scheme {
         this.useExternalValidation = useExternalValidation;
     }
 
-    /*
+    /**
      * Return whether Splunk should run all modular inputs of this kind via one instance of the script
      * or start an instance for each modular input.
      */
@@ -108,7 +102,7 @@ class Scheme {
         return useSingleInstance;
     }
 
-    /*
+    /**
      * Specify whether Splunk should run all modular inputs of this kind via one instance of the script
      * or start an instance for each modular input.
      */
@@ -116,7 +110,7 @@ class Scheme {
         this.useSingleInstance = useSingleInstance;
     }
 
-    /*
+    /**
      * Return whether this modular input kind will send events to Splunk as XML (the default and preferred
      * value) or plain text.
      */
@@ -124,7 +118,7 @@ class Scheme {
         return streamingMode;
     }
 
-    /*
+    /**
      * Specify whether this modular input kind will send events to Splunk as XML (the default and preferred
      * value) or plain text.
      */
@@ -132,28 +126,34 @@ class Scheme {
         this.streamingMode = streamingMode;
     }
 
-    /*
+    /**
      * Return all the arguments to this modular input kind.
      */
     public List<Argument> getArguments() {
         return arguments;
     }
 
-    /*
+    /**
      * Replace the current list of arguments with the specified one.
      */
     public void setArguments(List<Argument> arguments) {
         this.arguments = new ArrayList<Argument>(arguments);
     }
 
-    /*
+    /**
      * Append an argument to those this modular input kind takes.
      */
     public void addArgument(Argument argument) {
         this.arguments.add(argument);
     }
 
-    public Document toXml() throws ParserConfigurationException, TransformerException {
+    /**
+     * Generates an XML encoding of this scheme to be passed to Splunk.
+     *
+     * @return an org.w3c.dom.Document object containing the XML of this scheme.
+     * @throws ParserConfigurationException if there was a problem configuring the XML libraries.
+     */
+    Document toXml() throws ParserConfigurationException {
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document doc = documentBuilder.newDocument();
 
