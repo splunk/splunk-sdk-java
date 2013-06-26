@@ -41,21 +41,25 @@ public class ModularInputComponentClassTest {
         }
     }
 
-    public void assertXmlEqual(Node a, Node b) throws TransformerException, ParserConfigurationException {
+    public void assertXmlEqual(Node expected, Node found) throws TransformerException, ParserConfigurationException {
         try {
-            Assert.assertTrue(a.isEqualNode(b));
+            Assert.assertTrue(expected.isEqualNode(found));
         } catch (AssertionError e) {
-            NodeList aChildren = a.getChildNodes();
-            NodeList bChildren = b.getChildNodes();
-            if (aChildren.getLength() != bChildren.getLength()) {
+            NodeList expectedChildren = expected.getChildNodes();
+            NodeList foundChildren = found.getChildNodes();
+            if (expectedChildren.getLength() != foundChildren.getLength()) {
                 throw new AssertionError("Expected node: \n" +
-                        nodeToXml(a) + "\n" +
+                        nodeToXml(expected) + "\n" +
                         "Generated node:\n" +
-                        nodeToXml(b));
+                        nodeToXml(found));
             }
-            for (int i = 0; i < aChildren.getLength(); i++) {
-                assertXmlEqual(aChildren.item(i), bChildren.item(i));
+            for (int i = 0; i < expectedChildren.getLength(); i++) {
+                assertXmlEqual(expectedChildren.item(i), foundChildren.item(i));
             }
+            if (expected.getNodeType() == expected.TEXT_NODE && found.getNodeType() == found.TEXT_NODE) {
+                Assert.assertEquals(((Text)expected).getData(), ((Text)found).getData());
+            }
+            throw new AssertionError("Parents unequal but couldn't find unmatched child in node " + expected.getNodeName());
         }
     }
 
@@ -208,10 +212,10 @@ public class ModularInputComponentClassTest {
     public void testArgumentGeneration() throws ParserConfigurationException, TransformerException {
         Argument argument = new Argument("some_name");
         argument.setDescription("쎼 and 쎶 and <&> für");
-        argument.setDataType(Argument.DataType.NUMBER);
-        argument.setRequiredOnCreate(true);
-        argument.setRequiredOnEdit(true);
+        argument.setDataType(Argument.DataType.BOOLEAN);
         argument.setValidation("is_pos_int('some_name')");
+        argument.setRequiredOnEdit(true);
+        argument.setRequiredOnCreate(true);
 
         Document generatedDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         argument.addToDocument(generatedDoc, generatedDoc);
@@ -338,6 +342,7 @@ public class ModularInputComponentClassTest {
         XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(sb);
 
         Event event = new Event();
+        event.setTime(new Date(1372187084000L));
         event.setStanza("fubar");
         event.setData("This is a test of the emergency broadcast system.");
         event.writeTo(writer);
@@ -355,13 +360,13 @@ public class ModularInputComponentClassTest {
         XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(sb);
 
         Event event = new Event();
+        event.setTime(new Date(1372274622493L));
         event.setStanza("fubar");
         event.setData("This is a test of the emergency broadcast system.");
         event.setHost("localhost");
         event.setIndex("main");
         event.setSource("hilda");
         event.setSourceType("misc");
-        event.setTime(new Date());
         event.setDone(true);
         event.setUnbroken(true);
         event.writeTo(writer);
@@ -381,13 +386,13 @@ public class ModularInputComponentClassTest {
         EventWriter ew = new EventWriter(out, err);
 
         Event event = new Event();
+        event.setTime(new Date(1372275124466L));
         event.setStanza("fubar");
         event.setData("This is a test of the emergency broadcast system.");
         event.setHost("localhost");
         event.setIndex("main");
         event.setSource("hilda");
         event.setSourceType("misc");
-        event.setTime(new Date());
         event.setDone(true);
         event.setUnbroken(true);
         ew.writeEvent(event);

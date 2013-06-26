@@ -51,9 +51,14 @@ public class Event {
         }
         out.writeAttribute("unbroken", isUnbroken() ? "1" : "0");
 
-        long epoch_time = time != null ? time.getTime() : System.currentTimeMillis();
+        long epoch_time;
+        if (this.time == null) {
+            epoch_time = System.currentTimeMillis();
+        } else {
+            epoch_time = this.time.getTime();
+        }
 
-        writeFieldTo(out, "time", Long.toString(epoch_time / 1000));
+        writeFieldTo(out, "time", String.format("%.3f", epoch_time / 1000D));
         writeFieldTo(out, "source", getSource());
         writeFieldTo(out, "sourceType", getSourceType());
         writeFieldTo(out, "index", getIndex());

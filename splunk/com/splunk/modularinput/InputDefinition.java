@@ -19,71 +19,88 @@ import java.util.Map;
  * a modular input script as a Java object.
  */
 public class InputDefinition {
-    private String serverHost;
-    private String serverUri;
-    private String checkpointDir;
-    private String sessionKey;
+    // We use a map to hold all parameters such as server host, server URI, etc. instead of individual fields
+    // so that additions to the input definition contract in the future won't break this implementation. It also
+    // simplifies the parsing code below.
+    private Map<String,String> metadata;
+
     private Map<String, List<Parameter>> inputs;
+
+    private final String serverHostField = "server_host";
+    private final String serverUriField = "server_uri";
+    private final String checkpointDirField = "checkpoint_dir";
+    private final String sessionKeyField = "session_key";
 
     // Package private on purpose
     InputDefinition() {
         inputs = new HashMap<String, List<Parameter>>();
+        metadata = new HashMap<String, String>();
+    }
+
+    /**
+     * In future versions of Splunk, there may be additional fields on the InputDefinition. getField permits
+     * access to them in case you are constrained to an old version of the Splunk SDK for Java.
+     *
+     * @param fieldName The name of the field to fetch.
+     */
+    public String getField(String fieldName) {
+        return this.metadata.get(fieldName);
     }
 
     /**
      * Set the name of the server on which this modular input is being run.
      */
     public void setServerHost(String serverHost) {
-        this.serverHost = serverHost;
+        this.metadata.put(serverHostField, serverHost);
     }
 
     /**
      * @return the name of the server on which this modular input is being run.
      */
     public String getServerHost() {
-        return serverHost;
+        return this.metadata.get(serverHostField);
     }
 
     /**
      * @param serverUri The URI to reach the server on which this modular input is being run.
      */
     public void setServerUri(String serverUri) {
-        this.serverUri = serverUri;
+        this.metadata.put(serverUriField, serverUri);
     }
 
     /**
      * @return the URI to the server on which this modular input is being run.
      */
     public String getServerUri() {
-        return serverUri;
+        return this.metadata.get(serverUriField);
     }
 
     /**
      * @param checkpointDir The path to write checkpoint files in.
      */
     public void setCheckpointDir(String checkpointDir) {
-        this.checkpointDir = checkpointDir;
+        this.metadata.put(checkpointDirField, checkpointDir);
     }
 
     /**
      * @return the path to write checkpoint files for restarting inputs in.
      */
     public String getCheckpointDir() {
-        return checkpointDir;
+        return this.metadata.get(checkpointDirField);
     }
 
     /**
      * @param sessionKey A session key that can be used to access splunkd's REST API.
      */
     public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
+        this.metadata.put(sessionKeyField, sessionKey);
     }
 
     /**
      * @return A session key providing access to splunkd's REST API on this host.
      */
     public String getSessionKey() {
-        return sessionKey;
+        return this.metadata.get(sessionKeyField);
     }
 
     /**
@@ -125,26 +142,6 @@ public class InputDefinition {
         for (Node node = doc.getDocumentElement().getFirstChild(); node != null; node = node.getNextSibling()) {
             if (node.getNodeType() == node.TEXT_NODE) {
                 continue;
-            } else if (node.getNodeName().equals("server_host")) {
-                definition.setServerHost(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element server_host"
-                ));
-            } else if (node.getNodeName().equals("server_uri")) {
-                definition.setServerUri(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element server_uri"
-                ));
-            } else if (node.getNodeName().equals("checkpoint_dir")) {
-                definition.setCheckpointDir(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element checkpoint_dir"
-                ));
-            } else if (node.getNodeName().equals("session_key")) {
-                definition.setSessionKey(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element session_key"
-                ));
             } else if (node.getNodeName().equals("configuration")) {
                 for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
                     if (child.getNodeType() == child.TEXT_NODE) {
@@ -157,6 +154,11 @@ public class InputDefinition {
                     List<Parameter> parameter = Parameter.nodeToParameterList(child);
                     definition.addInput(name, parameter);
                 }
+            } else {
+                definition.metadata.put(
+                        node.getNodeName(),
+                        XmlUtil.textInNode(node, "Expected a text value in element " + node.getNodeName())
+                );
             }
         }
 
@@ -169,11 +171,7 @@ public class InputDefinition {
             return false;
         }
         InputDefinition that = (InputDefinition)other;
-        return this.getServerUri().equals(that.getServerUri()) &&
-                this.getServerHost().equals(that.getServerHost()) &&
-                this.getCheckpointDir().equals(that.getCheckpointDir()) &&
-                this.getSessionKey().equals(that.getSessionKey()) &&
-                this.getInputs().equals(that.getInputs());
+        return this.metadata.equals(that.metadata) && this.inputs.equals(that.inputs);
     }
 
     @Override
