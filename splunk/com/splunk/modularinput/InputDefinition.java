@@ -176,10 +176,6 @@ public class InputDefinition {
 
     @Override
     public int hashCode() {
-        return (this.getServerUri() == null ? 0 : this.getServerUri().hashCode()) ^
-                (this.getServerHost() == null ? 0 : this.getServerHost().hashCode()) ^
-                (this.getCheckpointDir() == null ? 0 : this.getCheckpointDir().hashCode()) ^
-                (this.getSessionKey() == null ? 0 : this.getSessionKey().hashCode()) ^
-                (this.getInputs() == null ? 0 : this.getInputs().hashCode());
+        return this.metadata.hashCode() ^ (this.getInputs() == null ? 0 : this.getInputs().hashCode());
     }
 }

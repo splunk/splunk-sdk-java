@@ -9,92 +9,98 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class representing the XML sent by Splunk for external validation of a new modular input.
  */
 public class ValidationDefinition {
-    private String serverHost;
-    private String serverUri;
-    private String checkpointDir;
-    private String sessionKey;
-    private String name;
+    private Map<String, String> metadata;
+
     private List<Parameter> parameters;
+
+    private final String serverHostField = "server_host";
+    private final String serverUriField = "server_uri";
+    private final String checkpointDirField = "checkpoint_dir";
+    private final String sessionKeyField = "session_key";
+    private final String nameField = "name";
 
     // Package private on purpose.
     ValidationDefinition() {
         super();
+        metadata = new HashMap<String, String>();
     }
 
     /**
      * Set the name of the server on which this modular input is being run.
      */
     void setServerHost(String serverHost) {
-        this.serverHost = serverHost;
+        this.metadata.put(serverHostField, serverHost);
     }
 
     /**
      * @return the name of the server on which this modular input is being run.
      */
     public String getServerHost() {
-        return serverHost;
+        return this.metadata.get(serverHostField);
     }
 
     /**
      * @param serverUri The URI to reach the server on which this modular input is being run.
      */
     void setServerUri(String serverUri) {
-        this.serverUri = serverUri;
+        this.metadata.put(serverUriField, serverUri);
     }
 
     /**
      * @return the URI to the server on which this modular input is being run.
      */
     public String getServerUri() {
-        return serverUri;
+        return this.metadata.get(serverUriField);
     }
 
     /**
      * @param checkpointDir The path to write checkpoint files in.
      */
     void setCheckpointDir(String checkpointDir) {
-        this.checkpointDir = checkpointDir;
+        this.metadata.put(checkpointDirField, checkpointDir);
     }
 
     /**
      * @return the path to write checkpoint files for restarting inputs in.
      */
     public String getCheckpointDir() {
-        return checkpointDir;
+        return this.metadata.get(checkpointDirField);
     }
 
     /**
      * @param sessionKey A session key that can be used to access splunkd's REST API.
      */
     void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
+        this.metadata.put(sessionKeyField, sessionKey);
     }
 
     /**
      * @return A session key providing access to splunkd's REST API on this host.
      */
     public String getSessionKey() {
-        return sessionKey;
+        return this.metadata.get(sessionKeyField);
     }
 
     /**
      * @param name The name of the proposed modular input instance.
      */
     void setName(String name) {
-        this.name = name;
+        this.metadata.put(nameField, name);
     }
 
     /**
      * @return The name of the proposed modular input instance.
      */
     public String getName() {
-        return this.name;
+        return this.metadata.get(nameField);
     }
 
     /**
@@ -145,34 +151,19 @@ public class ValidationDefinition {
 
         ValidationDefinition definition = new ValidationDefinition();
         for (Node node = doc.getDocumentElement().getFirstChild(); node != null; node = node.getNextSibling()) {
-            if (node.getNodeType() == node.TEXT_NODE) {
+            if (node.getNodeType() == node.TEXT_NODE || node.getNodeType() == node.COMMENT_NODE) {
                 continue;
-            } else if (node.getNodeName().equals("server_host")) {
-                definition.setServerHost(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element server_host"
-                ));
-            } else if (node.getNodeName().equals("server_uri")) {
-                definition.setServerUri(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element server_uri"
-                ));
-            } else if (node.getNodeName().equals("checkpoint_dir")) {
-                definition.setCheckpointDir(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element checkpoint_dir"
-                ));
-            } else if (node.getNodeName().equals("session_key")) {
-                definition.setSessionKey(XmlUtil.textInNode(
-                        node,
-                        "Expected a text value in element session_key"
-                ));
             } else if (node.getNodeName().equals("item")) {
                 String name = node.getAttributes().getNamedItem("name").getNodeValue();
                 definition.setName(name);
 
                 List<Parameter> parameter = Parameter.nodeToParameterList(node);
                 definition.setParameters(parameter);
+            } else {
+                definition.metadata.put(
+                        node.getNodeName(),
+                        XmlUtil.textInNode(node, "Expected a text value in element " + node.getNodeName())
+                );
             }
         }
 
@@ -185,20 +176,12 @@ public class ValidationDefinition {
             return false;
         }
         ValidationDefinition that = (ValidationDefinition)other;
-        return this.getServerUri().equals(that.getServerUri()) &&
-                this.getServerHost().equals(that.getServerHost()) &&
-                this.getCheckpointDir().equals(that.getCheckpointDir()) &&
-                this.getSessionKey().equals(that.getSessionKey()) &&
-                this.getParameters().equals(that.getParameters());
+        return this.metadata.equals(that.metadata) && this.parameters.equals(that.parameters);
     }
 
     @Override
     public int hashCode() {
-        return (this.getServerUri() == null ? 0 : this.getServerUri().hashCode()) ^
-                (this.getServerHost() == null ? 0 : this.getServerHost().hashCode()) ^
-                (this.getCheckpointDir() == null ? 0 : this.getCheckpointDir().hashCode()) ^
-                (this.getSessionKey() == null ? 0 : this.getSessionKey().hashCode()) ^
-                (this.getParameters() == null ? 0 : this.getParameters().hashCode());
+        return this.metadata.hashCode() ^ (this.parameters == null ? 0 : this.parameters.hashCode());
     }
 
 }

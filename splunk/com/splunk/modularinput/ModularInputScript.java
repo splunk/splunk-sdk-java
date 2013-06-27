@@ -1,5 +1,7 @@
 package com.splunk.modularinput;
 
+import javax.xml.stream.XMLStreamException;
+
 /**
  * ModularInputScript is an abstract base class for implementing modular inputs. Subclasses
  * should override getScheme and streamEvents, and optionall configureValidator if the modular
@@ -44,5 +46,6 @@ public abstract class ModularInputScript {
      *
      * @param ew An object with methods to write events and log messages to Splunk.
      */
-    public abstract void streamEvents(InputDefinition inputs, EventWriter ew);
+    public abstract void streamEvents(InputDefinition inputs, EventWriter ew)
+            throws MalformedDataException, XMLStreamException;
 }
