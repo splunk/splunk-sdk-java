@@ -143,7 +143,8 @@ public class ValidationDefinition {
      * @throws SAXException when the XML is invalid.
      * @throws MalformedDataException when the XML does not meet the required schema.
      */
-    public static ValidationDefinition parseDefinition(InputStream stream) throws ParserConfigurationException, IOException, SAXException, MalformedDataException {
+    public static ValidationDefinition parseDefinition(InputStream stream) throws ParserConfigurationException,
+            IOException, SAXException, MalformedDataException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setIgnoringElementContentWhitespace(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

@@ -141,7 +141,7 @@ public class EventTest extends ModularInputTestCase {
         try {
             ew.writeEvent(event);
         } catch (MalformedDataException e) {
-            Assert.assertTrue(err.toString().startsWith("WARNING"));
+            Assert.assertTrue(err.toString().startsWith("WARN"));
             return;
         }
         Assert.fail();
@@ -157,8 +157,27 @@ public class EventTest extends ModularInputTestCase {
 
         EventWriter ew = new EventWriter(out, err);
 
-        ew.log(Level.SEVERE, "Something happened!");
+        ew.log(EventWriter.ERROR, "Something happened!");
 
-        Assert.assertEquals("SEVERE Something happened!\n", err.toString());
+        Assert.assertEquals("ERROR Something happened!\n", err.toString());
     }
+
+    /**
+     * Check that EventWriter.writeXmlDocument writes sensible XML to the output stream.
+     */
+    @Test
+    public void testWriteXmlDocumentIsSane() throws XMLStreamException, IOException, TransformerException, ParserConfigurationException {
+        StringWriter out = new StringWriter();
+        StringWriter err = new StringWriter();
+
+        EventWriter ew = new EventWriter(out, err);
+
+        Document expectedXml = resourceToXmlDocument("modularinput/data/event_maximal.xml");
+
+        ew.writeXmlDocument(expectedXml);
+        Document foundXml = stringToXmlDocument(out.toString());
+
+        assertXmlEqual(expectedXml, foundXml);
+    }
+
 }

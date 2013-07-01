@@ -75,6 +75,7 @@ public class Event {
         }
 
         out.writeEndElement();
+        out.flush();
     }
 
     /**

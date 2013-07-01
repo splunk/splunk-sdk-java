@@ -1,8 +1,13 @@
 package com.splunk.modularinput;
 
+import org.w3c.dom.Document;
+
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.logging.Level;
 
@@ -14,7 +19,17 @@ import java.util.logging.Level;
  */
 public class EventWriter {
     private XMLStreamWriter outputStreamWriter;
+    private Writer rawOutputStreamWriter;
     private Writer errorStreamWriter;
+
+    private boolean headerWritten = false;
+
+    // The severities that Splunk understands for log messages from modular inputs.
+    public static String DEBUG = "DEBUG";
+    public static String INFO = "INFO";
+    public static String WARN = "WARN";
+    public static String ERROR = "ERROR";
+    public static String FATAL = "FATAL";
 
     /**
      * Wrap a UTF-8 OutputStreamWriter around an OutputStream, chomping the error that the Java spec asserts
@@ -36,10 +51,9 @@ public class EventWriter {
     }
 
     public EventWriter(Writer outputWriter, Writer errorWriter) throws XMLStreamException {
+        this.rawOutputStreamWriter = outputWriter;
         this.outputStreamWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(outputWriter);
         this.errorStreamWriter = errorWriter;
-
-        this.outputStreamWriter.writeStartElement("stream");
     }
 
     /**
@@ -59,10 +73,14 @@ public class EventWriter {
      */
     public void writeEvent(Event event) throws MalformedDataException, XMLStreamException {
         try {
+            if (!headerWritten) {
+                outputStreamWriter.writeStartElement("stream");
+                headerWritten = true;
+            }
             event.writeTo(outputStreamWriter);
         } catch (MalformedDataException e) {
             try {
-                log(Level.WARNING, e.toString());
+                log(WARN, e.toString());
             } catch (IOException ioe) { /* If we reach this, there's nothing good to do. */ }
             throw e;
         }
@@ -71,19 +89,19 @@ public class EventWriter {
     /**
      * Thread safe version of log.
      */
-    public synchronized void synchronizedLog(Level severity, String errorMessage) throws IOException {
+    public synchronized void synchronizedLog(String severity, String errorMessage) throws IOException {
         log(severity, errorMessage);
     }
 
     /**
      * Log messages about the state of this modular input to Splunk. These messages will show up in Splunk's
      * internal logs.
-     * @param severity The severity (e.g., Level.WARNING, Level.SEVERE) of this message.
+     * @param severity The severity (e.g., EventWriter.WARN, EventWriter.FATAL) of this message.
      * @param errorMessage The message that should appear in the logs.
      * @throws IOException
      */
-    public void log(Level severity, String errorMessage) throws IOException {
-        errorStreamWriter.write(severity.toString() + " " + errorMessage + "\n");
+    public void log(String severity, String errorMessage) throws IOException {
+        errorStreamWriter.write(severity + " " + errorMessage + "\n");
         errorStreamWriter.flush();
     }
 
@@ -96,5 +114,24 @@ public class EventWriter {
         this.outputStreamWriter.writeEndElement();
     }
 
+    /**
+     * Write an org.w3c.dom.Document object containing XML to the output stream.
+     */
+    void writeXmlDocument(Document document) throws TransformerException, XMLStreamException, IOException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = null;
+        transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
+
+        DOMSource source = new DOMSource(document);
+        StringWriter buffer = new StringWriter();
+        StreamResult result = new StreamResult(buffer);
+        transformer.transform(source, result);
+        rawOutputStreamWriter.write(result.getWriter().toString());
+        rawOutputStreamWriter.flush();
+    }
 
 }
