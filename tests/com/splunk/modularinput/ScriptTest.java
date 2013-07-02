@@ -9,7 +9,9 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
-import java.io.*;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 /**
@@ -75,7 +77,7 @@ public class ScriptTest extends ModularInputTestCase {
                 scheme.addArgument(arg1);
 
                 Argument arg2 = new Argument("arg2");
-                arg2.setDescription("쎼 and 쎶 and <&> für");
+                arg2.setDescription("\uC3BC and \uC3B6 and <&> f\u00FCr");
                 arg2.setDataType(Argument.DataType.NUMBER);
                 arg2.setRequiredOnCreate(true);
                 arg2.setRequiredOnEdit(true);
@@ -116,7 +118,7 @@ public class ScriptTest extends ModularInputTestCase {
 
             @Override
             public void validateInput(ValidationDefinition definition) throws Exception {
-                return; // Always succeed
+                // Always succeed
             }
 
             @Override

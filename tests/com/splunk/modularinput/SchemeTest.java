@@ -34,7 +34,7 @@ public class SchemeTest extends ModularInputTestCase {
     @Test
     public void testGenerateXmlFromScheme() throws TransformerException, ParserConfigurationException {
         Scheme scheme = new Scheme("abcd");
-        scheme.setDescription("쎼 and 쎶 and <&> für");
+        scheme.setDescription("\uC3BC and \uC3B6 and <&> f\u00FCr");
         scheme.setStreamingMode(Scheme.StreamingMode.SIMPLE);
         scheme.setUseExternalValidation(false);
         scheme.setUseSingleInstance(true);
@@ -43,7 +43,7 @@ public class SchemeTest extends ModularInputTestCase {
         scheme.addArgument(arg1);
 
         Argument arg2 = new Argument("arg2");
-        arg2.setDescription("쎼 and 쎶 and <&> für");
+        arg2.setDescription("\uC3BC and \uC3B6 and <&> f\u00FCr");
         arg2.setDataType(Argument.DataType.NUMBER);
         arg2.setRequiredOnCreate(true);
         arg2.setRequiredOnEdit(true);
@@ -78,7 +78,7 @@ public class SchemeTest extends ModularInputTestCase {
     @Test
     public void testGenerateXmlFromArgument() throws ParserConfigurationException, TransformerException {
         Argument argument = new Argument("some_name");
-        argument.setDescription("쎼 and 쎶 and <&> für");
+        argument.setDescription("\uC3BC and \uC3B6 and <&> f\u00FCr");
         argument.setDataType(Argument.DataType.BOOLEAN);
         argument.setValidation("is_pos_int('some_name')");
         argument.setRequiredOnEdit(true);
