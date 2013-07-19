@@ -23,7 +23,8 @@ bin
 build.log
 
 # Visual Studio
-launchers/shim/**/Debug/**
+Debug
+Release
 launchers/shim/ipch/*
 launchers/shim/shim.opensdf
 

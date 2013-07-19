@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class ValidationDefinition {
     private Map<String, String> metadata;
 
-    private List<Parameter> parameters;
+    private Map<String, Parameter> parameters;
 
     private final String serverHostField = "server_host";
     private final String serverUriField = "server_uri";
@@ -106,14 +107,18 @@ public class ValidationDefinition {
     /**
      * @param parameters a list of Parameter objects giving the proposed configuration.
      */
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
+    public void setParameters(Collection<Parameter> parameters) {
+        Map<String, Parameter> paramMap = new HashMap<String, Parameter>();
+        for (Parameter p : parameters) {
+            paramMap.put(p.getName(), p);
+        }
+        this.parameters = paramMap;
     }
 
     /**
      * @return The parameters on the proposed input.
      */
-    public List<Parameter> getParameters() {
+    public Map<String, Parameter> getParameters() {
         return this.parameters;
     }
 

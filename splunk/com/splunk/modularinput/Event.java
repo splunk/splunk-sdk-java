@@ -55,9 +55,9 @@ public class Event {
         }
         out.writeAttribute("unbroken", isUnbroken() ? "1" : "0");
 
-        long epoch_time;
+        Long epoch_time;
         if (this.time == null) {
-            epoch_time = System.currentTimeMillis();
+            epoch_time = null;
         } else {
             epoch_time = this.time.getTime();
         }

@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class InputDefinition {
     // simplifies the parsing code below.
     private Map<String,String> metadata;
 
-    private Map<String, List<Parameter>> inputs;
+    private Map<String, Map<String, Parameter>> inputs;
 
     private final String serverHostField = "server_host";
     private final String serverUriField = "server_uri";
@@ -33,7 +34,7 @@ public class InputDefinition {
 
     // Package private on purpose
     InputDefinition() {
-        inputs = new HashMap<String, List<Parameter>>();
+        inputs = new HashMap<String, Map<String, Parameter>>();
         metadata = new HashMap<String, String>();
     }
 
@@ -107,16 +108,22 @@ public class InputDefinition {
      * Add an input to the set of inputs on this InputDefinition.
      *
      * @param name The name of this input (e.g., foobar://this-input-name).
-     * @param parameters A list of Parameter objects giving the settings for this input.
+     * @param parameters A collection of Parameter objects giving the settings for this input.
      */
-    public void addInput(String name, List<Parameter> parameters) {
-        this.inputs.put(name, parameters);
+    public void addInput(String name, Collection<Parameter> parameters) {
+        Map<String, Parameter> paramMap = new HashMap<String, Parameter>();
+
+        for (Parameter p : parameters) {
+            paramMap.put(p.getName(), p);
+        }
+
+        this.inputs.put(name, paramMap);
     }
 
     /**
      * @return A map of all the inputs specified in this InputDefinition.
      */
-    public Map<String, List<Parameter>> getInputs() {
+    public Map<String, Map<String, Parameter>> getInputs() {
         return this.inputs;
     }
 

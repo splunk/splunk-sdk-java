@@ -24,6 +24,8 @@ public class EventWriter {
 
     private boolean headerWritten = false;
 
+    private boolean hadIOException = false;
+
     // The severities that Splunk understands for log messages from modular inputs.
     public static String DEBUG = "DEBUG";
     public static String INFO = "INFO";
@@ -57,9 +59,42 @@ public class EventWriter {
     }
 
     /**
+     * Clear the error state on this EventWriter.
+     *
+     * EventWriter does not throw IOException errors, but does not ignore them entirely either. Instead it operates
+     * the same way as PrintStream in the standard library. You can always check if an IOException has been thrown
+     * by calling checkError.
+     */
+    protected void clearError() {
+        hadIOException = false;
+    }
+
+    /**
+     * Declare that this EventWriter had an IOException.
+     *
+     * EventWriter does not throw IOException errors, but does not ignore them entirely either. Instead it operates
+     * the same way as PrintStream in the standard library. You can always check if an IOException has been thrown
+     * by calling checkError.
+     */
+    protected void setError() {
+        hadIOException = true;
+    }
+
+    /**
+     * Returns whether there was an IOException on this EventWriter.
+     *
+     * EventWriter does not throw IOException errors, but does not ignore them entirely either. Instead it operates
+     * the same way as PrintStream in the standard library. You can always check if an IOException has been thrown
+     * by calling checkError.
+     */
+    public boolean checkError() {
+        return hadIOException;
+    }
+
+    /**
      * Thread safe version of writeEvent.
      */
-    public synchronized void synchronizedWriteEvent(Event event) throws MalformedDataException, XMLStreamException {
+    public synchronized void synchronizedWriteEvent(Event event) throws MalformedDataException {
         writeEvent(event);
     }
 
@@ -67,29 +102,31 @@ public class EventWriter {
      * Write an Event object to Splunk. This method is not thread safe. If you need a thread safe version, use
      * synchronizedWriteEvent.
      *
+     * If you try to write an Event with null data, throws MalformedDataException.
+     *
      * @param event The Event object to write.
      * @throws MalformedDataException
-     * @throws XMLStreamException
      */
-    public void writeEvent(Event event) throws MalformedDataException, XMLStreamException {
+    public void writeEvent(Event event) throws MalformedDataException {
         try {
             if (!headerWritten) {
                 outputStreamWriter.writeStartElement("stream");
                 headerWritten = true;
             }
             event.writeTo(outputStreamWriter);
+            outputStreamWriter.flush();
         } catch (MalformedDataException e) {
-            try {
-                log(WARN, e.toString());
-            } catch (IOException ioe) { /* If we reach this, there's nothing good to do. */ }
+            log(WARN, e.toString());
             throw e;
+        } catch (XMLStreamException e) {
+            log(ERROR, e.toString());
         }
     }
 
     /**
      * Thread safe version of log.
      */
-    public synchronized void synchronizedLog(String severity, String errorMessage) throws IOException {
+    public synchronized void synchronizedLog(String severity, String errorMessage) {
         log(severity, errorMessage);
     }
 
@@ -100,9 +137,13 @@ public class EventWriter {
      * @param errorMessage The message that should appear in the logs.
      * @throws IOException
      */
-    public void log(String severity, String errorMessage) throws IOException {
-        errorStreamWriter.write(severity + " " + errorMessage + "\n");
-        errorStreamWriter.flush();
+    public void log(String severity, String errorMessage) {
+        try {
+            errorStreamWriter.write(severity + " " + errorMessage + "\n");
+            errorStreamWriter.flush();
+        } catch (IOException e) {
+            setError();
+        }
     }
 
     /**
@@ -110,8 +151,12 @@ public class EventWriter {
      *
      * @throws XMLStreamException
      */
-    public void close() throws XMLStreamException {
-        this.outputStreamWriter.writeEndElement();
+    public void close() {
+        try {
+            this.outputStreamWriter.writeEndElement();
+        } catch (XMLStreamException e) {
+            log(ERROR, e.toString());
+        }
     }
 
     /**
