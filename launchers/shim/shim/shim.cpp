@@ -65,19 +65,21 @@ int _tmain(int argc, _TCHAR* argv[])
     if (waitOutcome == WAIT_OBJECT_0) {
         // Splunkd has died
         GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0);
-        return 0;
+
+        goto CLEAN_UP_AND_EXIT;
     } else if (waitOutcome == WAIT_OBJECT_0 + 1) {
         // JVM has died
-        if (!GetExitCodeProcess(jvmHandle, &exitCode)) {
+        if (!GetExitCodeProcess(jvmHandle, &returnCode)) {
             printErrorMessage(GetLastError());
-            return 1;
+            returnCode = 1;
         }
-        CloseHandle(splunkdHandle); // Close splunkd handle
-        CloseHandle(jvmHandle); // Close JVM handle
-        return exitCode;
+        goto CLEAN_UP_AND_EXIT;
     } else {
         // There was some other error.
         printErrorMessage(GetLastError());
+
+        returnCode = 1;
+        goto CLEAN_UP_AND_EXIT;
     }
 
 CLEAN_UP_AND_EXIT:
