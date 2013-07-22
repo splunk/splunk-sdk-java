@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Splunk, Inc.
+ * Copyright 2013 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -14,28 +14,6 @@
  * under the License.
  */
 
-/* 
- * shim - Windows launcher for Splunk modular inputs written in Java.
- *
- * shim is provided as both 32-bit and 64-bit binaries. If you are setting up a
- * modular input written in Java in your app, you should make it into an executable
- * jar, and put it in a jars/ directory in your app. The jar should be named the
- * with the same name as the modular input kind defined in Splunk. That is, if your
- * stanza in README/inputs.conf.spec that defines the modular input kind is called
- * 'abc', then the jar should be in jars/abc.jar. You can create an ASCII (well, UTF-8)
- * text file in jars/abc.vmopts that contains options to pass to java when creating
- * the virtual machine (i.e., -Xms512M -agent something.jar).
- *
- * Then place the 32-bit binary of shim in windows_x86/bin/abc.exe and the 64-bit
- * binary in windows_x86_64/bin/abc.exe (changing 'abc' to the name of your modular
- * input kind). Splunk will launch them and they in turn will look for the jar,
- * launch it, and handle all the control signals from Splunk.
- *
- * Once shim starts and executes the JVM, it waits for Ctrl+C from Splunk or for splunkd
- * to die. If either of these events occurs, it sends Ctrl+C to the JVM, waits for it
- * to exit, and exits itself. If the JVM exits, the shim exits immediately thereafter.
- */
-
 #include "stdafx.h"
 #include "shim.h"
 
@@ -44,33 +22,43 @@ DWORD jvmPid = NULL;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-    HANDLE processHandles[2];
-    PTSTR jarPath, jvmOptions, jvmCommandLine;
+    HANDLE processHandles[2] = {NULL, NULL};
+    HANDLE &splunkdHandle = processHandles[0];
+    HANDLE &jvmHandle = processHandles[1];
+    PTSTR jarPath = NULL, jvmOptions = NULL, jvmCommandLine = NULL;
     DWORD waitOutcome, exitCode;
+
+    DWORD returnCode = 0;
+
+    STARTUPINFO si = {sizeof(si)};
+    PROCESS_INFORMATION pi;
+
 
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)killJvm, TRUE);
     
-    processHandles[0] = getSplunkdHandle();
-    if (NULL == processHandles[0]) {
+    splunkdHandle = getSplunkdHandle();
+    if (NULL == splunkdHandle) {
         // Couldn't get a handle to splunkd.
         printErrorMessage(GetLastError());
-        return 1;
+
+        returnCode = 1;
+        goto CLEAN_UP_AND_EXIT;
     }
 
     jarPath = getPathToJar();
     jvmOptions = readJvmOptions(jarPath);
     jvmCommandLine = assembleJvmCommand(jarPath, jvmOptions, argc, argv);
 
-    STARTUPINFO si = {sizeof(si)};
-    PROCESS_INFORMATION pi;
     if (!CreateProcess(NULL, jvmCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         // Process creation failed.
         printErrorMessage(GetLastError(), jvmCommandLine);
-        return 1;
+
+        returnCode = 1;
+        goto CLEAN_UP_AND_EXIT;
     }
 
-    CloseHandle(pi.hThread);
-    processHandles[1] = pi.hProcess;
+    CloseHandle(pi.hThread); // CreateProcess gives us a handle to the initial thread of the new process, which we don't need.
+    jvmHandle = pi.hProcess;
     jvmPid = pi.dwProcessId;
     waitOutcome = WaitForMultipleObjects(2, processHandles, FALSE, INFINITE);
 
@@ -80,30 +68,30 @@ int _tmain(int argc, _TCHAR* argv[])
         return 0;
     } else if (waitOutcome == WAIT_OBJECT_0 + 1) {
         // JVM has died
-        if (!GetExitCodeProcess(processHandles[1], &exitCode)) {
+        if (!GetExitCodeProcess(jvmHandle, &exitCode)) {
             printErrorMessage(GetLastError());
             return 1;
         }
-        CloseHandle(processHandles[0]); // Close splunkd handle
-        CloseHandle(processHandles[1]); // Close JVM handle
+        CloseHandle(splunkdHandle); // Close splunkd handle
+        CloseHandle(jvmHandle); // Close JVM handle
         return exitCode;
     } else {
         // There was some other error.
         printErrorMessage(GetLastError());
     }
 
-    return 0;
+CLEAN_UP_AND_EXIT:
+    if (NULL != jvmCommandLine) LocalFree(jvmCommandLine);
+    if (NULL != jvmOptions)     LocalFree(jvmOptions);
+    if (NULL != jarPath)        LocalFree(jarPath);
+
+    if (NULL != splunkdHandle) CloseHandle(splunkdHandle);
+    if (NULL != jvmHandle)     CloseHandle(jvmHandle);
+
+    return returnCode;
 }
 
-/*
- * A PHANDLER_ROUTINE to handle receiving console control events such as 
- * Ctrl+C. Upon receiving a console control event, it sends the same event
- * to the JVM (which it finds via the PID stored in the global jvmPid
- * variable).
- *
- * The handler does not further shutdown, since as soon as the JVM dies,
- * the standard logic in _tmain will handle exiting this program as well.
- */
+
 BOOL killJvm(DWORD interruptCode) {
     if (jvmPid != NULL) {
         GenerateConsoleCtrlEvent(interruptCode, jvmPid);
@@ -113,12 +101,8 @@ BOOL killJvm(DWORD interruptCode) {
     }
 }
 
-/*
- * Print an error message to stderr containing the human readable error message
- * corresponding to the GetLastError's return value.
- */
+
 void printErrorMessage(DWORD errorCode, ...) {
-    DWORD nBytesWritten;
     LPTSTR buffer;
 
     va_list args = NULL;
@@ -128,20 +112,16 @@ void printErrorMessage(DWORD errorCode, ...) {
         NULL, errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer, 0, &args);
 
     fwprintf(stderr, TEXT("ERROR %s\r\n"), buffer);
+
+    LocalFree(buffer);
 }
 
-/*
- * Returns the contents of a file with the same base name as the Jar referred to in jarPath, 
- * but with the suffix .vmopts (so for path\to\myinput.jar, reads path\to\myinputs.vmptops).
- * 
- * This function is meant to read the options for the JVM (i.e., -Xms512M) so they can be
- * added to the command line. If there is an error that prevents reading the file (the jar path
- * does not end in .jar, or it cannot be read), readJvmOptions returns NULL and sets an error
- * code retrievable with GetLastError. If the file does not exist, readJvmOptions returns an
- * empty string.
- */
+
 PTSTR readJvmOptions(PTSTR jarPath) {
     DWORD jarPathLen = _tcslen(jarPath);
+    // vmoptsPath is the same as jarPath, but ending with .vmopts instead of .jar. We allocate
+    // 3 additional TCHARs for the additional length of .vmopts, and 1 more TCHAR for a NULL
+    // terminator, so jarPathLen+4.
     PTSTR vmoptsPath = (PTSTR)malloc(sizeof(TCHAR) * (jarPathLen + 4));
     PTSTR suffixPtr = vmoptsPath;
 
@@ -155,13 +135,16 @@ PTSTR readJvmOptions(PTSTR jarPath) {
 
     _tcscpy_s(suffixPtr, 8, TEXT(".vmopts"));
 
-    OFSTRUCT fileInformation;
     HANDLE vmoptsHandle = CreateFile(vmoptsPath, GENERIC_READ, FILE_SHARE_READ, 
         NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (INVALID_HANDLE_VALUE == vmoptsHandle) {
-        if (ERROR_FILE_NOT_FOUND == GetLastError()) {
-            return TEXT("");
+        if (ERROR_FILE_NOT_FOUND == GetLastError() || ERROR_PATH_NOT_FOUND == GetLastError()) {
+            // We can't return a literal because we will try to deallocate it later.
+            free(vmoptsPath);
+            vmoptsPath = (PTSTR)malloc(sizeof(TCHAR));
+            _tcscpy_s(vmoptsPath, 1, TEXT(""));
+            return vmoptsPath;
         } else {
             return NULL;
         }
@@ -193,11 +176,7 @@ PTSTR readJvmOptions(PTSTR jarPath) {
 #endif
 }
 
-/*
- * Construct the full command to run the jar. This will return a new buffer containing
- *
- *     java [jvmOptions] -jar "[jarPath]" [argv[0]] [argv[1]] ...
- */
+
 PTSTR assembleJvmCommand(PTSTR jarPath, PTSTR jvmOptions, int argc, _TCHAR* argv[]) {
     PTSTR buffer, index;
     size_t len;
@@ -212,38 +191,28 @@ PTSTR assembleJvmCommand(PTSTR jarPath, PTSTR jvmOptions, int argc, _TCHAR* argv
     buffer = (PTSTR)malloc((13 + _tcslen(jarPath) + _tcslen(jvmOptions) + len + 1) * sizeof(TCHAR));
     index = buffer;
 
-    _tcscpy_s(index, 6, TEXT("java "));
-    index += 5;
-    len = _tcslen(jvmOptions);
-    _tcscpy_s(index, len+1, jvmOptions);
-    index += len;
-    _tcscpy_s(index, 8, TEXT(" -jar \""));
-    index += 7;
-    len = _tcslen(jarPath);
-    _tcscpy_s(index, len+1, jarPath);
-    index += len;
-    _tcscpy_s(index, 2, TEXT("\""));
-    index += 1;
+#define APPEND_TCS(literal) { \
+    _tcscpy_s(index, _tcslen(literal)+1, literal); \
+    index += _tcslen(literal); \
+}
+
+    APPEND_TCS(TEXT("java"));
+    APPEND_TCS(jvmOptions);
+    APPEND_TCS(TEXT(" -jar \""));
+    APPEND_TCS(jarPath);
+    APPEND_TCS(TEXT("\""));
 
     for (i = 1; i < argc; i++) {
-        _tcscpy_s(index, 2, TEXT(" "));
-        index += 1;
-        len = _tcslen(argv[i]);
-        _tcscpy_s(index, len+1, argv[i]);
-        index += len;
+        APPEND_TCS(TEXT(" "));
+        APPEND_TCS(argv[i]);
     }
+
+#undef APPEND_TCS
 
     return buffer;
 }
 
 
-/*
- * Returns a HANDLE referring to splunkd's process, or NULL if it could
- * not find such a handle. Use GetLastError to find the error in that case.
- *
- * When splunkd starts a modular input script, it sets its pid as the value of
- * an environment variable SPLUNKD_PROCESSID.
- */
 HANDLE getSplunkdHandle() {
     const TCHAR* SPLUNKD_HANDLE_ENVVAR = TEXT("SPLUNKD_PROCESSID");
 
@@ -261,7 +230,9 @@ HANDLE getSplunkdHandle() {
     }
 
     pidBuffer = (PTSTR)malloc(bufferSize * sizeof(TCHAR));
-    _tgetenv_s(&bufferSize, pidBuffer, bufferSize, SPLUNKD_HANDLE_ENVVAR);
+    if (_tgetenv_s(&bufferSize, pidBuffer, bufferSize, SPLUNKD_HANDLE_ENVVAR)) {
+        return NULL; // There was an error in getting the environment variable.
+    }
     splunkdPid = _tcstoul(pidBuffer, &stopString, 10);
 
     if (*stopString != NULL || splunkdPid == 0) {
@@ -269,16 +240,13 @@ HANDLE getSplunkdHandle() {
         SetLastError(ERROR_BAD_ENVIRONMENT);
         return NULL;
     }
+
+    free(pidBuffer);
     
     return OpenProcess(SYNCHRONIZE, FALSE, splunkdPid);
 }
 
-/*
- * Return a PTSTR with the path to the Java jar, or NULL if no path could be constructed.
- *
- * The jar is taken to be at ../../jars/{name}.jar from the location of the current executable,
- * if the name of the current executable is {name}.exe.
- */
+
 PTSTR getPathToJar() {
     PTSTR thisPath, endPtr, baseName;
     PCTSTR jarPathFragment = TEXT("\\jars\\");
@@ -313,6 +281,11 @@ PTSTR getPathToJar() {
     endPtr = _tcsrchr(thisPath, '\\');
     *endPtr = NULL;
     endPtr = _tcsrchr(thisPath, '\\');
+
+    if (baseName-endPtr < _tcslen(TEXT("\\jars\\"))) {
+        return NULL; // Not enough space to copy the path fragment in without clobbering the jar name.
+    }
+
     // Instead of NULL terminating, we copy \jars\ over top and advance to the end of it.
     _tcscpy_s(endPtr, jarPathFragmentLen, jarPathFragment);
     endPtr += jarPathFragmentLen - 1;
