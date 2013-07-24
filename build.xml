@@ -195,6 +195,7 @@
         <standalone-example-jar name="index"/>
         <standalone-example-jar name="info"/>
         <standalone-example-jar name="input"/>
+        <standalone-example-jar name="randomnumbers"/>
 
         <standalone-example-jar name="search">
             <dependencies>

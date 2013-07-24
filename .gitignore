@@ -21,3 +21,15 @@ TEST-com.splunk.*.xml
 .settings
 bin
 build.log
+
+# Visual Studio
+Debug
+Release
+launchers/shim/Release
+launchers/shim/shim/Release
+launchers/shim/x64
+launchers/shim/ipch/*
+launchers/shim/shim.opensdf
+
+
+
