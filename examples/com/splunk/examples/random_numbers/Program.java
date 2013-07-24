@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.splunk.examples.randomnumbers;
+package com.splunk.examples.random_numbers;
 
 import com.splunk.modularinput.*;
 
@@ -153,7 +153,7 @@ public class Program extends Script {
                 // event.
                 Event event = new Event();
                 event.setStanza(inputName);
-                event.setData("number=" + randomGenerator.nextDouble() * (max - min) + min);
+                event.setData("number=" + (randomGenerator.nextDouble() * (max - min) + min));
 
                 try {
                     ew.writeEvent(event);

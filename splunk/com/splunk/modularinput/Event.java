@@ -71,26 +71,23 @@ public class Event {
         }
         out.writeAttribute("unbroken", isUnbroken() ? "1" : "0");
 
-        Long epoch_time;
-        if (this.time == null) {
-            epoch_time = null;
-        } else {
-            epoch_time = this.time.getTime();
+        if (this.time != null) {
+            writeFieldTo(out, "time", String.format("%.3f", time.getTime() / 1000D));
         }
 
-        writeFieldTo(out, "time", String.format("%.3f", epoch_time / 1000D));
         writeFieldTo(out, "source", getSource());
         writeFieldTo(out, "sourceType", getSourceType());
         writeFieldTo(out, "index", getIndex());
         writeFieldTo(out, "host", getHost());
         writeFieldTo(out, "data", getData());
 
-        if (!isUnbroken() && isDone()) {
+        if (isDone()) {
             out.writeStartElement("done");
             out.writeEndElement();
         }
 
         out.writeEndElement();
+        out.writeCharacters("\r\n");
         out.flush();
     }
 

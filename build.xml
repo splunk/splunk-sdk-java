@@ -22,6 +22,7 @@
 
     <!-- Paths within the repository that are referenced
          multiple times. -->
+    <property name="build.apps" location="build"/>
     <property name="build.splunk" location="build/splunk"/>
     <property name="build.tests" location="build/tests"/>
     <property name="build.examples" location="build/examples"/>
@@ -195,7 +196,7 @@
         <standalone-example-jar name="index"/>
         <standalone-example-jar name="info"/>
         <standalone-example-jar name="input"/>
-        <standalone-example-jar name="randomnumbers"/>
+        <standalone-example-jar name="random_numbers"/>
 
         <standalone-example-jar name="search">
             <dependencies>
@@ -211,6 +212,41 @@
         <standalone-example-jar name="search_simple"/>
         <standalone-example-jar name="spurl"/>
         <standalone-example-jar name="tail"/>
+
+	<!-- Create the random_numbers example modular input app -->
+	<echo message="Assembling example app"/>
+	<copy todir="${build.apps}/random_numbers">
+	  <fileset dir="examples/com/splunk/examples/random_numbers/random_numbers"/>
+	</copy>
+
+	<mkdir dir="${build.apps}/random_numbers/jars"/>
+	<copy file="${dist}/examples/random_numbers.jar" todir="${build.apps}/random_numbers/jars"/>
+
+	<mkdir dir="${build.apps}/random_numbers/windows_x86_64/bin"/>
+	<copy file="launchers/shim64.exe" tofile="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe"/>
+	<chmod file="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe" perm="ugo+x"/>
+
+	<mkdir dir="${build.apps}/random_numbers/windows_x86/bin"/>
+	<copy file="launchers/shim32.exe" tofile="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe"/>
+	<chmod file="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe" perm="ugo+x"/>
+
+	<mkdir dir="${build.apps}/random_numbers/darwin_x86_64/bin"/>
+ 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh"/>
+	<chmod file="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh" perm="ugo+x"/>
+
+	<mkdir dir="${build.apps}/random_numbers/linux_x86/bin"/>
+ 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh"/>
+	<chmod file="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh" perm="ugo+x"/>
+
+	<mkdir dir="${build.apps}/random_numbers/linux_x86_64/bin"/>
+ 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh"/>
+	<chmod file="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh" perm="ugo+x"/>
+
+	<echo message="Packaging example app"/>
+	<tar destfile="${dist}/random_numbers.spl"
+	     basedir="${build.apps}"
+	     includes="random_numbers/**"/>
+
     </target>
 
 
