@@ -294,7 +294,7 @@ PTSTR getPathToJar() {
     // Now shift the base name over.
     baseNameLen = _tcslen(baseName) + 1;
     // Advance endPtr and add .jar to it.
-    _tcscpy_s(endPtr, baseNameLen, baseName);
+    memmove_s(endPtr, baseNameLen*sizeof(TCHAR), baseName, baseNameLen*sizeof(TCHAR));
     endPtr += baseNameLen - 1;
     _tcscpy_s(endPtr, jarSuffixLen, jarSuffix);
 
