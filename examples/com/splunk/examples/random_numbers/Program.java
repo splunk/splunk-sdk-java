@@ -56,20 +56,20 @@ public class Program extends Script {
         scheme.setUseExternalValidation(true);
         scheme.setUseSingleInstance(true);
 
-        scheme.addArgument(new Argument("min") {{
-            setDataType(DataType.NUMBER);
-            setDescription("Minimum value to be produced by this input.");
-            setRequiredOnCreate(true);
-            // If you are not using external validation, you would add something like:
-            //
-            // setValidation("min > 0");
-        }});
+        Argument minArgument = new Argument("min");
+        minArgument.setDataType(Argument.DataType.NUMBER);
+        minArgument.setDescription("Minimum value to be produced by this input.");
+        minArgument.setRequiredOnCreate(true);
+        // If you are not using external validation, you would add something like:
+        //
+        // setValidation("min > 0");
+        scheme.addArgument(minArgument);
 
-        scheme.addArgument(new Argument("max") {{
-            setDataType(DataType.NUMBER);
-            setDescription("Maximum value to be produced by this input.");
-            setRequiredOnCreate(true);
-        }});
+        Argument maxArgument = new Argument("max");
+        maxArgument.setDataType(Argument.DataType.NUMBER);
+        maxArgument.setDescription("Maximum value to be produced by this input.");
+        maxArgument.setRequiredOnCreate(true);
+        scheme.addArgument(maxArgument);
 
         return scheme; // ...and don't forget to return the scheme.
     }

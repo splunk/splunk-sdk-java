@@ -281,6 +281,7 @@
                 <fileset dir="${build.tests}">
                     <include name="**/*Test.class"/>
                 </fileset>
+		<formatter type="xml" />
             </batchtest>
 
             <formatter type="xml" />
@@ -319,6 +320,7 @@
                     <fileset dir="${build.tests}">
                         <include name="**/*Test.class"/>
                     </fileset>
+		    <formatter type="xml" />
                 </batchtest>
 
                 <formatter type="xml" />
@@ -341,6 +343,7 @@
             </structure>
 
             <html destdir="${coverage.dir}"/>
+	    <xml destfile="test_coverage.xml"/>
         </jacoco:report>
 
         <mkdir dir="${testreport.dir}"/>
