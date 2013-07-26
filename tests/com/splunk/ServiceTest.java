@@ -16,16 +16,15 @@
 
 package com.splunk;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URLStreamHandler;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Test;
 
 public class ServiceTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
@@ -683,5 +682,27 @@ public class ServiceTest extends SDKTestCase {
         loginArgs.add("port", command.opts.get("port"));
 
         Service.connect(loginArgs);
+    }
+
+    @Test
+    public void testHandleErrorsReturnedAsJson() {
+        JobExportArgs exportArgs = new JobExportArgs();
+
+        exportArgs.setOutputMode(JobExportArgs.OutputMode.JSON);
+        exportArgs.setSearchMode(JobExportArgs.SearchMode.REALTIME);
+        exportArgs.setEarliestTime("rt");
+        exportArgs.setLatestTime("rt");
+
+        try {
+            service.export("notasearchcommand", exportArgs);
+        } catch (Exception e) {
+            assertEquals(
+                    "HTTP 400 -- {\"messages\":[{\"type\":\"FATAL\",\"text\":" +
+                            "\"Unknown search command 'notasearchcommand'.\"}]}",
+                    e.getMessage()
+            );
+            return;
+        }
+        fail();
     }
 }
