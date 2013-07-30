@@ -7,9 +7,19 @@
 # Extra arguments to the JVM (i.e., -Xms512M) can be put in
 # a file jars/${INPUTNAME}.vmopts and will be interpolated
 # into the command to run the JVM.
-SCRIPT=$(readlink -f "$0")
+SCRIPT="$0"
+
+cd `dirname "$SCRIPT"`
+SCRIPT=`basename "$SCRIPT"`
+
+while [ -L "$SCRIPT" ]; do
+    SCRIPT=`readlink "$SCRIPT"`
+    cd `dirname "$SCRIPT"`
+    SCRIPT=`basename "$SCRIPT"`
+done
+
 BASENAME=$(basename "$SCRIPT" .sh)
-JAR_DIR=$(dirname "$SCRIPT")/../../jars
+JAR_DIR=`pwd -P`/../../jars
 
 if [ -f $JAR_DIR/$BASENAME.vmopts ]; then
     VMOPTS=`cat $JAR_DIR/$BASENAME.vmopts`
