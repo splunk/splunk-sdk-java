@@ -223,29 +223,32 @@
 	<copy file="${dist}/examples/random_numbers.jar" todir="${build.apps}/random_numbers/jars"/>
 
 	<mkdir dir="${build.apps}/random_numbers/windows_x86_64/bin"/>
-	<copy file="launchers/shim64.exe" tofile="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe"/>
-	<chmod file="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe" perm="ugo+x"/>
+	<copy file="launchers/shim-windows_x86_64.exe" tofile="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe"/>
 
 	<mkdir dir="${build.apps}/random_numbers/windows_x86/bin"/>
-	<copy file="launchers/shim32.exe" tofile="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe"/>
-	<chmod file="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe" perm="ugo+x"/>
+	<copy file="launchers/shim-windows_x86.exe" tofile="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe"/>
 
 	<mkdir dir="${build.apps}/random_numbers/darwin_x86_64/bin"/>
- 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh"/>
-	<chmod file="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh" perm="ugo+x"/>
+ 	<copy file="launchers/shim-darwin.sh" tofile="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh"/>
 
 	<mkdir dir="${build.apps}/random_numbers/linux_x86/bin"/>
- 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh"/>
-	<chmod file="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh" perm="ugo+x"/>
+ 	<copy file="launchers/shim-linux.sh" tofile="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh"/>
 
 	<mkdir dir="${build.apps}/random_numbers/linux_x86_64/bin"/>
- 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh"/>
-	<chmod file="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh" perm="ugo+x"/>
+ 	<copy file="launchers/shim-linux.sh" tofile="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh"/>
 
 	<echo message="Packaging example app"/>
-	<tar destfile="${dist}/random_numbers.spl"
-	     basedir="${build.apps}"
-	     includes="random_numbers/**"/>
+	<tar longfile="gnu" destfile="${dist}/random_numbers.spl">
+	  <tarfileset dir="${build.apps}" filemode="755">
+	    <include name="random_numbers/*/bin/random_numbers.*"/>
+	  </tarfileset>
+
+	  <tarfileset dir="${build.apps}">
+	    <include name="random_numbers/**"/>
+	    <exclude name="random_numbers/*/bin/*"/>
+	  </tarfileset>
+	</tar>
+	<echo message="Done packaging."/>
 
     </target>
 
