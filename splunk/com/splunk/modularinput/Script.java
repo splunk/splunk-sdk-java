@@ -53,11 +53,7 @@ public abstract class Script {
             eventWriter = new EventWriter();
             return run(args, eventWriter, System.in);
         } catch (XMLStreamException e) {
-
-            System.err.print(stackTraceToLogEntry(
-                    Severity.ERROR.toString(),
-                    e.getStackTrace())
-            );
+            System.err.print(stackTraceToLogEntry(e));
             return 1;
         }
     }
@@ -109,36 +105,31 @@ public abstract class Script {
 
                     return 1;
                 }
+            } else {
+                StringBuilder sb = new StringBuilder();
+                sb.append("ERROR Invalid arguments to modular input script:");
+                for (String arg : args) {
+                    sb.append(" ");
+                    sb.append(arg);
+                }
+                eventWriter.log(EventWriter.ERROR, sb.toString());
+                return 1;
             }
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("ERROR Invalid arguments to modular input script:");
-            for (String arg : args) {
-                sb.append(" ");
-                sb.append(arg);
-            }
-            System.err.println(sb.toString());
-            return 1;
         } catch (Exception e) {
-            return logException(e);
+            eventWriter.log(EventWriter.ERROR, stackTraceToLogEntry(e));
+            return 1;
         }
 
     }
 
-    public String stackTraceToLogEntry(String severity, StackTraceElement[] stackTrace) {
+    protected String stackTraceToLogEntry(Exception e) {
+        // Concatenate all the lines of the exception's stack trace with \\ between them.
         StringBuilder sb = new StringBuilder();
-        sb.append(severity);
-        sb.append(" ");
-        for (StackTraceElement s : stackTrace) {
+        for (StackTraceElement s : e.getStackTrace()) {
             sb.append(s.toString());
-            sb.append("\\");
+            sb.append("\\\\");
         }
         return sb.toString();
-    }
-
-    public int logException(Throwable e) {
-        System.err.println(stackTraceToLogEntry(EventWriter.ERROR, e.getStackTrace()));
-        return 1;
     }
 
     /**
