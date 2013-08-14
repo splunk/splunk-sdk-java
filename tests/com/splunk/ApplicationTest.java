@@ -192,13 +192,13 @@ public class ApplicationTest extends SDKTestCase {
             
             // Verify expected properties of the update
             ApplicationUpdate update = gettingStarted.getUpdate();
-            assertEquals("f1a30efa896d9a2f7272420c2f999f03", update.getChecksum());
+            assertEquals("3f489b7b8106bd3cc65f159d22918ba3", update.getChecksum());
             assertEquals("md5", update.getChecksumType());
-            assertEquals("https://splunkbase.splunk.com/apps/Getting+Started", update.getHomepage());
-            assertEquals(804665, update.getSize());
+            assertEquals("https://splunkbase.splunk.com/apps/Getting%20Started", update.getHomepage());
+            assertEquals(846532, update.getSize());
             assertEquals("Getting Started", update.getUpdateName());
             assertEquals(
-                    "https://splunkbase.splunk.com/api/apps:download/Getting+Started/1.0/gettingstarted.spl",
+                    "https://splunkbase.splunk.com/api/apps:download/Getting%20Started/1.0/gettingstarted.spl",
                     update.getAppUrl()
             );
             assertEquals("1.0", update.getVersion());
