@@ -90,7 +90,7 @@ public class ServiceArgs extends Args {
     }
     
     /**
-     * @param httpsHandler
+     * @param handler
      *      A URLStreamHandler to handle HTTPS requests for the service.
      */
     public void setHTTPSHandler(URLStreamHandler handler) {
