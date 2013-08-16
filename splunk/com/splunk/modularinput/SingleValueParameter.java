@@ -17,8 +17,8 @@
 package com.splunk.modularinput;
 
 /**
- * Class representing a parameter as part of a modular input instance that
- * contains only a single value. This corresponds to XML fragments of the form
+ * The {@code SingleValueParameter} class represents a parameter as part of a modular input instance that
+ * contains only a single value. This corresponds to XML fragments of the form:
  *
  * <param name="param1">value11</param>
  *
@@ -43,22 +43,22 @@ public class SingleValueParameter extends Parameter {
     /**
      * Returns the parameter as found (as a String), without trying to coerce it to another type.
      *
-     * If your field is boolean or numeric, use getBoolean or one of getInt, getLong, getFloat, and getDouble
-     * instead.
+     * If your field is Boolean or numeric, use {@code getBoolean} or one of {@code getInt}, {@code getLong}, 
+     * {@code getFloat}, and {@code getDouble} instead.
      *
-     * @return the value of this parameter as a String.
+     * @return The value of this parameter as a String.
      */
     public String getValue() {
         return this.value;
     }
 
     /**
-     * Tries to coerce the value of this parameter to a boolean. A range of values (true, t, on, 1, y, yes) are
-     * interpreted as true, and a similar range (false, f, off, 0, no, n) as false. Everything else, including null,
-     * results in a MalformedDataException.
+     * Tries to coerce the value of this parameter to a Boolean. A range of values (true, t, on, 1, y, yes) are
+     * interpreted as {@code true}, and a similar range (false, f, off, 0, no, n) as {@code false}. Everything
+     * else, including null, results in a {@code MalformedDataException}.
      *
-     * @return the value of this parameter coerced to a boolean.
-     * @throws MalformedDataException if the value cannot be coerced to a boolean.
+     * @return The value of this parameter coerced to a Boolean. 
+     * @throws MalformedDataException If the value cannot be coerced to a boolean.
      */
     public boolean getBoolean() throws MalformedDataException {
         return XmlUtil.normalizeBoolean(getValue());
@@ -67,7 +67,7 @@ public class SingleValueParameter extends Parameter {
     /**
      * Coerces the value of this field to an int.
      *
-     * @return an int parsed from this parameter's value.
+     * @return An int parsed from this parameter's value.
      */
     public int getInt() {
         return Integer.parseInt(getValue());
@@ -76,7 +76,7 @@ public class SingleValueParameter extends Parameter {
     /**
      * Coerces the value of this field to a long.
      *
-     * @return a long parsed from this parameter's value.
+     * @return A long parsed from this parameter's value.
      */
     public long getLong() {
         return Long.parseLong(getValue());
@@ -85,7 +85,7 @@ public class SingleValueParameter extends Parameter {
     /**
      * Coerces the value of this field to a float.
      *
-     * @return a float parsed from this parameter's value.
+     * @return A float parsed from this parameter's value.
      */
     public float getFloat() {
         return Float.parseFloat(getValue());
@@ -94,7 +94,7 @@ public class SingleValueParameter extends Parameter {
     /**
      * Coerces the value of this field to a double.
      *
-     * @return a double parsed from this parameter's value.
+     * @return A double parsed from this parameter's value.
      */
     public double getDouble() {
         return Double.parseDouble(getValue());

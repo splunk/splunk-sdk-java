@@ -21,15 +21,15 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.Date;
 
 /**
- * Event represents an event or fragment of an event to be written by this modular input to Splunk.
+ * The {@code Event} class represents an event or fragment of an event to be written by this modular input to Splunk.
  *
- * To write an Event to an XML stream, call its writeTo method with an XMLStreamWriter object to write to.
- * The Event must have at least the data field set or writeTo will throw a MalformedDataException. All other
- * fields are optional. If you omit the time field, the writeTo method will fill in the current time when it is called.
+ * To write an {@code Event} to an XML stream, call its {@code writeTo} method with an {@code XMLStreamWriter} object to write to.
+ * The {@code Event} must have at least the data field set or {@code writeTo} will throw a {@code MalformedDataException}. All other
+ * fields are optional. If you omit the time field, the {@code writeTo} method will fill in the current time when it is called.
  *
- * Typically, you will also want to call setStanza to specify which instance of the modular input kind this event
- * should go to, setTime to set the timestamp, and setSource, setHost, and setSourceType specify where this event
- * came from.
+ * Typically, you will also want to call {@code setStanza} to specify which instance of the modular input kind this event
+ * should go to, {@code setTime} to set the timestamp, and {@code setSource}, {@code setHost}, and {@code setSourceType}
+ * specify where this event came from.
  */
 public class Event {
     protected Date time = null;
@@ -54,10 +54,10 @@ public class Event {
     }
 
     /**
-     * Write this event to the given XMLStreamWriter.
+     * Writes this event to the given {@code XMLStreamWriter}.
      *
-     * @param out The XMLStreamWriter to append to.
-     * @throws XMLStreamException if there is a problem in the XMLStreamWriter.
+     * @param out The {@code XMLStreamWriter} to append to.
+     * @throws XMLStreamException if there is a problem in the {@code XMLStreamWriter}.
      * @throws MalformedDataException if you have not specified data for this event.
      */
     public void writeTo(XMLStreamWriter out) throws XMLStreamException, MalformedDataException {
@@ -92,10 +92,10 @@ public class Event {
     }
 
     /**
-     * Time is a java.util.Date object giving the timestamp that should be sent with this event. If this field is null,
+     * Gets a {@code java.util.Date} object giving the timestamp that should be sent with this event. If this field is null,
      * Splunk will assign the time at which the event is indexed as its timestamp.
      *
-     * @return a java.util.Date object giving the time assigned to this Event, or null if Splunk should apply a default
+     * @return A {@code java.util.Date} object giving the time assigned to this Event, or null if Splunk should apply a default
      *         timestamp.
      */
     public Date getTime() {
@@ -103,10 +103,10 @@ public class Event {
     }
 
     /**
-     * Time is a java.util.Date object giving the timestamp that should be sent with this event. If this field is null,
+     * Sets a {@code java.util.Date} object giving the timestamp that should be sent with this event. If this field is null,
      * Splunk will assign the time at which the event is indexed as its timestamp.
      *
-     * @param time The java.util.Date which should be used as this event's timestamp, or null to have Splunk use a
+     * @param time The {@code java.util.Date} which should be used as this event's timestamp, or null to have Splunk use a
      *             default timestamp.
      */
     public void setTime(Date time) {
@@ -114,100 +114,100 @@ public class Event {
     }
 
     /**
-     * Data is the text of the event that Splunk should index.
+     * Gets the text of the event that Splunk should index.
      *
-     * @return a String containing the event text.
+     * @return A String containing the event text.
      */
     public String getData() {
         return this.data;
     }
 
     /**
-     * Data is the text of the event that Splunk should index.
+     * Sets the text of the event that Splunk should index.
      *
-     * @param data a String containing the event text.
+     * @param data A String containing the event text.
      */
     public void setData(String data) {
         this.data = data;
     }
 
     /**
-     * Source is the file, service, or other producer that this Event comes from. For lines in log files, it is
+     * Gets the file, service, or other producer that this {@code Event} comes from. For lines in log files, it is
      * typically the full path to the log file. If it is omitted, Splunk will guess a sensible name for the source.
      *
-     * @return a String giving the source of this event, or null to have Splunk guess.
+     * @return A String giving the source of this event, or null to have Splunk guess.
      */
     public String getSource() {
         return this.source;
     }
 
     /**
-     * Source is the file, service, or other producer that this Event comes from. For lines in log files, it is
+     * Sets the file, service, or other producer that this {@code Event} comes from. For lines in log files, it is
      * typically the full path to the log file. If it is omitted, Splunk will guess a sensible name for the source.
      *
-     * @param source a String to be used as the source of this event, or null to have Splunk guess.
+     * @param source A String to be used as the source of this event, or null to have Splunk guess.
      */
     public void setSource(String source) {
         this.source = source;
     }
 
     /**
-     * Source type is a classification of this event. For example, all different web server logs might be assigned
+     * Gets a classification of this event. For example, all different web server logs might be assigned
      * the same source type, or different source types can be assigned to distinct classes of events that all have
      * the same source. If it is omitted, Splunk will guess a sensible name for the source type.
      *
-     * @return the source type currently set on this event, or null if Splunk is to guess a source.
+     * @return The source type currently set on this event, or null if Splunk is to guess a source.
      */
     public String getSourceType() {
         return this.sourceType;
     }
 
     /**
-     * Source type is a classification of this event. For example, all different web server logs might be assigned
+     * Sets a classification of this event. For example, all different web server logs might be assigned
      * the same source type, or different source types can be assigned to distinct classes of events that all have
      * the same source. If this field is omitted, Splunk will make a guess as to the source type.
      *
-     * @param sourceType a String to use as the source type for this event, or null to have Splunk guess.
+     * @param sourceType A String to use as the source type for this event, or null to have Splunk guess.
      */
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
     }
 
     /**
-     * The index field specifies which index Splunk should write this event to. If it is omitted, Splunk has a default
+     * Gets an index field specifying which index Splunk should write this event to. If it is omitted, Splunk has a default
      * index where events will be written.
      *
-     * @return the index this event is specified to write to, or null if it will be written to the default index.
+     * @return The index this event is specified to write to, or null if it will be written to the default index.
      */
     public String getIndex() {
         return this.index;
     }
 
     /**
-     * The index field specifies which index Splunk should write this event to. If it is omitted, Splunk has a default
+     * Sets an index field specifying which index Splunk should write this event to. If it is omitted, Splunk has a default
      * index where events will be written.
      *
-     * @param index the name of the index to write to, or null to have Splunk write to the default index.
+     * @param index The name of the index to write to, or null to have Splunk write to the default index.
      */
     public void setIndex(String index) {
         this.index = index;
     }
 
     /**
-     * Host specifies the name of the network host on which this event was produced. If it is omitted, Splunk will use
+     * Gets a host specifying the name of the network host on which this event was produced. If it is omitted, Splunk will use
      * the host from which it directly received the event.
      *
-     * @return a String giving the host name of the event source, or null to use the host Splunk receives the event from.
+     * @return A String giving the host name of the event source, or null to use the host Splunk receives the event from.
      */
     public String getHost() {
         return this.host;
     }
 
     /**
-     * Host specifies the name of the network host on which this event was produced. If it is omitted, Splunk will use
+     * Sets a host specifying the name of the network host on which this event was produced. If it is omitted, Splunk will use
      * the host from which it directly received the event.
      *
-     * @param host a String giving the host name of the event source, or null to use the host Splunk receives
+     * @param host A String giving the host name of the event source, or null to use the host Splunk receives
      *             the event from.
      */
     public void setHost(String host) {
@@ -215,74 +215,86 @@ public class Event {
     }
 
     /**
+     * Sets a value indicating whether this is the last piece of an event broken across multiple {@code Event} objects.
+     * 
      * Splunk allows events from modular inputs to be sent in pieces. For example, if lines of an event become available
-     * one at a time, they can be sent (in events with setUnbroken(false) called on them) as hunks. At the end of the
+     * one at a time, they can be sent (in events with {@code setUnbroken(false)} called on them) as hunks. At the end of the
      * event, you must manually tell Splunk to break after this hunk by setting done to true. Then the next event
      * received will be taken to be part of another event.
      *
-     * By default, done is true and unbroken is true, so if you do not touch these fields, you will send one complete
-     * event per Event object.
+     * By default, done is {@code true} and unbroken is {@code true}, so if you do not touch these fields, you will send one complete
+     * event per {@code Event} object.
      *
-     * @param done Is this the last hunk of an event broken across multiple Event objects?
+     * @param done Is this the last hunk of an event broken across multiple {@code Event} objects?
      */
     public void setDone(boolean done) {
         this.done = done;
     }
 
     /**
+     * Gets a value indicating whether this is the last piece of an event broken across multiple {@code Event} objects.
+     * 
      * Splunk allows events from modular inputs to be sent in pieces. For example, if lines of an event become available
      * one at a time, they can be sent (in events with setUnbroken(false) called on them) as hunks. At the end of the
      * event, you must manually tell Splunk to break after this hunk by setting done to true. Then the next event
      * received will be taken to be part of another event.
      *
-     * By default, done is true and unbroken is true, so if you do not touch these fields, you will send one complete
-     * event per Event object.
+     * By default, done is {@code true} and unbroken is {@code true}, so if you do not touch these fields, you will send one complete
+     * event per {@code Event} object.
      *
-     * @return Is this the last hunk of an event broken across multiple Event objects?
+     * @return Is this the last hunk of an event broken across multiple {@code Event} objects?
      */
     public boolean isDone() {
         return this.done;
     }
 
     /**
-     * Splunk allows events from modular inputs to be sent in pieces. If unbroken is set to true, then this event is
-     * assumed to be a complete event, not a piece of one. By default, unbroken is true. If you set unbroken to false,
-     * you need to call setDone(true) on the last hunk of the complete event for Splunk to know to terminate it.
+     * Sets a value indicating whether this event is completely encapsulated in this {@code Event} object.
+     * 
+     * Splunk allows events from modular inputs to be sent in pieces. If unbroken is set to {@code true}, then this event is
+     * assumed to be a complete event, not a piece of one. By default, unbroken is {@code true}. If you set unbroken to {@code false},
+     * you need to call {@code setDone(true)} on the last hunk of the complete event for Splunk to know to terminate it.
      *
-     * @param unbroken Is this event completely encapsulated in this Event object?
+     * @param unbroken Is this event completely encapsulated in this {@code Event} object?
      */
     public void setUnbroken(boolean unbroken) {
         this.unbroken = unbroken;
     }
 
     /**
-     * Splunk allows events from modular inputs to be sent in pieces. If unbroken is set to true, then this event is
-     * assumed to be a complete event, not a piece of one. By default, unbroken is true. If you set unbroken to false,
-     * you need to call setDone(true) on the last hunk of the complete event for Splunk to know to terminate it.
+     * Gets a value indicating whether this event is completely encapsulated in this {@code Event} object.
+     * 
+     * Splunk allows events from modular inputs to be sent in pieces. If unbroken is set to {@code true}, then this event is
+     * assumed to be a complete event, not a piece of one. By default, unbroken is {@code true}. If you set unbroken to {@code false},
+     * you need to call {@code setDone(true)} on the last hunk of the complete event for Splunk to know to terminate it.
      *
-     * @return Is this event completely encapsulated in this Event object?
+     * @return Is this event completely encapsulated in this {@code Event} object?
      */
     public boolean isUnbroken() {
         return this.unbroken;
     }
 
     /**
+     * Gets the name of the input this event should be sent to.
+     * 
      * A single modular input script can feed events to multiple instances of the modular input. In this case, each
      * event must be marked with the name of the input it should be sent to. This is also the name of the configuration
      * stanza that describes that input.
      *
-     * @return the name of the input this event should be sent to.
+     * @return The name of the input this event should be sent to.
      */
     public String getStanza() {
         return this.stanza;
     }
 
     /**
+     * Sets the name of the input this event should be sent to.
+     * 
      * A single modular input script can feed events to multiple instances of the modular input. In this case, each
      * event must be marked with the name of the input it should be sent to. This is also the name of the configuration
      * stanza that describes that input.
      *
-     * @param stanza the name of the input this event should be sent to.
+     * @param stanza The name of the input this event should be sent to.
      */
     public void setStanza(String stanza) {
         this.stanza = stanza;

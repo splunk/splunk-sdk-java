@@ -28,9 +28,9 @@ import java.io.*;
 import java.util.logging.Level;
 
 /**
- * EventWriter encapsulates writing events and error messages to Splunk from a modular input.
+ * The {@code EventWriter} class encapsulates writing events and error messages to Splunk from a modular input.
  *
- * Its two important methods are writeEvent, which takes an Event object, and log, which takes a severity
+ * Its two important methods are {@code writeEvent}, which takes an {@code Event} object, and log, which takes a severity
  * and an error message.
  */
 public class EventWriter {
@@ -75,52 +75,54 @@ public class EventWriter {
     }
 
     /**
-     * Clear the error state on this EventWriter.
+     * Clears the error state on this {@code EventWriter}.
      *
-     * EventWriter does not throw IOException errors, but does not ignore them entirely either. Instead it operates
-     * the same way as PrintStream in the standard library. You can always check if an IOException has been thrown
-     * by calling checkError.
+     * {@code EventWriter} does not throw {@code IOException} errors, but does not ignore them entirely either. Instead it operates
+     * the same way as {@code PrintStream} in the standard library. You can always check if an {@code IOException} has been thrown
+     * by calling {@code checkError}.
      */
     protected void clearError() {
         hadIOException = false;
     }
 
     /**
-     * Declare that this EventWriter had an IOException.
+     * Declares that this {@code EventWriter} had an {@code IOException}.
      *
-     * EventWriter does not throw IOException errors, but does not ignore them entirely either. Instead it operates
-     * the same way as PrintStream in the standard library. You can always check if an IOException has been thrown
-     * by calling checkError.
+     * {@code EventWriter} does not throw {@code IOException} errors, but does not ignore them entirely either. Instead it operates
+     * the same way as {@code PrintStream} in the standard library. You can always check if an {@code IOException} has been thrown
+     * by calling {@code checkError}.
      */
     protected void setError() {
         hadIOException = true;
     }
 
     /**
-     * Returns whether there was an IOException on this EventWriter.
+     * Returns whether there was an {@code IOException} on this EventWriter.
      *
-     * EventWriter does not throw IOException errors, but does not ignore them entirely either. Instead it operates
-     * the same way as PrintStream in the standard library. You can always check if an IOException has been thrown
-     * by calling checkError.
+     * {@code EventWriter} does not throw {@code IOException} errors, but does not ignore them entirely either. Instead it operates
+     * the same way as {@code PrintStream} in the standard library. You can always check if an {@code IOException} has been thrown
+     * by calling {@code checkError}.
      */
     public boolean checkError() {
         return hadIOException;
     }
 
     /**
-     * Thread safe version of writeEvent.
+     * Thread safe version of {@code writeEvent}.
+     * @see #writeEvent
      */
     public synchronized void synchronizedWriteEvent(Event event) throws MalformedDataException {
         writeEvent(event);
     }
 
     /**
-     * Write an Event object to Splunk. This method is not thread safe. If you need a thread safe version, use
-     * synchronizedWriteEvent.
+     * Writes an {@code Event} object to Splunk. This method is not thread safe. If you need a thread safe version, use
+     * {@code synchronizedWriteEvent}.
      *
-     * If you try to write an Event with null data, throws MalformedDataException.
+     * If you try to write an {@code Event} with null data, throws {@code MalformedDataException}.
      *
-     * @param event The Event object to write.
+     * @see #synchronizedWriteEvent
+     * @param event The {@code Event} object to write.
      * @throws MalformedDataException
      */
     public void writeEvent(Event event) throws MalformedDataException {
@@ -140,16 +142,19 @@ public class EventWriter {
     }
 
     /**
-     * Thread safe version of log.
+     * Thread safe version of {@code log}.
+     * @see #log
      */
     public synchronized void synchronizedLog(String severity, String errorMessage) {
         log(severity, errorMessage);
     }
 
     /**
-     * Log messages about the state of this modular input to Splunk. These messages will show up in Splunk's
+     * Logs messages about the state of this modular input to Splunk. These messages will show up in Splunk's
      * internal logs.
-     * @param severity The severity (e.g., EventWriter.WARN, EventWriter.FATAL) of this message.
+     * 
+     * @see #synchronizedLog
+     * @param severity The severity (e.g., {@code EventWriter.WARN}, {@code EventWriter.FATAL}) of this message.
      * @param errorMessage The message that should appear in the logs.
      * @throws IOException
      */
@@ -163,7 +168,7 @@ public class EventWriter {
     }
 
     /**
-     * Write the closing </stream> tag to make this XML well formed.
+     * Writes the closing </stream> tag to make this XML well formed.
      *
      * @throws XMLStreamException
      */
@@ -176,7 +181,7 @@ public class EventWriter {
     }
 
     /**
-     * Write an org.w3c.dom.Document object containing XML to the output stream.
+     * Writes an org.w3c.dom.Document object containing XML to the output stream.
      */
     void writeXmlDocument(Document document) throws TransformerException, XMLStreamException, IOException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
