@@ -198,7 +198,7 @@ PTSTR assembleJvmCommand(PTSTR jarPath, PTSTR jvmOptions, int argc, _TCHAR* argv
     index += _tcslen(literal); \
 }
 
-    APPEND_TCS(TEXT("java"));
+    APPEND_TCS(TEXT("java "));
     APPEND_TCS(jvmOptions);
     APPEND_TCS(TEXT(" -jar \""));
     APPEND_TCS(jarPath);
