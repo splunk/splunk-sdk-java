@@ -1,8 +1,8 @@
-# The Splunk Java Software Development Kit
+# The Splunk Software Development Kit for Java
 
-#### Version 1.1
+#### Version 1.2
 
-The Splunk Java Software Development Kit (SDK) contains library code and 
+The Splunk Software Development Kit (SDK) for Java contains library code and 
 examples designed to enable developers to build applications using Splunk.
 
 Splunk is a search engine and analytic environment that uses a distributed
@@ -126,7 +126,7 @@ To use this convenience file, create a text file with the following format:
 
 Save the file as **.splunkrc** in the current user's home directory.
 
-*   For example on Mac OS X, save the file as: 
+*   For example, on Mac OS X, save the file as: 
 
         ~/.splunkrc
 
