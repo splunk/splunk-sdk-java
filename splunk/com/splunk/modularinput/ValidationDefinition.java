@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class representing the XML sent by Splunk for external validation of a new modular input.
+ * The {@code ValidationDefinition} class represents the XML sent by Splunk for external validation of a new modular input.
  */
 public class ValidationDefinition {
     private Map<String, String> metadata;
@@ -51,20 +51,26 @@ public class ValidationDefinition {
     }
 
     /**
-     * Set the name of the server on which this modular input is being run.
+     * Sets the name of the server on which this modular input is being run.
+     *
+     * @param serverHost The name of the server on which this modular input is being run.
      */
     void setServerHost(String serverHost) {
         this.metadata.put(serverHostField, serverHost);
     }
 
     /**
-     * @return the name of the server on which this modular input is being run.
+     * Gets the name of the server on which this modular input is being run.
+     *
+     * @return The name of the server on which this modular input is being run.
      */
     public String getServerHost() {
         return this.metadata.get(serverHostField);
     }
 
     /**
+     * Sets the URI to reach the server on which this modular input is being run.
+     *
      * @param serverUri The URI to reach the server on which this modular input is being run.
      */
     void setServerUri(String serverUri) {
@@ -72,13 +78,17 @@ public class ValidationDefinition {
     }
 
     /**
-     * @return the URI to the server on which this modular input is being run.
+     * Gets the URI to the server on which this modular input is being run.
+     *
+     * @return The URI to the server on which this modular input is being run.
      */
     public String getServerUri() {
         return this.metadata.get(serverUriField);
     }
 
     /**
+     * Sets the path to write checkpoint files in.
+     *
      * @param checkpointDir The path to write checkpoint files in.
      */
     void setCheckpointDir(String checkpointDir) {
@@ -86,13 +96,17 @@ public class ValidationDefinition {
     }
 
     /**
-     * @return the path to write checkpoint files for restarting inputs in.
+     * Gets the path to write checkpoint files for restarting inputs in.
+     *
+     * @return The path to write checkpoint files for restarting inputs in.
      */
     public String getCheckpointDir() {
         return this.metadata.get(checkpointDirField);
     }
 
     /**
+     * Sets a session key that can be used to access splunkd's REST API.
+     *
      * @param sessionKey A session key that can be used to access splunkd's REST API.
      */
     void setSessionKey(String sessionKey) {
@@ -100,6 +114,8 @@ public class ValidationDefinition {
     }
 
     /**
+     * Gets a session key providing access to splunkd's REST API on this host.
+     *
      * @return A session key providing access to splunkd's REST API on this host.
      */
     public String getSessionKey() {
@@ -107,6 +123,8 @@ public class ValidationDefinition {
     }
 
     /**
+     * Sets the name of the proposed modular input instance.
+     *
      * @param name The name of the proposed modular input instance.
      */
     void setName(String name) {
@@ -114,6 +132,8 @@ public class ValidationDefinition {
     }
 
     /**
+     * Gets the name of the proposed modular input instance.
+     *
      * @return The name of the proposed modular input instance.
      */
     public String getName() {
@@ -121,7 +141,9 @@ public class ValidationDefinition {
     }
 
     /**
-     * @param parameters a list of Parameter objects giving the proposed configuration.
+     * Sets a list of {@code Parameter} objects giving the proposed configuration.
+     *
+     * @param parameters A list of {@code Parameter} objects giving the proposed configuration.
      */
     public void setParameters(Collection<Parameter> parameters) {
         Map<String, Parameter> paramMap = new HashMap<String, Parameter>();

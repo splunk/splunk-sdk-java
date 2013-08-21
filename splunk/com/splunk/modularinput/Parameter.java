@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parameter is a base class for parameters of modular inputs. It has two subclasses, SingleValueParameter
- * and MultiValueParameter.
+ * The {@code Parameter} class is a base class for parameters of modular inputs. It has two subclasses: {@code SingleValueParameter}
+ * and {@code MultiValueParameter}.
  *
- * All parameters should be constructed with the static nodeToParameterList method, which takes an XML org.w3c.dom.Node
- * object as its argument and returns a list of Parameter objects, single valued or multi valued as needed.
+ * All parameters should be constructed with the static {@code nodeToParameterList} method, which takes an XML {@code org.w3c.dom.Node}
+ * object as its argument and returns a list of {@code Parameter} objects, single valued or multi valued as needed.
  */
 public abstract class Parameter {
     public abstract String getName();
@@ -37,7 +37,7 @@ public abstract class Parameter {
     }
 
     /**
-     * Generate a list of Parameter objects from an org.w3c.dom.Node object containing a set of parameters. The node
+     * Generates a list of {@code Parameter} objects from an {@code org.w3c.dom.Node} object containing a set of parameters. The node
      * may be any element, but is expected to contain elements param or param_list, as in
      *
      * <stanza name="foobar://aaa">
@@ -51,9 +51,9 @@ public abstract class Parameter {
      *     </param_list>
      * </stanza>
      *
-     * @param node an org.w3c.dom.Node object containing the parameter list as children.
-     * @return a list of Parameter objects extracted from the XML.
-     * @throws com.splunk.modularinput.MalformedDataException if the XML does not specify a valid parameter list.
+     * @param node An {@code org.w3c.dom.Node} object containing the parameter list as children.
+     * @return A list of Parameter objects extracted from the XML.
+     * @throws com.splunk.modularinput.MalformedDataException If the XML does not specify a valid parameter list.
      */
     public static List<Parameter> nodeToParameterList(Node node) throws MalformedDataException {
         List<Parameter> parameters = new ArrayList<Parameter>();

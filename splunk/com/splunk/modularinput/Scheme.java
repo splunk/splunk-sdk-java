@@ -27,12 +27,12 @@ import java.util.List;
 
 
 /**
- * Class representing the metadata for a modular input kind.
+ * The {@code Scheme} class represents the metadata for a modular input kind.
  *
- * A Scheme specifies a title, description, several options of how Splunk should run modular inputs of this
+ * A {@code Scheme} specifies a title, description, several options of how Splunk should run modular inputs of this
  * kind, and a set of arguments which define a particular modular input's properties.
  *
- * The primary use of Scheme is to abstract away the construction of XML to feed to Splunk.
+ * The primary use of {@code Scheme} is to abstract away the construction of XML to feed to Splunk.
  */
 public class Scheme {
     private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -67,97 +67,128 @@ public class Scheme {
     }
 
     /**
-     * Return the title of this modular input kind.
+     * Gets the title of this modular input kind.
+     *
+     * @return The title of this modular input kind.
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Set the title of this modular input kind.
+     * Sets the title of this modular input kind.
+     *
+     * @param title The title of this modular input kind.
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * Get the human readable description of this modular input kind.
+     * Gets the human readable description of this modular input kind.
+     *
+     * @return The human readable description of this modular input kind.
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Set the human readable description of this modular input kind.
+     * Sets the human readable description of this modular input kind.
+     *
+     * @param The human readable description of this modular input kind.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * Return whether Splunk should use the modular input kind script to validate the arguments
-     * of a particular modular input (true) or use the validation predicates specified by the arguments (false).
+     * Returns whether Splunk should use the modular input kind script to validate the arguments
+     * of a particular modular input or use the validation predicates specified by the arguments.
+     *
+     * @return {@code true} if Splunk should use the modular input kind script to validate the arguments
+     * of a particular modular input, {@code false} if it should use the validation predicates specified by the arguments.
      */
     public boolean isUseExternalValidation() {
         return useExternalValidation;
     }
 
     /**
-     * Specify whether Splunk should use the modular input kind script to validate the arguments
+     * Specifies whether Splunk should use the modular input kind script to validate the arguments
      * of a particular modular input (true) or use the validation predicates specified by the arguments (false).
+     *
+     * @param useExternalValidation {@code true} if Splunk should use the modular input kind script to validate the arguments
+     * of a particular modular input, {@code false} if it should use the validation predicates specified by the arguments.
      */
     public void setUseExternalValidation(boolean useExternalValidation) {
         this.useExternalValidation = useExternalValidation;
     }
 
     /**
-     * Return whether Splunk should run all modular inputs of this kind via one instance of the script
+     * Returns whether Splunk should run all modular inputs of this kind via one instance of the script
      * or start an instance for each modular input.
+     *
+     * @return {@code true} if Splunk should run all modular inputs of this kind via one instance of the script,
+     * {@code false} if it should start an instance for each modular input.
      */
     public boolean isUseSingleInstance() {
         return useSingleInstance;
     }
 
     /**
-     * Specify whether Splunk should run all modular inputs of this kind via one instance of the script
+     * Specifies whether Splunk should run all modular inputs of this kind via one instance of the script
      * or start an instance for each modular input.
+     *
+     * @param useSingleInstance {@code true} if Splunk should run all modular inputs of this kind via one instance of the script,
+     * {@code false} if it should start an instance for each modular input.
      */
     public void setUseSingleInstance(boolean useSingleInstance) {
         this.useSingleInstance = useSingleInstance;
     }
 
     /**
-     * Return whether this modular input kind will send events to Splunk as XML (the default and preferred
+     * Returns whether this modular input kind will send events to Splunk as XML (the default and preferred
      * value) or plain text.
+     *
+     * @return The streaming mode.
      */
     public StreamingMode getStreamingMode() {
         return streamingMode;
     }
 
     /**
-     * Specify whether this modular input kind will send events to Splunk as XML (the default and preferred
+     * Specifies whether this modular input kind will send events to Splunk as XML (the default and preferred
      * value) or plain text.
+     *
+     * @param streamingMode The streaming mode.
      */
     public void setStreamingMode(StreamingMode streamingMode) {
         this.streamingMode = streamingMode;
     }
 
     /**
-     * Return all the arguments to this modular input kind.
+     * Returns all the arguments to this modular input kind.
+     *
+     * @return A list of all the arguments to this modular input kind.
      */
     public List<Argument> getArguments() {
         return arguments;
     }
 
     /**
-     * Replace the current list of arguments with the specified one.
+     * Replaces the current list of arguments with the specified one.
+     * 
+     * @param arguments The list of arguments with which to replace the current
+     * list of arguments.
      */
     public void setArguments(List<Argument> arguments) {
         this.arguments = new ArrayList<Argument>(arguments);
     }
 
     /**
-     * Append an argument to those this modular input kind takes.
+     * Appends an argument to the arguments that this modular input kind takes.
+     *
+     * @param argument The argument to append to the arguments. 
      */
     public void addArgument(Argument argument) {
         this.arguments.add(argument);
@@ -166,8 +197,8 @@ public class Scheme {
     /**
      * Generates an XML encoding of this scheme to be passed to Splunk.
      *
-     * @return an org.w3c.dom.Document object containing the XML of this scheme.
-     * @throws ParserConfigurationException if there was a problem configuring the XML libraries.
+     * @return An {@code org.w3c.dom.Document} object containing the XML of this scheme.
+     * @throws ParserConfigurationException If there was a problem configuring the XML libraries.
      */
     Document toXml() throws ParserConfigurationException {
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
