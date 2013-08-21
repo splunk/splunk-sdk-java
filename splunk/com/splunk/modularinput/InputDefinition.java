@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * InputDefinition encodes the XML defining inputs that Splunk passes to
+ * The {@code InputDefinition} class encodes the XML defining inputs that Splunk passes to
  * a modular input script as a Java object.
  */
 public class InputDefinition {
@@ -55,30 +55,37 @@ public class InputDefinition {
     }
 
     /**
-     * In future versions of Splunk, there may be additional fields on the InputDefinition. getField permits
+     * Gets the name of the field to fetch.
+     * 
+     * In future versions of Splunk, there may be additional fields on the {@code InputDefinition}. {@code getField} permits
      * access to them in case you are constrained to an old version of the Splunk SDK for Java.
      *
      * @param fieldName The name of the field to fetch.
+     * @return The field.
      */
     public String getField(String fieldName) {
         return this.metadata.get(fieldName);
     }
 
     /**
-     * Set the name of the server on which this modular input is being run.
+     * Sets the name of the server on which this modular input is being run.
      */
     public void setServerHost(String serverHost) {
         this.metadata.put(serverHostField, serverHost);
     }
 
     /**
-     * @return the name of the server on which this modular input is being run.
+     * Gets the name of the server on which this modular input is being run.
+     *
+     * @return The name of the server on which this modular input is being run.
      */
     public String getServerHost() {
         return this.metadata.get(serverHostField);
     }
 
     /**
+     * Sets the URI to reach the server on which this modular input is being run.
+     *
      * @param serverUri The URI to reach the server on which this modular input is being run.
      */
     public void setServerUri(String serverUri) {
@@ -86,27 +93,35 @@ public class InputDefinition {
     }
 
     /**
-     * @return the URI to the server on which this modular input is being run.
+     * Gets the URI to the server on which this modular input is being run.
+     *
+     * @return The URI to the server on which this modular input is being run.
      */
     public String getServerUri() {
         return this.metadata.get(serverUriField);
     }
 
     /**
-     * @param checkpointDir The path to write checkpoint files in.
+     * Sets the path to which to write checkpoint files.
+     *
+     * @param checkpointDir The path to which to write checkpoint files.
      */
     public void setCheckpointDir(String checkpointDir) {
         this.metadata.put(checkpointDirField, checkpointDir);
     }
 
     /**
-     * @return the path to write checkpoint files for restarting inputs in.
+     * Gets the path to which to write checkpoint files for restarting inputs.
+     *
+     * @return The path to which to write checkpoint files for restarting inputs.
      */
     public String getCheckpointDir() {
         return this.metadata.get(checkpointDirField);
     }
 
     /**
+     * Sets a session key that can be used to access splunkd's REST API.
+     *
      * @param sessionKey A session key that can be used to access splunkd's REST API.
      */
     public void setSessionKey(String sessionKey) {
@@ -114,6 +129,8 @@ public class InputDefinition {
     }
 
     /**
+     * Sets a session providing access to splunkd's REST API on this host.
+     *
      * @return A session key providing access to splunkd's REST API on this host.
      */
     public String getSessionKey() {
@@ -121,10 +138,10 @@ public class InputDefinition {
     }
 
     /**
-     * Add an input to the set of inputs on this InputDefinition.
+     * Adds an input to the set of inputs on this {@code InputDefinition}.
      *
      * @param name The name of this input (e.g., foobar://this-input-name).
-     * @param parameters A collection of Parameter objects giving the settings for this input.
+     * @param parameters A collection of {@code Parameter} objects giving the settings for this input.
      */
     public void addInput(String name, Collection<Parameter> parameters) {
         Map<String, Parameter> paramMap = new HashMap<String, Parameter>();
@@ -137,22 +154,22 @@ public class InputDefinition {
     }
 
     /**
-     * @return A map of all the inputs specified in this InputDefinition.
+     * @return A map of all the inputs specified in this {@code InputDefinition}.
      */
     public Map<String, Map<String, Parameter>> getInputs() {
         return this.inputs;
     }
 
     /**
-     * Parse a stream containing XML into an InputDefinition.
+     * Parses a stream containing XML into an InputDefinition.
      *
      * @param stream The stream containing XML to parse.
-     * @return an InputDefinition object.
-     * @throws ParserConfigurationException if there are errors in setting up the parser (which indicates system
+     * @return An {@code InputDefinition} object.
+     * @throws ParserConfigurationException If there are errors in setting up the parser (which indicates system
      *           configuration issues).
-     * @throws IOException if there is an error in reading from the stream.
-     * @throws SAXException when the XML is invalid.
-     * @throws MalformedDataException when the XML does specify a valid set of inputs.
+     * @throws IOException If there is an error in reading from the stream.
+     * @throws SAXException When the XML is invalid.
+     * @throws MalformedDataException When the XML does specify a valid set of inputs.
      */
     public static InputDefinition parseDefinition(InputStream stream) throws ParserConfigurationException,
             IOException, SAXException, MalformedDataException {

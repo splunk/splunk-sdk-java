@@ -23,9 +23,9 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
- * Class representing an argument to a modular input kind.
+ * The {@code Argument} class represents an argument to a modular input kind.
  *
- * Argument is meant to be used with Scheme to generate an XML definition of the modular input
+ * {@code Argument} is meant to be used with {@code Scheme} to generate an XML definition of the modular input
  * kind that Splunk understands.
  */
 public class Argument {
@@ -57,91 +57,130 @@ public class Argument {
     }
 
     /**
-     * Return the name that Splunk uses to represent this argument.
+     * Gets the name that Splunk uses to represent this argument.
+     *
+     * @return The argument's name.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Set the name that Splunk will use to represent this argument.
+     * Sets the name that Splunk will use to represent this argument.
+     * 
+     * @param name
+     *      The name that Splunk will use to represent this argument.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Return the human readable description of this argument.
+     * Gets the human readable description of this argument.
+     *
+     * @return The argument's description.
      */
     public String getDescription() {
         return  this.description;
     }
 
     /**
-     * Set the human readable description of this argument.
+     * Sets the human readable description of this argument.
+     * 
+     * @param description
+     *      The human readable description of this argument.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * Return the validation to be used on this argument, if using internal validation.
+     * Gets the validation to be used on this argument, if using internal validation.
+     *
+     * @return The validation used on the argument.
      */
     public String getValidation() {
         return this.validation;
     }
 
     /**
-     * Set the validation string that internal validation should use on this argument.
+     * Sets the validation string that internal validation should use on this argument.
+     * 
+     * @param validation
+     *      The validation string that internal validation should use on this argument.
      */
     public void setValidation(String validation) {
         this.validation = validation;
     }
 
     /**
-     * Return the data type of this argument.
+     * Gets the data type of this argument.
+     *
+     * @return The data type of the argument.
      */
     public DataType getDataType() {
         return this.dataType;
     }
 
     /**
-     * Set the data type of this argument.
+     * Sets the data type of this argument.
+     * 
+     * @param dataType
+     *      The data type of this argument.
      */
     public void setDataType(DataType dataType) {
         this.dataType = dataType;
     }
 
     /**
-     * Return whether a value for this argument must be specified when editing an existing modular input of this kind.
+     * Returns whether a value for this argument must be specified when editing an existing modular input of this kind.
+     *
+     * @return {@code true} if a value for this argument must be specified when editing an existing modular input of this kind, 
+     *      {@code false} if not.
      */
     public boolean isRequiredOnEdit() {
         return this.requiredOnEdit;
     }
 
     /**
-     * Set whether a value for this argument must be specified when editing an existing modular input of this kind.
+     * Sets whether a value for this argument must be specified when editing an existing modular input of this kind.
+     * 
+     * @param requiredOnEdit
+     *      {@code true} if a value for this argument must be specified when editing an existing modular input of this kind, 
+     *      {@code false} if not.
      */
     public void setRequiredOnEdit(boolean requiredOnEdit) {
         this.requiredOnEdit = requiredOnEdit;
     }
 
     /**
-     * Return whether a value for this argument must be specified when creating a modular input of this kind.
+     * Returns whether a value for this argument must be specified when creating a modular input of this kind.
+     *
+     * @return {@code true} if a value for this argument must be specified when creating a modular input of this kind, 
+     *      {@code false} if not.
      */
     public boolean isRequiredOnCreate() {
         return this.requiredOnCreate;
     }
 
     /**
-     * Set whether a value for this argument must be specified when creating a modular input of this kind.
+     * Sets whether a value for this argument must be specified when creating a modular input of this kind.
+     * 
+     * @param requiredOnCreate
+     *      {@code true} if a value for this argument must be specified when creating a modular input of this kind, 
+     *      {@code false} if not.
      */
     public void setRequiredOnCreate(boolean requiredOnCreate) {
         this.requiredOnCreate = requiredOnCreate;
     }
 
     /**
-     * Return an Element object representing this argument that can be added to another XML document for the Scheme.
+     * Returns an {@code Element} object representing this argument that can be added to another XML document for the {@code Scheme}.
+     * 
+     * @param doc
+     *      The XML document.
+     * @param parent
+     *      The parent object.
      */
     public void addToDocument(Document doc, Node parent) {
         Element arg = doc.createElement("arg");

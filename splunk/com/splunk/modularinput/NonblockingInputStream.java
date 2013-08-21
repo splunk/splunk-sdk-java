@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * A stream wrapper that acts as though the underlying stream has terminated every time it blocks.
+ * The {@code NonblockingInputStream} class is a stream wrapper that acts as though
+ * the underlying stream has terminated every time it blocks.
  */
 public class NonblockingInputStream extends InputStream {
     private final InputStream stream;
