@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@code MultiValueParameter} represents a parameter containing multiple values that is passed as part of a definition
+ * The {@code MultiValueParameter} class represents a parameter containing multiple values that is passed as part of a definition
  * of a modular input instance. {@code MultiValueParameter} objects correspond to XML fragments of the form:
  *
  * <param_list name="multiValue">
