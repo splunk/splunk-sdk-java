@@ -30,13 +30,16 @@ int _tmain(int argc, _TCHAR* argv[])
 
     DWORD returnCode = 0;
 
-    STARTUPINFO si = {sizeof(si)};
-    PROCESS_INFORMATION pi;
+    STARTUPINFO si;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
 
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&pi, sizeof(pi));
 
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)killJvm, TRUE);
-    
     splunkdHandle = getSplunkdHandle();
+    
     if (NULL == splunkdHandle) {
         // Couldn't get a handle to splunkd.
         printErrorMessage(GetLastError());
@@ -75,7 +78,7 @@ int _tmain(int argc, _TCHAR* argv[])
         }
         goto CLEAN_UP_AND_EXIT;
     } else {
-        // There was some other error.
+        // There was some other error
         printErrorMessage(GetLastError());
 
         returnCode = 1;
