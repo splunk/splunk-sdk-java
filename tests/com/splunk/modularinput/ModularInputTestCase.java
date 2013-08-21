@@ -111,7 +111,7 @@ public class ModularInputTestCase {
         try {
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new AssertionError("Parser configuration failed: " + e.toString(), e);
+            throw new AssertionError("Parser configuration failed: " + e.toString());
         }
 
         InputStream resource = SDKTestCase.openResource(path);
@@ -119,9 +119,9 @@ public class ModularInputTestCase {
             Document doc = documentBuilder.parse(resource);
             return doc;
         } catch (SAXException e) {
-            throw new AssertionError("Could not parse XML file at " + path, e);
+            throw new AssertionError("Could not parse XML file at " + path);
         } catch (IOException e) {
-            throw new AssertionError("Could not read XML file at " + path, e);
+            throw new AssertionError("Could not read XML file at " + path);
         }
     }
 
@@ -147,10 +147,10 @@ public class ModularInputTestCase {
             return generatedDoc;
         } catch (SAXException e) {
             e.printStackTrace();
-            throw new AssertionError("Error parsing XML passed to function: " + e.toString(), e);
+            throw new AssertionError("Error parsing XML passed to function: " + e.toString());
         } catch (IOException e) {
             e.printStackTrace();
-            throw new AssertionError("Error reading XML passed to function: " + e.toString(), e);
+            throw new AssertionError("Error reading XML passed to function: " + e.toString());
         }
     }
 
