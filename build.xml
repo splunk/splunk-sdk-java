@@ -18,10 +18,11 @@
 
 <project name="splunk-sdk-java" basedir="." default="dist" xmlns:jacoco="antlib:org.jacoco.ant"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="antlib:org.jacoco.ant ">
-    <property name="version.number" value="1.1"/>
-
+    <property name="version.number" value="1.2"/>
+    
     <!-- Paths within the repository that are referenced
          multiple times. -->
+    <property name="build.apps" location="build"/>
     <property name="build.splunk" location="build/splunk"/>
     <property name="build.tests" location="build/tests"/>
     <property name="build.examples" location="build/examples"/>
@@ -195,6 +196,7 @@
         <standalone-example-jar name="index"/>
         <standalone-example-jar name="info"/>
         <standalone-example-jar name="input"/>
+        <standalone-example-jar name="random_numbers"/>
 
         <standalone-example-jar name="search">
             <dependencies>
@@ -210,6 +212,44 @@
         <standalone-example-jar name="search_simple"/>
         <standalone-example-jar name="spurl"/>
         <standalone-example-jar name="tail"/>
+
+	<!-- Create the random_numbers example modular input app -->
+	<echo message="Assembling example app"/>
+	<copy todir="${build.apps}/random_numbers">
+	  <fileset dir="examples/com/splunk/examples/random_numbers/random_numbers"/>
+	</copy>
+
+	<mkdir dir="${build.apps}/random_numbers/jars"/>
+	<copy file="${dist}/examples/random_numbers.jar" todir="${build.apps}/random_numbers/jars"/>
+
+	<mkdir dir="${build.apps}/random_numbers/windows_x86_64/bin"/>
+	<copy file="launchers/shim-windows_x86_64.exe" tofile="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe"/>
+
+	<mkdir dir="${build.apps}/random_numbers/windows_x86/bin"/>
+	<copy file="launchers/shim-windows_x86.exe" tofile="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe"/>
+
+	<mkdir dir="${build.apps}/random_numbers/darwin_x86_64/bin"/>
+ 	<copy file="launchers/shim-darwin.sh" tofile="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh"/>
+
+	<mkdir dir="${build.apps}/random_numbers/linux_x86/bin"/>
+ 	<copy file="launchers/shim-linux.sh" tofile="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh"/>
+
+	<mkdir dir="${build.apps}/random_numbers/linux_x86_64/bin"/>
+ 	<copy file="launchers/shim-linux.sh" tofile="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh"/>
+
+	<echo message="Packaging example app"/>
+	<tar longfile="gnu" destfile="${dist}/random_numbers.spl">
+	  <tarfileset dir="${build.apps}" filemode="755">
+	    <include name="random_numbers/*/bin/random_numbers.*"/>
+	  </tarfileset>
+
+	  <tarfileset dir="${build.apps}">
+	    <include name="random_numbers/**"/>
+	    <exclude name="random_numbers/*/bin/*"/>
+	  </tarfileset>
+	</tar>
+	<echo message="Done packaging."/>
+
     </target>
 
 
@@ -244,6 +284,7 @@
                 <fileset dir="${build.tests}">
                     <include name="**/*Test.class"/>
                 </fileset>
+		<formatter type="xml" />
             </batchtest>
 
             <formatter type="xml" />
@@ -282,6 +323,7 @@
                     <fileset dir="${build.tests}">
                         <include name="**/*Test.class"/>
                     </fileset>
+		    <formatter type="xml" />
                 </batchtest>
 
                 <formatter type="xml" />
@@ -304,6 +346,7 @@
             </structure>
 
             <html destdir="${coverage.dir}"/>
+	    <xml destfile="test_coverage.xml"/>
         </jacoco:report>
 
         <mkdir dir="${testreport.dir}"/>

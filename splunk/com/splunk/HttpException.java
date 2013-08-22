@@ -19,6 +19,10 @@ package com.splunk;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
 /**
  * Thrown for HTTP responses that return an error status code.
  */
@@ -41,15 +45,45 @@ public class HttpException extends RuntimeException {
     static HttpException create(ResponseMessage response) {
         int status = response.getStatus();
 
-        // Attempt to read the error detail from the error response content.
+        response.getContent().mark(10000);
         String detail = "";
         try {
+            // Attempt to read the error detail from the error response content as XML
             Document document = Xml.parse(response.getContent());
             NodeList msgs = document.getElementsByTagName("msg");
             if (msgs.getLength() > 0)
                 detail = msgs.item(0).getTextContent();
         }
-        catch (Exception e) {} // Couldn't get detail
+        catch (Exception e) {
+            // Not an XML document; return the raw string.
+            try {
+                response.getContent().reset();
+            } catch (IOException e2) {
+                // Not much to be done here if that stream is bad...
+            }
+
+            StringBuilder s = new StringBuilder();
+            InputStreamReader r;
+            try {
+                r = new InputStreamReader(response.getContent(), "UTF-8");
+            } catch (UnsupportedEncodingException e1) {
+                throw new AssertionError("How does your system not support UTF-8?");
+            }
+
+            int c = -1;
+            while (true) {
+                try {
+                    c = r.read();
+                } catch (IOException e1) {
+                    // Not much to be done here if that stream is bad...
+                }
+                if (c == -1) break;
+
+                s.appendCodePoint(c);
+            }
+
+            detail = s.toString();
+        }
 
         String message = String.format("HTTP %d", status);  
 

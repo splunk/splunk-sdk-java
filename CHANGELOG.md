@@ -1,5 +1,17 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.2
+
+### New features and APIs
+
+* Added support for building modular input scripts in Java using the Splunk SDK for Java.
+
+### Bug fixes
+
+* Any errors returned by Splunk in formats besides XML (for example, when Splunk returns JSON
+  if an error occurs during a search with output_mode=json), are passed on as is in the resulting
+  HttpException, replacing the uninformative error about XML parsing that was produced before.
+
 ## Version 1.1
 
 ### Breaking changes

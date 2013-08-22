@@ -19,6 +19,7 @@ package com.splunk;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.net.URLStreamHandler;
 import java.util.Map;
 
 /**
@@ -103,6 +104,23 @@ public class Service extends BaseService {
     public Service(String host, int port, String scheme) {
         super(host, port, scheme);
     }
+    
+    /**
+     * Constructs a new {@code Service} instance using the given host,
+     * port, and scheme, and instructing it to use the specified HTTPS handler.
+     *
+     * @param host The host name of the service.
+     * @param port The port number of the service.
+     * @param scheme Scheme for accessing the service ({@code http} or 
+     * {@code https}).
+     */
+    public Service(String host, int port, String scheme, 
+    		URLStreamHandler httpsHandler) {
+        this.host = host;
+        this.port = port;
+        this.scheme = scheme;
+        this.httpsHandler = httpsHandler;
+    }
 
     /**
      * Creates a new {@code Service} instance using a collection of arguments.
@@ -128,6 +146,7 @@ public class Service extends BaseService {
         this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
+        this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
     }
 
     /**
@@ -145,6 +164,7 @@ public class Service extends BaseService {
         this.token = Args.<String>get(args, "token", null);
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
+        this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
     }
 
     /**
@@ -904,7 +924,7 @@ public class Service extends BaseService {
      */
     public EntityCollection<Role> getRoles(Args args) {
         return new EntityCollection<Role>(
-            this, "authentication/roles", Role.class, args);
+            this, "authorization/roles", Role.class, args);
     }
 
     /**
@@ -1167,7 +1187,7 @@ public class Service extends BaseService {
      * @return The restart response message.
      */
     public ResponseMessage restart() {
-        return get("server/control/restart");
+        return post("server/control/restart");
     }
 
     /**
@@ -1207,7 +1227,9 @@ public class Service extends BaseService {
      * @return The HTTP response.
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
-        request.getHeader().put("Authorization", token);
+        if (token != null) {
+            request.getHeader().put("Authorization", token);
+        }
         return super.send(fullpath(path), request);
     }
 
