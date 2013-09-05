@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+declare -r scriptDirectory="$(dirname $(readlink -e $0))"
+declare -r scriptName="$(basename $0)"
+declare -r version="1.2"
+
+if [[ $# -ne 1 ]]; then
+    echo 1>&2 "Usage: ${scriptName} {local|staging||production}"
+fi
+
+case $1 in
+local)
+    declare -r url="file:///${HOME}/.m2/repository/"
+    declare -r repositoryId=""
+    ;;
+staging)
+    declare -r url="http://stg-artifactory:8081/artifactory/devplat-staging/"
+    declare -r repositoryId="splunk-staging-artifactory"
+    ;;
+production)
+    declare -r url="http://splunk.artifactoryonline.com/splunk/ext-releases-local/"
+    declare -r repositoryId="splunk-production-artifactory"
+    ;;
+esac
+
+cd "${scriptDirectory}"
+
+mvn deploy:deploy-file -Ddescription="The Splunk SDK for Java" -Dfile=dist/splunk-${version}.jar \
+    -DgroupId=com.splunk -DartifactId=splunk -Dversion=${version}.0 -Dpackaging=jar \
+    -Djavadoc=dist/splunk-${version}-javadoc.jar \
+    -Dsources=dist/splunk-${version}-sources.jar \
+    -DrepositoryId="${repositoryId}" \
+    -DupdateReleaseInfo=true \
+    -Durl="${url}"

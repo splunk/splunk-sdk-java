@@ -159,15 +159,13 @@
          is splunk.jar, and we create a jar for each example, including its
          dependencies, to make it easily redistributable.
     -->
-    <target name="dist" depends="build, javadoc">
+    <target name="dist" depends="build, javadoc, sources">
         <mkdir dir="${dist}"/>
 
         <!-- Splunk SDK jar -->
         <jar destfile="${dist}/splunk-${version.number}.jar">
             <fileset dir="${build.splunk}"
                      includes="**/*.class"/>
-
-            <fileset dir="splunk" includes="**/*"/>
 
             <manifest>
                 <attribute name="Implementation-Title"
@@ -252,8 +250,7 @@
 
     </target>
 
-
-    <!-- Create JavaDoc output in dist/docs/ -->
+    <!-- Create JavaDoc site in dist/docs/ with JavaDoc jar in dist/splunk-${version.number}-javadoc.jar -->
     <target name="javadoc">
         <property name="dist.docs" location="${dist}/docs"/>
         <mkdir dir="${dist.docs}"/>
@@ -265,6 +262,31 @@
                 <pathelement location="${opencsv}"/>
             </classpath>
         </javadoc>
+        <jar basedir="${dist.docs}" destfile="${dist}/splunk-${version.number}-javadoc.jar">
+            <manifest>
+                <attribute name="Implementation-Title"
+                           value="com.splunk"/>
+                <attribute name="Implementation-Vendor"
+                           value="Splunk, Inc."/>
+                <attribute name="Implementation-Version"
+                           value="${version.number}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Create sources jar, dist/splunk-${version.number}-sources.jar -->
+    <target name="sources">
+        <property name="sources" location="splunk"/>
+        <jar basedir="${sources}" destfile="${dist}/splunk-${version.number}-sources.jar" excludes=".classpath, .project, splunk.iml, staticdocs.css">
+            <manifest>
+                <attribute name="Implementation-Title"
+                           value="com.splunk"/>
+                <attribute name="Implementation-Vendor"
+                           value="Splunk, Inc."/>
+                <attribute name="Implementation-Version"
+                           value="${version.number}"/>
+            </manifest>
+        </jar>
     </target>
 
     <!-- Run the test suite -->
