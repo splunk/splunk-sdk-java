@@ -18,8 +18,8 @@
 
 <project name="splunk-sdk-java" basedir="." default="dist" xmlns:jacoco="antlib:org.jacoco.ant"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="antlib:org.jacoco.ant ">
-    <property name="version.number" value="1.1"/>
-
+    <property name="version.number" value="1.2"/>
+    
     <!-- Paths within the repository that are referenced
          multiple times. -->
     <property name="build.apps" location="build"/>
@@ -159,15 +159,13 @@
          is splunk.jar, and we create a jar for each example, including its
          dependencies, to make it easily redistributable.
     -->
-    <target name="dist" depends="build, javadoc">
+    <target name="dist" depends="build, javadoc, sources">
         <mkdir dir="${dist}"/>
 
         <!-- Splunk SDK jar -->
         <jar destfile="${dist}/splunk-${version.number}.jar">
             <fileset dir="${build.splunk}"
                      includes="**/*.class"/>
-
-            <fileset dir="splunk" includes="**/*"/>
 
             <manifest>
                 <attribute name="Implementation-Title"
@@ -223,34 +221,36 @@
 	<copy file="${dist}/examples/random_numbers.jar" todir="${build.apps}/random_numbers/jars"/>
 
 	<mkdir dir="${build.apps}/random_numbers/windows_x86_64/bin"/>
-	<copy file="launchers/shim64.exe" tofile="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe"/>
-	<chmod file="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe" perm="ugo+x"/>
+	<copy file="launchers/shim-windows_x86_64.exe" tofile="${build.apps}/random_numbers/windows_x86_64/bin/random_numbers.exe"/>
 
 	<mkdir dir="${build.apps}/random_numbers/windows_x86/bin"/>
-	<copy file="launchers/shim32.exe" tofile="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe"/>
-	<chmod file="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe" perm="ugo+x"/>
+	<copy file="launchers/shim-windows_x86.exe" tofile="${build.apps}/random_numbers/windows_x86/bin/random_numbers.exe"/>
 
 	<mkdir dir="${build.apps}/random_numbers/darwin_x86_64/bin"/>
- 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh"/>
-	<chmod file="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh" perm="ugo+x"/>
+ 	<copy file="launchers/shim-darwin.sh" tofile="${build.apps}/random_numbers/darwin_x86_64/bin/random_numbers.sh"/>
 
 	<mkdir dir="${build.apps}/random_numbers/linux_x86/bin"/>
- 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh"/>
-	<chmod file="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh" perm="ugo+x"/>
+ 	<copy file="launchers/shim-linux.sh" tofile="${build.apps}/random_numbers/linux_x86/bin/random_numbers.sh"/>
 
 	<mkdir dir="${build.apps}/random_numbers/linux_x86_64/bin"/>
- 	<copy file="launchers/shim.sh" tofile="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh"/>
-	<chmod file="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh" perm="ugo+x"/>
+ 	<copy file="launchers/shim-linux.sh" tofile="${build.apps}/random_numbers/linux_x86_64/bin/random_numbers.sh"/>
 
 	<echo message="Packaging example app"/>
-	<tar destfile="${dist}/random_numbers.spl"
-	     basedir="${build.apps}"
-	     includes="random_numbers/**"/>
+	<tar longfile="gnu" destfile="${dist}/random_numbers.spl">
+	  <tarfileset dir="${build.apps}" filemode="755">
+	    <include name="random_numbers/*/bin/random_numbers.*"/>
+	  </tarfileset>
+
+	  <tarfileset dir="${build.apps}">
+	    <include name="random_numbers/**"/>
+	    <exclude name="random_numbers/*/bin/*"/>
+	  </tarfileset>
+	</tar>
+	<echo message="Done packaging."/>
 
     </target>
 
-
-    <!-- Create JavaDoc output in dist/docs/ -->
+    <!-- Create JavaDoc site in dist/docs/ with JavaDoc jar in dist/splunk-${version.number}-javadoc.jar -->
     <target name="javadoc">
         <property name="dist.docs" location="${dist}/docs"/>
         <mkdir dir="${dist.docs}"/>
@@ -262,6 +262,31 @@
                 <pathelement location="${opencsv}"/>
             </classpath>
         </javadoc>
+        <jar basedir="${dist.docs}" destfile="${dist}/splunk-${version.number}-javadoc.jar">
+            <manifest>
+                <attribute name="Implementation-Title"
+                           value="com.splunk"/>
+                <attribute name="Implementation-Vendor"
+                           value="Splunk, Inc."/>
+                <attribute name="Implementation-Version"
+                           value="${version.number}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Create sources jar, dist/splunk-${version.number}-sources.jar -->
+    <target name="sources">
+        <property name="sources" location="splunk"/>
+        <jar basedir="${sources}" destfile="${dist}/splunk-${version.number}-sources.jar" excludes=".classpath, .project, splunk.iml, staticdocs.css">
+            <manifest>
+                <attribute name="Implementation-Title"
+                           value="com.splunk"/>
+                <attribute name="Implementation-Vendor"
+                           value="Splunk, Inc."/>
+                <attribute name="Implementation-Version"
+                           value="${version.number}"/>
+            </manifest>
+        </jar>
     </target>
 
     <!-- Run the test suite -->

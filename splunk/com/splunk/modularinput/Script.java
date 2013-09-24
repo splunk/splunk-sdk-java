@@ -35,17 +35,17 @@ import java.lang.annotation.Documented;
 import java.nio.*;
 
 /**
- * Script is an abstract base class for implementing modular inputs. Subclasses
- * should override getScheme and streamEvents, and optional configureValidator if the modular
+ * The {@code Script} class is an abstract base class for implementing modular inputs. Subclasses
+ * should override {@code getScheme} and {@code streamEvents}, and optional {@code configureValidator} if the modular
  * input is using external validation.
  */
 public abstract class Script {
     /**
-     * run encodes all the common behavior of modular inputs. Users should have no reason
+     * Encodes all the common behavior of modular inputs. You should have no reason
      * to override this method in most cases.
      *
      * @param args An array of command line arguments passed to this script.
-     * @return an integer to be used as the exit value of this program.
+     * @return An integer to be used as the exit value of this program.
      */
     public int run(String[] args) {
         EventWriter eventWriter = null;
@@ -58,6 +58,15 @@ public abstract class Script {
         }
     }
 
+    /**
+     * Encodes all the common behavior of modular inputs. You should have no reason
+     * to override this method in most cases.
+     *
+     * @param args An array of command line arguments passed to this script.
+     * @param eventWriter An {@code EventWriter}.
+     * @param in An {@code InputStream}.
+     * @return An integer to be used as the exit value of this program.
+     */
     public int run(String[] args, EventWriter eventWriter, InputStream in) {
         try {
             if (args.length == 0) {
@@ -118,6 +127,8 @@ public abstract class Script {
         } catch (Exception e) {
             eventWriter.log(EventWriter.ERROR, stackTraceToLogEntry(e));
             return 1;
+        } catch (Exception e) {
+            return logException(e);
         }
 
     }
@@ -133,20 +144,30 @@ public abstract class Script {
     }
 
     /**
-     * The scheme defines the parameters understood by this modular input.
+     * Writes a stack trace entry to the log.
      *
-     * @return a Scheme object representing the parameters for this modular input.
+     * @return 1 if successful.
+     */
+    public int logException(Throwable e) {
+        System.err.println(stackTraceToLogEntry(EventWriter.ERROR, e.getStackTrace()));
+        return 1;
+    }
+
+    /**
+     * Gets the scheme that defines the parameters understood by this modular input.
+     *
+     * @return A {@code Scheme} object representing the parameters for this modular input.
      */
     public abstract Scheme getScheme();
 
     /**
-     * validateInput handles external validation for modular input kinds. When Splunk
+     * Handles external validation for modular input kinds. When Splunk
      * called a modular input script in validation mode, it will pass in an XML document
      * giving information about the Splunk instance (so you can call back into it if needed)
      * and the name and parameters of the proposed input.
      *
      * If this function does not throw an exception, the validation is assumed to succeed. Otherwise
-     * any error throws will be turned into a string and logged back to Splunk.
+     * any error thrown will be turned into a string and logged back to Splunk.
      *
      * The default implementation always passes.
      *
@@ -155,8 +176,8 @@ public abstract class Script {
     public void validateInput(ValidationDefinition definition) throws Exception {}
 
     /**
-     * The method called to stream events into Splunk. It should do all of its output via
-     * EventWriter rather than assuming that there is a console attached.
+     * Streams events into Splunk. It should do all of its output via
+     * {@code EventWriter} rather than assuming that there is a console attached.
      *
      * @param ew An object with methods to write events and log messages to Splunk.
      */

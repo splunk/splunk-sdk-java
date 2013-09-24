@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a parameter containing multiple values that is passed as part of a definition
- * of a modular input instance. MultiValueParameter objects correspond to XML fragments of the form
+ * The {@code MultiValueParameter} class represents a parameter containing multiple values that is passed as part of a definition
+ * of a modular input instance. {@code MultiValueParameter} objects correspond to XML fragments of the form:
  *
  * <param_list name="multiValue">
  *     <value>value1</value>
@@ -39,6 +39,8 @@ public class MultiValueParameter extends Parameter {
     }
 
     /**
+     * Gets the name of this parameter.
+     *
      * @return The name of this parameter.
      */
     public String getName() {
@@ -46,6 +48,8 @@ public class MultiValueParameter extends Parameter {
     }
 
     /**
+     * Gets a list of all values of this parameter.
+     *
      * @return A list of all values of this parameter.
      */
     public List<String> getValues() {

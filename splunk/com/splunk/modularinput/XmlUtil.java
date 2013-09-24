@@ -20,18 +20,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 /**
- * Utility functions for handling XML that are used in several places.
+ * The {@code XmlUtil} class contains utility functions for handling XML that are used in several places.
  */
 class XmlUtil {
 
     /**
-     * Given an org.w3c.dom.Node which is an element containing text, returns the text. If there
-     * is anything but text inside the element, throws a MalformedDataException with errorMessage as the reason.
+     * Given an {@code org.w3c.dom.Node} which is an element containing text, returns the text. If there
+     * is anything but text inside the element, throws a {@code MalformedDataException} with {@code errorMessage} as the reason.
      *
-     * @param node The Node object to pull text out of.
+     * @param node The {@code Node} object to pull text out of.
      * @param errorMessage The reason provided if there is something besides text in the element.
-     * @return a String of the text in the element.
-     * @throws MalformedDataException when there is anything besides text in the element.
+     * @return A String of the text in the element.
+     * @throws MalformedDataException When there is anything besides text in the element.
      */
     static String textInNode(Node node, String errorMessage) throws MalformedDataException {
         Node child = node.getFirstChild();
@@ -43,11 +43,11 @@ class XmlUtil {
     }
 
     /**
-     * Coerce all the forms of boolean Splunk may return to proper booleans.
+     * Coerces all the forms of Boolean Splunk may return to proper Booleans.
      *
-     * @param s a String containing the boolean from Splunk.
-     * @return a Java boolean.
-     * @throws MalformedDataException if the string can't be coerced to a boolean.
+     * @param s A String containing the Boolean from Splunk.
+     * @return A Java Boolean.
+     * @throws MalformedDataException If the string can't be coerced to a Boolean.
      */
     static boolean normalizeBoolean(String s) throws MalformedDataException {
         if (s == null) {
