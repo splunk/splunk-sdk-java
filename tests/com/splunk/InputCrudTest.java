@@ -243,14 +243,21 @@ public class InputCrudTest extends InputTest {
     
     @Test
     public void testScriptInputCrud() {
+        if (!hasTestData()) {
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
+
+        installApplicationFromTestData("modular-inputs");
+
         // Determine what script to use for the input
         String filename;
         if (service.getInfo().getOsName().equals("Windows")) {
             // Windows
-            filename = "echo.bat";
+            filename = "etc/apps/modular-inputs/bin/echo.bat";
         } else {
             // Linux or Mac OS X
-            filename = "echo.sh";
+            filename = "etc/apps/modular-inputs/bin/echo.sh";
         }
 
         // Create

@@ -135,7 +135,6 @@ public class ApplicationTest extends SDKTestCase {
         assertTrue(application.isVisible());
         assertFalse(application.stateChangeRequiresRestart());
         assertFalse(application.getRefresh());
-        assertTrue(application.isManageable());
 
         String authorString = "Boris the mad baboon";
         application.setAuthor(authorString);
@@ -148,7 +147,6 @@ public class ApplicationTest extends SDKTestCase {
         application.setVersion(versionString);
         application.setConfigured(true);
         application.setVisible(false);
-        application.setManageable(false);
 
         application.update();
         application.refresh();
@@ -160,30 +158,35 @@ public class ApplicationTest extends SDKTestCase {
         assertEquals(versionString, application.getVersion());
         assertTrue(application.isConfigured());
         assertFalse(application.isVisible());
-        assertFalse(application.isManageable());
     }
 
     @Test
     public void testUpdate() {
-        // Set the version of gettingstarted to something small,
+        if (service.getApplications().get("wc") == null) {
+            System.out.println("WARNING: Must have app wc installed on splunkd to run ApplicationTest.testUpdate");
+            return;
+        }
+
+        // Set the version of wc to something small,
         // then wait for splunkd to pull its update information from splunkbase.
         
-        Application gettingStarted = service.getApplications().get("gettingstarted");
+        Application gettingStarted = service.getApplications().get("wc");
         String originalVersion = gettingStarted.getVersion();
         try {
             // Decrease the app's version
             gettingStarted.setVersion("0.1");
             gettingStarted.update();
             
-            // TODO: Is this really needed?
-            //       If so, an explanation should be provided.
+            // The easiest way to force Splunk to check for new versions of apps
+            // is to restart it. Otherwise who knows how long it will be...
             uncheckedSplunkRestart();
-            gettingStarted = service.getApplications().get("gettingstarted");
+            gettingStarted = service.getApplications().get("wc");
             
             // Wait until Splunk sees that an update for the app is available
             // NOTE: This typically takes about 15s
             final Application gettingStartedReference = gettingStarted;
             assertEventuallyTrue(new EventuallyTrueBehavior() {
+                { tries = 100; }
                 @Override
                 public boolean predicate() {
                     return gettingStartedReference.getUpdate().getChecksum() != null;
@@ -192,17 +195,17 @@ public class ApplicationTest extends SDKTestCase {
             
             // Verify expected properties of the update
             ApplicationUpdate update = gettingStarted.getUpdate();
-            assertEquals("3f489b7b8106bd3cc65f159d22918ba3", update.getChecksum());
+            assertEquals("315d8e92a0227aa75bbca1b8f33b4970", update.getChecksum());
             assertEquals("md5", update.getChecksumType());
-            assertEquals("https://splunkbase.splunk.com/apps/Getting%20Started", update.getHomepage());
-            assertEquals(846532, update.getSize());
-            assertEquals("Getting Started", update.getUpdateName());
+            assertEquals("https://apps.splunk.com/app/1541/", update.getHomepage());
+            assertEquals(39879, update.getSize());
+            assertEquals("wc - word count", update.getUpdateName());
             assertEquals(
-                    "https://splunkbase.splunk.com/api/apps:download/Getting%20Started/1.0/gettingstarted.spl",
+                    "https://apps.splunk.com/app/1541/package/1.0/none/",
                     update.getAppUrl()
             );
             assertEquals("1.0", update.getVersion());
-            assertTrue(update.isImplicitIdRequired());
+            assertFalse(update.isImplicitIdRequired());
         } finally {
             // Restore the app's original version
             gettingStarted.setVersion(originalVersion);

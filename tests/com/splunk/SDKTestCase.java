@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.InputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -339,5 +339,23 @@ public abstract class SDKTestCase extends TestCase {
         }
         
         return Util.join(separator, components);
+    }
+
+    protected boolean firstLineIsXmlDtd(InputStream stream) {
+        InputStreamReader reader;
+        try {
+            reader = new InputStreamReader(stream, "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            throw new Error(e);
+        }
+        BufferedReader lineReader = new BufferedReader(reader);
+        try {
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".equals(
+                    lineReader.readLine()
+            );
+        } catch (IOException e) {
+            fail(e.toString());
+            return false;
+        }
     }
 }

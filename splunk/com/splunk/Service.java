@@ -375,6 +375,12 @@ public class Service extends BaseService {
      * @return The configuration of deployment servers.
      */
     public EntityCollection<DeploymentServer> getDeploymentServers(Args args) {
+        String path;
+        if (versionIsEarlierThan("6.0.0")) {
+            path = "deployment/server";
+        } else {
+            path = ""; // TODO: Find out what this should be and fix it.
+        }
         return new EntityCollection<DeploymentServer>(
             this, "deployment/server", DeploymentServer.class, args);
     }
@@ -397,8 +403,14 @@ public class Service extends BaseService {
      */
     public EntityCollection<DeploymentServerClass> getDeploymentServerClasses(
             Args args) {
+        String path;
+        if (versionIsEarlierThan("6.0.0")) {
+            path = "deployment/serverclass";
+        } else {
+            path = "deployment/server/serverclasses";
+        }
         return new EntityCollection<DeploymentServerClass>(
-            this, "deployment/serverclass", DeploymentServerClass.class, args);
+            this, path, DeploymentServerClass.class, args);
     }
 
     /**

@@ -101,19 +101,6 @@ public class Application extends Entity {
     }
 
     /**
-     * Indicates whether the app can be managed by Splunk Manager.
-     * 
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @return {@code true} if the app can be managed by Splunk Manager,
-     * {@code false} if not.
-     */
-    @Deprecated
-    public boolean isManageable() {
-        return getBoolean("manageable", false);
-    }
-
-    /**
      * Indicates whether the app is visible and navigable from Splunk Web.
      *
      * @return {@code true} if the app is visible and navigable from Splunk
@@ -183,19 +170,6 @@ public class Application extends Entity {
      */
     public void setLabel(String label) {
         setCacheValue("label", label);
-    }
-
-    /**
-     * Sets whether the app can be managed by Splunk Manager.
-     * 
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @param value {@code true} if the app can be managed by Splunk Manager,
-     * {@code false} if not.
-     */
-    @Deprecated
-    public void setManageable(boolean value) {
-        setCacheValue("manageable", value);
     }
 
     /**

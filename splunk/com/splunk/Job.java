@@ -215,7 +215,7 @@ public class Job extends Entity {
      */
     public int getDropCount() {
         checkReady();
-        return getInteger("dropCount");
+        return getInteger("dropCount", 0);
     }
 
     /**

@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -285,12 +286,13 @@ public class ServiceTest extends SDKTestCase {
     }
 
     @Test
-    public void testJobs() {
+    public void testJobs() throws InterruptedException {
         JobCollection jobs = service.getJobs();
         for (Job entity : jobs.values())
             testGetters(entity);
 
         Job job = jobs.create("search *");
+
         testGetters(job);
         job.cancel();
     }
@@ -705,4 +707,27 @@ public class ServiceTest extends SDKTestCase {
         }
         fail();
     }
+
+    @Test
+    public void testDelete() {
+        Args deleteArgs = Args.create("output_mode", "json");
+        try {
+            service.delete("/services/search/jobs/foobar_doesntexist", deleteArgs);
+        } catch (HttpException e) {
+            assertEquals(404, e.getStatus());
+            assertNotNull(e.getDetail());
+        }
+    }
+
+    @Test
+    public void testPost() {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put("foo", "bar");
+
+        ResponseMessage response;
+        response = service.post("/services/search/jobs", args);
+        assertEquals(200, response.getStatus());
+        assertTrue(firstLineIsXmlDtd(response.getContent()));
+    }
+
 }

@@ -44,24 +44,6 @@ public class HttpServiceTest extends SDKTestCase {
         );
     }
 
-    private boolean firstLineIsXmlDtd(InputStream stream) {
-        InputStreamReader reader;
-        try {
-            reader = new InputStreamReader(stream, "UTF8");
-        } catch (UnsupportedEncodingException e) {
-            throw new Error(e);
-        }
-        BufferedReader lineReader = new BufferedReader(reader);
-        try {
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".equals(
-                    lineReader.readLine()
-            );
-        } catch (IOException e) {
-            fail(e.toString());
-            return false;
-        }
-    }
-
     @Test
     public void testGet() {
         ResponseMessage response = httpService.get("/");
@@ -70,18 +52,9 @@ public class HttpServiceTest extends SDKTestCase {
     }
 
     @Test
-    public void testPost() {
-        HashMap<String, Object> args = new HashMap<String, Object>();
-        args.put("foo", "bar");
-        ResponseMessage response = httpService.post("/", args);
-        assertEquals(200, response.getStatus());
-        assertTrue(firstLineIsXmlDtd(response.getContent()));
-    }
-
-    @Test
     public void testSend() {
         RequestMessage request = new RequestMessage("GET");
-        ResponseMessage response = service.send("/", request);
+        ResponseMessage response = service.send("/services", request);
         assertEquals(200, response.getStatus());
         assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
@@ -111,16 +84,5 @@ public class HttpServiceTest extends SDKTestCase {
         ResponseMessage response = new ResponseMessage(200);
         assertEquals(response.getStatus(), 200);
         assertTrue(response.getHeader() != null);
-    }
-
-    @Test
-    public void testDelete() {
-        Args deleteArgs = Args.create("output_mode", "json");
-        try {
-            httpService.delete("/search/jobs/foobar_doesntexist", deleteArgs);
-        } catch (HttpException e) {
-            assertEquals(404, e.getStatus());
-            assertNotNull(e.getDetail());
-        }
     }
 }

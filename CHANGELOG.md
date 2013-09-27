@@ -1,5 +1,13 @@
 # Splunk SDK for Java Changelog
 
+## Version ?? [TODO: fixme]
+
+### Breaking changes
+
+* Removed Application.isManageable and Application.setManageable, since they are deprecated or nonexistant
+  in all supported versions as of this release.
+* OutputDefault.getMaxQueueSize now returns a String instead of a long to match the behavior of setMaxQueueSize.
+
 ## Version 1.2
 
 ### New features and APIs

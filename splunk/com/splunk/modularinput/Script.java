@@ -18,21 +18,11 @@ package com.splunk.modularinput;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
-import javax.print.attribute.standard.Severity;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.lang.annotation.Documented;
-import java.nio.*;
 
 /**
  * The {@code Script} class is an abstract base class for implementing modular inputs. Subclasses
@@ -48,7 +38,7 @@ public abstract class Script {
      * @return An integer to be used as the exit value of this program.
      */
     public int run(String[] args) {
-        EventWriter eventWriter = null;
+        EventWriter eventWriter;
         try {
             eventWriter = new EventWriter();
             return run(args, eventWriter, System.in);
@@ -96,7 +86,7 @@ public abstract class Script {
                 } catch (Exception e) {
                     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                     documentBuilderFactory.setIgnoringElementContentWhitespace(true);
-                    DocumentBuilder documentBuilder = null;
+                    DocumentBuilder documentBuilder;
                     documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
                     Document document = documentBuilder.newDocument();
@@ -127,10 +117,7 @@ public abstract class Script {
         } catch (Exception e) {
             eventWriter.log(EventWriter.ERROR, stackTraceToLogEntry(e));
             return 1;
-        } catch (Exception e) {
-            return logException(e);
         }
-
     }
 
     protected String stackTraceToLogEntry(Exception e) {
@@ -141,16 +128,6 @@ public abstract class Script {
             sb.append("\\\\");
         }
         return sb.toString();
-    }
-
-    /**
-     * Writes a stack trace entry to the log.
-     *
-     * @return 1 if successful.
-     */
-    public int logException(Throwable e) {
-        System.err.println(stackTraceToLogEntry(EventWriter.ERROR, e.getStackTrace()));
-        return 1;
     }
 
     /**

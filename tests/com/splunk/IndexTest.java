@@ -301,7 +301,11 @@ public class IndexTest extends SDKTestCase {
         
         // TODO: Figure out which of the above setters is forcing
         //       causing a restart request.
-        clearRestartMessage();
+        if (service.versionIsEarlierThan("6.0.0")) {
+            clearRestartMessage();
+        } else {
+            splunkRestart(); // In Splunk 6, you actually need the restart or it won't let you delete the index.
+        }
     }
 
     @Test
@@ -317,9 +321,11 @@ public class IndexTest extends SDKTestCase {
             }
         });
 
-        // Disabling an index puts Splunk into a weird state that actually
+        // Disabling an index before Splunk 6 puts Splunk into a weird state that actually
         // requires a restart to get out of.
-        splunkRestart();
+        if (service.versionIsEarlierThan("6.0.0")) {
+            splunkRestart();
+        }
 
         // And then enable it
         index.enable();
