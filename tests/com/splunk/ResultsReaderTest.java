@@ -230,15 +230,15 @@ public class ResultsReaderTest extends SDKTestCase {
         {
             ResultsReader reader = createResultsReader(type, openResource(filename));
             
-            HashMap<String, String> firstResult = reader.getNextEvent();
+            Event firstResult = reader.getNextEvent();
             {
-                String siDelimited = firstResult.get("_si");
-                String[] siArray = siDelimited.split(Pattern.quote(delimiter));
-                assertEquals(2, siArray.length);
+                String[] si = firstResult.getArray("_si", delimiter);
+                //String[] siArray = siDelimited.split(Pattern.quote(delimiter));
+                assertEquals(2, si.length);
                 // (siArray[0] should be the locally-determined hostname of
                 //  splunkd, but there is no good way to test this
                 //  consistently.)
-                assertEquals("_internal", siArray[1]);
+                assertEquals("_internal", si[1]);
             }
             assertEquals("_internal", firstResult.get("index"));
             
