@@ -95,7 +95,7 @@ public class TcpInput extends PortInput {
      * @return The group.
      */
     public String getGroup() {
-        return getString("group");
+        return getString("group", null);
     }
 
     /**

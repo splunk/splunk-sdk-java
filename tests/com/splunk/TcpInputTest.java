@@ -58,14 +58,20 @@ public class TcpInputTest extends SDKTestCase {
     }
 
     @Test
-    public void testGetters() throws IOException {
+    public void testConnectionList() throws IOException {
         if (service.versionIsEarlierThan("4.3")) {
             return; // Doesn't seem to work on Splunk 4.2.
+        } else if (service.versionCompare("6.0.0") == 0) {
+            uncheckedSplunkRestart(); // Connections will not show up until after splunkd restarts in this version.
         }
 
         final Socket socket = tcpInput.attach();
+        assertTrue(socket.isConnected());
+
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 50; }
+
             @Override
             public boolean predicate() {
                 TcpConnections connections = tcpInput.connections();
@@ -85,8 +91,10 @@ public class TcpInputTest extends SDKTestCase {
                 return true;
             }
         });
-    
-        
+    }
+
+    @Test
+    public void testGetters() {
         assertNotNull(tcpInput.getGroup());
         assertNull(tcpInput.getRestrictToHost());
        

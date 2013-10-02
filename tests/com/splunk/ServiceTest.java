@@ -59,25 +59,30 @@ public class ServiceTest extends SDKTestCase {
     public void testReceiver() {
         Receiver receiver = service.getReceiver();
 
-        final Index index = service.getIndexes().get("main");
+        final String indexName = service.getIndexes().get("_internal").getDefaultDatabase();
+        final Index index = service.getIndexes().get(indexName);
         final int originalEventCount = index.getTotalEventCount();
-        
+
         try {
             Socket socket1 = receiver.attach();
             OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon1!\r\n";
             stream.write(s.getBytes("UTF8"));
+            stream.close();
+            socket1.close();
         } catch (IOException e) {
             fail("Exception on attach");
         }
-        
+
         try {
             Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
             OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon2!\r\n";
             stream.write(s.getBytes("UTF8"));
+            stream.close();
+            socket1.close();
         } catch (IOException e) {
             fail("Exception on attach");
         }
@@ -87,8 +92,8 @@ public class ServiceTest extends SDKTestCase {
         receiver.log("Boris the mad baboon5!\r\n");
         receiver.log("main", "Boris the mad baboon6!\r\n");
         receiver.log(Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon7!\r\n");
-        receiver.log("main", Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon8!\r\n");
-        
+        receiver.log(indexName, Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon8!\r\n");
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
                 tries = 50;
@@ -98,7 +103,7 @@ public class ServiceTest extends SDKTestCase {
             public boolean predicate() {
                 index.refresh();
                 int eventCount = index.getTotalEventCount();
-                return eventCount == originalEventCount + 6;
+                return eventCount == originalEventCount + 8;
             }
         });
     }
@@ -291,7 +296,11 @@ public class ServiceTest extends SDKTestCase {
         for (Job entity : jobs.values())
             testGetters(entity);
 
-        Job job = jobs.create("search *");
+        Job job = jobs.create("search * | head 1");
+
+        while (!job.isDone()) {
+            Thread.sleep(150);
+        }
 
         testGetters(job);
         job.cancel();

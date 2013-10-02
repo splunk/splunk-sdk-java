@@ -608,7 +608,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testEnablePreview() {
+    public void testEnablePreview() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
@@ -621,6 +621,10 @@ public class SearchJobTest extends SDKTestCase {
         args.put("priority", 5);
         args.put("latest_time", "now");
         final Job job = jobs.create(query, args);
+
+        while (!job.isReady()) {
+            Thread.sleep(150);
+        }
 
         assertFalse(job.isPreviewEnabled());
         
@@ -658,6 +662,9 @@ public class SearchJobTest extends SDKTestCase {
         args.put("latest_time", "now");
         args.put("preview", "1");
         final Job job = jobs.create(query, args);
+
+        while (!job.isReady())
+
         assertTrue(job.isPreviewEnabled());
 
         job.disablePreview();

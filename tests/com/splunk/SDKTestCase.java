@@ -28,6 +28,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.io.IOException;
+import java.net.Socket;
+
 
 /**
  * Base test case for SDK test suite.
@@ -43,7 +46,8 @@ import java.util.UUID;
  */
 public abstract class SDKTestCase extends TestCase {
     protected static final boolean WORKAROUND_KNOWN_BUGS = true;
-    
+    private static final boolean VERBOSE_PORT_SCAN = false;
+
     protected static Service service;
     protected List<String> installedApps;
 
@@ -293,13 +297,27 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     protected int findNextUnusedPort(int startingPort) {
-        InputCollection inputs = service.getInputs();
-        
         int port = startingPort;
-        while (inputs.containsKey(String.valueOf(port))) {
+        while (isPortInUse(port)) {
             port++;
         }
         return port;
+    }
+
+    public boolean isPortInUse(int port) {
+        try {
+            Socket pingSocket = new Socket(service.getHost(), port);
+            pingSocket.close();
+            if (VERBOSE_PORT_SCAN) {
+                System.out.println("IN-USE(" + port + ")");
+            }
+            return true;
+        } catch (IOException e) {
+            if (VERBOSE_PORT_SCAN) {
+                System.out.println("OPEN(" + port + "): " + e.getMessage());
+            }
+            return false;
+        }
     }
     
     protected static boolean contains(String[] array, String value) {

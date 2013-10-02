@@ -16,14 +16,10 @@
 
 package com.splunk;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import org.junit.Test;
 
 public class SettingsTest extends SDKTestCase {
-    private static final boolean VERBOSE_PORT_SCAN = false;
-    
+
     @Test
     public void testGettersThrowNoExceptions() {
         Settings settings = service.getSettings();
@@ -45,26 +41,7 @@ public class SettingsTest extends SDKTestCase {
     @Test
     public void testHttpPortSetter() throws Exception {
         Settings settings = service.getSettings();
-        
-        // Try to clean up from previous test runs, if needed
-        if (isPortInUse(8000) && isPortInUse(8001)) {
-            // Looks like there are two splunkwebs. Kill them.
-            System.out.println(
-                    "WARNING: There seem to be two splunkwebs running. " +
-                    "Trying to recover...");
-            uncheckedSplunkRestart();
-            if (isPortInUse(8000) && isPortInUse(8001)) {
-                fail("There seem to be two splunkwebs running and I couldn't kill them.");
-            }
-        }
-        if (settings.getHttpPort() == 8001) {
-            System.out.println(
-                    "WARNING: splunkweb seems to be running on the test port " +
-                    "(8001). Trying to recover...");
-            changeHttpPort(8000);
-            settings.refresh();
-        }
-        
+
         int originalHttpPort = settings.getHttpPort();
         if (!isPortInUse(originalHttpPort)) {
             // Try to clean up from weird state where splunkweb isn't running
@@ -75,17 +52,18 @@ public class SettingsTest extends SDKTestCase {
             waitForSplunkwebUp(originalHttpPort);
         }
         assertTrue(isPortInUse(originalHttpPort));
-        assertFalse(
-                "This test is not valid if splunkweb's port is already 8001.",
-                originalHttpPort == 8001);
-        
-        changeHttpPort(8001);
-        assertTrue(isPortInUse(8001));
+
+        int newPort = originalHttpPort + 1;
+        while (isPortInUse(newPort)) {
+            newPort++;
+        }
+        changeHttpPort(newPort);
+        assertTrue(isPortInUse(newPort));
         assertFalse(isPortInUse(originalHttpPort));
         
         changeHttpPort(originalHttpPort);
         assertTrue(isPortInUse(originalHttpPort));
-        assertFalse(isPortInUse(8001));
+        assertFalse(isPortInUse(newPort));
     }
 
     private void changeHttpPort(int newHttpPort) {
@@ -116,23 +94,7 @@ public class SettingsTest extends SDKTestCase {
             }
         });
     }
-    
-    private boolean isPortInUse(int port) {
-        try {
-            Socket pingSocket = new Socket(service.getHost(), port);
-            pingSocket.close();
-            if (VERBOSE_PORT_SCAN) {
-                System.out.println("IN-USE(" + port + ")");
-            }
-            return true;
-        } catch (IOException e) {
-            if (VERBOSE_PORT_SCAN) {
-                System.out.println("OPEN(" + port + "): " + e.getMessage());
-            }
-            return false;
-        }
-    }
-    
+
     @Test
     public void testMangementPort() throws Exception {
         Settings settings = service.getSettings();
