@@ -626,12 +626,20 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(150);
         }
 
+        if (service.versionCompare("6.0.0") == 0) {
+            // Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up for some period
+            // after the job is ready.
+            Thread.sleep(300);
+        }
+
+        job.refresh();
         assertFalse(job.isPreviewEnabled());
         
         job.enablePreview();
         job.update();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 50; }
             @Override
             public boolean predicate() {
                 job.refresh();
@@ -648,7 +656,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testDisablePreview() {
+    public void testDisablePreview() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
@@ -663,7 +671,15 @@ public class SearchJobTest extends SDKTestCase {
         args.put("preview", "1");
         final Job job = jobs.create(query, args);
 
-        while (!job.isReady())
+        while (!job.isReady()) {
+            Thread.sleep(150);
+        }
+
+        if (service.versionCompare("6.0.0") == 0) {
+            // Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up for some period
+            // after the job is ready.
+            Thread.sleep(300);
+        }
 
         assertTrue(job.isPreviewEnabled());
 
@@ -671,6 +687,7 @@ public class SearchJobTest extends SDKTestCase {
         job.update();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 50; }
             @Override
             public boolean predicate() {
                 job.refresh();
@@ -707,7 +724,7 @@ public class SearchJobTest extends SDKTestCase {
     }
     
     @Test
-    public void testSetPriority() {
+    public void testSetPriority() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
@@ -723,6 +740,17 @@ public class SearchJobTest extends SDKTestCase {
         args.put("priority", 5);
         args.put("latest_time", "now");
         final Job job = jobs.create(query);
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
+
+        if (service.versionCompare("6.0.0") == 0) {
+            // Splunk 6.0.0 doesn't have all the fields presented at ready.
+            Thread.sleep(300);
+            job.refresh();
+        }
+
 
         assertEquals(5, job.getPriority()); // The default priority is 5
 
