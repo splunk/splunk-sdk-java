@@ -84,13 +84,8 @@ public class JobCollection extends EntityCollection<Job> {
             .item(0)
             .getTextContent();
 
-        invalidate();
-        Job job = get(sid);
-
-        // if job not yet scheduled, create an empty job object
-        if (job == null) {
-            job = new Job(service, "search/jobs/" + sid);
-        }
+        Job job = new Job(service, "search/jobs/" + sid);
+        job.refresh();
 
         return job;
     }

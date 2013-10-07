@@ -495,13 +495,17 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testRemoteTimeline() {
+    public void testRemoteTimeline() throws InterruptedException {
         Job job = jobs.create(QUERY);
 
         String sid = job.getSid();
 
         jobs.refresh();
         assertTrue(jobs.containsKey(sid));
+
+        while (!job.isReady()) {
+            Thread.sleep(50);
+        }
 
         job.isRemoteTimeline();
     }
