@@ -1,6 +1,16 @@
 # Splunk SDK for Java Changelog
 
-## Version ?? [TODO: fixme]
+## Version 1.2.1
+
+### New features and APIs
+
+* The Splunk SDK for Java is fully compatible with Splunk 6.0 as of this release.
+
+### Bug fixes
+
+* JobCollection.create() previously invalidated the collection and refreshed it to see if the job had appeared.
+  This was problematic for Splunk instances running many jobs at once. The method has been changed to only interact
+  with the endpoint specific to the newly created job.
 
 ### Breaking changes
 
