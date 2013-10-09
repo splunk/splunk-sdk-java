@@ -11,6 +11,7 @@
 * JobCollection.create() previously invalidated the collection and refreshed it to see if the job had appeared.
   This was problematic for Splunk instances running many jobs at once. The method has been changed to only interact
   with the endpoint specific to the newly created job.
+* Namespaces which contain special characters such as @ in their owner or app are now handled correctly.
 
 ### Breaking changes
 
