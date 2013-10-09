@@ -31,6 +31,9 @@
     <property name="coverage.dir" location="build/reports/coverage"/>
     <property name="testreport.dir" location="build/reports/tests" />
 
+    <!-- Test case to run -->
+    <property name="testcase" value="*Test" />
+
     <!-- Short names for all the external libraries that get
          referenced multiple times. -->
     <property name="junit" location="lib/junit-4.11.jar"/>
@@ -304,7 +307,7 @@
 
             <batchtest>
                 <fileset dir="${build.tests}">
-                    <include name="**/*Test.class"/>
+                    <include name="**/${testcase}.class"/>
                 </fileset>
 		<formatter type="xml" />
             </batchtest>
