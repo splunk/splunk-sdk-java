@@ -329,7 +329,7 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     protected static String locateSystemLog() {
-        final String filename;
+        String filename = null;
         String osName = service.getInfo().getOsName();
         if (osName.equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log";
