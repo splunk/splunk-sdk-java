@@ -18,6 +18,8 @@ package com.splunk;
 
 import org.junit.Test;
 
+import java.net.URLEncoder;
+
 public class NamespaceTest extends SDKTestCase {
     @Test
     public void testStaticNamespace() {
@@ -34,6 +36,12 @@ public class NamespaceTest extends SDKTestCase {
         namespace.clear();
         assertEquals("/services/",
             service.fullpath("", null));
+
+        namespace.clear();
+        namespace.put("owner", "bill@some domain");
+        namespace.put("app", "my! app!@");
+        assertEquals("/servicesNS/bill%40some+domain/my%21+app%21%40/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("owner", "Bob");
@@ -150,7 +158,7 @@ public class NamespaceTest extends SDKTestCase {
 
     @Test
     public void testLiveNamespace1() throws Exception {
-        String username = "sdk-user";
+        String username = "sdk-user@somedomain!";
         String password = "changeme";
         String savedSearch = "sdk-test1";
         String searchString = "search index=main * | head 10";
