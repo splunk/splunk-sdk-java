@@ -333,8 +333,14 @@ public abstract class SDKTestCase extends TestCase {
         String osName = service.getInfo().getOsName();
         if (osName.equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log";
-        else if (osName.equals("Linux"))
-            filename = "/var/log/syslog";
+        else if (osName.equals("Linux")) {
+            String[] filenames = {"/var/log/syslog", "/var/log/messages"};
+            for (String candidate : filenames) {
+                if (new File(candidate).exists()) {
+                    filename = candidate;
+                }
+            }
+        }
         else if (osName.equals("Darwin")) {
             filename = "/var/log/system.log";
         } else {
