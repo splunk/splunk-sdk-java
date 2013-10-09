@@ -521,12 +521,14 @@ public class IndexTest extends SDKTestCase {
         socket.close();
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
             @Override
             public boolean predicate() {
                 return getResultCountOfIndex() == 3;
             }
         });
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
             @Override
             public boolean predicate() {
                 index.refresh();
