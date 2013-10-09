@@ -53,11 +53,6 @@ public class AtomFeedTest {
 
     @Test
     public void testAtomFeed() {
-        if (this.testName.equals("atom_without_feed")) {
-            System.out.println("WARNING: AtomFeed does not work with Splunk 4.2 or earlier due to lack of 'feed' elements; skipping test:");
-            System.out.println("    " + this.testName);
-            return;
-        }
         Map<String, Object> expectedMetadata = (Map<String, Object>)expectedFeed.get("metadata");
         AtomFeed actualFeed = AtomFeed.parseStream(this.xmlStream);
 
