@@ -299,12 +299,8 @@ public class IndexTest extends SDKTestCase {
         index.update();
         //index.setColdToFrozenScript(coldToFrozenScript);
         
-        // TODO: Figure out which of the above setters is forcing
-        //       causing a restart request.
-        if (service.versionIsEarlierThan("6.0.0")) {
-            clearRestartMessage();
-        } else {
-            splunkRestart(); // In Splunk 6, you actually need the restart or it won't let you delete the index.
+        if (restartRequired()) {
+            splunkRestart();
         }
     }
 
