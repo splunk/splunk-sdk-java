@@ -312,10 +312,12 @@
             <formatter type="xml" />
             <formatter type="plain" usefile="false"/>
         </junit>
+    </target>
 
+    <target name="testreport" depends="test">
         <mkdir dir="${testreport.dir}"/>
         <junitreport todir="${testreport.dir}">
-            <fileset dir="${testreport.dir}">
+            <fileset dir=".">
                 <include name="TEST-*.xml" />
             </fileset>
             <report todir="${testreport.dir}" />
