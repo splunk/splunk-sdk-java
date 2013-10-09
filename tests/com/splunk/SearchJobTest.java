@@ -507,6 +507,12 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(50);
         }
 
+        if (service.versionCompare("6.0.0") == 0) {
+            // Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up for some period
+            // after the job is ready.
+            Thread.sleep(300);
+        }
+
         job.isRemoteTimeline();
     }
 
