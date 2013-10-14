@@ -100,14 +100,20 @@ public class ServiceTest extends SDKTestCase {
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
-                tries = 50;
+                tries = 200;
             }
 
             @Override
             public boolean predicate() {
                 index.refresh();
                 int eventCount = index.getTotalEventCount();
-                return eventCount == originalEventCount + 8;
+                if (service.versionCompare("6.0.0") == 0 && service.getInfo().getOsName().equals("Windows")) {
+                    // Splunk 6 on Windows doesn't record events submitted to the streaming HTTP input
+                    // without a source type.
+                    return eventCount == originalEventCount + 7;
+                } else {
+                    return eventCount == originalEventCount + 8;
+                }
             }
         });
     }

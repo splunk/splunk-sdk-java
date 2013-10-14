@@ -21,15 +21,12 @@ import org.junit.After;
 import org.junit.Before;
 
 import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.io.IOException;
-import java.net.Socket;
+import java.util.*;
 
 
 /**
@@ -306,7 +303,14 @@ public abstract class SDKTestCase extends TestCase {
 
     public boolean isPortInUse(int port) {
         try {
-            Socket pingSocket = new Socket(service.getHost(), port);
+            Socket pingSocket = new Socket();
+            // On Windows, the firewall doesn't respond at all if you connect to an unbound port, so we need to
+            // take lack of a connection as an empty port. Timeout is 1000ms.
+            try {
+                pingSocket.connect(new InetSocketAddress(service.getHost(), port), 1000);
+            } catch (SocketTimeoutException ste) {
+                return false;
+            }
             pingSocket.close();
             if (VERBOSE_PORT_SCAN) {
                 System.out.println("IN-USE(" + port + ")");

@@ -50,10 +50,15 @@ public class TcpInputTest extends SDKTestCase {
         if (index != null && service.versionCompare("5.0") >= 0) {
             index.remove();
         }
-        if (tcpInput != null) {
-            tcpInput.remove();
+        if (service.versionCompare("6.0.0") != 0 || !service.getInfo().getOsName().equals("Windows")) {
+            // Removing TCP inputs doesn't work on Windows in Splunk 6.0.0. The HTTP call hangs forever,
+            // and, though the input vanishes from the REST API, the port is never unbound and cannot be
+            // reused until Splunk restarts.
+            if (tcpInput != null) {
+                tcpInput.remove();
+            }
         }
-        
+
         super.tearDown();
     }
 
@@ -70,7 +75,7 @@ public class TcpInputTest extends SDKTestCase {
 
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
-            { tries = 50; }
+            { tries = 15; }
 
             @Override
             public boolean predicate() {

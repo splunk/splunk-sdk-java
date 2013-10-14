@@ -16,14 +16,13 @@
 
 package com.splunk;
 
+import junit.framework.AssertionFailedError;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
-
-import junit.framework.AssertionFailedError;
 
 public class IndexTest extends SDKTestCase {
     private String indexName;
@@ -106,6 +105,8 @@ public class IndexTest extends SDKTestCase {
         });
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
+
             @Override
             public boolean predicate() {
                 index.refresh();
@@ -471,23 +472,34 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testAttach() throws IOException {
+        System.out.println("Index: " + indexName);
         assertTrue(getResultCountOfIndex() == 0);
         assertTrue(index.getTotalEventCount() == 0);
-        
+
         Socket socket = index.attach();
         OutputStream ostream = socket.getOutputStream();
         Writer out = new OutputStreamWriter(ostream, "UTF8");
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
+
+        // setTcpNoDelay = Yes, flush, damn you.
+        // Yes, this is needed on at least Linux when talking to splunkd on Windows.
+        socket.setTcpNoDelay(true);
         out.flush();
         socket.close();
-        
+
+        index.refresh();
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
+
             @Override
             public boolean predicate() {
+                index.refresh();
                 return getResultCountOfIndex() == 2;
             }
         });
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -513,6 +525,7 @@ public class IndexTest extends SDKTestCase {
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world again!\u0150\r\n");
+        socket.setTcpNoDelay(true);
         out.flush();
         socket.close();
         

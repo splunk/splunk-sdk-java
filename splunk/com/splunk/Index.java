@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.lang.UnsupportedOperationException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -70,6 +69,7 @@ public class Index extends Entity {
             socket = attach();
             output = socket.getOutputStream();
             behavior.run(output);
+            socket.setTcpNoDelay(true);
             output.flush();
         } finally {
             if (output != null) { output.close(); }

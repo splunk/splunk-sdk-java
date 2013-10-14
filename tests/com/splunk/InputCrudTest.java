@@ -17,9 +17,9 @@
 package com.splunk;
 
 
-import java.util.HashMap;
-
 import org.junit.Test;
+
+import java.util.HashMap;
 
 public class InputCrudTest extends InputTest {
     @Test
@@ -254,7 +254,7 @@ public class InputCrudTest extends InputTest {
         String filename;
         if (service.getInfo().getOsName().equals("Windows")) {
             // Windows
-            filename = "etc/apps/modular-inputs/bin/echo.bat";
+            filename = "etc\\apps\\modular-inputs\\bin\\echo.bat";
         } else {
             // Linux or Mac OS X
             filename = "etc/apps/modular-inputs/bin/echo.sh";
@@ -457,6 +457,7 @@ public class InputCrudTest extends InputTest {
         String name = "sdk-input-wel";
         
         deleteInputIfExists(name);
+        assertFalse(inputs.refresh().containsKey(name));
 
         // Create
         inputs.create(
@@ -619,7 +620,7 @@ public class InputCrudTest extends InputTest {
                 windowsWmiInput.getClasses());
             assertEquals(600,
                 windowsWmiInput.getInterval());
-            assertEquals("127.0.0.1",
+            assertEquals(service.getHost(),
                 windowsWmiInput.getLookupHost());
     
             windowsWmiInput.setClasses("PerfDisk_LogicalDisk");

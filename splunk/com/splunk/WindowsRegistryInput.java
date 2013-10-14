@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -113,7 +112,12 @@ public class WindowsRegistryInput extends Input {
             }
         }
         else {
-            return getStringArray("type", new String[]{});
+            String types = getString("type", null);
+            if (types == null) {
+                return new String[]{};
+            } else {
+                return types.split("\\|");
+            }
         }
     }
 
@@ -167,7 +171,21 @@ public class WindowsRegistryInput extends Input {
      * monitor all sub-nodes, {@code false} if not.
      */
     public void setMonitorSubnodes(boolean monitorSubnodes) {
-        setCacheValue("monitorSubnodes", monitorSubnodes);
+        // In Splunk 6, monitor subnodes is a trailing string on hive.
+        if (service.versionIsAtLeast("6.0.0")) {
+            if (getHive().endsWith("\\\\?.*")) {
+                if (!monitorSubnodes) {
+                    setHive(getHive().substring(0, getHive().length()-5));
+                }
+            } else {
+                if (monitorSubnodes) {
+                    setHive(getHive() + "\\\\?.*");
+                }
+            }
+        } else {
+            // In Splunk 5 and earlier, it's a separate field.
+            setCacheValue("monitorSubnodes", monitorSubnodes);
+        }
     }
 
     /**
