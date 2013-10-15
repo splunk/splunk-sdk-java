@@ -38,9 +38,9 @@ public class NamespaceTest extends SDKTestCase {
             service.fullpath("", null));
 
         namespace.clear();
-        namespace.put("owner", "bill@some domain");
+        namespace.put("owner", "bill@some domain\u0150");
         namespace.put("app", "my! app!@");
-        assertEquals("/servicesNS/bill%40some+domain/my%21+app%21%40/",
+        assertEquals("/servicesNS/bill%40some+domain%C5%90/my%21+app%21%40/",
                 service.fullpath("", namespace));
 
         namespace.clear();

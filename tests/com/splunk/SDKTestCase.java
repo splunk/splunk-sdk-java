@@ -351,6 +351,7 @@ public abstract class SDKTestCase extends TestCase {
             for (String candidate : filenames) {
                 if (new File(candidate).exists()) {
                     filename = candidate;
+                    break;
                 }
             }
         }
@@ -359,6 +360,8 @@ public abstract class SDKTestCase extends TestCase {
         } else {
             throw new RuntimeException("OS " + osName + " not recognized");
         }
+
+        assertNotNull(filename);
         return filename;
     }
     

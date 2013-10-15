@@ -32,6 +32,8 @@
     <property name="testreport.dir" location="build/reports/tests" />
 
     <!-- Test case to run -->
+    <!-- This is separated into a property so it can be overridden by command line arguments,
+         making it easy to run specific test cases. -->
     <property name="testcase" value="*Test" />
 
     <!-- Short names for all the external libraries that get
