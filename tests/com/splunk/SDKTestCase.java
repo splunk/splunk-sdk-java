@@ -92,7 +92,16 @@ public abstract class SDKTestCase extends TestCase {
             // for restarts that might be required, since deleting an app
             // triggers a restart (but one that we can safely ignore).
             for (String applicationName : installedApps) {
-                service.getApplications().remove(applicationName);
+                try {
+                    service.getApplications().remove(applicationName);
+                } catch (HttpException e) {
+                    // WORKAROUND (SPL-75224): Under Splunk 6.0 on Windows, deleting apps sometimes fails with
+                    // the message "Operation completed successfully." The app is actually deleted, but it will
+                    // cause tests to fail.
+                    if (service.versionCompare("6.0.0") == 0 && e.getStatus() != 500) {
+                        throw e;
+                    }
+                }
                 clearRestartMessage();
             }
         }

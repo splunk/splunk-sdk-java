@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,11 +40,20 @@ public class DeploymentServerClassTest extends SDKTestCase {
 
     @Test
     public void testCreate() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+        }
+
         assertTrue(classes.containsKey(serverClassName));
     }
 
     @Test
     public void testDisable() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         if (serverClass.isDisabled()) {
             serverClass.enable();
             serverClass.refresh();
@@ -57,6 +67,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
 
     @Test
     public void testEnable() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         if (!serverClass.isDisabled()) {
             serverClass.disable();
             serverClass.refresh();
@@ -70,6 +85,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
 
     @Test
     public void testBlacklist() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         String[] blacklist = {"bad1.splunk.com", "bad2.splunk.com"};
 
         for (int i = 0; i < blacklist.length; i++) {
@@ -88,6 +108,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
 
     @Test
     public void testWhitelist() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         String[] whitelist = {"bad1.splunk.com", "bad2.splunk.com"};
 
         for (int i = 0; i < whitelist.length; i++) {
@@ -106,6 +131,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
 
     @Test
     public void testContinueMatching() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         assertFalse(serverClass.getContinueMatching());
         serverClass.setContinueMatching(true);
         serverClass.update();
@@ -115,6 +145,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
 
     @Test
     public void testEndpoint() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         serverClass.setEndPoint("boris the mad baboon");
         serverClass.update();
         serverClass.refresh();
@@ -123,6 +158,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
 
     @Test
     public void testFilterType() {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         serverClass.setFilterType("whitelist");
         serverClass.update();
         serverClass.refresh();

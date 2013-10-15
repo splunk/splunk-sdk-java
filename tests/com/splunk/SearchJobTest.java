@@ -507,11 +507,15 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(50);
         }
 
+        // WORKAROUND (SPL-74890): Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up
+        // for some period after the job is ready.
         if (service.versionCompare("6.0.0") == 0) {
-            // Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up for some period
-            // after the job is ready.
-            Thread.sleep(300);
+            while (job.getString("isPreviewEnabled") == null) {
+                job.refresh();
+                Thread.sleep(100);
+            }
         }
+        // END WORKAROUND
 
         job.isRemoteTimeline();
     }
@@ -636,11 +640,15 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(150);
         }
 
+        // WORKAROUND (SPL-74890): Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up
+        // for some period after the job is ready.
         if (service.versionCompare("6.0.0") == 0) {
-            // Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up for some period
-            // after the job is ready.
-            Thread.sleep(300);
+            while (job.getString("isPreviewEnabled") == null) {
+                job.refresh();
+                Thread.sleep(100);
+            }
         }
+        // END WORKAROUND
 
         job.refresh();
         assertFalse(job.isPreviewEnabled());
@@ -685,11 +693,15 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(150);
         }
 
+        // WORKAROUND (SPL-74890): Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up
+        // for some period after the job is ready.
         if (service.versionCompare("6.0.0") == 0) {
-            // Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up for some period
-            // after the job is ready.
-            Thread.sleep(300);
+            while (job.getString("isPreviewEnabled") == null) {
+                job.refresh();
+                Thread.sleep(100);
+            }
         }
+        // END WORKAROUND
 
         assertTrue(job.isPreviewEnabled());
 
@@ -755,11 +767,15 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(100);
         }
 
+        // WORKAROUND (SPL-74890): Splunk 6.0.0 has a bug where the priority field may not show up
+        // for some period after the job is ready.
         if (service.versionCompare("6.0.0") == 0) {
-            // Splunk 6.0.0 doesn't have all the fields presented at ready.
-            Thread.sleep(300);
-            job.refresh();
+            while (job.getString("priority") == null) {
+                job.refresh();
+                Thread.sleep(100);
+            }
         }
+        // END WORKAROUND
 
 
         assertEquals(5, job.getPriority()); // The default priority is 5
