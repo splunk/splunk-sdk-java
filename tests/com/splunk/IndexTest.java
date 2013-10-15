@@ -472,7 +472,6 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testAttach() throws IOException {
-        System.out.println("Index: " + indexName);
         assertTrue(getResultCountOfIndex() == 0);
         assertTrue(index.getTotalEventCount() == 0);
 
@@ -482,8 +481,9 @@ public class IndexTest extends SDKTestCase {
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
 
-        // setTcpNoDelay = Yes, flush, damn you.
-        // Yes, this is needed on at least Linux when talking to splunkd on Windows.
+        // WORKAROUND (unfiled): out.flush() is supposed to force the writing of all data on the socket and
+        // then return, but with the test suite on Linux talking to splunkd 6.0.0 on Windows, when the socket
+        // is closed after flushing, the data apparently doesn't get sent unless we setTcpNoDelay(true).
         socket.setTcpNoDelay(true);
         out.flush();
         socket.close();
@@ -525,6 +525,10 @@ public class IndexTest extends SDKTestCase {
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world again!\u0150\r\n");
+
+        // WORKAROUND (unfiled): out.flush() is supposed to force the writing of all data on the socket and
+        // then return, but with the test suite on Linux talking to splunkd 6.0.0 on Windows, when the socket
+        // is closed after flushing, the data apparently doesn't get sent unless we setTcpNoDelay(true).
         socket.setTcpNoDelay(true);
         out.flush();
         socket.close();

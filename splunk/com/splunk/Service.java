@@ -274,6 +274,7 @@ public class Service extends BaseService {
 
         // override with invocation namespace if set.
         if (namespace != null) {
+            // URL encode the owner and app.
             if (namespace.containsKey("app"))
                 try {
                     localApp = URLEncoder.encode((String)namespace.get("app"), "UTF-8");

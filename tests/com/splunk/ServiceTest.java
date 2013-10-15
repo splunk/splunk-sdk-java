@@ -107,9 +107,9 @@ public class ServiceTest extends SDKTestCase {
             public boolean predicate() {
                 index.refresh();
                 int eventCount = index.getTotalEventCount();
+                // WORKAROUND (SPL-75109): Splunk 6.0 on Windows doesn't record events submitted to the streaming
+                // HTTP input without a sourcetype.
                 if (service.versionCompare("6.0.0") == 0 && service.getInfo().getOsName().equals("Windows")) {
-                    // Splunk 6 on Windows doesn't record events submitted to the streaming HTTP input
-                    // without a source type.
                     return eventCount == originalEventCount + 7;
                 } else {
                     return eventCount == originalEventCount + 8;

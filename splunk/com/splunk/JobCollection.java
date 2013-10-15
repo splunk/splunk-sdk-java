@@ -112,8 +112,11 @@ public class JobCollection extends EntityCollection<Job> {
      * @return The job's response.
      */
     @Override public ResponseMessage list() {
-        this.refreshArgs.add("count", 0);
-        return service.get(path, this.refreshArgs);
+        Args args = new Args(this.refreshArgs);
+        if (!args.containsKey("count")) {
+            args.put("count", 0);
+        }
+        return service.get(path, args);
     }
 
     /**

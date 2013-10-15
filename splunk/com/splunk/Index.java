@@ -69,8 +69,9 @@ public class Index extends Entity {
             socket = attach();
             output = socket.getOutputStream();
             behavior.run(output);
-            // This appears to be necessary to get events sent from the SDK on Linux
-            // to splunkd on Windows to actually be indexed.
+            // WORKAROUND (not filed): This appears to be necessary to get events sent from the SDK on Linux
+            // to splunkd on Windows to actually be indexed. Otherwise the data may be dropped before being sent
+            // when the socket is closed, despite calling output.flush().
             socket.setTcpNoDelay(true);
             output.flush();
         } finally {
