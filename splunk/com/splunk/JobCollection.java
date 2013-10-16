@@ -34,6 +34,7 @@ public class JobCollection extends EntityCollection<Job> {
      */
     JobCollection(Service service) {
         super(service, "search/jobs", Job.class);
+        this.refreshArgs.put("count", "0");
     }
 
     /**
@@ -45,6 +46,7 @@ public class JobCollection extends EntityCollection<Job> {
      */
     JobCollection(Service service, Args args) {
         super(service, "search/jobs", Job.class, args);
+        this.refreshArgs.put("count", "0");
     }
 
     /**
@@ -112,11 +114,7 @@ public class JobCollection extends EntityCollection<Job> {
      * @return The job's response.
      */
     @Override public ResponseMessage list() {
-        Args args = new Args(this.refreshArgs);
-        if (!args.containsKey("count")) {
-            args.put("count", 0);
-        }
-        return service.get(path, args);
+        return service.get(path, this.refreshArgs);
     }
 
     /**
