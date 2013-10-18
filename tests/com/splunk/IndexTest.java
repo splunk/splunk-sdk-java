@@ -218,8 +218,12 @@ public class IndexTest extends SDKTestCase {
         int newThrottleCheckPeriod = index.getThrottleCheckPeriod()+1;
         index.setThrottleCheckPeriod(newThrottleCheckPeriod);
         String coldToFrozenDir = index.getColdToFrozenDir();
-        index.setColdToFrozenDir("/tmp/foobar" + index.getName());
-        
+        if (service.getInfo().getOsName().equals("Windows")) {
+            index.setColdToFrozenDir("C:\\frozenDir\\" + index.getName());
+        } else {
+            index.setColdToFrozenDir("/tmp/foobar" + index.getName());
+        }
+
         boolean newEnableOnlineBucketRepair = false;
         String newMaxBloomBackfillBucketAge = null;
         if (service.versionIsAtLeast("4.3")) {
@@ -263,7 +267,11 @@ public class IndexTest extends SDKTestCase {
         assertEquals(newServiceMetaPeriod, index.getServiceMetaPeriod());
         assertEquals(newSyncMeta, index.getSyncMeta());
         assertEquals(newThrottleCheckPeriod, index.getThrottleCheckPeriod());
-        assertEquals("/tmp/foobar" + index.getName(), index.getColdToFrozenDir());
+        if (service.getInfo().getOsName().equals("Windows")) {
+            assertEquals("C:\\frozenDir\\" + index.getName(), index.getColdToFrozenDir());
+        } else {
+            assertEquals("/tmp/foobar" + index.getName(), index.getColdToFrozenDir());
+        }
         if (service.versionIsAtLeast("4.3")) {
             assertEquals(
                     newEnableOnlineBucketRepair,

@@ -301,7 +301,7 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     String[] getStringArray(String key) {
         if (toUpdate.containsKey(key)) {
-            return (String[])toUpdate.get(key);
+            return ((String)toUpdate.get(key)).split("\\|");
         }
         return getContent().getStringArray(key);
     }

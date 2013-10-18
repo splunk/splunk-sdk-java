@@ -112,11 +112,18 @@ public class WindowsRegistryInput extends Input {
             }
         }
         else {
-            String types = getString("type", null);
-            if (types == null) {
-                return new String[]{};
+            // Before Splunk 6, the type was returned in a form like ["create", "delete"].
+            // In Splunk 6, it has changed to create|delete, which is symmetric with the values taken
+            // by setType.
+            if (service.versionIsEarlierThan("6.0.0")) {
+                return getStringArray("type", new String[] {});
             } else {
-                return types.split("\\|");
+                String types = getString("type", null);
+                if (types == null) {
+                    return new String[]{};
+                } else {
+                    return types.split("\\|");
+                }
             }
         }
     }
