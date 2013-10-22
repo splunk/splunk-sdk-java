@@ -162,6 +162,12 @@ public class ApplicationTest extends SDKTestCase {
 
     @Test
     public void testUpdate() {
+        // WORKAROUND (SPL-75560): This test makes splunkd hang on OS X with Splunk 6. The test itself finishes
+        // and the problem is in teardown. I have not been able to diagnose what's going on.
+        if (service.getInfo().getOsName().equals("Darwin") && service.versionCompare("6.0.0") == 0) {
+            return;
+        }
+
         if (service.getApplications().get("wc") == null) {
             System.out.println("WARNING: Must have app wc installed on splunkd to run ApplicationTest.testUpdate");
             return;

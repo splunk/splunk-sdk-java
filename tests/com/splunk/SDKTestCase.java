@@ -68,6 +68,10 @@ public abstract class SDKTestCase extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        // If using Charles Proxy for debugging, uncomment these lines.
+        //System.setProperty("https.proxyHost", "127.0.0.1");
+        //System.setProperty("https.proxyPort", "8888");
+
         command = Command.splunk();
         connect();
         if (restartRequired()) {
@@ -75,6 +79,7 @@ public abstract class SDKTestCase extends TestCase {
                     "WARNING: Splunk was already in a state requiring a " +
                     "restart prior to running this test. Trying to recover...");
             splunkRestart();
+            System.out.println("Restart complete.");
         }
         installedApps = new ArrayList<String>();
     }
