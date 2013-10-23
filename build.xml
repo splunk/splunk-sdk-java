@@ -54,6 +54,7 @@
         <javac includeantruntime="false"
                srcdir="splunk"
                destdir="${build.splunk}"
+               target="1.6"
                debug="true"
                debuglevel="lines,vars,source">
             <classpath>
@@ -66,6 +67,7 @@
         <!-- Compile utils -->
         <mkdir dir="${build.util}"/>
         <javac includeantruntime="false"
+               target="1.6"
                srcdir="util"
                destdir="${build.util}">
             <classpath>
@@ -78,6 +80,7 @@
         <!-- Compile the unit tests -->
         <mkdir dir="${build.tests}"/>
         <javac includeantruntime="false"
+               target="1.6"
                srcdir="tests"
                destdir="${build.tests}">
             <classpath>
@@ -97,6 +100,7 @@
         <!-- Compile the examples -->
         <mkdir dir="${build.examples}/"/>
         <javac includeantruntime="false"
+               target="1.6"
                srcdir="examples"
                destdir="${build.examples}">
             <classpath>
@@ -260,6 +264,7 @@
         <property name="dist.docs" location="${dist}/docs"/>
         <mkdir dir="${dist.docs}"/>
         <javadoc destdir="${dist.docs}"
+                 target="1.6"
                  sourcepath="splunk"
                  stylesheetfile="splunk/staticdocs.css">
             <classpath>
