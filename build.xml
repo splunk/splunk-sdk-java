@@ -264,7 +264,6 @@
         <property name="dist.docs" location="${dist}/docs"/>
         <mkdir dir="${dist.docs}"/>
         <javadoc destdir="${dist.docs}"
-                 target="1.6"
                  sourcepath="splunk"
                  stylesheetfile="splunk/staticdocs.css">
             <classpath>
