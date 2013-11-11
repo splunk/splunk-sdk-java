@@ -507,24 +507,18 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(50);
         }
 
-        // WORKAROUND (SPL-74890): Splunk 6.0.0 has a bug where the isPreviewEnabled field may not show up
-        // for some period after the job is ready.
-        if (service.versionCompare("6.0.0") == 0) {
-            while (job.getString("isPreviewEnabled", null) == null) {
-                job.refresh();
-                Thread.sleep(100);
-            }
-        }
-        // END WORKAROUND
-
         job.isRemoteTimeline();
     }
 
     @Test
-    public void testRemoveFail() {
+    public void testRemoveFail() throws InterruptedException {
         Job job = jobs.create(QUERY);
 
         String sid = job.getSid();
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
 
         jobs.refresh();
         assertTrue(jobs.containsKey(sid));
@@ -538,12 +532,17 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testPreview() {
+    public void testPreview() throws InterruptedException {
         JobArgs args = new JobArgs();
         args.put("field_list", "source,host,sourcetype");
         args.setStatusBuckets(100);
 
         Job job = jobs.create(QUERY, args);
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
+
         assertTrue(10 >= countEvents(job.getResultsPreview()));
 
         job.cancel();
@@ -796,7 +795,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testPause() {
+    public void testPause() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
@@ -805,6 +804,10 @@ public class SearchJobTest extends SDKTestCase {
         
         String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
 
         if (job.isPaused()) {
             job.control("unpause");
@@ -825,7 +828,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testUnpause() {
+    public void testUnpause() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
@@ -834,6 +837,10 @@ public class SearchJobTest extends SDKTestCase {
         
         String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
 
         if (!job.isPaused()) {
             job.control("pause");
@@ -854,7 +861,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testFinalize() {
+    public void testFinalize() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
@@ -863,6 +870,10 @@ public class SearchJobTest extends SDKTestCase {
         
         String query = "search index=_internal | sleep 10";
         final Job job = jobs.create(query);
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
 
         assertFalse(job.isFinalized());
 
