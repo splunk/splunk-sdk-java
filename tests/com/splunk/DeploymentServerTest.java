@@ -16,11 +16,17 @@
 
 package com.splunk;
 
+import org.junit.Assume;
 import org.junit.Test;
 
 public class DeploymentServerTest extends SDKTestCase {
     @Test
     public void testDeploymentServer() throws Exception {
+        if (service.versionIsAtLeast("6.0")) {
+            // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
+        }
+
         EntityCollection<DeploymentServer> deploymentServers =
                 service.getDeploymentServers();
         if (deploymentServers.values().size() == 0) {

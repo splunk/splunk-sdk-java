@@ -16,14 +16,13 @@
 
 package com.splunk;
 
+import junit.framework.AssertionFailedError;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
-
-import junit.framework.AssertionFailedError;
 
 public class IndexTest extends SDKTestCase {
     private String indexName;
@@ -106,6 +105,8 @@ public class IndexTest extends SDKTestCase {
         });
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
+
             @Override
             public boolean predicate() {
                 index.refresh();
@@ -217,8 +218,12 @@ public class IndexTest extends SDKTestCase {
         int newThrottleCheckPeriod = index.getThrottleCheckPeriod()+1;
         index.setThrottleCheckPeriod(newThrottleCheckPeriod);
         String coldToFrozenDir = index.getColdToFrozenDir();
-        index.setColdToFrozenDir("/tmp/foobar" + index.getName());
-        
+        if (service.getInfo().getOsName().equals("Windows")) {
+            index.setColdToFrozenDir("C:\\frozenDir\\" + index.getName());
+        } else {
+            index.setColdToFrozenDir("/tmp/foobar" + index.getName());
+        }
+
         boolean newEnableOnlineBucketRepair = false;
         String newMaxBloomBackfillBucketAge = null;
         if (service.versionIsAtLeast("4.3")) {
@@ -262,7 +267,11 @@ public class IndexTest extends SDKTestCase {
         assertEquals(newServiceMetaPeriod, index.getServiceMetaPeriod());
         assertEquals(newSyncMeta, index.getSyncMeta());
         assertEquals(newThrottleCheckPeriod, index.getThrottleCheckPeriod());
-        assertEquals("/tmp/foobar" + index.getName(), index.getColdToFrozenDir());
+        if (service.getInfo().getOsName().equals("Windows")) {
+            assertEquals("C:\\frozenDir\\" + index.getName(), index.getColdToFrozenDir());
+        } else {
+            assertEquals("/tmp/foobar" + index.getName(), index.getColdToFrozenDir());
+        }
         if (service.versionIsAtLeast("4.3")) {
             assertEquals(
                     newEnableOnlineBucketRepair,
@@ -299,12 +308,8 @@ public class IndexTest extends SDKTestCase {
         index.update();
         //index.setColdToFrozenScript(coldToFrozenScript);
         
-        // TODO: Figure out which of the above setters is forcing
-        //       causing a restart request.
-        if (service.versionIsEarlierThan("6.0.0")) {
-            clearRestartMessage();
-        } else {
-            splunkRestart(); // In Splunk 6, you actually need the restart or it won't let you delete the index.
+        if (restartRequired()) {
+            splunkRestart();
         }
     }
 
@@ -475,23 +480,31 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testAttach() throws IOException {
+
         assertTrue(getResultCountOfIndex() == 0);
         assertTrue(index.getTotalEventCount() == 0);
-        
+
         Socket socket = index.attach();
         OutputStream ostream = socket.getOutputStream();
         Writer out = new OutputStreamWriter(ostream, "UTF8");
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
+
         out.flush();
         socket.close();
-        
+
+        index.refresh();
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
+
             @Override
             public boolean predicate() {
+                index.refresh();
                 return getResultCountOfIndex() == 2;
             }
         });
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -517,16 +530,19 @@ public class IndexTest extends SDKTestCase {
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world again!\u0150\r\n");
+
         out.flush();
         socket.close();
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
             @Override
             public boolean predicate() {
                 return getResultCountOfIndex() == 3;
             }
         });
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
             @Override
             public boolean predicate() {
                 index.refresh();

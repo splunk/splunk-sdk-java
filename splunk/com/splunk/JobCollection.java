@@ -34,6 +34,7 @@ public class JobCollection extends EntityCollection<Job> {
      */
     JobCollection(Service service) {
         super(service, "search/jobs", Job.class);
+        this.refreshArgs.put("count", "0");
     }
 
     /**
@@ -45,6 +46,7 @@ public class JobCollection extends EntityCollection<Job> {
      */
     JobCollection(Service service, Args args) {
         super(service, "search/jobs", Job.class, args);
+        this.refreshArgs.put("count", "0");
     }
 
     /**
@@ -84,13 +86,8 @@ public class JobCollection extends EntityCollection<Job> {
             .item(0)
             .getTextContent();
 
-        invalidate();
-        Job job = get(sid);
-
-        // if job not yet scheduled, create an empty job object
-        if (job == null) {
-            job = new Job(service, "search/jobs/" + sid);
-        }
+        Job job = new Job(service, "search/jobs/" + sid);
+        job.refresh();
 
         return job;
     }
@@ -117,7 +114,7 @@ public class JobCollection extends EntityCollection<Job> {
      * @return The job's response.
      */
     @Override public ResponseMessage list() {
-        return service.get(path + "?count=0");
+        return service.get(path, this.refreshArgs);
     }
 
     /**

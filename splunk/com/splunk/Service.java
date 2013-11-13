@@ -18,7 +18,9 @@ package com.splunk;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.util.Map;
 
@@ -272,12 +274,26 @@ public class Service extends BaseService {
 
         // override with invocation namespace if set.
         if (namespace != null) {
-            if (namespace.containsKey("app"))
-                localApp = (String)namespace.get("app");
-            if (namespace.containsKey("owner"))
-                localOwner = (String)namespace.get("owner");
-            if (namespace.containsKey("sharing"))
+            // URL encode the owner and app.
+            if (namespace.containsKey("app")) {
+                try {
+                    localApp = URLEncoder.encode((String)namespace.get("app"), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    // This is unreachable, since UTF-8 is always supported.
+                    assert false;
+                }
+            }
+            if (namespace.containsKey("owner")) {
+                try {
+                    localOwner = URLEncoder.encode((String)namespace.get("owner"), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    // This is unreachable, since UTF-8 is always supported.
+                    assert false;
+                }
+            }
+            if (namespace.containsKey("sharing")) {
                 localSharing = (String)namespace.get("sharing");
+            }
         }
 
         // sharing, if set calls for special mapping, override here.

@@ -1,12 +1,29 @@
 # Splunk SDK for Java Changelog
 
-## Version ?? [TODO: fixme]
+## Version 1.2.1
+
+### New features and APIs
+
+* The Splunk SDK for Java is fully compatible with Splunk 6.0 as of this release.
+
+### Bug fixes
+
+* JobCollection.create() previously invalidated the collection and refreshed it to see if the job had appeared.
+  This was problematic for Splunk instances running many jobs at once. The method has been changed to only interact
+  with the endpoint specific to the newly created job.
+* Namespaces which contain special characters such as @ in their owner or app are now handled correctly.
 
 ### Breaking changes
 
 * Removed Application.isManageable and Application.setManageable, since they are deprecated or nonexistant
   in all supported versions as of this release.
 * OutputDefault.getMaxQueueSize now returns a String instead of a long to match the behavior of setMaxQueueSize.
+
+### Known issues
+
+* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on MacOS 10.8 using Splunk 6.0.0.
+
+* The modular input support in the Splunk SDK for Java does not work on Windows Server 2003.
 
 ## Version 1.2
 

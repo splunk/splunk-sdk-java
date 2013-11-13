@@ -18,6 +18,8 @@ package com.splunk;
 
 import org.junit.Test;
 
+import java.net.URLEncoder;
+
 public class NamespaceTest extends SDKTestCase {
     @Test
     public void testStaticNamespace() {
@@ -34,6 +36,12 @@ public class NamespaceTest extends SDKTestCase {
         namespace.clear();
         assertEquals("/services/",
             service.fullpath("", null));
+
+        namespace.clear();
+        namespace.put("owner", "bill@some domain\u0150");
+        namespace.put("app", "my! app!@");
+        assertEquals("/servicesNS/bill%40some+domain%C5%90/my%21+app%21%40/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("owner", "Bob");
@@ -150,7 +158,7 @@ public class NamespaceTest extends SDKTestCase {
 
     @Test
     public void testLiveNamespace1() throws Exception {
-        String username = "sdk-user";
+        String username = "sdk-user@somedomain!";
         String password = "changeme";
         String savedSearch = "sdk-test1";
         String searchString = "search index=main * | head 10";
@@ -189,222 +197,90 @@ public class NamespaceTest extends SDKTestCase {
         assertFalse(users.containsKey(username));
     }
 
+    // Check that a saved search created in one user namespace is invisible in another.
     @Test
-    public void testLiveNamespace2() throws Exception {
+    public void testNamespaceVisibility() {
+        final String savedSearchName = createTemporaryName();
+        final String query = "search *";
 
-        /* establish naming convention for separate namespaces */
-        String search = "search *";
+        final String user = "admin";
+        final String app = "search";
 
-        String searchName11 = "sdk-test-search11";
-        String searchName12 = "sdk-test-search12";
-        String searchName21 = "sdk-test-search21";
-        String searchName22 = "sdk-test-search22";
+        Args namespace = new Args();
+        namespace.put("owner", user);
+        namespace.put("app", app);
 
-        String username1 = "sdk-user1";
-        String username2 = "sdk-user2";
-        String appname1 = "sdk-app1";
-        String appname2 = "sdk-app2";
+        Args otherUserNamespace = new Args();
+        otherUserNamespace.put("owner", user);
+        otherUserNamespace.put("app", "launcher");
 
-        Args namespace11 = new Args();
-        Args namespace12 = new Args();
-        Args namespace21 = new Args();
-        Args namespace22 = new Args();
-        Args namespacex1  = new Args();
-        Args namespaceNobody1 = new Args();
-        Args namespaceBad = new Args();
+        Args appNamespace = new Args();
+        appNamespace.put("owner", "nobody");
+        appNamespace.put("app", app);
 
-        namespace11.put("owner", username1);
-        namespace11.put("app",  appname1);
-        namespace12.put("owner", username1);
-        namespace12.put("app",  appname2);
-        namespace21.put("owner", username2);
-        namespace21.put("app",  appname1);
-        namespace22.put("owner", username2);
-        namespace22.put("app",  appname2);
-        namespacex1.put("owner", "-");
-        namespacex1.put("app", appname1);
-        namespaceNobody1.put("owner", "nobody");
-        namespaceNobody1.put("app", appname1);
-        namespaceBad.put("owner", "magilicuddy");
-        namespaceBad.put("app",  "oneBadApp");
+        Args wildcardUserNamespace = new Args();
+        wildcardUserNamespace.put("owner", "-");
+        wildcardUserNamespace.put("app", app);
 
-        /* scrub to make sure apps don't already exist */
-        EntityCollection<Application> apps = service.getApplications();
-        if (apps.containsKey(appname1)) {
-            apps.remove(appname1);
-            clearRestartMessage();
-            apps = service.getApplications();
+        try {
+            SavedSearch ss = service.getSavedSearches(namespace).create(savedSearchName, query);
+
+            assertTrue(service.getSavedSearches(namespace).containsKey(savedSearchName));
+            assertFalse(service.getSavedSearches(otherUserNamespace).containsKey(savedSearchName));
+            assertFalse(service.getSavedSearches(appNamespace).containsKey(savedSearchName));
+            assertTrue(service.getSavedSearches(wildcardUserNamespace).containsKey(savedSearchName));
+        } finally {
+            if (service.getSavedSearches(namespace).containsKey(savedSearchName)) {
+                service.getSavedSearches(namespace).remove(savedSearchName);
+            }
         }
-        if (apps.containsKey(appname2)) {
-            apps.remove(appname2);
-            clearRestartMessage();
-            apps = service.getApplications();
+    }
+
+    @Test
+    public void testNamespaceConflicts() {
+        final String user = "admin";
+        final String app1 = "search";
+        final String app2 = "launcher";
+
+        Args namespace1 = new Args();
+        namespace1.put("owner", user);
+        namespace1.put("app", app1);
+
+        Args namespace2 = new Args();
+        namespace2.put("owner", user);
+        namespace2.put("app", app2);
+
+        Args wildcardNamespace = new Args();
+        wildcardNamespace.put("owner", user);
+        wildcardNamespace.put("app", "-");
+
+        final String savedSearchName = createTemporaryName();
+        final String query1 = "search * | head 1";
+        final String query2 = "search * | head 2";
+
+        try {
+            SavedSearch ss1 = service.getSavedSearches(namespace1).create(savedSearchName, query1);
+            SavedSearch ss2 = service.getSavedSearches(namespace2).create(savedSearchName, query2);
+
+            assertEquals(query1, service.getSavedSearches(namespace1).get(savedSearchName).getSearch());
+            assertEquals(query2, service.getSavedSearches(namespace2).get(savedSearchName).getSearch());
+
+            try {
+                service.getSavedSearches(wildcardNamespace).get(savedSearchName).getSearch();
+                fail("Expected SplunkException about multiple keys.");
+            } catch (SplunkException e) {
+
+            }
+        } finally {
+            if (service.getSavedSearches(namespace1).containsKey(savedSearchName)) {
+                service.getSavedSearches(namespace1).remove(savedSearchName);
+            }
+
+            if (service.getSavedSearches(namespace2).containsKey(savedSearchName)) {
+                service.getSavedSearches(namespace2).remove(savedSearchName);
+            }
         }
-        assertFalse(apps.containsKey(appname1));
-        assertFalse(apps.containsKey(appname2));
 
-        /* scrub to make sure users don't already exist */
-        UserCollection users = service.getUsers();
-        if (users.containsKey(username1))
-            users.remove(username1);
-        if (users.containsKey(username2))
-            users.remove(username2);
-        assertFalse(users.containsKey(username1));
-        assertFalse(users.containsKey(username2));
 
-        /* create users */
-        users.create(username1, "abc", "user");
-        users.create(username2, "abc", "user");
-        assertTrue(users.containsKey(username1));
-        assertTrue(users.containsKey(username2));
-
-        /* create apps */
-        apps.create(appname1);
-        apps.create(appname2);
-        assertTrue(apps.containsKey(appname1));
-        assertTrue(apps.containsKey(appname2));
-
-        /* create namespace specfic UNIQUE searches */
-        SavedSearchCollection
-            savedSearches11 = service.getSavedSearches(namespace11);
-        SavedSearchCollection
-            savedSearches12 = service.getSavedSearches(namespace12);
-        SavedSearchCollection
-            savedSearches21 = service.getSavedSearches(namespace21);
-        SavedSearchCollection
-            savedSearches22 = service.getSavedSearches(namespace22);
-        SavedSearchCollection
-            savedSearchesx1 = service.getSavedSearches(namespacex1);
-        SavedSearchCollection
-            savedSearchesNobody1 = service.getSavedSearches(namespaceNobody1);
-
-        // create in 11 namespace, make sure there, but not in others
-        savedSearches11.create(searchName11, search);
-        assertTrue(
-            savedSearches11.containsKey(searchName11));
-        savedSearches12.refresh();
-        assertFalse(
-            savedSearches12.containsKey(searchName11));
-        savedSearches21.refresh();
-        assertFalse(
-            savedSearches21.containsKey(searchName11));
-        savedSearches22.refresh();
-        assertFalse(
-            savedSearches22.containsKey(searchName11));
-
-        // create in 12 namespace, make sure there, but not in others
-        savedSearches12.create(searchName12, search);
-        assertTrue(
-            savedSearches12.containsKey(searchName12));
-        savedSearches11.refresh();
-        assertFalse(
-            savedSearches11.containsKey(searchName12));
-        savedSearches12.refresh();
-        assertFalse(
-            savedSearches21.containsKey(searchName12));
-        savedSearches22.refresh();
-        assertFalse(
-            savedSearches22.containsKey(searchName12));
-
-        // create in 21 namespace, make sure there, but not in others
-        savedSearches21.create(searchName21, search);
-        assertTrue(
-            savedSearches21.containsKey(searchName21));
-        savedSearches11.refresh();
-        assertFalse(
-            savedSearches11.containsKey(searchName21));
-        savedSearches12.refresh();
-        assertFalse(
-            savedSearches12.containsKey(searchName21));
-        savedSearches22.refresh();
-        assertFalse(
-            savedSearches22.containsKey(searchName21));
-
-        // create in 22 namespace, make sure there, but not in others
-        savedSearches22.create(searchName22, search);
-        assertTrue(
-            savedSearches22.containsKey(searchName22));
-        savedSearches11.refresh();
-        assertFalse(
-            savedSearches11.containsKey(searchName22));
-        savedSearches12.refresh();
-        assertFalse(
-            savedSearches12.containsKey(searchName22));
-        savedSearches21.refresh();
-        assertFalse(
-            savedSearches21.containsKey(searchName22));
-
-        /* now remove the UNIQUE saved searches */
-        savedSearches11.remove(searchName11);
-        savedSearches12.remove(searchName12);
-        savedSearches21.remove(searchName21);
-        savedSearches22.remove(searchName22);
-        assertFalse(
-            savedSearches11.containsKey(searchName11));
-        assertFalse(
-            savedSearches12.containsKey(searchName12));
-        assertFalse(
-            savedSearches21.containsKey(searchName21));
-        assertFalse(
-            savedSearches22.containsKey(searchName22));
-
-        /* create same search name in different namespaces */
-        savedSearches11.create("sdk-test-search", search + " | head 1");
-        savedSearches21.create("sdk-test-search", search + " | head 2");
-        savedSearchesNobody1.create("sdk-test-search", search + " | head 4");
-        assertTrue(
-            savedSearches11.containsKey("sdk-test-search"));
-        assertTrue(
-            savedSearches21.containsKey("sdk-test-search"));
-        assertTrue(
-            savedSearchesNobody1.containsKey("sdk-test-search"));
-
-        // we have created three saved searches with the same name, make sure we
-        // can see all three with a wild-carded get.
-        savedSearchesx1.refresh();
-        assertEquals(3, savedSearchesx1.values().size());
-
-        assertFalse(
-            savedSearchesx1.containsKey("sdk-test-search", namespaceBad));
-        assertTrue(
-            savedSearchesx1.containsKey("sdk-test-search", namespace21));
-        assertTrue(
-            savedSearchesx1.get("sdk-test-search", namespace21) != null);
-
-        // remove one of the saved searches through a specific namespace path
-        savedSearchesx1.remove("sdk-test-search", namespace21);
-        savedSearches11.remove("sdk-test-search");
-        savedSearchesNobody1.remove("sdk-test-search");
-        assertFalse(
-            savedSearches11.containsKey("sdk-test-search"));
-        savedSearches21.refresh();
-        assertFalse(
-            savedSearches21.containsKey("sdk-test-search"));
-        assertFalse(
-            savedSearchesNobody1.containsKey("sdk-test-search"));
-
-        /* cleanup apps */
-        apps.refresh();
-        if (apps.containsKey(appname1)) {
-            apps.remove(appname1);
-            clearRestartMessage();
-            apps = service.getApplications();
-        }
-        if (apps.containsKey(appname2)) {
-            apps.remove(appname2);
-            clearRestartMessage();
-            apps = service.getApplications();
-        }
-        assertFalse(apps.containsKey(appname1));
-        assertFalse(apps.containsKey(appname2));
-
-        /* cleanup users */
-        users = service.getUsers(); // need to re-establish, because of restart
-        if (users.containsKey(username1))
-            users.remove(username1);
-        if (users.containsKey(username2))
-            users.remove(username2);
-        assertFalse(users.containsKey(username1));
-        assertFalse(users.containsKey(username2));
     }
 }

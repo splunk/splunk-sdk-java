@@ -1,6 +1,6 @@
 # The Splunk Software Development Kit for Java
 
-#### Version 1.2
+#### Version 1.2.1
 
 The Splunk Software Development Kit (SDK) for Java contains library code and 
 examples designed to enable developers to build applications using Splunk.
@@ -187,6 +187,18 @@ directory and enter:
 To run the units from anywhere in the repository, enter:
 
     ant test -find
+
+You can also run specific test classes by passing the class to the -Dtestcase=
+option, e.g.,
+
+    ant test -Dtestcase=AtomFeedTest
+
+The ant configuration can also produce a single HTML report of all the tests run
+using the target testreport (which also understands the -Dtestcase= option), e.g.
+
+    ant testreport
+
+The report will be written in build/reports/tests/index.html.
 
 It's also possible to run the units within Java IDEs such as IntelliJ and 
 Eclipse. For example, to open the Splunk SDK for Java project in Eclipse: 

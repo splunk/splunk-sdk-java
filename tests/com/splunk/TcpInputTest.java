@@ -50,22 +50,34 @@ public class TcpInputTest extends SDKTestCase {
         if (index != null && service.versionCompare("5.0") >= 0) {
             index.remove();
         }
-        if (tcpInput != null) {
-            tcpInput.remove();
+
+        // WORKAROUND (SPL-75101): Removing TCP inputs doesn't work on Windows in Splunk 6.0.0. The HTTP call
+        // hangs forever, and, though the input vanishes from the REST API, the port is never unbound and cannot be
+        // reused until Splunk restarts.
+        if (service.versionCompare("6.0.0") != 0 || !service.getInfo().getOsName().equals("Windows")) {
+            if (tcpInput != null) {
+                tcpInput.remove();
+            }
         }
-        
+
         super.tearDown();
     }
 
     @Test
-    public void testGetters() throws IOException {
-        if (service.versionIsEarlierThan("4.3")) {
-            return; // Doesn't seem to work on Splunk 4.2.
+    public void testConnectionList() throws IOException {
+        // WORKAROUND (SPL-74835): Connections to the TCP input newly created in setUp will not be listed in
+        // Splunk 6.0.0 until after the next restart of splunkd.
+        if (service.versionCompare("6.0.0") == 0) {
+            uncheckedSplunkRestart();
         }
 
         final Socket socket = tcpInput.attach();
+        assertTrue(socket.isConnected());
+
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 15; }
+
             @Override
             public boolean predicate() {
                 TcpConnections connections = tcpInput.connections();
@@ -85,8 +97,10 @@ public class TcpInputTest extends SDKTestCase {
                 return true;
             }
         });
-    
-        
+    }
+
+    @Test
+    public void testGetters() {
         assertNotNull(tcpInput.getGroup());
         assertNull(tcpInput.getRestrictToHost());
        

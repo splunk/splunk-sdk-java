@@ -295,6 +295,14 @@ public class InputCollection extends EntityCollection<Input> {
 
         // Iterate over all input kinds and collect all instances.
         for (InputKind kind : this.inputKinds) {
+            if (service.versionIsAtLeast("6.0.0")) {
+                // In Splunk 6 and later, the registry endpoint has been deprecated in favor of the new
+                // WinRegMon modular input, but both now point to the same place. To avoid duplicates, we have
+                // to read only one of them.
+                if (kind.getKind().equals("registry")) {
+                    continue;
+                }
+            }
             String relpath = kind.getRelativePath();
             String inputs = String.format("%s/%s?count=-1", path, relpath);
             ResponseMessage response;

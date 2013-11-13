@@ -55,12 +55,16 @@ public class InputKind {
 
     /** Windows event log input. */
     public static final InputKind WindowsEventLog = new InputKind("win-event-log-collections",WindowsEventLogInput.class);
+    // As of Splunk 6, "win-event-log-collections" has changed to "WinEventLog".
+    public static final InputKind WinEventLog = new InputKind("WinEventLog", WindowsEventLogInput.class);
 
     /** Windows performance monitor input. */
     public static final InputKind WindowsPerfmon = new InputKind("win-perfmon", WindowsPerfmonInput.class);
 
     /** Windows Registry input. */
     public static final InputKind WindowsRegistry = new InputKind("registry", WindowsRegistryInput.class);
+    // As of Splunk 6, "registry" has changed to "WinRegMon".
+    public static final InputKind WinRegMon = new InputKind("WinRegMon", WindowsRegistryInput.class);
 
     /** Windows Management Instrumentation (WMI) input. */
     public static final InputKind WindowsWmi = new InputKind("win-wmi-collections", WindowsWmiInput.class);
