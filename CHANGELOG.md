@@ -19,6 +19,12 @@
   in all supported versions as of this release.
 * OutputDefault.getMaxQueueSize now returns a String instead of a long to match the behavior of setMaxQueueSize.
 
+### Known issues
+
+* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on MacOS 10.8 using Splunk 6.0.0.
+
+* The modular input support in the Splunk SDK for Java does not work on Windows Server 2003.
+
 ## Version 1.2
 
 ### New features and APIs

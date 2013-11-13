@@ -520,9 +520,6 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testAttachArgs() throws IOException {
-        // WORKAROUND (unfiled): out.flush() is supposed to force the writing of all data on the socket and
-        // then return, but with the test suite on Linux talking to splunkd 6.0.0 on Windows, when the socket
-        // is closed after flushing, the data apparently doesn't get sent unless we setTcpNoDelay(true).
         assertTrue(getResultCountOfIndex() == 0);
         assertTrue(index.getTotalEventCount() == 0);
         

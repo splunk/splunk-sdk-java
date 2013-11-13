@@ -42,6 +42,7 @@ public class DeploymentServerClassTest extends SDKTestCase {
     public void testCreate() {
         if (service.versionIsAtLeast("6.0")) {
             // WORKAROUND (DVPL-2993): The deployment server has changed in Splunk 6, and is not yet supported.
+            return;
         }
 
         assertTrue(classes.containsKey(serverClassName));
