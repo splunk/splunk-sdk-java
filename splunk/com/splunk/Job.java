@@ -215,7 +215,7 @@ public class Job extends Entity {
      */
     public int getDropCount() {
         checkReady();
-        return getInteger("dropCount");
+        return getInteger("dropCount", 0);
     }
 
     /**
@@ -662,7 +662,6 @@ public class Job extends Entity {
      * @return The job's SID.
      */
     public String getSid() {
-        checkReady();
         return getString("sid");
     }
 
@@ -894,7 +893,6 @@ public class Job extends Entity {
             return this;
         }
 
-        isReady = true;
         AtomEntry entry;
         try {
             entry = AtomEntry.parseStream(response.getContent());
@@ -902,6 +900,14 @@ public class Job extends Entity {
             throw new RuntimeException(e);
         }
         load(entry);
+
+        if (getString("dispatchState").equals("QUEUED") || getString("dispatchState").equals("PARSING")) {
+            isReady = false;
+        } else {
+            isReady = true;
+        }
+
+
         return this;
     }
 

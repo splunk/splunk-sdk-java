@@ -167,7 +167,11 @@ public class Entity extends Resource implements Map<String, Object> {
     Date getDate(String key) {
         if (toUpdate.containsKey(key))
             return Value.toDate(toUpdate.get(key).toString());
-        return getContent().getDate(key);
+        if (getContent().containsKey(key)) {
+            return getContent().getDate(key);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -297,7 +301,7 @@ public class Entity extends Resource implements Map<String, Object> {
      */
     String[] getStringArray(String key) {
         if (toUpdate.containsKey(key)) {
-            return (String[])toUpdate.get(key);
+            return ((String)toUpdate.get(key)).split("\\|");
         }
         return getContent().getStringArray(key);
     }

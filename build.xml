@@ -18,7 +18,7 @@
 
 <project name="splunk-sdk-java" basedir="." default="dist" xmlns:jacoco="antlib:org.jacoco.ant"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="antlib:org.jacoco.ant ">
-    <property name="version.number" value="1.2"/>
+    <property name="version.number" value="1.2.1"/>
     
     <!-- Paths within the repository that are referenced
          multiple times. -->
@@ -30,6 +30,11 @@
     <property name="dist" location="dist"/>
     <property name="coverage.dir" location="build/reports/coverage"/>
     <property name="testreport.dir" location="build/reports/tests" />
+
+    <!-- Test case to run -->
+    <!-- This is separated into a property so it can be overridden by command line arguments,
+         making it easy to run specific test cases. -->
+    <property name="testcase" value="*Test" />
 
     <!-- Short names for all the external libraries that get
          referenced multiple times. -->
@@ -49,6 +54,7 @@
         <javac includeantruntime="false"
                srcdir="splunk"
                destdir="${build.splunk}"
+               target="1.6"
                debug="true"
                debuglevel="lines,vars,source">
             <classpath>
@@ -61,6 +67,7 @@
         <!-- Compile utils -->
         <mkdir dir="${build.util}"/>
         <javac includeantruntime="false"
+               target="1.6"
                srcdir="util"
                destdir="${build.util}">
             <classpath>
@@ -73,6 +80,7 @@
         <!-- Compile the unit tests -->
         <mkdir dir="${build.tests}"/>
         <javac includeantruntime="false"
+               target="1.6"
                srcdir="tests"
                destdir="${build.tests}">
             <classpath>
@@ -92,6 +100,7 @@
         <!-- Compile the examples -->
         <mkdir dir="${build.examples}/"/>
         <javac includeantruntime="false"
+               target="1.6"
                srcdir="examples"
                destdir="${build.examples}">
             <classpath>
@@ -166,6 +175,8 @@
         <jar destfile="${dist}/splunk-${version.number}.jar">
             <fileset dir="${build.splunk}"
                      includes="**/*.class"/>
+
+            <fileset dir="splunk" includes="**/*"/>
 
             <manifest>
                 <attribute name="Implementation-Title"
@@ -304,7 +315,7 @@
 
             <batchtest>
                 <fileset dir="${build.tests}">
-                    <include name="**/*Test.class"/>
+                    <include name="**/${testcase}.class"/>
                 </fileset>
 		<formatter type="xml" />
             </batchtest>
@@ -312,10 +323,12 @@
             <formatter type="xml" />
             <formatter type="plain" usefile="false"/>
         </junit>
+    </target>
 
+    <target name="testreport" depends="test">
         <mkdir dir="${testreport.dir}"/>
         <junitreport todir="${testreport.dir}">
-            <fileset dir="${testreport.dir}">
+            <fileset dir=".">
                 <include name="TEST-*.xml" />
             </fileset>
             <report todir="${testreport.dir}" />

@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,25 +59,34 @@ public class ServiceTest extends SDKTestCase {
     public void testReceiver() {
         Receiver receiver = service.getReceiver();
 
-        final Index index = service.getIndexes().get("main");
+        final String indexName = service.getIndexes().get("_internal").getDefaultDatabase();
+        final Index index = service.getIndexes().get(indexName);
         final int originalEventCount = index.getTotalEventCount();
-        
+
         try {
             Socket socket1 = receiver.attach();
             OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon1!\r\n";
             stream.write(s.getBytes("UTF8"));
+            // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
+            // has been written.
+            stream.close();
+            socket1.close();
         } catch (IOException e) {
             fail("Exception on attach");
         }
-        
+
         try {
             Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
             OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon2!\r\n";
             stream.write(s.getBytes("UTF8"));
+            // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
+            // has been written.
+            stream.close();
+            socket1.close();
         } catch (IOException e) {
             fail("Exception on attach");
         }
@@ -86,18 +96,24 @@ public class ServiceTest extends SDKTestCase {
         receiver.log("Boris the mad baboon5!\r\n");
         receiver.log("main", "Boris the mad baboon6!\r\n");
         receiver.log(Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon7!\r\n");
-        receiver.log("main", Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon8!\r\n");
-        
+        receiver.log(indexName, Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon8!\r\n");
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
-                tries = 50;
+                tries = 200;
             }
 
             @Override
             public boolean predicate() {
                 index.refresh();
                 int eventCount = index.getTotalEventCount();
-                return eventCount == originalEventCount + 6;
+                // WORKAROUND (SPL-75109): Splunk 6.0 on Windows doesn't record events submitted to the streaming
+                // HTTP input without a sourcetype.
+                if (service.versionCompare("6.0.0") == 0 && service.getInfo().getOsName().equals("Windows")) {
+                    return eventCount == originalEventCount + 7;
+                } else {
+                    return eventCount == originalEventCount + 8;
+                }
             }
         });
     }
@@ -285,12 +301,17 @@ public class ServiceTest extends SDKTestCase {
     }
 
     @Test
-    public void testJobs() {
+    public void testJobs() throws InterruptedException {
         JobCollection jobs = service.getJobs();
         for (Job entity : jobs.values())
             testGetters(entity);
 
-        Job job = jobs.create("search *");
+        Job job = jobs.create("search * | head 1");
+
+        while (!job.isDone()) {
+            Thread.sleep(150);
+        }
+
         testGetters(job);
         job.cancel();
     }
@@ -705,4 +726,27 @@ public class ServiceTest extends SDKTestCase {
         }
         fail();
     }
+
+    @Test
+    public void testDelete() {
+        Args deleteArgs = Args.create("output_mode", "json");
+        try {
+            service.delete("/services/search/jobs/foobar_doesntexist", deleteArgs);
+        } catch (HttpException e) {
+            assertEquals(404, e.getStatus());
+            assertNotNull(e.getDetail());
+        }
+    }
+
+    @Test
+    public void testPost() {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put("foo", "bar");
+
+        ResponseMessage response;
+        response = service.post("/services/search/jobs", args);
+        assertEquals(200, response.getStatus());
+        assertTrue(firstLineIsXmlDtd(response.getContent()));
+    }
+
 }

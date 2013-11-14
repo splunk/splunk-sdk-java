@@ -20,14 +20,14 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.InputStream;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 
 /**
  * Base test case for SDK test suite.
@@ -43,7 +43,8 @@ import java.util.UUID;
  */
 public abstract class SDKTestCase extends TestCase {
     protected static final boolean WORKAROUND_KNOWN_BUGS = true;
-    
+    private static final boolean VERBOSE_PORT_SCAN = false;
+
     protected static Service service;
     protected List<String> installedApps;
 
@@ -67,6 +68,10 @@ public abstract class SDKTestCase extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        // If using Charles Proxy for debugging, uncomment these lines.
+        //System.setProperty("https.proxyHost", "127.0.0.1");
+        //System.setProperty("https.proxyPort", "8888");
+
         command = Command.splunk();
         connect();
         if (restartRequired()) {
@@ -74,6 +79,7 @@ public abstract class SDKTestCase extends TestCase {
                     "WARNING: Splunk was already in a state requiring a " +
                     "restart prior to running this test. Trying to recover...");
             splunkRestart();
+            System.out.println("Restart complete.");
         }
         installedApps = new ArrayList<String>();
     }
@@ -91,7 +97,16 @@ public abstract class SDKTestCase extends TestCase {
             // for restarts that might be required, since deleting an app
             // triggers a restart (but one that we can safely ignore).
             for (String applicationName : installedApps) {
-                service.getApplications().remove(applicationName);
+                try {
+                    service.getApplications().remove(applicationName);
+                } catch (HttpException e) {
+                    // WORKAROUND (SPL-75224): Under Splunk 6.0 on Windows, deleting apps sometimes fails with
+                    // the message "Operation completed successfully." The app is actually deleted, but it will
+                    // cause tests to fail.
+                    if (service.versionCompare("6.0.0") == 0 && e.getStatus() != 500) {
+                        throw e;
+                    }
+                }
                 clearRestartMessage();
             }
         }
@@ -293,13 +308,34 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     protected int findNextUnusedPort(int startingPort) {
-        InputCollection inputs = service.getInputs();
-        
         int port = startingPort;
-        while (inputs.containsKey(String.valueOf(port))) {
+        while (isPortInUse(port)) {
             port++;
         }
         return port;
+    }
+
+    public boolean isPortInUse(int port) {
+        try {
+            Socket pingSocket = new Socket();
+            // On Windows, the firewall doesn't respond at all if you connect to an unbound port, so we need to
+            // take lack of a connection as an empty port. Timeout is 1000ms.
+            try {
+                pingSocket.connect(new InetSocketAddress(service.getHost(), port), 1000);
+            } catch (SocketTimeoutException ste) {
+                return false;
+            }
+            pingSocket.close();
+            if (VERBOSE_PORT_SCAN) {
+                System.out.println("IN-USE(" + port + ")");
+            }
+            return true;
+        } catch (IOException e) {
+            if (VERBOSE_PORT_SCAN) {
+                System.out.println("OPEN(" + port + "): " + e.getMessage());
+            }
+            return false;
+        }
     }
     
     protected static boolean contains(String[] array, String value) {
@@ -311,17 +347,20 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     protected static String locateSystemLog() {
-        final String filename;
+        String filename = null;
         String osName = service.getInfo().getOsName();
         if (osName.equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log";
-        else if (osName.equals("Linux"))
-            filename = "/var/log/syslog";
+        else if (osName.equals("Linux")) {
+            filename = "/etc/fstab";
+        }
         else if (osName.equals("Darwin")) {
             filename = "/var/log/system.log";
         } else {
             throw new RuntimeException("OS " + osName + " not recognized");
         }
+
+        assertNotNull(filename);
         return filename;
     }
     
@@ -339,5 +378,23 @@ public abstract class SDKTestCase extends TestCase {
         }
         
         return Util.join(separator, components);
+    }
+
+    protected boolean firstLineIsXmlDtd(InputStream stream) {
+        InputStreamReader reader;
+        try {
+            reader = new InputStreamReader(stream, "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            throw new Error(e);
+        }
+        BufferedReader lineReader = new BufferedReader(reader);
+        try {
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".equals(
+                    lineReader.readLine()
+            );
+        } catch (IOException e) {
+            fail(e.toString());
+            return false;
+        }
     }
 }

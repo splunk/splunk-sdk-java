@@ -17,9 +17,9 @@
 package com.splunk;
 
 
-import java.util.HashMap;
-
 import org.junit.Test;
+
+import java.util.HashMap;
 
 public class InputCrudTest extends InputTest {
     @Test
@@ -243,14 +243,21 @@ public class InputCrudTest extends InputTest {
     
     @Test
     public void testScriptInputCrud() {
+        if (!hasTestData()) {
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
+
+        installApplicationFromTestData("modular-inputs");
+
         // Determine what script to use for the input
         String filename;
         if (service.getInfo().getOsName().equals("Windows")) {
             // Windows
-            filename = "echo.bat";
+            filename = "etc\\apps\\modular-inputs\\bin\\echo.bat";
         } else {
             // Linux or Mac OS X
-            filename = "echo.sh";
+            filename = "etc/apps/modular-inputs/bin/echo.sh";
         }
 
         // Create
@@ -450,6 +457,7 @@ public class InputCrudTest extends InputTest {
         String name = "sdk-input-wel";
         
         deleteInputIfExists(name);
+        assertFalse(inputs.refresh().containsKey(name));
 
         // Create
         inputs.create(
@@ -612,7 +620,7 @@ public class InputCrudTest extends InputTest {
                 windowsWmiInput.getClasses());
             assertEquals(600,
                 windowsWmiInput.getInterval());
-            assertEquals("127.0.0.1",
+            assertEquals(service.getHost(),
                 windowsWmiInput.getLookupHost());
     
             windowsWmiInput.setClasses("PerfDisk_LogicalDisk");

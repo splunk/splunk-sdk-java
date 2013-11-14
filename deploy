@@ -2,7 +2,7 @@
 
 declare -r scriptDirectory="$(dirname $(readlink -e $0))"
 declare -r scriptName="$(basename $0)"
-declare -r version="1.2"
+declare -r version="1.2.1"
 
 if [[ $# -ne 1 ]]; then
     echo 1>&2 "Usage: ${scriptName} {local|staging||production}"
@@ -18,7 +18,7 @@ staging)
     declare -r repositoryId="splunk-staging-artifactory"
     ;;
 production)
-    declare -r url="http://splunk.artifactoryonline.com/splunk/ext-releases-local/"
+    declare -r url="https://splunk.artifactoryonline.com/splunk/ext-releases-local/"
     declare -r repositoryId="splunk-production-artifactory"
     ;;
 esac

@@ -33,7 +33,11 @@ public class UdpInputTest extends SDKTestCase {
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
 
-        udpPort = findNextUnusedPort(10000);
+        udpPort = 10000;
+        while (service.getInputs().containsKey(Integer.toString(udpPort))) {
+            udpPort++;
+        }
+
         udpInput = service.getInputs().create(
                 String.valueOf(udpPort),
                 InputKind.Udp,
@@ -60,7 +64,7 @@ public class UdpInputTest extends SDKTestCase {
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
-                tries = 50;
+                tries = 60;
             }
 
             @Override

@@ -134,10 +134,11 @@ public class OutputDefault extends Entity {
      * Returns the maximum size of the output queue for this forwarder.
      * The maximum size of the wait queue is set to three times this value. 
      *
-     * @return The maximum size of the output queue, in bytes.
+     * @return The maximum size of the output queue. The string maybe "auto" or a number followed by one of the suffixes
+     *  "B", "KB", "MB", or "GB" (for bytes, kilobytes, megabytes, and gigabytes, respectively).
      */
-    public long getMaxQueueSize() {
-        return getByteCount("maxQueueSize");
+    public String getMaxQueueSize() {
+        return getString("maxQueueSize");
     }
 
     /**

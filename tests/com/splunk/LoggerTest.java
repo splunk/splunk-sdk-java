@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class LoggerTest extends SDKTestCase {
     private static final List<String> VALID_LEVELS = Arrays.asList(
-            "INFO", "WARN", "ERROR", "DEBUG", "CRIT");
+            "INFO", "WARN", "ERROR", "DEBUG", "CRIT", "FATAL");
     
     // NOTE: Ideally we would create our own logger instead of using an existing
     //       one. However there is no REST API call to create a Logger, and
