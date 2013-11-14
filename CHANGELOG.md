@@ -4,26 +4,30 @@
 
 ### New features and APIs
 
-* The Splunk SDK for Java is fully compatible with Splunk 6.0 as of this release.
+* The Splunk SDK for Java is fully compatible with Splunk Enterprise 6.0 as of this release.
 
 ### Bug fixes
 
-* JobCollection.create() previously invalidated the collection and refreshed it to see if the job had appeared.
-  This was problematic for Splunk instances running many jobs at once. The method has been changed to only interact
-  with the endpoint specific to the newly created job.
-* Namespaces which contain special characters such as @ in their owner or app are now handled correctly.
+* **JobCollection.create()** previously invalidated the collection and refreshed it to see whether the job had 
+  appeared. This was problematic for Splunk Enterprise instances running many jobs at once. The method has been changed
+  to only interact with the endpoint specific to the newly created job.
+* Namespaces that contain special characters such as '@' in their owner or app are now handled correctly.
 
 ### Breaking changes
 
-* Removed Application.isManageable and Application.setManageable, since they are deprecated or nonexistant
-  in all supported versions as of this release.
-* OutputDefault.getMaxQueueSize now returns a String instead of a long to match the behavior of setMaxQueueSize.
+* Removed **Application.isManageable** and **Application.setManageable**, since they are deprecated or nonexistent
+  in all supported Splunk versions as of this release.
+* **OutputDefault.getMaxQueueSize** now returns a String instead of a long to match the behavior of
+  **setMaxQueueSize**.
 
 ### Known issues
 
-* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on MacOS 10.8 using Splunk 6.0.0.
+* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on OS X v10.8 Mountain Lion 
+  running Splunk 6.0.0. This issue is not present when running Splunk Enterprise on OS X v10.7 Lion or OS X v10.9   
+  Mavericks. This will be fixed in a future release.
 
-* The modular input support in the Splunk SDK for Java does not work on Windows Server 2003.
+* The modular input support in the Splunk SDK for Java is not compatible with Windows Server 2003 or Windows Server 
+  2003 R2.
 
 ## Version 1.2
 
