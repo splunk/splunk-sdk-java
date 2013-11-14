@@ -139,6 +139,14 @@ public class Program {
 
         Job job = service.getJobs().create(query, queryArgs);
 
+        while (!job.isReady()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // You shouldn't ever get here.
+            }
+        }
+
         InputStream stream = null;
 
         Args outputArgs = new Args();
