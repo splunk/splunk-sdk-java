@@ -22,9 +22,9 @@
 
 ### Known issues
 
-* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on OS X v10.8 Mountain Lion 
-  running Splunk 6.0.0. This issue is not present when running Splunk Enterprise on OS X v10.7 Lion or OS X v10.9   
-  Mavericks. This will be fixed in a future release.
+* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on OS X v10.8 Mountain Lion and 
+  OS X v10.9 Mavericks running Splunk 6.0.0. This issue is not present when running Splunk Enterprise on earlier 
+  versions of OS X. This will be fixed in a future release.
 
 * The modular input support in the Splunk SDK for Java is not compatible with Windows Server 2003 or Windows Server 
   2003 R2.
