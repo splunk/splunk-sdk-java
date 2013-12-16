@@ -291,101 +291,70 @@ public class HttpService {
      * @return The HTTP response.
      */
     public ResponseMessage send(String path, RequestMessage request) {
-        // Construct a full URL to the resource
-        URL url = getUrl(path);
+		// Construct a full URL to the resource
+		try {
+			URL url = getUrl(path);
 
-        // Create and initialize the connection object
-        HttpURLConnection cn;
-        try {
-            cn = (HttpURLConnection)url.openConnection();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        if(cn instanceof HttpsURLConnection) {
-            ((HttpsURLConnection)cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
-            ((HttpsURLConnection)cn).setHostnameVerifier(HOSTNAME_VERIFIER);
-        }
-        cn.setUseCaches(false);
-        cn.setAllowUserInteraction(false);
+			// Create and initialize the connection object
+			HttpURLConnection cn;
+			cn = (HttpURLConnection) url.openConnection();
+			if (cn instanceof HttpsURLConnection) {
+				((HttpsURLConnection) cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
+				((HttpsURLConnection) cn).setHostnameVerifier(HOSTNAME_VERIFIER);
+			}
+			cn.setUseCaches(false);
+			cn.setAllowUserInteraction(false);
 
-        // Set the request method
-        String method = request.getMethod();
-        try {
-            cn.setRequestMethod(method);
-        }
-        catch (ProtocolException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+			// Set the request method
+			String method = request.getMethod();
+			cn.setRequestMethod(method);
 
-        // Add headers from request message
-        Map<String, String> header = request.getHeader();
-        for (Entry<String, String> entry : header.entrySet())
-            cn.setRequestProperty(entry.getKey(), entry.getValue());
+			// Add headers from request message
+			Map<String, String> header = request.getHeader();
+			for (Entry<String, String> entry : header.entrySet())
+				cn.setRequestProperty(entry.getKey(), entry.getValue());
 
-        // Add default headers that were absent from the request message
-        for (Entry<String, String> entry : defaultHeader.entrySet()) {
-            String key = entry.getKey();
-            if (header.containsKey(key)) continue;
-            cn.setRequestProperty(key, entry.getValue());
-        }
+			// Add default headers that were absent from the request message
+			for (Entry<String, String> entry : defaultHeader.entrySet()) {
+				String key = entry.getKey();
+				if (header.containsKey(key)) {
+					continue;
+				}
+				cn.setRequestProperty(key, entry.getValue());
+			}
+			cn.setDoOutput(true);
+			cn.connect();
+			// Write out request content, if any
+			Object content = request.getContent();
+			if (content != null) {
+				OutputStream stream = cn.getOutputStream();
+				OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF8");
+				writer.write((String) content);
+				writer.close();
+			}
+			if (VERBOSE_REQUESTS) {
+				System.out.format("%s %s => ", method, url.toString());
+			}
 
-        // Write out request content, if any
-        try {
-            Object content = request.getContent();
-            if (content != null) {
-                cn.setDoOutput(true);
-                OutputStream stream = cn.getOutputStream();
-                OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF8");
-                writer.write((String)content);
-                writer.close();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+			int status = cn.getResponseCode();
+			InputStream input = null;
+			input = status >= 400 ? cn.getErrorStream() : cn.getInputStream();
 
-        if (VERBOSE_REQUESTS) {
-            System.out.format("%s %s => ", method, url.toString());
-        }
+			ResponseMessage response = new ResponseMessage(status, input);
 
-        // Execute the request
-        try {
-            cn.connect();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-
-        int status;
-        try {
-            status = cn.getResponseCode();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-
-        InputStream input = null;
-        try {
-            input = status >= 400
-                ? cn.getErrorStream()
-                : cn.getInputStream();
-        }
-        catch (IOException e) { assert(false); }
-
-        ResponseMessage response = new ResponseMessage(status, input);
-
-        if (VERBOSE_REQUESTS) {
-            System.out.format("%d\n", status);
-            if (method.equals("POST")) {
-                System.out.println("    " + request.getContent());
-            }
-        }
-
-        if (status >= 400)
-            throw HttpException.create(response);
-
-        return response;
+			if (VERBOSE_REQUESTS) {
+				System.out.format("%d\n", status);
+				if (method.equals("POST")) {
+					System.out.println("    " + request.getContent());
+				}
+			}
+			if (status >= 400) {
+				throw HttpException.create(response);
+			}
+			return response;
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
     }
 
     private static SSLSocketFactory createSSLFactory() {
