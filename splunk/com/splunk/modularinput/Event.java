@@ -76,7 +76,7 @@ public class Event {
         }
 
         writeFieldTo(out, "source", getSource());
-        writeFieldTo(out, "sourceType", getSourceType());
+        writeFieldTo(out, "sourcetype", getSourceType());
         writeFieldTo(out, "index", getIndex());
         writeFieldTo(out, "host", getHost());
         writeFieldTo(out, "data", getData());
