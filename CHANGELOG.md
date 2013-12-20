@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 * When setting the sourcetype of a modular input event, events are indexed properly.
-  Previously Splunk would encounter an error and skip them.
+  Previously Splunk would encounter an error and skip them. Also updated some of the modular input test data to reflect this change.
 
 ### Breaking changes
 
