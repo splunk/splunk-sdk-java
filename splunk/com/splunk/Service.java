@@ -1057,6 +1057,44 @@ public class Service extends BaseService {
     public UserCollection getUsers(Args args) {
         return new UserCollection(this, args);
     }
+    
+    /**
+     * Returns the collection of views(a.k.a. dashboards).
+     *
+     * @return The view collection in current app
+     */
+    public EntityCollection<View> getViews() {
+        return getViews(null,null);
+    }
+    
+    /**
+     * Returns the collection of views(a.k.a. dashboards).
+     * @param app splunk app
+     *
+     * @return The view collection in specific app
+     */
+    public EntityCollection<View> getViews(String app) {
+    	return getViews(app,null);
+    }
+    
+    /**
+     * Returns the collection of views(a.k.a. dashboards).
+     * @param app splunk app
+     * @param search sever side filtering criteria 
+     *
+     * @return The view collection in specific app, matching the search. The views wil be filtered on server side.
+     */
+    public EntityCollection<View> getViews(String app, String search) {
+    	Args args=new Args();
+    	if(app!=null) {
+    		args.add("app", app);
+    	}
+    	if(search!=null) {
+    		args.add("search", search);
+    	}
+        return new EntityCollection<View>(
+            this, "data/ui/views", View.class, args);
+    }
 
     /**
      * Authenticates the {@code Service} instance with the username and password
