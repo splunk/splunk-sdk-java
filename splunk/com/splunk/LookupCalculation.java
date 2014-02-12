@@ -52,9 +52,4 @@ public class LookupCalculation extends Calculation {
      * @return the field on the input to lookup with
      */
     public Field getInputField() { return this.inputField; }
-
-    /**
-     * @return name of the field on the input to lookup with
-     */
-    public String getInputFieldName() { return getInputField().getName(); }
 }
