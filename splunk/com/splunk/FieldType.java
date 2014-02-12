@@ -16,20 +16,7 @@
 
 package com.splunk;
 
-import java.util.Collection;
-
 /**
- * DataModel represents a data model on the server. Data models contain
- * data model objects, which specify structured views on Splunk data.
+ * Represents the type of a field in a data model object.
  */
-public class DataModel extends Entity {
-    private Collection<DataModelObject> objects;
-
-    public DataModel(Service service, String path) {
-        super(service, path);
-    }
-
-    public Collection<DataModelObject> getObjects() {
-        return objects;
-    }
-}
+public enum FieldType { STRING, NUMBER, BOOLEAN, IPV4, TIMESTAMP, CHILDCOUNT, OBJECTCOUNT, UNDEFINED };
