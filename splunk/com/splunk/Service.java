@@ -366,6 +366,15 @@ public class Service extends BaseService {
     }
 
     /**
+     * Returns the collection of data models.
+     */
+    public EntityCollection<DataModel> getDataModels() {
+        return new EntityCollection<DataModel>(
+                this, "datamodel/model", DataModel.class
+        );
+    }
+
+    /**
      * Returns the configuration and status of a deployment client.
      *
      * @return The configuration and status.
