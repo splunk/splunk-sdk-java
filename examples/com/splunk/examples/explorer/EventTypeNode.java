@@ -25,7 +25,7 @@ class EventTypeNode extends EntityNode {
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        list.add(String.class, "getDescription");
+        list.add(String.class, "getDescriptionLabel");
         list.add(int.class, "getPriority");
         list.add(String.class, "getSearch");
         return list;

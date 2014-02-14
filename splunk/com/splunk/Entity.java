@@ -22,7 +22,7 @@ import java.util.*;
  * The {@code Entity} class represents a Splunk entity.
  */
 public class Entity extends Resource implements Map<String, Object> {
-    private Record content;
+    protected Record content;
     protected HashMap<String, Object> toUpdate = new LinkedHashMap<String, Object>();
 
     /**
@@ -153,7 +153,7 @@ public class Entity extends Resource implements Map<String, Object> {
         return getContent().getByteCount(key, defaultValue);
     }
 
-    private Record getContent() {
+    protected Record getContent() {
         return validate().content;
     }
 
