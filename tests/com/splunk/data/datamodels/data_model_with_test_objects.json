@@ -2,7 +2,7 @@
   "objects":[
     {
       "objectName":"event1",
-      "comment":"",
+      "comment":"ဩᚙ௵ comment on event1",
       "autoextractSearch":" (uri=\"*.php\" OR uri=\"*.py\"\nNOT (referer=null OR referer=\"-\")) ",
       "calculations":[
         {
@@ -157,7 +157,7 @@
               "required":true
             }
           ],
-          "comment":"",
+          "comment":"ဩᚙ௵ comment of pbe9bd0rp4",
           "editable":true,
           "inputField":"output_from_reverse_hostname",
           "calculationType":"GeoIP"
@@ -176,7 +176,7 @@
       ],
       "lineage":"event1",
       "tsidxNamespace":"",
-      "displayName":"event1",
+      "displayName":"event1 ဩᚙ",
       "fields":[
         {
           "owner":"BaseEvent",
@@ -251,7 +251,6 @@
     "Interfaces":0,
     "Interface Implementations":0
   },
-  "modelName":"search1",
   "description":"A description",
   "objectNameList":[
     "event1"

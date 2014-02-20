@@ -16,7 +16,30 @@
 
 package com.splunk;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Represents the type of a field in a data model object.
  */
-public enum FieldType { STRING, NUMBER, BOOLEAN, IPV4, TIMESTAMP, CHILDCOUNT, OBJECTCOUNT, UNDEFINED };
+public enum FieldType { STRING, NUMBER, BOOLEAN, IPV4, TIMESTAMP, CHILDCOUNT, OBJECTCOUNT, UNDEFINED;
+
+    private final static Map<String, FieldType> typeLookup = new HashMap<String, FieldType>() {{
+        put("string", STRING);
+        put("number", NUMBER);
+        put("boolean", BOOLEAN);
+        put("ipv4", IPV4);
+        put("timestamp", TIMESTAMP);
+        put("childcount", CHILDCOUNT);
+        put("objectcount", OBJECTCOUNT);
+    }};
+
+    public static FieldType parseType(String text) {
+        FieldType result = typeLookup.get(text.toLowerCase());
+        if (result == null) {
+            result = UNDEFINED;
+        }
+        return result;
+    }
+
+};

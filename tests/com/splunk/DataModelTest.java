@@ -130,10 +130,20 @@ public class DataModelTest extends SDKTestCase {
 
     @Test
     public void testAccelerationSettings() {
-        EntityCollection<DataModel> dataModels = service.getDataModels();
+        Args serviceArgs = new Args();
+        serviceArgs.put("host", service.getHost());
+        serviceArgs.put("port", service.getPort());
+        serviceArgs.put("scheme", service.getScheme());
+        serviceArgs.put("token", service.getToken());
+
+        serviceArgs.put("owner", "nobody");
+        serviceArgs.put("app", "search");
+        Service nonprivateService = new Service(serviceArgs);
+
+        EntityCollection<DataModel> dataModels = nonprivateService.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/object_with_two_searches.json")));
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         model.setAcceleration(true);
@@ -156,8 +166,82 @@ public class DataModelTest extends SDKTestCase {
         model.setAccelerationCronSchedule("* * * * *");
 
         Assert.assertFalse(model.isAccelerated());
-        Assert.assertEquals("-1w", model.getEarliestAcceleratedTime());
+        Assert.assertEquals("-1mon", model.getEarliestAcceleratedTime());
         Assert.assertEquals("* * * * *", model.getAccelerationCronSchedule());
+    }
 
+    @Test
+    public void testObjectMetadata() {
+        DataModelCollection models = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = models.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("event1");
+        Assert.assertNotNull(object);
+
+        Assert.assertEquals("event1 \u1029\u1699", object.getDisplayName());
+        Assert.assertEquals("\u1029\u1699\u0bf5 comment on event1", object.getComment());
+        Assert.assertEquals("event1", object.getName());
+    }
+
+    @Test
+    public void testLineage() {
+        DataModelCollection models = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        DataModel model = models.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("level_0");
+        Assert.assertNotNull(object);
+        Assert.assertEquals(new String[] {"level_0"}, object.getLineage());
+
+        object = model.getObject("level_1");
+        Assert.assertNotNull(object);
+        Assert.assertEquals(new String[] {"level_0", "level_1"}, object.getLineage());
+
+        object = model.getObject("level_2");
+        Assert.assertNotNull(object);
+        Assert.assertEquals(new String[] {"level_0", "level_1", "level_2"}, object.getLineage());
+
+    }
+
+    @Test
+    public void testObjectFields() {
+        DataModelCollection models = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        DataModel model = models.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("level_2");
+        Assert.assertNotNull(object);
+        Assert.assertEquals(5, object.getFields().size());
+
+        Field f = object.getField("_time");
+        Assert.assertEquals("BaseEvent", f.getOwnerName());
+        Assert.assertArrayEquals(new String[]{"BaseEvent"}, f.getOwnerLineage());
+        Assert.assertEquals(FieldType.TIMESTAMP, f.getType());
+        Assert.assertEquals("_time", f.getName());
+        Assert.assertEquals("_time", f.getDisplayName());
+        Assert.assertEquals(false, f.isRequired());
+        Assert.assertEquals(false, f.isMultivalued());
+        Assert.assertEquals(false, f.isHidden());
+        Assert.assertEquals(false, f.isEditable());
+        Assert.assertEquals("", f.getComment());
+
+        f = object.getField("level_2");
+        Assert.assertEquals("level_2", f.getOwnerName());
+        Assert.assertArrayEquals(new String[]{"level_0", "level_1", "level_2"}, f.getOwnerLineage());
+        Assert.assertEquals(FieldType.OBJECTCOUNT, f.getType());
+        Assert.assertEquals("level_2", f.getName());
+        Assert.assertEquals("level 2", f.getDisplayName());
+        Assert.assertEquals(false, f.isRequired());
+        Assert.assertEquals(false, f.isMultivalued());
+        Assert.assertEquals(false, f.isHidden());
+        Assert.assertEquals(false, f.isEditable());
+        Assert.assertEquals("", f.getComment());
     }
 }

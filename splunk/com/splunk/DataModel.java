@@ -167,30 +167,8 @@ public class DataModel extends Entity {
      * @param enabled true enabled, false disables.
      */
     public void setAcceleration(boolean enabled) {
-        setAccelerationObject(
-                enabled,
-                getEarliestAcceleratedTime(),
-                getAccelerationCronSchedule()
-        );
-    }
-
-    private void setAccelerationObject(boolean isAccelerated, String earliestTime, String cronSchedule) {
-        Map toSend = new HashMap();
-
-        toSend.put("enabled", isAccelerated);
-        toSend.put("earliest_time", earliestTime);
-        toSend.put("cron_schedule", cronSchedule);
-
-        final String json = gson.toJson(toSend);
-        System.out.println(json);
-
-        ResponseMessage message = service.post(path, new Args() {{
-            put("acceleration", json);
-            //put("concise", "0");
-        }});
-
-        AtomFeed feed = AtomFeed.parseStream(message.getContent());
-        load(feed);
+        this.accelerationEnabled = enabled;
+        toUpdate.put("enabled", enabled);
     }
 
     public String getEarliestAcceleratedTime() {
@@ -198,11 +176,8 @@ public class DataModel extends Entity {
     }
 
     public void setEarliestAcceleratedTime(String earliestAcceleratedTime) {
-        setAccelerationObject(
-                isAccelerated(),
-                earliestAcceleratedTime,
-                getAccelerationCronSchedule()
-        );
+        this.earliestAcceleratedTime = earliestAcceleratedTime;
+        toUpdate.put("earliest_time", earliestAcceleratedTime);
     }
 
     public String getAccelerationCronSchedule() {
@@ -210,10 +185,20 @@ public class DataModel extends Entity {
     }
 
     public void setAccelerationCronSchedule(String accelerationCronSchedule) {
-        setAccelerationObject(
-                isAccelerated(),
-                getEarliestAcceleratedTime(),
-                accelerationCronSchedule
-        );
+        this.accelerationCronSchedule = accelerationCronSchedule;
+        toUpdate.put("cron_schedule", accelerationCronSchedule);
+    }
+
+    @Override
+    public void update() {
+        Map<String, Object> accelerationMap = new HashMap<String, Object>();
+        for (String key : new String[] {"enabled", "earliest_time", "cron_schedule"}) {
+            if (toUpdate.containsKey(key)) {
+                accelerationMap.put(key, toUpdate.get(key));
+                toUpdate.remove(key);
+            }
+        }
+        toUpdate.put("acceleration", gson.toJson(accelerationMap));
+        super.update();
     }
 }

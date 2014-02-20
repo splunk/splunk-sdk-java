@@ -15,36 +15,28 @@
  */
 package com.splunk;
 
+import com.google.gson.JsonElement;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Represents a field of a data model object.
  */
 public class Field {
-    private final Collection<Constraint> constraints;
-    private final DataModelObject owner;
-    private final String name;
-    private final FieldType type;
-    private final boolean required;
-    private final boolean multivalued;
-    private final boolean hidden;
-    private final String displayName;
-    private final String comment;
+    private String[] ownerLineage;
+    private String name;
+    private FieldType type;
+    private boolean required;
+    private boolean multivalued;
+    private boolean hidden;
+    private String displayName;
+    private String comment;
+    private boolean editable;
 
-    public Field(String name, DataModelObject owner, FieldType type,
-                 Collection<Constraint> constraints,
-                 boolean isRequired, boolean isMultivalued, boolean isHidden,
-                 String displayName, String comment) {
-        this.name = name;
-        this.owner = owner;
-        this.type = type;
-        this.constraints = constraints;
-        this.required = isRequired;
-        this.multivalued = isMultivalued;
-        this.hidden = isHidden;
-        this.displayName = displayName;
-        this.comment = comment;
-    }
+    private Field() {}
 
     /**
      * @return The name of this field.
@@ -52,19 +44,20 @@ public class Field {
     public String getName() { return this.name; };
 
     /**
-     * @return The DataModelObject that owns this field.
-     */
-    public DataModelObject getOwner() { return this.owner; }
-
-    /**
+     * Return the name of the data model object on which this field is defined. That need not
+     * be the data model object you accessed it from. It can be one of its ancestors.
+     *
      * @return The name of the DataModelObject that owns this field.
      */
-    public String getOwnerName() { return getOwner().getName(); }
+    public String getOwnerName() { return this.ownerLineage[this.ownerLineage.length-1]; }
 
     /**
+     * Return the lineage of the data model object on which this field is defined. That need not
+     * be the data model object you accessed it from. It can be one of its ancestors.
+     *
      * @return An array of names of DataModelObjects representing the lineage of this field's owner.
      */
-    public String[] getOwnerLineage() { return getOwner().getLineage(); }
+    public String[] getOwnerLineage() { return this.ownerLineage; }
 
     /**
      * @return The type of this field.
@@ -72,9 +65,14 @@ public class Field {
     public FieldType getType() { return this.type; }
 
     /**
-     * @return Constraints that apply to this field.
+     * Some fields are part of system objects such as BaseEvent or are part
+     * of the structure of the object, such as a field with the same name
+     * as the object. Those fields cannot be edited. This method returns
+     * whether the field is one of these protected fields.
+     *
+     * @return whether this field can be edited.
      */
-    public Collection<Constraint> getConstraints() { return constraints; }
+    public boolean isEditable() { return editable; }
 
     /**
      * @return whether this field is required on events in the object.
@@ -100,5 +98,33 @@ public class Field {
      * @return a comment on this field (if there is one), or null.
      */
     public String getComment() { return comment; }
+
+    public static Field parse(JsonElement fieldJson) {
+        Field field = new Field();
+
+        for (Entry<String, JsonElement> entry : fieldJson.getAsJsonObject().entrySet()) {
+            if (entry.getKey().equals("fieldName")) {
+                field.name = entry.getValue().getAsString();
+            } else if (entry.getKey().equals("owner")) {
+                field.ownerLineage = entry.getValue().getAsString().split("\\.");
+            } else if (entry.getKey().equals("type")) {
+                field.type = FieldType.parseType(entry.getValue().getAsString());
+            } else if (entry.getKey().equals("required")) {
+                field.required = entry.getValue().getAsBoolean();
+            } else if (entry.getKey().equals("multivalue")) {
+                field.multivalued = entry.getValue().getAsBoolean();
+            } else if (entry.getKey().equals("hidden")) {
+                field.hidden = entry.getValue().getAsBoolean();
+            } else if (entry.getKey().equals("displayName")) {
+                field.displayName = entry.getValue().getAsString();
+            } else if (entry.getKey().equals("comment")) {
+                field.comment = entry.getValue().getAsString();
+            } else if (entry.getKey().equals("editable")) {
+                field.editable = entry.getValue().getAsBoolean();
+            }
+        }
+
+        return field;
+    }
 }
 

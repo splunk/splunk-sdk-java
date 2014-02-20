@@ -41,5 +41,4 @@ public class DataModelCollection extends EntityCollection<DataModel> {
         model.parseAcceleration(model.getContent().getString("acceleration"));
         return model;
     }
-
 }
