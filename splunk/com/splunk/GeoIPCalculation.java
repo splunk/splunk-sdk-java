@@ -15,7 +15,7 @@
  */
 package com.splunk;
 
-import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents a GeoIP lookup on a data model object, which uses an input
@@ -23,17 +23,17 @@ import java.util.Collection;
  */
 
 public class GeoIPCalculation extends Calculation {
-    private final Field inputField;
+    private final String inputField;
 
-    public GeoIPCalculation(DataModelObject owner, String calculationID,
-                            Collection<Field> generatedFields, String comment,
-                            Field inputField) {
-        super(owner, calculationID, generatedFields, comment);
+    public GeoIPCalculation(String[] ownerLineage, String calculationID,
+                            Map<String, Field> generatedFields, String comment,
+                            boolean editable, String inputField) {
+        super(ownerLineage, calculationID, generatedFields, comment, editable);
         this.inputField = inputField;
     }
 
     /**
      * @return field to do GeoIP lookup on
      */
-    public Field getInputField() { return this.inputField; }
+    public String getInputField() { return this.inputField; }
 }

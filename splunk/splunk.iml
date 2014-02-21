@@ -9,6 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="gson" level="project" />
     <orderEntry type="library" name="opencsv" level="project" />
+    <orderEntry type="library" name="openide" level="project" />
   </component>
 </module>
 

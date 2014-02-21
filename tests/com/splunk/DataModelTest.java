@@ -1,8 +1,12 @@
 package com.splunk;
 
+import com.sun.accessibility.internal.resources.accessibility_en;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DataModelTest extends SDKTestCase {
     @After
@@ -184,6 +188,7 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertEquals("event1 \u1029\u1699", object.getDisplayName());
         Assert.assertEquals("\u1029\u1699\u0bf5 comment on event1", object.getComment());
         Assert.assertEquals("event1", object.getName());
+        Assert.assertEquals(model, object.getDataModel());
     }
 
     @Test
@@ -194,18 +199,36 @@ public class DataModelTest extends SDKTestCase {
         args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
         DataModel model = models.create(createTemporaryName(), args);
 
+        Collection<DataModelObject> children;
+
         DataModelObject object = model.getObject("level_0");
         Assert.assertNotNull(object);
-        Assert.assertEquals(new String[] {"level_0"}, object.getLineage());
+        Assert.assertArrayEquals(new String[]{"level_0"}, object.getLineage());
+        Assert.assertEquals("BaseEvent", object.getParentName());
+        Assert.assertArrayEquals(new String[]{"level_1"}, object.getChildrenNames().toArray());
+        children = object.getChildren();
+        Assert.assertEquals(1, children.size());
+        boolean more_than_one = false;
+        for (DataModelObject child : children) {
+            Assert.assertFalse(more_than_one);
+            Assert.assertEquals("level_1", child.getName());
+            more_than_one = true;
+        }
+
 
         object = model.getObject("level_1");
         Assert.assertNotNull(object);
-        Assert.assertEquals(new String[] {"level_0", "level_1"}, object.getLineage());
+        Assert.assertArrayEquals(new String[]{"level_0", "level_1"}, object.getLineage());
+        Assert.assertEquals("level_0", object.getParentName());
+        Assert.assertArrayEquals(new String[] {"level_2"}, object.getChildrenNames().toArray());
 
         object = model.getObject("level_2");
         Assert.assertNotNull(object);
-        Assert.assertEquals(new String[] {"level_0", "level_1", "level_2"}, object.getLineage());
-
+        Assert.assertArrayEquals(new String[]{"level_0", "level_1", "level_2"}, object.getLineage());
+        Assert.assertEquals("level_1", object.getParentName());
+        Assert.assertArrayEquals(new String[] {}, object.getChildrenNames().toArray());
+        children = object.getChildren();
+        Assert.assertEquals(0, children.size());
     }
 
     @Test
@@ -243,5 +266,319 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertEquals(false, f.isHidden());
         Assert.assertEquals(false, f.isEditable());
         Assert.assertEquals("", f.getComment());
+    }
+
+    @Test
+    public void testCreateLocalAccelerationJob() {
+        String namespace = createTemporaryName();
+
+        DataModelCollection models = service.getDataModels();
+
+        String dataModelName = createTemporaryName();
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        DataModel model = models.create(dataModelName, args);
+
+        DataModelObject object = model.getObject("level_2");
+        Assert.assertNotNull(object);
+
+        final Job accelerationJob = object.createLocalAccelerationJob(namespace);
+
+        try {
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return accelerationJob.isReady();
+                }
+            });
+
+            Assert.assertEquals(
+                    "| datamodel " + dataModelName + " level_2 search | tscollect namespace=" + namespace,
+                    accelerationJob.getSearch()
+            );
+        } finally {
+            accelerationJob.cancel();
+        }
+    }
+
+    @Test
+    public void testCreateLocalAccelerationJobWithEarliestTime() {
+        String namespace = createTemporaryName();
+
+        DataModelCollection models = service.getDataModels();
+
+        String dataModelName = createTemporaryName();
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        DataModel model = models.create(dataModelName, args);
+
+        DataModelObject object = model.getObject("level_2");
+        Assert.assertNotNull(object);
+
+        final Job accelerationJob = object.createLocalAccelerationJob(namespace, "-1d");
+        try {
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return accelerationJob.isReady();
+                }
+            });
+
+            Assert.assertEquals(
+                    "| datamodel " + dataModelName + " level_2 search | tscollect namespace=" + namespace,
+                    accelerationJob.getSearch()
+            );
+        } finally {
+            accelerationJob.cancel();
+        }
+        // I don't have a good way of getting a date two weeks ago in Java, so
+        // the earliest time part of this is simply untested.
+    }
+
+    @Test
+    public void testAcceleratedQueryEqualsQueryOnUnacceleratedModel() {
+        DataModelCollection models = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        DataModel model = models.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("level_2");
+
+        Assert.assertEquals(object.getQuery(), object.getAcceleratedQuery());
+    }
+
+    @Test
+    public void testAcceleratedQueryWithNamespace() {
+        DataModelCollection models = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        DataModel model = models.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("level_2");
+
+        String namespace = createTemporaryName();
+        final Job accelerationJob = object.createLocalAccelerationJob(namespace);
+
+        try {
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return accelerationJob.isReady();
+                }
+            });
+
+            String query = object.getAcceleratedQuery(namespace);
+            Job job = service.getJobs().create(query);
+            job.cancel();
+        } finally {
+            accelerationJob.cancel();
+        }
+
+        Assert.assertEquals(object.getQuery(), object.getAcceleratedQuery());
+    }
+
+    @Test
+    public void testAcceleratedQueryOnAcceleratedModelWorks() {
+        Args serviceArgs = new Args();
+        serviceArgs.put("host", service.getHost());
+        serviceArgs.put("port", service.getPort());
+        serviceArgs.put("scheme", service.getScheme());
+        serviceArgs.put("token", service.getToken());
+
+        serviceArgs.put("owner", "nobody");
+        serviceArgs.put("app", "search");
+        Service nonprivateService = new Service(serviceArgs);
+
+        EntityCollection<DataModel> dataModels = nonprivateService.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        model.setAcceleration(true);
+
+        DataModelObject object = model.getObject("event1");
+
+        Assert.assertTrue(object.getAcceleratedQuery().startsWith("| tstats"));
+
+        final Job job = nonprivateService.getJobs().create(object.getAcceleratedQuery());
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isReady();
+            }
+        });
+
+        Assert.assertEquals(0, job.getEventCount());
+    }
+
+    @Test
+    public void testAcceleratedQueryWorksOnUnacceleratedModel() {
+        EntityCollection<DataModel> dataModels = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("event1");
+
+        Assert.assertTrue(object.getAcceleratedQuery().startsWith("| datamodel"));
+
+        final Job job = service.getJobs().create(object.getAcceleratedQuery());
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isReady();
+            }
+        });
+
+        Assert.assertEquals(0, job.getEventCount());
+    }
+
+    @Test
+    public void testQueryWorksOnModel() {
+        EntityCollection<DataModel> dataModels = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("event1");
+
+        Assert.assertTrue(object.getQuery().startsWith("| datamodel"));
+
+        final Job job = service.getJobs().create(object.getQuery());
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isReady();
+            }
+        });
+
+        Assert.assertEquals(0, job.getEventCount());
+    }
+
+    @Test
+    public void testConstraints() {
+        EntityCollection<DataModel> dataModels = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("event1");
+        Assert.assertNotNull(object);
+
+        Assert.assertEquals(1, object.getConstraints().size());
+        boolean only_one = true;
+        for (Constraint c : object.getConstraints()) {
+            Assert.assertTrue(only_one);
+            only_one = false;
+            Assert.assertEquals("event1", c.getOwner());
+            Assert.assertEquals("uri=\"*.php\" OR uri=\"*.py\"\n" +
+                    "NOT (referer=null OR referer=\"-\")", c.getQuery());
+        }
+    }
+
+    @Test
+    public void testCalculations() {
+        EntityCollection<DataModel> dataModels = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("event1");
+        Assert.assertNotNull(object);
+
+        Map<String, Calculation> calculations = object.getCalculations();
+        Assert.assertEquals(4, calculations.size());
+
+        EvalCalculation c = (EvalCalculation)calculations.get("93fzsv03wa7");
+        Assert.assertEquals("event1", c.getOwner());
+        Assert.assertArrayEquals(new String[]{"event1"}, c.getLineage());
+        Assert.assertEquals("", c.getComment());
+        Assert.assertEquals(true, c.isEditable());
+        Assert.assertEquals(
+                "if(cidrmatch(\"192.0.0.0/16\", clientip), \"local\", \"other\")",
+                c.getExpression()
+        );
+        Assert.assertEquals(1, c.getGeneratedFields().size());
+        Field f = c.getGeneratedField("new_field");
+        Assert.assertNotNull(f);
+        Assert.assertEquals("My New Field", f.getDisplayName());
+
+        LookupCalculation lc = (LookupCalculation)calculations.get("sr3mc8o3mjr");
+        Assert.assertEquals("event1", lc.getOwner());
+        Assert.assertArrayEquals(new String[]{"event1"}, lc.getLineage());
+        Assert.assertEquals("", lc.getComment());
+        Assert.assertEquals(true, lc.isEditable());
+        Assert.assertEquals("host", lc.getInputField());
+        Assert.assertEquals("dnslookup", lc.getLookupName());
+        Assert.assertEquals("a_lookup_field", lc.getLookupFieldName());
+
+        RegexpCalculation rc = (RegexpCalculation)calculations.get("a5v1k82ymic");
+        Assert.assertEquals(2, rc.getGeneratedFields().size());
+        Assert.assertEquals("_raw", rc.getInputField());
+        Assert.assertEquals(" From: (?<from>.*) To: (?<to>.*) ", rc.getExpression());
+
+        GeoIPCalculation gc = (GeoIPCalculation)calculations.get("pbe9bd0rp4");
+        Assert.assertEquals("\u1029\u1699\u0bf5 comment of pbe9bd0rp4", gc.getComment());
+        Assert.assertEquals(5, gc.getGeneratedFields().size());
+        Assert.assertEquals("output_from_reverse_hostname", gc.getInputField());
+    }
+
+    @Test
+    public void testRunQuery() {
+        EntityCollection<DataModel> dataModels = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("event1");
+
+        Job job = null;
+        try {
+            final Job j = object.runQuery();
+            job = j;
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return j.isReady();
+                }
+            });
+            Assert.assertEquals(object.getAcceleratedQuery(), job.getSearch());
+        } finally {
+            if (job != null) {
+                job.cancel();
+            }
+        }
+
+        job = null;
+        try {
+            job = object.runQuery("| head 3", new JobArgs() {{
+                setEnableLookups(false);
+                put("status_buckets", "5");
+            }});
+            final Job j = job;
+            assertEventuallyTrue(new EventuallyTrueBehavior() {
+                @Override
+                public boolean predicate() {
+                    return j.isReady();
+                }
+            });
+            Assert.assertEquals(object.getAcceleratedQuery() + "| head 3", job.getSearch());
+            Assert.assertEquals(5, job.getInteger("statusBuckets"));
+        } finally {
+            if (job != null) {
+                job.cancel();
+            }
+        }
     }
 }

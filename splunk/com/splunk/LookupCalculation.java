@@ -16,6 +16,7 @@
 package com.splunk;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents a lookup calculation on a data model object.
@@ -25,14 +26,14 @@ import java.util.Collection;
  */
 public class LookupCalculation extends Calculation {
     private final String lookupFieldName;
-    private final Field inputField;
+    private final String inputField;
     private final String lookupName;
 
-    public LookupCalculation(DataModelObject owner, String calculationID,
-                             Collection<Field> generatedFields, String comment,
-                             String lookupName,
-                             String lookupFieldName, Field inputField) {
-        super(owner, calculationID, generatedFields, comment);
+    public LookupCalculation(String[] ownerLineage, String calculationID,
+                             Map<String, Field> generatedFields, String comment,
+                             boolean editable, String lookupName,
+                             String lookupFieldName, String inputField) {
+        super(ownerLineage, calculationID, generatedFields, comment, editable);
         this.lookupName = lookupName;
         this.lookupFieldName = lookupFieldName;
         this.inputField = inputField;
@@ -51,5 +52,5 @@ public class LookupCalculation extends Calculation {
     /**
      * @return the field on the input to lookup with
      */
-    public Field getInputField() { return this.inputField; }
+    public String getInputField() { return this.inputField; }
 }

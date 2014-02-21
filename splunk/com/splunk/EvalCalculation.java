@@ -15,7 +15,7 @@
  */
 package com.splunk;
 
-import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents a calculation on a data model object done by an eval.
@@ -23,10 +23,10 @@ import java.util.Collection;
 public class EvalCalculation extends Calculation {
     private final String expression;
 
-    public EvalCalculation(DataModelObject owner, String calculationID,
-                           Collection<Field> generatedFields, String comment,
-                           String expression) {
-        super(owner, calculationID, generatedFields, comment);
+    public EvalCalculation(String[] owner, String calculationID,
+                           Map<String, Field> generatedFields, String comment,
+                           boolean editable, String expression) {
+        super(owner, calculationID, generatedFields, comment, editable);
         this.expression = expression;
     }
 

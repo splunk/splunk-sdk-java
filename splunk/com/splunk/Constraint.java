@@ -15,16 +15,19 @@
  */
 package com.splunk;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map.Entry;
+
 /**
  * Represents a constraint on a data model object or a field on a data model object.
  */
 public class Constraint {
-    private final DataModelObject owner;
-    private final String query;
+    private String owner;
+    private String query;
 
-    public Constraint(DataModelObject owner, String query) {
-        this.owner = owner;
-        this.query = query;
+    private Constraint() {
     }
 
     /**
@@ -36,15 +39,26 @@ public class Constraint {
     /**
      * @return The DataModelObject that owns this field.
      */
-    public DataModelObject getOwner() { return this.owner; }
+    public String getOwner() { return this.owner; }
 
     /**
-     * @return The name of the DataModelObject that owns this field.
+     * Parse a Constraint object out of JSON.
+     *
+     * @param json JsonElement to parse.
+     * @return a Constraint object.
      */
-    public String getOwnerName() { return getOwner().getName(); }
+    public static Constraint parse(JsonElement json) {
+        JsonObject jsonObject = json.getAsJsonObject();
+        Constraint constraint = new Constraint();
 
-    /**
-     * @return An array of names of DataModelObjects representing the lineage of this field's owner.
-     */
-    public String[] getOwnerLineage() { return getOwner().getLineage(); }
+        for (Entry<String, JsonElement> e : jsonObject.entrySet()) {
+            if (e.getKey().equals("owner")) {
+                constraint.owner = e.getValue().getAsString();
+            } else if (e.getKey().equals("search")) {
+                constraint.query = e.getValue().getAsString();
+            }
+        }
+
+        return constraint;
+    }
 }
