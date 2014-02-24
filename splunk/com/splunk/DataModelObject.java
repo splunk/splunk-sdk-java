@@ -1,8 +1,22 @@
+/*
+ * Copyright 2014 Splunk, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"): you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 package com.splunk;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +37,7 @@ public class DataModelObject {
     private Collection<Constraint> constraints;
     private Map<String, Calculation> calculations;
 
-    private DataModelObject(DataModel model) {
+    DataModelObject(DataModel model) {
         this.model = model;
         this.fields = new HashMap<String, Field>();
         this.children = new ArrayList<String>();
@@ -251,34 +265,48 @@ public class DataModelObject {
     }
 
     public static DataModelObject parse(DataModel dataModel, JsonElement object) {
-        DataModelObject dmo = new DataModelObject(dataModel);
+        String name = null;
+        String displayName = null;
+        String comment = null;
+        String[] lineage = new String[0];
+        String parentName = null;
+        Map<String, Field> fields = new HashMap<String, Field>();
+        Collection<String> children = new ArrayList<String>();
+        Collection<Constraint> constraints = new ArrayList<Constraint>();
+        Map<String, Calculation> calculations = new HashMap<String, Calculation>();
+
+        // Fields specific to objects inheriting directly from BaseSearch.
+        String baseSearch = null;
+        // Fields specific to objects inheriting directly from BaseTransaction
+        String transactionMaxPause = null;
+        String transactionMaxTimeSpan = null;
+        Collection<String> groupByFields = new ArrayList<String>();
+        Collection<String> objectsToGroup = new ArrayList<String>();
 
         for (Entry<String, JsonElement> entry : object.getAsJsonObject().entrySet()) {
             if (entry.getKey().equals("objectName")) {
-                dmo.name = entry.getValue().getAsString();
+                name = entry.getValue().getAsString();
             } else if (entry.getKey().equals("displayName")) {
-                dmo.displayName = entry.getValue().getAsString();
+                displayName = entry.getValue().getAsString();
             } else if (entry.getKey().equals("comment")) {
-                dmo.comment = entry.getValue().getAsString();
+                comment = entry.getValue().getAsString();
             } else if (entry.getKey().equals("lineage")) {
-                dmo.lineage = entry.getValue().getAsString().split("\\.");
-            } else if (entry.getKey().equals("displayName")) {
-                dmo.displayName = entry.getValue().getAsString();
+                lineage = entry.getValue().getAsString().split("\\.");
             } else if (entry.getKey().equals("parentName")) {
-                dmo.parentName = entry.getValue().getAsString();
+                parentName = entry.getValue().getAsString();
             } else if (entry.getKey().equals("fields")) {
                 JsonArray fieldsJson = entry.getValue().getAsJsonArray();
-                dmo.fields.clear();
+                fields.clear();
 
                 for (JsonElement fieldJson : fieldsJson) {
                     Field field = Field.parse(fieldJson);
-                    dmo.fields.put(field.getName(), field);
+                    fields.put(field.getName(), field);
                 }
             } else if (entry.getKey().equals("children")) {
                 JsonArray childrenJson = entry.getValue().getAsJsonArray();
 
                 for (JsonElement childJson : childrenJson) {
-                    dmo.children.add(childJson.getAsString());
+                    children.add(childJson.getAsString());
                 }
 
             } else if (entry.getKey().equals("constraints")) {
@@ -286,15 +314,61 @@ public class DataModelObject {
 
                 for (JsonElement constraintJson : constraintsJson) {
                     Constraint constraint = Constraint.parse(constraintJson);
-                    dmo.constraints.add(constraint);
+                    constraints.add(constraint);
                 }
             } else if (entry.getKey().equals("calculations")) {
+                calculations.clear();
                 for (JsonElement cjson : entry.getValue().getAsJsonArray()) {
                     Calculation c = Calculation.parse(cjson);
                     String cid = c.getCalculationID();
-                    dmo.calculations.put(cid, c);
+                    calculations.put(cid, c);
+                }
+            } else if (entry.getKey().equals("baseSearch")) {
+                baseSearch = entry.getValue().getAsString();
+            } else if (entry.getKey().equals("transactionMaxPause")) {
+                transactionMaxPause = entry.getValue().getAsString();
+            } else if (entry.getKey().equals("transactionMaxTimeSpan")) {
+                transactionMaxTimeSpan = entry.getValue().getAsString();
+            } else if (entry.getKey().equals("groupByFields")) {
+                for (JsonElement e : entry.getValue().getAsJsonArray()) {
+                    groupByFields.add(e.getAsString());
+                }
+            } else if (entry.getKey().equals("objectsToGroup")) {
+                for (JsonElement e : entry.getValue().getAsJsonArray()) {
+                    objectsToGroup.add(e.getAsString());
                 }
             }
+        }
+
+        DataModelObject dmo;
+        // Create the right subclass of DataModelObject.
+        if (parentName.equals("BaseSearch")) {
+            dmo = new DataModelSearch(dataModel);
+        } else if (parentName.equals("BaseTransaction")) {
+            dmo = new DataModelTransaction(dataModel);
+        } else {
+            dmo = new DataModelObject(dataModel);
+        }
+
+        // Set the fields common to all data model objects
+        dmo.name = name;
+        dmo.displayName = displayName;
+        dmo.comment = comment;
+        dmo.lineage = lineage;
+        dmo.parentName = parentName;
+        dmo.fields = fields;
+        dmo.children = children;
+        dmo.constraints = constraints;
+        dmo.calculations = calculations;
+
+        // Set the fields of particular types
+        if (parentName.equals("BaseSearch")) {
+            ((DataModelSearch)dmo).baseSearch = baseSearch;
+        } else if (parentName.equals("BaseTransaction")) {
+            ((DataModelTransaction)dmo).groupByFields = groupByFields;
+            ((DataModelTransaction)dmo).objectsToGroup = objectsToGroup;
+            ((DataModelTransaction)dmo).maxPause = transactionMaxPause;
+            ((DataModelTransaction)dmo).maxSpan = transactionMaxTimeSpan;
         }
 
         return dmo;

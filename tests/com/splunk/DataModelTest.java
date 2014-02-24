@@ -581,4 +581,42 @@ public class DataModelTest extends SDKTestCase {
             }
         }
     }
+
+    @Test
+    public void testBaseSearchProperlyParsed() {
+        EntityCollection<DataModel> dataModels = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/model_with_multiple_types.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("search1");
+        Assert.assertNotNull(object);
+        Assert.assertTrue(object instanceof DataModelSearch);
+        DataModelSearch s = (DataModelSearch)object;
+
+        Assert.assertEquals("BaseSearch", s.getParentName());
+        Assert.assertEquals("search index=_internal | head 10", s.getBaseSearch());
+    }
+
+    @Test
+    public void testBaseTransactionProperlyParsed() {
+        EntityCollection<DataModel> dataModels = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/model_with_multiple_types.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("transaction1");
+        Assert.assertNotNull(object);
+        Assert.assertTrue(object instanceof DataModelTransaction);
+        DataModelTransaction t = (DataModelTransaction)object;
+
+        Assert.assertArrayEquals(new String[] {"event1"}, t.getObjectsToGroup().toArray());
+        Assert.assertArrayEquals(new String[] {"host", "from"}, t.getGroupByFields().toArray());
+
+        Assert.assertEquals("25s", t.getMaxPause());
+        Assert.assertEquals("100m", t.getMaxSpan());
+    }
 }
+
