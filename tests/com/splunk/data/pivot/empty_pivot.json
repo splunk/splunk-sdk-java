@@ -1,0 +1,13 @@
+{
+  "dataModel": "mymodel",
+  "baseClass": "myobject",
+  "filters": [],
+  "cells": [],
+  "rows": [],
+  "columns": [],
+  "rowFormat": {
+
+  },
+  "colFormat": {}
+
+}
