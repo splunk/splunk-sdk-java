@@ -47,6 +47,13 @@ public abstract class Calculation {
     public String getCalculationID() { return this.calculationID; }
 
     /**
+     * @return whether this calculation generated a field of the given name.
+     */
+    public boolean containsGeneratedField(String fieldName) {
+        return this.generatedFields.containsKey(fieldName);
+    }
+
+    /**
      * @return a collection of the fields this calculation generates.
      */
     public Collection<Field> getGeneratedFields() { return this.generatedFields.values(); }

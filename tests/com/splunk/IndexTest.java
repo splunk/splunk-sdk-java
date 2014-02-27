@@ -18,6 +18,7 @@ package com.splunk;
 
 import junit.framework.AssertionFailedError;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -64,7 +65,7 @@ public class IndexTest extends SDKTestCase {
             return;
         }
         
-        assertTrue(service.getIndexes().containsKey(indexName));
+        Assert.assertTrue(service.getIndexes().containsKey(indexName));
         
         index.remove();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -82,7 +83,7 @@ public class IndexTest extends SDKTestCase {
             return;
         }
         
-        assertTrue(service.getIndexes().containsKey(indexName));
+        Assert.assertTrue(service.getIndexes().containsKey(indexName));
         service.getIndexes().remove(indexName);
         
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -248,50 +249,50 @@ public class IndexTest extends SDKTestCase {
         index.update();
         index.refresh();
 
-        assertEquals(newBlockSignSize, index.getBlockSignSize());
-        assertEquals(newFrozenTimePeriodInSecs, index.getFrozenTimePeriodInSecs());
-        assertEquals(newMaxConcurrentOptimizes, index.getMaxConcurrentOptimizes());
-        assertEquals(newMaxDataSize, index.getMaxDataSize());
-        assertEquals(newMaxHotBuckets, index.getMaxHotBuckets());
-        assertEquals(newMaxHotIdleSecs, index.getMaxHotIdleSecs());
-        assertEquals(newMaxMemMB, index.getMaxMemMB());
-        assertEquals(newMaxMetaEntries, index.getMaxMetaEntries());
-        assertEquals(newMaxTotalDataSizeMB, index.getMaxTotalDataSizeMB());
-        assertEquals(newMaxWarmDBCount, index.getMaxWarmDBCount());
-        assertEquals(newMinRawFileSyncSecs, index.getMinRawFileSyncSecs());
-        assertEquals(newPartialServiceMetaPeriod, index.getPartialServiceMetaPeriod());
-        assertEquals(newQuarantineFutureSecs, index.getQuarantineFutureSecs());
-        assertEquals(newQuarantinePastSecs, index.getQuarantinePastSecs());
-        assertEquals(newRawChunkSizeBytes, index.getRawChunkSizeBytes());
-        assertEquals(newRotatePeriodInSecs, index.getRotatePeriodInSecs());
-        assertEquals(newServiceMetaPeriod, index.getServiceMetaPeriod());
-        assertEquals(newSyncMeta, index.getSyncMeta());
-        assertEquals(newThrottleCheckPeriod, index.getThrottleCheckPeriod());
+        Assert.assertEquals(newBlockSignSize, index.getBlockSignSize());
+        Assert.assertEquals(newFrozenTimePeriodInSecs, index.getFrozenTimePeriodInSecs());
+        Assert.assertEquals(newMaxConcurrentOptimizes, index.getMaxConcurrentOptimizes());
+        Assert.assertEquals(newMaxDataSize, index.getMaxDataSize());
+        Assert.assertEquals(newMaxHotBuckets, index.getMaxHotBuckets());
+        Assert.assertEquals(newMaxHotIdleSecs, index.getMaxHotIdleSecs());
+        Assert.assertEquals(newMaxMemMB, index.getMaxMemMB());
+        Assert.assertEquals(newMaxMetaEntries, index.getMaxMetaEntries());
+        Assert.assertEquals(newMaxTotalDataSizeMB, index.getMaxTotalDataSizeMB());
+        Assert.assertEquals(newMaxWarmDBCount, index.getMaxWarmDBCount());
+        Assert.assertEquals(newMinRawFileSyncSecs, index.getMinRawFileSyncSecs());
+        Assert.assertEquals(newPartialServiceMetaPeriod, index.getPartialServiceMetaPeriod());
+        Assert.assertEquals(newQuarantineFutureSecs, index.getQuarantineFutureSecs());
+        Assert.assertEquals(newQuarantinePastSecs, index.getQuarantinePastSecs());
+        Assert.assertEquals(newRawChunkSizeBytes, index.getRawChunkSizeBytes());
+        Assert.assertEquals(newRotatePeriodInSecs, index.getRotatePeriodInSecs());
+        Assert.assertEquals(newServiceMetaPeriod, index.getServiceMetaPeriod());
+        Assert.assertEquals(newSyncMeta, index.getSyncMeta());
+        Assert.assertEquals(newThrottleCheckPeriod, index.getThrottleCheckPeriod());
         if (service.getInfo().getOsName().equals("Windows")) {
-            assertEquals("C:\\frozenDir\\" + index.getName(), index.getColdToFrozenDir());
+            Assert.assertEquals("C:\\frozenDir\\" + index.getName(), index.getColdToFrozenDir());
         } else {
-            assertEquals("/tmp/foobar" + index.getName(), index.getColdToFrozenDir());
+            Assert.assertEquals("/tmp/foobar" + index.getName(), index.getColdToFrozenDir());
         }
         if (service.versionIsAtLeast("4.3")) {
-            assertEquals(
+            Assert.assertEquals(
                     newEnableOnlineBucketRepair,
                     index.getEnableOnlineBucketRepair()
             );
-            assertEquals(
+            Assert.assertEquals(
                     newMaxBloomBackfillBucketAge,
                     index.getMaxBloomBackfillBucketAge()
             );
         }
         if (service.versionIsAtLeast("5.0")) {
-            assertEquals(
+            Assert.assertEquals(
                     newBucketRebuildMemoryHint,
                     index.getBucketRebuildMemoryHint()
             );
-            assertEquals(
+            Assert.assertEquals(
                     newMaxTimeUnreplicatedNoAcks,
                     index.getMaxTimeUnreplicatedNoAcks()
             );
-            assertEquals(
+            Assert.assertEquals(
                     newMaxTimeUnreplicatedWithAcks,
                     index.getMaxTimeUnreplicatedWithAcks()
             );
@@ -303,7 +304,7 @@ public class IndexTest extends SDKTestCase {
         String coldToFrozenScript = index.getColdToFrozenScript();
         index.setColdToFrozenScript("/bin/sh");
         index.update();
-        assertEquals("/bin/sh", index.getColdToFrozenScript());
+        Assert.assertEquals("/bin/sh", index.getColdToFrozenScript());
         index.setColdToFrozenScript(coldToFrozenScript == null ? "" : coldToFrozenScript);
         index.update();
         //index.setColdToFrozenScript(coldToFrozenScript);
@@ -315,7 +316,7 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testEnable() {
-        assertFalse(index.isDisabled());
+        Assert.assertFalse(index.isDisabled());
         
         // Force the index to be disabled
         index.disable();
@@ -362,8 +363,8 @@ public class IndexTest extends SDKTestCase {
     }
     
     private void tryTestSubmitOne() {
-        assertTrue(getResultCountOfIndex() == 0);
-        assertTrue(index.getTotalEventCount() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
         
         index.submit(createTimestamp() + " This is a test of the emergency broadcasting system.");
         
@@ -402,8 +403,8 @@ public class IndexTest extends SDKTestCase {
     }
     
     private void tryTestSubmitOneArgs() {
-        assertTrue(getResultCountOfIndex() == 0);
-        assertTrue(index.getTotalEventCount() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
         
         Args args = Args.create("sourcetype", "mysourcetype");
         index.submit(args, createTimestamp() + " This is a test of the emergency broadcasting system.");
@@ -425,8 +426,8 @@ public class IndexTest extends SDKTestCase {
     
     @Test
     public void testSubmitOneInEachCall() {
-        assertTrue(getResultCountOfIndex() == 0);
-        assertTrue(index.getTotalEventCount() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
         
         index.submit(createTimestamp() + " Hello world!\u0150");
         index.submit(createTimestamp() + " Goodbye world!\u0150");
@@ -452,8 +453,8 @@ public class IndexTest extends SDKTestCase {
     
     @Test
     public void testSubmitMultipleInOneCall() {
-        assertTrue(getResultCountOfIndex() == 0);
-        assertTrue(index.getTotalEventCount() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
         
         index.submit(
                 createTimestamp() + " Hello world!\u0150" + "\r\n" +
@@ -481,8 +482,8 @@ public class IndexTest extends SDKTestCase {
     @Test
     public void testAttach() throws IOException {
 
-        assertTrue(getResultCountOfIndex() == 0);
-        assertTrue(index.getTotalEventCount() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
 
         Socket socket = index.attach();
         OutputStream ostream = socket.getOutputStream();
@@ -520,8 +521,8 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testAttachArgs() throws IOException {
-        assertTrue(getResultCountOfIndex() == 0);
-        assertTrue(index.getTotalEventCount() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
         
         Args args = Args.create("sourcetype", "mysourcetype");
         Socket socket = index.attach(args);
@@ -564,8 +565,8 @@ public class IndexTest extends SDKTestCase {
 
         installApplicationFromTestData("file_to_upload");
         
-        assertTrue(getResultCountOfIndex() == 0);
-        assertTrue(index.getTotalEventCount() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
 
         String fileToUpload = joinServerPath(new String[] {
                 service.getSettings().getSplunkHome(),
@@ -613,7 +614,7 @@ public class IndexTest extends SDKTestCase {
     }
     
     private void tryTestSubmitAndClean() throws InterruptedException {
-        assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
         
         // Make sure the index is not empty.
         index.submit("Hello world");
@@ -631,14 +632,14 @@ public class IndexTest extends SDKTestCase {
         // Clean the index and make sure it's empty.
         // NOTE: Average time for this is 65s (!!!). Have seen 110+.
         index.clean(150);
-        assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(getResultCountOfIndex() == 0);
     }
     
     @Test
     public void testUpdateNameShouldFail() {
         try {
             index.update(new Args("name", createTemporaryName()));
-            fail("Expected IllegalStateException.");
+            Assert.fail("Expected IllegalStateException.");
         }
         catch (IllegalStateException e) {
             // Good

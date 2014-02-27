@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class DeploymentClientTest extends SDKTestCase {
@@ -31,13 +32,13 @@ public class DeploymentClientTest extends SDKTestCase {
         // Try to disable & enable with standard methods (which should fail)
         try {
             deploymentClient.disable();
-            fail("Expected disable to fail.");
+            Assert.fail("Expected disable to fail.");
         } catch (UnsupportedOperationException e) {
             // Expected
         }
         try {
             deploymentClient.enable();
-            fail("Expected enable to fail.");
+            Assert.fail("Expected enable to fail.");
         } catch (UnsupportedOperationException e) {
             // Expected
         }
@@ -53,11 +54,11 @@ public class DeploymentClientTest extends SDKTestCase {
         // Probe via setter
         deploymentClient.setTargetUri("1.2.3.4:8080");
         deploymentClient.update();
-        assertEquals("1.2.3.4:8080", deploymentClient.getTargetUri());
+        Assert.assertEquals("1.2.3.4:8080", deploymentClient.getTargetUri());
         
         // Prove via argument map
         deploymentClient.update(new Args("targetUri", uri));
-        assertEquals(uri, deploymentClient.getTargetUri());
+        Assert.assertEquals(uri, deploymentClient.getTargetUri());
         
         // Ensure getters throw no exceptions
         deploymentClient.getServerClasses();

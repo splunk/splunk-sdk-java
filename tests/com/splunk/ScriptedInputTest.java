@@ -16,28 +16,29 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ScriptedInputTest extends SDKTestCase {
     @Test
     public void testMatchNonscriptInputName() {
-        assertFalse(InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "def"));
-        assertTrue(InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "1-[]bc"));
+        Assert.assertFalse(InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "def"));
+        Assert.assertTrue(InputCollection.matchesInputName(InputKind.Tcp, "1-[]bc", "1-[]bc"));
     }
     
     @Test
     public void testMatchScriptInputName() {
-        assertTrue(InputCollection.matchesInputName(
+        Assert.assertTrue(InputCollection.matchesInputName(
                 InputKind.Script, "abc.py", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
         ));
-        assertFalse(InputCollection.matchesInputName(
+        Assert.assertFalse(InputCollection.matchesInputName(
                 InputKind.Script, "abc", "$SPLUNK_HOME/etc/apps/boris/bin/abc.py"
         ));
         
-        assertTrue(InputCollection.matchesInputName(
+        Assert.assertTrue(InputCollection.matchesInputName(
                 InputKind.Script, "abc.py", "$SPLUNK_HOME\\etc\\apps\\boris\\bin\\abc.py"
         ));
-        assertFalse(InputCollection.matchesInputName(
+        Assert.assertFalse(InputCollection.matchesInputName(
                 InputKind.Script, "abc", "$SPLUNK_HOME\\etc\\apps\\boris\\bin\\abc.py"
         ));
     }
@@ -59,7 +60,7 @@ public class ScriptedInputTest extends SDKTestCase {
         inputs.refresh();
         
         ScriptInput input = (ScriptInput)inputs.get("bucketdir.py");
-        assertNotNull(input);
+        Assert.assertNotNull(input);
         
         input.getEndTime();
         input.getGroup();
@@ -67,13 +68,13 @@ public class ScriptedInputTest extends SDKTestCase {
         input.getSource();
         input.getStartTime();
         
-        assertFalse(input.getBoolean("disabled"));
+        Assert.assertFalse(input.getBoolean("disabled"));
         input.setDisabled(true);
         input.update();
-        assertTrue(input.getBoolean("disabled"));
+        Assert.assertTrue(input.getBoolean("disabled"));
         input.setDisabled(false);
         input.update();
-        assertFalse(input.getBoolean("disabled"));
+        Assert.assertFalse(input.getBoolean("disabled"));
         
         input.remove();
     }

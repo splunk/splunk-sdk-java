@@ -19,6 +19,7 @@ package com.splunk;
 import java.lang.reflect.Method;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,17 +66,13 @@ public class PortInputTest extends InputTest {
         super.tearDown();
     }
 
-    @Test
+    @Test(expected=UnsupportedOperationException.class)
     public void testRestrictToHostCausesError() {
-        try {
-            tcpInput.update(new Args("restrictToHost", "boris"));
-            fail("Expected an UnsupportedOperationException.");
-        }
-        catch (UnsupportedOperationException e) {}
+        tcpInput.update(new Args("restrictToHost", "boris"));
     }
 
     @Test
     public void testGetPort() {
-        assertEquals(tcpPort, tcpInput.getPort());
+        Assert.assertEquals(tcpPort, tcpInput.getPort());
     }
 }

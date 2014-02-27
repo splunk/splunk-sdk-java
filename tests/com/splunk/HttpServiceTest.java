@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,42 +48,42 @@ public class HttpServiceTest extends SDKTestCase {
     @Test
     public void testGet() {
         ResponseMessage response = httpService.get("/");
-        assertEquals(200, response.getStatus());
-        assertTrue(firstLineIsXmlDtd(response.getContent()));
+        Assert.assertEquals(200, response.getStatus());
+        Assert.assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 
     @Test
     public void testSend() {
         RequestMessage request = new RequestMessage("GET");
         ResponseMessage response = service.send("/services", request);
-        assertEquals(200, response.getStatus());
-        assertTrue(firstLineIsXmlDtd(response.getContent()));
+        Assert.assertEquals(200, response.getStatus());
+        Assert.assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 
     @Test
     public void testRequestMessage() {
         RequestMessage request = new RequestMessage("GET");
-        assertTrue(request.checkMethod(request.getMethod()));
+        Assert.assertTrue(request.checkMethod(request.getMethod()));
         request.setMethod("POST");
-        assertTrue(request.checkMethod(request.getMethod()));
-        assertEquals(request.getMethod(), "POST");
+        Assert.assertTrue(request.checkMethod(request.getMethod()));
+        Assert.assertEquals(request.getMethod(), "POST");
         
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
             stream.write("HELLO".getBytes("UTF-8"));
         } catch (Exception e) {
-            fail("Exception!");
+            Assert.fail("Exception!");
         }
         
-        assertNull(request.getContent());
+        Assert.assertNull(request.getContent());
         request.setContent(stream);
-        assertNotNull(request.getContent());
+        Assert.assertNotNull(request.getContent());
     }
 
     @Test
     public void testResponseMessage() {
         ResponseMessage response = new ResponseMessage(200);
-        assertEquals(response.getStatus(), 200);
-        assertTrue(response.getHeader() != null);
+        Assert.assertEquals(response.getStatus(), 200);
+        Assert.assertTrue(response.getHeader() != null);
     }
 }

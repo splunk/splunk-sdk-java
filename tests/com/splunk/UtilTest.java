@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -27,16 +27,16 @@ public class UtilTest extends SDKTestCase {
     @Test
     public void testJoin() {
         List<String> emptyList = new ArrayList<String>();
-        assertEquals("", Util.join("/", emptyList));
+        Assert.assertEquals("", Util.join("/", emptyList));
 
         List<String> oneElementList = new ArrayList<String>();
         oneElementList.add("abcd");
-        assertEquals("abcd", Util.join("/", oneElementList));
+        Assert.assertEquals("abcd", Util.join("/", oneElementList));
 
         List<String> fullList = new ArrayList<String>();
         fullList.add("abcd");
         fullList.add("defg");
-        assertEquals(
+        Assert.assertEquals(
                 "abcd/defg",
                 Util.join("/", fullList)
         );
@@ -45,13 +45,13 @@ public class UtilTest extends SDKTestCase {
     @Test
     public void testJoinOnArray() {
         String[] emptyArray = {};
-        assertEquals("", Util.join("/", emptyArray));
+        Assert.assertEquals("", Util.join("/", emptyArray));
 
         String[] oneElementArray = {"abcd"};
-        assertEquals("abcd", Util.join("/", oneElementArray));
+        Assert.assertEquals("abcd", Util.join("/", oneElementArray));
 
         String[] fullArray = {"abcd", "defg"};
-        assertEquals(
+        Assert.assertEquals(
                 "abcd/defg",
                 Util.join("/", fullArray)
         );
@@ -59,7 +59,7 @@ public class UtilTest extends SDKTestCase {
 
     @Test
     public void testSubstringAfterSucceeds() {
-        assertEquals(
+        Assert.assertEquals(
                 "efg",
                 Util.substringAfter("abcdefg", "cd", "boris")
         );
@@ -67,7 +67,7 @@ public class UtilTest extends SDKTestCase {
 
     @Test
     public void testSubstringAfterFails() {
-        assertEquals(
+        Assert.assertEquals(
                 "boris",
                 Util.substringAfter("abcdefg", "pq", "boris")
         );
@@ -76,23 +76,18 @@ public class UtilTest extends SDKTestCase {
     @Test
     public void testArgs() {
         Args args = Args.create();
-        assertTrue(args != null);
-        assertTrue(args instanceof Args);
+        Assert.assertTrue(args != null);
+        Assert.assertTrue(args instanceof Args);
         
-        assertTrue(Args.encode((String)null).equals(""));
+        Assert.assertTrue(Args.encode((String) null).equals(""));
     }
 
-    @Test
+    @Test(expected=Exception.class)
     public void testValue() {
-        assertEquals(1024, Value.toByteCount("1KB"));
-        assertEquals(1024 * 1024, Value.toByteCount("1MB"));
-        assertEquals(1024 * 1024 * 1024, Value.toByteCount("1GB"));
+        Assert.assertEquals(1024, Value.toByteCount("1KB"));
+        Assert.assertEquals(1024 * 1024, Value.toByteCount("1MB"));
+        Assert.assertEquals(1024 * 1024 * 1024, Value.toByteCount("1GB"));
         
-        try {
-            Value.toByteCount("0GGGGB");
-            fail("Should error!");
-        } catch(Exception e) {
-            // nothing
-        }
+        Value.toByteCount("0GGGGB");
     }
 }

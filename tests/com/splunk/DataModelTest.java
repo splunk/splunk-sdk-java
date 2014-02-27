@@ -256,7 +256,7 @@ public class DataModelTest extends SDKTestCase {
 
         DataModelObject object = model.getObject("level_2");
         Assert.assertNotNull(object);
-        Assert.assertEquals(5, object.getFields().size());
+        Assert.assertEquals(5, object.getAutoExtractedFields().size());
 
         Field f = object.getField("_time");
         Assert.assertEquals("BaseEvent", f.getOwnerName());
@@ -284,9 +284,23 @@ public class DataModelTest extends SDKTestCase {
     }
 
     @Test
-    public void testCreateLocalAccelerationJob() {
-        String namespace = createTemporaryName();
+    public void testOutputObjectFields() {
+        DataModelCollection models = service.getDataModels();
 
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
+        DataModel model = models.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("test_data");
+        Assert.assertEquals(5, object.getAutoExtractedFields().size());
+        Assert.assertEquals(10, object.getAllFields().size());
+        Assert.assertTrue(object.containsField("has_boris"));
+        Assert.assertTrue(object.containsField("_time"));
+    }
+
+
+    @Test
+    public void testCreateLocalAccelerationJob() {
         DataModelCollection models = service.getDataModels();
 
         String dataModelName = createTemporaryName();
@@ -297,7 +311,7 @@ public class DataModelTest extends SDKTestCase {
         DataModelObject object = model.getObject("level_2");
         Assert.assertNotNull(object);
 
-        final Job accelerationJob = object.createLocalAccelerationJob(namespace);
+        final Job accelerationJob = object.createLocalAccelerationJob();
 
         try {
             assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -308,7 +322,7 @@ public class DataModelTest extends SDKTestCase {
             });
 
             Assert.assertEquals(
-                    "| datamodel " + dataModelName + " level_2 search | tscollect namespace=" + namespace,
+                    "| datamodel " + dataModelName + " level_2 search | tscollect",
                     accelerationJob.getSearch()
             );
         } finally {
@@ -318,8 +332,6 @@ public class DataModelTest extends SDKTestCase {
 
     @Test
     public void testCreateLocalAccelerationJobWithEarliestTime() {
-        String namespace = createTemporaryName();
-
         DataModelCollection models = service.getDataModels();
 
         String dataModelName = createTemporaryName();
@@ -330,7 +342,7 @@ public class DataModelTest extends SDKTestCase {
         DataModelObject object = model.getObject("level_2");
         Assert.assertNotNull(object);
 
-        final Job accelerationJob = object.createLocalAccelerationJob(namespace, "-1d");
+        final Job accelerationJob = object.createLocalAccelerationJob("-1d");
         try {
             assertEventuallyTrue(new EventuallyTrueBehavior() {
                 @Override
@@ -340,7 +352,7 @@ public class DataModelTest extends SDKTestCase {
             });
 
             Assert.assertEquals(
-                    "| datamodel " + dataModelName + " level_2 search | tscollect namespace=" + namespace,
+                    "| datamodel " + dataModelName + " level_2 search | tscollect",
                     accelerationJob.getSearch()
             );
         } finally {
@@ -373,8 +385,7 @@ public class DataModelTest extends SDKTestCase {
 
         DataModelObject object = model.getObject("level_2");
 
-        String namespace = createTemporaryName();
-        final Job accelerationJob = object.createLocalAccelerationJob(namespace);
+        final Job accelerationJob = object.createLocalAccelerationJob();
 
         try {
             assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -384,8 +395,7 @@ public class DataModelTest extends SDKTestCase {
                 }
             });
 
-            String query = object.getAcceleratedQuery(namespace);
-            Job job = service.getJobs().create(query);
+            Job job = service.getJobs().create("tstats count from sid=" + accelerationJob.getSid());
             job.cancel();
         } finally {
             accelerationJob.cancel();

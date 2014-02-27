@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SettingsTest extends SDKTestCase {
@@ -51,19 +52,19 @@ public class SettingsTest extends SDKTestCase {
             uncheckedSplunkRestart();
             waitForSplunkwebUp(originalHttpPort);
         }
-        assertTrue(isPortInUse(originalHttpPort));
+        Assert.assertTrue(isPortInUse(originalHttpPort));
 
         int newPort = originalHttpPort + 1;
         while (isPortInUse(newPort)) {
             newPort++;
         }
         changeHttpPort(newPort);
-        assertTrue(isPortInUse(newPort));
-        assertFalse(isPortInUse(originalHttpPort));
+        Assert.assertTrue(isPortInUse(newPort));
+        Assert.assertFalse(isPortInUse(originalHttpPort));
         
         changeHttpPort(originalHttpPort);
-        assertTrue(isPortInUse(originalHttpPort));
-        assertFalse(isPortInUse(newPort));
+        Assert.assertTrue(isPortInUse(originalHttpPort));
+        Assert.assertFalse(isPortInUse(newPort));
     }
 
     private void changeHttpPort(int newHttpPort) {
@@ -78,7 +79,7 @@ public class SettingsTest extends SDKTestCase {
         waitForSplunkwebUp(newHttpPort);
         
         settings = service.getSettings();
-        assertEquals(newHttpPort, settings.getHttpPort());
+        Assert.assertEquals(newHttpPort, settings.getHttpPort());
     }
     
     private void waitForSplunkwebUp(final int httpPort) {
@@ -88,7 +89,7 @@ public class SettingsTest extends SDKTestCase {
                 tries = 20;
                 pauseTime = 1000;
             }
-            
+
             public boolean predicate() {
                 return isPortInUse(httpPort);
             }
@@ -104,7 +105,7 @@ public class SettingsTest extends SDKTestCase {
         settings.update();
         settings.refresh();
         
-        assertEquals(29111, settings.getMgmtPort());
+        Assert.assertEquals(29111, settings.getMgmtPort());
         
         settings.setMgmtPort(managementPort);
         settings.update();
@@ -120,7 +121,7 @@ public class SettingsTest extends SDKTestCase {
         settings.update();
         settings.refresh();
         
-        assertEquals(key + "_foo", settings.getPass4SymmKey());
+        Assert.assertEquals(key + "_foo", settings.getPass4SymmKey());
         
         settings.setPasswordSymmKey(key);
         settings.update();
@@ -152,12 +153,12 @@ public class SettingsTest extends SDKTestCase {
         
         clearRestartMessage();
 
-        assertEquals(!originalSSL, settings.getEnableSplunkWebSSL());
-        assertEquals("sdk-host", settings.getHost());
-        assertEquals(originalMinSpace-100, settings.getMinFreeSpace());
-        assertEquals("sdk-test-name", settings.getServerName());
-        assertEquals("2h", settings.getSessionTimeout());
-        //assertEquals(settings.getStartWebServer(), !originalStartWeb);
+        Assert.assertEquals(!originalSSL, settings.getEnableSplunkWebSSL());
+        Assert.assertEquals("sdk-host", settings.getHost());
+        Assert.assertEquals(originalMinSpace - 100, settings.getMinFreeSpace());
+        Assert.assertEquals("sdk-test-name", settings.getServerName());
+        Assert.assertEquals("2h", settings.getSessionTimeout());
+        //Assert.assertEquals(settings.getStartWebServer(), !originalStartWeb);
 
         // Restore
         settings.setEnableSplunkWebSSL(originalSSL);
@@ -170,11 +171,11 @@ public class SettingsTest extends SDKTestCase {
 
         clearRestartMessage();
 
-        assertEquals(originalSSL, settings.getEnableSplunkWebSSL());
-        assertEquals(originalHost, settings.getHost());
-        assertEquals(originalMinSpace, settings.getMinFreeSpace());
-        assertEquals(originalServerName, settings.getServerName());
-        assertEquals(originalTimeout, settings.getSessionTimeout());
-        assertEquals(originalStartWeb, settings.getStartWebServer());
+        Assert.assertEquals(originalSSL, settings.getEnableSplunkWebSSL());
+        Assert.assertEquals(originalHost, settings.getHost());
+        Assert.assertEquals(originalMinSpace, settings.getMinFreeSpace());
+        Assert.assertEquals(originalServerName, settings.getServerName());
+        Assert.assertEquals(originalTimeout, settings.getSessionTimeout());
+        Assert.assertEquals(originalStartWeb, settings.getStartWebServer());
     }
 }

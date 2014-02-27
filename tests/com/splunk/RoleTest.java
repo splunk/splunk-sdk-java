@@ -19,6 +19,7 @@ package com.splunk;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class RoleTest extends SDKTestCase {
@@ -41,20 +42,20 @@ public class RoleTest extends SDKTestCase {
             role.update();
             role.refresh();
             
-            assertEquals(new String[] { "admin_all_objects" }, role.getCapabilities());
-            assertEquals("search", role.getDefaultApp());
-            assertEquals(new String[] { "user" }, role.getImportedRoles());
-            assertEquals(9000, role.getSearchDiskQuota());
-            assertEquals("*", role.getSearchFilter());
-            assertEquals(new String[] { "*" }, role.getSearchIndexesAllowed());
+            Assert.assertEquals(new String[] { "admin_all_objects" }, role.getCapabilities());
+            Assert.assertEquals("search", role.getDefaultApp());
+            Assert.assertArrayEquals(new String[]{"user"}, role.getImportedRoles());
+            Assert.assertEquals(9000, role.getSearchDiskQuota());
+            Assert.assertEquals("*", role.getSearchFilter());
+            Assert.assertArrayEquals(new String[]{"*"}, role.getSearchIndexesAllowed());
             List<String> defaultIndexes = Arrays.asList(role.getSearchIndexesDefault());
-            assertEquals(2, defaultIndexes.size());
-            assertTrue(defaultIndexes.contains("main"));
-            assertTrue(defaultIndexes.contains("_internal"));
-            assertEquals(49, role.getSearchJobsQuota());
+            Assert.assertEquals(2, defaultIndexes.size());
+            Assert.assertTrue(defaultIndexes.contains("main"));
+            Assert.assertTrue(defaultIndexes.contains("_internal"));
+            Assert.assertEquals(49, role.getSearchJobsQuota());
             
-            assertEquals(99, role.getRealTimeSearchJobsQuota());
-            assertEquals(99, role.getSearchTimeWindow());
+            Assert.assertEquals(99, role.getRealTimeSearchJobsQuota());
+            Assert.assertEquals(99, role.getSearchTimeWindow());
         }
         finally {
             role.remove();
@@ -73,10 +74,10 @@ public class RoleTest extends SDKTestCase {
             role.update();
             role.refresh();
             
-            assertEquals(new String[] { "admin_all_objects" }, role.getCapabilities());
-            assertEquals(new String[] { "user" }, role.getImportedRoles());
-            assertEquals(new String[] { "*" }, role.getSearchIndexesAllowed());
-            assertEquals(new String[] { "main" }, role.getSearchIndexesDefault());
+            Assert.assertArrayEquals(new String[] { "admin_all_objects" }, role.getCapabilities());
+            Assert.assertArrayEquals(new String[] { "user" }, role.getImportedRoles());
+            Assert.assertArrayEquals(new String[] { "*" }, role.getSearchIndexesAllowed());
+            Assert.assertArrayEquals(new String[] { "main" }, role.getSearchIndexesDefault());
         }
         finally {
             role.remove();
@@ -98,15 +99,15 @@ public class RoleTest extends SDKTestCase {
              *       future, this test should be rewritten to lookup the values
              *       from the "user" role to determine the expected values here.
              */
-            assertTrue(Arrays.asList(role.getImportedCapabilities()).contains(
+            Assert.assertTrue(Arrays.asList(role.getImportedCapabilities()).contains(
                     "change_own_password"));
-            assertEquals(6, role.getImportedRealTimeSearchJobsQuota());
-            assertEquals(100, role.getImportedSearchDiskQuota());
-            assertEquals(null, role.getImportedSearchFilter());
-            assertEquals(new String[] { "*" }, role.getImportedIndexesAllowed());
-            assertEquals(new String[] { "main" }, role.getImportedIndexesDefault());
-            assertEquals(3, role.getImportedSearchJobsQuota());
-            assertEquals(-1, role.getImportedSearchTimeWindow());
+            Assert.assertEquals(6, role.getImportedRealTimeSearchJobsQuota());
+            Assert.assertEquals(100, role.getImportedSearchDiskQuota());
+            Assert.assertEquals(null, role.getImportedSearchFilter());
+            Assert.assertArrayEquals(new String[] { "*" }, role.getImportedIndexesAllowed());
+            Assert.assertArrayEquals(new String[] { "main" }, role.getImportedIndexesDefault());
+            Assert.assertEquals(3, role.getImportedSearchJobsQuota());
+            Assert.assertEquals(-1, role.getImportedSearchTimeWindow());
         }
         finally {
             role.remove();

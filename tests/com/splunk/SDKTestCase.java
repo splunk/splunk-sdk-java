@@ -18,6 +18,7 @@ package com.splunk;
 
 import junit.framework.TestCase;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
 import java.io.*;
@@ -41,7 +42,7 @@ import java.util.*;
  * @@After:
  *   - Logout the Service object.
  */
-public abstract class SDKTestCase extends TestCase {
+public abstract class SDKTestCase {
     protected static final boolean WORKAROUND_KNOWN_BUGS = true;
     private static final boolean VERBOSE_PORT_SCAN = false;
 
@@ -64,10 +65,7 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     @Before
-    @Override
     public void setUp() throws Exception {
-        super.setUp();
-
         // If using Charles Proxy for debugging, uncomment these lines.
         //System.setProperty("https.proxyHost", "127.0.0.1");
         //System.setProperty("https.proxyPort", "8888");
@@ -85,10 +83,9 @@ public abstract class SDKTestCase extends TestCase {
     }
 
     @After
-    @Override
     public void tearDown() throws Exception {
         if (restartRequired()) {
-            fail("Test left Splunk in a state that required restart.");
+            Assert.fail("Test left Splunk in a state that required restart.");
         }
 
         // Cannot delete applications in Splunk 4.2.
@@ -110,8 +107,6 @@ public abstract class SDKTestCase extends TestCase {
                 clearRestartMessage();
             }
         }
-
-        super.tearDown();
     }
     
     // === Temporary Names ===
@@ -151,7 +146,7 @@ public abstract class SDKTestCase extends TestCase {
         }
 
         InputStream input = ResourceRoot.class.getResourceAsStream(path);
-        assertNotNull("Could not open " + path, input);
+        Assert.assertNotNull("Could not open " + path, input);
         return input;
     }
 
@@ -183,7 +178,7 @@ public abstract class SDKTestCase extends TestCase {
                 } catch (InterruptedException e) {}
             }
         }
-        fail(behavior.timeoutMessage);
+        Assert.fail(behavior.timeoutMessage);
         return false;
     }
     
@@ -264,7 +259,7 @@ public abstract class SDKTestCase extends TestCase {
 
     public void splunkRestart() {
         if (!restartRequired()) {
-            fail("Asked to restart Splunk when no restart was required.");
+            Assert.fail("Asked to restart Splunk when no restart was required.");
         }
         uncheckedSplunkRestart();
     }
@@ -272,7 +267,7 @@ public abstract class SDKTestCase extends TestCase {
     public void uncheckedSplunkRestart() {
         ResponseMessage response = service.restart();
         if (response.getStatus() != 200) {
-            fail("Restart command failed: " + response.getContent());
+            Assert.fail("Restart command failed: " + response.getContent());
         }
         
         // (This status will be cleared when Splunk actually restarts.)
@@ -343,7 +338,7 @@ public abstract class SDKTestCase extends TestCase {
     }
     
     protected static void assertEquals(String[] a1, String[] a2) {
-        assertEquals(Arrays.asList(a1), Arrays.asList(a2));
+        Assert.assertArrayEquals(a1, a2);
     }
 
     protected static String locateSystemLog() {
@@ -360,7 +355,7 @@ public abstract class SDKTestCase extends TestCase {
             throw new RuntimeException("OS " + osName + " not recognized");
         }
 
-        assertNotNull(filename);
+        Assert.assertNotNull(filename);
         return filename;
     }
     
@@ -393,7 +388,7 @@ public abstract class SDKTestCase extends TestCase {
                     lineReader.readLine()
             );
         } catch (IOException e) {
-            fail(e.toString());
+            Assert.fail(e.toString());
             return false;
         }
     }

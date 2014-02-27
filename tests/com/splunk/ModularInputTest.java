@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ModularInputTest extends InputTest {
@@ -37,7 +38,7 @@ public class ModularInputTest extends InputTest {
                 hasTest2 = true;
             }
         }
-        assertTrue(hasTest2);
+        Assert.assertTrue(hasTest2);
     }
     
     @Test
@@ -52,7 +53,7 @@ public class ModularInputTest extends InputTest {
             inputs.refresh();
         }
 
-        assertFalse(inputs.isEmpty());
+        Assert.assertFalse(inputs.isEmpty());
         
         String inputName = createTemporaryName();
         inputs.create(
@@ -67,6 +68,6 @@ public class ModularInputTest extends InputTest {
                 inputFound = true;
             }
         }
-        assertTrue("Modular input did not show up in list.", inputFound);
+        Assert.assertTrue("Modular input did not show up in list.", inputFound);
     }
 }

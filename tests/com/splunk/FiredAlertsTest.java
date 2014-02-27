@@ -17,6 +17,7 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class FiredAlertsTest extends SDKTestCase {
         super.setUp();
         
         indexName = createTemporaryName();
-        assertFalse(service.getIndexes().containsKey(indexName));
+        Assert.assertFalse(service.getIndexes().containsKey(indexName));
         
         index = service.getIndexes().create(indexName);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -78,7 +79,7 @@ public class FiredAlertsTest extends SDKTestCase {
 
     @Test
     public void testAlertsShowUp() {
-        assertFalse(
+        Assert.assertFalse(
                 "Found alerts before sending any events.",
                 service.getFiredAlertGroups().containsKey(savedSearchName)
         );
@@ -111,8 +112,8 @@ public class FiredAlertsTest extends SDKTestCase {
         
         FiredAlertGroup firedAlertGroup =
                 service.getFiredAlertGroups().get(savedSearchName);
-        assertNotNull(firedAlertGroup);
-        assertEquals(1, firedAlertGroup.getAlerts().size());
+        Assert.assertNotNull(firedAlertGroup);
+        Assert.assertEquals(1, firedAlertGroup.getAlerts().size());
 
         for (FiredAlert firedAlert : firedAlertGroup.getAlerts().values()) {
             firedAlert.getAction();

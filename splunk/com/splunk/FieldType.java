@@ -22,7 +22,33 @@ import java.util.Map;
 /**
  * Represents the type of a field in a data model object.
  */
-public enum FieldType { STRING, NUMBER, BOOLEAN, IPV4, TIMESTAMP, CHILDCOUNT, OBJECTCOUNT, UNDEFINED;
+public enum FieldType {
+    STRING {
+        public String toString() { return "string"; }
+    },
+    NUMBER {
+        public String toString() { return "number"; }
+    },
+    BOOLEAN {
+        public String toString() { return "boolean"; }
+    },
+    IPV4 {
+        public String toString() { return "ipv4"; }
+    },
+    TIMESTAMP {
+        public String toString() { return "timestamp"; }
+    },
+    CHILDCOUNT {
+        public String toString() { return "childcount"; }
+    },
+    OBJECTCOUNT {
+        public String toString() { return "objectcount"; }
+    },
+    UNDEFINED {
+        public String toString() {
+            throw new UnsupportedOperationException("No serialization for undefined field type.");
+        }
+    };
 
     private final static Map<String, FieldType> typeLookup = new HashMap<String, FieldType>() {{
         put("string", STRING);

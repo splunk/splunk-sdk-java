@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LicenseTest extends SDKTestCase {
@@ -46,9 +48,9 @@ public class LicenseTest extends SDKTestCase {
     public void testStacks() throws Exception {
         EntityCollection<LicenseStack> stacks = service.getLicenseStacks();
         for (LicenseStack stack : stacks.values()) {
-            assertTrue(stack.getQuota() >= 0);
-            assertTrue(!stack.getType().isEmpty());
-            assertTrue(!stack.getLabel().isEmpty());
+            Assert.assertTrue(stack.getQuota() >= 0);
+            Assert.assertTrue(!stack.getType().isEmpty());
+            Assert.assertTrue(!stack.getLabel().isEmpty());
         }
     }
     
@@ -58,18 +60,18 @@ public class LicenseTest extends SDKTestCase {
 
         // Test for sane data in licenses
         for (License license: licenses.values()) {
-            assertTrue(license.getCreationTime().after(new Date(0)));
-            assertTrue(license.getExpirationTime().after(new Date(0)));
-            assertTrue(license.getQuota() > 0);
-            assertEquals(64, license.getLicenseHash().length());
+            Assert.assertTrue(license.getCreationTime().after(new Date(0)));
+            Assert.assertTrue(license.getExpirationTime().after(new Date(0)));
+            Assert.assertTrue(license.getQuota() > 0);
+            Assert.assertEquals(64, license.getLicenseHash().length());
             for (String feature: license.getFeatures()) {
-                assertTrue(KNOWN_FEATURES.contains(feature));
+                Assert.assertTrue(KNOWN_FEATURES.contains(feature));
             }
-            assertTrue(KNOWN_GROUP_IDS.contains(license.getGroupId()));
-            assertTrue(license.getLabel().length() > 0);
-            assertNotSame(0, license.getMaxViolations());
-            assertTrue(KNOWN_STATUSES.contains(license.getStatus()));
-            assertTrue(KNOWN_TYPES.contains(license.getType()));
+            Assert.assertTrue(KNOWN_GROUP_IDS.contains(license.getGroupId()));
+            Assert.assertTrue(license.getLabel().length() > 0);
+            Assert.assertNotSame(0, license.getMaxViolations());
+            Assert.assertTrue(KNOWN_STATUSES.contains(license.getStatus()));
+            Assert.assertTrue(KNOWN_TYPES.contains(license.getType()));
             license.getSourceTypes();
             license.getStackId();
             license.getWindowPeriod();
@@ -83,18 +85,18 @@ public class LicenseTest extends SDKTestCase {
         if (licenses.containsKey("sdk-test")) {
             licenses.remove("sdk-test");
         }
-        assertFalse(licenses.containsKey("sdk-test"));
+        Assert.assertFalse(licenses.containsKey("sdk-test"));
 
         String licenseKey = "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101";
         if (licenses.containsKey(licenseKey)) {
             licenses.remove(licenseKey);
         }
-        assertFalse(licenses.containsKey(licenseKey));
+        Assert.assertFalse(licenses.containsKey(licenseKey));
         
         // Read test license from disk
         byte[] licensePayload = new byte[2048];
         InputStream licenseStream = getClass().getResourceAsStream("splunk.license");
-        assertNotNull("Could not find splunk.license.", licenseStream);
+        Assert.assertNotNull("Could not find splunk.license.", licenseStream);
         try {
             licenseStream.read(licensePayload);
         }
@@ -106,9 +108,9 @@ public class LicenseTest extends SDKTestCase {
         licenses.create("sdk-test", new Args("payload", new String(licensePayload)));
         
         // Remove
-        assertTrue(licenses.containsKey(licenseKey));
+        Assert.assertTrue(licenses.containsKey(licenseKey));
         licenses.remove(licenseKey);
-        assertFalse(licenses.containsKey(licenseKey));
+        Assert.assertFalse(licenses.containsKey(licenseKey));
         
         clearRestartMessage();
     }

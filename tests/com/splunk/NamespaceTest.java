@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.URLEncoder;
@@ -23,10 +24,10 @@ import java.net.URLEncoder;
 public class NamespaceTest extends SDKTestCase {
     @Test
     public void testStaticNamespace() {
-        assertEquals(
+        Assert.assertEquals(
                 "This test is not valid when Service owner is overridden.",
                 null, service.getOwner());
-        assertEquals(
+        Assert.assertEquals(
                 "This test is not valid when Service app is overridden.",
                 null, service.getApp());
         
@@ -34,126 +35,126 @@ public class NamespaceTest extends SDKTestCase {
 
         // syntactic tests
         namespace.clear();
-        assertEquals("/services/",
-            service.fullpath("", null));
+        Assert.assertEquals("/services/",
+                service.fullpath("", null));
 
         namespace.clear();
         namespace.put("owner", "bill@some domain\u0150");
         namespace.put("app", "my! app!@");
-        assertEquals("/servicesNS/bill%40some+domain%C5%90/my%21+app%21%40/",
+        Assert.assertEquals("/servicesNS/bill%40some+domain%C5%90/my%21+app%21%40/",
                 service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/Bob/-/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/Bob/-/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("app", "search");
-        assertEquals("/servicesNS/-/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/-/search/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/Bob/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/Bob/search/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "user");
-        assertEquals("/servicesNS/-/-/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/-/-/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/Bob/-/",
-            service.fullpath("", namespace));
-
-        namespace.clear();
-        namespace.put("sharing", "user");
-        namespace.put("app", "search");
-        assertEquals("/servicesNS/-/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/Bob/-/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "user");
         namespace.put("app", "search");
+        Assert.assertEquals("/servicesNS/-/search/",
+                service.fullpath("", namespace));
+
+        namespace.clear();
+        namespace.put("sharing", "user");
+        namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/Bob/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/Bob/search/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
-        assertEquals("/servicesNS/nobody/-/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/-/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/nobody/-/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/-/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("app", "search");
-        assertEquals("/servicesNS/nobody/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/search/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "app");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/nobody/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/search/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
-        assertEquals("/servicesNS/nobody/-/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/-/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/nobody/-/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/-/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("app", "search");
-        assertEquals("/servicesNS/nobody/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/search/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "global");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/nobody/search/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/search/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
-        assertEquals("/servicesNS/nobody/system/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/system/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/nobody/system/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/system/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("app", "search");
-        assertEquals("/servicesNS/nobody/system/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/system/",
+                service.fullpath("", namespace));
 
         namespace.clear();
         namespace.put("sharing", "system");
         namespace.put("app", "search");
         namespace.put("owner", "Bob");
-        assertEquals("/servicesNS/nobody/system/",
-            service.fullpath("", namespace));
+        Assert.assertEquals("/servicesNS/nobody/system/",
+                service.fullpath("", namespace));
     }
 
     @Test
@@ -172,9 +173,9 @@ public class NamespaceTest extends SDKTestCase {
         UserCollection users = service.getUsers();
         if (users.containsKey(username))
             users.remove(username);
-        assertFalse(users.containsKey(username));
+        Assert.assertFalse(users.containsKey(username));
         users.create(username, password, "user");
-        assertTrue(users.containsKey(username));
+        Assert.assertTrue(users.containsKey(username));
 
         // get saved searches for our new namespace, clean to make sure
         // we remove, before we create one.
@@ -183,18 +184,18 @@ public class NamespaceTest extends SDKTestCase {
 
         if (savedSearches.containsKey(savedSearch))
             savedSearches.remove(savedSearch);
-        assertFalse(savedSearches.containsKey(savedSearch));
+        Assert.assertFalse(savedSearches.containsKey(savedSearch));
 
         savedSearches.create(savedSearch, searchString);
-        assertTrue(savedSearches.containsKey(savedSearch));
+        Assert.assertTrue(savedSearches.containsKey(savedSearch));
 
         // remove saved search
         savedSearches.remove(savedSearch);
-        assertFalse(savedSearches.containsKey(savedSearch));
+        Assert.assertFalse(savedSearches.containsKey(savedSearch));
 
         // remove user
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        Assert.assertFalse(users.containsKey(username));
     }
 
     // Check that a saved search created in one user namespace is invisible in another.
@@ -225,10 +226,10 @@ public class NamespaceTest extends SDKTestCase {
         try {
             SavedSearch ss = service.getSavedSearches(namespace).create(savedSearchName, query);
 
-            assertTrue(service.getSavedSearches(namespace).containsKey(savedSearchName));
-            assertFalse(service.getSavedSearches(otherUserNamespace).containsKey(savedSearchName));
-            assertFalse(service.getSavedSearches(appNamespace).containsKey(savedSearchName));
-            assertTrue(service.getSavedSearches(wildcardUserNamespace).containsKey(savedSearchName));
+            Assert.assertTrue(service.getSavedSearches(namespace).containsKey(savedSearchName));
+            Assert.assertFalse(service.getSavedSearches(otherUserNamespace).containsKey(savedSearchName));
+            Assert.assertFalse(service.getSavedSearches(appNamespace).containsKey(savedSearchName));
+            Assert.assertTrue(service.getSavedSearches(wildcardUserNamespace).containsKey(savedSearchName));
         } finally {
             if (service.getSavedSearches(namespace).containsKey(savedSearchName)) {
                 service.getSavedSearches(namespace).remove(savedSearchName);
@@ -262,12 +263,12 @@ public class NamespaceTest extends SDKTestCase {
             SavedSearch ss1 = service.getSavedSearches(namespace1).create(savedSearchName, query1);
             SavedSearch ss2 = service.getSavedSearches(namespace2).create(savedSearchName, query2);
 
-            assertEquals(query1, service.getSavedSearches(namespace1).get(savedSearchName).getSearch());
-            assertEquals(query2, service.getSavedSearches(namespace2).get(savedSearchName).getSearch());
+            Assert.assertEquals(query1, service.getSavedSearches(namespace1).get(savedSearchName).getSearch());
+            Assert.assertEquals(query2, service.getSavedSearches(namespace2).get(savedSearchName).getSearch());
 
             try {
                 service.getSavedSearches(wildcardNamespace).get(savedSearchName).getSearch();
-                fail("Expected SplunkException about multiple keys.");
+                Assert.fail("Expected SplunkException about multiple keys.");
             } catch (SplunkException e) {
 
             }

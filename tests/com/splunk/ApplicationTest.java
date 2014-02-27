@@ -17,6 +17,7 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -76,13 +77,13 @@ public class ApplicationTest extends SDKTestCase {
         // Newly created applications have no setup.
         try {
             application.setup().getSetupXml();
-            fail("Expected HTTP 500.");
+            Assert.fail("Expected HTTP 500.");
         }
         catch (HttpException e) {
-            assertEquals(500, e.getStatus());
-            assertTrue(
+            Assert.assertEquals(500, e.getStatus());
+            Assert.assertTrue(
                     e.getMessage().contains("does not exits") ||    // 4.3.2
-                    e.getMessage().contains("does not exist"));     // 5.0rc5
+                            e.getMessage().contains("does not exist"));     // 5.0rc5
         }
     }
 
@@ -93,48 +94,48 @@ public class ApplicationTest extends SDKTestCase {
             return;
         }
         installApplicationFromTestData("has_setup_xml");
-        assertTrue(service.getApplications().containsKey("has_setup_xml"));
+        Assert.assertTrue(service.getApplications().containsKey("has_setup_xml"));
         Application applicationWithSetupXml = service.getApplications().get("has_setup_xml");
         
         ApplicationSetup applicationSetup = applicationWithSetupXml.setup();
-        assertEquals("has_setup_xml", applicationSetup.getName());
-        assertFalse(applicationSetup.getRefresh());
+        Assert.assertEquals("has_setup_xml", applicationSetup.getName());
+        Assert.assertFalse(applicationSetup.getRefresh());
         
         String setupXml = applicationSetup.getSetupXml();
         Document parsedSetupXml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
             new ByteArrayInputStream(setupXml.getBytes("UTF8")));
         parsedSetupXml.getDocumentElement().normalize();
         
-        assertEquals(parsedSetupXml.getDocumentElement().getNodeName(), "SetupInfo");
+        Assert.assertEquals(parsedSetupXml.getDocumentElement().getNodeName(), "SetupInfo");
         
         NodeList blocks = parsedSetupXml.getDocumentElement().getElementsByTagName("block");
-        assertEquals(1, blocks.getLength());
+        Assert.assertEquals(1, blocks.getLength());
         Node block = blocks.item(0);
-        assertEquals("block", block.getNodeName());
+        Assert.assertEquals("block", block.getNodeName());
     }
 
     @Test
     public void testArchive() {
         ApplicationArchive archive = application.archive();
-        assertEquals(applicationName, archive.getAppName());
+        Assert.assertEquals(applicationName, archive.getAppName());
         {
             String filePath = archive.getFilePath();
-            assertTrue(filePath.contains("/") || filePath.contains("\\"));
-            assertTrue(filePath.endsWith(applicationName + ".spl"));
+            Assert.assertTrue(filePath.contains("/") || filePath.contains("\\"));
+            Assert.assertTrue(filePath.endsWith(applicationName + ".spl"));
         }
-        assertFalse(archive.getRefresh());
-        assertTrue(archive.getUrl() != null);
+        Assert.assertFalse(archive.getRefresh());
+        Assert.assertTrue(archive.getUrl() != null);
     }
 
     @Test
     public void testFields() {
         // Initially, should be empty.
-        assertEquals(null, application.getAuthor());
-        assertTrue(application.getCheckForUpdates());
-        assertFalse(application.isConfigured());
-        assertTrue(application.isVisible());
-        assertFalse(application.stateChangeRequiresRestart());
-        assertFalse(application.getRefresh());
+        Assert.assertEquals(null, application.getAuthor());
+        Assert.assertTrue(application.getCheckForUpdates());
+        Assert.assertFalse(application.isConfigured());
+        Assert.assertTrue(application.isVisible());
+        Assert.assertFalse(application.stateChangeRequiresRestart());
+        Assert.assertFalse(application.getRefresh());
 
         String authorString = "Boris the mad baboon";
         application.setAuthor(authorString);
@@ -151,13 +152,13 @@ public class ApplicationTest extends SDKTestCase {
         application.update();
         application.refresh();
 
-        assertEquals(authorString, application.getAuthor());
-        assertFalse(application.getCheckForUpdates());
-        assertEquals(descriptionString, application.getDescription());
-        assertEquals(labelString, application.getLabel());
-        assertEquals(versionString, application.getVersion());
-        assertTrue(application.isConfigured());
-        assertFalse(application.isVisible());
+        Assert.assertEquals(authorString, application.getAuthor());
+        Assert.assertFalse(application.getCheckForUpdates());
+        Assert.assertEquals(descriptionString, application.getDescription());
+        Assert.assertEquals(labelString, application.getLabel());
+        Assert.assertEquals(versionString, application.getVersion());
+        Assert.assertTrue(application.isConfigured());
+        Assert.assertFalse(application.isVisible());
     }
 
     @Test
@@ -195,17 +196,17 @@ public class ApplicationTest extends SDKTestCase {
             
             // Verify expected properties of the update
             ApplicationUpdate update = gettingStarted.getUpdate();
-            assertEquals("315d8e92a0227aa75bbca1b8f33b4970", update.getChecksum());
-            assertEquals("md5", update.getChecksumType());
-            assertEquals("https://apps.splunk.com/app/1541/", update.getHomepage());
-            assertEquals(39879, update.getSize());
-            assertEquals("wc - word count", update.getUpdateName());
-            assertEquals(
+            Assert.assertEquals("315d8e92a0227aa75bbca1b8f33b4970", update.getChecksum());
+            Assert.assertEquals("md5", update.getChecksumType());
+            Assert.assertEquals("https://apps.splunk.com/app/1541/", update.getHomepage());
+            Assert.assertEquals(39879, update.getSize());
+            Assert.assertEquals("wc - word count", update.getUpdateName());
+            Assert.assertEquals(
                     "https://apps.splunk.com/app/1541/package/1.0/none/",
                     update.getAppUrl()
             );
-            assertEquals("1.0", update.getVersion());
-            assertFalse(update.isImplicitIdRequired());
+            Assert.assertEquals("1.0", update.getVersion());
+            Assert.assertFalse(update.isImplicitIdRequired());
         } finally {
             // Restore the app's original version
             gettingStarted.setVersion(originalVersion);
@@ -216,14 +217,14 @@ public class ApplicationTest extends SDKTestCase {
     @Test
     public void testEmptyUpdate() {
         ApplicationUpdate update = application.getUpdate();
-        assertNull(update.getChecksum());
-        assertNull(update.getChecksumType());
-        assertNull(update.getHomepage());
-        assertEquals(-1, update.getSize());
-        assertNull(update.getUpdateName());
-        assertNull(update.getAppUrl());
-        assertNull(update.getVersion());
-        assertFalse(update.isImplicitIdRequired());
+        Assert.assertNull(update.getChecksum());
+        Assert.assertNull(update.getChecksumType());
+        Assert.assertNull(update.getHomepage());
+        Assert.assertEquals(-1, update.getSize());
+        Assert.assertNull(update.getUpdateName());
+        Assert.assertNull(update.getAppUrl());
+        Assert.assertNull(update.getVersion());
+        Assert.assertFalse(update.isImplicitIdRequired());
     }
 
     @Test
@@ -234,12 +235,12 @@ public class ApplicationTest extends SDKTestCase {
                 found = true;
             }
         }
-        assertTrue(found);
+        Assert.assertTrue(found);
     }
 
     @Test
     public void testContains() {
-        assertTrue(service.getApplications().containsKey(applicationName));
+        Assert.assertTrue(service.getApplications().containsKey(applicationName));
     }
 
 }

@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class OutputGroupTest extends SDKTestCase {
@@ -42,7 +43,7 @@ public class OutputGroupTest extends SDKTestCase {
                 outputGroup.update();
     
                 String[] updatedServers = outputGroup.getServers();
-                assertTrue(contains(updatedServers, "1.1.1.1:9997"));
+                Assert.assertTrue(contains(updatedServers, "1.1.1.1:9997"));
             }
 
             // Restore original values

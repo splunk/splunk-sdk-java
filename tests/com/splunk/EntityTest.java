@@ -18,6 +18,7 @@ package com.splunk;
 
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class EntityTest extends SDKTestCase {
@@ -30,41 +31,41 @@ public class EntityTest extends SDKTestCase {
     public void testMapOverrides() {
         Entity entity = service.getJobs().create(QUERY);
         
-        assertFalse(entity.isEmpty());
-        assertEquals(VALUE, entity.get(KEY));
-        assertTrue(entity.containsKey(KEY));
-        assertTrue(entity.containsValue(VALUE));
-        assertTrue(entity.keySet().contains(KEY));
-        assertTrue(entity.values().contains(VALUE));
+        Assert.assertFalse(entity.isEmpty());
+        Assert.assertEquals(VALUE, entity.get(KEY));
+        Assert.assertTrue(entity.containsKey(KEY));
+        Assert.assertTrue(entity.containsValue(VALUE));
+        Assert.assertTrue(entity.keySet().contains(KEY));
+        Assert.assertTrue(entity.values().contains(VALUE));
         for (Map.Entry<String, Object> e : entity.entrySet()) {
-            assertTrue(entity.containsKey(e.getKey()));
-            assertTrue(entity.containsValue(e.getValue()));
+            Assert.assertTrue(entity.containsKey(e.getKey()));
+            Assert.assertTrue(entity.containsValue(e.getValue()));
         }
         
         try {
             entity.put(null, null);
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         } catch (UnsupportedOperationException e) {
             // Good
         }
         
         try {
             entity.putAll(null);
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         } catch (UnsupportedOperationException e) {
             // Good
         }
         
         try {
             entity.clear();
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         } catch (UnsupportedOperationException e) {
             // Good
         }
         
         try {
             entity.remove(null);
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         } catch (UnsupportedOperationException e) {
             // Good
         }
@@ -76,41 +77,41 @@ public class EntityTest extends SDKTestCase {
         
         try {
             indexes.clear();
-            fail("Should've thrown");
+            Assert.fail("Should've thrown");
         }
         catch (Exception ex) {
-            assertTrue(true);
+            Assert.assertTrue(true);
         }
         
         try {
             indexes.entrySet();
-            fail("Should've thrown");
+            Assert.fail("Should've thrown");
         }
         catch (Exception ex) {
-            assertTrue(true);
+            Assert.assertTrue(true);
         }
         
         try {
             indexes.put("hello", null);
-            fail("Should've thrown");
+            Assert.fail("Should've thrown");
         }
         catch (Exception ex) {
-            assertTrue(true);
+            Assert.assertTrue(true);
         }
         
         try {
             indexes.putAll(null);
-            fail("Should've thrown");
+            Assert.fail("Should've thrown");
         }
         catch (Exception ex) {
-            assertTrue(true);
+            Assert.assertTrue(true);
         }
         
         Index main = indexes.get("main");
-        assertTrue(indexes.containsValue(main));
-        assertTrue(indexes.equals(indexes.items));
-        assertTrue(indexes.hashCode() != 0);
-        assertTrue(indexes.keySet().contains("main"));
-        assertTrue(indexes.valueSize("main") == 1);
+        Assert.assertTrue(indexes.containsValue(main));
+        Assert.assertTrue(indexes.equals(indexes.items));
+        Assert.assertTrue(indexes.hashCode() != 0);
+        Assert.assertTrue(indexes.keySet().contains("main"));
+        Assert.assertTrue(indexes.valueSize("main") == 1);
     }
 }

@@ -18,6 +18,8 @@ package com.splunk;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LicenseGroupTest extends SDKTestCase {
@@ -35,7 +37,7 @@ public class LicenseGroupTest extends SDKTestCase {
         for (LicenseGroup licenseGroup: service.getLicenseGroups().values()) {
             // Recognized stack ID?
             for (String id: licenseGroup.getStackIds()) {
-                assertTrue(KNOWN_STACK_IDS.contains(id));
+                Assert.assertTrue(KNOWN_STACK_IDS.contains(id));
             }
             
             // Test getters

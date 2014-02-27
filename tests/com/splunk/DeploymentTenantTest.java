@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class DeploymentTenantTest extends SDKTestCase {
         for (DeploymentTenant deploymentTenant: deploymentTenants.values()) {
             // Ensure getters throw no exceptions
             deploymentTenant.isDisabled();
-            assertTrue(deploymentTenant.getWhitelistByIndex(0).length() > 0);
+            Assert.assertTrue(deploymentTenant.getWhitelistByIndex(0).length() > 0);
             for (int i=0; i<10; i++) {
                 deploymentTenant.getWhitelistByIndex(i);
             }
