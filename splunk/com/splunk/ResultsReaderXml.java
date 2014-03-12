@@ -189,9 +189,9 @@ public class ResultsReaderXml
             // we expect an XMLStreamingException that contains our
             // corresponding end-of-document </doc> that we injected into the
             // front of the stream. Any other exception we rethrow.
-            if (!(e.getMessage().contains("</doc>") ||
-                e.getMessage().contains(
-                    "XML document structures must start and end within the same entity."))) {
+            if (!(e.getMessage().contains("</doc>")
+                || e.getMessage().contains("XML document structures must start and end within the same entity.")
+                || e.getMessage().contains("was expecting a close tag for element <doc>"))) {
                 throw e;
             }
         }
