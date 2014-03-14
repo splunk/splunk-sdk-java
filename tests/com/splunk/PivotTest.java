@@ -395,7 +395,7 @@ public class PivotTest extends SDKTestCase {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testAddTimestampnRowSplitOnWrongType() {
+    public void testAddTimestampRowSplitOnWrongType() {
         PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
         pivotSpecification.addRowSplit("epsilon", "My Label", "true", "false");
     }
@@ -423,5 +423,179 @@ public class PivotTest extends SDKTestCase {
             Assert.assertEquals(expected, o);
         }
     }
+
+    @Test
+    public void testAddStringRowSplit() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addRowSplit("host", "My Label");
+
+        Assert.assertEquals(1, pivotSpecification.getRowSplits().size());
+        for (PivotRowSplit prs : pivotSpecification.getRowSplits()) {
+            Assert.assertTrue(prs instanceof StringPivotRowSplit);
+            JsonElement found = prs.toJson();
+
+            JsonObject expected = new JsonObject();
+            expected.addProperty("fieldName", "host");
+            expected.addProperty("label", "My Label");
+            expected.addProperty("owner", "BaseEvent");
+            expected.addProperty("type", "string");
+
+            Assert.assertEquals(expected, found);
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddNumericColumnSplitOnWrongType() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("has_boris");
+    }
+
+    @Test
+    public void testAddNumericColumnSplit() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("epsilon");
+
+        Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
+        for (PivotColumnSplit prs : pivotSpecification.getColumnSplits()) {
+            Assert.assertTrue(prs instanceof NumericPivotColumnSplit);
+            JsonElement obj = prs.toJson();
+
+            Assert.assertTrue(obj instanceof JsonObject);
+            JsonObject o = (JsonObject)obj;
+
+            Assert.assertTrue(o.has("fieldName"));
+            Assert.assertEquals(new JsonPrimitive("epsilon"), o.get("fieldName"));
+
+            Assert.assertTrue(o.has("owner"));
+            Assert.assertEquals(new JsonPrimitive("test_data"), o.get("owner"));
+
+            Assert.assertTrue(o.has("type"));
+            Assert.assertEquals(new JsonPrimitive("number"), o.get("type"));
+
+            Assert.assertTrue(o.has("display"));
+            Assert.assertEquals(new JsonPrimitive("all"), o.get("display"));
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddRangeColumnSplitOnWrongType() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("has_boris", 0, 100, 20, 5);
+    }
+
+    @Test
+    public void testAddRangeColumnSplit() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("epsilon", 0, 100, 20, 5);
+
+        Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
+        for (PivotColumnSplit prs : pivotSpecification.getColumnSplits()) {
+            Assert.assertTrue(prs instanceof RangePivotColumnSplit);
+            JsonElement obj = prs.toJson();
+
+            Assert.assertTrue(obj instanceof JsonObject);
+            JsonObject o = (JsonObject)obj;
+
+            Assert.assertTrue(o.has("fieldName"));
+            Assert.assertEquals(new JsonPrimitive("epsilon"), o.get("fieldName"));
+
+            Assert.assertTrue(o.has("owner"));
+            Assert.assertEquals(new JsonPrimitive("test_data"), o.get("owner"));
+
+            Assert.assertTrue(o.has("type"));
+            Assert.assertEquals(new JsonPrimitive("number"), o.get("type"));
+
+            Assert.assertTrue(o.has("display"));
+            Assert.assertEquals(new JsonPrimitive("ranges"), o.get("display"));
+
+            JsonObject ranges = new JsonObject();
+            ranges.add("start", new JsonPrimitive(0));
+            ranges.add("end", new JsonPrimitive(100));
+            ranges.add("size", new JsonPrimitive(20));
+            ranges.add("maxNumberOf", new JsonPrimitive(5));
+            Assert.assertTrue(o.has("ranges"));
+            Assert.assertEquals(ranges, o.get("ranges"));
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddBooleanColumnSplitOnWrongType() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("epsilon", "true", "false");
+    }
+
+    @Test
+    public void testAddBooleanColumnSplit() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("has_boris", "is_true", "is_false");
+
+        Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
+        for (PivotColumnSplit prs : pivotSpecification.getColumnSplits()) {
+            Assert.assertTrue(prs instanceof BooleanPivotColumnSplit);
+            JsonElement obj = prs.toJson();
+
+            Assert.assertTrue(obj instanceof JsonObject);
+            JsonObject o = (JsonObject)obj;
+
+            JsonObject expected = new JsonObject();
+            expected.add("fieldName", new JsonPrimitive("has_boris"));
+            expected.add("owner", new JsonPrimitive("test_data"));
+            expected.addProperty("type", "boolean");
+            expected.addProperty("trueLabel", "is_true");
+            expected.addProperty("falseLabel", "is_false");
+
+            Assert.assertEquals(expected, o);
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddTimestampColumnSplitOnWrongType() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("epsilon", "true", "false");
+    }
+
+    @Test
+    public void testAddTimestampColumnSplit() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("_time", TimestampBinning.DAY);
+
+        Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
+        for (PivotColumnSplit prs : pivotSpecification.getColumnSplits()) {
+            Assert.assertTrue(prs instanceof TimestampPivotColumnSplit);
+            JsonElement obj = prs.toJson();
+
+            Assert.assertTrue(obj instanceof JsonObject);
+            JsonObject o = (JsonObject)obj;
+
+            JsonObject expected = new JsonObject();
+            expected.add("fieldName", new JsonPrimitive("_time"));
+            expected.add("owner", new JsonPrimitive("BaseEvent"));
+            expected.addProperty("type", "timestamp");
+            expected.addProperty("period", "day");
+
+            Assert.assertEquals(expected, o);
+        }
+    }
+
+    @Test
+    public void testAddStringColumnSplit() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addColumnSplit("host");
+
+        Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
+        for (PivotColumnSplit prs : pivotSpecification.getColumnSplits()) {
+            Assert.assertTrue(prs instanceof StringPivotColumnSplit);
+            JsonElement found = prs.toJson();
+
+            JsonObject expected = new JsonObject();
+            expected.addProperty("fieldName", "host");
+            expected.addProperty("owner", "BaseEvent");
+            expected.addProperty("type", "string");
+
+            Assert.assertEquals(expected, found);
+        }
+    }
+
+
 
 }

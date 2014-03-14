@@ -30,7 +30,7 @@ public class PivotSpecification {
     private DataModelObject dataModelObject;
     String namespace = null;
 
-    List<PivotColumn> columns = new ArrayList<PivotColumn>();
+    List<PivotColumnSplit> columns = new ArrayList<PivotColumnSplit>();
     List<PivotFilter> filters = new ArrayList<PivotFilter>();
     List<PivotCell> cells = new ArrayList<PivotCell>();
     List<PivotRowSplit> rows = new ArrayList<PivotRowSplit>();
@@ -153,13 +153,16 @@ public class PivotSpecification {
      */
     public PivotSpecification addRowSplit(String field, String label) {
         FieldType t = this.dataModelObject.getField(field).getType();
-        if (t != FieldType.NUMBER) {
-            throw new IllegalArgumentException("Expected a field of type number; found type " + t.toString());
+        PivotRowSplit split;
+        if (t == FieldType.NUMBER) {
+            split = new NumberPivotRowSplit(this.dataModelObject, field, label);
+        } else if (t == FieldType.STRING) {
+            split = new StringPivotRowSplit(this.dataModelObject, field, label);
+        } else {
+            throw new IllegalArgumentException("Expected a field of type number or string; found type " + t.toString());
         }
 
-        PivotRowSplit split = new NumberPivotRowSplit(this.dataModelObject, field, label);
         rows.add(split);
-
         return this;
     }
 
@@ -212,6 +215,61 @@ public class PivotSpecification {
         return this;
     }
 
+    public PivotSpecification addColumnSplit(String field) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+        PivotColumnSplit split;
+
+        if (t == FieldType.NUMBER) {
+            split = new NumericPivotColumnSplit(this.dataModelObject, field);
+        } else if (t == FieldType.STRING) {
+            split = new StringPivotColumnSplit(this.dataModelObject, field);
+        } else {
+            throw new IllegalArgumentException("Expected a field of type number or string; found type " + t.toString());
+        }
+
+        columns.add(split);
+        return this;
+    }
+
+    public PivotSpecification addColumnSplit(String field, int start, int end, int step, int limit) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+
+        if (t != FieldType.NUMBER) {
+            throw new IllegalArgumentException("Expected a field of type number; found type " + t.toString());
+        }
+
+        PivotColumnSplit split = new RangePivotColumnSplit(this.dataModelObject, field, start, end, step, limit);
+
+        columns.add(split);
+        return this;
+    }
+
+    public PivotSpecification addColumnSplit(String field, String trueDisplayValue, String falseDisplayValue) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+
+        if (t != FieldType.BOOLEAN) {
+            throw new IllegalArgumentException("Expected a field of type boolean; found type " + t.toString());
+        }
+
+        PivotColumnSplit split = new BooleanPivotColumnSplit(this.dataModelObject, field,
+                trueDisplayValue, falseDisplayValue);
+
+        columns.add(split);
+        return this;
+    }
+
+    public PivotSpecification addColumnSplit(String field, TimestampBinning binning) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+
+        if (t != FieldType.TIMESTAMP) {
+            throw new IllegalArgumentException("Expected a field of type timestamp; found type " + t.toString());
+        }
+
+        PivotColumnSplit split = new TimestampPivotColumnSplit(this.dataModelObject, field, binning);
+
+        columns.add(split);
+        return this;
+    }
 
     public JsonElement getDescription() {
         JsonObject root = new JsonObject();
@@ -230,5 +288,6 @@ public class PivotSpecification {
 
     public Collection<PivotFilter> getFilters() { return this.filters; }
     public Collection<PivotRowSplit> getRowSplits() { return this.rows; }
+    public Collection<PivotColumnSplit> getColumnSplits() { return this.columns; }
 
 }
