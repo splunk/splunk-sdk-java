@@ -17,7 +17,6 @@ package com.splunk;
 
 import com.google.gson.*;
 
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +33,7 @@ public class PivotSpecification {
     List<PivotColumn> columns = new ArrayList<PivotColumn>();
     List<PivotFilter> filters = new ArrayList<PivotFilter>();
     List<PivotCell> cells = new ArrayList<PivotCell>();
-    List<PivotRow> rows = new ArrayList<PivotRow>();
+    List<PivotRowSplit> rows = new ArrayList<PivotRowSplit>();
 
     public PivotSpecification(DataModelObject dataModelObject) {
         this.dataModelObject = dataModelObject;
@@ -143,6 +142,77 @@ public class PivotSpecification {
         return this;
     }
 
+    /*
+   * These methods add row splits. In all cases, if the type of field the method applies
+   * to as specified in its comments doesn't match the type of the field specified by 'field',
+   * the method throws an IllegalArgumentException.
+   */
+
+    /**
+     * Numeric field, display=all
+     */
+    public PivotSpecification addRowSplit(String field, String label) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+        if (t != FieldType.NUMBER) {
+            throw new IllegalArgumentException("Expected a field of type number; found type " + t.toString());
+        }
+
+        PivotRowSplit split = new NumberPivotRowSplit(this.dataModelObject, field, label);
+        rows.add(split);
+
+        return this;
+    }
+
+    /**
+     * Numeric field, display=ranges, generates bins with edges equivalent to the
+     * classic loop 'for i in <start> to <end> by <step>' but with a maximum
+     * number of bins <limit>. This dispatches to the stats and xyseries search commands.
+     */
+    public PivotSpecification addRowSplit(String field, String label, int start, int end, int step, int limit) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+        if (t != FieldType.NUMBER) {
+            throw new IllegalArgumentException("Expected a field of type number; found type " + t.toString());
+        }
+
+        PivotRowSplit split = new RangePivotRowSplit(this.dataModelObject, field, label, start, end, step, limit);
+        rows.add(split);
+
+        return this;
+    }
+
+    /**
+     * Boolean field. trueDisplayValue and falseDisplayValue are the strings to be shown in the results
+     * when the field is true or false, respectively.
+     */
+    public PivotSpecification addRowSplit(String field, String label, String trueDisplayValue, String falseDisplayValue) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+        if (t != FieldType.BOOLEAN) {
+            throw new IllegalArgumentException("Expected a field of type boolean; found type " + t.toString());
+        }
+
+        PivotRowSplit split = new BooleanPivotRowSplit(this.dataModelObject, field, label,
+                trueDisplayValue, falseDisplayValue);
+        rows.add(split);
+
+        return this;
+    }
+
+    /**
+     * Timestamp field. binning is the size of buckets to use.
+     */
+    public PivotSpecification addRowSplit(String field, String label, TimestampBinning binning) {
+        FieldType t = this.dataModelObject.getField(field).getType();
+        if (t != FieldType.TIMESTAMP) {
+            throw new IllegalArgumentException("Expected a field of type timestamp; found type " + t.toString());
+        }
+
+        PivotRowSplit split = new TimestampPivotRowSplit(this.dataModelObject, field, label, binning);
+        rows.add(split);
+
+        return this;
+    }
+
+
     public JsonElement getDescription() {
         JsonObject root = new JsonObject();
 
@@ -159,5 +229,6 @@ public class PivotSpecification {
     }
 
     public Collection<PivotFilter> getFilters() { return this.filters; }
+    public Collection<PivotRowSplit> getRowSplits() { return this.rows; }
 
 }
