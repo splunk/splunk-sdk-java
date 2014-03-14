@@ -94,7 +94,7 @@ public class PivotSpecification {
         return this;
     }
 
-    public PivotSpecification addFilter(String field, IPv4Comparison comparison, Inet4Address comparisonValue) {
+    public PivotSpecification addFilter(String field, IPv4Comparison comparison, String comparisonValue) {
         if (!dataModelObject.containsField(field)) {
             throw new IllegalArgumentException("No such field " + field);
         }
@@ -103,6 +103,41 @@ public class PivotSpecification {
                     + dataModelObject.getField(field).getType().toString());
         }
         IPv4PivotFilter filter = new IPv4PivotFilter(this.dataModelObject, field, comparison, comparisonValue);
+        filters.add(filter);
+
+        return this;
+    }
+
+    public PivotSpecification addFilter(String field, NumberComparison comparison, double comparisonValue) {
+        if (!dataModelObject.containsField(field)) {
+            throw new IllegalArgumentException("No such field " + field);
+        }
+        if (dataModelObject.getField(field).getType() != FieldType.NUMBER) {
+            throw new IllegalArgumentException("Expected a field of type number, found "
+                    + dataModelObject.getField(field).getType().toString());
+        }
+        NumberPivotFilter filter = new NumberPivotFilter(this.dataModelObject, field, comparison, comparisonValue);
+        filters.add(filter);
+
+        return this;
+    }
+
+    public PivotSpecification addFilter(String field, String sortAttribute,
+                                        SortDirection sortDirection, int limit, StatsFunction statsFunction) {
+        if (!dataModelObject.containsField(field)) {
+            throw new IllegalArgumentException("No such field " + field);
+        }
+        if (dataModelObject.getField(field).getType() != FieldType.NUMBER) {
+            throw new IllegalArgumentException("Expected a field of type number, found "
+                    + dataModelObject.getField(field).getType().toString());
+        }
+
+        if (!dataModelObject.containsField(sortAttribute)) {
+            throw new IllegalArgumentException("No such field " + sortAttribute);
+        }
+
+        LimitPivotFilter filter = new LimitPivotFilter(this.dataModelObject, field, sortAttribute,
+                sortDirection, limit, statsFunction);
         filters.add(filter);
 
         return this;

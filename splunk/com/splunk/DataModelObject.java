@@ -274,6 +274,10 @@ public class DataModelObject {
         return this.parentName;
     }
 
+    public DataModelObject getParent() {
+        return this.getDataModel().getObject(this.parentName);
+    }
+
     public Job runQuery() {
         return runQuery("", null);
     }

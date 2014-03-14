@@ -33,6 +33,8 @@ public abstract class PivotFilter {
         this.fieldName = fieldName;
     }
 
+    public DataModelObject getOwner() { return this.dataModelObject; }
+
     public String getFieldName() {
         return this.fieldName;
     }

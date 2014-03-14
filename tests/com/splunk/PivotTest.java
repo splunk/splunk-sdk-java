@@ -23,6 +23,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+
 public class PivotTest extends SDKTestCase {
     DataModelObject dataModelObject;
 
@@ -155,6 +158,128 @@ public class PivotTest extends SDKTestCase {
 
             Assert.assertTrue(o.has("compareTo"));
             Assert.assertEquals(new JsonPrimitive("abc"), o.get("compareTo"));
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddIpv4FilterOnWrongType() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addFilter("has_boris", IPv4Comparison.STARTS_WITH, "192.168");
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testIpv4FilterOnNonexistantField() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addFilter(createTemporaryName(), IPv4Comparison.STARTS_WITH, "192.168");
+    }
+
+    @Test
+    public void testAddIpv4Filter() {
+        PivotSpecification pivotSpec = new PivotSpecification(dataModelObject);
+        pivotSpec.addFilter("hostip", IPv4Comparison.STARTS_WITH, "192.168");
+
+        Assert.assertEquals(1, pivotSpec.getFilters().size());
+        for (PivotFilter pf : pivotSpec.getFilters()) {
+            Assert.assertTrue(pf instanceof IPv4PivotFilter);
+            JsonElement obj = pf.toJson();
+            Assert.assertTrue(obj instanceof JsonObject);
+            JsonObject o = (JsonObject)obj;
+
+            Assert.assertTrue(o.has("fieldName"));
+            Assert.assertEquals(new JsonPrimitive("hostip"), o.get("fieldName"));
+
+            Assert.assertTrue(o.has("type"));
+            Assert.assertEquals(new JsonPrimitive("ipv4"), o.get("type"));
+
+            Assert.assertTrue(o.has("comparator"));
+            Assert.assertEquals(new JsonPrimitive("startsWith"), o.get("comparator"));
+
+            Assert.assertTrue(o.has("compareTo"));
+            Assert.assertEquals(new JsonPrimitive("192.168"), o.get("compareTo"));
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddNumberFilterOnWrongType() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addFilter("has_boris", NumberComparison.AT_LEAST, 2.3);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testNumberFilterOnNonexistantField() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addFilter(createTemporaryName(), NumberComparison.AT_LEAST, 2.3);
+    }
+
+    @Test
+    public void testAddNumberFilter() {
+        PivotSpecification pivotSpec = new PivotSpecification(dataModelObject);
+        pivotSpec.addFilter("epsilon", NumberComparison.AT_LEAST, 2.3);
+
+        Assert.assertEquals(1, pivotSpec.getFilters().size());
+        for (PivotFilter pf : pivotSpec.getFilters()) {
+            Assert.assertTrue(pf instanceof NumberPivotFilter);
+            JsonElement obj = pf.toJson();
+            Assert.assertTrue(obj instanceof JsonObject);
+            JsonObject o = (JsonObject)obj;
+
+            Assert.assertTrue(o.has("fieldName"));
+            Assert.assertEquals(new JsonPrimitive("epsilon"), o.get("fieldName"));
+
+            Assert.assertTrue(o.has("type"));
+            Assert.assertEquals(new JsonPrimitive("number"), o.get("type"));
+
+            Assert.assertTrue(o.has("comparator"));
+            Assert.assertEquals(new JsonPrimitive(">="), o.get("comparator"));
+
+            Assert.assertTrue(o.has("compareTo"));
+            Assert.assertEquals(new JsonPrimitive((double)2.3), o.get("compareTo"));
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddLimitFilterOnNonexistentField() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addFilter("has_boris", "host",
+                SortDirection.DEFAULT, 50, StatsFunction.COUNT);
+    }
+
+    @Test
+    public void testAddLimitFilter() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addFilter("epsilon", "hostip", SortDirection.ASCENDING, 500, StatsFunction.AVERAGE);
+
+        Assert.assertEquals(1, pivotSpecification.getFilters().size());
+        for (PivotFilter pf : pivotSpecification.getFilters()) {
+            Assert.assertTrue(pf instanceof LimitPivotFilter);
+            JsonElement obj = pf.toJson();
+
+            Assert.assertTrue(obj instanceof JsonObject);
+            JsonObject o = (JsonObject)obj;
+
+            Assert.assertTrue(o.has("fieldName"));
+            Assert.assertEquals(new JsonPrimitive("epsilon"), o.get("fieldName"));
+
+            Assert.assertTrue(o.has("owner"));
+            Assert.assertEquals(new JsonPrimitive("test_data"), o.get("owner"));
+
+            Assert.assertTrue(o.has("type"));
+            Assert.assertEquals(new JsonPrimitive("number"), o.get("type"));
+
+            Assert.assertTrue(o.has("attributeName"));
+            Assert.assertEquals(new JsonPrimitive("hostip"), o.get("attributeName"));
+
+            Assert.assertTrue(o.has("attributeOwner"));
+            Assert.assertEquals(new JsonPrimitive("test_data"), o.get("attributeOwner"));
+
+            Assert.assertTrue(o.has("limitType"));
+            Assert.assertEquals(new JsonPrimitive("lowest"), o.get("limitType"));
+
+            Assert.assertTrue(o.has("limitAmount"));
+            Assert.assertEquals(new JsonPrimitive(500), o.get("limitAmount"));
+
+            Assert.assertTrue(o.has("statsFn"));
+            Assert.assertEquals(new JsonPrimitive("average"), o.get("statsFn"));
         }
     }
 }
