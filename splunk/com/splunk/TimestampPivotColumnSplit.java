@@ -27,7 +27,7 @@ public class TimestampPivotColumnSplit extends PivotColumnSplit {
     }
 
     @Override
-    public JsonElement toJson() {
+    public JsonObject toJson() {
         JsonObject root = new JsonObject();
         addCommonFields(root);
         root.addProperty("period", binning.toString());

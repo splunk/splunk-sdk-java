@@ -15,7 +15,6 @@
  */
 package com.splunk;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -25,7 +24,7 @@ public class NumericPivotColumnSplit extends PivotColumnSplit {
     }
 
     @Override
-    public JsonElement toJson() {
+    public JsonObject toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

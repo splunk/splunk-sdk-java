@@ -23,8 +23,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
 
 public class PivotTest extends SDKTestCase {
     DataModelObject dataModelObject;
@@ -59,15 +57,13 @@ public class PivotTest extends SDKTestCase {
 
         PivotSpecification pivotArgs = new PivotSpecification(dataModelObject);
 
-        JsonElement root = pivotArgs.getDescription();
-        Assert.assertTrue(root instanceof JsonObject);
-        JsonObject rootAsObject = root.getAsJsonObject();
+        JsonObject root = pivotArgs.toJson();
 
-        Assert.assertTrue(rootAsObject.has("dataModel"));
-        Assert.assertEquals(new JsonPrimitive(dataModelObject.getDataModel().getName()), rootAsObject.get("dataModel"));
+        Assert.assertTrue(root.has("dataModel"));
+        Assert.assertEquals(new JsonPrimitive(dataModelObject.getDataModel().getName()), root.get("dataModel"));
 
-        Assert.assertTrue(rootAsObject.has("baseClass"));
-        Assert.assertEquals(new JsonPrimitive(dataModelObject.getName()), rootAsObject.get("baseClass"));
+        Assert.assertTrue(root.has("baseClass"));
+        Assert.assertEquals(new JsonPrimitive(dataModelObject.getName()), root.get("baseClass"));
     }
 
     @Test
@@ -562,10 +558,7 @@ public class PivotTest extends SDKTestCase {
         Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
         for (PivotColumnSplit prs : pivotSpecification.getColumnSplits()) {
             Assert.assertTrue(prs instanceof TimestampPivotColumnSplit);
-            JsonElement obj = prs.toJson();
-
-            Assert.assertTrue(obj instanceof JsonObject);
-            JsonObject o = (JsonObject)obj;
+            JsonObject found = prs.toJson();
 
             JsonObject expected = new JsonObject();
             expected.add("fieldName", new JsonPrimitive("_time"));
@@ -573,7 +566,7 @@ public class PivotTest extends SDKTestCase {
             expected.addProperty("type", "timestamp");
             expected.addProperty("period", "day");
 
-            Assert.assertEquals(expected, o);
+            Assert.assertEquals(expected, found);
         }
     }
 
@@ -585,7 +578,7 @@ public class PivotTest extends SDKTestCase {
         Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
         for (PivotColumnSplit prs : pivotSpecification.getColumnSplits()) {
             Assert.assertTrue(prs instanceof StringPivotColumnSplit);
-            JsonElement found = prs.toJson();
+            JsonObject found = prs.toJson();
 
             JsonObject expected = new JsonObject();
             expected.addProperty("fieldName", "host");
@@ -596,6 +589,76 @@ public class PivotTest extends SDKTestCase {
         }
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void testNonexistantFieldToCellValue() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addCellValue("nonexistant", "my_label", StatsFunction.COUNT, false);
+    }
 
+    @Test
+    public void testAddStringCellValue() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addCellValue("source", "Source Value", StatsFunction.DISTINCT_COUNT, true);
 
+        Assert.assertEquals(1, pivotSpecification.getCellValues().size());
+        for (PivotCellValue pcv : pivotSpecification.getCellValues()) {
+            JsonObject found = pcv.toJson();
+            JsonObject expected = new JsonObject();
+            expected.addProperty("fieldName", "source");
+            expected.addProperty("owner", "BaseEvent");
+            expected.addProperty("type", "string");
+            expected.addProperty("label", "Source Value");
+            expected.addProperty("value", "dc");
+            expected.addProperty("sparkline", true);
+
+            Assert.assertEquals(expected, found);
+        }
+    }
+
+    @Test
+    public void testAddIpv4CellValue() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addCellValue("hostip", "Source Value", StatsFunction.DISTINCT_COUNT, true);
+
+        Assert.assertEquals(1, pivotSpecification.getCellValues().size());
+        for (PivotCellValue pcv : pivotSpecification.getCellValues()) {
+            JsonObject found = pcv.toJson();
+            JsonObject expected = new JsonObject();
+            expected.addProperty("fieldName", "hostip");
+            expected.addProperty("owner", "test_data");
+            expected.addProperty("type", "ipv4");
+            expected.addProperty("label", "Source Value");
+            expected.addProperty("value", "dc");
+            expected.addProperty("sparkline", true);
+
+            Assert.assertEquals(expected, found);
+        }
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testIllegalStatsFunction() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addCellValue("source", "Source Value", StatsFunction.SUM, true);
+
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testNoBooleanCellValues() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addCellValue("has_boris", "Source Value", StatsFunction.DISTINCT_VALUES, true);
+    }
+
+    @Test(expected= HttpException.class)
+    public void testEmptyPivotGivesError() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        Pivot pivot = pivotSpecification.pivot();
+    }
+
+    @Test
+    public void testSimplePivotWithoutNamespace() {
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
+
+        Pivot pivot = pivotSpecification.pivot();
+    }
 }

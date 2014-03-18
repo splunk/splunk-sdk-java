@@ -39,5 +39,5 @@ public abstract class PivotColumnSplit {
         obj.addProperty("type", field.getType().toString());
     }
 
-    public abstract JsonElement toJson();
+    public abstract JsonObject toJson();
 }

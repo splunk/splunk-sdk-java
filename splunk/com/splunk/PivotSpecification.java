@@ -16,7 +16,6 @@
 package com.splunk;
 
 import com.google.gson.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +31,7 @@ public class PivotSpecification {
 
     List<PivotColumnSplit> columns = new ArrayList<PivotColumnSplit>();
     List<PivotFilter> filters = new ArrayList<PivotFilter>();
-    List<PivotCell> cells = new ArrayList<PivotCell>();
+    List<PivotCellValue> cells = new ArrayList<PivotCellValue>();
     List<PivotRowSplit> rows = new ArrayList<PivotRowSplit>();
 
     public PivotSpecification(DataModelObject dataModelObject) {
@@ -271,17 +270,34 @@ public class PivotSpecification {
         return this;
     }
 
-    public JsonElement getDescription() {
+    public PivotSpecification addCellValue(String field, String label, StatsFunction statsFunction,
+                                           boolean generateSparkline) {
+        cells.add(new PivotCellValue(this.dataModelObject, field, label, statsFunction, generateSparkline));
+
+        return this;
+    }
+
+    public JsonObject toJson() {
         JsonObject root = new JsonObject();
 
-        root.add("dataModel", new JsonPrimitive(this.dataModelObject.getDataModel().getName()));
-        root.add("baseClass", new JsonPrimitive(this.dataModelObject.getName()));
+        root.addProperty("dataModel", this.dataModelObject.getDataModel().getName());
+        root.addProperty("baseClass", this.dataModelObject.getName());
 
         JsonArray filterArray = new JsonArray();
-        for (PivotFilter filter : filters) {
-            filterArray.add(filter.toJson());
-        }
+        for (PivotFilter p : filters) { filterArray.add(p.toJson()); }
         root.add("filters", filterArray);
+
+        JsonArray rowsplitArray = new JsonArray();
+        for (PivotRowSplit p : rows) { rowsplitArray.add(p.toJson()); }
+        root.add("rows", rowsplitArray);
+
+        JsonArray cellvalueArray = new JsonArray();
+        for (PivotCellValue p : cells) { cellvalueArray.add(p.toJson()); }
+        root.add("cells", cellvalueArray);
+
+        JsonArray columnsplitArray = new JsonArray();
+        for (PivotColumnSplit p : columns) { columnsplitArray.add(p.toJson()); }
+        root.add("columns", columnsplitArray);
 
         return root;
     }
@@ -289,5 +305,31 @@ public class PivotSpecification {
     public Collection<PivotFilter> getFilters() { return this.filters; }
     public Collection<PivotRowSplit> getRowSplits() { return this.rows; }
     public Collection<PivotColumnSplit> getColumnSplits() { return this.columns; }
+    public Collection<PivotCellValue> getCellValues() { return this.cells; }
 
+    public static String streamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
+    public Pivot pivot() {
+        Service service = this.dataModelObject.getDataModel().service;
+
+        Args args = new Args();
+        args.put("pivot_json", toJson());
+        args.put("namespace", "something"); // TODO: Fix this
+        ResponseMessage response = service.get(
+                "datamodel/pivot/" + this.dataModelObject.getDataModel().getName(),
+                args
+        );
+
+        if (response.getStatus() != 200) {
+            throw HttpException.create(response);
+        } else {
+
+            System.out.println(streamToString(response.getContent()));
+            // TODO Parse pivot response and return it.
+            return null;
+        }
+    }
 }

@@ -37,7 +37,7 @@ public class RangePivotColumnSplit extends PivotColumnSplit {
     public int getLimit() { return this.limit; }
 
     @Override
-    public JsonElement toJson() {
+    public JsonObject toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

@@ -28,7 +28,7 @@ public class BooleanPivotColumnSplit extends PivotColumnSplit {
     }
 
     @Override
-    public JsonElement toJson() {
+    public JsonObject toJson() {
         JsonObject root = new JsonObject();
         addCommonFields(root);
 
