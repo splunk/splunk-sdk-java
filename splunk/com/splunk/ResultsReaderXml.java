@@ -21,10 +21,7 @@ import javax.xml.stream.*;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -66,7 +63,7 @@ public class ResultsReaderXml
             throws IOException {
         super(inputStream, isInMultiReader);
         PushbackReader pushbackReader =
-            new PushbackReader(inputStreamReader, 256);
+            new PushbackReader(new InputStreamReader(inputStream), 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         // At initialization, skip everything in the start until we get to the
@@ -114,7 +111,7 @@ public class ResultsReaderXml
             int data = pushbackReader.read();
             if (data < 0) return;
             accumulator = accumulator + (char)data;
-            if ("<results".equals(accumulator)) {
+            if (findToken.equals(accumulator)) {
                     String putBackString = "<doc>" + findToken;
                     char putBackBytes[] = putBackString.toCharArray();
                     pushbackReader.unread(putBackBytes);
@@ -124,10 +121,12 @@ public class ResultsReaderXml
             }
         }
 
+        Reader appendingReader = new AppendingReader(pushbackReader, new StringReader("</doc>"));
+
         // Attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
-            xmlReader = inputFactory.createXMLEventReader(pushbackReader);
+            xmlReader = inputFactory.createXMLEventReader(appendingReader);
             finishInitialization();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
@@ -182,19 +181,7 @@ public class ResultsReaderXml
     boolean readIntoNextResultsElement()
             throws XMLStreamException, IOException {
         XMLEvent xmlEvent = null;
-        try {
             xmlEvent = readToStartOfElementWithName("results");
-        } catch (XMLStreamException e) {
-            // Because we cannot stuff trailing information into the stream,
-            // we expect an XMLStreamingException that contains our
-            // corresponding end-of-document </doc> that we injected into the
-            // front of the stream. Any other exception we rethrow.
-            if (!(e.getMessage().contains("</doc>") ||
-                e.getMessage().contains(
-                    "XML document structures must start and end within the same entity."))) {
-                throw e;
-            }
-        }
         if (xmlEvent == null) {
             return false;
         }
