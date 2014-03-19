@@ -660,5 +660,27 @@ public class PivotTest extends SDKTestCase {
         pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
 
         Pivot pivot = pivotSpecification.pivot();
+        Assert.assertNull(pivot.getAcceleratedQuery());
+        Assert.assertTrue(pivot.getPivotQuery().startsWith("| pivot"));
+    }
+
+    @Test
+    public void testSimplePivotWithNamespace() {
+        Job adhocJob = dataModelObject.createLocalAccelerationJob();
+        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
+
+        Pivot pivot = pivotSpecification.pivot(adhocJob);
+        Assert.assertNotNull(pivot.getAcceleratedQuery());
+
+        final Job job = pivot.run();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isReady();
+            }
+        });
+
+        Assert.assertTrue(job.getSearch().startsWith("| tstats"));
     }
 }

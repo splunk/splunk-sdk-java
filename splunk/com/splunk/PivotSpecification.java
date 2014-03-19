@@ -313,11 +313,21 @@ public class PivotSpecification {
     }
 
     public Pivot pivot() {
+        return pivot((String) null);
+    }
+
+    public Pivot pivot(Job adhocAccelerationJob) {
+        return pivot(adhocAccelerationJob.getSid());
+    }
+
+    public Pivot pivot(String namespace) {
         Service service = this.dataModelObject.getDataModel().service;
 
         Args args = new Args();
         args.put("pivot_json", toJson());
-        args.put("namespace", "something"); // TODO: Fix this
+        if (namespace != null) {
+            args.put("namespace", namespace);
+        }
         ResponseMessage response = service.get(
                 "datamodel/pivot/" + this.dataModelObject.getDataModel().getName(),
                 args
@@ -326,10 +336,7 @@ public class PivotSpecification {
         if (response.getStatus() != 200) {
             throw HttpException.create(response);
         } else {
-
-            System.out.println(streamToString(response.getContent()));
-            // TODO Parse pivot response and return it.
-            return null;
+            return Pivot.parseStream(this.dataModelObject.getDataModel().getService(), response.getContent());
         }
     }
 }
