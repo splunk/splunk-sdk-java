@@ -21,7 +21,10 @@ import javax.xml.stream.*;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -180,8 +183,7 @@ public class ResultsReaderXml
     // Return value indicates whether the next 'results' element is found.
     boolean readIntoNextResultsElement()
             throws XMLStreamException, IOException {
-        XMLEvent xmlEvent = null;
-            xmlEvent = readToStartOfElementWithName("results");
+        XMLEvent xmlEvent = readToStartOfElementWithName("results");
         if (xmlEvent == null) {
             return false;
         }
