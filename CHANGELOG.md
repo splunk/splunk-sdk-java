@@ -6,11 +6,18 @@
 
 * When setting the sourcetype of a modular input event, events are indexed properly.
   Previously Splunk would encounter an error and skip them. Also updated some of the modular input test data to reflect this change.
+* ResultsReadeRXml now works with alternate XML parser libraries.
 
 ### Breaking changes
 
 * If you're not expecting Splunk to index these modular inputs with a sourcetype set,
   when updating to this version of the SDK you will see these events unexpectedly.
+
+## Version 1.2.2
+
+### Bug fixes
+
+* Hot fix to ResultsReaderXml to work with woodstox XML parsing library.
 
 ## Version 1.2.1
 
