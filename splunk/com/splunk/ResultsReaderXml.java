@@ -63,7 +63,7 @@ public class ResultsReaderXml
             throws IOException {
         super(inputStream, isInMultiReader);
         PushbackReader pushbackReader =
-            new PushbackReader(new InputStreamReader(inputStream), 256);
+            new PushbackReader(inputStreamReader, 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         // At initialization, skip everything in the start until we get to the
@@ -111,7 +111,7 @@ public class ResultsReaderXml
             int data = pushbackReader.read();
             if (data < 0) return;
             accumulator = accumulator + (char)data;
-            if (findToken.equals(accumulator)) {
+            if ("<results".equals(accumulator)) {
                     String putBackString = "<doc>" + findToken;
                     char putBackBytes[] = putBackString.toCharArray();
                     pushbackReader.unread(putBackBytes);
@@ -121,12 +121,10 @@ public class ResultsReaderXml
             }
         }
 
-        Reader appendingReader = new AppendingReader(pushbackReader, new StringReader("</doc>"));
-
         // Attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
-            xmlReader = inputFactory.createXMLEventReader(appendingReader);
+            xmlReader = inputFactory.createXMLEventReader(pushbackReader);
             finishInitialization();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
@@ -181,7 +179,19 @@ public class ResultsReaderXml
     boolean readIntoNextResultsElement()
             throws XMLStreamException, IOException {
         XMLEvent xmlEvent = null;
+        try {
             xmlEvent = readToStartOfElementWithName("results");
+        } catch (XMLStreamException e) {
+            // Because we cannot stuff trailing information into the stream,
+            // we expect an XMLStreamingException that contains our
+            // corresponding end-of-document </doc> that we injected into the
+            // front of the stream. Any other exception we rethrow.
+            if (!(e.getMessage().contains("</doc>") ||
+                e.getMessage().contains(
+                    "XML document structures must start and end within the same entity."))) {
+                throw e;
+            }
+        }
         if (xmlEvent == null) {
             return false;
         }

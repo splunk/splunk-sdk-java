@@ -1,5 +1,11 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.2.2
+
+### Bug fixes
+
+* Hot fix to ResultsReaderXml to work with woodstox XML parsing library.
+
 ## Version 1.2.1
 
 ### New features and APIs
