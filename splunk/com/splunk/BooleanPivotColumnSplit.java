@@ -15,9 +15,11 @@
  */
 package com.splunk;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents a column split on a boolean valued field in a pivot.
+ */
 public class BooleanPivotColumnSplit extends PivotColumnSplit {
     private final String trueLabel, falseLabel;
 

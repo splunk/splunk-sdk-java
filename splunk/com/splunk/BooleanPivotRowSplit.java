@@ -19,6 +19,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Represents a row split on a boolean valued field in a pivot.
+ */
 public class BooleanPivotRowSplit extends PivotRowSplit {
     private final String falseDisplayValue;
     private final String trueDisplayValue;

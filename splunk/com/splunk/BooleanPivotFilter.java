@@ -19,6 +19,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Represents a filter on a boolean valued field in a pivot.
+ */
 public class BooleanPivotFilter extends PivotFilter {
     private final BooleanComparison comparison;
     private final boolean comparisonValue;

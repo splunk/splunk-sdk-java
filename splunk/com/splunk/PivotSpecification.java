@@ -365,6 +365,14 @@ public class PivotSpecification {
         return this;
     }
 
+    /**
+     * Add a column split on a boolean valued field.
+     *
+     * @param field the field to split on.
+     * @param trueDisplayValue the string to display in the true valued column label.
+     * @param falseDisplayValue the string to display in the false valued column label.
+     * @return the PivotSpecification you are working on.
+     */
     public PivotSpecification addColumnSplit(String field, String trueDisplayValue, String falseDisplayValue) {
         FieldType t = this.dataModelObject.getField(field).getType();
 
@@ -379,6 +387,13 @@ public class PivotSpecification {
         return this;
     }
 
+    /**
+     * Add a column split on a timestamp valued field.
+     *
+     * @param field the field to split on.
+     * @param binning what time periods to use for binning valued of the field.
+     * @return the PivotSpecification you are working on.
+     */
     public PivotSpecification addColumnSplit(String field, TimestampBinning binning) {
         FieldType t = this.dataModelObject.getField(field).getType();
 
@@ -392,6 +407,15 @@ public class PivotSpecification {
         return this;
     }
 
+    /**
+     * Add an aggregate to each cell of the pivot.
+     *
+     * @param field the field to aggregate.
+     * @param label a human readable name for this aggregate.
+     * @param statsFunction the function to use for aggregation.
+     * @param generateSparkline should there be a sparkline generated for this aggregate.
+     * @return the PivotSpecification you are working on.
+     */
     public PivotSpecification addCellValue(String field, String label, StatsFunction statsFunction,
                                            boolean generateSparkline) {
         cells.add(new PivotCellValue(this.dataModelObject, field, label, statsFunction, generateSparkline));
@@ -399,6 +423,9 @@ public class PivotSpecification {
         return this;
     }
 
+    /**
+     * @return a JSON serialization of this object.
+     */
     public JsonObject toJson() {
         JsonObject root = new JsonObject();
 
@@ -424,24 +451,51 @@ public class PivotSpecification {
         return root;
     }
 
+    /**
+     * @return a collection of all the filters added to this PivotSpecification.
+     */
     public Collection<PivotFilter> getFilters() { return this.filters; }
+
+    /**
+     * @return a collection of all the row splits added to this PivotSpecification.
+     */
     public Collection<PivotRowSplit> getRowSplits() { return this.rows; }
+
+    /**
+     * @return a collection of all the column splits added to this PivotSpecification.
+     */
     public Collection<PivotColumnSplit> getColumnSplits() { return this.columns; }
+
+    /**
+     * @return a collection of all the cell values added to this PivotSpecification.
+     */
     public Collection<PivotCellValue> getCellValues() { return this.cells; }
 
-    public static String streamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
-
+    /**
+     * Query Splunk for SPL queries corresponding to this pivot.
+     *
+     * @return a Pivot object encapsulating the returned queries.
+     */
     public Pivot pivot() {
         return pivot((String) null);
     }
 
+    /**
+     * Query Splunk for SPL queries corresponding to this pivot.
+     *
+     * @param adhocAccelerationJob Tell splunkd to use the specified Job object to accelerate this pivot.
+     * @return a Pivot object encapsulating the returned queries.
+     */
     public Pivot pivot(Job adhocAccelerationJob) {
         return pivot(adhocAccelerationJob.getSid());
     }
 
+    /**
+     * Query Splunk for SPL queries corresponding to this pivot.
+     *
+     * @param namespace Tell splunkd to use the specified tsidx namespace to accelerate this pivot.
+     * @return a Pivot object encapsulating the returned queries.
+     */
     public Pivot pivot(String namespace) {
         Service service = this.dataModelObject.getDataModel().service;
 

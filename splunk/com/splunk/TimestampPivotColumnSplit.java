@@ -15,9 +15,11 @@
  */
 package com.splunk;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents a column split on a timestamp valued field in a pivot.
+ */
 public class TimestampPivotColumnSplit extends PivotColumnSplit {
     private final TimestampBinning binning;
 
@@ -25,6 +27,8 @@ public class TimestampPivotColumnSplit extends PivotColumnSplit {
         super(owner, fieldName);
         this.binning = binning;
     }
+
+    public TimestampBinning getBinning() { return this.binning; }
 
     @Override
     public JsonObject toJson() {

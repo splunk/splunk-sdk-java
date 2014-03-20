@@ -15,6 +15,9 @@
  */
 package com.splunk;
 
+/**
+ * Possible bin sizes for timestamp valued fields in pivots.
+ */
 public enum TimestampBinning {
     AUTO {
         public String toString() { return "auto"; }

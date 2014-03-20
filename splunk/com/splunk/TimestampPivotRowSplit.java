@@ -18,6 +18,9 @@ package com.splunk;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents a row split on a timestamp valued field in a pivot.
+ */
 public class TimestampPivotRowSplit extends PivotRowSplit {
     private final TimestampBinning binning;
 

@@ -15,6 +15,9 @@
  */
 package com.splunk;
 
+/**
+ * Comparison operators for string valued fields.
+ */
 public enum StringComparison {
     IS {
         public String toString() { return "is"; }

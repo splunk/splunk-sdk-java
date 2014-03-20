@@ -18,6 +18,9 @@ package com.splunk;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents a row split on a string valued field.
+ */
 public class StringPivotRowSplit extends PivotRowSplit {
     public StringPivotRowSplit(DataModelObject dataModelObject, String field, String label) {
         super(dataModelObject, field, label);

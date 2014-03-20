@@ -19,6 +19,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Represents a filter on a string valued field.
+ */
 public class StringPivotFilter extends PivotFilter {
     private final StringComparison comparison;
     private final String comparisonValue;
