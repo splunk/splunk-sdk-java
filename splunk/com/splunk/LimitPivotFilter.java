@@ -64,7 +64,7 @@ public class LimitPivotFilter extends PivotFilter {
      * not a built-in parent to this data model object.
      */
     public String[] getAttributeOwnerLineage() {
-        return this.getOwner().getField(this.sortAttribute).getOwnerLineage();
+        return this.dataModelObject.getField(this.sortAttribute).getOwnerLineage();
     }
 
     /**

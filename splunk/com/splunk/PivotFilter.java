@@ -25,8 +25,8 @@ import java.util.ArrayList;
  * Base class representing filters in pivots.
  */
 public abstract class PivotFilter {
-    private final DataModelObject dataModelObject;
-    private final String fieldName;
+    protected final DataModelObject dataModelObject;
+    protected final String fieldName;
 
     public PivotFilter(DataModelObject dataModelObject, String fieldName) {
         this.dataModelObject = dataModelObject;
