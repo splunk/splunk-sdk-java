@@ -120,11 +120,21 @@ public class DataModel extends Entity {
     @Override
     public Entity load(AtomObject value) {
         Entity result = super.load(value);
+        // After loading the Atom entity as we would for any other Splunk entity,
+        // we have to parse the JSON description of the data model and its acceleration
+        // status.
         parseDescription(getString(rawJsonLabel));
         parseAcceleration(getString("acceleration"));
         return result;
     }
 
+    /**
+     * Parse the JSON returned from splunkd describing this data model.
+     *
+     * This method writes the results into fields of this object.
+     *
+     * @param input a String containing JSON.
+     */
     void parseDescription(String input) {
         objects = new HashMap<String, DataModelObject>();
 
@@ -147,6 +157,13 @@ public class DataModel extends Entity {
         }
     }
 
+    /**
+     * Parse the acceleration description from splunkd of this data model.
+     *
+     * This method writes the results into fields of this object.
+     *
+     * @param input a string containing JSON.
+     */
     public void parseAcceleration(String input) {
          JsonElement rootElement = jsonParser.parse(input);
 
@@ -171,19 +188,48 @@ public class DataModel extends Entity {
         toUpdate.put("enabled", enabled);
     }
 
+    /**
+     * Return the earliest time of the window over which the data model is accelerated.
+     *
+     * Times are represented relative to now, given by a minus sign, a number, and a
+     * suffix indicating the time unit (e.g., "-2mon", "-1day").
+     *
+     * @return a string representing the earliest accelerated time.
+     */
     public String getEarliestAcceleratedTime() {
         return earliestAcceleratedTime;
     }
 
+    /**
+     * Set the size of the window (from the specified earliest time to now) over
+     * which the data model should be accelerated.
+     *
+     * Times are represented relative to now, given by a minus sign, a number, and a
+     * suffix indicating the time unit (e.g., "-2mon", "-1day").
+     *
+     * @param earliestAcceleratedTime a string specifying a time.
+     */
     public void setEarliestAcceleratedTime(String earliestAcceleratedTime) {
         this.earliestAcceleratedTime = earliestAcceleratedTime;
         toUpdate.put("earliest_time", earliestAcceleratedTime);
     }
 
+    /**
+     * Return the cron schedule on which the cached data for acceleration should be
+     * updated.
+     *
+     * @return a string containing a crontab style schedule specification.
+     */
     public String getAccelerationCronSchedule() {
         return accelerationCronSchedule;
     }
 
+    /**
+     * Set the cron schedule on which the cached data for the acceleration should
+     * be updated.
+     *
+     * @param accelerationCronSchedule a crontab style schedule to use.
+     */
     public void setAccelerationCronSchedule(String accelerationCronSchedule) {
         this.accelerationCronSchedule = accelerationCronSchedule;
         toUpdate.put("cron_schedule", accelerationCronSchedule);
@@ -191,6 +237,8 @@ public class DataModel extends Entity {
 
     @Override
     public void update() {
+        // We have to do some munging on the acceleration fields to pass them as JSON
+        // to the server.
         Map<String, Object> accelerationMap = new HashMap<String, Object>();
         for (String key : new String[] {"enabled", "earliest_time", "cron_schedule"}) {
             if (toUpdate.containsKey(key)) {
@@ -199,6 +247,8 @@ public class DataModel extends Entity {
             }
         }
         toUpdate.put("acceleration", gson.toJson(accelerationMap));
+
+        // Now update like we would any other entity.
         super.update();
     }
 }

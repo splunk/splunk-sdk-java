@@ -207,6 +207,20 @@ public class DataModelTest extends SDKTestCase {
     }
 
     @Test
+    public void testParentOnChild() {
+        DataModelCollection models = service.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        DataModel model = models.create(createTemporaryName(), args);
+
+        DataModelObject object = model.getObject("event1");
+        Assert.assertNotNull(object);
+
+        object.getParent();
+    }
+
+    @Test
     public void testLineage() {
         DataModelCollection models = service.getDataModels();
 

@@ -20,10 +20,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class RangePivotColumnSplit extends PivotColumnSplit {
-    private final int start, end, step, limit;
+    private final Integer start, end, step, limit;
 
     public RangePivotColumnSplit(DataModelObject dataModelObject, String field,
-                                 int start, int end, int step, int limit) {
+                                 Integer start, Integer end, Integer step, Integer limit) {
         super(dataModelObject, field);
         this.start = start;
         this.end = end;
@@ -31,10 +31,24 @@ public class RangePivotColumnSplit extends PivotColumnSplit {
         this.limit = limit;
     }
 
-    public int getStart() { return this.start; }
-    public int getEnd() { return this.end; }
-    public int getStep() { return this.step; }
-    public int getLimit() { return this.limit; }
+    /**
+     * @return the value of the start of the lowest range, or null if not specified.
+     */
+    public Integer getStart() { return this.start; }
+
+    /**
+     * @return the value of the end of the highest range, or null if not specified.
+     */
+    public Integer getEnd() { return this.end; }
+
+    /**
+     * @return the width of each range, or null if not specified.
+     */
+    public Integer getStep() { return this.step; }
+
+    /**
+     * @return the maximum number of ranges to split into, or null if no limit.
+     */
 
     @Override
     public JsonObject toJson() {

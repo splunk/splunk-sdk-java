@@ -21,6 +21,9 @@ import com.google.gson.JsonPrimitive;
 
 import java.net.Inet4Address;
 
+/**
+ * Represents a filter on an IPv4 valued field in a pivot.
+ */
 public class IPv4PivotFilter extends PivotFilter {
     private final IPv4Comparison comparison;
     private final String comparisonValue;

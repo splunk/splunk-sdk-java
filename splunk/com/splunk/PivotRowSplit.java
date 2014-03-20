@@ -18,33 +18,57 @@ package com.splunk;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
 
+/**
+ * Base class representing row splits in a pivot.
+ */
 public abstract class PivotRowSplit {
     private final String fieldName;
-    private final DataModelObject owner;
+    private final DataModelObject dataModelObject;
     private final String label;
 
-    public PivotRowSplit(DataModelObject owner, String fieldName, String label) {
+    public PivotRowSplit(DataModelObject dataModelObject, String fieldName, String label) {
         this.fieldName = fieldName;
-        this.owner = owner;
+        this.dataModelObject = dataModelObject;
         this.label = label;
     }
 
+    /**
+     * @return the name of the field to split on.
+     */
     public String getFieldName() { return this.fieldName; }
 
-    public DataModelObject getOwner() { return this.owner; }
+    /**
+     * @return the name of the data model object on which this split's field is defined.
+     */
+    public String getOwnerName() { return this.dataModelObject.getField(fieldName).getOwnerName(); }
 
+    /**
+     * @return the lineage, most remote ancestor first, on which the split's field is defined.
+     */
+    public String[] getOwnerLineage() { return this.dataModelObject.getField(fieldName).getOwnerLineage(); }
+
+    /**
+     * @return a human readable label for this split.
+     */
     public String getLabel() { return this.label; }
 
+    /**
+     * Add keys common to all row splits to a JSON serialization.
+     *
+     * @param obj JSON serialization to modify.
+     */
     protected void addCommonFields(JsonObject obj) {
-        Field field = this.owner.getField(this.fieldName);
+        Field field = this.dataModelObject.getField(this.fieldName);
 
-        obj.add("fieldName", new JsonPrimitive(this.fieldName));
-        obj.add("owner", new JsonPrimitive(Util.join(".", field.getOwnerLineage())));
-        obj.add("type", new JsonPrimitive(field.getType().toString()));
-        obj.add("label", new JsonPrimitive(this.label));
+        obj.addProperty("fieldName", this.fieldName);
+        obj.addProperty("dataModelObject", Util.join(".", field.getOwnerLineage()));
+        obj.addProperty("type", field.getType().toString());
+        obj.addProperty("label", this.label);
     }
 
+    /**
+     * @return a JSON serialization of this object.
+     */
     public abstract JsonElement toJson();
 }

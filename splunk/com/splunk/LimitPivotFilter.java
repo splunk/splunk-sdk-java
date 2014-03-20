@@ -4,6 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Represents a limit on the events shown in a pivot by sorting them according to some field, then taking
+ * the specified number from the beginning or end of the list.
+ */
 public class LimitPivotFilter extends PivotFilter {
     private final StatsFunction statsFunction;
     private final String sortAttribute;
@@ -48,26 +52,39 @@ public class LimitPivotFilter extends PivotFilter {
         this.statsFunction = statsFunction;
     }
 
-    /*
-     * See the documentation on Pivot for addFilter with a limit for the explanation of
-     * these fields.
+    /**
+     * Return the name of the field to use for sorting.
      */
     public String getAttributeName() {
         return this.sortAttribute;
     }
 
+    /**
+     * @return a list of the names of DataModelObjects from the most remote ancestor that is
+     * not a built-in parent to this data model object.
+     */
     public String[] getAttributeOwnerLineage() {
         return this.getOwner().getField(this.sortAttribute).getOwnerLineage();
     }
 
+    /**
+     * @return whether the limit takes the lowest (SortDirection.ASCENDING) or highest (SortDirection.DESCENDING)
+     * values from the sorted list.
+     */
     public SortDirection getSortDirection() {
         return this.sortDirection;
     }
 
+    /**
+     * @return The number of values from the sorted list to allow through this filter.
+     */
     public int getLimit() {
         return this.limit;
     }
 
+    /**
+     * @return The stats function to use for aggregation before sorting.
+     */
     public StatsFunction getStatsFunction() {
         return this.statsFunction;
     }

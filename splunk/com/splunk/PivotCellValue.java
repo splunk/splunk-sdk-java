@@ -18,6 +18,9 @@ package com.splunk;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Represents an aggregate value to appear in the cells of a pivot.
+ */
 public class PivotCellValue {
     private final String fieldName;
     private final DataModelObject dataModelObject;
@@ -83,12 +86,34 @@ public class PivotCellValue {
         }
     }
 
+    /**
+     * @return the name of the field to aggregate on.
+     */
     public String getFieldName() { return this.fieldName; }
+
+    /**
+     * @return the data model object this pivot is operating on.
+     */
     public DataModelObject getOwner() { return this.dataModelObject; }
+
+    /**
+     * @return a human readable name for this aggregate.
+     */
     public String getLabel() { return this.label; }
+
+    /**
+     * @return whether this aggregate will generate sparkline data.
+     */
     public boolean generateSparklineEnabled() { return this.generateSparkline; }
+
+    /**
+     * @return the function used for aggregation.
+     */
     public StatsFunction getStatsFunction() { return this.statsFunction; }
 
+    /**
+     * @return a JSON serialization of this object.
+     */
     public JsonObject toJson() {
         JsonObject root = new JsonObject();
 

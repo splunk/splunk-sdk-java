@@ -15,6 +15,9 @@
  */
 package com.splunk;
 
+/**
+ * Comparison operators on numeric fields.
+ */
 public enum NumberComparison {
     EQUALS {
         public String toString() { return "="; }

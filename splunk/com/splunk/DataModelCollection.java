@@ -17,9 +17,6 @@ package com.splunk;
 
 import java.util.Map;
 
-/**
- * Created by fross on 2/14/14.
- */
 public class DataModelCollection extends EntityCollection<DataModel> {
     public DataModelCollection(Service service) {
         super(service, "datamodel/model", DataModel.class);

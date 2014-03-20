@@ -19,6 +19,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Specifies a row split in a pivot on a numeric field.
+ *
+ * Each value of the field will be split into a different row.
+ */
 public class NumberPivotRowSplit extends PivotRowSplit {
     public NumberPivotRowSplit(DataModelObject owner, String field, String label) {
         super(owner, field, label);

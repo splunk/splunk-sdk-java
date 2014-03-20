@@ -15,6 +15,9 @@
  */
 package com.splunk;
 
+/**
+ * Comparisons on boolean valued fields.
+ */
 public enum BooleanComparison {
     IS_NULL {
         public String toString() { return "isNull"; }

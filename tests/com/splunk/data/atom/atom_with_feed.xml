@@ -46,7 +46,7 @@
             <s:key name="can_share_user">0</s:key>
             <s:key name="can_write">1</s:key>
             <s:key name="modifiable">1</s:key>
-            <s:key name="owner">nobody</s:key>
+            <s:key name="dataModelObject">nobody</s:key>
             <s:key name="perms">
               <s:dict>
                 <s:key name="read">

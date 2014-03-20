@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * DataModelObject represents one of the structured views in a data model.
+ */
 public class DataModelObject {
     private String comment;
     private DataModel model;
@@ -150,14 +153,31 @@ public class DataModelObject {
         return "| tstats namespace=" + namespace;
     }
 
+    /**
+     * Return the calculations done by this data model object to produce fields.
+     *
+     * Each calculation has a unique ID assigned to it by splunkd, which is the key
+     * in the returned map. For most purposes you will probably only want the values.
+     *
+     * @return a map of calculation IDs to Calculation objects.
+     */
     public Map<String, Calculation> getCalculations() {
         return this.calculations;
     }
 
+    /**
+     * Fetch a calculation by its unique ID.
+     *
+     * @param calculationId a splunkd assigned unique ID for this calculation.
+     * @return a Calculation object.
+     */
     public Calculation getCalcualtion(String calculationId) {
         return this.calculations.get(calculationId);
     }
 
+    /**
+     * @return a collection of the DataModelObjects that inherit from this one.
+     */
     public Collection<DataModelObject> getChildren() {
         Collection<DataModelObject> children = new ArrayList<DataModelObject>();
 
@@ -183,6 +203,9 @@ public class DataModelObject {
         return this.comment;
     }
 
+    /**
+     * @return a collection of the constraints limiting events that will appear in this data model object.
+     */
     public Collection<Constraint> getConstraints() {
         return this.constraints;
     }
@@ -244,6 +267,10 @@ public class DataModelObject {
         return fields;
     }
 
+    /**
+     * @return an unaccelerated query string that will fetch all the events as structured by this
+     * data model object.
+     */
     public String getQuery() {
         return "| datamodel " + this.model.getName() + " " + this.getName() + " search";
     }
@@ -274,31 +301,65 @@ public class DataModelObject {
         return this.parentName;
     }
 
+    /**
+     * @return the data model object this one inherits from if it is a user defined data model object
+     * in the same data model; otherwise returns null (for example if the data model object inherits from BaseEvent
+     * or BaseTransaction).
+     */
     public DataModelObject getParent() {
         return this.getDataModel().getObject(this.parentName);
     }
 
+    /**
+     * Start a job that fetches all the events of this data model object.
+     *
+     * @return a Job object.
+     */
     public Job runQuery() {
         return runQuery("", null);
     }
 
+    /**
+     * Start a job that fetches all the events of this data model object.
+     *
+     * @param args arguments specifying behavior of the job.
+     * @return a Job object.
+     */
     public Job runQuery(JobArgs args) {
         return runQuery("", args);
     }
 
+    /**
+     * Start a job that applies querySuffix to all the events in this data model object.
+     *
+     * @param querySuffix a search query, starting with a '|' that will be appended to the command to fetch
+     *                    the contents of this data model object (e.g., "| head 3").
+     * @return a Job object.
+     */
     public Job runQuery(String querySuffix) {
         return runQuery(querySuffix, null);
     }
 
+    /**
+     * Start a job that applies querySuffix to all the events in this data model object.
+     *
+     * @param querySuffix a search query, starting with a '|' that will be appended to the command to fetch
+     *                    the contents of this data model object (e.g., "| head 3").
+     * @param args arguments to control the job.
+     * @return a Job object.
+     */
     public Job runQuery(String querySuffix, JobArgs args) {
         return getDataModel().getService().getJobs().create(getAcceleratedQuery() + querySuffix, args);
     }
 
-    public Pivot pivot(PivotSpecification pivotArgs) {
-        // TODO implement me
-        return null;
-    }
+    /**
+     * Produce a data model object from a JSON dictionary specifying it plus a data model that contains it.
 
+     * @param dataModel a DataModel instance that contains this data model object.
+     * @param object a JsonElement (as produced by Gson) specifying this data model object (usually one of
+     *               the entries in the array of objects in the JSON description of the data model).
+     * @return a DataModelObject instance.
+     */
     public static DataModelObject parse(DataModel dataModel, JsonElement object) {
         String name = null;
         String displayName = null;

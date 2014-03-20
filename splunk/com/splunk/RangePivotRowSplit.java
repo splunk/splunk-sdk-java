@@ -19,11 +19,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Split values of a field into rows by ranges of a numeric field.
+ */
 public class RangePivotRowSplit extends PivotRowSplit {
-    final int start, end, step, limit;
+    final Integer start, end, step, limit;
 
     public RangePivotRowSplit(DataModelObject dataModelObject, String field, String label,
-                              int start, int end, int step, int limit) {
+                              Integer start, Integer end, Integer step, Integer limit) {
         super(dataModelObject, field, label);
         this.start = start;
         this.end = end;
@@ -31,24 +34,38 @@ public class RangePivotRowSplit extends PivotRowSplit {
         this.limit = limit;
     }
 
-    public int getStart() { return this.start; }
-    public int getEnd() { return this.end; }
-    public int getStep() { return this.step; }
-    public int getLimit() { return this.limit; }
+    /**
+     * @return the value of the start of the lowest range, or null if not specified.
+     */
+    public Integer getStart() { return this.start; }
+
+    /**
+     * @return the value of the end of the highest range, or null if not specified.
+     */
+    public Integer getEnd() { return this.end; }
+
+    /**
+     * @return the width of each range, or null if not specified.
+     */
+    public Integer getStep() { return this.step; }
+
+    /**
+     * @return the maximum number of ranges to split into, or null if no limit.
+     */
+    public Integer getLimit() { return this.limit; }
 
     @Override
     public JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);
-
         JsonObject ranges = new JsonObject();
-        ranges.add("start", new JsonPrimitive(start));
-        ranges.add("end", new JsonPrimitive(end));
-        ranges.add("size", new JsonPrimitive(step));
-        ranges.add("maxNumberOf", new JsonPrimitive(limit));
+        if (start != null) ranges.addProperty("start", start);
+        if (end != null)   ranges.addProperty("end", end);
+        if (step != null)  ranges.addProperty("size", step);
+        if (limit != null) ranges.addProperty("maxNumberOf", limit);
         root.add("ranges", ranges);
-        root.add("display", new JsonPrimitive("ranges"));
+        root.addProperty("display", "ranges");
 
         return root;
     }

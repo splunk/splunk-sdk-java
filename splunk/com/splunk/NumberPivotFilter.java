@@ -19,6 +19,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Specifies a filter in a pivot on a numeric field.
+ */
 public class NumberPivotFilter extends PivotFilter {
     private final NumberComparison comparison;
     private final double comparisonValue;

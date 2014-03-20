@@ -15,6 +15,9 @@
  */
 package com.splunk;
 
+/**
+ * Comparison operators that apply to IPv4 values in data models and pivots.
+ */
 public enum IPv4Comparison {
     IS {
         public String toString() { return "is"; }

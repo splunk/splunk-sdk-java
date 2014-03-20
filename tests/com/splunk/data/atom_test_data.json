@@ -45,7 +45,7 @@
             "can_share_user": "0",
             "can_write": "1",
             "modifiable": "1",
-            "owner": "nobody",
+            "dataModelObject": "nobody",
             "perms": {
               "read": ["*"],
               "write": ["power"]
@@ -116,7 +116,7 @@
             "can_share_user": "0",
             "can_write": "1",
             "modifiable": "1",
-            "owner": "system",
+            "dataModelObject": "system",
             "perms": {
               "read": ["*"],
               "write": ["power"]
@@ -157,7 +157,7 @@
             "can_share_user": "0",
             "can_write": "1",
             "modifiable": "1",
-            "owner": "system",
+            "dataModelObject": "system",
             "perms": {
               "read": ["*"],
               "write": ["power"]
@@ -199,7 +199,7 @@
             "can_share_user": "0",
             "can_write": "1",
             "modifiable": "1",
-            "owner": "system",
+            "dataModelObject": "system",
             "perms": {"read": ["*"], "write": ["*"]},
             "removable": "0",
             "sharing": "app"

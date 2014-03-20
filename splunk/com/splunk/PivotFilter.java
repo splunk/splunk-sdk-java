@@ -21,6 +21,9 @@ import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 
+/**
+ * Base class representing filters in pivots.
+ */
 public abstract class PivotFilter {
     private final DataModelObject dataModelObject;
     private final String fieldName;
@@ -33,33 +36,44 @@ public abstract class PivotFilter {
         this.fieldName = fieldName;
     }
 
-    public DataModelObject getOwner() { return this.dataModelObject; }
+    /**
+     * @return the name of the data model object this filter's field is defined on.
+     */
+    public String getOwnerName() { return this.dataModelObject.getField(this.fieldName).getOwnerName(); }
 
+    /**
+     * @return return the lineage, most remote ancestor first, of the data model object his filter's field is
+     * defined on.
+     */
+    public String[] getOwnerLineage() { return this.dataModelObject.getField(this.fieldName).getOwnerLineage(); }
+
+    /**
+     * @return the name of the field to filter on.
+     */
     public String getFieldName() {
         return this.fieldName;
     }
 
-    public String getOwnerName() {
-        return this.dataModelObject.getName();
-    }
-    public String[] getOwnerLineage() {
-        return this.dataModelObject.getLineage();
-    }
-
+    /**
+     * @return the type of the field we are filtering on.
+     */
     public FieldType getType() {
         return this.dataModelObject.getField(fieldName).getType();
     }
 
+    /**
+     * @return a JSON serialization of this object.
+     */
     public abstract JsonElement toJson();
 
+    /**
+     * Called by subclasses to add the fields common to all subclasses to JSON serializations.
+     *
+     * @param root a JsonObject instance representing a serialization of this object.
+     */
     protected void addCommonFields(JsonObject root) {
-        root.add("fieldName", new JsonPrimitive(this.fieldName));
-
-        ArrayList<String> lineageList = new ArrayList<String>();
-        for (String entry : this.getOwnerLineage()) {
-            lineageList.add(entry);
-        }
-        root.add("owner", new JsonPrimitive(Util.join(".", lineageList)));
-        root.add("type", new JsonPrimitive(this.getType().toString()));
+        root.addProperty("fieldName", this.fieldName);
+        root.addProperty("owner", Util.join(".", this.dataModelObject.getField(fieldName).getOwnerLineage()));
+        root.addProperty("type", this.getType().toString());
     }
 }
