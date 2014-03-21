@@ -33,12 +33,12 @@ public class PivotTest extends SDKTestCase {
 
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
-        DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
-        DataModel model = dataModels.create(createTemporaryName(), args);
+//        DataModelArgs args = new DataModelArgs();
+//        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
+//        DataModel model = dataModels.create(createTemporaryName(), args);
 
-        this.dataModelObject = model.getObject("test_data");
-        Assert.assertNotNull(dataModelObject);
+ //       this.dataModelObject = model.getObject("test_data");
+ //       Assert.assertNotNull(dataModelObject);
     }
 
     @After
@@ -682,5 +682,30 @@ public class PivotTest extends SDKTestCase {
         });
 
         Assert.assertTrue(job.getSearch().startsWith("| tstats"));
+    }
+
+    @Test
+    public void testColumnRangeSplit() {
+        // This tests is here because we had a problem with fields that were supposed to be
+        // numbers being expected as strings in Splunk 6.0. This was fixed in Splunk 6.1, and accepts
+        // either strings or numbers.
+        DataModelObject searches = service.getDataModels().get("internal_audit_logs").getObject("searches");
+        PivotSpecification pivotSpecification = new PivotSpecification(searches);
+        pivotSpecification.addRowSplit("user", "Executing user");
+        pivotSpecification.addColumnSplit("exec_time", 0, 12, 5, 4);
+        pivotSpecification.addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES, false);
+
+        Pivot pivot = pivotSpecification.pivot();
+        final Job job = pivot.run();
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isDone();
+            }
+        });
+
+        job.cancel();
+
     }
 }

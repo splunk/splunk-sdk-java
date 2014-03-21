@@ -59,10 +59,12 @@ public class RangePivotColumnSplit extends PivotColumnSplit {
         addCommonFields(root);
 
         JsonObject ranges = new JsonObject();
-        ranges.add("start", new JsonPrimitive(start));
-        ranges.add("end", new JsonPrimitive(end));
-        ranges.add("size", new JsonPrimitive(step));
-        ranges.add("maxNumberOf", new JsonPrimitive(limit));
+        // In Splunk 6.0.1.1, data models incorrectly expect strings for these fields
+        // instead of numbers. In 6.1, this is fixed and both are accepted.
+        if (start != null) ranges.add("start", new JsonPrimitive(start.toString()));
+        if (end != null) ranges.add("end", new JsonPrimitive(end.toString()));
+        if (step != null) ranges.add("size", new JsonPrimitive(step.toString()));
+        if (limit != null) ranges.add("maxNumberOf", new JsonPrimitive(limit.toString()));
         root.add("ranges", ranges);
         root.add("display", new JsonPrimitive("ranges"));
 

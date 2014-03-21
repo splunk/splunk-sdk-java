@@ -53,6 +53,15 @@ public class DataModelTest extends SDKTestCase {
     }
 
     @Test
+    public void testDataModelObjectFetchNotNull() {
+        DataModelCollection dataModelCollection = service.getDataModels();
+        DataModel model = dataModelCollection.get("internal_audit_logs");
+        DataModelObject searches = model.getObject("searches");
+
+        Assert.assertNotNull(searches);
+    }
+
+    @Test
     public void testDataModelWithZeroObjects() {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 

@@ -20,6 +20,7 @@ import java.util.Map;
 public class DataModelCollection extends EntityCollection<DataModel> {
     public DataModelCollection(Service service) {
         super(service, "datamodel/model", DataModel.class);
+        this.refreshArgs.put("concise", "0");
     }
 
     /**

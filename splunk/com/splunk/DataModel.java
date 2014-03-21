@@ -47,6 +47,9 @@ public class DataModel extends Entity {
     public DataModel(Service service, String path) {
         super(service, path);
         objects = new HashMap<String, DataModelObject>();
+        // The data provided by the collection is incomplete. Go ahead and refresh so we don't
+        // have to worry about it.
+        this.refresh();
     }
 
     /**
