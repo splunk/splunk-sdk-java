@@ -36,7 +36,6 @@ public class Program {
         service = Service.connect(command.opts);
 
         DataModel dataModel = service.getDataModels().get("internal_audit_logs");
-        dataModel.refresh();
         DataModelObject searches = dataModel.getObject("searches");
 
         System.out.print("Working with object " + searches.getDisplayName());
