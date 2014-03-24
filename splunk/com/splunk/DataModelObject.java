@@ -171,7 +171,7 @@ public class DataModelObject {
      * @param calculationId a splunkd assigned unique ID for this calculation.
      * @return a Calculation object.
      */
-    public Calculation getCalcualtion(String calculationId) {
+    public Calculation getCalculation(String calculationId) {
         return this.calculations.get(calculationId);
     }
 
@@ -258,7 +258,7 @@ public class DataModelObject {
      * Return all the fields, whether input or created by calculations.
      * @return a collection of Field objects.
      */
-    public Collection<Field> getAllFields() {
+    public Collection<Field> getFields() {
         Collection<Field> fields = new ArrayList<Field>();
         fields.addAll(this.autoextractedFields.values());
         for (Calculation c : this.calculations.values()) {

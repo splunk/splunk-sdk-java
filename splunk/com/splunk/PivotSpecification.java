@@ -228,7 +228,7 @@ public class PivotSpecification {
     }
 
     /**
-     * Add a row split on a numeric field, splitting on each distinct value of the field.
+     * Add a row split on a numeric or string valued field, splitting on each distinct value of the field.
      *
      * @param field name of the field to split on
      * @param  label a human readable name for this set of rows
@@ -474,10 +474,16 @@ public class PivotSpecification {
     /**
      * Query Splunk for SPL queries corresponding to this pivot.
      *
+     * This method will attempt to use the data model's acceleration if it is enabled.
+     *
      * @return a Pivot object encapsulating the returned queries.
      */
     public Pivot pivot() {
-        return pivot((String) null);
+        if (dataModelObject.getDataModel().isAccelerated()) {
+            return pivot(dataModelObject.getDataModel().getAccelerationNamespace());
+        } else {
+            return pivot((String)null);
+        }
     }
 
     /**

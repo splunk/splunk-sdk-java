@@ -15,12 +15,10 @@
  */
 package com.splunk;
 
-import com.sun.accessibility.internal.resources.accessibility_en;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DataModelTest extends SDKTestCase {
@@ -316,7 +314,7 @@ public class DataModelTest extends SDKTestCase {
 
         DataModelObject object = model.getObject("test_data");
         Assert.assertEquals(5, object.getAutoExtractedFields().size());
-        Assert.assertEquals(10, object.getAllFields().size());
+        Assert.assertEquals(10, object.getFields().size());
         Assert.assertTrue(object.containsField("has_boris"));
         Assert.assertTrue(object.containsField("_time"));
     }
