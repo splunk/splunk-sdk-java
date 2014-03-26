@@ -22,6 +22,7 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -62,71 +63,12 @@ public class ResultsReaderXml
             boolean isInMultiReader)
             throws IOException {
         super(inputStream, isInMultiReader);
-        PushbackReader pushbackReader =
-            new PushbackReader(new InputStreamReader(inputStream), 256);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-        // At initialization, skip everything in the start until we get to the
-        // first-non preview data "<results",
-        // Push back into the stream an opening <doc> tag, and parse the file.
-        // We do this because the XML parser requires a single root element.
-        // Below is an example of an input stream, with a single 'results'
-        // element. With a stream from an export point, there can be
-        // multiple ones.
-        //
-        //        <?xml version='1.0' encoding='UTF-8'?>
-        //        <results preview='0'>
-        //        <meta>
-        //        <fieldOrder>
-        //        <field>series</field>
-        //        <field>sum(kb)</field>
-        //        </fieldOrder>
-        //        </meta>
-        //        <messages>
-        //        <msg type='DEBUG'>base lispy: [ AND ]</msg>
-        //        <msg type='DEBUG'>search context: user='admin', app='search', bs-pathname='/some/path'</msg>
-        //        </messages>
-        //        <result offset='0'>
-        //        <field k='series'>
-        //        <value><text>twitter</text></value>
-        //        </field>
-        //        <field k='sum(kb)'>
-        //        <value><text>14372242.758775</text></value>
-        //        </field>
-        //        </result>
-        //        <result offset='1'>
-        //        <field k='series'>
-        //        <value><text>splunkd</text></value>
-        //        </field>
-        //        <field k='sum(kb)'>
-        //        <value><text>267802.333926</text></value>
-        //        </field>
-        //        </result>
-        //        </results>
-
-        String findToken = "<results";
-        String accumulator = "";
-        int index = 0;
-        while (true) {
-            int data = pushbackReader.read();
-            if (data < 0) return;
-            accumulator = accumulator + (char)data;
-            if (findToken.equals(accumulator)) {
-                    String putBackString = "<doc>" + findToken;
-                    char putBackBytes[] = putBackString.toCharArray();
-                    pushbackReader.unread(putBackBytes);
-                    break;
-            } else if (!findToken.startsWith(accumulator)) {
-                accumulator = "";
-            }
-        }
-
-        Reader appendingReader = new AppendingReader(pushbackReader, new StringReader("</doc>"));
-
-        // Attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
-            xmlReader = inputFactory.createXMLEventReader(appendingReader);
+            InputStream filteredStream = new InsertRootElementFilterInputStream(inputStream);
+            xmlReader = inputFactory.createXMLEventReader(filteredStream);
             finishInitialization();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
