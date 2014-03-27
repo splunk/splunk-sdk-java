@@ -29,7 +29,7 @@ import java.util.Iterator;
 public abstract class ResultsReader
         extends StreamIterableBase<Event>
         implements SearchResults {
-    InputStreamReader inputStreamReader = null;
+    protected final InputStream inputStream;
     // Default should be false which will result in no result set skipping.
     boolean isPreview;
     boolean isExportStream;
@@ -37,7 +37,7 @@ public abstract class ResultsReader
 
     ResultsReader(InputStream inputStream, boolean isInMultiReader)
             throws IOException {
-        inputStreamReader = new InputStreamReader(inputStream, "UTF8");
+        this.inputStream = inputStream;
         isExportStream = inputStream instanceof ExportResultsStream;
         this.isInMultiReader = isInMultiReader;
     }
@@ -48,9 +48,7 @@ public abstract class ResultsReader
      * @throws IOException On IO exception.
      */
     public void close() throws IOException {
-        if (inputStreamReader != null)
-            inputStreamReader.close();
-        inputStreamReader = null;
+        inputStream.close();
     }
 
     /**

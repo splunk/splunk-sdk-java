@@ -47,4 +47,14 @@ public class InsertRootElementFilterInputStreamTest {
         Assert.assertEquals(expected, found);
     }
 
+    @Test
+    public void testNoResultsElement() throws IOException {
+        InputStream stream = new ByteArrayInputStream("boris the mad baboon".getBytes("UTF-8"));
+        InputStream filteredStream = new InsertRootElementFilterInputStream(stream);
+
+        String found = SDKTestCase.streamToString(filteredStream);
+        String expected = "boris the mad baboon";
+
+        Assert.assertEquals(expected, found);
+    }
 }

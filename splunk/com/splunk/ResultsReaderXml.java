@@ -62,20 +62,19 @@ public class ResultsReaderXml
             InputStream inputStream,
             boolean isInMultiReader)
             throws IOException {
-        super(inputStream, isInMultiReader);
+        super(new PushbackInputStream(inputStream), isInMultiReader);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-        PushbackInputStream pushbackInputStream = new PushbackInputStream(inputStream);
-        int ch = pushbackInputStream.read();
+        int ch = this.inputStream.read();
         if (ch == -1) {
             return; // Stream is empty.
         } else {
-            pushbackInputStream.unread(ch);
+            ((PushbackInputStream)this.inputStream).unread(ch);
         }
 
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
-            InputStream filteredStream = new InsertRootElementFilterInputStream(pushbackInputStream);
+            InputStream filteredStream = new InsertRootElementFilterInputStream(this.inputStream);
             xmlReader = inputFactory.createXMLEventReader(filteredStream);
             finishInitialization();
         } catch (XMLStreamException e) {
