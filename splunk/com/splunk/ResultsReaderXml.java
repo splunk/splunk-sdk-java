@@ -65,9 +65,17 @@ public class ResultsReaderXml
         super(inputStream, isInMultiReader);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
+        PushbackInputStream pushbackInputStream = new PushbackInputStream(inputStream);
+        int ch = pushbackInputStream.read();
+        if (ch == -1) {
+            return; // Stream is empty.
+        } else {
+            pushbackInputStream.unread(ch);
+        }
+
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
-            InputStream filteredStream = new InsertRootElementFilterInputStream(inputStream);
+            InputStream filteredStream = new InsertRootElementFilterInputStream(pushbackInputStream);
             xmlReader = inputFactory.createXMLEventReader(filteredStream);
             finishInitialization();
         } catch (XMLStreamException e) {
