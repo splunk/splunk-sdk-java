@@ -51,8 +51,17 @@ public abstract class SDKTestCase extends TestCase {
     protected Command command;
 
     public static String streamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+        Reader r = new InputStreamReader(is);
+        StringBuffer sb = new StringBuffer();
+        int ch;
+        try {
+            while ((ch = r.read()) != -1) {
+                sb.append((char)ch);
+            }
+        } catch (IOException ioex) {
+            throw new RuntimeException(ioex.getMessage());
+        }
+        return sb.toString();
     }
 
     public void connect() {

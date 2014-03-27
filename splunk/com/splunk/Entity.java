@@ -385,7 +385,9 @@ public class Entity extends Resource implements Map<String, Object> {
             throw new RuntimeException(e);
         }
         int count = feed.entries.size();
-        assert(count == 0 || count == 1);
+        if (count > 1) {
+            throw new IllegalStateException("Expected 0 or 1 Atom entries; found " + feed.entries.size());
+        }
         AtomEntry entry = count == 0 ? null : feed.entries.get(0);
         load(entry);
         return this;
