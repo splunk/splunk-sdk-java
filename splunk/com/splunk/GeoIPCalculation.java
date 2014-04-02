@@ -25,7 +25,7 @@ import java.util.Map;
 public class GeoIPCalculation extends Calculation {
     private final String inputField;
 
-    public GeoIPCalculation(String[] ownerLineage, String calculationID,
+    GeoIPCalculation(String[] ownerLineage, String calculationID,
                             Map<String, Field> generatedFields, String comment,
                             boolean editable, String inputField) {
         super(ownerLineage, calculationID, generatedFields, comment, editable);

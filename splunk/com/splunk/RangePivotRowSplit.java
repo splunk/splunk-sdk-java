@@ -25,7 +25,7 @@ import com.google.gson.JsonPrimitive;
 public class RangePivotRowSplit extends PivotRowSplit {
     final Integer start, end, step, limit;
 
-    public RangePivotRowSplit(DataModelObject dataModelObject, String field, String label,
+    RangePivotRowSplit(DataModelObject dataModelObject, String field, String label,
                               Integer start, Integer end, Integer step, Integer limit) {
         super(dataModelObject, field, label);
         this.start = start;
@@ -55,7 +55,7 @@ public class RangePivotRowSplit extends PivotRowSplit {
     public Integer getLimit() { return this.limit; }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

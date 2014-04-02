@@ -26,7 +26,7 @@ public class BooleanPivotFilter extends PivotFilter {
     private final BooleanComparison comparison;
     private final boolean comparisonValue;
 
-    public BooleanPivotFilter(DataModelObject dataModelObject, String fieldName,
+    BooleanPivotFilter(DataModelObject dataModelObject, String fieldName,
                               BooleanComparison comparison, boolean comparisonValue) {
         super(dataModelObject, fieldName);
         if (dataModelObject.getField(fieldName).getType() != FieldType.BOOLEAN) {
@@ -38,7 +38,7 @@ public class BooleanPivotFilter extends PivotFilter {
     }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

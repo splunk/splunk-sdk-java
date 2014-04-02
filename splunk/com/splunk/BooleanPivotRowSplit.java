@@ -26,7 +26,7 @@ public class BooleanPivotRowSplit extends PivotRowSplit {
     private final String falseDisplayValue;
     private final String trueDisplayValue;
 
-    public BooleanPivotRowSplit(DataModelObject dataModelObject, String field, String label,
+    BooleanPivotRowSplit(DataModelObject dataModelObject, String field, String label,
                                 String trueDisplayValue, String falseDisplayValue) {
         super(dataModelObject, field, label);
         this.trueDisplayValue = trueDisplayValue;
@@ -37,7 +37,7 @@ public class BooleanPivotRowSplit extends PivotRowSplit {
     public String getFalseDisplayValue() { return this.falseDisplayValue; }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

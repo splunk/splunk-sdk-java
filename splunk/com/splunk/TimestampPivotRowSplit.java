@@ -24,7 +24,7 @@ import com.google.gson.JsonObject;
 public class TimestampPivotRowSplit extends PivotRowSplit {
     private final TimestampBinning binning;
 
-    public TimestampPivotRowSplit(DataModelObject dataModelObject, String field,
+    TimestampPivotRowSplit(DataModelObject dataModelObject, String field,
                                   String label, TimestampBinning binning) {
         super(dataModelObject, field, label);
 
@@ -34,7 +34,7 @@ public class TimestampPivotRowSplit extends PivotRowSplit {
     public TimestampBinning getBinning() { return this.binning; }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

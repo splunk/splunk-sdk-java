@@ -22,7 +22,7 @@ public abstract class PivotColumnSplit {
     private final String fieldName;
     private final DataModelObject owner;
 
-    public PivotColumnSplit(DataModelObject owner, String fieldName) {
+    PivotColumnSplit(DataModelObject owner, String fieldName) {
         this.fieldName = fieldName;
         this.owner = owner;
     }
@@ -39,5 +39,5 @@ public abstract class PivotColumnSplit {
         obj.addProperty("type", field.getType().toString());
     }
 
-    public abstract JsonObject toJson();
+    abstract JsonObject toJson();
 }

@@ -27,7 +27,7 @@ public abstract class PivotRowSplit {
     private final DataModelObject dataModelObject;
     private final String label;
 
-    public PivotRowSplit(DataModelObject dataModelObject, String fieldName, String label) {
+    PivotRowSplit(DataModelObject dataModelObject, String fieldName, String label) {
         this.fieldName = fieldName;
         this.dataModelObject = dataModelObject;
         this.label = label;
@@ -70,5 +70,5 @@ public abstract class PivotRowSplit {
     /**
      * @return a JSON serialization of this object.
      */
-    public abstract JsonElement toJson();
+    abstract JsonElement toJson();
 }

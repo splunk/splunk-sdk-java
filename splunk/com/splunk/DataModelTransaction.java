@@ -28,7 +28,7 @@ public class DataModelTransaction extends DataModelObject {
     protected String maxSpan;
     protected String maxPause;
 
-    public DataModelTransaction(DataModel dataModel) {
+    DataModelTransaction(DataModel dataModel) {
         super(dataModel);
     }
 

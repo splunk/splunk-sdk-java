@@ -28,7 +28,7 @@ public class PivotCellValue {
     private final boolean generateSparkline;
     private final StatsFunction statsFunction;
 
-    public PivotCellValue(DataModelObject dataModelObject, String fieldName, String label,
+    PivotCellValue(DataModelObject dataModelObject, String fieldName, String label,
                           StatsFunction statsFunction, boolean generateSparkline) {
         this.fieldName = fieldName;
         this.dataModelObject = dataModelObject;
@@ -114,7 +114,7 @@ public class PivotCellValue {
     /**
      * @return a JSON serialization of this object.
      */
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject root = new JsonObject();
 
         Field f = this.dataModelObject.getField(fieldName);

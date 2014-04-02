@@ -92,7 +92,7 @@ public class Pivot {
      * @param content an InputStream returned by an HTTP response.
      * @return a Pivot object.
      */
-    public static Pivot parseStream(Service service, InputStream content) {
+    static Pivot parseStream(Service service, InputStream content) {
         AtomFeed feed = AtomFeed.parseStream(content);
         if (feed.entries.size() != 1) {
             throw new IllegalStateException("Expected one Atom entry; found " + feed.entries.size());

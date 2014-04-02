@@ -22,12 +22,12 @@ import com.google.gson.JsonObject;
  * Represents a row split on a string valued field.
  */
 public class StringPivotRowSplit extends PivotRowSplit {
-    public StringPivotRowSplit(DataModelObject dataModelObject, String field, String label) {
+    StringPivotRowSplit(DataModelObject dataModelObject, String field, String label) {
         super(dataModelObject, field, label);
     }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
         addCommonFields(root);
         return root;

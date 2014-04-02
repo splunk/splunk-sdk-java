@@ -28,7 +28,7 @@ public abstract class PivotFilter {
     protected final DataModelObject dataModelObject;
     protected final String fieldName;
 
-    public PivotFilter(DataModelObject dataModelObject, String fieldName) {
+    PivotFilter(DataModelObject dataModelObject, String fieldName) {
         this.dataModelObject = dataModelObject;
         if (!dataModelObject.containsField(fieldName)) {
             throw new IllegalArgumentException("No such field " + fieldName + " on specified data model object.");
@@ -64,7 +64,7 @@ public abstract class PivotFilter {
     /**
      * @return a JSON serialization of this object.
      */
-    public abstract JsonElement toJson();
+    abstract JsonElement toJson();
 
     /**
      * Called by subclasses to add the fields common to all subclasses to JSON serializations.

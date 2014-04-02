@@ -24,7 +24,7 @@ public class RegexpCalculation extends Calculation {
     private final String expression;
     private final String inputField;
 
-    public RegexpCalculation(String[] owner, String calculationID,
+    RegexpCalculation(String[] owner, String calculationID,
                              Map<String, Field> generatedFields, String comment,
                              boolean editable, String inputField, String expression) {
         super(owner, calculationID, generatedFields, comment, editable);

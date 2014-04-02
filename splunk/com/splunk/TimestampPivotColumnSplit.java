@@ -23,7 +23,7 @@ import com.google.gson.JsonObject;
 public class TimestampPivotColumnSplit extends PivotColumnSplit {
     private final TimestampBinning binning;
 
-    public TimestampPivotColumnSplit(DataModelObject owner, String fieldName, TimestampBinning binning) {
+    TimestampPivotColumnSplit(DataModelObject owner, String fieldName, TimestampBinning binning) {
         super(owner, fieldName);
         this.binning = binning;
     }
@@ -31,7 +31,7 @@ public class TimestampPivotColumnSplit extends PivotColumnSplit {
     public TimestampBinning getBinning() { return this.binning; }
 
     @Override
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject root = new JsonObject();
         addCommonFields(root);
         root.addProperty("period", binning.toString());

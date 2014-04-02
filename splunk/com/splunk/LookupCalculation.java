@@ -29,7 +29,7 @@ public class LookupCalculation extends Calculation {
     private final String inputField;
     private final String lookupName;
 
-    public LookupCalculation(String[] ownerLineage, String calculationID,
+    LookupCalculation(String[] ownerLineage, String calculationID,
                              Map<String, Field> generatedFields, String comment,
                              boolean editable, String lookupName,
                              String lookupFieldName, String inputField) {

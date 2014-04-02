@@ -113,7 +113,7 @@ public class DataModelObject {
         if (earliestTime != null) {
             args.setEarliestTime(earliestTime);
         }
-        return this.model.getService().getJobs().create(query, args);
+        return this.model.getService().search(query, args);
     }
 
     /**
@@ -308,6 +308,15 @@ public class DataModelObject {
      */
     public DataModelObject getParent() {
         return this.getDataModel().getObject(this.parentName);
+    }
+
+    /**
+     * Create a PivotSpecification on this data model object.
+     *
+     * @return a PivotSpecification instance.
+     */
+    public PivotSpecification getPivotSpecification() {
+        return new PivotSpecification(this);
     }
 
     /**

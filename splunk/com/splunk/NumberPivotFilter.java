@@ -26,7 +26,7 @@ public class NumberPivotFilter extends PivotFilter {
     private final NumberComparison comparison;
     private final double comparisonValue;
 
-    public NumberPivotFilter(DataModelObject dataModelObject, String field,
+    NumberPivotFilter(DataModelObject dataModelObject, String field,
                              NumberComparison comparison, double comparisonValue) {
         super(dataModelObject, field);
         if (dataModelObject.getField(field).getType() != FieldType.NUMBER) {
@@ -38,7 +38,7 @@ public class NumberPivotFilter extends PivotFilter {
     }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

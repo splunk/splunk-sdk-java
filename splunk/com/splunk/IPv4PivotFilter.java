@@ -28,7 +28,7 @@ public class IPv4PivotFilter extends PivotFilter {
     private final IPv4Comparison comparison;
     private final String comparisonValue;
 
-    public IPv4PivotFilter(DataModelObject dataModelObject, String field, IPv4Comparison comparison, String comparisonValue) {
+    IPv4PivotFilter(DataModelObject dataModelObject, String field, IPv4Comparison comparison, String comparisonValue) {
         super(dataModelObject, field);
         if (dataModelObject.getField(field).getType() != FieldType.IPV4) {
             throw new IllegalArgumentException("Field " + field + " on the data model object was of type "
@@ -39,7 +39,7 @@ public class IPv4PivotFilter extends PivotFilter {
     }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

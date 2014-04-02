@@ -25,12 +25,12 @@ import com.google.gson.JsonPrimitive;
  * Each value of the field will be split into a different row.
  */
 public class NumberPivotRowSplit extends PivotRowSplit {
-    public NumberPivotRowSplit(DataModelObject owner, String field, String label) {
+    NumberPivotRowSplit(DataModelObject owner, String field, String label) {
         super(owner, field, label);
     }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

@@ -20,7 +20,7 @@ public class LimitPivotFilter extends PivotFilter {
      *   - COUNT, DISTINCT_COUNT, SUM, AVERAGE (for fields of type number)
      *   - COUNT (for fields of type object count)
      */
-    public LimitPivotFilter(DataModelObject dataModelObject, String fieldName, String sortAttribute,
+    LimitPivotFilter(DataModelObject dataModelObject, String fieldName, String sortAttribute,
                             SortDirection sortDirection, int limit,
                             StatsFunction statsFunction) {
         super(dataModelObject, fieldName);
@@ -90,7 +90,7 @@ public class LimitPivotFilter extends PivotFilter {
     }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

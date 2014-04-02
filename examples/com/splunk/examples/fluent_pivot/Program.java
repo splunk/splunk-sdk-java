@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.splunk.examples.pivot;
+package com.splunk.examples.fluent_pivot;
 
 import com.splunk.*;
 
@@ -60,13 +60,12 @@ public class Program {
         System.out.println("~~~~~~~~~~~~~~~~~~~~");
         System.out.println("Pivoting on searches");
 
-        PivotSpecification pivotSpecification = searches.getPivotSpecification();
+        Pivot pivot = searches.getPivotSpecification().
+                addRowSplit("user", "Executing user").
+                addColumnSplit("exec_time", null, null, null, 4).
+                addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES, false).
+                pivot();
 
-        pivotSpecification.addRowSplit("user", "Executing user");
-        pivotSpecification.addColumnSplit("exec_time", null, null, null, 4);
-        pivotSpecification.addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES, false);
-
-        Pivot pivot = pivotSpecification.pivot();
         System.out.println("Query for binning search queries by execution time and executing user:");
         System.out.println("  " + pivot.getPrettyQuery());
 

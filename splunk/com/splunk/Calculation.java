@@ -33,7 +33,7 @@ public abstract class Calculation {
     private final String comment;
     private final boolean editable;
 
-    Calculation(String[] ownerLineage, String calculationID, Map<String, Field> generatedFields, String comment, boolean editable) {
+    protected Calculation(String[] ownerLineage, String calculationID, Map<String, Field> generatedFields, String comment, boolean editable) {
         this.ownerLineage = ownerLineage;
         this.calculationID = calculationID;
         this.generatedFields = generatedFields;
@@ -93,7 +93,7 @@ public abstract class Calculation {
     public boolean isEditable() { return this.editable; }
 
 
-    public static Calculation parse(JsonElement json) {
+    static Calculation parse(JsonElement json) {
         Calculation c;
         String type = null;
         String calculationId = null;

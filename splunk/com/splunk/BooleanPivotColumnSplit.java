@@ -23,14 +23,14 @@ import com.google.gson.JsonObject;
 public class BooleanPivotColumnSplit extends PivotColumnSplit {
     private final String trueLabel, falseLabel;
 
-    public BooleanPivotColumnSplit(DataModelObject owner, String fieldName, String trueLabel, String falseLabel) {
+    BooleanPivotColumnSplit(DataModelObject owner, String fieldName, String trueLabel, String falseLabel) {
         super(owner, fieldName);
         this.trueLabel = trueLabel;
         this.falseLabel = falseLabel;
     }
 
     @Override
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject root = new JsonObject();
         addCommonFields(root);
 

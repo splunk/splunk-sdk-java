@@ -47,7 +47,7 @@ public class Constraint {
      * @param json JsonElement to parse.
      * @return a Constraint object.
      */
-    public static Constraint parse(JsonElement json) {
+    static Constraint parse(JsonElement json) {
         JsonObject jsonObject = json.getAsJsonObject();
         Constraint constraint = new Constraint();
 

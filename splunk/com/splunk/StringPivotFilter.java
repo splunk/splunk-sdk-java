@@ -26,7 +26,7 @@ public class StringPivotFilter extends PivotFilter {
     private final StringComparison comparison;
     private final String comparisonValue;
 
-    public StringPivotFilter(DataModelObject dataModelObject, String fieldName,
+    StringPivotFilter(DataModelObject dataModelObject, String fieldName,
                              StringComparison comparison, String comparisonValue) {
         super(dataModelObject, fieldName);
         if (dataModelObject.getField(fieldName).getType() != FieldType.STRING) {
@@ -38,7 +38,7 @@ public class StringPivotFilter extends PivotFilter {
     }
 
     @Override
-    public JsonElement toJson() {
+    JsonElement toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

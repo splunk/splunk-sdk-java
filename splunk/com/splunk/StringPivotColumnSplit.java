@@ -21,12 +21,12 @@ import com.google.gson.JsonObject;
  * Represents a column split on a string valued field.
  */
 public class StringPivotColumnSplit extends PivotColumnSplit {
-    public StringPivotColumnSplit(DataModelObject dataModelObject, String field) {
+    StringPivotColumnSplit(DataModelObject dataModelObject, String field) {
         super(dataModelObject, field);
     }
 
     @Override
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);

@@ -19,12 +19,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class NumericPivotColumnSplit extends PivotColumnSplit {
-    public NumericPivotColumnSplit(DataModelObject dataModelObject, String field) {
+    NumericPivotColumnSplit(DataModelObject dataModelObject, String field) {
         super(dataModelObject, field);
     }
 
     @Override
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject root = new JsonObject();
 
         addCommonFields(root);
