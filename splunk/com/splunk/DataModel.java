@@ -22,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,20 +34,22 @@ public class DataModel extends Entity {
     private final static JsonParser jsonParser = new JsonParser();
     private final static Gson gson = new Gson();
 
-    private final String modelNameLabel = "modelName";
-    private final String displayNameLabel = "displayName";
-    private final String rawJsonLabel = "description";
+    private static final String ACCELERATION_LABEL = "acceleration";
+    private static final String MODEL_NAME_LABEL = "modelName";
+    private static final String DISPLAY_NAME_LABEL = "displayName";
+    private static final String DESCRIPTION_LABEL = "description";
+    private static final String RAW_JSON_LABEL = "description"; // Yes, this is insane.
 
-    private String description = null;
+    // Human readable description, as opposed to the raw JSON, which is also called 'description'
+    private String description;
 
     private Map<String, DataModelObject> objects;
     private boolean accelerationEnabled;
     private String earliestAcceleratedTime;
     private String accelerationCronSchedule;
 
-    public DataModel(Service service, String path) {
+    DataModel(Service service, String path) {
         super(service, path);
-        objects = new HashMap<String, DataModelObject>();
         // The data provided by the collection is incomplete. Go ahead and refresh so we don't
         // have to worry about it.
         this.refresh();
@@ -76,7 +79,7 @@ public class DataModel extends Entity {
      * @return a collection of all objects in this data model.
      */
     public Collection<DataModelObject> getObjects() {
-        return objects.values();
+        return Collections.unmodifiableCollection(objects.values());
     }
 
     /**
@@ -110,24 +113,24 @@ public class DataModel extends Entity {
      * @return The raw JSON describing this data model and its objects.
      */
     public String getRawJson() {
-        return getString(rawJsonLabel);
+        return getString(RAW_JSON_LABEL);
     }
 
     /**
      * @return the human readable name of this data model.
      */
     public String getDisplayName() {
-        return getString(displayNameLabel);
+        return getString(DISPLAY_NAME_LABEL);
     }
 
     @Override
-    public Entity load(AtomObject value) {
+    Entity load(AtomObject value) {
         Entity result = super.load(value);
         // After loading the Atom entity as we would for any other Splunk entity,
         // we have to parse the JSON description of the data model and its acceleration
         // status.
-        parseDescription(getString(rawJsonLabel));
-        parseAcceleration(getString("acceleration"));
+        parseDescription(getString(RAW_JSON_LABEL));
+        parseAcceleration(getString(ACCELERATION_LABEL));
         return result;
     }
 
@@ -138,17 +141,17 @@ public class DataModel extends Entity {
      *
      * @param input a String containing JSON.
      */
-    void parseDescription(String input) {
+    private void parseDescription(String input) {
         objects = new HashMap<String, DataModelObject>();
 
         JsonElement rootElement = jsonParser.parse(input);
 
         for (Entry<String, JsonElement> entry : rootElement.getAsJsonObject().entrySet()) {
-            if (entry.getKey().equals(modelNameLabel)) {
-                content.put(modelNameLabel, entry.getValue().getAsString());
-            } else if (entry.getKey().equals(displayNameLabel)) {
-                content.put(displayNameLabel, entry.getValue().getAsString());
-            } else if (entry.getKey().equals(rawJsonLabel)) {
+            if (entry.getKey().equals(MODEL_NAME_LABEL)) {
+                content.put(MODEL_NAME_LABEL, entry.getValue().getAsString());
+            } else if (entry.getKey().equals(DISPLAY_NAME_LABEL)) {
+                content.put(DISPLAY_NAME_LABEL, entry.getValue().getAsString());
+            } else if (entry.getKey().equals(DESCRIPTION_LABEL)) {
                 description = entry.getValue().getAsString();
             } else if (entry.getKey().equals("objects")) {
                 JsonArray objectArray = entry.getValue().getAsJsonArray();
@@ -156,6 +159,8 @@ public class DataModel extends Entity {
                     DataModelObject dmo = DataModelObject.parse(this, object);
                     objects.put(dmo.getName(), dmo);
                 }
+            } else {
+                // Allow new keys without complaining
             }
         }
     }
@@ -167,8 +172,8 @@ public class DataModel extends Entity {
      *
      * @param input a string containing JSON.
      */
-    public void parseAcceleration(String input) {
-         JsonElement rootElement = jsonParser.parse(input);
+    private void parseAcceleration(String input) {
+        JsonElement rootElement = jsonParser.parse(input);
 
         for (Entry<String, JsonElement> entry : rootElement. getAsJsonObject().entrySet()) {
             if (entry.getKey().equals("enabled")) {
@@ -177,6 +182,8 @@ public class DataModel extends Entity {
                 earliestAcceleratedTime = entry.getValue().getAsString();
             } else if (entry.getKey().equals("cron_schedule")) {
                 accelerationCronSchedule = entry.getValue().getAsString();
+            } else {
+                // Allow new keys without complaining
             }
         }
     }
@@ -249,7 +256,10 @@ public class DataModel extends Entity {
                 toUpdate.remove(key);
             }
         }
-        toUpdate.put("acceleration", gson.toJson(accelerationMap));
+
+        if (!accelerationMap.isEmpty()) {
+            toUpdate.put("acceleration", gson.toJson(accelerationMap));
+        }
 
         // Now update like we would any other entity.
         super.update();

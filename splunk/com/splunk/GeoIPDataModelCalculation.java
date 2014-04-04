@@ -22,12 +22,12 @@ import java.util.Map;
  * field to add geographic information to the output.
  */
 
-public class GeoIPCalculation extends Calculation {
+public class GeoIPDataModelCalculation extends DataModelCalculation {
     private final String inputField;
 
-    GeoIPCalculation(String[] ownerLineage, String calculationID,
-                            Map<String, Field> generatedFields, String comment,
-                            boolean editable, String inputField) {
+    GeoIPDataModelCalculation(String[] ownerLineage, String calculationID,
+                              Map<String, DataModelField> generatedFields, String comment,
+                              boolean editable, String inputField) {
         super(ownerLineage, calculationID, generatedFields, comment, editable);
         this.inputField = inputField;
     }

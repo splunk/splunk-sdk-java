@@ -60,7 +60,7 @@ public class Program {
         System.out.println("~~~~~~~~~~~~~~~~~~~~");
         System.out.println("Pivoting on searches");
 
-        Pivot pivot = searches.getPivotSpecification().
+        Pivot pivot = searches.createPivotSpecification().
                 addRowSplit("user", "Executing user").
                 addColumnSplit("exec_time", null, null, null, 4).
                 addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES, false).
@@ -78,7 +78,6 @@ public class Program {
         for (Event event : results) {
             System.out.println(event.toString());
         }
-
     }
 }
 

@@ -23,11 +23,11 @@ import java.util.Map.Entry;
 /**
  * Represents a constraint on a data model object or a field on a data model object.
  */
-public class Constraint {
+public class DataModelConstraint {
     private String owner;
     private String query;
 
-    private Constraint() {
+    private DataModelConstraint() {
     }
 
     /**
@@ -42,14 +42,14 @@ public class Constraint {
     public String getOwner() { return this.owner; }
 
     /**
-     * Parse a Constraint object out of JSON.
+     * Parse a DataModelConstraint object out of JSON.
      *
      * @param json JsonElement to parse.
-     * @return a Constraint object.
+     * @return a DataModelConstraint object.
      */
-    static Constraint parse(JsonElement json) {
+    static DataModelConstraint parse(JsonElement json) {
         JsonObject jsonObject = json.getAsJsonObject();
-        Constraint constraint = new Constraint();
+        DataModelConstraint constraint = new DataModelConstraint();
 
         for (Entry<String, JsonElement> e : jsonObject.entrySet()) {
             if (e.getKey().equals("owner")) {

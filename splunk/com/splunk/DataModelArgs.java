@@ -23,6 +23,6 @@ package com.splunk;
  * description field for writing raw JSON to the server.
  */
 public class DataModelArgs extends Args {
-    public String getRawDescription() { return (String) get("description"); }
-    public void setRawDescription(String rawDescription) { put("description", rawDescription); }
+    public String getRawJsonDescription() { return (String) get("description"); }
+    public void setRawJsonDescription(String rawJson) { put("description", rawJson); }
 }

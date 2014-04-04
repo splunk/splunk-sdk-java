@@ -6,11 +6,11 @@
       "autoextractSearch":" (uri=\"*.php\" OR uri=\"*.py\"\nNOT (referer=null OR referer=\"-\")) ",
       "calculations":[
         {
-          "dataModelObject":"event1",
+          "owner":"event1",
           "calculationID":"93fzsv03wa7",
           "outputFields":[
             {
-              "dataModelObject":"event1",
+              "owner":"event1",
               "type":"string",
               "hidden":true,
               "fieldSearch":"new_field=* ",
@@ -28,7 +28,7 @@
           "expression":"if(cidrmatch(\"192.0.0.0/16\", clientip), \"local\", \"other\")"
         },
         {
-          "dataModelObject":"event1",
+          "owner":"event1",
           "calculationID":"sr3mc8o3mjr",
           "outputFields":[
             {
@@ -36,7 +36,7 @@
               "hidden":false,
               "fieldName":"output_from_reverse_hostname",
               "type":"ipv4",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "comment":"",
               "fieldSearch":"output_from_reverse_hostname=* ",
               "editable":true,
@@ -53,11 +53,11 @@
           "lookupField":"a_lookup_field"
         },
         {
-          "dataModelObject":"event1",
+          "owner":"event1",
           "calculationID":"a5v1k82ymic",
           "outputFields":[
             {
-              "dataModelObject":"event1",
+              "owner":"event1",
               "type":"string",
               "hidden":false,
               "fieldSearch":"",
@@ -69,7 +69,7 @@
               "comment":""
             },
             {
-              "dataModelObject":"event1",
+              "owner":"event1",
               "type":"string",
               "hidden":false,
               "fieldSearch":"",
@@ -88,7 +88,7 @@
           "expression":" From: (?<from>.*) To: (?<to>.*) "
         },
         {
-          "dataModelObject":"event1",
+          "owner":"event1",
           "calculationID":"pbe9bd0rp4",
           "outputFields":[
             {
@@ -96,7 +96,7 @@
               "hidden":false,
               "fieldName":"output_from_reverse_hostname_lon",
               "type":"number",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "comment":"",
               "fieldSearch":"output_from_reverse_hostname_lon=* ",
               "editable":true,
@@ -109,7 +109,7 @@
               "hidden":false,
               "fieldName":"output_from_reverse_hostname_lat",
               "type":"number",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "comment":"",
               "fieldSearch":"output_from_reverse_hostname_lat=* ",
               "editable":true,
@@ -122,7 +122,7 @@
               "hidden":false,
               "fieldName":"output_from_reverse_hostname_City",
               "type":"string",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "comment":"",
               "fieldSearch":"output_from_reverse_hostname_City=* ",
               "editable":true,
@@ -135,7 +135,7 @@
               "hidden":false,
               "fieldName":"output_from_reverse_hostname_Region",
               "type":"string",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "comment":"",
               "fieldSearch":"output_from_reverse_hostname_Region=* ",
               "editable":true,
@@ -148,7 +148,7 @@
               "hidden":false,
               "fieldName":"output_from_reverse_hostname_Country",
               "type":"string",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "comment":"",
               "fieldSearch":"output_from_reverse_hostname_Country=* ",
               "editable":true,
@@ -170,7 +170,7 @@
       "objectSearch":" | search (uri=\"*.php\" OR uri=\"*.py\"\nNOT (referer=null OR referer=\"-\")) | rename \"new_field\" AS \"event1.new_field\", \"output_from_reverse_hostname\" AS \"event1.output_from_reverse_hostname\", \"from\" AS \"event1.from\", \"to\" AS \"event1.to\", \"output_from_reverse_hostname_lon\" AS \"event1.output_from_reverse_hostname_lon\", \"output_from_reverse_hostname_lat\" AS \"event1.output_from_reverse_hostname_lat\", \"output_from_reverse_hostname_City\" AS \"event1.output_from_reverse_hostname_City\", \"output_from_reverse_hostname_Region\" AS \"event1.output_from_reverse_hostname_Region\", \"output_from_reverse_hostname_Country\" AS \"event1.output_from_reverse_hostname_Country\" | rename \"event1.new_field\" AS \"new_field\", \"event1.output_from_reverse_hostname\" AS \"output_from_reverse_hostname\", \"event1.from\" AS \"from\", \"event1.to\" AS \"to\", \"event1.output_from_reverse_hostname_lon\" AS \"output_from_reverse_hostname_lon\", \"event1.output_from_reverse_hostname_lat\" AS \"output_from_reverse_hostname_lat\", \"event1.output_from_reverse_hostname_City\" AS \"output_from_reverse_hostname_City\", \"event1.output_from_reverse_hostname_Region\" AS \"output_from_reverse_hostname_Region\", \"event1.output_from_reverse_hostname_Country\" AS \"output_from_reverse_hostname_Country\" | eval \"new_field\"=if(cidrmatch(\"192.0.0.0/16\", clientip), \"local\", \"other\") | lookup dnslookup a_lookup_field AS host OUTPUT reverse_hostname AS output_from_reverse_hostname | rex field=_raw \" From: (?<from>.*) To: (?<to>.*) \" max_match=1 | iplocation \"output_from_reverse_hostname\" prefix=output_from_reverse_hostname_ | search new_field=* output_from_reverse_hostname=* output_from_reverse_hostname_lon=* output_from_reverse_hostname_lat=* output_from_reverse_hostname_City=* output_from_reverse_hostname_Region=* output_from_reverse_hostname_Country=* | rename \"new_field\" AS \"event1.new_field\", \"output_from_reverse_hostname\" AS \"event1.output_from_reverse_hostname\", \"from\" AS \"event1.from\", \"to\" AS \"event1.to\", \"output_from_reverse_hostname_lon\" AS \"event1.output_from_reverse_hostname_lon\", \"output_from_reverse_hostname_lat\" AS \"event1.output_from_reverse_hostname_lat\", \"output_from_reverse_hostname_City\" AS \"event1.output_from_reverse_hostname_City\", \"output_from_reverse_hostname_Region\" AS \"event1.output_from_reverse_hostname_Region\", \"output_from_reverse_hostname_Country\" AS \"event1.output_from_reverse_hostname_Country\" | fields \"_time\", \"host\", \"source\", \"sourcetype\", \"event1.new_field\", \"event1.output_from_reverse_hostname\", \"event1.from\", \"event1.to\", \"event1.output_from_reverse_hostname_lon\", \"event1.output_from_reverse_hostname_lat\", \"event1.output_from_reverse_hostname_City\", \"event1.output_from_reverse_hostname_Region\", \"event1.output_from_reverse_hostname_Country\"",
       "constraints":[
         {
-          "dataModelObject":"event1",
+          "owner":"event1",
           "search":"uri=\"*.php\" OR uri=\"*.py\"\nNOT (referer=null OR referer=\"-\")"
         }
       ],
@@ -179,7 +179,7 @@
       "displayName":"event1 ဩᚙ",
       "fields":[
         {
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "type":"timestamp",
           "hidden":false,
           "fieldSearch":"",
@@ -191,7 +191,7 @@
           "comment":""
         },
         {
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "type":"string",
           "hidden":false,
           "fieldSearch":"",
@@ -203,7 +203,7 @@
           "comment":""
         },
         {
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "type":"string",
           "hidden":false,
           "fieldSearch":"",
@@ -215,7 +215,7 @@
           "comment":""
         },
         {
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "type":"string",
           "hidden":false,
           "fieldSearch":"",
@@ -227,7 +227,7 @@
           "comment":""
         },
         {
-          "dataModelObject":"event1",
+          "owner":"event1",
           "type":"objectCount",
           "hidden":false,
           "fieldSearch":"",

@@ -15,7 +15,6 @@
  */
 package com.splunk;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -24,15 +23,15 @@ import java.util.Map;
  * A lookup calculation takes the value of an input field and uses it to
  * look up new values for the output fields in a lookup.
  */
-public class LookupCalculation extends Calculation {
+public class LookupDataModelCalculation extends DataModelCalculation {
     private final String lookupFieldName;
     private final String inputField;
     private final String lookupName;
 
-    LookupCalculation(String[] ownerLineage, String calculationID,
-                             Map<String, Field> generatedFields, String comment,
-                             boolean editable, String lookupName,
-                             String lookupFieldName, String inputField) {
+    LookupDataModelCalculation(String[] ownerLineage, String calculationID,
+                               Map<String, DataModelField> generatedFields, String comment,
+                               boolean editable, String lookupName,
+                               String lookupFieldName, String inputField) {
         super(ownerLineage, calculationID, generatedFields, comment, editable);
         this.lookupName = lookupName;
         this.lookupFieldName = lookupFieldName;

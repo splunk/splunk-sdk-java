@@ -19,7 +19,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"timestamp",
           "displayName":"_time"
@@ -31,7 +31,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"string",
           "displayName":"host"
@@ -43,7 +43,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"string",
           "displayName":"source"
@@ -55,7 +55,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"string",
           "displayName":"sourcetype"
@@ -67,7 +67,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "type":"objectCount",
           "displayName":"test data"
@@ -92,13 +92,13 @@
               "required":false,
               "multivalue":false,
               "hidden":false,
-              "dataModelObject":"test_data",
+              "owner":"test_data",
               "comment":"",
               "type":"boolean",
               "displayName":"has_boris"
             }
           ],
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "calculationID":"2f8rvff3gsm",
           "expression":"if(boris != null, \"true\", \"false\")",
@@ -114,13 +114,13 @@
               "required":false,
               "multivalue":false,
               "hidden":false,
-              "dataModelObject":"test_data",
+              "owner":"test_data",
               "comment":"",
               "type":"ipv4",
               "displayName":"hostip"
             }
           ],
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "calculationID":"bs7krya32co",
           "expression":"129.0.0.1",
@@ -136,13 +136,13 @@
               "required":false,
               "multivalue":false,
               "hidden":false,
-              "dataModelObject":"test_data",
+              "owner":"test_data",
               "comment":"",
               "type":"number",
               "displayName":"epsilon"
             }
           ],
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "calculationID":"bsbno65h5v",
           "expression":"25",
@@ -158,13 +158,13 @@
               "required":false,
               "multivalue":false,
               "hidden":false,
-              "dataModelObject":"test_data",
+              "owner":"test_data",
               "comment":"",
               "type":"childCount",
               "displayName":"is_child"
             }
           ],
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "calculationID":"ec9664b60b8de96cd9d7a0114e89e358d1620c19",
           "expression":"if(searchmatch(\"\"),1,0)",
@@ -180,13 +180,13 @@
               "required":false,
               "multivalue":false,
               "hidden":false,
-              "dataModelObject":"test_data",
+              "owner":"test_data",
               "comment":"",
               "type":"childCount",
               "displayName":"is_not_child"
             }
           ],
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "calculationID":"64f71e104ac3b7cdbf665046891b79adb58ddf6d",
           "expression":"if(searchmatch(\"NOT( )\"),1,0)",
@@ -211,7 +211,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"timestamp",
           "displayName":"_time"
@@ -223,7 +223,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"string",
           "displayName":"host"
@@ -235,7 +235,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"string",
           "displayName":"source"
@@ -247,7 +247,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "comment":"",
           "type":"string",
           "displayName":"sourcetype"
@@ -259,7 +259,7 @@
           "required":false,
           "multivalue":false,
           "hidden":false,
-          "dataModelObject":"test_data.child",
+          "owner":"test_data.child",
           "comment":"",
           "type":"objectCount",
           "displayName":"child"
@@ -280,39 +280,17 @@
             {
               "editable":true,
               "fieldSearch":"",
-              "fieldName":"has_boris",
-              "required":false,
-              "multivalue":false,
-              "hidden":false,
-              "dataModelObject":"test_data",
-              "comment":"",
-              "type":"boolean",
-              "displayName":"has_boris"
-            }
-          ],
-          "dataModelObject":"test_data",
-          "comment":"",
-          "calculationID":"2f8rvff3gsm",
-          "expression":"if(boris != null, \"true\", \"false\")",
-          "calculationType":"Eval"
-        },
-        {
-          "editable":true,
-          "outputFields":[
-            {
-              "editable":true,
-              "fieldSearch":"",
               "fieldName":"hostip",
               "required":false,
               "multivalue":false,
               "hidden":false,
-              "dataModelObject":"test_data",
+              "owner":"test_data",
               "comment":"",
               "type":"ipv4",
               "displayName":"hostip"
             }
           ],
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "calculationID":"bs7krya32co",
           "expression":"129.0.0.1",
@@ -328,13 +306,13 @@
               "required":false,
               "multivalue":false,
               "hidden":false,
-              "dataModelObject":"test_data",
+              "owner":"test_data",
               "comment":"",
               "type":"number",
               "displayName":"epsilon"
             }
           ],
-          "dataModelObject":"test_data",
+          "owner":"test_data",
           "comment":"",
           "calculationID":"bsbno65h5v",
           "expression":"25",

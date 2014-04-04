@@ -18,27 +18,20 @@ package com.splunk;
 import java.util.Map;
 
 /**
- * Represents a calculation on a data model object done by a regular expression.
+ * Represents a calculation on a data model object done by an eval.
  */
-public class RegexpCalculation extends Calculation {
+public class EvalDataModelCalculation extends DataModelCalculation {
     private final String expression;
-    private final String inputField;
 
-    RegexpCalculation(String[] owner, String calculationID,
-                             Map<String, Field> generatedFields, String comment,
-                             boolean editable, String inputField, String expression) {
+    public EvalDataModelCalculation(String[] owner, String calculationID,
+                                    Map<String, DataModelField> generatedFields, String comment,
+                                    boolean editable, String expression) {
         super(owner, calculationID, generatedFields, comment, editable);
         this.expression = expression;
-        this.inputField = inputField;
     }
 
     /**
-     * @return regular expression specifying this calculation
+     * @return eval expression specifying this calculation
      */
     public String getExpression() { return this.expression; }
-
-    /**
-     * @return name of the field to apply the regular expression to.
-     */
-    public String getInputField() { return this.inputField; }
 }

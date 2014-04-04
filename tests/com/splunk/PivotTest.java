@@ -33,12 +33,12 @@ public class PivotTest extends SDKTestCase {
 
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
-//        DataModelArgs args = new DataModelArgs();
-//        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
-//        DataModel model = dataModels.create(createTemporaryName(), args);
+        DataModelArgs args = new DataModelArgs();
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
 
- //       this.dataModelObject = model.getObject("test_data");
- //       Assert.assertNotNull(dataModelObject);
+        this.dataModelObject = model.getObject("test_data");
+        Assert.assertNotNull(dataModelObject);
     }
 
     @After
@@ -55,7 +55,7 @@ public class PivotTest extends SDKTestCase {
     @Test
     public void testConstructorArgs() {
 
-        PivotSpecification pivotArgs = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotArgs = dataModelObject.createPivotSpecification();
 
         JsonObject root = pivotArgs.toJson();
 
@@ -68,34 +68,40 @@ public class PivotTest extends SDKTestCase {
 
     @Test
     public void testAccelerationWorks() {
-        PivotSpecification pivotArgs = new PivotSpecification(dataModelObject);
+        DataModel model = dataModelObject.getDataModel();
+        model.setAcceleration(true);
+        model.setEarliestAcceleratedTime("-2mon");
+        model.setAccelerationCronSchedule("0 */12 * * *");
+        model.update();
 
-        Assert.assertEquals(dataModelObject.getDataModel().getName(), pivotArgs.getNamespace());
+        PivotSpecification pivotArgs = dataModelObject.createPivotSpecification();
+
+        Assert.assertEquals(dataModelObject.getDataModel().getName(), pivotArgs.getAccelerationNamespace());
 
         String sid = createTemporaryName();
         pivotArgs.setAccelerationJob(sid);
-        Assert.assertEquals("sid="+sid, pivotArgs.getNamespace());
+        Assert.assertEquals("sid="+sid, pivotArgs.getAccelerationNamespace());
 
         String namespace = createTemporaryName();
         pivotArgs.setAccelerationNamespace(namespace);
-        Assert.assertEquals(namespace, pivotArgs.getNamespace());
+        Assert.assertEquals(namespace, pivotArgs.getAccelerationNamespace());
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddFilterOnNonexistantField() {
-        PivotSpecification pivotArgs = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotArgs = dataModelObject.createPivotSpecification();
         pivotArgs.addFilter(createTemporaryName(), BooleanComparison.EQUALS, true);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddBooleanFilterOnWrongType() {
-        PivotSpecification pivotSpec = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpec = dataModelObject.createPivotSpecification();
         pivotSpec.addFilter("_time", BooleanComparison.EQUALS, true);
     }
 
     @Test
     public void testAddBooleanFilter() {
-        PivotSpecification pivotSpec = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpec = dataModelObject.createPivotSpecification();
         pivotSpec.addFilter("has_boris", BooleanComparison.EQUALS, true);
 
         Assert.assertEquals(1, pivotSpec.getFilters().size());
@@ -121,19 +127,19 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddStringFilterOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addFilter("has_boris", StringComparison.CONTAINS, "abc");
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddStringFilteronNonexistantField() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addFilter(createTemporaryName(), StringComparison.CONTAINS, "abc");
     }
 
     @Test
     public void testAddStringFilter() {
-        PivotSpecification pivotSpec = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpec = dataModelObject.createPivotSpecification();
         pivotSpec.addFilter("host", StringComparison.CONTAINS, "abc");
 
         Assert.assertEquals(1, pivotSpec.getFilters().size());
@@ -159,19 +165,19 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddIpv4FilterOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addFilter("has_boris", IPv4Comparison.STARTS_WITH, "192.168");
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testIpv4FilterOnNonexistantField() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addFilter(createTemporaryName(), IPv4Comparison.STARTS_WITH, "192.168");
     }
 
     @Test
     public void testAddIpv4Filter() {
-        PivotSpecification pivotSpec = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpec = dataModelObject.createPivotSpecification();
         pivotSpec.addFilter("hostip", IPv4Comparison.STARTS_WITH, "192.168");
 
         Assert.assertEquals(1, pivotSpec.getFilters().size());
@@ -197,19 +203,19 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddNumberFilterOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addFilter("has_boris", NumberComparison.AT_LEAST, 2.3);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testNumberFilterOnNonexistantField() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addFilter(createTemporaryName(), NumberComparison.AT_LEAST, 2.3);
     }
 
     @Test
     public void testAddNumberFilter() {
-        PivotSpecification pivotSpec = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpec = dataModelObject.createPivotSpecification();
         pivotSpec.addFilter("epsilon", NumberComparison.AT_LEAST, 2.3);
 
         Assert.assertEquals(1, pivotSpec.getFilters().size());
@@ -235,15 +241,15 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddLimitFilterOnNonexistentField() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addFilter("has_boris", "host",
                 SortDirection.DEFAULT, 50, StatsFunction.COUNT);
     }
 
     @Test
     public void testAddLimitFilter() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
-        pivotSpecification.addFilter("epsilon", "hostip", SortDirection.ASCENDING, 500, StatsFunction.AVERAGE);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
+        pivotSpecification.addFilter("epsilon", "host", SortDirection.ASCENDING, 500, StatsFunction.AVERAGE);
 
         Assert.assertEquals(1, pivotSpecification.getFilters().size());
         for (PivotFilter pf : pivotSpecification.getFilters()) {
@@ -263,10 +269,10 @@ public class PivotTest extends SDKTestCase {
             Assert.assertEquals(new JsonPrimitive("number"), o.get("type"));
 
             Assert.assertTrue(o.has("attributeName"));
-            Assert.assertEquals(new JsonPrimitive("hostip"), o.get("attributeName"));
+            Assert.assertEquals(new JsonPrimitive("host"), o.get("attributeName"));
 
             Assert.assertTrue(o.has("attributeOwner"));
-            Assert.assertEquals(new JsonPrimitive("test_data"), o.get("attributeOwner"));
+            Assert.assertEquals(new JsonPrimitive("BaseEvent"), o.get("attributeOwner"));
 
             Assert.assertTrue(o.has("limitType"));
             Assert.assertEquals(new JsonPrimitive("lowest"), o.get("limitType"));
@@ -281,13 +287,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddNumericRowSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "My Label");
     }
 
     @Test
     public void testAddNumericRowSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("epsilon", "My Label");
 
         Assert.assertEquals(1, pivotSpecification.getRowSplits().size());
@@ -317,13 +323,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddRangeRowSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "My Label", 0, 100, 20, 5);
     }
 
     @Test
     public void testAddRangeRowSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("epsilon", "My Label", 0, 100, 20, 5);
 
         Assert.assertEquals(1, pivotSpecification.getRowSplits().size());
@@ -361,13 +367,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddBooleanRowSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("epsilon", "My Label", "true", "false");
     }
 
     @Test
     public void testAddBooleanRowSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "My Label", "is_true", "is_false");
 
         Assert.assertEquals(1, pivotSpecification.getRowSplits().size());
@@ -392,13 +398,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddTimestampRowSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("epsilon", "My Label", "true", "false");
     }
 
     @Test
     public void testAddTimestampRowSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("_time", "My Label", TimestampBinning.DAY);
 
         Assert.assertEquals(1, pivotSpecification.getRowSplits().size());
@@ -422,7 +428,7 @@ public class PivotTest extends SDKTestCase {
 
     @Test
     public void testAddStringRowSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("host", "My Label");
 
         Assert.assertEquals(1, pivotSpecification.getRowSplits().size());
@@ -442,13 +448,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddNumericColumnSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("has_boris");
     }
 
     @Test
     public void testAddNumericColumnSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("epsilon");
 
         Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
@@ -475,13 +481,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddRangeColumnSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("has_boris", 0, 100, 20, 5);
     }
 
     @Test
     public void testAddRangeColumnSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("epsilon", 0, 100, 20, 5);
 
         Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
@@ -505,10 +511,10 @@ public class PivotTest extends SDKTestCase {
             Assert.assertEquals(new JsonPrimitive("ranges"), o.get("display"));
 
             JsonObject ranges = new JsonObject();
-            ranges.add("start", new JsonPrimitive(0));
-            ranges.add("end", new JsonPrimitive(100));
-            ranges.add("size", new JsonPrimitive(20));
-            ranges.add("maxNumberOf", new JsonPrimitive(5));
+            ranges.add("start", new JsonPrimitive("0"));
+            ranges.add("end", new JsonPrimitive("100"));
+            ranges.add("size", new JsonPrimitive("20"));
+            ranges.add("maxNumberOf", new JsonPrimitive("5"));
             Assert.assertTrue(o.has("ranges"));
             Assert.assertEquals(ranges, o.get("ranges"));
         }
@@ -516,13 +522,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddBooleanColumnSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("epsilon", "true", "false");
     }
 
     @Test
     public void testAddBooleanColumnSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("has_boris", "is_true", "is_false");
 
         Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
@@ -546,13 +552,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testAddTimestampColumnSplitOnWrongType() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("epsilon", "true", "false");
     }
 
     @Test
     public void testAddTimestampColumnSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("_time", TimestampBinning.DAY);
 
         Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
@@ -572,7 +578,7 @@ public class PivotTest extends SDKTestCase {
 
     @Test
     public void testAddStringColumnSplit() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addColumnSplit("host");
 
         Assert.assertEquals(1, pivotSpecification.getColumnSplits().size());
@@ -591,13 +597,13 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testNonexistantFieldToCellValue() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addCellValue("nonexistant", "my_label", StatsFunction.COUNT, false);
     }
 
     @Test
     public void testAddStringCellValue() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addCellValue("source", "Source Value", StatsFunction.DISTINCT_COUNT, true);
 
         Assert.assertEquals(1, pivotSpecification.getCellValues().size());
@@ -617,7 +623,7 @@ public class PivotTest extends SDKTestCase {
 
     @Test
     public void testAddIpv4CellValue() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addCellValue("hostip", "Source Value", StatsFunction.DISTINCT_COUNT, true);
 
         Assert.assertEquals(1, pivotSpecification.getCellValues().size());
@@ -637,26 +643,26 @@ public class PivotTest extends SDKTestCase {
 
     @Test(expected=IllegalArgumentException.class)
     public void testIllegalStatsFunction() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addCellValue("source", "Source Value", StatsFunction.SUM, true);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testNoBooleanCellValues() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addCellValue("has_boris", "Source Value", StatsFunction.DISTINCT_VALUES, true);
     }
 
     @Test(expected= HttpException.class)
     public void testEmptyPivotGivesError() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         Pivot pivot = pivotSpecification.pivot();
     }
 
     @Test
     public void testSimplePivotWithoutNamespace() {
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
 
         Pivot pivot = pivotSpecification.pivot();
@@ -667,10 +673,11 @@ public class PivotTest extends SDKTestCase {
     @Test
     public void testSimplePivotWithNamespace() {
         Job adhocJob = dataModelObject.createLocalAccelerationJob();
-        PivotSpecification pivotSpecification = new PivotSpecification(dataModelObject);
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
+        pivotSpecification.setAccelerationJob(adhocJob);
 
-        Pivot pivot = pivotSpecification.pivot(adhocJob);
+        Pivot pivot = pivotSpecification.pivot();
         Assert.assertNotNull(pivot.getAcceleratedQuery());
 
         final Job job = pivot.run();

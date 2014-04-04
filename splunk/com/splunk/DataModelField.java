@@ -17,15 +17,12 @@ package com.splunk;
 
 import com.google.gson.JsonElement;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /**
  * Represents a field of a data model object.
  */
-public class Field {
+public class DataModelField {
     private String[] ownerLineage;
     private String name;
     private FieldType type;
@@ -35,8 +32,14 @@ public class Field {
     private String displayName;
     private String comment;
     private boolean editable;
+    private String fieldSearch;
 
-    private Field() {}
+    private DataModelField() {}
+
+    /**
+     * @return a search query fragment for this field.
+     */
+    public String getFieldSearch() { return this.fieldSearch; }
 
     /**
      * @return The name of this field.
@@ -99,8 +102,8 @@ public class Field {
      */
     public String getComment() { return comment; }
 
-    public static Field parse(JsonElement fieldJson) {
-        Field field = new Field();
+    public static DataModelField parse(JsonElement fieldJson) {
+        DataModelField field = new DataModelField();
 
         for (Entry<String, JsonElement> entry : fieldJson.getAsJsonObject().entrySet()) {
             if (entry.getKey().equals("fieldName")) {
@@ -121,6 +124,8 @@ public class Field {
                 field.comment = entry.getValue().getAsString();
             } else if (entry.getKey().equals("editable")) {
                 field.editable = entry.getValue().getAsBoolean();
+            } else if (entry.getKey().equals("fieldSearch")) {
+                field.fieldSearch = entry.getValue().getAsString();
             }
         }
 

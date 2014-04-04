@@ -60,7 +60,7 @@ public class Program {
         System.out.println("~~~~~~~~~~~~~~~~~~~~");
         System.out.println("Pivoting on searches");
 
-        PivotSpecification pivotSpecification = searches.getPivotSpecification();
+        PivotSpecification pivotSpecification = searches.createPivotSpecification();
 
         pivotSpecification.addRowSplit("user", "Executing user");
         pivotSpecification.addColumnSplit("exec_time", null, null, null, 4);

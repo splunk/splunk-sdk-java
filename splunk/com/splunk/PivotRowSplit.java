@@ -17,7 +17,6 @@ package com.splunk;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
  * Base class representing row splits in a pivot.
@@ -59,10 +58,10 @@ public abstract class PivotRowSplit {
      * @param obj JSON serialization to modify.
      */
     protected void addCommonFields(JsonObject obj) {
-        Field field = this.dataModelObject.getField(this.fieldName);
+        DataModelField field = this.dataModelObject.getField(this.fieldName);
 
         obj.addProperty("fieldName", this.fieldName);
-        obj.addProperty("dataModelObject", Util.join(".", field.getOwnerLineage()));
+        obj.addProperty("owner", Util.join(".", field.getOwnerLineage()));
         obj.addProperty("type", field.getType().toString());
         obj.addProperty("label", this.label);
     }

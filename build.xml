@@ -39,7 +39,7 @@
     <!-- Short names for all the external libraries that get
          referenced multiple times. -->
     <property name="junit" location="lib/junit-4.11.jar"/>
-    <property name="gson" location="lib/gson-2.1.jar"/>
+    <property name="gson" location="lib/gson-2.2.4.jar"/>
     <property name="opencsv" location="lib/opencsv-2.3.jar"/>
 
     <target name="clean">
@@ -126,7 +126,7 @@
              <dependencies>
                  <fileset dir="${build.util}"
                           includes="**/*.class" />
-                 <zipgroupfileset dir="lib" includes="gson-2.1.jar" />
+                 <zipgroupfileset dir="lib" includes="gson-2.2.4.jar" />
                  <zipgroupfileset dir="lib" includes="opencsv-2.3.jar" />
                  <zipgroupfileset dir="lib" includes="org-openide-*.jar" />
              </dependencies>
@@ -194,7 +194,7 @@
         <!-- Now, the examples -->
         <standalone-example-jar name="explorer">
             <dependencies>
-                <zipgroupfileset dir="lib" includes="gson-2.1.jar"/>
+                <zipgroupfileset dir="lib" includes="gson-2.2.4.jar"/>
                 <zipgroupfileset dir="lib" includes="opencsv-2.3.jar"/>
                 <zipgroupfileset dir="lib" includes="org-openide-*.jar"/>
             </dependencies>
@@ -209,7 +209,7 @@
 
         <standalone-example-jar name="search">
             <dependencies>
-                <zipgroupfileset dir="lib" includes="gson-2.1.jar"/>
+                <zipgroupfileset dir="lib" includes="gson-2.2.4.jar"/>
                 <zipgroupfileset dir="lib" includes="opencsv-2.3.jar"/>
             </dependencies>
         </standalone-example-jar>

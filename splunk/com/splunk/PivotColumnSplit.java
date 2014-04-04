@@ -15,7 +15,6 @@
  */
 package com.splunk;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public abstract class PivotColumnSplit {
@@ -32,7 +31,7 @@ public abstract class PivotColumnSplit {
     public DataModelObject getOwner() { return this.owner; }
 
     protected void addCommonFields(JsonObject obj) {
-        Field field = this.owner.getField(this.fieldName);
+        DataModelField field = this.owner.getField(this.fieldName);
 
         obj.addProperty("fieldName", this.fieldName);
         obj.addProperty("owner", Util.join(".", field.getOwnerLineage()));

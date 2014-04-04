@@ -15,7 +15,6 @@
  */
 package com.splunk;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -117,7 +116,7 @@ public class PivotCellValue {
     JsonObject toJson() {
         JsonObject root = new JsonObject();
 
-        Field f = this.dataModelObject.getField(fieldName);
+        DataModelField f = this.dataModelObject.getField(fieldName);
 
         root.addProperty("fieldName", this.fieldName);
         root.addProperty("owner", f.getOwnerName());

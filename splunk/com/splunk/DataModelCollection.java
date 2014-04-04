@@ -18,7 +18,7 @@ package com.splunk;
 import java.util.Map;
 
 public class DataModelCollection extends EntityCollection<DataModel> {
-    public DataModelCollection(Service service) {
+    DataModelCollection(Service service) {
         super(service, "datamodel/model", DataModel.class);
         this.refreshArgs.put("concise", "0");
     }
@@ -43,15 +43,12 @@ public class DataModelCollection extends EntityCollection<DataModel> {
      */
     @Override
     public DataModel create(String name, Map args) {
-        Args revisedArgs = Args.create(args).add("name", name);
+        Args revisedArgs = Args.create(args);
         // concise=0 forces the server to return all details of the newly
         // created data model.
         if (!args.containsKey("concise")) {
             revisedArgs = revisedArgs.add("concise", "0");
         }
-        DataModel model = super.create(name, revisedArgs);
-        model.parseDescription(model.getContent().getString("description"));
-        model.parseAcceleration(model.getContent().getString("acceleration"));
-        return model;
+        return super.create(name, revisedArgs);
     }
 }

@@ -24,7 +24,8 @@ import java.util.*;
 public class DataModelTest extends SDKTestCase {
     @After
     public void tearDown() throws Exception {
-        for (DataModel d : service.getDataModels().values()) {
+        Collection<DataModel> dataModels = service.getDataModels().values();
+        for (DataModel d : dataModels) {
             if (d.getName().startsWith("delete-me")) {
                 d.remove();
             }
@@ -38,7 +39,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/empty_data_model.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/empty_data_model.json")));
 
         int initialN = dataModels.size();
 
@@ -64,7 +65,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/empty_data_model.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/empty_data_model.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         Assert.assertEquals(0, model.getObjects().size());
@@ -79,7 +80,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/object_with_one_search.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/object_with_one_search.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         Assert.assertEquals(1, model.getObjects().size());
@@ -94,7 +95,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/object_with_two_searches.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/object_with_two_searches.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         Assert.assertEquals(2, model.getObjects().size());
@@ -109,7 +110,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/object_with_two_searches.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/object_with_two_searches.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         Assert.assertTrue(model.containsObject("search1"));
@@ -131,7 +132,7 @@ public class DataModelTest extends SDKTestCase {
         String modelName = createTemporaryName();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/model_with_unicode_headers.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/model_with_unicode_headers.json")));
         DataModel model = dataModels.create(modelName, args);
 
         Assert.assertEquals(modelName, model.getName());
@@ -146,7 +147,7 @@ public class DataModelTest extends SDKTestCase {
         String modelName = createTemporaryName();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/model_with_empty_headers.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/model_with_empty_headers.json")));
         DataModel model = dataModels.create(modelName, args);
 
         Assert.assertEquals(modelName, model.getName());
@@ -169,18 +170,19 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = nonprivateService.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         model.setAcceleration(true);
         model.setEarliestAcceleratedTime("-2mon");
         model.setAccelerationCronSchedule("5/* * * * *");
+        model.update();
 
         Assert.assertTrue(model.isAccelerated());
         Assert.assertEquals("-2mon", model.getEarliestAcceleratedTime());
         Assert.assertEquals("5/* * * * *", model.getAccelerationCronSchedule());
 
-        model.update();
+        model.update(); // An empty update should also work
         model.refresh();
 
         Assert.assertTrue(model.isAccelerated());
@@ -190,6 +192,7 @@ public class DataModelTest extends SDKTestCase {
         model.setAcceleration(false);
         model.setEarliestAcceleratedTime("-1mon");
         model.setAccelerationCronSchedule("* * * * *");
+        model.update();
 
         Assert.assertFalse(model.isAccelerated());
         Assert.assertEquals("-1mon", model.getEarliestAcceleratedTime());
@@ -201,7 +204,7 @@ public class DataModelTest extends SDKTestCase {
         DataModelCollection models = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = models.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("event1");
@@ -218,7 +221,7 @@ public class DataModelTest extends SDKTestCase {
         DataModelCollection models = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = models.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("event1");
@@ -232,7 +235,7 @@ public class DataModelTest extends SDKTestCase {
         DataModelCollection models = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
         DataModel model = models.create(createTemporaryName(), args);
 
         Collection<DataModelObject> children;
@@ -272,14 +275,14 @@ public class DataModelTest extends SDKTestCase {
         DataModelCollection models = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
         DataModel model = models.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("level_2");
         Assert.assertNotNull(object);
         Assert.assertEquals(5, object.getAutoExtractedFields().size());
 
-        Field f = object.getField("_time");
+        DataModelField f = object.getField("_time");
         Assert.assertEquals("BaseEvent", f.getOwnerName());
         Assert.assertArrayEquals(new String[]{"BaseEvent"}, f.getOwnerLineage());
         Assert.assertEquals(FieldType.TIMESTAMP, f.getType());
@@ -309,7 +312,7 @@ public class DataModelTest extends SDKTestCase {
         DataModelCollection models = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
         DataModel model = models.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("test_data");
@@ -326,7 +329,7 @@ public class DataModelTest extends SDKTestCase {
 
         String dataModelName = createTemporaryName();
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
         DataModel model = models.create(dataModelName, args);
 
         DataModelObject object = model.getObject("level_2");
@@ -357,7 +360,7 @@ public class DataModelTest extends SDKTestCase {
 
         String dataModelName = createTemporaryName();
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
         DataModel model = models.create(dataModelName, args);
 
         DataModelObject object = model.getObject("level_2");
@@ -384,137 +387,11 @@ public class DataModelTest extends SDKTestCase {
     }
 
     @Test
-    public void testAcceleratedQueryEqualsQueryOnUnacceleratedModel() {
-        DataModelCollection models = service.getDataModels();
-
-        DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
-        DataModel model = models.create(createTemporaryName(), args);
-
-        DataModelObject object = model.getObject("level_2");
-
-        Assert.assertEquals(object.getQuery(), object.getAcceleratedQuery());
-    }
-
-    @Test
-    public void testAcceleratedQueryWithNamespace() {
-        DataModelCollection models = service.getDataModels();
-
-        DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/inheritance_test_data.json")));
-        DataModel model = models.create(createTemporaryName(), args);
-
-        DataModelObject object = model.getObject("level_2");
-
-        final Job accelerationJob = object.createLocalAccelerationJob();
-
-        try {
-            assertEventuallyTrue(new EventuallyTrueBehavior() {
-                @Override
-                public boolean predicate() {
-                    return accelerationJob.isReady();
-                }
-            });
-
-            Job job = service.getJobs().create("tstats count from sid=" + accelerationJob.getSid());
-            job.cancel();
-        } finally {
-            accelerationJob.cancel();
-        }
-
-        Assert.assertEquals(object.getQuery(), object.getAcceleratedQuery());
-    }
-
-    @Test
-    public void testAcceleratedQueryOnAcceleratedModelWorks() {
-        Args serviceArgs = new Args();
-        serviceArgs.put("host", service.getHost());
-        serviceArgs.put("port", service.getPort());
-        serviceArgs.put("scheme", service.getScheme());
-        serviceArgs.put("token", service.getToken());
-
-        serviceArgs.put("owner", "nobody");
-        serviceArgs.put("app", "search");
-        Service nonprivateService = new Service(serviceArgs);
-
-        EntityCollection<DataModel> dataModels = nonprivateService.getDataModels();
-
-        DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
-        DataModel model = dataModels.create(createTemporaryName(), args);
-
-        model.setAcceleration(true);
-
-        DataModelObject object = model.getObject("event1");
-
-        Assert.assertTrue(object.getAcceleratedQuery().startsWith("| tstats"));
-
-        final Job job = nonprivateService.getJobs().create(object.getAcceleratedQuery());
-
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override
-            public boolean predicate() {
-                return job.isReady();
-            }
-        });
-
-        Assert.assertEquals(0, job.getEventCount());
-    }
-
-    @Test
-    public void testAcceleratedQueryWorksOnUnacceleratedModel() {
-        EntityCollection<DataModel> dataModels = service.getDataModels();
-
-        DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
-        DataModel model = dataModels.create(createTemporaryName(), args);
-
-        DataModelObject object = model.getObject("event1");
-
-        Assert.assertTrue(object.getAcceleratedQuery().startsWith("| datamodel"));
-
-        final Job job = service.getJobs().create(object.getAcceleratedQuery());
-
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override
-            public boolean predicate() {
-                return job.isReady();
-            }
-        });
-
-        Assert.assertEquals(0, job.getEventCount());
-    }
-
-    @Test
-    public void testQueryWorksOnModel() {
-        EntityCollection<DataModel> dataModels = service.getDataModels();
-
-        DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
-        DataModel model = dataModels.create(createTemporaryName(), args);
-
-        DataModelObject object = model.getObject("event1");
-
-        Assert.assertTrue(object.getQuery().startsWith("| datamodel"));
-
-        final Job job = service.getJobs().create(object.getQuery());
-
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            @Override
-            public boolean predicate() {
-                return job.isReady();
-            }
-        });
-
-        Assert.assertEquals(0, job.getEventCount());
-    }
-
-    @Test
     public void testConstraints() {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("event1");
@@ -522,7 +399,7 @@ public class DataModelTest extends SDKTestCase {
 
         Assert.assertEquals(1, object.getConstraints().size());
         boolean only_one = true;
-        for (Constraint c : object.getConstraints()) {
+        for (DataModelConstraint c : object.getConstraints()) {
             Assert.assertTrue(only_one);
             only_one = false;
             Assert.assertEquals("event1", c.getOwner());
@@ -536,16 +413,16 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("event1");
         Assert.assertNotNull(object);
 
-        Map<String, Calculation> calculations = object.getCalculations();
+        Map<String, DataModelCalculation> calculations = object.getCalculations();
         Assert.assertEquals(4, calculations.size());
 
-        EvalCalculation c = (EvalCalculation)calculations.get("93fzsv03wa7");
+        EvalDataModelCalculation c = (EvalDataModelCalculation)calculations.get("93fzsv03wa7");
         Assert.assertEquals("event1", c.getOwner());
         Assert.assertArrayEquals(new String[]{"event1"}, c.getLineage());
         Assert.assertEquals("", c.getComment());
@@ -555,11 +432,11 @@ public class DataModelTest extends SDKTestCase {
                 c.getExpression()
         );
         Assert.assertEquals(1, c.getGeneratedFields().size());
-        Field f = c.getGeneratedField("new_field");
+        DataModelField f = c.getGeneratedField("new_field");
         Assert.assertNotNull(f);
         Assert.assertEquals("My New Field", f.getDisplayName());
 
-        LookupCalculation lc = (LookupCalculation)calculations.get("sr3mc8o3mjr");
+        LookupDataModelCalculation lc = (LookupDataModelCalculation)calculations.get("sr3mc8o3mjr");
         Assert.assertEquals("event1", lc.getOwner());
         Assert.assertArrayEquals(new String[]{"event1"}, lc.getLineage());
         Assert.assertEquals("", lc.getComment());
@@ -568,12 +445,12 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertEquals("dnslookup", lc.getLookupName());
         Assert.assertEquals("a_lookup_field", lc.getLookupFieldName());
 
-        RegexpCalculation rc = (RegexpCalculation)calculations.get("a5v1k82ymic");
+        RegexpDataModelCalculation rc = (RegexpDataModelCalculation)calculations.get("a5v1k82ymic");
         Assert.assertEquals(2, rc.getGeneratedFields().size());
         Assert.assertEquals("_raw", rc.getInputField());
         Assert.assertEquals(" From: (?<from>.*) To: (?<to>.*) ", rc.getExpression());
 
-        GeoIPCalculation gc = (GeoIPCalculation)calculations.get("pbe9bd0rp4");
+        GeoIPDataModelCalculation gc = (GeoIPDataModelCalculation)calculations.get("pbe9bd0rp4");
         Assert.assertEquals("\u1029\u1699\u0bf5 comment of pbe9bd0rp4", gc.getComment());
         Assert.assertEquals(5, gc.getGeneratedFields().size());
         Assert.assertEquals("output_from_reverse_hostname", gc.getInputField());
@@ -584,7 +461,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("event1");
@@ -599,7 +476,7 @@ public class DataModelTest extends SDKTestCase {
                     return j.isReady();
                 }
             });
-            Assert.assertEquals(object.getAcceleratedQuery(), job.getSearch());
+            Assert.assertEquals("| datamodel " + model.getName() + " " + object.getName() + " search", job.getSearch());
         } finally {
             if (job != null) {
                 job.cancel();
@@ -619,7 +496,7 @@ public class DataModelTest extends SDKTestCase {
                     return j.isReady();
                 }
             });
-            Assert.assertEquals(object.getAcceleratedQuery() + "| head 3", job.getSearch());
+            Assert.assertEquals("| datamodel " + model.getName() + " " + object.getName() + " search| head 3", job.getSearch());
             Assert.assertEquals(5, job.getInteger("statusBuckets"));
         } finally {
             if (job != null) {
@@ -633,7 +510,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/model_with_multiple_types.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/model_with_multiple_types.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("search1");
@@ -650,7 +527,7 @@ public class DataModelTest extends SDKTestCase {
         EntityCollection<DataModel> dataModels = service.getDataModels();
 
         DataModelArgs args = new DataModelArgs();
-        args.setRawDescription(streamToString(openResource("data/datamodels/model_with_multiple_types.json")));
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/model_with_multiple_types.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
         DataModelObject object = model.getObject("transaction1");

@@ -20,7 +20,7 @@
       "constraints":[
         {
           "search":"uri=\"*.php\" OR uri=\"*.py\"\nNOT (referer=null OR referer=\"-\")",
-          "dataModelObject":"event1"
+          "owner":"event1"
         }
       ],
       "tsidxNamespace":"",
@@ -39,7 +39,7 @@
               "hidden":true,
               "fieldName":"new_field",
               "displayName":"My New Field",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "fieldSearch":"new_field=* "
             }
           ],
@@ -47,7 +47,7 @@
           "calculationID":"93fzsv03wa7",
           "editable":true,
           "calculationType":"Eval",
-          "dataModelObject":"event1"
+          "owner":"event1"
         },
         {
           "lookupField":"a_lookup_field",
@@ -63,7 +63,7 @@
               "displayName":"\u0bf5aad",
               "fieldName":"output_from_reverse_hostname",
               "type":"ipv4",
-              "dataModelObject":"event1"
+              "owner":"event1"
             }
           ],
           "comment":"",
@@ -72,7 +72,7 @@
           "lookupName":"dnslookup",
           "inputField":"host",
           "calculationType":"Lookup",
-          "dataModelObject":"event1"
+          "owner":"event1"
         },
         {
           "expression":" From: (?<from>.*) To: (?<to>.*) ",
@@ -86,7 +86,7 @@
               "hidden":false,
               "fieldName":"from",
               "displayName":"from",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "fieldSearch":""
             },
             {
@@ -98,7 +98,7 @@
               "hidden":false,
               "fieldName":"to",
               "displayName":"to",
-              "dataModelObject":"event1",
+              "owner":"event1",
               "fieldSearch":""
             }
           ],
@@ -107,7 +107,7 @@
           "editable":true,
           "inputField":"_raw",
           "calculationType":"Rex",
-          "dataModelObject":"event1"
+          "owner":"event1"
         },
         {
           "outputFields":[
@@ -122,7 +122,7 @@
               "displayName":"output_from_reverse_hostname_lon",
               "fieldName":"output_from_reverse_hostname_lon",
               "type":"number",
-              "dataModelObject":"event1"
+              "owner":"event1"
             },
             {
               "editable":true,
@@ -135,7 +135,7 @@
               "displayName":"output_from_reverse_hostname_lat",
               "fieldName":"output_from_reverse_hostname_lat",
               "type":"number",
-              "dataModelObject":"event1"
+              "owner":"event1"
             },
             {
               "editable":true,
@@ -148,7 +148,7 @@
               "displayName":"output_from_reverse_hostname_City",
               "fieldName":"output_from_reverse_hostname_City",
               "type":"string",
-              "dataModelObject":"event1"
+              "owner":"event1"
             },
             {
               "editable":true,
@@ -161,7 +161,7 @@
               "displayName":"output_from_reverse_hostname_Region",
               "fieldName":"output_from_reverse_hostname_Region",
               "type":"string",
-              "dataModelObject":"event1"
+              "owner":"event1"
             },
             {
               "editable":true,
@@ -174,7 +174,7 @@
               "displayName":"output_from_reverse_hostname_Country",
               "fieldName":"output_from_reverse_hostname_Country",
               "type":"string",
-              "dataModelObject":"event1"
+              "owner":"event1"
             }
           ],
           "comment":"",
@@ -182,7 +182,7 @@
           "editable":true,
           "inputField":"output_from_reverse_hostname",
           "calculationType":"GeoIP",
-          "dataModelObject":"event1"
+          "owner":"event1"
         }
       ],
       "children":[
@@ -200,7 +200,7 @@
           "hidden":false,
           "fieldName":"_time",
           "displayName":"_time",
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "fieldSearch":""
         },
         {
@@ -212,7 +212,7 @@
           "hidden":false,
           "fieldName":"host",
           "displayName":"host",
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "fieldSearch":""
         },
         {
@@ -224,7 +224,7 @@
           "hidden":false,
           "fieldName":"source",
           "displayName":"source",
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "fieldSearch":""
         },
         {
@@ -236,7 +236,7 @@
           "hidden":false,
           "fieldName":"sourcetype",
           "displayName":"sourcetype",
-          "dataModelObject":"BaseEvent",
+          "owner":"BaseEvent",
           "fieldSearch":""
         },
         {
@@ -248,7 +248,7 @@
           "hidden":false,
           "fieldName":"event1",
           "displayName":"event1",
-          "dataModelObject":"event1",
+          "owner":"event1",
           "fieldSearch":""
         }
       ],
@@ -291,7 +291,7 @@
           "hidden":false,
           "fieldName":"eventcount",
           "displayName":"eventcount",
-          "dataModelObject":"BaseEventSet",
+          "owner":"BaseEventSet",
           "fieldSearch":"eventcount=* "
         },
         {
@@ -303,7 +303,7 @@
           "hidden":false,
           "fieldName":"duration",
           "displayName":"duration",
-          "dataModelObject":"BaseEventSet",
+          "owner":"BaseEventSet",
           "fieldSearch":"duration=* "
         },
         {
@@ -315,7 +315,7 @@
           "hidden":false,
           "fieldName":"_time",
           "displayName":"_time",
-          "dataModelObject":"BaseEventSet",
+          "owner":"BaseEventSet",
           "fieldSearch":"_time=* "
         },
         {
@@ -327,7 +327,7 @@
           "hidden":false,
           "fieldName":"host",
           "displayName":"host",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -339,7 +339,7 @@
           "hidden":false,
           "fieldName":"source",
           "displayName":"source",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -351,7 +351,7 @@
           "hidden":false,
           "fieldName":"sourcetype",
           "displayName":"sourcetype",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -363,7 +363,7 @@
           "hidden":false,
           "fieldName":"new_field",
           "displayName":"new_field",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -375,7 +375,7 @@
           "hidden":false,
           "fieldName":"output_from_reverse_hostname",
           "displayName":"output_from_reverse_hostname",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -387,7 +387,7 @@
           "hidden":false,
           "fieldName":"from",
           "displayName":"from",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -399,7 +399,7 @@
           "hidden":false,
           "fieldName":"to",
           "displayName":"to",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -411,7 +411,7 @@
           "hidden":false,
           "fieldName":"output_from_reverse_hostname_lon",
           "displayName":"output_from_reverse_hostname_lon",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -423,7 +423,7 @@
           "hidden":false,
           "fieldName":"output_from_reverse_hostname_lat",
           "displayName":"output_from_reverse_hostname_lat",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -435,7 +435,7 @@
           "hidden":false,
           "fieldName":"output_from_reverse_hostname_City",
           "displayName":"output_from_reverse_hostname_City",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -447,7 +447,7 @@
           "hidden":false,
           "fieldName":"output_from_reverse_hostname_Region",
           "displayName":"output_from_reverse_hostname_Region",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -459,7 +459,7 @@
           "hidden":false,
           "fieldName":"output_from_reverse_hostname_Country",
           "displayName":"output_from_reverse_hostname_Country",
-          "dataModelObject":"BaseTransaction",
+          "owner":"BaseTransaction",
           "fieldSearch":""
         },
         {
@@ -471,7 +471,7 @@
           "hidden":false,
           "fieldName":"transaction1",
           "displayName":"transaction1",
-          "dataModelObject":"transaction1",
+          "owner":"transaction1",
           "fieldSearch":""
         }
       ],
@@ -502,7 +502,7 @@
               "hidden":false,
               "fieldName":"is_subsearch",
               "displayName":"is_subsearch",
-              "dataModelObject":"search1",
+              "owner":"search1",
               "fieldSearch":""
             }
           ],
@@ -510,7 +510,7 @@
           "calculationID":"0ed17fcd0954d6299d64bf4e1556514229b61fa8",
           "editable":false,
           "calculationType":"Eval",
-          "dataModelObject":"search1"
+          "owner":"search1"
         },
         {
           "expression":"if(searchmatch(\"NOT(  (boris=meep) )\"),1,0)",
@@ -524,7 +524,7 @@
               "hidden":false,
               "fieldName":"is_not_subsearch",
               "displayName":"is_not_subsearch",
-              "dataModelObject":"search1",
+              "owner":"search1",
               "fieldSearch":""
             }
           ],
@@ -532,7 +532,7 @@
           "calculationID":"ce565b44f7e01bb1ea9afb742f5bb361f94e39b2",
           "editable":false,
           "calculationType":"Eval",
-          "dataModelObject":"search1"
+          "owner":"search1"
         }
       ],
       "children":[
@@ -550,7 +550,7 @@
           "hidden":false,
           "fieldName":"search1",
           "displayName":"search1",
-          "dataModelObject":"search1",
+          "owner":"search1",
           "fieldSearch":""
         }
       ],
@@ -565,7 +565,7 @@
       "constraints":[
         {
           "search":"boris=meep",
-          "dataModelObject":"search1.subsearch"
+          "owner":"search1.subsearch"
         }
       ],
       "tsidxNamespace":"",
@@ -589,7 +589,7 @@
           "hidden":false,
           "fieldName":"subsearch",
           "displayName":"subsearch",
-          "dataModelObject":"search1.subsearch",
+          "owner":"search1.subsearch",
           "fieldSearch":""
         }
       ],

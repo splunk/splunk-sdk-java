@@ -30,7 +30,7 @@ public class Pivot {
     private final Service service;
     private final String search;
 
-    Pivot(Service service, AtomEntry entry) {
+    private Pivot(Service service, AtomEntry entry) {
         this.service = service;
         this.openInSearch = entry.content.getString("open_in_search");
         this.drilldownSearch = entry.content.getString("drilldown_search");

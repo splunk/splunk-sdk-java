@@ -17,8 +17,8 @@ package com.splunk;
 
 import com.google.gson.JsonElement;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,14 +26,15 @@ import java.util.Map.Entry;
 /**
  * Abstract class specifying a calculation on a data model object.
  */
-public abstract class Calculation {
+public abstract class DataModelCalculation {
     private final String[] ownerLineage;
     private final String calculationID;
-    private final Map<String, Field> generatedFields;
+    private final Map<String, DataModelField> generatedFields;
     private final String comment;
     private final boolean editable;
 
-    protected Calculation(String[] ownerLineage, String calculationID, Map<String, Field> generatedFields, String comment, boolean editable) {
+    protected DataModelCalculation(String[] ownerLineage, String calculationID,
+                                   Map<String, DataModelField> generatedFields, String comment, boolean editable) {
         this.ownerLineage = ownerLineage;
         this.calculationID = calculationID;
         this.generatedFields = generatedFields;
@@ -56,13 +57,15 @@ public abstract class Calculation {
     /**
      * @return a collection of the fields this calculation generates.
      */
-    public Collection<Field> getGeneratedFields() { return this.generatedFields.values(); }
+    public Collection<DataModelField> getGeneratedFields() {
+        return Collections.unmodifiableCollection(this.generatedFields.values());
+    }
 
     /**
      * @param fieldName Name of the field to fetch.
-     * @return a Field object.
+     * @return a DataModelField object.
      */
-    public Field getGeneratedField(String fieldName) { return this.generatedFields.get(fieldName); }
+    public DataModelField getGeneratedField(String fieldName) { return this.generatedFields.get(fieldName); }
 
     /**
      * @return the comment on this calculation (if one is specified) or null.
@@ -92,9 +95,7 @@ public abstract class Calculation {
      */
     public boolean isEditable() { return this.editable; }
 
-
-    static Calculation parse(JsonElement json) {
-        Calculation c;
+    static DataModelCalculation parse(JsonElement json) {
         String type = null;
         String calculationId = null;
         String inputField = null;
@@ -102,9 +103,9 @@ public abstract class Calculation {
         String expression = null;
         String lookupName = null;
         String lookupField = null;
-        String[] owner = new String[0];
+        String[] owner = new String[0]; // Should always be set below
         boolean editable = false;
-        Map<String, Field> outputFields = new HashMap<String, Field>();
+        Map<String, DataModelField> outputFields = new HashMap<String, DataModelField>();
 
         String key;
         for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
@@ -115,7 +116,7 @@ public abstract class Calculation {
                 calculationId = entry.getValue().getAsString();
             } else if (key.equals("outputFields")) {
                 for (JsonElement e : entry.getValue().getAsJsonArray()) {
-                    Field f = Field.parse(e.getAsJsonObject());
+                    DataModelField f = DataModelField.parse(e.getAsJsonObject());
                     outputFields.put(f.getName(), f);
                 }
             } else if (key.equals("inputField")) {
@@ -135,14 +136,15 @@ public abstract class Calculation {
             }
         }
 
+        DataModelCalculation c;
         if (type.equals("lookup")) {
-            c = new LookupCalculation(owner, calculationId, outputFields, comment, editable, lookupName, lookupField, inputField);
+            c = new LookupDataModelCalculation(owner, calculationId, outputFields, comment, editable, lookupName, lookupField, inputField);
         } else if (type.equals("geoip")) {
-            c = new GeoIPCalculation(owner, calculationId, outputFields, comment, editable, inputField);
+            c = new GeoIPDataModelCalculation(owner, calculationId, outputFields, comment, editable, inputField);
         } else if (type.equals("eval")) {
-            c = new EvalCalculation(owner, calculationId, outputFields, comment, editable, expression);
+            c = new EvalDataModelCalculation(owner, calculationId, outputFields, comment, editable, expression);
         } else if (type.equals("rex")) {
-            c = new RegexpCalculation(owner, calculationId, outputFields, comment, editable, inputField, expression);
+            c = new RegexpDataModelCalculation(owner, calculationId, outputFields, comment, editable, inputField, expression);
         } else {
             throw new IllegalStateException("Unknown calculation type: " + type);
         }

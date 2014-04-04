@@ -28,16 +28,20 @@ public class PivotSpecification {
     private static GsonBuilder gson = new GsonBuilder();
 
     private DataModelObject dataModelObject;
-    String namespace = null;
+    private String accelerationNamespace = null;
 
-    List<PivotColumnSplit> columns = new ArrayList<PivotColumnSplit>();
-    List<PivotFilter> filters = new ArrayList<PivotFilter>();
-    List<PivotCellValue> cells = new ArrayList<PivotCellValue>();
-    List<PivotRowSplit> rows = new ArrayList<PivotRowSplit>();
+    private List<PivotColumnSplit> columns = new ArrayList<PivotColumnSplit>();
+    private List<PivotFilter> filters = new ArrayList<PivotFilter>();
+    private List<PivotCellValue> cells = new ArrayList<PivotCellValue>();
+    private List<PivotRowSplit> rows = new ArrayList<PivotRowSplit>();
 
-    public PivotSpecification(DataModelObject dataModelObject) {
+    PivotSpecification(DataModelObject dataModelObject) {
         this.dataModelObject = dataModelObject;
-        this.namespace = dataModelObject.getDataModel().getName();
+        if (dataModelObject.getDataModel().isAccelerated()) {
+            this.accelerationNamespace = dataModelObject.getDataModel().getName();
+        } else {
+            this.accelerationNamespace = null;
+        }
     }
 
     /**
@@ -46,8 +50,9 @@ public class PivotSpecification {
      *
      * @param namespace a string specifying a namespcae.
      */
-    public void setAccelerationNamespace(String namespace) {
-        this.namespace = namespace;
+    public PivotSpecification setAccelerationNamespace(String namespace) {
+        this.accelerationNamespace = namespace;
+        return this;
     }
 
     /**
@@ -56,12 +61,13 @@ public class PivotSpecification {
      *
      * @param sid the SID of a job.
      */
-    public void setAccelerationJob(String sid) {
+    public PivotSpecification setAccelerationJob(String sid) {
         if (sid == null) {
             throw new IllegalArgumentException("Sid to use for acceleration must not be null.");
         } else {
-            this.namespace = "sid=" + sid;
+            this.accelerationNamespace = "sid=" + sid;
         }
+        return this;
     }
 
     /**
@@ -70,15 +76,38 @@ public class PivotSpecification {
      *
      * @param job a Job object.
      */
-    public void setAccelerationJob(Job job) {
+    public PivotSpecification setAccelerationJob(Job job) {
         setAccelerationJob(job.getSid());
+        return this;
     }
 
     /**
      * @return the acceleration namespace to use in this pivot.
      */
-    public String getNamespace() {
-        return this.namespace;
+    public String getAccelerationNamespace() {
+        return this.accelerationNamespace;
+    }
+
+    private void assertCorrectlyTypedField(String fieldName, FieldType[] acceptableTypes) {
+        DataModelField field = this.dataModelObject.getField(fieldName);
+        if (field == null) {
+            throw new IllegalArgumentException("No such field named " + fieldName);
+        } else if (!Arrays.asList(acceptableTypes).contains(field.getType())) {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Expected a field of one of the following types: ");
+            boolean first = true;
+            for (FieldType t : acceptableTypes) {
+                if (!first) errorMessage.append(", ");
+                errorMessage.append(t.toString());
+                first = false;
+            }
+            errorMessage.append("; found type " + field.getType().toString());
+            throw new IllegalArgumentException(errorMessage.toString());
+        }
+    }
+
+    private void assertCorrectlyTypedField(String field, FieldType acceptableType) {
+        assertCorrectlyTypedField(field, new FieldType[] { acceptableType });
     }
 
     /**
@@ -217,7 +246,7 @@ public class PivotSpecification {
         } else if (t == FieldType.STRING) {
             rows.add(new StringPivotRowSplit(this.dataModelObject, field, label));
         } else {
-            throw new IllegalStateException("Field not of type number or string despite precondition asserting so.");
+            throw new IllegalArgumentException("Field not of type number or string despite precondition asserting so.");
         }
 
         return this;
@@ -265,27 +294,6 @@ public class PivotSpecification {
         rows.add(split);
 
         return this;
-    }
-
-    private void assertCorrectlyTypedField(String fieldName, FieldType[] acceptableTypes) {
-        Field field = this.dataModelObject.getField(fieldName);
-        if (field == null) {
-            throw new IllegalArgumentException("No such field named " + fieldName);
-        } else if (!Arrays.asList(acceptableTypes).contains(field.getType())) {
-            StringBuilder errorMessage = new StringBuilder();
-            errorMessage.append("Expected a field of one of the following types: ");
-            boolean first = true;
-            for (FieldType t : acceptableTypes) {
-                if (!first) errorMessage.append(", ");
-                errorMessage.append(t.toString());
-                first = false;
-            }
-            errorMessage.append("; found type " + field.getType().toString());
-        }
-    }
-
-    private void assertCorrectlyTypedField(String field, FieldType acceptableType) {
-        assertCorrectlyTypedField(field, new FieldType[] { acceptableType });
     }
 
     /**
@@ -454,45 +462,20 @@ public class PivotSpecification {
     /**
      * Query Splunk for SPL queries corresponding to this pivot.
      *
-     * This method will attempt to use the data model's acceleration if it is enabled.
-     *
      * @return a Pivot object encapsulating the returned queries.
      */
     public Pivot pivot() {
-        if (dataModelObject.getDataModel().isAccelerated()) {
-            return pivot(dataModelObject.getDataModel().getAccelerationNamespace());
-        } else {
-            return pivot((String)null);
-        }
-    }
-
-    /**
-     * Query Splunk for SPL queries corresponding to this pivot.
-     *
-     * @param adhocAccelerationJob Tell splunkd to use the specified Job object to accelerate this pivot.
-     * @return a Pivot object encapsulating the returned queries.
-     */
-    public Pivot pivot(Job adhocAccelerationJob) {
-        return pivot("sid=" + adhocAccelerationJob.getSid());
-    }
-
-    /**
-     * Query Splunk for SPL queries corresponding to this pivot.
-     *
-     * @param namespace Tell splunkd to use the specified tsidx namespace to accelerate this pivot.
-     * @return a Pivot object encapsulating the returned queries.
-     */
-    public Pivot pivot(String namespace) {
-        Service service = this.dataModelObject.getDataModel().service;
+        Service service = this.dataModelObject.getDataModel().getService();
 
         Args args = new Args();
         args.put("pivot_json", toJson());
-        if (namespace != null) {
-            args.put("namespace", namespace);
+        if (this.accelerationNamespace != null) {
+            args.put("namespace", this.accelerationNamespace);
         }
+
         ResponseMessage response = service.get(
-                "datamodel/pivot/" + this.dataModelObject.getDataModel().getName(),
-                args
+            "datamodel/pivot/" + this.dataModelObject.getDataModel().getName(),
+            args
         );
 
         if (response.getStatus() != 200) {
