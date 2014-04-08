@@ -125,12 +125,12 @@ public class ResourceCollection<T extends Resource>
         try {
             while (true) {
                 Object obj = constructor.newInstance(service, service.fullpath(path, namespace));
-                if (obj instanceof Message) { // We ignore messages sent back inline.
-                    continue;
-                } else {
+                //if (obj instanceof Message) { // We ignore messages sent back inline.
+                //    continue;
+                //} else {
                     item = (T)obj;
                     break;
-                }
+            //}
             }
         }
         catch (IllegalAccessException e) {

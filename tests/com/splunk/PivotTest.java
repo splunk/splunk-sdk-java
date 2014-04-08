@@ -69,6 +69,13 @@ public class PivotTest extends SDKTestCase {
     @Test
     public void testAccelerationWorks() {
         DataModel model = dataModelObject.getDataModel();
+
+        // We have to make the data model public, or we cannot accelerate it.
+        Args postArgs = new Args();
+        postArgs.put("sharing", "app");
+        postArgs.put("owner", model.getService().username);
+        model.getService().post(model.path + "/acl", postArgs);
+
         model.setAcceleration(true);
         model.setEarliestAcceleratedTime("-2mon");
         model.setAccelerationCronSchedule("0 */12 * * *");

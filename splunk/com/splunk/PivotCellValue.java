@@ -119,7 +119,7 @@ public class PivotCellValue {
         DataModelField f = this.dataModelObject.getField(fieldName);
 
         root.addProperty("fieldName", this.fieldName);
-        root.addProperty("owner", f.getOwnerName());
+        root.addProperty("owner", Util.join(".", f.getOwnerLineage()));
         root.addProperty("type", f.getType().toString());
         root.addProperty("label", this.label);
         root.addProperty("sparkline", this.generateSparkline);
