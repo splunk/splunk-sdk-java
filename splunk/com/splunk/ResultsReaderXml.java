@@ -39,6 +39,7 @@ public class ResultsReaderXml
 
     private XMLEventReader xmlReader = null;
     private ArrayList<String> fields = new ArrayList<String>();
+    private PushbackInputStream pushbackInputStream;
 
     /**
      * Class constructor.
@@ -62,19 +63,23 @@ public class ResultsReaderXml
             InputStream inputStream,
             boolean isInMultiReader)
             throws IOException {
-        super(new PushbackInputStream(inputStream), isInMultiReader);
+        super(inputStream, isInMultiReader);
+
+        // We need to do read-ahead, so we have to use a PushbackInputStream for everything
+        // in this class.
+        this.pushbackInputStream = new PushbackInputStream(inputStream);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-        int ch = this.inputStream.read();
+        int ch = this.pushbackInputStream.read();
         if (ch == -1) {
             return; // Stream is empty.
         } else {
-            ((PushbackInputStream)this.inputStream).unread(ch);
+            ((PushbackInputStream)this.pushbackInputStream).unread(ch);
         }
 
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
-            InputStream filteredStream = new InsertRootElementFilterInputStream(this.inputStream);
+            InputStream filteredStream = new InsertRootElementFilterInputStream(this.pushbackInputStream);
             xmlReader = inputFactory.createXMLEventReader(filteredStream);
             finishInitialization();
         } catch (XMLStreamException e) {

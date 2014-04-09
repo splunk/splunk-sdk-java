@@ -682,6 +682,7 @@ public class PivotTest extends SDKTestCase {
         Job adhocJob = dataModelObject.createLocalAccelerationJob();
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
+        pivotSpecification.addCellValue("hostip", "Distinct IPs", StatsFunction.DISTINCT_COUNT, false);
         pivotSpecification.setAccelerationJob(adhocJob);
 
         Pivot pivot = pivotSpecification.pivot();
