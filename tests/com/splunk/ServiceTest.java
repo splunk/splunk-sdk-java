@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class ServiceTest extends SDKTestCase {
 
         String[] caps = service.getCapabilities();
         for (String name : expected) {
-            assertTrue(contains(caps, name));
+            Assert.assertTrue(contains(caps, name));
         }
     }
 
@@ -74,7 +75,7 @@ public class ServiceTest extends SDKTestCase {
             stream.close();
             socket1.close();
         } catch (IOException e) {
-            fail("Exception on attach");
+            Assert.fail("Exception on attach");
         }
 
         try {
@@ -88,7 +89,7 @@ public class ServiceTest extends SDKTestCase {
             stream.close();
             socket1.close();
         } catch (IOException e) {
-            fail("Exception on attach");
+            Assert.fail("Exception on attach");
         }
 
         receiver.submit("Boris the mad baboon3!\r\n");
@@ -136,10 +137,10 @@ public class ServiceTest extends SDKTestCase {
         // And make sure we get the expected 404
         try {
             service.get("/zippy");
-            fail("Expected HttpException");
+            Assert.fail("Expected HttpException");
         }
         catch (HttpException e) {
-            assertEquals(404, e.getStatus());
+            Assert.assertEquals(404, e.getStatus());
         }
     }
 
@@ -152,7 +153,7 @@ public class ServiceTest extends SDKTestCase {
 
         ServiceInfo info = service.getInfo();
         for (String name : expected)
-            assertTrue(info.containsKey(name));
+            Assert.assertTrue(info.containsKey(name));
 
         info.getBuild();
         info.getCpuArch();
@@ -172,7 +173,7 @@ public class ServiceTest extends SDKTestCase {
         info.isRtSearchEnabled();
         info.isTrial();
         
-        assertEquals(info.getService(), service);
+        Assert.assertEquals(info.getService(), service);
     }
 
     private void checkLoggedIn(Service service) {
@@ -184,10 +185,10 @@ public class ServiceTest extends SDKTestCase {
     protected void checkNotLoggedIn(Service service) {
         try {
             service.get("/services/authentication/users");
-            fail("Expected HttpException");
+            Assert.fail("Expected HttpException");
         }
         catch (HttpException e) {
-            assertEquals(401, e.getStatus());
+            Assert.assertEquals(401, e.getStatus());
         }
     }
     
@@ -253,7 +254,7 @@ public class ServiceTest extends SDKTestCase {
         checkNotLoggedIn(service);
     }
     
-    @Test
+    @Test(expected=IllegalStateException.class)
     public void testLoginWithoutAnyUsernameFails() {
         ServiceArgs args = new ServiceArgs();
         args.setHost((String) command.opts.get("host"));
@@ -261,18 +262,14 @@ public class ServiceTest extends SDKTestCase {
         args.setScheme((String) command.opts.get("scheme"));
         Service service = new Service(args);
         
-        try {
-            service.login();
-            fail("Expected IllegalStateException");
-        }
-        catch (IllegalStateException e) {}
+        service.login();
     }
     
     @Test
     public void testLoginWithToken() {
         String validToken = service.getToken();
         
-        assertTrue(validToken.startsWith("Splunk "));
+        Assert.assertTrue(validToken.startsWith("Splunk "));
         
         Service s = new Service(service.getHost(), service.getPort());
         s.setToken(validToken);
@@ -284,7 +281,7 @@ public class ServiceTest extends SDKTestCase {
         // Make sure we're still using the same token.
         // In particular we don't want to trigger auto-login functionality
         // that gets a new token.
-        assertEquals(s.getToken(), validToken);
+        Assert.assertEquals(s.getToken(), validToken);
     }
     
     @Test
@@ -296,8 +293,8 @@ public class ServiceTest extends SDKTestCase {
             // Don't care if login fails. It probably will.
         }
         
-        assertEquals("theUser", s.getUsername());
-        assertEquals("thePassword", s.getPassword());
+        Assert.assertEquals("theUser", s.getUsername());
+        Assert.assertEquals("thePassword", s.getPassword());
     }
 
     @Test
@@ -359,7 +356,7 @@ public class ServiceTest extends SDKTestCase {
         job.isSaved();
         job.isSavedSearch();
         job.isZombie();
-        assertEquals(job.getName(), job.getSid());
+        Assert.assertEquals(job.getName(), job.getSid());
     }
 
     @Test
@@ -372,18 +369,18 @@ public class ServiceTest extends SDKTestCase {
 
         // Ensure setter updates local state
         settings.setHost("sdk-host");
-        assertEquals("sdk-host", settings.getHost());
+        Assert.assertEquals("sdk-host", settings.getHost());
 
         // Ensure update() merges arguments with local state
         settings.setHost("sdk-host2");
         settings.update(Args.create("minFreeSpace", 500));
-        assertEquals("sdk-host2", settings.getHost());
-        assertEquals(500, settings.getMinFreeSpace());
+        Assert.assertEquals("sdk-host2", settings.getHost());
+        Assert.assertEquals(500, settings.getMinFreeSpace());
 
         // Ensure update argument takes precedence over local state
         settings.setMinimumFreeSpace(600);
         settings.update(Args.create("minFreeSpace", 700));
-        assertEquals(700, settings.getMinFreeSpace());
+        Assert.assertEquals(700, settings.getMinFreeSpace());
 
         // Restore
         {
@@ -391,9 +388,9 @@ public class ServiceTest extends SDKTestCase {
             settings.setMinimumFreeSpace(originalMinSpace);
             settings.update();
             
-            assertEquals(settings.getMinFreeSpace(),
-                originalMinSpace);
-            assertEquals(settings.getHost(), originalHost);
+            Assert.assertEquals(settings.getMinFreeSpace(),
+                    originalMinSpace);
+            Assert.assertEquals(settings.getHost(), originalHost);
         }
         
         // Twiddling the host value makes Splunk want to restart.
@@ -413,7 +410,7 @@ public class ServiceTest extends SDKTestCase {
 
         // Cleanup potential prior failed test run.
         users.remove(username);
-        assertFalse(users.containsKey(username));
+        Assert.assertFalse(users.containsKey(username));
 
         // Create user using base create method
         {
@@ -422,26 +419,26 @@ public class ServiceTest extends SDKTestCase {
             args.put("roles", "power");
             user = users.create(username, args);
             
-            assertTrue(users.containsKey(username));
-            assertEquals(username, user.getName());
-            assertEquals(1, user.getRoles().length);
-            assertTrue(contains(user.getRoles(), "power"));
+            Assert.assertTrue(users.containsKey(username));
+            Assert.assertEquals(username, user.getName());
+            Assert.assertEquals(1, user.getRoles().length);
+            Assert.assertTrue(contains(user.getRoles(), "power"));
             
             users.remove(username);
-            assertFalse(users.containsKey(username));
+            Assert.assertFalse(users.containsKey(username));
         }
 
         // Create user using derived create method 
         {
             user = users.create(username, password, "power");
             
-            assertTrue(users.containsKey(username));
-            assertEquals(username, user.getName());
-            assertEquals(1, user.getRoles().length);
-            assertTrue(contains(user.getRoles(), "power"));
+            Assert.assertTrue(users.containsKey(username));
+            Assert.assertEquals(username, user.getName());
+            Assert.assertEquals(1, user.getRoles().length);
+            Assert.assertTrue(contains(user.getRoles(), "power"));
     
             users.remove(username);
-            assertFalse(users.containsKey(username));
+            Assert.assertFalse(users.containsKey(username));
         }
 
         // Create using derived method with multiple roles
@@ -449,14 +446,14 @@ public class ServiceTest extends SDKTestCase {
             user = users.create(
                 username, password, new String[] { "power", "user" });
             
-            assertTrue(users.containsKey(username));
-            assertEquals(username, user.getName());
-            assertEquals(2, user.getRoles().length);
-            assertTrue(contains(user.getRoles(), "power"));
-            assertTrue(contains(user.getRoles(), "user"));
+            Assert.assertTrue(users.containsKey(username));
+            Assert.assertEquals(username, user.getName());
+            Assert.assertEquals(2, user.getRoles().length);
+            Assert.assertTrue(contains(user.getRoles(), "power"));
+            Assert.assertTrue(contains(user.getRoles(), "user"));
     
             users.remove(username);
-            assertFalse(users.containsKey(username));
+            Assert.assertFalse(users.containsKey(username));
         }
 
         // Create using derived method with multiple roles and extra properties
@@ -468,18 +465,18 @@ public class ServiceTest extends SDKTestCase {
             user = users.create(
                 username, password, new String[] { "power", "user" }, args);
             
-            assertTrue(users.containsKey(username));
-            assertEquals(username, user.getName());
-            assertEquals(2, user.getRoles().length);
-            assertTrue(contains(user.getRoles(), "power"));
-            assertTrue(contains(user.getRoles(), "user"));
-            assertEquals("Renzo", user.getRealName());
-            assertEquals("email.me@now.com", user.getEmail());
-            assertEquals("search", user.getDefaultApp());
-            assertNotNull(user.getPassword());
+            Assert.assertTrue(users.containsKey(username));
+            Assert.assertEquals(username, user.getName());
+            Assert.assertEquals(2, user.getRoles().length);
+            Assert.assertTrue(contains(user.getRoles(), "power"));
+            Assert.assertTrue(contains(user.getRoles(), "user"));
+            Assert.assertEquals("Renzo", user.getRealName());
+            Assert.assertEquals("email.me@now.com", user.getEmail());
+            Assert.assertEquals("search", user.getDefaultApp());
+            Assert.assertNotNull(user.getPassword());
             user.getDefaultAppIsUserOverride();
-            assertNotNull(user.getDefaultAppSourceRole());
-            assertNotNull(user.getType());
+            Assert.assertNotNull(user.getDefaultAppSourceRole());
+            Assert.assertNotNull(user.getType());
     
             // Probe
             {
@@ -497,14 +494,14 @@ public class ServiceTest extends SDKTestCase {
                 user.update();
                 user.refresh();
         
-                assertEquals("search", user.getDefaultApp());
-                assertEquals("none@noway.com", user.getEmail());
-                assertEquals("SDK-name", user.getRealName());
-                assertEquals(1, user.getRoles().length);
+                Assert.assertEquals("search", user.getDefaultApp());
+                Assert.assertEquals("none@noway.com", user.getEmail());
+                Assert.assertEquals("SDK-name", user.getRealName());
+                Assert.assertEquals(1, user.getRoles().length);
                 if (service.versionIsAtLeast("4.3")) {
-                    assertEquals("Pacific/Midway", user.getTz());
+                    Assert.assertEquals("Pacific/Midway", user.getTz());
                 }
-                assertTrue(contains(user.getRoles(), "power"));
+                Assert.assertTrue(contains(user.getRoles(), "power"));
                 
                 if (service.versionIsAtLeast("4.3")) {
                     user.setTz(tz == null ? "" : tz);
@@ -512,11 +509,11 @@ public class ServiceTest extends SDKTestCase {
                 user.setRoles(new String[] {"power"});
                 user.update();
                 user.refresh();
-                assertTrue(contains(user.getRoles(), "power"));
+                Assert.assertTrue(contains(user.getRoles(), "power"));
             }
     
             users.remove(username);
-            assertFalse(users.containsKey(username));
+            Assert.assertFalse(users.containsKey(username));
         }
     }
     
@@ -532,12 +529,12 @@ public class ServiceTest extends SDKTestCase {
         args.token = "Splunk MY_SESSION_KEY";
         
         Service service = new Service(args);
-        assertEquals(args.app, service.getApp());
-        assertEquals(args.host, service.getHost());
-        assertEquals(args.owner, service.getOwner());
-        assertEquals((int) args.port, (int) service.getPort());
-        assertEquals(args.scheme, service.getScheme());
-        assertEquals(args.token, service.getToken());
+        Assert.assertEquals(args.app, service.getApp());
+        Assert.assertEquals(args.host, service.getHost());
+        Assert.assertEquals(args.owner, service.getOwner());
+        Assert.assertEquals((int) args.port, (int) service.getPort());
+        Assert.assertEquals(args.scheme, service.getScheme());
+        Assert.assertEquals(args.token, service.getToken());
     }
     
     @SuppressWarnings("deprecation")
@@ -551,16 +548,16 @@ public class ServiceTest extends SDKTestCase {
         args.setScheme("https");
         args.setToken("Splunk MY_SESSION_KEY");
         
-        assertEquals("Arg setters didn't replicate value to deprecated fields.",
-            args.app, "myapp");
+        Assert.assertEquals("Arg setters didn't replicate value to deprecated fields.",
+                args.app, "myapp");
         
         Service service = new Service(args);
-        assertEquals(args.app, service.getApp());
-        assertEquals(args.host, service.getHost());
-        assertEquals(args.owner, service.getOwner());
-        assertEquals((int) args.port, (int) service.getPort());
-        assertEquals(args.scheme, service.getScheme());
-        assertEquals(args.token, service.getToken());
+        Assert.assertEquals(args.app, service.getApp());
+        Assert.assertEquals(args.host, service.getHost());
+        Assert.assertEquals(args.owner, service.getOwner());
+        Assert.assertEquals((int) args.port, (int) service.getPort());
+        Assert.assertEquals(args.scheme, service.getScheme());
+        Assert.assertEquals(args.token, service.getToken());
     }
     
     @Test
@@ -574,12 +571,12 @@ public class ServiceTest extends SDKTestCase {
         args.put("token", "Splunk MY_SESSION_KEY");
         
         Service service = new Service(args);
-        assertEquals("myapp", service.getApp());
-        assertEquals("myhost.splunk.com", service.getHost());
-        assertEquals("myuser", service.getOwner());
-        assertEquals(9999, (int) service.getPort());
-        assertEquals("https", service.getScheme());
-        assertEquals("Splunk MY_SESSION_KEY", service.getToken());
+        Assert.assertEquals("myapp", service.getApp());
+        Assert.assertEquals("myhost.splunk.com", service.getHost());
+        Assert.assertEquals("myuser", service.getOwner());
+        Assert.assertEquals(9999, (int) service.getPort());
+        Assert.assertEquals("https", service.getScheme());
+        Assert.assertEquals("Splunk MY_SESSION_KEY", service.getToken());
     }
     
     @Test
@@ -587,12 +584,12 @@ public class ServiceTest extends SDKTestCase {
         ServiceArgs args = new ServiceArgs();
         
         Service service = new Service(args);
-        assertEquals(null, service.getApp());
-        assertEquals("localhost", service.getHost());
-        assertEquals(null, service.getOwner());
-        assertEquals(8089, (int) service.getPort());
-        assertEquals("https", service.getScheme());
-        assertEquals(null, service.getToken());
+        Assert.assertEquals(null, service.getApp());
+        Assert.assertEquals("localhost", service.getHost());
+        Assert.assertEquals(null, service.getOwner());
+        Assert.assertEquals(8089, (int) service.getPort());
+        Assert.assertEquals("https", service.getScheme());
+        Assert.assertEquals(null, service.getToken());
     }
     
     @Test
@@ -600,19 +597,19 @@ public class ServiceTest extends SDKTestCase {
         Service s;
         
         s = new Service("localhost");
-        assertEquals("localhost", s.getHost());
-        assertEquals(8089, s.getPort());
-        assertEquals("https", s.getScheme());
+        Assert.assertEquals("localhost", s.getHost());
+        Assert.assertEquals(8089, s.getPort());
+        Assert.assertEquals("https", s.getScheme());
         
         s = new Service("localhost", 9999);
-        assertEquals("localhost", s.getHost());
-        assertEquals(9999, s.getPort());
-        assertEquals("https", s.getScheme());
+        Assert.assertEquals("localhost", s.getHost());
+        Assert.assertEquals(9999, s.getPort());
+        Assert.assertEquals("https", s.getScheme());
         
         s = new Service("localhost", 9999, "http");
-        assertEquals("localhost", s.getHost());
-        assertEquals(9999, s.getPort());
-        assertEquals("http", s.getScheme());
+        Assert.assertEquals("localhost", s.getHost());
+        Assert.assertEquals(9999, s.getPort());
+        Assert.assertEquals("http", s.getScheme());
     }
     
     @Test
@@ -638,7 +635,7 @@ public class ServiceTest extends SDKTestCase {
                 }
             } while (event != null);
         
-            assertEquals(10, nEvents);
+            Assert.assertEquals(10, nEvents);
         }
         finally {
             jobOutput.close();
@@ -667,7 +664,7 @@ public class ServiceTest extends SDKTestCase {
                 }
             } while (event != null);
         
-            assertEquals(10, nEvents);
+            Assert.assertEquals(10, nEvents);
         }
         finally {
             jobOutput.close();
@@ -677,7 +674,7 @@ public class ServiceTest extends SDKTestCase {
     // === Utility ===
     
     private static void checkResponse(ResponseMessage response) {
-        assertEquals(200, response.getStatus());
+        Assert.assertEquals(200, response.getStatus());
         
         // Make sure we can at least load the Atom response
         AtomFeed.parseStream(response.getContent());
@@ -717,14 +714,14 @@ public class ServiceTest extends SDKTestCase {
         try {
             service.export("notasearchcommand", exportArgs);
         } catch (Exception e) {
-            assertEquals(
+            Assert.assertEquals(
                     "HTTP 400 -- {\"messages\":[{\"type\":\"FATAL\",\"text\":" +
                             "\"Unknown search command 'notasearchcommand'.\"}]}",
                     e.getMessage()
             );
             return;
         }
-        fail();
+        Assert.fail();
     }
 
     @Test
@@ -733,8 +730,8 @@ public class ServiceTest extends SDKTestCase {
         try {
             service.delete("/services/search/jobs/foobar_doesntexist", deleteArgs);
         } catch (HttpException e) {
-            assertEquals(404, e.getStatus());
-            assertNotNull(e.getDetail());
+            Assert.assertEquals(404, e.getStatus());
+            Assert.assertNotNull(e.getDetail());
         }
     }
 
@@ -745,8 +742,8 @@ public class ServiceTest extends SDKTestCase {
 
         ResponseMessage response;
         response = service.post("/services/search/jobs", args);
-        assertEquals(200, response.getStatus());
-        assertTrue(firstLineIsXmlDtd(response.getContent()));
+        Assert.assertEquals(200, response.getStatus());
+        Assert.assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 
 }

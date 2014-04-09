@@ -17,6 +17,8 @@
 package com.splunk;
 
 import java.util.Date;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LicenseMessageTest extends SDKTestCase {
@@ -32,7 +34,7 @@ public class LicenseMessageTest extends SDKTestCase {
 
         for (LicenseMessage licenseMessage: licenseMessages.values()) {
             // Test getters
-            assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
+            Assert.assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
             licenseMessage.getCategory();
             licenseMessage.getDescription();
             licenseMessage.getPoolId();

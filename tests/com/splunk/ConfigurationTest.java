@@ -17,6 +17,7 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,17 +75,17 @@ public class ConfigurationTest extends SDKTestCase {
     @Test
     public void testStandardFilesExist() {
         ConfCollection confs = appService.getConfs();
-        assertTrue(confs.containsKey("eventtypes"));
-        assertTrue(confs.containsKey("indexes"));
-        assertTrue(confs.containsKey("inputs"));
-        assertTrue(confs.containsKey("props"));
-        assertTrue(confs.containsKey("transforms"));
-        assertTrue(confs.containsKey("savedsearches"));
+        Assert.assertTrue(confs.containsKey("eventtypes"));
+        Assert.assertTrue(confs.containsKey("indexes"));
+        Assert.assertTrue(confs.containsKey("inputs"));
+        Assert.assertTrue(confs.containsKey("props"));
+        Assert.assertTrue(confs.containsKey("transforms"));
+        Assert.assertTrue(confs.containsKey("savedsearches"));
 
         for (Entity stanza : confs.get("indexes").values()) {
-            assertNotNull(stanza);
-            assertNotNull(stanza.getName());
-            assertNotNull(stanza.getPath());
+            Assert.assertNotNull(stanza);
+            Assert.assertNotNull(stanza.getName());
+            Assert.assertNotNull(stanza.getPath());
         }
     }
 
@@ -93,10 +94,10 @@ public class ConfigurationTest extends SDKTestCase {
         ConfCollection confs = appService.getConfs();
         String confName = createTemporaryName();
 
-        assertFalse("New configuration name already used.", confs.containsKey(confName));
+        Assert.assertFalse("New configuration name already used.", confs.containsKey(confName));
         EntityCollection<Entity> conf = confs.create(confName);
-        assertTrue("New configuration doesn't show up after creation.", confs.containsKey(confName));
-        assertEquals("New configuration is not empty.", 0, conf.size());
+        Assert.assertTrue("New configuration doesn't show up after creation.", confs.containsKey(confName));
+        Assert.assertEquals("New configuration is not empty.", 0, conf.size());
     }
 
     @Test
@@ -106,15 +107,15 @@ public class ConfigurationTest extends SDKTestCase {
         EntityCollection<Entity> conf = confs.create(confName);
 
         String stanzaName = createTemporaryName();
-        assertFalse("Stanza already exists.", conf.containsKey(stanzaName));
+        Assert.assertFalse("Stanza already exists.", conf.containsKey(stanzaName));
         Entity stanza = conf.create(stanzaName);
 
-        assertTrue("Stanza doesn't show up after creation.", conf.containsKey(stanzaName));
-        assertEquals("Stanza contains something besides eai: and disabled attributes when first created.", 5, stanza.size());
+        Assert.assertTrue("Stanza doesn't show up after creation.", conf.containsKey(stanzaName));
+        Assert.assertEquals("Stanza contains something besides eai: and disabled attributes when first created.", 5, stanza.size());
 
         stanza.remove();
         conf.refresh();
-        assertFalse("Stanza not deleted by remove()", conf.containsKey(stanzaName));
+        Assert.assertFalse("Stanza not deleted by remove()", conf.containsKey(stanzaName));
     }
 
     @Test
@@ -125,11 +126,11 @@ public class ConfigurationTest extends SDKTestCase {
         String stanzaName = createTemporaryName();
         Entity stanza = conf.create(stanzaName);
 
-        assertEquals("Stanza begins with only eai:* and disabled in it.", 5, stanza.size());
+        Assert.assertEquals("Stanza begins with only eai:* and disabled in it.", 5, stanza.size());
         Args args = new Args();
         args.put("test-key", "42");
         stanza.update(args);
-        assertEquals("Stanza has right size after write.", 6, stanza.size());
-        assertEquals("Read from key gives right value.", "42", stanza.get("test-key"));
+        Assert.assertEquals("Stanza has right size after write.", 6, stanza.size());
+        Assert.assertEquals("Read from key gives right value.", "42", stanza.get("test-key"));
     }
 }

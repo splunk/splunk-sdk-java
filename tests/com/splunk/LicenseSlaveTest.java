@@ -18,6 +18,8 @@ package com.splunk;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LicenseSlaveTest extends SDKTestCase {
@@ -34,19 +36,19 @@ public class LicenseSlaveTest extends SDKTestCase {
     public void testDefaultLicenseSlavesAreKnown() throws Exception {
         EntityCollection<LicenseSlave> licenseSlaves = service.getLicenseSlaves();
         for (LicenseSlave licenseSlave : licenseSlaves.values()) {
-            assertTrue(licenseSlave.getLabel().length() > 0);
+            Assert.assertTrue(licenseSlave.getLabel().length() > 0);
             
             for (String pool: licenseSlave.getPoolIds()) {
                 // Special-case, fixed sourcetype has a hash at the end; so
                 // no fixed value will match. Thus only check versus known
                 // fixed values from list.
                 if (!pool.startsWith("auto_generated_pool_fixed-sourcetype_")) {
-                    assertTrue(KNOWN_POOL_IDS.contains(pool));
+                    Assert.assertTrue(KNOWN_POOL_IDS.contains(pool));
                 }
             }
             
             for (String stack: licenseSlave.getStackIds()) {
-                assertTrue(KNOWN_STACK_IDS.contains(stack));
+                Assert.assertTrue(KNOWN_STACK_IDS.contains(stack));
             }
         }
     }

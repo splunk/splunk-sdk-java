@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class OutputDefaultTest extends SDKTestCase {
@@ -44,9 +45,9 @@ public class OutputDefaultTest extends SDKTestCase {
         // Probe
         {
             outputDefault.setMaxQueueSize("1MB");
-            assertEquals(outputDefault.getMaxQueueSize(), "1MB");
+            Assert.assertEquals(outputDefault.getMaxQueueSize(), "1MB");
             outputDefault.setMaxQueueSize(maxQueueSize);
-            assertEquals(outputDefault.getMaxQueueSize(), maxQueueSize);
+            Assert.assertEquals(outputDefault.getMaxQueueSize(), maxQueueSize);
             
             outputDefault.setDropEventsOnQueueFull(0);
             outputDefault.setHeartbeatFrequency(heartbeat+1);
@@ -54,10 +55,10 @@ public class OutputDefaultTest extends SDKTestCase {
             outputDefault.setSendCookedData(!cookedData);
             outputDefault.update();
     
-            assertEquals(0, outputDefault.getDropEventsOnQueueFull());
-            assertEquals(heartbeat+1, outputDefault.getHeartbeatFrequency());
-            assertEquals(!forward, outputDefault.indexAndForward());
-            assertEquals(!cookedData, outputDefault.getSendCookedData());
+            Assert.assertEquals(0, outputDefault.getDropEventsOnQueueFull());
+            Assert.assertEquals(heartbeat + 1, outputDefault.getHeartbeatFrequency());
+            Assert.assertEquals(!forward, outputDefault.indexAndForward());
+            Assert.assertEquals(!cookedData, outputDefault.getSendCookedData());
         }
 
         // Restore original values
@@ -68,10 +69,10 @@ public class OutputDefaultTest extends SDKTestCase {
             outputDefault.setSendCookedData(cookedData);
             outputDefault.update();
     
-            assertEquals(onQueueFull, outputDefault.getDropEventsOnQueueFull());
-            assertEquals(heartbeat, outputDefault.getHeartbeatFrequency());
-            assertEquals(forward, outputDefault.indexAndForward());
-            assertEquals(cookedData, outputDefault.getSendCookedData());
+            Assert.assertEquals(onQueueFull, outputDefault.getDropEventsOnQueueFull());
+            Assert.assertEquals(heartbeat, outputDefault.getHeartbeatFrequency());
+            Assert.assertEquals(forward, outputDefault.indexAndForward());
+            Assert.assertEquals(cookedData, outputDefault.getSendCookedData());
         }
     }
 }

@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MessageTest extends SDKTestCase {
@@ -25,31 +26,31 @@ public class MessageTest extends SDKTestCase {
 
         if (messageCollection.containsKey("sdk-test-message1"))
             messageCollection.remove("sdk-test-message1");
-        assertFalse(messageCollection.containsKey("sdk-test-message1"));
+        Assert.assertFalse(messageCollection.containsKey("sdk-test-message1"));
 
         if (messageCollection.containsKey("sdk-test-message2"))
             messageCollection.remove("sdk-test-message2");
-        assertFalse(messageCollection.containsKey("sdk-test-message2"));
+        Assert.assertFalse(messageCollection.containsKey("sdk-test-message2"));
 
         // Create & Check
         {
             messageCollection.create("sdk-test-message1", "hello.");
-            assertTrue(messageCollection.containsKey("sdk-test-message1"));
+            Assert.assertTrue(messageCollection.containsKey("sdk-test-message1"));
             Message message = messageCollection.get("sdk-test-message1");
-            assertEquals("sdk-test-message1", message.getKey());
-            assertEquals("hello.", message.getValue());
+            Assert.assertEquals("sdk-test-message1", message.getKey());
+            Assert.assertEquals("hello.", message.getValue());
     
             messageCollection.create("sdk-test-message2", new Args("value", "world."));
-            assertTrue(messageCollection.containsKey("sdk-test-message2"));
+            Assert.assertTrue(messageCollection.containsKey("sdk-test-message2"));
             message = messageCollection.get("sdk-test-message2");
-            assertEquals("sdk-test-message2", message.getKey());
-            assertEquals("world.", message.getValue());
+            Assert.assertEquals("sdk-test-message2", message.getKey());
+            Assert.assertEquals("world.", message.getValue());
         }
 
         messageCollection.remove("sdk-test-message1");
-        assertFalse(messageCollection.containsKey("sdk-test-message1"));
+        Assert.assertFalse(messageCollection.containsKey("sdk-test-message1"));
 
         messageCollection.remove("sdk-test-message2");
-        assertFalse(messageCollection.containsKey("sdk-test-message2"));
+        Assert.assertFalse(messageCollection.containsKey("sdk-test-message2"));
     }
 }

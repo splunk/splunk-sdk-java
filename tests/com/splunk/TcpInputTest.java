@@ -17,6 +17,7 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -72,7 +73,7 @@ public class TcpInputTest extends SDKTestCase {
         }
 
         final Socket socket = tcpInput.attach();
-        assertTrue(socket.isConnected());
+        Assert.assertTrue(socket.isConnected());
 
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -91,7 +92,7 @@ public class TcpInputTest extends SDKTestCase {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    fail("Should not throw!");
+                    Assert.fail("Should not throw!");
                 } 
                 
                 return true;
@@ -101,8 +102,8 @@ public class TcpInputTest extends SDKTestCase {
 
     @Test
     public void testGetters() {
-        assertNotNull(tcpInput.getGroup());
-        assertNull(tcpInput.getRestrictToHost());
+        Assert.assertNotNull(tcpInput.getGroup());
+        Assert.assertNull(tcpInput.getRestrictToHost());
        
         tcpInput.setDisabled(false);
         tcpInput.update();
@@ -173,21 +174,21 @@ public class TcpInputTest extends SDKTestCase {
     @Test
     public void testGetInputKindOfScript() {
         Input scriptInput = new Input(service, "data/inputs/script/$SPLUNK_HOME/etc/apps/myapp/bin/myscript.py");
-        assertEquals(InputKind.Script, scriptInput.getKind());
+        Assert.assertEquals(InputKind.Script, scriptInput.getKind());
         
         Input scriptInputWin = new Input(service, "data/inputs/script/$SPLUNK_HOME\\etc\\apps\\myapp\\bin\\myscript.py");
-        assertEquals(InputKind.Script, scriptInputWin.getKind());
+        Assert.assertEquals(InputKind.Script, scriptInputWin.getKind());
         
         Input tcpRawInput = new Input(service, "data/inputs/tcp/raw/6666");
-        assertEquals(InputKind.Tcp, tcpRawInput.getKind());
+        Assert.assertEquals(InputKind.Tcp, tcpRawInput.getKind());
         
         Input tcpCookedInput = new Input(service, "data/inputs/tcp/cooked/6666");
-        assertEquals(InputKind.TcpSplunk, tcpCookedInput.getKind());
+        Assert.assertEquals(InputKind.TcpSplunk, tcpCookedInput.getKind());
         
         Input udpInput = new Input(service, "data/inputs/udp/6666");
-        assertEquals(InputKind.Udp, udpInput.getKind());
+        Assert.assertEquals(InputKind.Udp, udpInput.getKind());
         
         Input modularInput = new Input(service, "data/inputs/my_modular_input/input_name");
-        assertEquals(InputKind.create("my_modular_input"), modularInput.getKind());
+        Assert.assertEquals(InputKind.create("my_modular_input"), modularInput.getKind());
     }
 }

@@ -17,6 +17,7 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class EventTypesTest extends SDKTestCase {
         if (service.getEventTypes().containsKey(eventTypeName)) {
             eventType.remove();
         }
-        assertFalse(service.getEventTypes().containsKey(eventTypeName));
+        Assert.assertFalse(service.getEventTypes().containsKey(eventTypeName));
         
         super.tearDown();
     }
@@ -53,30 +54,30 @@ public class EventTypesTest extends SDKTestCase {
     @Test
     public void testList() {
         EntityCollection<EventType> eventTypes = service.getEventTypes();
-        assertFalse("No event types in system.", eventTypes.size() == 0);
+        Assert.assertFalse("No event types in system.", eventTypes.size() == 0);
 
         for (EventType eventType : eventTypes.values()) {
             eventType.getDescription();
             eventType.getPriority();
             eventType.getSearch();
-            assertNotNull(eventType.getTags());
+            Assert.assertNotNull(eventType.getTags());
         }
     }
 
     @Test
     public void testInitializedProperly() {
-        assertEquals(
+        Assert.assertEquals(
                 "Wrong search in event type",
                 "index=_internal *",
                 eventType.getSearch()
         );
-        assertEquals(
+        Assert.assertEquals(
                 "Wrong description in event type",
                 "Test event type.",
                 eventType.getDescription()
         );
-        assertTrue("Event type not created disabled.", eventType.isDisabled());
-        assertEquals(
+        Assert.assertTrue("Event type not created disabled.", eventType.isDisabled());
+        Assert.assertEquals(
                 "Event type created with wrong priority.",
                 2, eventType.getPriority()
         );
@@ -90,20 +91,20 @@ public class EventTypesTest extends SDKTestCase {
         eventType.setSearch("index=_internal foo");
         eventType.update();
 
-        assertEquals("abcd", eventType.getDescription());
-        assertFalse(eventType.isDisabled());
-        assertEquals(3, eventType.getPriority());
-        assertEquals("index=_internal foo", eventType.getSearch());
+        Assert.assertEquals("abcd", eventType.getDescription());
+        Assert.assertFalse(eventType.isDisabled());
+        Assert.assertEquals(3, eventType.getPriority());
+        Assert.assertEquals("index=_internal foo", eventType.getSearch());
     }
 
     @Test
     public void testEnableDisable() {
-        assertTrue(eventType.isDisabled());
+        Assert.assertTrue(eventType.isDisabled());
         
         eventType.enable();
-        assertFalse(eventType.isDisabled());
+        Assert.assertFalse(eventType.isDisabled());
         
         eventType.disable();
-        assertTrue(eventType.isDisabled());
+        Assert.assertTrue(eventType.isDisabled());
     }
 }

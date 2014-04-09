@@ -18,6 +18,7 @@ package com.splunk;
 
 import java.util.Arrays;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LicensePoolTest extends SDKTestCase {
@@ -27,10 +28,10 @@ public class LicensePoolTest extends SDKTestCase {
         try {
             // The following will fail because there is no quota available
             licensePoolCollection.create("sdk-test", "MAX", "download-trial");
-            fail("Expected pool create to fail");
+            Assert.fail("Expected pool create to fail");
         }
         catch (HttpException e) {
-            assertEquals(400, e.getStatus());
+            Assert.assertEquals(400, e.getStatus());
         }
     }
     
@@ -57,33 +58,33 @@ public class LicensePoolTest extends SDKTestCase {
                 licensePool.setQuota("1048576");
                 licensePool.update();
     
-                assertEquals("sdk-test description", licensePool.getDescription());
-                assertEquals("1048576", licensePool.getQuota());
+                Assert.assertEquals("sdk-test description", licensePool.getDescription());
+                Assert.assertEquals("1048576", licensePool.getQuota());
             }
             
             String[] originalSlaves = licensePool.getSlaves();
             {
                 licensePool.setSlaves("abc,def");
                 String[] slaves = licensePool.getSlaves();
-                assertEquals(slaves[0], "abc");
-                assertEquals(slaves[1], "def");
+                Assert.assertEquals(slaves[0], "abc");
+                Assert.assertEquals(slaves[1], "def");
                 
                 licensePool.setSlaves(new String[]{"xyz", "qrs"});
                 String[] slaves2 = licensePool.getSlaves();
-                assertEquals(slaves2[0], "xyz");
-                assertEquals(slaves2[1], "qrs");
+                Assert.assertEquals(slaves2[0], "xyz");
+                Assert.assertEquals(slaves2[1], "qrs");
                 
                 licensePool.update();
                 String[] slaves3 = licensePool.getSlaves();
-                assertEquals(slaves3.length, 2);
-                assertTrue(Arrays.asList(slaves3).contains("xyz"));
-                assertTrue(Arrays.asList(slaves3).contains("qrs"));
+                Assert.assertEquals(slaves3.length, 2);
+                Assert.assertTrue(Arrays.asList(slaves3).contains("xyz"));
+                Assert.assertTrue(Arrays.asList(slaves3).contains("qrs"));
                 
                 licensePool.setSlaves(originalSlaves);
                 String[] slaves4 = licensePool.getSlaves();
-                assertEquals(slaves4.length, originalSlaves.length);
+                Assert.assertEquals(slaves4.length, originalSlaves.length);
                 for(int i = 0; i < originalSlaves.length; i++) {
-                    assertTrue(Arrays.asList(slaves4).contains(originalSlaves[i]));
+                    Assert.assertTrue(Arrays.asList(slaves4).contains(originalSlaves[i]));
                 }
             }
             

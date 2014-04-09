@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class DeploymentServerClassTest extends SDKTestCase {
             return;
         }
 
-        assertTrue(classes.containsKey(serverClassName));
+        Assert.assertTrue(classes.containsKey(serverClassName));
     }
 
     @Test
@@ -58,12 +59,12 @@ public class DeploymentServerClassTest extends SDKTestCase {
         if (serverClass.isDisabled()) {
             serverClass.enable();
             serverClass.refresh();
-            assertFalse(serverClass.isDisabled());
+            Assert.assertFalse(serverClass.isDisabled());
         }
 
         serverClass.disable();
         serverClass.refresh();
-        assertTrue(serverClass.isDisabled());
+        Assert.assertTrue(serverClass.isDisabled());
     }
 
     @Test
@@ -76,12 +77,12 @@ public class DeploymentServerClassTest extends SDKTestCase {
         if (!serverClass.isDisabled()) {
             serverClass.disable();
             serverClass.refresh();
-            assertTrue(serverClass.isDisabled());
+            Assert.assertTrue(serverClass.isDisabled());
         }
 
         serverClass.enable();
         serverClass.refresh();
-        assertFalse(serverClass.isDisabled());
+        Assert.assertFalse(serverClass.isDisabled());
     }
 
     @Test
@@ -101,10 +102,10 @@ public class DeploymentServerClassTest extends SDKTestCase {
         serverClass.refresh();
 
         for (int i = 0; i < blacklist.length; i++) {
-            assertEquals(blacklist[i], serverClass.getBlacklistByIndex(i));
+            Assert.assertEquals(blacklist[i], serverClass.getBlacklistByIndex(i));
         }
 
-        assertEquals(Util.join(",", blacklist), serverClass.getBlacklist());
+        Assert.assertEquals(Util.join(",", blacklist), serverClass.getBlacklist());
     }
 
     @Test
@@ -124,10 +125,10 @@ public class DeploymentServerClassTest extends SDKTestCase {
         serverClass.refresh();
 
         for (int i = 0; i < whitelist.length; i++) {
-            assertEquals(whitelist[i], serverClass.getWhitelistByIndex(i));
+            Assert.assertEquals(whitelist[i], serverClass.getWhitelistByIndex(i));
         }
 
-        assertEquals(Util.join(",", whitelist), serverClass.getWhitelist());
+        Assert.assertEquals(Util.join(",", whitelist), serverClass.getWhitelist());
     }
 
     @Test
@@ -137,11 +138,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
             return;
         }
 
-        assertFalse(serverClass.getContinueMatching());
+        Assert.assertFalse(serverClass.getContinueMatching());
         serverClass.setContinueMatching(true);
         serverClass.update();
         serverClass.refresh();
-        assertTrue(serverClass.getContinueMatching());
+        Assert.assertTrue(serverClass.getContinueMatching());
     }
 
     @Test
@@ -154,7 +155,7 @@ public class DeploymentServerClassTest extends SDKTestCase {
         serverClass.setEndPoint("boris the mad baboon");
         serverClass.update();
         serverClass.refresh();
-        assertEquals("boris the mad baboon", serverClass.getEndpoint());
+        Assert.assertEquals("boris the mad baboon", serverClass.getEndpoint());
     }
 
     @Test
@@ -167,11 +168,11 @@ public class DeploymentServerClassTest extends SDKTestCase {
         serverClass.setFilterType("whitelist");
         serverClass.update();
         serverClass.refresh();
-        assertEquals("whitelist", serverClass.getFilterType());
+        Assert.assertEquals("whitelist", serverClass.getFilterType());
 
         serverClass.setFilterType("blacklist");
         serverClass.refresh();
-        assertEquals("blacklist", serverClass.getFilterType());
+        Assert.assertEquals("blacklist", serverClass.getFilterType());
     }
 }
 

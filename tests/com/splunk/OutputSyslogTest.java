@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class OutputSyslogTest extends SDKTestCase {
@@ -45,8 +46,8 @@ public class OutputSyslogTest extends SDKTestCase {
                 entity.update();
     
                 // check
-                assertEquals("1.1.1.1:514", entity.getServer());
-                assertEquals(otherType, entity.getType());
+                Assert.assertEquals("1.1.1.1:514", entity.getServer());
+                Assert.assertEquals(otherType, entity.getType());
             }
 
             // Restore
@@ -55,8 +56,8 @@ public class OutputSyslogTest extends SDKTestCase {
                 entity.setType(type);
                 entity.update();
     
-                assertEquals(server, entity.getServer());
-                assertEquals(type, entity.getType());
+                Assert.assertEquals(server, entity.getServer());
+                Assert.assertEquals(type, entity.getType());
             }
         }
     }

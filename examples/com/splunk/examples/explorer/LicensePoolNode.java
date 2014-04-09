@@ -25,7 +25,7 @@ class LicensePoolNode extends EntityNode {
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        list.add(String.class, "getDescription");
+        list.add(String.class, "getDescriptionLabel");
         list.add(long.class, "getQuota");
         list.add(String[].class, "getSlaves");
         list.add(long.class, "getSlavesUsageBytes");

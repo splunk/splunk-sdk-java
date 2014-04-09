@@ -23,7 +23,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.lang.reflect.*;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -184,7 +183,7 @@ public class Command {
             // corresponding option value in order to provide simplified
             // access to command options.
             try {
-                Field field = this.getClass().getField(name);
+                java.lang.reflect.Field field = this.getClass().getField(name);
                 field.set(this, value);
             }
             catch (NoSuchFieldException e) { continue; }

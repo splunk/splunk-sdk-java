@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,9 +39,9 @@ public class ResultsReaderTest extends SDKTestCase {
 
         String[] fields = new String[0];
         fields = reader.getFields().toArray(fields);
-        assertEquals(2, fields.length);
-        assertEquals("sum(kb)", fields[0]);
-        assertEquals("series", fields[1]);
+        Assert.assertEquals(2, fields.length);
+        Assert.assertEquals("sum(kb)", fields[0]);
+        Assert.assertEquals("series", fields[1]);
 
         Map<String, String> expected = new HashMap<String, String>();
 
@@ -56,7 +57,7 @@ public class ResultsReaderTest extends SDKTestCase {
         expected.put("sum(kb)", "5979.036338");
         assertNextEventEquals(expected, reader);
 
-        assertNull(reader.getNextEvent());
+        Assert.assertNull(reader.getNextEvent());
         reader.close();
     }
 
@@ -71,7 +72,7 @@ public class ResultsReaderTest extends SDKTestCase {
         expected.put("count", "1");
         assertNextEventEquals(expected, reader);
 
-        assertNull(reader.getNextEvent());
+        Assert.assertNull(reader.getNextEvent());
         reader.close();
     }
 
@@ -104,7 +105,7 @@ public class ResultsReaderTest extends SDKTestCase {
             singleEvent = event;
         }
 
-       assertEquals("1", singleEvent.get("count"));
+       Assert.assertEquals("1", singleEvent.get("count"));
     }
 
     private MultiResultsReader getExportStreamJson() throws IOException {
@@ -139,7 +140,7 @@ public class ResultsReaderTest extends SDKTestCase {
         expected.put("sum(kb)", "5979.036338");
         assertNextEventEquals(expected, reader);
 
-        assertNull(reader.getNextEvent());
+        Assert.assertNull(reader.getNextEvent());
         reader.close();
     }
 
@@ -163,7 +164,7 @@ public class ResultsReaderTest extends SDKTestCase {
         expected.put("sum(kb)", "5979.036338");
         assertNextEventEquals(expected, reader);
 
-        assertNull(reader.getNextEvent());
+        Assert.assertNull(reader.getNextEvent());
         reader.close();
     }
     
@@ -234,15 +235,15 @@ public class ResultsReaderTest extends SDKTestCase {
             {
                 String[] si = firstResult.getArray("_si", delimiter);
                 //String[] siArray = siDelimited.split(Pattern.quote(delimiter));
-                assertEquals(2, si.length);
+                Assert.assertEquals(2, si.length);
                 // (siArray[0] should be the locally-determined hostname of
                 //  splunkd, but there is no good way to test this
                 //  consistently.)
-                assertEquals("_internal", si[1]);
+                Assert.assertEquals("_internal", si[1]);
             }
-            assertEquals("_internal", firstResult.get("index"));
+            Assert.assertEquals("_internal", firstResult.get("index"));
             
-            assertNull("Expected exactly one result.", reader.getNextEvent());
+            Assert.assertNull("Expected exactly one result.", reader.getNextEvent());
             reader.close();
         }
         
@@ -253,17 +254,17 @@ public class ResultsReaderTest extends SDKTestCase {
             Event firstResult = reader.getNextEvent();
             {
                 String[] siArray = firstResult.getArray("_si", delimiter);
-                assertEquals(2, siArray.length);
+                Assert.assertEquals(2, siArray.length);
                 // (siArray[0] should be the locally-determined hostname of
                 //  splunkd, but there is no good way to test this
                 //  consistently.)
-                assertEquals("_internal", siArray[1]);
+                Assert.assertEquals("_internal", siArray[1]);
             }
-            assertEquals(
+            Assert.assertEquals(
                     new String[] {"_internal"},
                     firstResult.getArray("index", delimiter));
             
-            assertNull("Expected exactly one result.", reader.getNextEvent());
+            Assert.assertNull("Expected exactly one result.", reader.getNextEvent());
             reader.close();
         }
     }
@@ -284,7 +285,7 @@ public class ResultsReaderTest extends SDKTestCase {
         
         try {
             event.clear();
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         }
         catch (UnsupportedOperationException e) {
             // Good
@@ -292,7 +293,7 @@ public class ResultsReaderTest extends SDKTestCase {
         
         try {
             event.clone();
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         }
         catch (UnsupportedOperationException e) {
             // Good
@@ -300,7 +301,7 @@ public class ResultsReaderTest extends SDKTestCase {
         
         try {
             event.put(null, null);
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         }
         catch (UnsupportedOperationException e) {
             // Good
@@ -308,7 +309,7 @@ public class ResultsReaderTest extends SDKTestCase {
         
         try {
             event.putAll(null);
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         }
         catch (UnsupportedOperationException e) {
             // Good
@@ -316,7 +317,7 @@ public class ResultsReaderTest extends SDKTestCase {
         
         try {
             event.remove(null);
-            fail("Expected UnsupportedOperationException.");
+            Assert.fail("Expected UnsupportedOperationException.");
         }
         catch (UnsupportedOperationException e) {
             // Good
@@ -337,12 +338,12 @@ public class ResultsReaderTest extends SDKTestCase {
         ResultsReaderXml reader = new ResultsReaderXml(
             openResource("resultsPreview.xml"));
 
-        assertTrue(reader.isPreview());
+        Assert.assertTrue(reader.isPreview());
 
         String[] fieldNameArray = new String[0];
         fieldNameArray = reader.getFields().toArray(fieldNameArray);
-        assertEquals(101, fieldNameArray.length);
-        assertEquals(fieldNameArray[99], "useragent");
+        Assert.assertEquals(101, fieldNameArray.length);
+        Assert.assertEquals(fieldNameArray[99], "useragent");
 
         int index = 0;
         Event lastEvent = null;
@@ -358,8 +359,8 @@ public class ResultsReaderTest extends SDKTestCase {
                 index ++;
             }
         }
-        assertEquals("1355946614", lastEvent.get("_indextime"));
-        assertEquals(10, index);
+        Assert.assertEquals("1355946614", lastEvent.get("_indextime"));
+        Assert.assertEquals(10, index);
 
         reader.close();
     }
@@ -409,19 +410,19 @@ public class ResultsReaderTest extends SDKTestCase {
         int indexEvent = 0;
         for (Event event : reader){
             if (indexEvent == 0) {
-                assertEquals("172.16.35.130", event.get("host"));
-                assertEquals("16", event.get("count"));
+                Assert.assertEquals("172.16.35.130", event.get("host"));
+                Assert.assertEquals("16", event.get("count"));
             }
 
             if (indexEvent == 4) {
-                assertEquals("three.four.com", event.get("host"));
-                assertEquals("35994", event.get( "count"));
+                Assert.assertEquals("three.four.com", event.get("host"));
+                Assert.assertEquals("35994", event.get( "count"));
             }
 
             indexEvent++;
         }
 
-        assertEquals(5, indexEvent);
+        Assert.assertEquals(5, indexEvent);
 
         reader.close();
     }
@@ -437,19 +438,19 @@ public class ResultsReaderTest extends SDKTestCase {
                 firstResults = results;
 
             if (indexResultSet == countResultSet -1) {
-                assertFalse(results.isPreview());
+                Assert.assertFalse(results.isPreview());
             }
 
             int indexEvent = 0;
             for (Event event : results) {
                 if (indexResultSet == 1 && indexEvent == 1) {
-                    assertEquals("andy-pc", event.get("host"));
-                    assertEquals("3", event.get("count"));
+                    Assert.assertEquals("andy-pc", event.get("host"));
+                    Assert.assertEquals("3", event.get("count"));
                 }
 
                 if (indexResultSet == countResultSet - 2 && indexEvent == 3) {
-                    assertEquals("andy-pc", event.get("host"));
-                    assertEquals("135", event.get( "count"));
+                    Assert.assertEquals("andy-pc", event.get("host"));
+                    Assert.assertEquals("135", event.get( "count"));
                 }
 
                 indexEvent++;
@@ -457,19 +458,19 @@ public class ResultsReaderTest extends SDKTestCase {
 
             switch (indexResultSet) {
                 case 0:
-                    assertEquals(indexEvent, 1);
+                    Assert.assertEquals(indexEvent, 1);
                     break;
                 case 1:
-                    assertEquals(indexEvent, 3);
+                    Assert.assertEquals(indexEvent, 3);
                     break;
                 default:
-                    assertEquals(indexEvent, 5);
+                    Assert.assertEquals(indexEvent, 5);
                     break;
             }
             indexResultSet++;
         }
 
-        assertEquals(indexResultSet, countResultSet);
+        Assert.assertEquals(indexResultSet, countResultSet);
 
         // firstResults should be empty since the multi-reader has passed it
         // and there should be no exception.
@@ -477,7 +478,7 @@ public class ResultsReaderTest extends SDKTestCase {
         for (Event eventL : firstResults) {
             count++;
         }
-        assertEquals(0, count);
+        Assert.assertEquals(0, count);
 
         multiReader.close();
     }
@@ -488,7 +489,7 @@ public class ResultsReaderTest extends SDKTestCase {
             Map<String, String> expected,
             ResultsReader reader) throws IOException {
         
-        assertEquals(expected, reader.getNextEvent());
+        Assert.assertEquals(expected, reader.getNextEvent());
         expected.clear();
     }
 }

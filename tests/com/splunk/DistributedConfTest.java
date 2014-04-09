@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -90,19 +91,19 @@ public class DistributedConfTest extends SDKTestCase {
 
             conf.refresh();
 
-            assertEquals(newAutoAddServers, conf.getAutoAddServers());
-            assertEquals(newBlacklistNames, conf.getBlacklistNames());
-            assertEquals(newBlacklistUrls, conf.getBlacklistUrls());
-            assertEquals(newTimeoutFrequency, conf.getCheckTimedOutServersFrequency());
-            assertEquals(newHeartbeatFrequency, conf.getHeartbeatFrequency());
-            assertEquals(newHeartbeatMcastAddr, conf.getHeartbeatMcastAddress());
-            assertEquals(newHeartbeatPort, conf.getHeartbeatPort());
-            assertEquals(newRemoveTimesOutServers, conf.getRemovedTimedOutServers());
-            assertEquals(newServers, conf.getServers());
-            assertEquals(newShareBundles, conf.getShareBundles());
-            assertEquals(newSkipOurselves, conf.getSkipOurselves());
-            assertEquals(newStatusTimeout, conf.getStatusTimeout());
-            assertEquals(newTtl, conf.getTtl());
+            Assert.assertEquals(newAutoAddServers, conf.getAutoAddServers());
+            Assert.assertEquals(newBlacklistNames, conf.getBlacklistNames());
+            Assert.assertEquals(newBlacklistUrls, conf.getBlacklistUrls());
+            Assert.assertEquals(newTimeoutFrequency, conf.getCheckTimedOutServersFrequency());
+            Assert.assertEquals(newHeartbeatFrequency, conf.getHeartbeatFrequency());
+            Assert.assertEquals(newHeartbeatMcastAddr, conf.getHeartbeatMcastAddress());
+            Assert.assertEquals(newHeartbeatPort, conf.getHeartbeatPort());
+            Assert.assertEquals(newRemoveTimesOutServers, conf.getRemovedTimedOutServers());
+            Assert.assertEquals(newServers, conf.getServers());
+            Assert.assertEquals(newShareBundles, conf.getShareBundles());
+            Assert.assertEquals(newSkipOurselves, conf.getSkipOurselves());
+            Assert.assertEquals(newStatusTimeout, conf.getStatusTimeout());
+            Assert.assertEquals(newTtl, conf.getTtl());
 
         } finally {
             conf.setAutoAddServers(originalAutoAddServers);
@@ -123,7 +124,7 @@ public class DistributedConfTest extends SDKTestCase {
 
     @Test
     public void testDisableAndEnable() {
-        assertEquals(conf.isDistSearchEnabled(), !conf.isDisabled());
+        Assert.assertEquals(conf.isDistSearchEnabled(), !conf.isDisabled());
 
         // Ensure that distributed search is enabled so we know
         // that disable works.
@@ -135,11 +136,11 @@ public class DistributedConfTest extends SDKTestCase {
         conf.disable();
         splunkRestart();
         conf.refresh();
-        assertTrue(conf.isDisabled());
+        Assert.assertTrue(conf.isDisabled());
 
         conf.enable();
         splunkRestart();
         conf.refresh();
-        assertTrue(conf.isDistSearchEnabled());
+        Assert.assertTrue(conf.isDistSearchEnabled());
     }
 }
