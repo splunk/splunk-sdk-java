@@ -458,17 +458,12 @@ public class DataModelTest extends SDKTestCase {
 
     @Test
     public void testRunQuery() {
-        EntityCollection<DataModel> dataModels = service.getDataModels();
-
-        DataModelArgs args = new DataModelArgs();
-        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
-        DataModel model = dataModels.create(createTemporaryName(), args);
-
-        DataModelObject object = model.getObject("event1");
+        DataModel dataModel = service.getDataModels().get("internal_audit_logs");
+        DataModelObject searches = dataModel.getObject("searches");
 
         Job job = null;
         try {
-            final Job j = object.runQuery();
+            final Job j = searches.runQuery();
             job = j;
             assertEventuallyTrue(new EventuallyTrueBehavior() {
                 @Override
@@ -476,7 +471,7 @@ public class DataModelTest extends SDKTestCase {
                     return j.isReady();
                 }
             });
-            Assert.assertEquals("| datamodel " + model.getName() + " " + object.getName() + " search", job.getSearch());
+            Assert.assertEquals("| datamodel " + dataModel.getName() + " " + searches.getName() + " search", job.getSearch());
         } finally {
             if (job != null) {
                 job.cancel();
@@ -485,7 +480,7 @@ public class DataModelTest extends SDKTestCase {
 
         job = null;
         try {
-            job = object.runQuery("| head 3", new JobArgs() {{
+            job = searches.runQuery("| head 3", new JobArgs() {{
                 setEnableLookups(false);
                 put("status_buckets", "5");
             }});
@@ -496,7 +491,7 @@ public class DataModelTest extends SDKTestCase {
                     return j.isReady();
                 }
             });
-            Assert.assertEquals("| datamodel " + model.getName() + " " + object.getName() + " search| head 3", job.getSearch());
+            Assert.assertEquals("| datamodel " + dataModel.getName() + " " + searches.getName() + " search| head 3", job.getSearch());
             Assert.assertEquals(5, job.getInteger("statusBuckets"));
         } finally {
             if (job != null) {
