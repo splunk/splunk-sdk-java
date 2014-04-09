@@ -64,7 +64,7 @@ public class Program {
 
         pivotSpecification.addRowSplit("user", "Executing user");
         pivotSpecification.addColumnSplit("exec_time", null, null, null, 4);
-        pivotSpecification.addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES, false);
+        pivotSpecification.addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES);
 
         Pivot pivot = pivotSpecification.pivot();
         System.out.println("Query for binning search queries by execution time and executing user:");

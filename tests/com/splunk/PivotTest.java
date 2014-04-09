@@ -23,6 +23,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.*;
+import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class PivotTest extends SDKTestCase {
     DataModelObject dataModelObject;
@@ -605,13 +611,13 @@ public class PivotTest extends SDKTestCase {
     @Test(expected=IllegalArgumentException.class)
     public void testNonexistantFieldToCellValue() {
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
-        pivotSpecification.addCellValue("nonexistant", "my_label", StatsFunction.COUNT, false);
+        pivotSpecification.addCellValue("nonexistant", "my_label", StatsFunction.COUNT);
     }
 
     @Test
     public void testAddStringCellValue() {
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
-        pivotSpecification.addCellValue("source", "Source Value", StatsFunction.DISTINCT_COUNT, true);
+        pivotSpecification.addCellValue("source", "Source Value", StatsFunction.DISTINCT_COUNT);
 
         Assert.assertEquals(1, pivotSpecification.getCellValues().size());
         for (PivotCellValue pcv : pivotSpecification.getCellValues()) {
@@ -622,7 +628,7 @@ public class PivotTest extends SDKTestCase {
             expected.addProperty("type", "string");
             expected.addProperty("label", "Source Value");
             expected.addProperty("value", "dc");
-            expected.addProperty("sparkline", true);
+            expected.addProperty("sparkline", false);
 
             Assert.assertEquals(expected, found);
         }
@@ -631,7 +637,7 @@ public class PivotTest extends SDKTestCase {
     @Test
     public void testAddIpv4CellValue() {
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
-        pivotSpecification.addCellValue("hostip", "Source Value", StatsFunction.DISTINCT_COUNT, true);
+        pivotSpecification.addCellValue("hostip", "Source Value", StatsFunction.DISTINCT_COUNT);
 
         Assert.assertEquals(1, pivotSpecification.getCellValues().size());
         for (PivotCellValue pcv : pivotSpecification.getCellValues()) {
@@ -642,7 +648,7 @@ public class PivotTest extends SDKTestCase {
             expected.addProperty("type", "ipv4");
             expected.addProperty("label", "Source Value");
             expected.addProperty("value", "dc");
-            expected.addProperty("sparkline", true);
+            expected.addProperty("sparkline", false);
 
             Assert.assertEquals(expected, found);
         }
@@ -651,14 +657,14 @@ public class PivotTest extends SDKTestCase {
     @Test(expected=IllegalArgumentException.class)
     public void testIllegalStatsFunction() {
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
-        pivotSpecification.addCellValue("source", "Source Value", StatsFunction.SUM, true);
+        pivotSpecification.addCellValue("source", "Source Value", StatsFunction.SUM);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testNoBooleanCellValues() {
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
-        pivotSpecification.addCellValue("has_boris", "Source Value", StatsFunction.DISTINCT_VALUES, true);
+        pivotSpecification.addCellValue("has_boris", "Source Value", StatsFunction.DISTINCT_VALUES);
     }
 
     @Test(expected= HttpException.class)
@@ -671,10 +677,40 @@ public class PivotTest extends SDKTestCase {
     public void testSimplePivotWithoutNamespace() {
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
+        pivotSpecification.addCellValue("hostip", "Distinct IPs", StatsFunction.DISTINCT_COUNT);
+
 
         Pivot pivot = pivotSpecification.pivot();
         Assert.assertNull(pivot.getAcceleratedQuery());
         Assert.assertTrue(pivot.getPivotQuery().startsWith("| pivot"));
+        final Job job = pivot.run();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isReady();
+            }
+        });
+        Assert.assertTrue(job.getSearch().startsWith("| pivot"));
+    }
+
+    @Test
+    public void testSimplePivotWithSparkline() {
+        PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
+        pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
+        pivotSpecification.addCellValue("hostip", "Distinct IPs", StatsFunction.DISTINCT_COUNT);
+
+
+        Pivot pivot = pivotSpecification.pivot();
+        Assert.assertNull(pivot.getAcceleratedQuery());
+        Assert.assertTrue(pivot.getPivotQuery().startsWith("| pivot"));
+        final Job job = pivot.run();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                return job.isReady();
+            }
+        });
+        Assert.assertTrue(job.getSearch().startsWith("| pivot"));
     }
 
     @Test
@@ -682,7 +718,7 @@ public class PivotTest extends SDKTestCase {
         Job adhocJob = dataModelObject.createLocalAccelerationJob();
         PivotSpecification pivotSpecification = dataModelObject.createPivotSpecification();
         pivotSpecification.addRowSplit("has_boris", "Has Boris", "meep", "hilda");
-        pivotSpecification.addCellValue("hostip", "Distinct IPs", StatsFunction.DISTINCT_COUNT, false);
+        pivotSpecification.addCellValue("hostip", "Distinct IPs", StatsFunction.DISTINCT_COUNT);
         pivotSpecification.setAccelerationJob(adhocJob);
 
         Pivot pivot = pivotSpecification.pivot();
@@ -697,6 +733,7 @@ public class PivotTest extends SDKTestCase {
         });
 
         Assert.assertTrue(job.getSearch().startsWith("| tstats"));
+        adhocJob.cancel();
     }
 
     @Test
@@ -708,7 +745,7 @@ public class PivotTest extends SDKTestCase {
         PivotSpecification pivotSpecification = new PivotSpecification(searches);
         pivotSpecification.addRowSplit("user", "Executing user");
         pivotSpecification.addColumnSplit("exec_time", 0, 12, 5, 4);
-        pivotSpecification.addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES, false);
+        pivotSpecification.addCellValue("search", "Search Query", StatsFunction.DISTINCT_VALUES);
 
         Pivot pivot = pivotSpecification.pivot();
         final Job job = pivot.run();

@@ -24,15 +24,12 @@ public class PivotCellValue {
     private final String fieldName;
     private final DataModelObject dataModelObject;
     private final String label;
-    private final boolean generateSparkline;
     private final StatsFunction statsFunction;
 
-    PivotCellValue(DataModelObject dataModelObject, String fieldName, String label,
-                          StatsFunction statsFunction, boolean generateSparkline) {
+    PivotCellValue(DataModelObject dataModelObject, String fieldName, String label, StatsFunction statsFunction) {
         this.fieldName = fieldName;
         this.dataModelObject = dataModelObject;
         this.label = label;
-        this.generateSparkline = generateSparkline;
         this.statsFunction = statsFunction;
 
         if (!dataModelObject.containsField(fieldName)) {
@@ -101,11 +98,6 @@ public class PivotCellValue {
     public String getLabel() { return this.label; }
 
     /**
-     * @return whether this aggregate will generate sparkline data.
-     */
-    public boolean generateSparklineEnabled() { return this.generateSparkline; }
-
-    /**
      * @return the function used for aggregation.
      */
     public StatsFunction getStatsFunction() { return this.statsFunction; }
@@ -122,7 +114,7 @@ public class PivotCellValue {
         root.addProperty("owner", Util.join(".", f.getOwnerLineage()));
         root.addProperty("type", f.getType().toString());
         root.addProperty("label", this.label);
-        root.addProperty("sparkline", this.generateSparkline);
+        root.addProperty("sparkline", false); // Not properly implemented in core yet.
         root.addProperty("value", this.statsFunction.toString());
 
         return root;

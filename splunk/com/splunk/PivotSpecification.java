@@ -396,9 +396,8 @@ public class PivotSpecification {
      * @param generateSparkline should there be a sparkline generated for this aggregate.
      * @return the PivotSpecification you are working on.
      */
-    public PivotSpecification addCellValue(String field, String label, StatsFunction statsFunction,
-                                           boolean generateSparkline) {
-        cells.add(new PivotCellValue(this.dataModelObject, field, label, statsFunction, generateSparkline));
+    public PivotSpecification addCellValue(String field, String label, StatsFunction statsFunction) {
+        cells.add(new PivotCellValue(this.dataModelObject, field, label, statsFunction));
 
         return this;
     }
