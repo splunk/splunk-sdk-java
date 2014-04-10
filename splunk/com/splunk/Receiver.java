@@ -84,7 +84,7 @@ public class Receiver {
     public Socket attach(String indexName, Args args) throws IOException {
         Socket socket = service.open();
         OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
+        Writer out = new OutputStreamWriter(ostream, "UTF-8");
         String postUrl = "POST /services/receivers/stream";
         if (indexName != null) {
             postUrl = postUrl + "?index=" + indexName;

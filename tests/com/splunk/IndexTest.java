@@ -101,7 +101,7 @@ public class IndexTest extends SDKTestCase {
         index.attachWith(new ReceiverBehavior() {
             public void run(OutputStream stream) throws IOException {
                 String s = createTimestamp() + " Boris the mad baboon!\r\n";
-                stream.write(s.getBytes("UTF8"));
+                stream.write(s.getBytes("UTF-8"));
             }
         });
         
@@ -487,7 +487,7 @@ public class IndexTest extends SDKTestCase {
 
         Socket socket = index.attach();
         OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
+        Writer out = new OutputStreamWriter(ostream, "UTF-8");
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
 
@@ -527,7 +527,7 @@ public class IndexTest extends SDKTestCase {
         Args args = Args.create("sourcetype", "mysourcetype");
         Socket socket = index.attach(args);
         OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF8");
+        Writer out = new OutputStreamWriter(ostream, "UTF-8");
         out.write(createTimestamp() + " Hello world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
         out.write(createTimestamp() + " Goodbye world again!\u0150\r\n");

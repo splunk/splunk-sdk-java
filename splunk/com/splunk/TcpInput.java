@@ -256,7 +256,7 @@ public class TcpInput extends PortInput {
         try {
             socket = attach();
             output = socket.getOutputStream();
-            output.write(eventBody.getBytes("UTF8"));
+            output.write(eventBody.getBytes("UTF-8"));
             output.flush();
             output.close();
             socket.close();

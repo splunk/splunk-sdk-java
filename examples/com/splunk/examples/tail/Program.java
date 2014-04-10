@@ -68,7 +68,7 @@ public class Program {
         InputStream is = service.export(query, args);
 
         // Use UTF8 sensitive reader/writers
-        InputStreamReader reader = new InputStreamReader(is, "UTF8");
+        InputStreamReader reader = new InputStreamReader(is, "UTF-8");
         OutputStreamWriter writer = new OutputStreamWriter(System.out);
 
         int size = 1024;

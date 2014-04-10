@@ -923,7 +923,7 @@ public class SearchJobTest extends SDKTestCase {
         try {
             StringBuilder b = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(stream, "UTF8")
+                    new InputStreamReader(stream, "UTF-8")
             );
             String tmp;
             while ((tmp = reader.readLine()) != null) {

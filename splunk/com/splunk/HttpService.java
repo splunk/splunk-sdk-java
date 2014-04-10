@@ -336,7 +336,7 @@ public class HttpService {
             if (content != null) {
                 cn.setDoOutput(true);
                 OutputStream stream = cn.getOutputStream();
-                OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF8");
+                OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF-8");
                 writer.write((String)content);
                 writer.close();
             }

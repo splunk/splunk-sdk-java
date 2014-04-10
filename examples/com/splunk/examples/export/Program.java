@@ -320,9 +320,9 @@ public class Program {
         InputStream is = service.export(search, args);
 
         // Use UTF8 sensitive reader/writers
-        InputStreamReader isr = new InputStreamReader(is, "UTF8");
+        InputStreamReader isr = new InputStreamReader(is, "UTF-8");
         FileOutputStream os = new FileOutputStream(file, true);
-        Writer out = new OutputStreamWriter(os, "UTF8");
+        Writer out = new OutputStreamWriter(os, "UTF-8");
 
         // Read/write 8k at a time if possible
         char [] xferBuffer = new char[8192];

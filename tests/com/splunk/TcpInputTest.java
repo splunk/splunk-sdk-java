@@ -157,7 +157,7 @@ public class TcpInputTest extends SDKTestCase {
         this.tcpInput.attachWith(new ReceiverBehavior() {
             public void run(OutputStream stream) throws IOException {
                 String s = createTimestamp() + " Boris the mad baboon!\r\n";
-                stream.write(s.getBytes("UTF8"));
+                stream.write(s.getBytes("UTF-8"));
             }
         });
 

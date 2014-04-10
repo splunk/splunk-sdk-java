@@ -69,7 +69,7 @@ public class ServiceTest extends SDKTestCase {
             OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon1!\r\n";
-            stream.write(s.getBytes("UTF8"));
+            stream.write(s.getBytes("UTF-8"));
             // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
             // has been written.
             stream.close();
@@ -83,7 +83,7 @@ public class ServiceTest extends SDKTestCase {
             OutputStream stream = socket1.getOutputStream();
 
             String s = createTimestamp() + " Boris the mad baboon2!\r\n";
-            stream.write(s.getBytes("UTF8"));
+            stream.write(s.getBytes("UTF-8"));
             // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
             // has been written.
             stream.close();

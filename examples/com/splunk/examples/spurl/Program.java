@@ -47,7 +47,7 @@ public class Program {
         if (status != 200) return;
 
         BufferedReader reader = new BufferedReader(
-            new InputStreamReader(response.getContent(), "UTF8"));
+            new InputStreamReader(response.getContent(), "UTF-8"));
         while (true) {
             String line = reader.readLine();
             if (line == null) break;

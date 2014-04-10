@@ -52,7 +52,12 @@ public abstract class SDKTestCase {
     protected Command command;
 
     public static String streamToString(java.io.InputStream is) {
-        Reader r = new InputStreamReader(is);
+        Reader r = null;
+        try {
+            r = new InputStreamReader(is, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Your JVM does not support UTF-8!");
+        }
         StringBuffer sb = new StringBuffer();
         int ch;
         try {
@@ -387,7 +392,7 @@ public abstract class SDKTestCase {
     protected boolean firstLineIsXmlDtd(InputStream stream) {
         InputStreamReader reader;
         try {
-            reader = new InputStreamReader(stream, "UTF8");
+            reader = new InputStreamReader(stream, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new Error(e);
         }

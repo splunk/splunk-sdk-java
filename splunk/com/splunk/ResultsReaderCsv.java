@@ -53,7 +53,7 @@ public class ResultsReaderCsv extends ResultsReader {
                 "by a CSV result reader. Use XML or JSON search output "+
                 "format and matching reader instead."
             );
-        csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF8"));
+        csvReader = new CSVReader(new InputStreamReader(inputStream, "UTF-8"));
         // initial line contains the keyArray, except for oneshot -- which 
         // contains a blank line, and then the key list.
         String[] keyArray = csvReader.readNext();

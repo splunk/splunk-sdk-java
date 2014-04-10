@@ -103,7 +103,7 @@ public class ApplicationTest extends SDKTestCase {
         
         String setupXml = applicationSetup.getSetupXml();
         Document parsedSetupXml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
-            new ByteArrayInputStream(setupXml.getBytes("UTF8")));
+            new ByteArrayInputStream(setupXml.getBytes("UTF-8")));
         parsedSetupXml.getDocumentElement().normalize();
         
         Assert.assertEquals(parsedSetupXml.getDocumentElement().getNodeName(), "SetupInfo");

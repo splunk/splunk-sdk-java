@@ -179,7 +179,7 @@ public class Program {
             }
         }
         else {
-            InputStreamReader reader = new InputStreamReader(stream, "UTF8");
+            InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
             OutputStreamWriter writer = new OutputStreamWriter(System.out);
 
             int size = 1024;

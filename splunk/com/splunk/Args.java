@@ -114,7 +114,7 @@ public class Args extends LinkedHashMap<String, Object> {
         if (value == null) return "";
         String result = null;
         try {
-            result = URLEncoder.encode(value, "UTF8");
+            result = URLEncoder.encode(value, "UTF-8");
         }
         catch (UnsupportedEncodingException e) { assert false; }
         return result;
