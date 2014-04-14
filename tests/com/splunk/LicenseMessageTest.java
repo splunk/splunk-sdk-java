@@ -24,6 +24,9 @@ import org.junit.Test;
 public class LicenseMessageTest extends SDKTestCase {
     @Test
     public void testLicenseMessage() throws Exception {
+        if (service.versionIsAtLeast("6.1")) {
+            Assert.fail("Bug in core (SPL-83050). Not trying.");
+        }
         EntityCollection<LicenseMessage> licenseMessages =
             service.getLicenseMessages();
         

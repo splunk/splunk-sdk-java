@@ -90,7 +90,7 @@ public class LicenseTest extends SDKTestCase {
         String licenseKey;
         String licenseFilename;
         if (service.versionIsAtLeast("6.1")) {
-            licenseKey = "";
+            licenseKey = "dTEDyZNMuiTE7Nu1Y3ZUr8l9pbGaX/RRo/eAhsGBHuo23VyYzaiyHnPHyr8IPL7d3opT/4EBfrCNI4HGwN1EOdiES9mt91fDQvEFx8f+p+RJnlFJfRQqbbWZWWjqxfJvYIlBc9GDiZ0xSo+Bc+DuYdlkG4f+WywHIH/k9HN6snqCxVojRJwiJAGjDn5FmUVIcaKCF84MaRVFPmRlicNzQ6pYvQjimPaUHNoP5NB9rgWg4ehaZ+bfR2AcjpgSBNiJOwKRI9EdNLA7GPXphcujyKynl45RSWZmqd5vQMHIH4a2BTeK+0QwPoJni4CUtN19yUFUNOiXHjx6Aunjw9qVtA==";
             licenseFilename = "splunk_at_least_cupcake.license";
         } else {
             licenseKey = "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101";
