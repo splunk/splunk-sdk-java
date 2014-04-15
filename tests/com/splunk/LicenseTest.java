@@ -81,16 +81,26 @@ public class LicenseTest extends SDKTestCase {
     @Test
     public void testCreateDelete() throws Exception {
         EntityCollection<License> licenses = service.getLicenses();
-        
-        if (licenses.containsKey("sdk-test")) {
-            licenses.remove("sdk-test");
+
+        String activeGroup = null;
+        EntityCollection<Entity> licenseGroups = new EntityCollection<Entity>(service, "licenser/groups");
+        for (Entity entity : licenseGroups.values()) {
+            if (entity.getBoolean("is_active", false)) {
+                activeGroup = entity.getName();
+                break;
+            }
         }
-        Assert.assertFalse(licenses.containsKey("sdk-test"));
+
+        try {
+        Args args = new Args();
+        args.put("is_active", "1");
+        service.post("licenser/groups/Free", args);
+        splunkRestart();
 
         String licenseKey;
         String licenseFilename;
         if (service.versionIsAtLeast("6.1")) {
-            licenseKey = "dTEDyZNMuiTE7Nu1Y3ZUr8l9pbGaX/RRo/eAhsGBHuo23VyYzaiyHnPHyr8IPL7d3opT/4EBfrCNI4HGwN1EOdiES9mt91fDQvEFx8f+p+RJnlFJfRQqbbWZWWjqxfJvYIlBc9GDiZ0xSo+Bc+DuYdlkG4f+WywHIH/k9HN6snqCxVojRJwiJAGjDn5FmUVIcaKCF84MaRVFPmRlicNzQ6pYvQjimPaUHNoP5NB9rgWg4ehaZ+bfR2AcjpgSBNiJOwKRI9EdNLA7GPXphcujyKynl45RSWZmqd5vQMHIH4a2BTeK+0QwPoJni4CUtN19yUFUNOiXHjx6Aunjw9qVtA==";
+            licenseKey = "EEDD55456662E29733FE185604ED22C44D1F472220BA3616E2605ECB322E4ACF";
             licenseFilename = "splunk_at_least_cupcake.license";
         } else {
             licenseKey = "6B7AD703356A487BDC513EE92B96A9B403C070EFAA30029C9784B0E240FA3101";
@@ -105,7 +115,6 @@ public class LicenseTest extends SDKTestCase {
         // Read test license from disk
         byte[] licensePayload = new byte[2048];
         InputStream licenseStream = SDKTestCase.openResource(licenseFilename);
-        Assert.assertNotNull("Could not find " + licenseFilename, licenseStream);
         try {
             licenseStream.read(licensePayload);
         }
@@ -114,13 +123,20 @@ public class LicenseTest extends SDKTestCase {
         }
         
         // Create
-        licenses.create("sdk-test", new Args("payload", new String(licensePayload)));
+        licenses.create(licenseKey, new Args("payload", new String(licensePayload)));
         
         // Remove
         Assert.assertTrue(licenses.containsKey(licenseKey));
         licenses.remove(licenseKey);
         Assert.assertFalse(licenses.containsKey(licenseKey));
-        
-        clearRestartMessage();
+
+        } finally {
+            if (activeGroup != null) {
+                Args args = new Args();
+                args.put("is_active", "1");
+                service.post("licenser/groups/" + activeGroup, args);
+                splunkRestart();
+            }
+        }
     }
 }

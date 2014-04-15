@@ -61,33 +61,7 @@ public class LicensePoolTest extends SDKTestCase {
                 Assert.assertEquals("sdk-test description", licensePool.getDescription());
                 Assert.assertEquals("1048576", licensePool.getQuota());
             }
-            
-            String[] originalSlaves = licensePool.getSlaves();
-            {
-                licensePool.setSlaves("abc,def");
-                String[] slaves = licensePool.getSlaves();
-                Assert.assertEquals(slaves[0], "abc");
-                Assert.assertEquals(slaves[1], "def");
-                
-                licensePool.setSlaves(new String[]{"xyz", "qrs"});
-                String[] slaves2 = licensePool.getSlaves();
-                Assert.assertEquals(slaves2[0], "xyz");
-                Assert.assertEquals(slaves2[1], "qrs");
-                
-                licensePool.update();
-                String[] slaves3 = licensePool.getSlaves();
-                Assert.assertEquals(slaves3.length, 2);
-                Assert.assertTrue(Arrays.asList(slaves3).contains("xyz"));
-                Assert.assertTrue(Arrays.asList(slaves3).contains("qrs"));
-                
-                licensePool.setSlaves(originalSlaves);
-                String[] slaves4 = licensePool.getSlaves();
-                Assert.assertEquals(slaves4.length, originalSlaves.length);
-                for(int i = 0; i < originalSlaves.length; i++) {
-                    Assert.assertTrue(Arrays.asList(slaves4).contains(originalSlaves[i]));
-                }
-            }
-            
+
             licensePool.update(new Args("description", originalDescription));
             licensePool.update(new Args("quota", "MAX"));
         }
