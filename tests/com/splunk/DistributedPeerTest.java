@@ -23,10 +23,18 @@ import org.junit.Test;
 
 public class DistributedPeerTest extends SDKTestCase {
     EntityCollection<DistributedPeer> peers;
+    String temporaryUsername;
+    String temporaryPassword;
+    User temporaryUser;
 
     @Before @Override
     public void setUp() throws Exception {
         super.setUp();
+
+
+        temporaryUsername = createTemporaryName();
+        temporaryPassword = createTemporaryName();
+        temporaryUser = service.getUsers().create(temporaryUsername, temporaryPassword, "admin");
 
         // To create search peers sanely, we need to have
         // distributed search enabled.
@@ -46,8 +54,8 @@ public class DistributedPeerTest extends SDKTestCase {
 
     private DistributedPeer connectToSelfAsPeer() {
         Args args = new Args();
-        args.put("remoteUsername", command.opts.get("username"));
-        args.put("remotePassword", command.opts.get("password"));
+        args.put("remoteUsername", temporaryUsername);
+        args.put("remotePassword", temporaryPassword);
         DistributedPeer peer = peers.create(nameOfPeer(), args);
         return peer;
     }
@@ -59,11 +67,14 @@ public class DistributedPeerTest extends SDKTestCase {
 
     @After @Override
     public void tearDown() throws Exception {
+        temporaryUser.remove();
+
         String name = nameOfPeer();
         if (peers.containsKey(name)) {
             peers.remove(name);
         }
         Assert.assertFalse(peers.containsKey(name));
+
     }
 
     @Test
@@ -167,12 +178,13 @@ public class DistributedPeerTest extends SDKTestCase {
         // are remoteUsername and remotePassword. Unfortunately
         // they cannot be fetched afterwards, so it's impossible
         // to test them.
-        String newUsername = createTemporaryName();
-        String newPassword = createTemporaryName();
-
         final DistributedPeer peer = connectToSelfAsPeer();
 
-        peer.setRemoteUsername(newUsername);
+        String newPassword = createTemporaryName();
+        temporaryUser.setPassword(newPassword);
+        temporaryUser.update();
+
+        peer.setRemoteUsername(temporaryUsername);
         peer.setRemotePassword(newPassword);
         peer.update();
 
