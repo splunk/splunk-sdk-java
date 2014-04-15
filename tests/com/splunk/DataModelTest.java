@@ -211,7 +211,6 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertNotNull(object);
 
         Assert.assertEquals("event1 \u1029\u1699", object.getDisplayName());
-        Assert.assertEquals("\u1029\u1699\u0bf5 comment on event1", object.getComment());
         Assert.assertEquals("event1", object.getName());
         Assert.assertEquals(model, object.getDataModel());
     }
@@ -244,30 +243,16 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertNotNull(object);
         Assert.assertArrayEquals(new String[]{"level_0"}, object.getLineage());
         Assert.assertEquals("BaseEvent", object.getParentName());
-        Assert.assertArrayEquals(new String[]{"level_1"}, object.getChildrenNames().toArray());
-        children = object.getChildren();
-        Assert.assertEquals(1, children.size());
-        boolean more_than_one = false;
-        for (DataModelObject child : children) {
-            Assert.assertFalse(more_than_one);
-            Assert.assertEquals("level_1", child.getName());
-            more_than_one = true;
-        }
-
 
         object = model.getObject("level_1");
         Assert.assertNotNull(object);
         Assert.assertArrayEquals(new String[]{"level_0", "level_1"}, object.getLineage());
         Assert.assertEquals("level_0", object.getParentName());
-        Assert.assertArrayEquals(new String[] {"level_2"}, object.getChildrenNames().toArray());
 
         object = model.getObject("level_2");
         Assert.assertNotNull(object);
         Assert.assertArrayEquals(new String[]{"level_0", "level_1", "level_2"}, object.getLineage());
         Assert.assertEquals("level_1", object.getParentName());
-        Assert.assertArrayEquals(new String[] {}, object.getChildrenNames().toArray());
-        children = object.getChildren();
-        Assert.assertEquals(0, children.size());
     }
 
     @Test
@@ -441,9 +426,13 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertArrayEquals(new String[]{"event1"}, lc.getLineage());
         Assert.assertEquals("", lc.getComment());
         Assert.assertEquals(true, lc.isEditable());
-        Assert.assertEquals("host", lc.getInputField());
+        List<LookupDataModelCalculation.LookupFieldMapping> expectedFieldMappings =
+                new ArrayList<LookupDataModelCalculation.LookupFieldMapping>();
+        expectedFieldMappings.add(new LookupDataModelCalculation.LookupFieldMapping() {{
+            inputField = "host";
+            lookupField = "a_lookup_field";
+        }});
         Assert.assertEquals("dnslookup", lc.getLookupName());
-        Assert.assertEquals("a_lookup_field", lc.getLookupFieldName());
 
         RegexpDataModelCalculation rc = (RegexpDataModelCalculation)calculations.get("a5v1k82ymic");
         Assert.assertEquals(2, rc.getGeneratedFields().size());

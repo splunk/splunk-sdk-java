@@ -15,6 +15,8 @@
  */
 package com.splunk;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,18 +26,21 @@ import java.util.Map;
  * look up new values for the output fields in a lookup.
  */
 public class LookupDataModelCalculation extends DataModelCalculation {
-    private final String lookupFieldName;
-    private final String inputField;
+    private final List<LookupFieldMapping> inputFieldMappings;
     private final String lookupName;
+
+    public static class LookupFieldMapping {
+        public String inputField;
+        public String lookupField;
+    }
 
     LookupDataModelCalculation(String[] ownerLineage, String calculationID,
                                Map<String, DataModelField> generatedFields, String comment,
                                boolean editable, String lookupName,
-                               String lookupFieldName, String inputField) {
+                               List<LookupFieldMapping> inputFieldMappings) {
         super(ownerLineage, calculationID, generatedFields, comment, editable);
         this.lookupName = lookupName;
-        this.lookupFieldName = lookupFieldName;
-        this.inputField = inputField;
+        this.inputFieldMappings = inputFieldMappings;
     }
 
     /**
@@ -44,12 +49,9 @@ public class LookupDataModelCalculation extends DataModelCalculation {
     public String getLookupName() { return this.lookupName; }
 
     /**
-     * @return the name of the field to use in the lookup
+     * @return the mappings from fields in the events to fields in the lookup
      */
-    public String getLookupFieldName() { return this.lookupFieldName; }
-
-    /**
-     * @return the field on the input to lookup with
-     */
-    public String getInputField() { return this.inputField; }
+    public List<LookupFieldMapping> getInputFieldMappings() {
+        return Collections.unmodifiableList(this.inputFieldMappings);
+    }
 }

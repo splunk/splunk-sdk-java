@@ -16,10 +16,7 @@
 
 package com.splunk;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -177,7 +174,15 @@ public class DataModel extends Entity {
 
         for (Entry<String, JsonElement> entry : rootElement. getAsJsonObject().entrySet()) {
             if (entry.getKey().equals("enabled")) {
-                accelerationEnabled = entry.getValue().getAsBoolean();
+                // API is broken in 6.1. It returns 1 instead of true (but does return false).
+                if (((JsonPrimitive)entry.getValue()).isBoolean()) {
+                    accelerationEnabled = entry.getValue().getAsBoolean();
+                } else if (((JsonPrimitive)entry.getValue()).isNumber()) {
+                    accelerationEnabled = entry.getValue().getAsInt() != 0;
+                } else {
+                    throw new RuntimeException("splunkd returned an unknown value " + entry.getValue().toString() +
+                            " for whether acceleration is enabled.");
+                }
             } else if (entry.getKey().equals("earliest_time")) {
                 earliestAcceleratedTime = entry.getValue().getAsString();
             } else if (entry.getKey().equals("cron_schedule")) {

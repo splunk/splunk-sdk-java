@@ -74,13 +74,24 @@ public class PivotTest extends SDKTestCase {
 
     @Test
     public void testAccelerationWorks() {
-        DataModel model = dataModelObject.getDataModel();
+        Args serviceArgs = new Args();
+        serviceArgs.put("host", service.getHost());
+        serviceArgs.put("port", service.getPort());
+        serviceArgs.put("scheme", service.getScheme());
+        serviceArgs.put("token", service.getToken());
 
-        // We have to make the data model public, or we cannot accelerate it.
-        Args postArgs = new Args();
-        postArgs.put("sharing", "app");
-        postArgs.put("owner", model.getService().username);
-        model.getService().post(model.path + "/acl", postArgs);
+        serviceArgs.put("owner", "nobody");
+        serviceArgs.put("app", "search");
+        Service nonprivateService = new Service(serviceArgs);
+
+        EntityCollection<DataModel> dataModels = nonprivateService.getDataModels();
+
+        DataModelArgs args = new DataModelArgs();
+        args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_for_pivot.json")));
+        DataModel model = dataModels.create(createTemporaryName(), args);
+
+        dataModelObject = model.getObject("test_data");
+        Assert.assertNotNull(dataModelObject);
 
         model.setAcceleration(true);
         model.setEarliestAcceleratedTime("-2mon");

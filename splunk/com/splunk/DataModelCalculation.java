@@ -16,11 +16,9 @@
 package com.splunk;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -98,11 +96,13 @@ public abstract class DataModelCalculation {
     static DataModelCalculation parse(JsonElement json) {
         String type = null;
         String calculationId = null;
-        String inputField = null;
+        List<LookupDataModelCalculation.LookupFieldMapping> lookupInputs =
+                new ArrayList<LookupDataModelCalculation.LookupFieldMapping>();
         String comment = null;
         String expression = null;
         String lookupName = null;
-        String lookupField = null;
+        String lookupField = null; // We need lookupField and inputField to handle the case in Splunk 6.0
+        String inputField = null;  // where there is only one entry, and it's not in an array.
         String[] owner = new String[0]; // Should always be set below
         boolean editable = false;
         Map<String, DataModelField> outputFields = new HashMap<String, DataModelField>();
@@ -118,6 +118,17 @@ public abstract class DataModelCalculation {
                 for (JsonElement e : entry.getValue().getAsJsonArray()) {
                     DataModelField f = DataModelField.parse(e.getAsJsonObject());
                     outputFields.put(f.getName(), f);
+                }
+            } else if (key.equals("lookupInputs")) {
+                for (JsonElement lookupInputJsonElement : entry.getValue().getAsJsonArray()) {
+                    if (!(lookupInputJsonElement instanceof JsonObject)) {
+                        throw new RuntimeException("Expected a JSON object for lookupInput entry.");
+                    }
+                    JsonObject lookupInputJson = (JsonObject)lookupInputJsonElement;
+                    LookupDataModelCalculation.LookupFieldMapping mapping = new LookupDataModelCalculation.LookupFieldMapping();
+                    mapping.inputField = lookupInputJson.get("inputField").getAsString();
+                    mapping.lookupField = lookupInputJson.get("lookupField").getAsString();
+                    lookupInputs.add(mapping);
                 }
             } else if (key.equals("inputField")) {
                 inputField = entry.getValue().getAsString();
@@ -138,7 +149,7 @@ public abstract class DataModelCalculation {
 
         DataModelCalculation c;
         if (type.equals("lookup")) {
-            c = new LookupDataModelCalculation(owner, calculationId, outputFields, comment, editable, lookupName, lookupField, inputField);
+            c = new LookupDataModelCalculation(owner, calculationId, outputFields, comment, editable, lookupName, lookupInputs);
         } else if (type.equals("geoip")) {
             c = new GeoIPDataModelCalculation(owner, calculationId, outputFields, comment, editable, inputField);
         } else if (type.equals("eval")) {

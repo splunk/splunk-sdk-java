@@ -25,13 +25,11 @@ import java.util.Map.Entry;
  * DataModelObject represents one of the structured views in a data model.
  */
 public class DataModelObject {
-    private String comment;
     private DataModel model;
     private String name;
     private String[] lineage;
     private String displayName;
     private String parentName;
-    private Collection<String> children;
 
     private Map<String, DataModelField> autoextractedFields;
     private Collection<DataModelConstraint> constraints;
@@ -129,34 +127,6 @@ public class DataModelObject {
      */
     public DataModelCalculation getCalculation(String calculationId) {
         return this.calculations.get(calculationId);
-    }
-
-    /**
-     * @return a collection of the DataModelObjects that inherit from this one.
-     */
-    public Collection<DataModelObject> getChildren() {
-        Collection<DataModelObject> children = new ArrayList<DataModelObject>();
-
-        DataModel model = this.getDataModel();
-        for (String childName : getChildrenNames()) {
-            children.add(model.getObject(childName));
-        }
-
-        return children;
-    }
-
-    /**
-     * @return a collection of string giving the names of all children of this object in the data model.
-     */
-    public Collection<String> getChildrenNames() {
-        return Collections.unmodifiableCollection(children);
-    }
-
-    /**
-     * @return a human readable comment on this object.
-     */
-    public String getComment() {
-        return this.comment;
     }
 
     /**
@@ -345,8 +315,6 @@ public class DataModelObject {
                 name = entry.getValue().getAsString();
             } else if (entry.getKey().equals("displayName")) {
                 displayName = entry.getValue().getAsString();
-            } else if (entry.getKey().equals("comment")) {
-                comment = entry.getValue().getAsString();
             } else if (entry.getKey().equals("lineage")) {
                 lineage = entry.getValue().getAsString().split("\\.");
             } else if (entry.getKey().equals("parentName")) {
@@ -359,13 +327,6 @@ public class DataModelObject {
                     DataModelField field = DataModelField.parse(fieldJson);
                     fields.put(field.getName(), field);
                 }
-            } else if (entry.getKey().equals("children")) {
-                JsonArray childrenJson = entry.getValue().getAsJsonArray();
-
-                for (JsonElement childJson : childrenJson) {
-                    children.add(childJson.getAsString());
-                }
-
             } else if (entry.getKey().equals("constraints")) {
                 JsonArray constraintsJson = entry.getValue().getAsJsonArray();
 
@@ -410,11 +371,9 @@ public class DataModelObject {
         // Set the fields common to all data model objects
         dmo.name = name;
         dmo.displayName = displayName;
-        dmo.comment = comment;
         dmo.lineage = lineage;
         dmo.parentName = parentName;
         dmo.autoextractedFields = fields;
-        dmo.children = children;
         dmo.constraints = constraints;
         dmo.calculations = calculations;
 
