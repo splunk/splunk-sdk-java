@@ -16,7 +16,7 @@
       <entry name="?*.ftl" />
       <entry name="?*.csv" />
       <entry name="?*.json" />
-      <entry name="splunk.license" />
+      <entry name="?*.license" />
     </wildcardResourcePatterns>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="false">
