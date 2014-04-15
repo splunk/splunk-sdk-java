@@ -24,9 +24,7 @@ import org.junit.Test;
 public class LicenseMessageTest extends SDKTestCase {
     @Test
     public void testLicenseMessage() throws Exception {
-        if (service.versionIsAtLeast("6.1")) {
-            Assert.fail("Bug in core (SPL-83050). Not trying.");
-        }
+        // SPL-83050: Known to fail. Should be fixed before Cupcake is released.
         EntityCollection<LicenseMessage> licenseMessages =
             service.getLicenseMessages();
         
