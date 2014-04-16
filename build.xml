@@ -221,6 +221,8 @@
         <standalone-example-jar name="search_simple"/>
         <standalone-example-jar name="spurl"/>
         <standalone-example-jar name="tail"/>
+        <standalone-example-jar name="pivot"/>
+        <standalone-example-jar name="fluent_pivot"/>
 
 	<!-- Create the random_numbers example modular input app -->
 	<echo message="Assembling example app"/>
