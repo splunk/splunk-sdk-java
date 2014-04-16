@@ -221,8 +221,17 @@
         <standalone-example-jar name="search_simple"/>
         <standalone-example-jar name="spurl"/>
         <standalone-example-jar name="tail"/>
-        <standalone-example-jar name="pivot"/>
-        <standalone-example-jar name="fluent_pivot"/>
+        <standalone-example-jar name="pivot">
+            <dependencies>
+                <zipgroupfileset dir="lib" includes="gson-2.2.4.jar"/>
+            </dependencies>
+        </standalone-example-jar>
+
+        <standalone-example-jar name="fluent_pivot">
+            <dependencies>
+                <zipgroupfileset dir="lib" includes="gson-2.2.4.jar"/>
+            </dependencies>
+        </standalone-example-jar>
 
 	<!-- Create the random_numbers example modular input app -->
 	<echo message="Assembling example app"/>
