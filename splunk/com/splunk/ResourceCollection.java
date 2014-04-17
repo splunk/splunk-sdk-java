@@ -113,9 +113,9 @@ public class ResourceCollection<T extends Resource>
      * @return The new member.
      */
     protected T createItem(Class itemClass, String path, Args namespace) {
-        Constructor ctor;
+        Constructor constructor;
         try {
-            ctor = itemClass.getDeclaredConstructor(itemSig);
+            constructor = itemClass.getDeclaredConstructor(itemSig);
         }
         catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -123,14 +123,21 @@ public class ResourceCollection<T extends Resource>
 
         T item;
         try {
-            item =
-               (T)ctor.newInstance(service, service.fullpath(path, namespace));
+            while (true) {
+                Object obj = constructor.newInstance(service, service.fullpath(path, namespace));
+                //if (obj instanceof Message) { // We ignore messages sent back inline.
+                //    continue;
+                //} else {
+                    item = (T)obj;
+                    break;
+            //}
+            }
         }
         catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getTargetException());
         }
         catch (InstantiationException e) {
             throw new RuntimeException(e);

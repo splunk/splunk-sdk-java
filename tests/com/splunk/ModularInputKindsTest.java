@@ -16,6 +16,7 @@
 package com.splunk;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,11 +35,11 @@ public class ModularInputKindsTest extends SDKTestCase {
         }
 
         if (m.getName().equals("test1")) {
-            assertEquals("Test \"Input\" - 1", m.getTitle());
-            assertEquals("xml", m.getStreamingMode());
+            Assert.assertEquals("Test \"Input\" - 1", m.getTitle());
+            Assert.assertEquals("xml", m.getStreamingMode());
         } else if (m.getName().equals("test2")) {
-            assertEquals("test2", m.getTitle());
-            assertEquals("simple", m.getStreamingMode());
+            Assert.assertEquals("test2", m.getTitle());
+            Assert.assertEquals("simple", m.getStreamingMode());
         }
 
     }
@@ -81,8 +82,8 @@ public class ModularInputKindsTest extends SDKTestCase {
             inputKinds = service.getModularInputKinds();
         }
         ModularInputKind test1 = inputKinds.get("test1");
-        assertFalse(test1.hasArgument("nonexistant_argument"));
-        assertNull(test1.getArgument("nonexistant_argument"));
+        Assert.assertFalse(test1.hasArgument("nonexistant_argument"));
+        Assert.assertNull(test1.getArgument("nonexistant_argument"));
     }
 
     @Test
@@ -95,12 +96,12 @@ public class ModularInputKindsTest extends SDKTestCase {
         }
         ModularInputKind test1 = inputKinds.get("test1");
         String expectedDescription1 = "A description of test input 1 with special characters: //;!*%";
-        assertEquals(expectedDescription1, test1.getDescription());
-        assertEquals("Test \"Input\" - 1", test1.getTitle());
+        Assert.assertEquals(expectedDescription1, test1.getDescription());
+        Assert.assertEquals("Test \"Input\" - 1", test1.getTitle());
 
         ModularInputKind test2 = inputKinds.get("test2");
-        assertEquals(null, test2.getDescription());
-        assertEquals("test2", test2.getTitle());
+        Assert.assertEquals(null, test2.getDescription());
+        Assert.assertEquals("test2", test2.getTitle());
     }
 
     @Test
@@ -122,11 +123,11 @@ public class ModularInputKindsTest extends SDKTestCase {
         expectedValues.put("empty_description", null);
 
         for (String key : expectedValues.keySet()) {
-            assertTrue(test1.hasArgument(key));
+            Assert.assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
             String expectedDescription = expectedValues.get(key);
             String foundDescription = arg.getDescription();
-            assertEquals(expectedDescription, foundDescription);
+            Assert.assertEquals(expectedDescription, foundDescription);
         }
     }
 
@@ -150,9 +151,9 @@ public class ModularInputKindsTest extends SDKTestCase {
         expectedValues.put("string_field", ModularInputKindArgument.Type.STRING);
 
         for (String key : expectedValues.keySet()) {
-            assertTrue(test1.hasArgument(key));
+            Assert.assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
-            assertEquals(expectedValues.get(key), arg.getType());
+            Assert.assertEquals(expectedValues.get(key), arg.getType());
         }
     }
 
@@ -174,9 +175,9 @@ public class ModularInputKindsTest extends SDKTestCase {
         expectedValues.put("not_required_on_create", false);
 
         for (String key : expectedValues.keySet()) {
-            assertTrue(test1.hasArgument(key));
+            Assert.assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
-            assertEquals((boolean)expectedValues.get(key), arg.getRequiredOnCreate());
+            Assert.assertEquals((boolean) expectedValues.get(key), arg.getRequiredOnCreate());
         }
     }
 
@@ -198,9 +199,9 @@ public class ModularInputKindsTest extends SDKTestCase {
         expectedValues.put("not_required_on_edit", false);
 
         for (String key : expectedValues.keySet()) {
-            assertTrue(test1.hasArgument(key));
+            Assert.assertTrue(test1.hasArgument(key));
             arg = test1.getArgument(key);
-            assertEquals((boolean)expectedValues.get(key), arg.getRequiredOnEdit());
+            Assert.assertEquals((boolean) expectedValues.get(key), arg.getRequiredOnEdit());
         }
     }
 
@@ -230,6 +231,6 @@ public class ModularInputKindsTest extends SDKTestCase {
         expectedKeys.add("string_field");
         expectedKeys.add("boolean_field");
 
-        assertEquals(expectedKeys, args.keySet());
+        Assert.assertEquals(expectedKeys, args.keySet());
     }
 }

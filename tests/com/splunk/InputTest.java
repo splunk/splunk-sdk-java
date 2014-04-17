@@ -17,6 +17,7 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,7 +57,7 @@ public class InputTest extends SDKTestCase {
         namespace.put("app", "search");
 
         inputs.create("2911", InputKind.Tcp);
-        assertTrue(inputs.containsKey("2911"));
+        Assert.assertTrue(inputs.containsKey("2911"));
         inputs.remove("2911", namespace);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
@@ -90,6 +91,6 @@ public class InputTest extends SDKTestCase {
             inputs.remove(name);
             inputs.refresh();
         }
-        assertFalse(inputs.containsKey(name));
+        Assert.assertFalse(inputs.containsKey(name));
     }
 }

@@ -17,6 +17,7 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch = savedSearches.create(savedSearchName, query);
 
         savedSearches.refresh();
-        assertTrue(savedSearches.containsKey(savedSearchName));
+        Assert.assertTrue(savedSearches.containsKey(savedSearchName));
     }
 
     @After
@@ -175,125 +176,125 @@ public class SavedSearchTest extends SDKTestCase {
         savedSearch.update();
         savedSearch.refresh();
 
-        assertTrue(savedSearch.isActionEmail());
-        assertTrue(savedSearch.isActionPopulateLookup());
-        assertTrue(savedSearch.isActionRss());
-        assertTrue(savedSearch.isActionScript());
-        assertTrue(savedSearch.isActionSummaryIndex());
-        assertTrue(savedSearch.isDigestMode());
+        Assert.assertTrue(savedSearch.isActionEmail());
+        Assert.assertTrue(savedSearch.isActionPopulateLookup());
+        Assert.assertTrue(savedSearch.isActionRss());
+        Assert.assertTrue(savedSearch.isActionScript());
+        Assert.assertTrue(savedSearch.isActionSummaryIndex());
+        Assert.assertTrue(savedSearch.isDigestMode());
 
-        assertEquals("sdk-password", savedSearch.getActionEmailAuthPassword());
-        assertEquals("sdk-username", savedSearch.getActionEmailAuthUsername());
-        assertEquals("sdk-bcc@splunk.com", savedSearch.getActionEmailBcc());
-        assertEquals("sdk-cc@splunk.com", savedSearch.getActionEmailCc());
-        assertEquals("$name1$", savedSearch.getActionEmailCommand());
-        assertEquals("text", savedSearch.getActionEmailFormat());
-        assertEquals("sdk@splunk.com", savedSearch.getActionEmailFrom());
-        assertEquals("dummy1.host.com", savedSearch.getActionEmailHostname());
-        assertTrue(savedSearch.getActionEmailInline());
-        assertEquals("splunk.com", savedSearch.getActionEmailMailServer());
-        assertEquals(101, savedSearch.getActionEmailMaxResults());
-        assertEquals("10s", savedSearch.getActionEmailMaxTime());
-        assertEquals("dummy", savedSearch.getActionEmailPdfView());
-        assertEquals("*", savedSearch.getActionEmailPreProcessResults());
-        assertEquals("landscape", savedSearch.getActionEmailReportPaperOrientation());
-        assertEquals("letter", savedSearch.getActionEmailReportPaperSize());
-        assertFalse(savedSearch.getActionEmailReportServerEnabled());
-        assertEquals("splunk.com", savedSearch.getActionEmailReportServerUrl());
-        assertFalse(savedSearch.getActionEmailSendPdf());
-        assertFalse(savedSearch.getActionEmailSendResults());
-        assertEquals("sdk-subject", savedSearch.getActionEmailSubject());
-        assertEquals("sdk-to@splunk.com", savedSearch.getActionEmailTo());
-        assertFalse(savedSearch.getActionEmailTrackAlert());
-        assertEquals("61", savedSearch.getActionEmailTtl());
-        assertFalse(savedSearch.getActionEmailUseSsl());
-        assertFalse(savedSearch.getActionEmailUseTls());
-        assertFalse(savedSearch.getActionEmailWidthSortColumns());
-        assertEquals("$name2$", savedSearch.getActionPopulateLookupCommand());
-        assertEquals("dummypath", savedSearch.getActionPopulateLookupDest());
-        assertEquals("dummy2.host.com", savedSearch.getActionPopulateLookupHostname());
-        assertEquals(102, savedSearch.getActionPopulateLookupMaxResults());
-        assertEquals("20s", savedSearch.getActionPopulateLookupMaxTime());
-        assertFalse(savedSearch.getActionPopulateLookupTrackAlert());
-        assertEquals("62", savedSearch.getActionPopulateLookupTtl());
-        assertEquals("$name3$", savedSearch.getActionRssCommand());
-        assertEquals("dummy3.host.com", savedSearch.getActionRssHostname());
-        assertEquals(103, savedSearch.getActionRssMaxResults());
-        assertEquals("30s", savedSearch.getActionRssMaxTime());
-        assertFalse(savedSearch.getActionRssTrackAlert());
-        assertEquals("63", savedSearch.getActionRssTtl());
-        assertEquals("foo.sh", savedSearch.getActionScriptFilename());
-        assertEquals("$name4$", savedSearch.getActionScriptCommand());
-        assertEquals("dummy4.host.com", savedSearch.getActionScriptHostname());
-        assertEquals(104, savedSearch.getActionScriptMaxResults());
-        assertEquals("40s", savedSearch.getActionScriptMaxTime());
-        assertFalse(savedSearch.getActionScriptTrackAlert());
-        assertEquals("64", savedSearch.getActionScriptTtl());
-        assertEquals("default", savedSearch.getActionSummaryIndexName());
-        assertEquals("$name5$", savedSearch.getActionSummaryIndexCommand());
-        assertEquals("dummy5.host.com", savedSearch.getActionSummaryIndexHostname());
-        assertFalse(savedSearch.getActionSummaryIndexInline());
-        assertEquals(105, savedSearch.getActionSummaryIndexMaxResults());
-        assertEquals("50s", savedSearch.getActionSummaryIndexMaxTime());
-        assertFalse(savedSearch.getActionSummaryIndexTrackAlert());
-        assertEquals("65", savedSearch.getActionSummaryIndexTtl());
-        assertEquals(savedSearch.isVisible(), !isVisible);
-        assertNull(savedSearch.getNextScheduledTime());
+        Assert.assertEquals("sdk-password", savedSearch.getActionEmailAuthPassword());
+        Assert.assertEquals("sdk-username", savedSearch.getActionEmailAuthUsername());
+        Assert.assertEquals("sdk-bcc@splunk.com", savedSearch.getActionEmailBcc());
+        Assert.assertEquals("sdk-cc@splunk.com", savedSearch.getActionEmailCc());
+        Assert.assertEquals("$name1$", savedSearch.getActionEmailCommand());
+        Assert.assertEquals("text", savedSearch.getActionEmailFormat());
+        Assert.assertEquals("sdk@splunk.com", savedSearch.getActionEmailFrom());
+        Assert.assertEquals("dummy1.host.com", savedSearch.getActionEmailHostname());
+        Assert.assertTrue(savedSearch.getActionEmailInline());
+        Assert.assertEquals("splunk.com", savedSearch.getActionEmailMailServer());
+        Assert.assertEquals(101, savedSearch.getActionEmailMaxResults());
+        Assert.assertEquals("10s", savedSearch.getActionEmailMaxTime());
+        Assert.assertEquals("dummy", savedSearch.getActionEmailPdfView());
+        Assert.assertEquals("*", savedSearch.getActionEmailPreProcessResults());
+        Assert.assertEquals("landscape", savedSearch.getActionEmailReportPaperOrientation());
+        Assert.assertEquals("letter", savedSearch.getActionEmailReportPaperSize());
+        Assert.assertFalse(savedSearch.getActionEmailReportServerEnabled());
+        Assert.assertEquals("splunk.com", savedSearch.getActionEmailReportServerUrl());
+        Assert.assertFalse(savedSearch.getActionEmailSendPdf());
+        Assert.assertFalse(savedSearch.getActionEmailSendResults());
+        Assert.assertEquals("sdk-subject", savedSearch.getActionEmailSubject());
+        Assert.assertEquals("sdk-to@splunk.com", savedSearch.getActionEmailTo());
+        Assert.assertFalse(savedSearch.getActionEmailTrackAlert());
+        Assert.assertEquals("61", savedSearch.getActionEmailTtl());
+        Assert.assertFalse(savedSearch.getActionEmailUseSsl());
+        Assert.assertFalse(savedSearch.getActionEmailUseTls());
+        Assert.assertFalse(savedSearch.getActionEmailWidthSortColumns());
+        Assert.assertEquals("$name2$", savedSearch.getActionPopulateLookupCommand());
+        Assert.assertEquals("dummypath", savedSearch.getActionPopulateLookupDest());
+        Assert.assertEquals("dummy2.host.com", savedSearch.getActionPopulateLookupHostname());
+        Assert.assertEquals(102, savedSearch.getActionPopulateLookupMaxResults());
+        Assert.assertEquals("20s", savedSearch.getActionPopulateLookupMaxTime());
+        Assert.assertFalse(savedSearch.getActionPopulateLookupTrackAlert());
+        Assert.assertEquals("62", savedSearch.getActionPopulateLookupTtl());
+        Assert.assertEquals("$name3$", savedSearch.getActionRssCommand());
+        Assert.assertEquals("dummy3.host.com", savedSearch.getActionRssHostname());
+        Assert.assertEquals(103, savedSearch.getActionRssMaxResults());
+        Assert.assertEquals("30s", savedSearch.getActionRssMaxTime());
+        Assert.assertFalse(savedSearch.getActionRssTrackAlert());
+        Assert.assertEquals("63", savedSearch.getActionRssTtl());
+        Assert.assertEquals("foo.sh", savedSearch.getActionScriptFilename());
+        Assert.assertEquals("$name4$", savedSearch.getActionScriptCommand());
+        Assert.assertEquals("dummy4.host.com", savedSearch.getActionScriptHostname());
+        Assert.assertEquals(104, savedSearch.getActionScriptMaxResults());
+        Assert.assertEquals("40s", savedSearch.getActionScriptMaxTime());
+        Assert.assertFalse(savedSearch.getActionScriptTrackAlert());
+        Assert.assertEquals("64", savedSearch.getActionScriptTtl());
+        Assert.assertEquals("default", savedSearch.getActionSummaryIndexName());
+        Assert.assertEquals("$name5$", savedSearch.getActionSummaryIndexCommand());
+        Assert.assertEquals("dummy5.host.com", savedSearch.getActionSummaryIndexHostname());
+        Assert.assertFalse(savedSearch.getActionSummaryIndexInline());
+        Assert.assertEquals(105, savedSearch.getActionSummaryIndexMaxResults());
+        Assert.assertEquals("50s", savedSearch.getActionSummaryIndexMaxTime());
+        Assert.assertFalse(savedSearch.getActionSummaryIndexTrackAlert());
+        Assert.assertEquals("65", savedSearch.getActionSummaryIndexTtl());
+        Assert.assertEquals(savedSearch.isVisible(), !isVisible);
+        Assert.assertNull(savedSearch.getNextScheduledTime());
         if (service.versionIsEarlierThan("4.3")) {
-            assertEquals("search  search index=boris abcd", savedSearch.getQualifiedSearch());
+            Assert.assertEquals("search  search index=boris abcd", savedSearch.getQualifiedSearch());
         } else {
-            assertEquals("search search index=boris abcd", savedSearch.getQualifiedSearch());
+            Assert.assertEquals("search search index=boris abcd", savedSearch.getQualifiedSearch());
         }
         
-        assertEquals("greater than", savedSearch.getAlertComparator());
-        assertEquals("*", savedSearch.getAlertCondition());
-        assertEquals(true, savedSearch.getAlertDigestMode());
-        assertEquals("23h", savedSearch.getAlertExpires());
-        assertEquals(6, savedSearch.getAlertSeverity());
-        assertEquals(true, savedSearch.getAlertSuppress());
+        Assert.assertEquals("greater than", savedSearch.getAlertComparator());
+        Assert.assertEquals("*", savedSearch.getAlertCondition());
+        Assert.assertEquals(true, savedSearch.getAlertDigestMode());
+        Assert.assertEquals("23h", savedSearch.getAlertExpires());
+        Assert.assertEquals(6, savedSearch.getAlertSeverity());
+        Assert.assertEquals(true, savedSearch.getAlertSuppress());
         if (service.versionIsAtLeast("4.3")) {
-            assertEquals("host", savedSearch.getAlertSuppressFields());
+            Assert.assertEquals("host", savedSearch.getAlertSuppressFields());
         }
-        assertEquals("1m", savedSearch.getAlertSuppressPeriod());
-        assertEquals("50%", savedSearch.getAlertThreshold());
+        Assert.assertEquals("1m", savedSearch.getAlertSuppressPeriod());
+        Assert.assertEquals("50%", savedSearch.getAlertThreshold());
         // NOTE: Always returns "0" or "1". Never "auto". Vince notified.
-        assertEquals("0", savedSearch.getAlertTrack());
-        assertEquals("number of events", savedSearch.getAlertType());
-        assertEquals("*/5 * * * *", savedSearch.getCronSchedule());
-        assertEquals("Cake!", savedSearch.getDescription());
-        assertEquals(100, savedSearch.getDispatchBuckets());
-        assertEquals("-100s@s", savedSearch.getDispatchEarliestTime());
-        assertEquals("-1s@s", savedSearch.getDispatchLatestTime());
-        assertEquals(false, savedSearch.getDispatchLookups());
-        assertEquals(100000, savedSearch.getDispatchMaxCount());
+        Assert.assertEquals("0", savedSearch.getAlertTrack());
+        Assert.assertEquals("number of events", savedSearch.getAlertType());
+        Assert.assertEquals("*/5 * * * *", savedSearch.getCronSchedule());
+        Assert.assertEquals("Cake!", savedSearch.getDescription());
+        Assert.assertEquals(100, savedSearch.getDispatchBuckets());
+        Assert.assertEquals("-100s@s", savedSearch.getDispatchEarliestTime());
+        Assert.assertEquals("-1s@s", savedSearch.getDispatchLatestTime());
+        Assert.assertEquals(false, savedSearch.getDispatchLookups());
+        Assert.assertEquals(100000, savedSearch.getDispatchMaxCount());
         // NOTE: Should be int to match setter. See DVPL-1268.
-        assertEquals(120, savedSearch.getDispatchMaxTime());
-        assertEquals(true, savedSearch.getDispatchSpawnProcess());
-        assertEquals("%FT%T.%Q", savedSearch.getDispatchTimeFormat());
-        assertEquals("3p", savedSearch.getDispatchTtl());
-        assertEquals("flash_timeline", savedSearch.getDisplayView());
-        assertEquals(2, savedSearch.getMaxConcurrent());
-        assertEquals(false, savedSearch.getRealtimeSchedule());
-        assertEquals("foo", savedSearch.getRequestUiDispatchApp());
-        assertEquals("bar", savedSearch.getRequestUiDispatchView());
-        assertEquals(true, savedSearch.getRunOnStartup());
-        assertEquals(null, savedSearch.getVsid());
+        Assert.assertEquals(120, savedSearch.getDispatchMaxTime());
+        Assert.assertEquals(true, savedSearch.getDispatchSpawnProcess());
+        Assert.assertEquals("%FT%T.%Q", savedSearch.getDispatchTimeFormat());
+        Assert.assertEquals("3p", savedSearch.getDispatchTtl());
+        Assert.assertEquals("flash_timeline", savedSearch.getDisplayView());
+        Assert.assertEquals(2, savedSearch.getMaxConcurrent());
+        Assert.assertEquals(false, savedSearch.getRealtimeSchedule());
+        Assert.assertEquals("foo", savedSearch.getRequestUiDispatchApp());
+        Assert.assertEquals("bar", savedSearch.getRequestUiDispatchView());
+        Assert.assertEquals(true, savedSearch.getRunOnStartup());
+        Assert.assertEquals(null, savedSearch.getVsid());
         
-        assertEquals(11, savedSearch.getDispatchReduceFrequency());
-        assertEquals(true, savedSearch.getDispatchRtBackfill());
-        assertEquals(false, savedSearch.getRestartOnSearchPeerAdd());
-        assertEquals(true, savedSearch.isDisabled());
+        Assert.assertEquals(11, savedSearch.getDispatchReduceFrequency());
+        Assert.assertEquals(true, savedSearch.getDispatchRtBackfill());
+        Assert.assertEquals(false, savedSearch.getRestartOnSearchPeerAdd());
+        Assert.assertEquals(true, savedSearch.isDisabled());
     }
     
     @Test
     public void testScheduled() {
         SavedSearch savedSearch = this.savedSearches.create(createTemporaryName(), "search index=_internal | head 1");
         
-        assertFalse(savedSearch.isScheduled());
+        Assert.assertFalse(savedSearch.isScheduled());
         savedSearch.setCronSchedule("*/5 * * * *");
         savedSearch.setIsScheduled(true);
         savedSearch.update();
-        assertTrue(savedSearch.isScheduled());
+        Assert.assertTrue(savedSearch.isScheduled());
         
         savedSearch.remove();
     }
@@ -302,9 +303,9 @@ public class SavedSearchTest extends SDKTestCase {
     public void testCreateWithNoSearch() {
         try {
             this.savedSearches.create(createTemporaryName());
-            fail("Should've thrown!");
+            Assert.fail("Should've thrown!");
         } catch (Exception e) {
-            assertTrue(true);
+            Assert.assertTrue(true);
         }
     }
 
@@ -318,7 +319,7 @@ public class SavedSearchTest extends SDKTestCase {
         try {
             Args args = new Args("borisTheMadBaboon", "Arrgh!");
             savedSearch.update(args);
-            fail("Expected an exception.");
+            Assert.fail("Expected an exception.");
         } catch (Exception e) {}
     }
 
@@ -329,7 +330,7 @@ public class SavedSearchTest extends SDKTestCase {
             Args args = new Args("name", newName);
             savedSearch.update(args);
             savedSearch.refresh();
-            fail("Expected exception to be raised when trying to update name.");
+            Assert.fail("Expected exception to be raised when trying to update name.");
         } catch (Exception e) {}
     }
 
@@ -350,9 +351,9 @@ public class SavedSearchTest extends SDKTestCase {
                 }
             });
 
-            assertTrue(jobs.containsKey(job.getSid()));
+            Assert.assertTrue(jobs.containsKey(job.getSid()));
         } catch (InterruptedException e) {
-            fail(e.toString());
+            Assert.fail(e.toString());
         }
     }
 
@@ -370,9 +371,9 @@ public class SavedSearchTest extends SDKTestCase {
                 }
             });
 
-            assertTrue(jobs.containsKey(job.getSid()));
+            Assert.assertTrue(jobs.containsKey(job.getSid()));
         } catch (InterruptedException e) {
-            fail(e.toString());
+            Assert.fail(e.toString());
         }
     }
 
@@ -390,7 +391,7 @@ public class SavedSearchTest extends SDKTestCase {
                 }
             });
 
-            assertEquals(oldJobs.length + 1, savedSearch.history().length);
+            Assert.assertEquals(oldJobs.length + 1, savedSearch.history().length);
 
             boolean isFound = false;
             for (Job j : savedSearch.history()) {
@@ -398,10 +399,10 @@ public class SavedSearchTest extends SDKTestCase {
                     isFound = true;
                 }
             }
-            assertTrue(isFound);
+            Assert.assertTrue(isFound);
 
         } catch (InterruptedException e) {
-            fail(e.toString());
+            Assert.fail(e.toString());
         }
     }
 }

@@ -134,7 +134,7 @@ public class Program {
                 stream = tcpInput.attach();
             }
             ostream = stream.getOutputStream();
-            writerOut = new OutputStreamWriter(ostream, "UTF8");
+            writerOut = new OutputStreamWriter(ostream, "UTF-8");
         }
 
         // Generate 10 batches of 5000 events each.

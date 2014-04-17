@@ -1,5 +1,17 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.3
+
+### New features and APIs
+
+* Added support for data models and pivots.
+
+### Bug Fixes
+
+* When setting the sourcetype of a modular input event, events are indexed properly.
+  Previously Splunk would encounter an error and skip them. Also updated some of the modular input test data to reflect this change.
+* ResultsReadeRXml now works with alternate XML parser libraries.
+
 ## Version 1.2.2
 
 ### Bug fixes

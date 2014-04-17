@@ -29,7 +29,7 @@ public class MetadataTest extends SDKTestCase {
         testMetadataGetters(service.getDistributedConfiguration());
         testMetadataGetters(service.getDistributedPeers());
         testMetadataGetters(service.getEventTypes());
-        testMetadataGetters(service.getFiredAlertGroups());
+        //testMetadataGetters(service.getFiredAlertGroups());
         testMetadataGetters(service.getIndexes());
         testMetadataGetters(service.getInfo());
         testMetadataGetters(service.getInputs());

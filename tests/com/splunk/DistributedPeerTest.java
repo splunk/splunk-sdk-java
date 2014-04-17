@@ -17,15 +17,24 @@
 package com.splunk;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class DistributedPeerTest extends SDKTestCase {
     EntityCollection<DistributedPeer> peers;
+    String temporaryUsername;
+    String temporaryPassword;
+    User temporaryUser;
 
     @Before @Override
     public void setUp() throws Exception {
         super.setUp();
+
+
+        temporaryUsername = createTemporaryName();
+        temporaryPassword = createTemporaryName();
+        temporaryUser = service.getUsers().create(temporaryUsername, temporaryPassword, "admin");
 
         // To create search peers sanely, we need to have
         // distributed search enabled.
@@ -45,8 +54,8 @@ public class DistributedPeerTest extends SDKTestCase {
 
     private DistributedPeer connectToSelfAsPeer() {
         Args args = new Args();
-        args.put("remoteUsername", command.opts.get("username"));
-        args.put("remotePassword", command.opts.get("password"));
+        args.put("remoteUsername", temporaryUsername);
+        args.put("remotePassword", temporaryPassword);
         DistributedPeer peer = peers.create(nameOfPeer(), args);
         return peer;
     }
@@ -58,29 +67,32 @@ public class DistributedPeerTest extends SDKTestCase {
 
     @After @Override
     public void tearDown() throws Exception {
+        temporaryUser.remove();
+
         String name = nameOfPeer();
         if (peers.containsKey(name)) {
             peers.remove(name);
         }
-        assertFalse(peers.containsKey(name));
+        Assert.assertFalse(peers.containsKey(name));
+
     }
 
     @Test
     public void testCreatePeer() {
         DistributedPeer peer = connectToSelfAsPeer();
-        assertTrue(peers.containsKey(peer.getName()));
+        Assert.assertTrue(peers.containsKey(peer.getName()));
     }
 
     @Test
     public void testDeletePeer() {
         DistributedPeer peer = connectToSelfAsPeer();
         String name = peer.getName();
-        assertTrue(peers.containsKey(name));
+        Assert.assertTrue(peers.containsKey(name));
 
         peer.remove();
 
         peers.refresh();
-        assertFalse(peers.containsKey(name));
+        Assert.assertFalse(peers.containsKey(name));
     }
 
     @Test
@@ -89,16 +101,16 @@ public class DistributedPeerTest extends SDKTestCase {
 
         // Since our only search peer is the splunkd instance
         // itself, we can correlate most of the fields.
-        assertEquals(nameOfPeer(), peer.getTitle());
-        assertEquals(service.getInfo().getBuild(), peer.getBuild());
-        assertEquals(service.getInfo().getGuid(), peer.getGuid());
-        assertEquals(service.getInfo().getServerName(), peer.getPeerName());
-        assertEquals("configured", peer.getPeerType());
-        assertEquals("Initial", peer.getReplicationStatus());
-        assertEquals("Duplicate Servername", peer.getStatus());
-        assertEquals(service.getInfo().getVersion(), peer.getVersion());
-        assertFalse(peer.isDisabled());
-        assertTrue(peer.isHttps());
+        Assert.assertEquals(nameOfPeer(), peer.getTitle());
+        Assert.assertEquals(service.getInfo().getBuild(), peer.getBuild());
+        Assert.assertEquals(service.getInfo().getGuid(), peer.getGuid());
+        Assert.assertEquals(service.getInfo().getServerName(), peer.getPeerName());
+        Assert.assertEquals("configured", peer.getPeerType());
+        Assert.assertEquals("Initial", peer.getReplicationStatus());
+        Assert.assertEquals("Duplicate Servername", peer.getStatus());
+        Assert.assertEquals(service.getInfo().getVersion(), peer.getVersion());
+        Assert.assertFalse(peer.isDisabled());
+        Assert.assertTrue(peer.isHttps());
 
         // Except for these two, which I don't know how to find
         // elsewhere in splunkd.
@@ -115,7 +127,8 @@ public class DistributedPeerTest extends SDKTestCase {
         if (peer.isDisabled()) {
             peer.enable();
             assertEventuallyTrue(new EventuallyTrueBehavior() {
-                @Override public boolean predicate() {
+                @Override
+                public boolean predicate() {
                     peer.refresh();
                     return !peer.isDisabled();
                 }
@@ -165,12 +178,13 @@ public class DistributedPeerTest extends SDKTestCase {
         // are remoteUsername and remotePassword. Unfortunately
         // they cannot be fetched afterwards, so it's impossible
         // to test them.
-        String newUsername = createTemporaryName();
-        String newPassword = createTemporaryName();
-
         final DistributedPeer peer = connectToSelfAsPeer();
 
-        peer.setRemoteUsername(newUsername);
+        String newPassword = createTemporaryName();
+        temporaryUser.setPassword(newPassword);
+        temporaryUser.update();
+
+        peer.setRemoteUsername(temporaryUsername);
         peer.setRemotePassword(newPassword);
         peer.update();
 

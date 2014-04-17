@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public class SearchJobTest extends SDKTestCase {
         Args namespace = Args.create();
         namespace.put("app", "search");
         namespace.put("owner", "admin");
-        assertNull(jobs.remove("doesntexist", namespace));
+        Assert.assertNull(jobs.remove("doesntexist", namespace));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class SearchJobTest extends SDKTestCase {
         Job job = jobs.create(QUERY);
         waitUntilDone(job);
 
-        assertEquals(10, countEvents(job.getEvents()));
+        Assert.assertEquals(10, countEvents(job.getEvents()));
 
         job.cancel();
     }
@@ -65,38 +66,38 @@ public class SearchJobTest extends SDKTestCase {
         Job job = jobs.create(QUERY);
         waitUntilDone(job);
 
-        assertEquals(10, countEvents(job.getResults()));
+        Assert.assertEquals(10, countEvents(job.getResults()));
 
         job.cancel();
     }
 
     @Test
     public void testBlockingSearch() {
-        assertEquals(10, countEvents(service.oneshotSearch(QUERY)));
+        Assert.assertEquals(10, countEvents(service.oneshotSearch(QUERY)));
     }
 
     @Test
     public void testOneshotWithGarbageFails() {
         try {
             service.oneshotSearch("syntax-error");
-            fail("Expected an exception from oneshot with garbage.");
+            Assert.fail("Expected an exception from oneshot with garbage.");
         } catch (HttpException e) {
-            assertEquals(400, e.getStatus());
+            Assert.assertEquals(400, e.getStatus());
         }
     }
 
     @Test
     public void testBlockingExport() {
-        assertEquals(10, countEvents(service.export(QUERY)));
+        Assert.assertEquals(10, countEvents(service.export(QUERY)));
     }
 
     @Test
     public void testExportWithGarbageFails() {
         try {
             service.export("syntax-error");
-            fail("Expected an exception from export with garbage.");
+            Assert.fail("Expected an exception from export with garbage.");
         } catch (HttpException e) {
-            assertEquals(400, e.getStatus());
+            Assert.assertEquals(400, e.getStatus());
         }
     }
 
@@ -105,11 +106,11 @@ public class SearchJobTest extends SDKTestCase {
         Job job = null;
         try {
             job = jobs.create("syntax-error");
-            fail("Expected an exception from creating a job with garbage.");
+            Assert.fail("Expected an exception from creating a job with garbage.");
         } catch (HttpException e) {
-            assertEquals(400, e.getStatus());
+            Assert.assertEquals(400, e.getStatus());
             if (job != null) {
-                assertTrue(job.isFailed());
+                Assert.assertTrue(job.isFailed());
             }
         }
     }
@@ -126,7 +127,7 @@ public class SearchJobTest extends SDKTestCase {
         }
         InputStream input = service.oneshotSearch("search index=_internal GET | head 3");
         String data = streamToString(input);
-        assertFalse(data.contains("<sg"));
+        Assert.assertFalse(data.contains("<sg"));
     }
 
     @Test
@@ -135,7 +136,7 @@ public class SearchJobTest extends SDKTestCase {
         args.put("segmentation", "raw");
         InputStream input = service.oneshotSearch("search index=_internal GET | head 3", args);
         String data = streamToString(input);
-        assertTrue(data.contains("<sg"));
+        Assert.assertTrue(data.contains("<sg"));
     }
 
     @Test
@@ -146,7 +147,7 @@ public class SearchJobTest extends SDKTestCase {
         }
         InputStream input = service.export("search index=_internal GET | head 3");
         String data = streamToString(input);
-        assertFalse(data.contains("<sg"));
+        Assert.assertFalse(data.contains("<sg"));
     }
 
     @Test
@@ -155,7 +156,7 @@ public class SearchJobTest extends SDKTestCase {
         args.put("segmentation", "raw");
         InputStream input = service.export("search index=_internal GET | head 3", args);
         String data = streamToString(input);
-        assertTrue(data.contains("<sg"));
+        Assert.assertTrue(data.contains("<sg"));
     }
 
     @Test
@@ -167,7 +168,7 @@ public class SearchJobTest extends SDKTestCase {
         Job job = service.getJobs().create("search index=_internal GET | head 3");
         waitUntilDone(job);
         String data = streamToString(job.getResults());
-        assertFalse(data.contains("<sg"));
+        Assert.assertFalse(data.contains("<sg"));
     }
 
     @Test
@@ -177,7 +178,7 @@ public class SearchJobTest extends SDKTestCase {
         Map<String, String> args = new HashMap<String, String>();
         args.put("segmentation", "raw");
         String data = streamToString(job.getResults(args));
-        assertTrue(data.contains("<sg"));
+        Assert.assertTrue(data.contains("<sg"));
     }
 
     @Test
@@ -216,15 +217,15 @@ public class SearchJobTest extends SDKTestCase {
                     System.out.println("'max_lines' does not work due to a known bug.");
                     numLines = 1;
                 }
-                assertEquals(1, numLines);
-                assertFalse(found.containsKey("date_month"));
+                Assert.assertEquals(1, numLines);
+                Assert.assertFalse(found.containsKey("date_month"));
             }
             else {
                 break;
             }
         }
 
-        assertEquals(200, count);
+        Assert.assertEquals(200, count);
     }
 
     @Test
@@ -252,8 +253,8 @@ public class SearchJobTest extends SDKTestCase {
         }
 
         job.refresh();
-        assertEquals(job.get("sid"), name);
-        assertTrue(job.getEventCount() < 2000);
+        Assert.assertEquals(job.get("sid"), name);
+        Assert.assertTrue(job.getEventCount() < 2000);
 
         testEventArgs(job);
         testResultArgs(job);
@@ -280,9 +281,9 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                assertEquals(found.get("_raw").split("\n").length, 1);
-                assertFalse(found.containsKey("date_month"));
-                assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
+                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertFalse(found.containsKey("date_month"));
+                Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
             }
             else {
@@ -290,7 +291,7 @@ public class SearchJobTest extends SDKTestCase {
             }
         }
 
-        assertEquals(2, count);
+        Assert.assertEquals(2, count);
     }
 
     public void testResultArgs(Job job) throws IOException, InterruptedException {
@@ -307,9 +308,9 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                assertEquals(found.get("_raw").split("\n").length, 1);
-                assertFalse(found.containsKey("date_month"));
-                assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
+                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertFalse(found.containsKey("date_month"));
+                Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
             }
             else {
@@ -317,7 +318,7 @@ public class SearchJobTest extends SDKTestCase {
             }
         }
 
-        assertEquals(2, count);
+        Assert.assertEquals(2, count);
 
         JobResultsArgs args2 = new JobResultsArgs();
         args2.setSearch("stats count");
@@ -330,7 +331,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader2.getNextEvent();
             if (found != null) {
-                assertEquals(found.get("count"), "10");
+                Assert.assertEquals(found.get("count"), "10");
                 count2++;
             }
             else {
@@ -338,7 +339,7 @@ public class SearchJobTest extends SDKTestCase {
             }
         }
 
-        assertEquals(1, count2);
+        Assert.assertEquals(1, count2);
     }
 
     public void testPreviewArgs(Job job) throws IOException, InterruptedException {
@@ -355,9 +356,9 @@ public class SearchJobTest extends SDKTestCase {
         while (true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                assertEquals(found.get("_raw").split("\n").length, 1);
-                assertFalse(found.containsKey("date_month"));
-                assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
+                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertFalse(found.containsKey("date_month"));
+                Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
             }
             else {
@@ -365,7 +366,7 @@ public class SearchJobTest extends SDKTestCase {
             }
         }
 
-        assertEquals(2, count);
+        Assert.assertEquals(2, count);
 
         JobResultsPreviewArgs args2 = new JobResultsPreviewArgs();
         args2.setSearch("stats count");
@@ -378,7 +379,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader2.getNextEvent();
             if (found != null) {
-                assertEquals(found.get("count"), "10");
+                Assert.assertEquals(found.get("count"), "10");
                 count2++;
             }
             else {
@@ -386,7 +387,7 @@ public class SearchJobTest extends SDKTestCase {
             }
         }
 
-        assertEquals(1, count2);
+        Assert.assertEquals(1, count2);
     }
 
     @Test
@@ -395,8 +396,8 @@ public class SearchJobTest extends SDKTestCase {
                 service.parse(QUERY).getContent()
         );
 
-        assertTrue(response.contains("<key name=\"command\">search</key>"));
-        assertTrue(response.contains("<key name=\"command\">head</key>"));
+        Assert.assertTrue(response.contains("<key name=\"command\">search</key>"));
+        Assert.assertTrue(response.contains("<key name=\"command\">head</key>"));
     }
 
     @Test
@@ -406,7 +407,7 @@ public class SearchJobTest extends SDKTestCase {
                 service.parse(QUERY, args).getContent()
         );
 
-        assertTrue(response.startsWith("{"));
+        Assert.assertTrue(response.startsWith("{"));
     }
 
     @Test
@@ -415,9 +416,9 @@ public class SearchJobTest extends SDKTestCase {
 
         try {
             service.parse(badQuery);
-            fail("Expected a parse error.");
+            Assert.fail("Expected a parse error.");
         } catch (HttpException e) {
-            assertEquals(400, e.getStatus());
+            Assert.assertEquals(400, e.getStatus());
         }
     }
 
@@ -428,9 +429,9 @@ public class SearchJobTest extends SDKTestCase {
         try {
             Args args = new Args("output_mode", "json");
             service.parse(badQuery, args);
-            fail("Expected a parse error.");
+            Assert.fail("Expected a parse error.");
         } catch (HttpException e) {
-            assertEquals(400, e.getStatus());
+            Assert.assertEquals(400, e.getStatus());
         }
     }
 
@@ -447,11 +448,11 @@ public class SearchJobTest extends SDKTestCase {
         String sid = job.getSid();
 
         jobs.refresh();
-        assertTrue(jobs.containsKey(sid));
+        Assert.assertTrue(jobs.containsKey(sid));
 
         job.cancel();
         jobs.refresh();
-        assertFalse(jobs.containsKey(sid));
+        Assert.assertFalse(jobs.containsKey(sid));
     }
 
     @Test
@@ -467,12 +468,12 @@ public class SearchJobTest extends SDKTestCase {
         String sid = job.getSid();
 
         jobs.refresh();
-        assertTrue(jobs.containsKey(sid));
+        Assert.assertTrue(jobs.containsKey(sid));
 
         job.cancel();
         job.cancel(); // Second cancel should be a nop
         jobs.refresh();
-        assertFalse(jobs.containsKey(sid));
+        Assert.assertFalse(jobs.containsKey(sid));
     }
 
     @Test
@@ -488,10 +489,10 @@ public class SearchJobTest extends SDKTestCase {
         String sid = job.getSid();
 
         jobs.refresh();
-        assertTrue(jobs.containsKey(sid));
+        Assert.assertTrue(jobs.containsKey(sid));
 
         Date date = job.getCursorTime();
-        assertNotNull(date);
+        Assert.assertNotNull(date);
     }
 
     @Test
@@ -501,7 +502,7 @@ public class SearchJobTest extends SDKTestCase {
         String sid = job.getSid();
 
         jobs.refresh();
-        assertTrue(jobs.containsKey(sid));
+        Assert.assertTrue(jobs.containsKey(sid));
 
         while (!job.isReady()) {
             Thread.sleep(50);
@@ -521,13 +522,13 @@ public class SearchJobTest extends SDKTestCase {
         }
 
         jobs.refresh();
-        assertTrue(jobs.containsKey(sid));
+        Assert.assertTrue(jobs.containsKey(sid));
 
         try {
             job.remove();
-            fail("Exception should be thrown on job removal");
+            Assert.fail("Exception should be thrown on job removal");
         } catch (Exception ex) {
-            assertTrue(true);
+            Assert.assertTrue(true);
         }
     }
 
@@ -543,7 +544,7 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(100);
         }
 
-        assertTrue(10 >= countEvents(job.getResultsPreview()));
+        Assert.assertTrue(10 >= countEvents(job.getResultsPreview()));
 
         job.cancel();
     }
@@ -554,7 +555,7 @@ public class SearchJobTest extends SDKTestCase {
         waitUntilDone(job);
         String response = inputStreamToString(job.getSearchLog());
 
-        assertTrue(response.contains("dispatchRunner"));
+        Assert.assertTrue(response.contains("dispatchRunner"));
 
         job.cancel();
     }
@@ -575,7 +576,7 @@ public class SearchJobTest extends SDKTestCase {
         if (!response.contains(SUMMARY_FIELD_MAGIC_42) &&
                 !response.contains(SUMMARY_FIELD_MAGIC_43) &&
                 !response.contains(SUMMARY_FIELD_MAGIC_5x)) {
-            fail("Couldn't find <field> in response: " + response);
+            Assert.fail("Couldn't find <field> in response: " + response);
         }
 
         job.cancel();
@@ -589,7 +590,7 @@ public class SearchJobTest extends SDKTestCase {
         waitUntilDone(job);
 
         String response = inputStreamToString(job.getTimeline());
-        assertTrue(response.contains("<bucket"));
+        Assert.assertTrue(response.contains("<bucket"));
 
         job.cancel();
     }
@@ -602,7 +603,7 @@ public class SearchJobTest extends SDKTestCase {
         waitUntilDone(job);
 
         String response = inputStreamToString(job.getTimeline());
-        assertTrue(response.contains("<bucket"));
+        Assert.assertTrue(response.contains("<bucket"));
 
         job.cancel();
     }
@@ -615,7 +616,7 @@ public class SearchJobTest extends SDKTestCase {
         waitUntilDone(job);
 
         String response = Util.join(",", job.getSearchProviders());
-        assertTrue(response.contains(service.getSettings().getServerName()));
+        Assert.assertTrue(response.contains(service.getSettings().getServerName()));
 
         job.cancel();
     }
@@ -650,7 +651,7 @@ public class SearchJobTest extends SDKTestCase {
         // END WORKAROUND
 
         job.refresh();
-        assertFalse(job.isPreviewEnabled());
+        Assert.assertFalse(job.isPreviewEnabled());
         
         job.enablePreview();
         job.update();
@@ -662,7 +663,7 @@ public class SearchJobTest extends SDKTestCase {
                 job.refresh();
 
                 if (!job.isPreviewEnabled() && job.isDone()) {
-                    fail("Job finished before preview was enabled.");
+                    Assert.fail("Job finished before preview was enabled.");
                 }
 
                 return job.isPreviewEnabled();
@@ -702,7 +703,7 @@ public class SearchJobTest extends SDKTestCase {
         }
         // END WORKAROUND
 
-        assertTrue(job.isPreviewEnabled());
+        Assert.assertTrue(job.isPreviewEnabled());
 
         job.disablePreview();
         job.update();
@@ -714,7 +715,7 @@ public class SearchJobTest extends SDKTestCase {
                 job.refresh();
 
                 if (job.isPreviewEnabled() && job.isDone()) {
-                    fail("Job finished before preview was enabled.");
+                    Assert.fail("Job finished before preview was enabled.");
                 }
 
                 return !job.isPreviewEnabled();
@@ -777,7 +778,7 @@ public class SearchJobTest extends SDKTestCase {
         // END WORKAROUND
 
 
-        assertEquals(5, job.getPriority()); // The default priority is 5
+        Assert.assertEquals(5, job.getPriority()); // The default priority is 5
 
         final int newPriority = 3;
         job.setPriority(newPriority);
@@ -812,7 +813,7 @@ public class SearchJobTest extends SDKTestCase {
         if (job.isPaused()) {
             job.control("unpause");
             job.refresh();
-            assertFalse(job.isPaused());
+            Assert.assertFalse(job.isPaused());
         }
 
         job.pause();
@@ -845,7 +846,7 @@ public class SearchJobTest extends SDKTestCase {
         if (!job.isPaused()) {
             job.control("pause");
             job.refresh();
-            assertTrue(job.isPaused());
+            Assert.assertTrue(job.isPaused());
         }
 
         job.control("unpause");
@@ -875,7 +876,7 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(100);
         }
 
-        assertFalse(job.isFinalized());
+        Assert.assertFalse(job.isFinalized());
 
         job.finish();
 
@@ -904,7 +905,7 @@ public class SearchJobTest extends SDKTestCase {
 
             return count;
         } catch (IOException e) {
-            fail(e.toString());
+            Assert.fail(e.toString());
             return -1;
         }
     }
@@ -922,7 +923,7 @@ public class SearchJobTest extends SDKTestCase {
         try {
             StringBuilder b = new StringBuilder();
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(stream, "UTF8")
+                    new InputStreamReader(stream, "UTF-8")
             );
             String tmp;
             while ((tmp = reader.readLine()) != null) {
@@ -931,7 +932,7 @@ public class SearchJobTest extends SDKTestCase {
 
             return b.toString();
         } catch (IOException e) {
-            fail(e.toString());
+            Assert.fail(e.toString());
             return null;
         }
     }

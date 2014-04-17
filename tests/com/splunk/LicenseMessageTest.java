@@ -17,11 +17,14 @@
 package com.splunk;
 
 import java.util.Date;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LicenseMessageTest extends SDKTestCase {
     @Test
     public void testLicenseMessage() throws Exception {
+        // SPL-83050: Known to fail. Should be fixed before Cupcake is released.
         EntityCollection<LicenseMessage> licenseMessages =
             service.getLicenseMessages();
         
@@ -32,7 +35,7 @@ public class LicenseMessageTest extends SDKTestCase {
 
         for (LicenseMessage licenseMessage: licenseMessages.values()) {
             // Test getters
-            assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
+            Assert.assertTrue(licenseMessage.getCreationTime().after(new Date(0)));
             licenseMessage.getCategory();
             licenseMessage.getDescription();
             licenseMessage.getPoolId();

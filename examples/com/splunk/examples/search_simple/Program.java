@@ -63,7 +63,7 @@ public class Program {
         // arguments are allowed, but they are not shown in this example.
         InputStream stream = service.oneshotSearch(query);
 
-        InputStreamReader reader = new InputStreamReader(stream, "UTF8");
+        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
         try {
             OutputStreamWriter writer = new OutputStreamWriter(System.out);
             try {

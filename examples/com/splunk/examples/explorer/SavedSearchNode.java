@@ -37,7 +37,7 @@ class SavedSearchNode extends EntityNode {
         list.add(String.class, "getAlertThreshold");
         list.add(String.class, "getAlertType");
         list.add(String.class, "getCronSchedule");
-        list.add(String.class, "getDescription");
+        list.add(String.class, "getDescriptionLabel");
         list.add(int.class, "getDispatchBuckets");
         list.add(String.class, "getDispatchEarliestTime");
         list.add(String.class, "getDispatchLatestTime");

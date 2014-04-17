@@ -58,7 +58,7 @@ public class ResultsReaderJson extends ResultsReader {
     ResultsReaderJson(InputStream inputStream, boolean isInMultiReader)
             throws IOException {
         super(inputStream, isInMultiReader);
-        jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF8"));
+        jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
         // if stream is empty, return a null reader.
         jsonReader.setLenient(true);
         if (isExportStream || isInMultiReader)

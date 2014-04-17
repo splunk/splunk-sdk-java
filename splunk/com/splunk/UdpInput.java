@@ -262,7 +262,7 @@ public class UdpInput extends PortInput {
         DatagramSocket socket = new DatagramSocket();
         InetAddress address = InetAddress.getByName(this.service.getHost());
         int port = this.getPort();
-        byte[] buffer = eventBody.getBytes("UTF8");
+        byte[] buffer = eventBody.getBytes("UTF-8");
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
         socket.send(packet);
         socket.close();

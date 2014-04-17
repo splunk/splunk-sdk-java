@@ -22,6 +22,7 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ public class ResultsReaderXml
 
     private XMLEventReader xmlReader = null;
     private ArrayList<String> fields = new ArrayList<String>();
+    private PushbackInputStream pushbackInputStream;
 
     /**
      * Class constructor.
@@ -62,69 +64,23 @@ public class ResultsReaderXml
             boolean isInMultiReader)
             throws IOException {
         super(inputStream, isInMultiReader);
-        PushbackReader pushbackReader =
-            new PushbackReader(inputStreamReader, 256);
+
+        // We need to do read-ahead, so we have to use a PushbackInputStream for everything
+        // in this class.
+        this.pushbackInputStream = new PushbackInputStream(inputStream);
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-        // At initialization, skip everything in the start until we get to the
-        // first-non preview data "<results",
-        // Push back into the stream an opening <doc> tag, and parse the file.
-        // We do this because the XML parser requires a single root element.
-        // Below is an example of an input stream, with a single 'results'
-        // element. With a stream from an export point, there can be
-        // multiple ones.
-        //
-        //        <?xml version='1.0' encoding='UTF-8'?>
-        //        <results preview='0'>
-        //        <meta>
-        //        <fieldOrder>
-        //        <field>series</field>
-        //        <field>sum(kb)</field>
-        //        </fieldOrder>
-        //        </meta>
-        //        <messages>
-        //        <msg type='DEBUG'>base lispy: [ AND ]</msg>
-        //        <msg type='DEBUG'>search context: user='admin', app='search', bs-pathname='/some/path'</msg>
-        //        </messages>
-        //        <result offset='0'>
-        //        <field k='series'>
-        //        <value><text>twitter</text></value>
-        //        </field>
-        //        <field k='sum(kb)'>
-        //        <value><text>14372242.758775</text></value>
-        //        </field>
-        //        </result>
-        //        <result offset='1'>
-        //        <field k='series'>
-        //        <value><text>splunkd</text></value>
-        //        </field>
-        //        <field k='sum(kb)'>
-        //        <value><text>267802.333926</text></value>
-        //        </field>
-        //        </result>
-        //        </results>
-
-        String findToken = "<results";
-        String accumulator = "";
-        int index = 0;
-        while (true) {
-            int data = pushbackReader.read();
-            if (data < 0) return;
-            accumulator = accumulator + (char)data;
-            if ("<results".equals(accumulator)) {
-                    String putBackString = "<doc>" + findToken;
-                    char putBackBytes[] = putBackString.toCharArray();
-                    pushbackReader.unread(putBackBytes);
-                    break;
-            } else if (!findToken.startsWith(accumulator)) {
-                accumulator = "";
-            }
+        int ch = this.pushbackInputStream.read();
+        if (ch == -1) {
+            return; // Stream is empty.
+        } else {
+            ((PushbackInputStream)this.pushbackInputStream).unread(ch);
         }
 
-        // Attach the XML reader to the stream
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
         try {
-            xmlReader = inputFactory.createXMLEventReader(pushbackReader);
+            InputStream filteredStream = new InsertRootElementFilterInputStream(this.pushbackInputStream);
+            xmlReader = inputFactory.createXMLEventReader(filteredStream);
             finishInitialization();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
@@ -178,20 +134,7 @@ public class ResultsReaderXml
     // Return value indicates whether the next 'results' element is found.
     boolean readIntoNextResultsElement()
             throws XMLStreamException, IOException {
-        XMLEvent xmlEvent = null;
-        try {
-            xmlEvent = readToStartOfElementWithName("results");
-        } catch (XMLStreamException e) {
-            // Because we cannot stuff trailing information into the stream,
-            // we expect an XMLStreamingException that contains our
-            // corresponding end-of-document </doc> that we injected into the
-            // front of the stream. Any other exception we rethrow.
-            if (!(e.getMessage().contains("</doc>") ||
-                e.getMessage().contains(
-                    "XML document structures must start and end within the same entity."))) {
-                throw e;
-            }
-        }
+        XMLEvent xmlEvent = readToStartOfElementWithName("results");
         if (xmlEvent == null) {
             return false;
         }

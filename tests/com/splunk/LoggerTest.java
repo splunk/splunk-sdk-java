@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +56,7 @@ public class LoggerTest extends SDKTestCase {
     @Test
     public void testDefaultLoggersHaveValidLevels() {
         for (Logger curLogger : service.getLoggers().values()) {
-            assertTrue(VALID_LEVELS.contains(curLogger.getLevel()));
+            Assert.assertTrue(VALID_LEVELS.contains(curLogger.getLevel()));
         }
     }
     
@@ -64,7 +65,7 @@ public class LoggerTest extends SDKTestCase {
         for (String curLevel : VALID_LEVELS) {
             logger.setLevel(curLevel);
             logger.update();
-            assertEquals(curLevel, logger.getLevel());
+            Assert.assertEquals(curLevel, logger.getLevel());
         }
     }
     
@@ -72,7 +73,7 @@ public class LoggerTest extends SDKTestCase {
     public void testLevelUpdate() {
         for (String curLevel : VALID_LEVELS) {
             logger.update(new Args("level", curLevel));
-            assertEquals(curLevel, logger.getLevel());
+            Assert.assertEquals(curLevel, logger.getLevel());
         }
     }
 }
