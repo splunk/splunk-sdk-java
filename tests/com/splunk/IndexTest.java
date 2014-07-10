@@ -17,6 +17,7 @@
 package com.splunk;
 
 import junit.framework.AssertionFailedError;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -577,19 +578,20 @@ public class IndexTest extends SDKTestCase {
         args.add("host", "IndexTest");
         args.add("rename-source", "IndexTestSrc");
         
-        index.upload(fileToUpload, args);;
+        index.upload(fileToUpload, args);
+        Service con = index.getService();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
-                return getResultCountOfIndex() == 4;
+            	Job search = con.search("search index=" + index.getTitle() + " sourcetype=log host=IndexTest source=IndexTestSrc");
+                return getResultCountOfIndex() == 4 && search.getEventCount() == 4;
             }
         });
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
                 index.refresh();
-                
                 // Some versions of Splunk only increase event count by 1.
                 // Event count should never go up by more than the result count.
                 int tec = index.getTotalEventCount();
