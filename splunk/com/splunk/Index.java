@@ -1124,6 +1124,9 @@ public class Index extends Entity {
      */
     public void upload(String filename, Args args) {
         EntityCollection<Upload> uploads = service.getUploads();
+        if(args.containsKey("index")){
+        	throw new IllegalArgumentException("The 'index' parameter cannot be passed to an index's oneshot upload.");
+        }
         args.add("index", getName());
         uploads.create(filename, args);
     }

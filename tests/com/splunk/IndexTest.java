@@ -16,6 +16,7 @@
 
 package com.splunk;
 
+import static org.junit.Assert.*;
 import junit.framework.AssertionFailedError;
 
 import org.junit.After;
@@ -599,6 +600,41 @@ public class IndexTest extends SDKTestCase {
             }
         });
     }
+    
+    @Test
+    public void testUploadArgsFailure() throws Exception{
+    	if (!hasTestData()) {
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
+    	installApplicationFromTestData("file_to_upload");
+    	
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
+
+        String fileToUpload = joinServerPath(new String[] {
+                service.getSettings().getSplunkHome(),
+                "etc", "apps", "file_to_upload", "log.txt"});
+        
+        Args args = new Args();
+        args.add("sourcetype", "log");
+        args.add("host", "IndexTest");
+        args.add("index", index.getTitle());
+        args.add("rename-source", "IndexTestSrc");
+        // The index argument cannot be passed into the upload function. 
+        try{
+        	index.upload(fileToUpload, args);
+        	fail("Uploading to an index with an index argument? No need for redundency!");
+        }
+        catch(Exception e){
+        	Assert.assertTrue(e.getMessage() == "The 'index' parameter cannot be passed to an index's oneshot upload.");
+        }
+        	
+    }
+        	
+        
+    
+    
     
     @Test
     public void testUpload() throws Exception {
