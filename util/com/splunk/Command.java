@@ -113,30 +113,41 @@ public class Command {
 
     // Load a file of options and arguments
     public Command load(String path) {
-        FileReader fileReader;
-        try {
-            fileReader = new FileReader(path);
-        }
-        catch (FileNotFoundException e) { return this; }
-
+        FileReader fileReader = null;
         ArrayList<String> argList = new ArrayList<String>(4);
-        BufferedReader reader = new BufferedReader(fileReader);
-        while (true) {
-            String line;
-            try {
-                line = reader.readLine();
-            }
-            catch (IOException e) { return this; }
-            if (line == null) break;
-            if (line.startsWith("#")) continue;
-            line = line.trim();
-            if (line.length() == 0) continue;
-            if (!line.startsWith("-"))
-                line = "--" + line;
-            argList.add(line);
+        
+        try {
+	        try {
+	            fileReader = new FileReader(path);
+	        }
+	        catch (FileNotFoundException e) { return this; }
+	
+	        BufferedReader reader = new BufferedReader(fileReader);
+	        while (true) {
+	            String line;
+	            try {
+	                line = reader.readLine();
+	            }
+	            catch (IOException e) { return this; }
+	            if (line == null) break;
+	            if (line.startsWith("#")) continue;
+	            line = line.trim();
+	            if (line.length() == 0) continue;
+	            if (!line.startsWith("-"))
+	                line = "--" + line;
+	            argList.add(line);
+	        }
+        } finally {
+        	if(null != fileReader){
+        		try{
+        			fileReader.close();
+        		} catch (IOException e){ }
+        	}
         }
+    
         parse(argList.toArray(new String[argList.size()]));
         return this;
+        
     }
 
     // Parse the given argument vector
