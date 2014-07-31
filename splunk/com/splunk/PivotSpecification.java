@@ -48,7 +48,7 @@ public class PivotSpecification {
      * Set the namespace to use for this acceleration, usually the name of a data model. A value of null will set no
      * namespace for acceleration.
      *
-     * @param namespace a string specifying a namespcae.
+     * @param namespace a string specifying a namespace.
      */
     public PivotSpecification setAccelerationNamespace(String namespace) {
         this.accelerationNamespace = namespace;
