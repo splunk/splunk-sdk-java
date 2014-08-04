@@ -560,11 +560,11 @@ public class IndexTest extends SDKTestCase {
 
     @Test
     public void testUploadArgs() throws Exception {
-    	if (!hasTestData()) {
+        if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
-    	
+        
         installApplicationFromTestData("file_to_upload");
 
         Assert.assertTrue(getResultCountOfIndex() == 0);
@@ -580,12 +580,12 @@ public class IndexTest extends SDKTestCase {
         args.add("rename-source", "IndexTestSrc");
         
         index.upload(fileToUpload, args);
-        Service con = index.getService();
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
-            	Job search = con.search("search index=" + index.getTitle() + " sourcetype=log host=IndexTest source=IndexTestSrc");
+                Service con = index.getService();
+                Job search = con.search("search index=" + index.getTitle() + " sourcetype=log host=IndexTest source=IndexTestSrc");
                 return getResultCountOfIndex() == 4 && search.getEventCount() == 4;
             }
         });
@@ -603,12 +603,12 @@ public class IndexTest extends SDKTestCase {
     
     @Test
     public void testUploadArgsFailure() throws Exception{
-    	if (!hasTestData()) {
+        if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
-    	installApplicationFromTestData("file_to_upload");
-    	
+        installApplicationFromTestData("file_to_upload");
+        
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
 
@@ -623,26 +623,26 @@ public class IndexTest extends SDKTestCase {
         args.add("rename-source", "IndexTestSrc");
         // The index argument cannot be passed into the upload function. 
         try{
-        	index.upload(fileToUpload, args);
-        	fail("Uploading to an index with an index argument? No need for redundency!");
+            index.upload(fileToUpload, args);
+            fail("Uploading to an index with an index argument? No need for redundency!");
         }
         catch(Exception e){
-        	Assert.assertTrue(e.getMessage() == "The 'index' parameter cannot be passed to an index's oneshot upload.");
+            Assert.assertTrue(e.getMessage() == "The 'index' parameter cannot be passed to an index's oneshot upload.");
         }
-        	
+            
     }
-        	
+            
         
     
     
     
     @Test
     public void testUpload() throws Exception {
-    	if (!hasTestData()) {
+        if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
-    	
+        
         installApplicationFromTestData("file_to_upload");
         
         Assert.assertTrue(getResultCountOfIndex() == 0);

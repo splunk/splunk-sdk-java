@@ -55,6 +55,7 @@
                srcdir="splunk"
                destdir="${build.splunk}"
                target="1.6"
+               source="1.6"
                debug="true"
                debuglevel="lines,vars,source">
             <classpath>
@@ -68,6 +69,7 @@
         <mkdir dir="${build.util}"/>
         <javac includeantruntime="false"
                target="1.6"
+               source="1.6"
                srcdir="util"
                destdir="${build.util}">
             <classpath>
@@ -81,6 +83,7 @@
         <mkdir dir="${build.tests}"/>
         <javac includeantruntime="false"
                target="1.6"
+               source="1.6"
                srcdir="tests"
                destdir="${build.tests}">
             <classpath>
@@ -101,6 +104,7 @@
         <mkdir dir="${build.examples}/"/>
         <javac includeantruntime="false"
                target="1.6"
+               source="1.6"
                srcdir="examples"
                destdir="${build.examples}">
             <classpath>
