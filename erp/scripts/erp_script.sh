@@ -4,7 +4,7 @@
 
 if [ ! -z "$JAVA_OPTS" ]; then
 	JAVA_OPTS="$JAVA_OPTS"
-els
+else
 	JAVA_OPTS="-Xmx512m"
 fi
 
@@ -17,11 +17,11 @@ if [ -z "$JAVA_CMD" ] || [ ! -x "$JAVA_CMD" ]; then
 fi
 
 if [ -z "$JAVA_CMD" ] || [ ! -x "$JAVA_CMD" ]; then
-	echo "Unable to find java in JAVA_HOME or PATH. Please ensure JAVA_HOME is set"
+	echo "Unable to find java in JAVA_HOME or PATH. Please ensure JAVA_HOME is set" >&2
 fi
 
 CLASS_NAME=$1
-CLASS_PATH=$SPLUNK_HOME/bin/jars/SplunkMR-s6.0-h2.0.jar:$bin/*
+CLASS_PATH=$SPLUNK_HOME/bin/jars/SplunkMR-s6.0-h1.0.jar:$bin/* 
 
 $JAVA_CMD $JAVA_OPTS -cp $CLASS_PATH $CLASS_NAME
 
