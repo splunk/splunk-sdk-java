@@ -19,6 +19,8 @@ public class VixConfig {
 	private String indexName;
 	private Map<String, String> configParams;
 	
+	//review ledion: add an instance var for the provider this vix belongs to 
+	
 	//TODO Decide on whether we want to use subclass of ParseNode or subclass of SearchElement
 	private SearchElement searchExpression;
 	
