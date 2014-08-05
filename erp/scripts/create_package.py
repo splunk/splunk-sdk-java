@@ -4,16 +4,19 @@ import shutil
 
 # Script to create directory structure and create config file with default settings
 
-# create_package app_name family_name class_name version
+# python create_package.py [app_name] [family_name] [class_name] [app_version] [path_to_folder_with_jars] 
 
 def main(args):
 	app_name = args[1]
 	family_name = args[2]
 	class_name = args[3]
 	version = args[4]
+	path_to_folder_with_jars = args[5]
 
 	create_directory_structure(app_name)
-	
+	bin_folder = os.path.join(os.path.getcwd(),app_name,"bin")
+	copy_jars_to_bin(bin_folder,path_to_folder_with_jars)
+
 	default_folder = os.path.join(os.path.getcwd(),app_name,"default")	
 	if not os.path.exists(default_folder):
 		print "Unable to find default directory"
@@ -74,7 +77,14 @@ def create_directory_structure(app_name):
 					print "creating views folder"		
 					os.makedirs(views_folder)
 					create_documentation_file(app_name, views_folder)
-			
+
+def copy_jars_to_bin(path_to_folder_with_jars,bin_folder):
+	try:
+		shutil.copytree(path_to_folder_with_jars,bin_folder)
+	except shutil.Error as e:
+		print('Directory not copied. Error: %s' % e)
+	except OSError as e:
+		print('Directory not copied. Error: %s' % e)
     
 def create_default_file(nav_folder_path):
 	file_name = os.path.join(nav_folder_path,"default.xml")
