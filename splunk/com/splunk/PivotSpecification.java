@@ -393,7 +393,6 @@ public class PivotSpecification {
      * @param field the field to aggregate.
      * @param label a human readable name for this aggregate.
      * @param statsFunction the function to use for aggregation.
-     * @param generateSparkline should there be a sparkline generated for this aggregate.
      * @return the PivotSpecification you are working on.
      */
     public PivotSpecification addCellValue(String field, String label, StatsFunction statsFunction) {
