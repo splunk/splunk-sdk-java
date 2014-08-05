@@ -23,6 +23,9 @@ public class ProviderConfig {
 	//Provider specific properties are stored in a Map
 	protected Map<String, String> properties;
 	
+	//Review ledion: need to expose the following info as instance vars in addition to family:
+	//               a) provider name, b) mode 
+	
 	public ProviderConfig(String familyName, Map<String, String> properties) {
 		this.familyName = familyName;
 		this.properties = properties;
