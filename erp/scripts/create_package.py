@@ -16,6 +16,7 @@ def main(args):
 	create_directory_structure(app_name)
 	bin_folder = os.path.join(os.path.getcwd(),app_name,"bin")
 	copy_jars_to_bin(bin_folder,path_to_folder_with_jars)
+	create_bash_script_file(bin_folder,app_name)
 
 	default_folder = os.path.join(os.path.getcwd(),app_name,"default")	
 	if not os.path.exists(default_folder):
@@ -85,7 +86,37 @@ def copy_jars_to_bin(path_to_folder_with_jars,bin_folder):
 		print('Directory not copied. Error: %s' % e)
 	except OSError as e:
 		print('Directory not copied. Error: %s' % e)
-    
+
+def create_bash_script_file(bin_folder,app_name):
+	file_name = os.path.join(bin_folder,"erp_script.sh")
+	fp = open(file_name,'w')
+	data = "#!/bin/bash\n" \
+			"#Script to execute ERPMain process\n" \
+			"if [ ! -z \"$JAVA_OPTS\" ]; then\n" \
+			"	JAVA_OPTS=\"$JAVA_OPTS\"\n" \
+			"els\n" \
+			"	JAVA_OPTS=\"-Xmx512m\"\n" \
+			"fi\n" \
+			"\n" \
+			"if [ ! -z \"JAVA_HOME\" ]; then\n" \
+			"	JAVA_CMD=$JAVA_HOME/bin/java\n" \
+			"fi\n" \
+			"\n" \
+			"if [ -z \"$JAVA_CMD\" ] || [ ! -x \"$JAVA_CMD\" ]; then\n" \
+			"	JAVA_CMD=\"which java\"\n" \
+			"fi\n" \
+			"\n" \
+			"if [ -z \"$JAVA_CMD\" ] || [ ! -x \"$JAVA_CMD\" ]; then\n" \
+			"	echo \"Unable to find java in JAVA_HOME or PATH. Please ensure JAVA_HOME is set\"\n" \
+			"fi\n" \
+			"\n" \
+			"CLASS_NAME=$1\n" \
+			"CLASS_PATH=$SPLUNK_HOME/bin/jars/SplunkMR-s6.0-h2.0.jar:$SPLUNK_HOME/etc/apps/"+ app_name +"/bin/:$SPLUNK_HOME/etc/apps/"+ app_name +"/bin/lib/*\n" \
+			"\n" \
+			"$JAVA_CMD $JAVA_OPTS -cp $CLASS_PATH $CLASS_NAME\n" \
+	fp.write(data)
+	fp.close()
+
 def create_default_file(nav_folder_path):
 	file_name = os.path.join(nav_folder_path,"default.xml")
 	fp=open(file_name,'w')
