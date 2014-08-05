@@ -51,6 +51,9 @@ public class ResultWriter implements ResultWriterProxy{
 		eventsCollector = new ByteArrayOutputStream(OUTPUT_BUFFER_LIMIT);
 		bufferFlushSize = INITIAL_BUFFER_FLUSH_SIZE;
 		
+		//REVIEW ledion: DO NOT use System.out as PrintStream objects "swallow" exceptions
+		//               also, see SplunkMR.java for how to replace System.out with System.err so 
+		//               that any printing to system.out does not mess up the protocol
 		outputStream = new SearchOutputStream(new ChunkedOutputStream(System.out)); 
 		outputStream.setStreamType("raw");
 	}
@@ -60,6 +63,7 @@ public class ResultWriter implements ResultWriterProxy{
 	 * if header fields are updated.  
 	 * @throws Exception
 	 */
+	 // Review ledion: why are you throwing Exception instead of IOException 
 	private void stream() throws Exception{
 		try {
 			if(isHeaderUpdated) {
@@ -69,8 +73,8 @@ public class ResultWriter implements ResultWriterProxy{
 			outputStream.write(eventsCollector);
 			eventsCollector.reset();
 		} catch (IOException e) {
-			ERPLogger.logError( e.getMessage());
-			throw new Exception("Error while streaming results to Splunk");
+			ERPLogger.logError( e.getMessage());  // reveiw ledion: you are loosing the stack trace here 
+			throw new Exception("Error while streaming results to Splunk");  // review ledion: no need to create a more generic exception
 		}
 	}
 	
@@ -78,7 +82,7 @@ public class ResultWriter implements ResultWriterProxy{
 	 * Close SearchOutputStream
 	 * @throws IOException
 	 */
-	public void close() throws Exception
+	public void close() throws Exception  // review ledion: why throw exception instead of ioexception?
 	{
 		if(eventsCollector.size() > 0)
 		{
@@ -106,7 +110,7 @@ public class ResultWriter implements ResultWriterProxy{
 	}
 	
 	@Override 
-	public void append(List<?> recordBatch) throws Exception {
+	public void append(List<?> recordBatch) throws Exception {   // review ledion: why throw a generic exception instead of a number of more specific ones?
 		ObjectMapper mapper =  new ObjectMapper();
 		for(Object record : recordBatch)
 		{
@@ -130,7 +134,7 @@ public class ResultWriter implements ResultWriterProxy{
 		try {
 			eventsCollector.write(result.getBytes());
 			eventsCollector.write(NEWLINE.getBytes());
-			if(eventsCollector.size() > bufferFlushSize)
+			if(eventsCollector.size() > bufferFlushSize) // review ledion: do you need to check count against batch size?
 			{
 				stream();
 				bufferFlushSize *= 2;
