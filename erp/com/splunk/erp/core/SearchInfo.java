@@ -114,6 +114,15 @@ public class SearchInfo {
 	}
 	
 	/**
+	 * Get user session authentication token
+	 * 
+	 * @return String : user session token
+	 */
+	public String getAuthenticationToken() {
+		return fields.get("_auth_token");
+	}
+	
+	/**
 	 * Creates a SearchInfo object from S-2-ERP protocol JSON 
 	 * @param JsonNode : JSON element containing search info 
 	 * @return SearchInfo object
@@ -130,6 +139,7 @@ public class SearchInfo {
 					Iterator<String> fieldNames = node.getFieldNames();
 					while(fieldNames.hasNext()){
 						String fieldName = fieldNames.next();
+						//Ignoring '_tz' property because of unnecessary data present in it
 						if(!fieldName.equalsIgnoreCase("_tz"))
 							fields.put(fieldName,node.get(fieldName).getTextValue());
 					}
