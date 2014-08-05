@@ -40,9 +40,10 @@ public interface IProvider extends Closeable{
 	 *  
 	 *  1. If SPL query consist  of multiple virtual indexes, ERP developers should handle the fetching
 	 *     of results from each virtual index.
-	 *  2. Handle the batching of results/records and passing the batch as either {@link StringRecordBatch} or 
-	 *     {@link JsonNodeRecordBatch}.
-	 *  3. Filter the white listed fields post querying database/datastore specified using {@link WildcardList}.   
+	 *  2. Initialize result writer object of ERP framework by setting index, source and sourcetype and 
+	 *     other header fields using proxy.    
+	 *  2. Handle the batching of results/records and pushing the batch of records/events as List<?> to the proxy. 
+	 *  3. Filter the white listed fields, specified using {@link WildcardList}, post querying database/datastore.   
 	 *    
 	 * @param {@link ResultWriterProxy} Proxy to ResultWriter object.
 	 * @throws Exception : Any exception raised while querying ERP and fetching results.

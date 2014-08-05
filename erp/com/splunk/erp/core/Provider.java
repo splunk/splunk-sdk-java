@@ -65,7 +65,7 @@ public abstract class Provider implements Closeable{
 	{
 		ResultWriter resultWriter = new ResultWriter(ERPUtils.getHostName());
 		try{
-			JsonNode argsForERP = ERPUtils.createJsonNodeFromStream(System.in);
+			JsonNode argsForERP = ERPUtils.readArgsForERP(System.in);
 			JsonNode providerConfigNode = ERPUtils.getProviderConfigNode(argsForERP);	
 			JsonNode vixesConfigNode = ERPUtils.getVixesConfigNode(argsForERP);		
 			

@@ -6,6 +6,12 @@ import java.util.Map;
 import com.splunk.io.SearchMetricsReporter;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
+/**
+ * A proxy to append records, header fields and search metrics while streaming search results.
+ * 
+ * @author smetkar
+ */
+
 public interface ResultWriterProxy extends SearchMetricsReporter {
 	
 	/**
@@ -50,7 +56,7 @@ public interface ResultWriterProxy extends SearchMetricsReporter {
 	public void setTimestampFieldPrefix(String timestampField);
 	
 	/**
-	 * Set expected timestamp field format
+	 * Set expected timestamp format
 	 * @param timestamp format regex (String)
 	 */
 	public void setTimestampFormat(String timestampFormat);

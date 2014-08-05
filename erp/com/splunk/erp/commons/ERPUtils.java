@@ -31,7 +31,7 @@ public class ERPUtils {
 	 * @return JsonNode 
 	 * @throws IOException
 	 */
-	public static JsonNode createJsonNodeFromStream(InputStream streamToRead) throws Exception{
+	public static JsonNode readArgsForERP(InputStream streamToRead) throws Exception{
 		JsonNode argsAsJson = null;
 		String argsLine = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(streamToRead));

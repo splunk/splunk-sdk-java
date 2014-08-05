@@ -61,10 +61,10 @@ public class ERPMain {
 		
 		try{
 			/* S-2-ERP protocol JSON is passed to ERPMain process using System console
-			 * Created JsonNode object from JSON string and create instances of ProviderConfig, VixConfig,
+			 * Create JsonNode object from JSON string and create instances of ProviderConfig, VixConfig,
 			 * SearchInfo and WildcardList			
 			 */
-			JsonNode argsForERP = ERPUtils.createJsonNodeFromStream(System.in);
+			JsonNode argsForERP = ERPUtils.readArgsForERP(System.in);
 			IProvider provider = ERPUtils.getProviderInstance(className);
 			
 			JsonNode providerConfigNode = ERPUtils.getProviderConfigNode(argsForERP);	
@@ -76,7 +76,7 @@ public class ERPMain {
 			SearchInfo searchInfo = SearchInfo.getSearchInfoInstance(argsForERP);
 			WildcardList requiredFieldList = ERPUtils.getRequiredFieldList(argsForERP);
 			
-			//Pass down the proxy to ResultWriter to IProvider implementing class
+			//Pass down the proxy for ResultWriter to IProvider implementing class
 			ResultWriterProxy resultWriterProxy = resultWriter;
 			
 			//Make the ERP ready for fetching results

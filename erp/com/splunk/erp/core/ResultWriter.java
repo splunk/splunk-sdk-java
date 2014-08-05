@@ -14,9 +14,9 @@ import com.splunk.io.ChunkedOutputStream;
 import com.splunk.io.SearchOutputStream;
 
 /**
- * This class has methods by which ERP developers to push the list of records/documents to Splunk.<br>
+ * This class has methods by which ERP developers push the list of records/documents to Splunkd process.<br>
  * It takes control of batching the results and streaming the results to Splunkd process.<br>
- * It implements {@link ResultWriterProxy} interface which defines method to push results, add stream header fields 
+ * It implements {@link ResultWriterProxy} interface which defines method to push results, add header fields 
  * and send metrics and messages for search process using {@link SearchOutputStream}.
  * @author smetkar
  *
@@ -56,7 +56,7 @@ public class ResultWriter implements ResultWriterProxy{
 	}
 	
 	/**
-	 * Writes content of {@link ByteArrayOutputStream} to {@link SearchOutputStream}, stream header 
+	 * Writes content of {@link ByteArrayOutputStream} to {@link SearchOutputStream} and stream header 
 	 * if header fields are updated.  
 	 * @throws Exception
 	 */
@@ -114,13 +114,13 @@ public class ResultWriter implements ResultWriterProxy{
 				append(mapper.writeValueAsString(record));
 			}catch (JsonGenerationException jge) {
 				ERPLogger.logError(jge.getMessage());
-				throw new Exception("Error while serialized JSON string");
+				throw new Exception("Error while serializing to JSON string");
 			}catch(JsonMappingException jme) {
 				ERPLogger.logError(jme.getMessage());
-				throw new Exception("Error while serialized JSON string");
+				throw new Exception("Error while serializing to JSON string");
 			}catch(IOException ioe) {
 				ERPLogger.logError(ioe.getMessage());
-				throw new Exception("Error while serialized JSON string");
+				throw new Exception("Error while serializing to JSON string");
 			}
 		}	
 	}
@@ -139,7 +139,7 @@ public class ResultWriter implements ResultWriterProxy{
 			}
 			
 			count++;
-			if(count > currentBatchSize) {
+			if(count == currentBatchSize) {
 				currentBatchSize *= 2;
 				if(currentBatchSize > MAX_BATCH_SIZE)
 					currentBatchSize = MAX_BATCH_SIZE;
