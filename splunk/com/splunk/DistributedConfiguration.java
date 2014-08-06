@@ -69,19 +69,6 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Indicates whether Splunk automatically adds all discovered servers.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @return {@code true} if Splunk automatically adds servers, {@code false}
-     * if not.
-     */
-    @Deprecated
-    public boolean getAutoAddServers() {
-        return getBoolean("autoAddServers", false);
-    }
-
-    /**
      * Returns a list of server names that are excluded from being peers.
      *
      * @return A comma-separated list of excluded servers by name, or
@@ -123,46 +110,6 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns the period between heartbeat checks on other servers' health.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @return The heartbeat period, in seconds. If 0, heartbeat checks are
-     * disabled.
-     */
-    @Deprecated
-    public int getHeartbeatFrequency() {
-        return getInteger("heartbeatFrequency", 0);
-    }
-
-    /**
-     * Returns the multicast address where each Splunk server sends and 
-     * listens for heartbeat messages.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @return The multicast address for discovery and heartbeat messages, 
-     * or {@code null} if not available.
-     */
-    @Deprecated
-    public String getHeartbeatMcastAddress() {
-        return getString("heartbeatMcastAddr", "224.0.0.37");
-    }
-
-    /**
-     * Returns the port where each Splunk server sends and listens for heartbeat
-     * messages.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @return The heartbeat port, or -1 if not specified.
-     */
-    @Deprecated
-    public int getHeartbeatPort() {
-        return getInteger("heartbeatPort", 8888);
-    }
-
-    /**
      * Returns the time-out period for trying to read and receive data from a
      * search peer.
      *
@@ -181,18 +128,6 @@ public class DistributedConfiguration extends Entity {
      */
     public boolean getRemovedTimedOutServers() {
         return getBoolean("removedTimedOutServers", false);
-    }
-
-    /**
-     * @deprecated Use specific {@code getConnectionTimeout}, 
-     * {@code getReceiveTimeout}, and {@code getSendTimeout}.
-     *
-     * Returns the server time-out period.
-     *
-     * @return The server time-out period, in seconds.
-     */
-    public int getServerTimeout() {
-        return getInteger("serverTimeout");
     }
 
     /**
@@ -230,22 +165,6 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Indicates whether this server participates in a search or call. If set to
-     * {@code true}, this server is skipped and does not participate. This 
-     * setting is used for building a node that only merges the results from 
-     * other servers.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @return {@code true} if the server does not participate as a server in
-     * any search, {@code false} if it does.
-     */
-    @Deprecated
-    public boolean getSkipOurselves() {
-        return getBoolean("skipOurselves", false);
-    }
-
-    /**
      * Returns the time-out period for gathering a search peer's basic information.
      *
      * @return The time-out period, in seconds.
@@ -256,18 +175,6 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Returns the time-to-live (ttl) of heartbeat messages.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @return The time-to-live of heartbeat messages.
-     */
-    @Deprecated
-    public int getTtl() {
-        return getInteger("ttl", 1);
-    }
-
-    /**
      * Indicates whether distributed search is enabled.
      *
      * @return {@code true} if distributed search is enabled, {@code false} if
@@ -275,19 +182,6 @@ public class DistributedConfiguration extends Entity {
      */
     public boolean isDistSearchEnabled() {
         return getBoolean("dist_search_enabled", true);
-    }
-
-    /**
-     * Sets whether to automatically add discovered servers.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @param autoAdd {@code true} to add servers automatically, {@code false} 
-     * if not. 
-     */
-    @Deprecated
-    public void setAutoAddServers(boolean autoAdd) {
-        setCacheValue("autoAddServers", autoAdd);
     }
 
     /**
@@ -348,44 +242,6 @@ public class DistributedConfiguration extends Entity {
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);
-    }
-
-    /**
-     * Sets the heartbeat frequency between peers.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @param seconds The time for peer heartbeats, in seconds. If set to 0,
-     * heartbeat messages are disabled.
-     */
-    @Deprecated
-    public void setHeartbeatFrequency(int seconds) {
-        setCacheValue("heartbeatFrequency", seconds);
-    }
-
-    /**
-     * Sets the heartbeat multicast address. This address is used for server
-     * auto discovery. The default address is "224.0.0.37".
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @param mCastAddress The multicast address for server auto discovery.
-     */
-    @Deprecated
-    public void setHeartbeatMcastAddr(String mCastAddress) {
-        setCacheValue("heartbeatMcastAddr", mCastAddress);
-    }
-
-    /**
-     * Sets the port where Splunk sends and listens for heartbeat messages.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @param port The heartbeat port.
-     */
-    @Deprecated
-    public void setHeartbeatPort(int port) {
-        setCacheValue("heartbeatPort", port);
     }
 
     /**
@@ -454,21 +310,6 @@ public class DistributedConfiguration extends Entity {
     }
 
     /**
-     * Sets whether this server skips participation as a server in any search or
-     * other call. This setting is used for building a node that only merges the
-     * results from other servers.
-     *
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @param skipOurselves {@code true} to skip participation, {@code false} to
-     * participate as a server in searches and calls.
-     */
-    @Deprecated
-    public void setSkipOurselves(boolean skipOurselves) {
-        setCacheValue("skipOurselves", skipOurselves);
-    }
-
-    /**
      * Sets the time-out period for connecting to a search peer for getting its
      * basic information.
      *
@@ -479,20 +320,4 @@ public class DistributedConfiguration extends Entity {
         setCacheValue("statusTimeout", seconds);
     }
 
-    /**
-     * Sets the time-to-live (ttl) of heartbeat messages. Increasing this number
-     * allows UDP packets to spread beyond the current sub-net to the specified
-     * number of hops.
-     * 
-     * <b>Note:</b> This feature only works when routers along the way are
-     * configured to pass UDP multicast packets.
-     * 
-     * @deprecated Deprecated since Splunk 5.0.
-     *
-     * @param value The time-to-live value of heartbeat messages.
-     */
-    @Deprecated
-    public void setTTL(int value) {
-        setCacheValue("ttl", value);
-    }
 }
