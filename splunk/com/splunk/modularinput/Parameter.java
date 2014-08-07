@@ -40,6 +40,8 @@ public abstract class Parameter {
      * Generates a list of {@code Parameter} objects from an {@code org.w3c.dom.Node} object containing a set of parameters. The node
      * may be any element, but is expected to contain elements param or param_list, as in
      *
+     * <pre>
+     * {@code
      * <stanza name="foobar://aaa">
      *     <param name="param1">value1</param>
      *     <param name="param2">value2</param>
@@ -50,6 +52,8 @@ public abstract class Parameter {
      *         <value>value2</value>
      *     </param_list>
      * </stanza>
+     * }
+     * </pre>
      *
      * @param node An {@code org.w3c.dom.Node} object containing the parameter list as children.
      * @return A list of Parameter objects extracted from the XML.

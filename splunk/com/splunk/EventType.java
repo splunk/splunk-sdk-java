@@ -83,7 +83,7 @@ public class EventType extends Entity {
     }
 
     /**
-     * Sets whether the event type is enabled or disabled. 
+     * Sets whether the event type is enabled or disabled.
      * <p>
      * <b>Note:</b> Using this method requires you to restart Splunk before this 
      * setting takes effect. To avoid restarting Splunk, use the 

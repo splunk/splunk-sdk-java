@@ -4,7 +4,7 @@
 
 * Removed deprecated functions from Distributed Configurations.
 * Added index.upload oneshot searches to allow oneshot parameters.
-* Improved HTTP handling and commandline handling.
+* Fixed a resource leak on a file load function.
 
 ## Version 1.3
 

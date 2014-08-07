@@ -96,7 +96,7 @@ public class Scheme {
     /**
      * Sets the human readable description of this modular input kind.
      *
-     * @param The human readable description of this modular input kind.
+     * @param description The human readable description of this modular input kind.
      */
     public void setDescription(String description) {
         this.description = description;

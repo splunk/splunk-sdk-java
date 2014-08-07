@@ -163,6 +163,8 @@ public class ValidationDefinition {
     /**
      * Create a ValidationDefinition from a provided stream containing XML. The XML typically will look like
      *
+     * <pre>
+     * {@code
      * <items>
      *     <server_host>myHost</server_host>
      *     <server_uri>https://127.0.0.1:8089</server_uri>
@@ -177,6 +179,8 @@ public class ValidationDefinition {
      *         </param_list>
      *     </item>
      * </items>
+     * }
+     * </pre>
      *
      * @param stream containing XML to parse.
      * @return a ValidationDefinition.

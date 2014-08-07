@@ -20,8 +20,11 @@ package com.splunk.modularinput;
  * The {@code SingleValueParameter} class represents a parameter as part of a modular input instance that
  * contains only a single value. This corresponds to XML fragments of the form:
  *
+ * <pre>
+ * {@code
  * <param name="param1">value11</param>
- *
+ * }
+ * </pre>
  */
 public class SingleValueParameter extends Parameter {
     private final String name;
