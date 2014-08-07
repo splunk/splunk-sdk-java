@@ -749,7 +749,7 @@ public class PivotTest extends SDKTestCase {
 
     @Test
     public void testColumnRangeSplit() {
-        // This tests is here because we had a problem with fields that were supposed to be
+        // This test is here because we had a problem with fields that were supposed to be
         // numbers being expected as strings in Splunk 6.0. This was fixed in Splunk 6.1, and accepts
         // either strings or numbers.
         DataModelObject searches = service.getDataModels().get("internal_audit_logs").getObject("searches");

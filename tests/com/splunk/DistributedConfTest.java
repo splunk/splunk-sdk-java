@@ -34,8 +34,6 @@ public class DistributedConfTest extends SDKTestCase {
     // We want to continue testing deprecated getters and setters
     @SuppressWarnings("deprecation")
     public void testSetAutoAddServers() {
-        boolean originalAutoAddServers = conf.getAutoAddServers();
-        boolean newAutoAddServers = !originalAutoAddServers;
 
         String originalBlacklistNames = conf.getBlacklistNames();
         String newBlacklistNames = "boris,hilda,edward";
@@ -46,79 +44,40 @@ public class DistributedConfTest extends SDKTestCase {
         int originalTimeoutFrequency = conf.getCheckTimedOutServersFrequency();
         int newTimeoutFrequency = originalTimeoutFrequency + 50;
 
-        int originalHeartbeatFrequency = conf.getHeartbeatFrequency();
-        int newHeartbeatFrequency = originalHeartbeatFrequency + 50;
-
-        String originalHeartbeatMcastAddr = conf.getHeartbeatMcastAddress();
-        String newHeartbeatMcastAddr = "boris.the.baboon";
-
-        int originalHeartbeatPort = conf.getHeartbeatPort();
-        int newHeartbeatPort = originalHeartbeatPort + 20;
-
         boolean originalRemoveTimedOutServers = conf.getRemovedTimedOutServers();
         boolean newRemoveTimesOutServers = !originalRemoveTimedOutServers;
-
-        String originalServers = conf.getServers();
-        String newServers = "boris,natasha,hilda";
 
         boolean originalShareBundles = conf.getShareBundles();
         boolean newShareBundles = !originalShareBundles;
 
-        boolean originalSkipOurselves = conf.getSkipOurselves();
-        boolean newSkipOurselves = !originalSkipOurselves;
-
         int originalStatusTimeout = conf.getStatusTimeout();
         int newStatusTimeout = originalStatusTimeout + 50;
 
-        int originalTtl = conf.getTtl();
-        int newTtl = originalTtl + 50;
-
         try {
 
-            conf.setAutoAddServers(newAutoAddServers);
             conf.setBlacklistNames(newBlacklistNames);
             conf.setBlacklistURLs(newBlacklistUrls);
             conf.setCheckTimedOutServersFrequency(newTimeoutFrequency);
-            conf.setHeartbeatFrequency(newHeartbeatFrequency);
-            conf.setHeartbeatMcastAddr(newHeartbeatMcastAddr);
-            conf.setHeartbeatPort(newHeartbeatPort);
             conf.setRemoveTimedOutServers(newRemoveTimesOutServers);
-            conf.setServers(newServers);
             conf.setShareBundles(newShareBundles);
-            conf.setSkipOurselves(newSkipOurselves);
             conf.setStatusTimeout(newStatusTimeout);
-            conf.setTTL(newTtl);
 
             conf.refresh();
 
-            Assert.assertEquals(newAutoAddServers, conf.getAutoAddServers());
             Assert.assertEquals(newBlacklistNames, conf.getBlacklistNames());
             Assert.assertEquals(newBlacklistUrls, conf.getBlacklistUrls());
             Assert.assertEquals(newTimeoutFrequency, conf.getCheckTimedOutServersFrequency());
-            Assert.assertEquals(newHeartbeatFrequency, conf.getHeartbeatFrequency());
-            Assert.assertEquals(newHeartbeatMcastAddr, conf.getHeartbeatMcastAddress());
-            Assert.assertEquals(newHeartbeatPort, conf.getHeartbeatPort());
             Assert.assertEquals(newRemoveTimesOutServers, conf.getRemovedTimedOutServers());
-            Assert.assertEquals(newServers, conf.getServers());
             Assert.assertEquals(newShareBundles, conf.getShareBundles());
-            Assert.assertEquals(newSkipOurselves, conf.getSkipOurselves());
             Assert.assertEquals(newStatusTimeout, conf.getStatusTimeout());
-            Assert.assertEquals(newTtl, conf.getTtl());
 
         } finally {
-            conf.setAutoAddServers(originalAutoAddServers);
             conf.setBlacklistNames(originalBlacklistNames);
             conf.setBlacklistURLs(originalBlacklistUrls);
             conf.setCheckTimedOutServersFrequency(originalTimeoutFrequency);
-            conf.setHeartbeatFrequency(originalHeartbeatFrequency);
-            conf.setHeartbeatMcastAddr(originalHeartbeatMcastAddr);
-            conf.setHeartbeatPort(originalHeartbeatPort);
             conf.setRemoveTimedOutServers(originalRemoveTimedOutServers);
-            conf.setServers(originalServers);
             conf.setShareBundles(originalShareBundles);
-            conf.setSkipOurselves(originalSkipOurselves);
             conf.setStatusTimeout(originalStatusTimeout);
-            conf.setTTL(originalTtl);
         }
     }
 

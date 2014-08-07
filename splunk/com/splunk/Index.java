@@ -1109,5 +1109,26 @@ public class Index extends Entity {
         Args args = new Args("index", getName());
         uploads.create(filename, args);
     }
+    
+    /**
+     * Uploads a file to this index as an event stream.
+     * <p>
+     * <b>Note:</b> This file must be directly accessible by the Splunk server.
+     *
+     * @param filename The path and filename.
+     * 
+     * @param args Optional arguments for this request. Valid parameters are:
+     * "host", "sourcetype", "rename-source". More found at:
+     * http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI/RESTinput#data.2Finputs.2Foneshot
+     * 
+     */
+    public void upload(String filename, Args args) {
+        EntityCollection<Upload> uploads = service.getUploads();
+        if(args.containsKey("index")){
+        	throw new IllegalArgumentException("The 'index' parameter cannot be passed to an index's oneshot upload.");
+        }
+        args.add("index", getName());
+        uploads.create(filename, args);
+    }
 }
 

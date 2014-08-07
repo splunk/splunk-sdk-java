@@ -156,8 +156,13 @@ public class Receiver {
             sendString = sendString +  ((indexName == null) ? "?" : "&");
             sendString = sendString + args.encode();
         }
-        service.send(
-             service.simpleReceiverEndPoint  + sendString, request);
+        ResponseMessage response = service.send(service.simpleReceiverEndPoint
+                + sendString, request);
+        try {
+            response.getContent().close();
+        } catch (IOException e) {
+            // noop
+        }
     }
 
     /**

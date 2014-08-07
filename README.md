@@ -1,6 +1,6 @@
 # The Splunk Software Development Kit for Java
 
-#### Version 1.3
+#### Version 1.3.1
 
 The Splunk Software Development Kit (SDK) for Java contains library code and 
 examples designed to enable developers to build applications using Splunk.

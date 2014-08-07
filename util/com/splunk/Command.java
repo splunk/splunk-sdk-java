@@ -113,28 +113,36 @@ public class Command {
 
     // Load a file of options and arguments
     public Command load(String path) {
-        FileReader fileReader;
+        ArrayList<String> argList = new ArrayList<String>();
+        
         try {
-            fileReader = new FileReader(path);
-        }
-        catch (FileNotFoundException e) { return this; }
-
-        ArrayList<String> argList = new ArrayList<String>(4);
-        BufferedReader reader = new BufferedReader(fileReader);
-        while (true) {
-            String line;
+            FileReader fileReader = new FileReader(path);
             try {
-                line = reader.readLine();
+                BufferedReader reader = new BufferedReader(fileReader);
+                while (true) {
+                    String line;
+                    line = reader.readLine();
+                    if (line == null)
+                        break;
+                    if (line.startsWith("#")) 
+                        continue;
+                    line = line.trim();
+                    if (line.length() == 0) 
+                        continue;
+                    if (!line.startsWith("-"))
+                        line = "--" + line;
+                    argList.add(line);
+                }
             }
-            catch (IOException e) { return this; }
-            if (line == null) break;
-            if (line.startsWith("#")) continue;
-            line = line.trim();
-            if (line.length() == 0) continue;
-            if (!line.startsWith("-"))
-                line = "--" + line;
-            argList.add(line);
+            finally {
+                fileReader.close();
+            }
         }
+        catch (IOException e) {
+            error(e.getMessage());
+            return this;
+        }
+
         parse(argList.toArray(new String[argList.size()]));
         return this;
     }

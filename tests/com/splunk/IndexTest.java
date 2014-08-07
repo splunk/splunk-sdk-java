@@ -17,6 +17,7 @@
 package com.splunk;
 
 import junit.framework.AssertionFailedError;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -557,12 +558,90 @@ public class IndexTest extends SDKTestCase {
     }
 
     @Test
+    public void testUploadArgs() throws Exception {
+        if (!hasTestData()) {
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
+        
+        installApplicationFromTestData("file_to_upload");
+
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
+
+        String fileToUpload = joinServerPath(new String[] {
+                service.getSettings().getSplunkHome(),
+                "etc", "apps", "file_to_upload", "log.txt"});
+        
+        Args args = new Args();
+        args.add("sourcetype", "log");
+        args.add("host", "IndexTest");
+        args.add("rename-source", "IndexTestSrc");
+        
+        index.upload(fileToUpload, args);
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                Service con = index.getService();
+                Job search = con.search("search index=" + index.getTitle() + " sourcetype=log host=IndexTest source=IndexTestSrc");
+                return getResultCountOfIndex() == 4 && search.getEventCount() == 4;
+            }
+        });
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                // Some versions of Splunk only increase event count by 1.
+                // Event count should never go up by more than the result count.
+                int tec = index.getTotalEventCount();
+                return (1 <= tec) && (tec <= 4);
+            }
+        });
+    }
+    
+    @Test
+    public void testUploadArgsFailure() throws Exception{
+        if (!hasTestData()) {
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
+        installApplicationFromTestData("file_to_upload");
+        
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
+
+        String fileToUpload = joinServerPath(new String[] {
+                service.getSettings().getSplunkHome(),
+                "etc", "apps", "file_to_upload", "log.txt"});
+        
+        Args args = new Args();
+        args.add("sourcetype", "log");
+        args.add("host", "IndexTest");
+        args.add("index", index.getTitle());
+        args.add("rename-source", "IndexTestSrc");
+        // The index argument cannot be passed into the upload function. 
+        try{
+            index.upload(fileToUpload, args);
+            Assert.fail("Uploading to an index with an index argument? No need for redundency!");
+        }
+        catch(Exception e){
+            Assert.assertEquals(e.getMessage(), "The 'index' parameter cannot be passed to an index's oneshot upload.");
+        }
+            
+    }
+            
+        
+    
+    
+    
+    @Test
     public void testUpload() throws Exception {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
-
+        
         installApplicationFromTestData("file_to_upload");
         
         Assert.assertTrue(getResultCountOfIndex() == 0);
@@ -572,7 +651,7 @@ public class IndexTest extends SDKTestCase {
                 service.getSettings().getSplunkHome(),
                 "etc", "apps", "file_to_upload", "log.txt"});
         index.upload(fileToUpload);
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {

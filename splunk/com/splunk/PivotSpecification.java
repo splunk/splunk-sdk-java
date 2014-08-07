@@ -48,7 +48,7 @@ public class PivotSpecification {
      * Set the namespace to use for this acceleration, usually the name of a data model. A value of null will set no
      * namespace for acceleration.
      *
-     * @param namespace a string specifying a namespcae.
+     * @param namespace a string specifying a namespace.
      */
     public PivotSpecification setAccelerationNamespace(String namespace) {
         this.accelerationNamespace = namespace;
@@ -186,7 +186,7 @@ public class PivotSpecification {
      *
      * for example
      *
-     *     height > 6
+     *     {@code height > 6}
      *
      * @param field the name of the field
      * @param comparison a comparison operator for the filter
@@ -254,11 +254,12 @@ public class PivotSpecification {
 
     /**
      * Add a row split on a numeric field, splitting into numeric ranges.
-     *
+     * 
      * This split generates bins with edges equivalent to the
-     * classic loop 'for i in <start> to <end> by <step>' but with a maximum
-     * number of bins <limit>. This dispatches to the stats and xyseries search commands.
+     * classic loop {@code 'for i in <start> to <end> by <step>' } but with a maximum
+     * number of bins {@code <limit> }. This dispatches to the stats and xyseries search commands.
      * See their documentation for more details.
+     * 
      *
      * @param field The field to split on
      * @param label a human readable name for this set of rows
@@ -393,7 +394,6 @@ public class PivotSpecification {
      * @param field the field to aggregate.
      * @param label a human readable name for this aggregate.
      * @param statsFunction the function to use for aggregation.
-     * @param generateSparkline should there be a sparkline generated for this aggregate.
      * @return the PivotSpecification you are working on.
      */
     public PivotSpecification addCellValue(String field, String label, StatsFunction statsFunction) {

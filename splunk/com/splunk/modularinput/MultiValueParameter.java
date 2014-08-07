@@ -23,10 +23,14 @@ import java.util.List;
  * The {@code MultiValueParameter} class represents a parameter containing multiple values that is passed as part of a definition
  * of a modular input instance. {@code MultiValueParameter} objects correspond to XML fragments of the form:
  *
+ * <pre>
+ * {@code
  * <param_list name="multiValue">
  *     <value>value1</value>
  *     <value>value2</value>
  * </param_list>
+ * }
+ * </pre>
  */
 public class MultiValueParameter extends Parameter {
     private final String name;

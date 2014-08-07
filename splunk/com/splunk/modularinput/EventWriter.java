@@ -156,7 +156,6 @@ public class EventWriter {
      * @see #synchronizedLog
      * @param severity The severity (e.g., {@code EventWriter.WARN}, {@code EventWriter.FATAL}) of this message.
      * @param errorMessage The message that should appear in the logs.
-     * @throws IOException
      */
     public void log(String severity, String errorMessage) {
         try {
@@ -168,9 +167,8 @@ public class EventWriter {
     }
 
     /**
-     * Writes the closing </stream> tag to make this XML well formed.
+     * Writes the closing {@code </stream>} tag to make this XML well formed.
      *
-     * @throws XMLStreamException
      */
     public void close() {
         try {

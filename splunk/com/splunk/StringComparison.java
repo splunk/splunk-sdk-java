@@ -39,7 +39,8 @@ public enum StringComparison {
     },
     IS_NULL {
         public String toString() { return "isNull"; }
-    }, IS_NOT_NULL {
+    }, 
+    IS_NOT_NULL {
         public String toString() { return "isNotNull"; }
     },
     REGEX {

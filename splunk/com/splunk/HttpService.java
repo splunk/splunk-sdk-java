@@ -62,7 +62,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.3");
+        put("User-Agent", "splunk-sdk-java/1.3.1");
         put("Accept", "*/*");
     }};
 
@@ -201,7 +201,7 @@ public class HttpService {
      */
     public URL getUrl(String path) {
         try {
-        	if (getScheme() == HTTPS_SCHEME && httpsHandler != null) {
+        	if (HTTPS_SCHEME.equals(getScheme()) && httpsHandler != null) {
         		// This branch is not currently covered by unit tests as I 
         		// could not figure out a generic way to get the default
         		// HTTPS handler.
