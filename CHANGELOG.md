@@ -2,9 +2,9 @@
 
 ## Version 1.3.1
 
-* Added support for building with Java version 1.6+.
 * Removed deprecated functions from Distributed Configurations.
 * Added index.upload oneshot searches to allow oneshot parameters.
+* Improved HTTP handling and commandline handling.
 
 ## Version 1.3
 
