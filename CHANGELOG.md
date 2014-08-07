@@ -2,8 +2,8 @@
 
 ## Version 1.3.1
 
-* Removed deprecated functions from Distributed Configurations.
-* Added index.upload oneshot searches to allow oneshot parameters.
+* Removed deprecated functions from `DistributedConfigurations`.
+* Added `Index.upload` oneshot searches to allow oneshot parameters.
 * Fixed a resource leak on a file load function.
 
 ## Version 1.3

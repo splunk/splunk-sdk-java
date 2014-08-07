@@ -46,7 +46,7 @@ public abstract class DataModelCalculation {
     public String getCalculationID() { return this.calculationID; }
 
     /**
-     * @param fieldName Name of the field to fetch
+     * @param fieldName Name of the field to fetch.
      * @return whether this calculation generated a field of the given name.
      */
     public boolean containsGeneratedField(String fieldName) {

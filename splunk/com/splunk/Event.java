@@ -174,7 +174,7 @@ public class Event extends HashMap<String, String> {
      * The {@code getSegmentedRaw} method returns this:
      * <p>
      * {@code <v xml:space="preserve" trunc="0">"http://localhost:8000/en-US/app/<sg h=\"1\">search</sg>/flashtimeline?q=<sg h=\"1\">search</sg>%20<sg h=\"1\">search</sg>%20index%3D_internal%20%7C%20head%2010&amp;earliest=rt-1h&amp;latest=rt"</v>}
-     * @return the segmented raw xml including tags and escaped characters
+     * @return the segmented raw xml including tags and escaped characters.
      */
     public String getSegmentedRaw() {
        if (segmentedRaw == null) {
