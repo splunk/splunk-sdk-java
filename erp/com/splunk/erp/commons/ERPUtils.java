@@ -10,28 +10,34 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.splunk.erp.core.IProvider;
 import com.splunk.util.WildcardList;
 
 /**
- * Helper class for ERP framework. Contains method for parsing JsonNode and extract particular nodes for 
+ * Helper class for ERP framework. <br>Contains method for parsing JsonNode and extract particular nodes for 
  * ProviderConfig, VixConfig, SearchInfo and WildcardList. <br> 
- * get localhost information and create IProvider implementation class object.
+ * <br>Get localhost information and create IProvider implementation class object.
  * @author smetkar
  *
  */
 public class ERPUtils {
 
+	private static Logger logger = getLogger(ERPUtils.class);
 	/**
 	 * Read System.in input stream for JSON data and convert into JsonNode object
 	 * @param System.in (InputStream)
 	 * @return JsonNode 
-	 * @throws IOException
+	 * @throws IOException,JsonProcessingException
 	 */
-	public static JsonNode readArgsForERP(InputStream streamToRead) throws Exception{
+	public static JsonNode readArgsForERP(InputStream streamToRead) throws IOException,JsonProcessingException{
 		JsonNode argsAsJson = null;
 		String argsLine = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(streamToRead));
@@ -40,27 +46,9 @@ public class ERPUtils {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		argsAsJson = objectMapper.readTree(argsLine);
-		
-		if(argsAsJson == null)
-			throw new Exception("S-2-ERP protocol JSON was found to be null");
-		
 		return argsAsJson;
 	}
 
-	/**
-	 * Read value of JSON element as String 
-	 * @param JsonNode node
-	 * @param String field to be read
-	 * @return String field value
-	 */
-	public static String getStringParameter(JsonNode node, String param) {
-		JsonNode indexNameJsonNode = node.get(param);
-		if (indexNameJsonNode != null) {
-			return indexNameJsonNode.getValueAsText();
-		}
-		return null;
-	}
-	
 	/**
 	 * Get virtual indexes config node from JSON data 
 	 * @param JsonNode : S-2-ERP protocol JSON string
@@ -80,7 +68,7 @@ public class ERPUtils {
 	 * @return Provider family name as String
 	 */
 	public static String getFamilyName(JsonNode providerConfigNode){
-		String familyName = getStringParameter(providerConfigNode, "family"); 
+		String familyName = providerConfigNode.get("family").getValueAsText(); 
 		return familyName;
 	}
 	
@@ -97,6 +85,25 @@ public class ERPUtils {
 			throw new IllegalArgumentException("Unable to find provider element in S-2-ERP protocol JSON");
 		}
 		return providerNode;
+	}
+	
+	/**
+	 * Get provider name
+	 * @param JsonNode : JSON element containing provider specific info
+	 * @return Provider name
+	 */
+	public static String getProviderName(JsonNode providerConfigNode) {
+		String providerName = providerConfigNode.get("conf").get("provider").get("splunk.search.provider").getTextValue();
+		return providerName;
+	}
+	
+	/**Get search mode, search mode can be 'stream', 'mixed' or 'report'
+	 * @param JsonNode : JSON element containing provider specific info
+	 * @return Search mode
+	 */
+	public static String getSearchMode(JsonNode providerConfigNode) {
+		String mode = providerConfigNode.get("conf").get("provider").get("mode").getTextValue();
+		return mode;
 	}
 	
 //	/**
@@ -171,11 +178,11 @@ public class ERPUtils {
 			tempHostName = InetAddress.getLocalHost().getHostName();
 		}catch(UnknownHostException uhe)
 		{
-			ERPLogger.logInfo("Could not get host name, defaulting to IP address");
+			logger.info("Could not get host name, defaulting to IP address");
 			try {
 				tempHostName = InetAddress.getLocalHost().getHostAddress();
 			} catch (UnknownHostException unknownhHost) {
-				ERPLogger.logInfo("Could not get host name, defaulting localhost");
+				logger.info("Could not get host name, defaulting to localhost");
 			}
 		}
 		return tempHostName;
@@ -194,14 +201,35 @@ public class ERPUtils {
 			IProvider providerImpl = providerImplClass.newInstance();
 			return providerImpl;
 		} catch (ClassNotFoundException cnfe) {
-			ERPLogger.logError(cnfe.getMessage());
-			throw new Exception("Error while instantiating provider object, Message : " + cnfe.getMessage());
+			logger.error(cnfe.getMessage(),cnfe);
+			throw new Exception("Error while instantiating provider object");
 		} catch (InstantiationException ine) {
-			ERPLogger.logError(ine.getMessage());
-			throw new Exception("Error while instantiating provider object, Message : " + ine.getMessage());
+			logger.error(ine.getMessage(),ine);
+			throw new Exception("Error while instantiating provider object");
 		} catch (IllegalArgumentException iae) {
-			ERPLogger.logError(iae.getMessage());
-			throw new Exception("Error while instantiating provider object, Message : " + iae.getMessage());
+			logger.error(iae.getMessage(),iae);
+			throw new Exception("Error while instantiating provider object");
 		}
+	}
+	
+
+	/**
+	 * Get Logger for the class, default logging level is set to DEBUG
+	 * @param Class : Class for which logger needs to be created
+	 * @return Logger for that particular class
+	 */
+	public static Logger getLogger(Class clazz) {
+		Logger logger = Logger.getLogger(clazz);
+		
+		ConsoleAppender console = new ConsoleAppender();
+		console.setTarget("System.err");
+		
+		String pattern = "%p %C{2} - %m%n";
+		console.setLayout(new PatternLayout(pattern));
+		console.activateOptions();
+		console.setThreshold(Level.INFO);
+		
+		logger.addAppender(console);
+		return logger;
 	}
 }
