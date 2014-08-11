@@ -2,7 +2,7 @@
 
 ## Version 1.3.1
 
-* Removed deprecated functions from `DistributedConfigurations' class.
+* Removed deprecated functions from `DistributedConfigurations` class.
 * Oneshot searches, called from `Index.upload`, can now be passed search arguments.
 * Fixed a resource leak in the `Command.load` function.
 
