@@ -1,0 +1,6 @@
+<dashboard>
+  <row>
+  <html> <iframe src="/static/app/$app-name/$app-name.html" style="width:100%; height: 800px;"/>
+  	</html>
+  </row>
+</dashboard>

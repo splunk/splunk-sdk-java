@@ -1,8 +1,9 @@
 import sys
 import os
 import shutil
+import io
 
-# Script to create directory structure and create config file with default settings
+# Script to create directory structure and create config file from template files
 
 # python create_package.py [app_name] [family_name] [class_name] [app_version] [path_to_folder_with_jars] 
 
@@ -16,7 +17,7 @@ def main(args):
 	create_directory_structure(app_name)
 	bin_folder = os.path.join(os.path.getcwd(),app_name,"bin")
 	copy_jars_to_bin(bin_folder,path_to_folder_with_jars)
-	create_bash_script_file(bin_folder,app_name)
+	create_bash_script_file(bin_folder,app_name)	
 
 	default_folder = os.path.join(os.path.getcwd(),app_name,"default")	
 	if not os.path.exists(default_folder):
@@ -87,104 +88,72 @@ def copy_jars_to_bin(path_to_folder_with_jars,bin_folder):
 	except OSError as e:
 		print('Directory not copied. Error: %s' % e)
 
+def create_config_files(default_folder,family_name,class_name,app_name,version):
+	os.chdir(default_folder)
+	create_indexes_conf_file(family_name,class_name,app_name)
+	create_apps_conf_file(family_name,class_name,app_name,version)
+
 def create_bash_script_file(bin_folder,app_name):
 	file_name = os.path.join(bin_folder,"erp_script.sh")
-	fp = open(file_name,'w')
-	data = "#!/bin/bash\n" \
-			"#Script to execute ERPMain process\n" \
-			"if [ ! -z \"$JAVA_OPTS\" ]; then\n" \
-			"	JAVA_OPTS=\"$JAVA_OPTS\"\n" \
-			"els\n" \
-			"	JAVA_OPTS=\"-Xmx512m\"\n" \
-			"fi\n" \
-			"\n" \
-			"if [ ! -z \"JAVA_HOME\" ]; then\n" \
-			"	JAVA_CMD=$JAVA_HOME/bin/java\n" \
-			"fi\n" \
-			"\n" \
-			"if [ -z \"$JAVA_CMD\" ] || [ ! -x \"$JAVA_CMD\" ]; then\n" \
-			"	JAVA_CMD=\"which java\"\n" \
-			"fi\n" \
-			"\n" \
-			"if [ -z \"$JAVA_CMD\" ] || [ ! -x \"$JAVA_CMD\" ]; then\n" \
-			"	echo \"Unable to find java in JAVA_HOME or PATH. Please ensure JAVA_HOME is set\"\n" \
-			"fi\n" \
-			"\n" \
-			"CLASS_NAME=$1\n" \
-			"CLASS_PATH=$SPLUNK_HOME/bin/jars/SplunkMR-s6.0-h2.0.jar:$SPLUNK_HOME/etc/apps/"+ app_name +"/bin/:$SPLUNK_HOME/etc/apps/"+ app_name +"/bin/lib/*\n" \
-			"\n" \
-			"$JAVA_CMD $JAVA_OPTS -cp $CLASS_PATH $CLASS_NAME\n" \
-	fp.write(data)
-	fp.close()
+	template_file_name = os.path.abspath(os.getcwd() + "/../template_files/erp_script.sh")
+	config = io.open(file_name,'w')
+
+	for line in io.open(template_file_name, 'r'):
+		line = line.replace('$app-name',app_name)
+		config.write(line)
+
+	config.close()
 
 def create_default_file(nav_folder_path):
 	file_name = os.path.join(nav_folder_path,"default.xml")
-	fp=open(file_name,'w')
-	data = "<nav search_view=\"search\" color=\"#65A637\">\n"\
-		 	"<view name=\"Documentation\" default='true' />\n" \
-		 	"<view name=\"search\" default='false' />\n" \
-		 	"<view name=\"data_models\" />\n" \
-		 	"<view name=\"reports\" />\n" \
-		 	"<view name=\"alerts\" />\n" \
-		 	"<view name=\"dashboards\" />\n" \
-    	 	"</nav>\n"
-    
-	fp.write(data)
-	fp.close()
+	template_file_name = os.path.abspath(os.getcwd() + "/../template_files/default.xml")
+	config = io.open(file_name,'w')
+
+	for line in io.open(template_file_name, 'r'):
+		config.write(line)
+
+	config.close()
 
 def create_documentation_file(app_name, views_folder_path):
 	file_name = os.path.join(views_folder_path, "Documentation.xml")
-	data = "<dashboard>\n" \
-  			"<row>\n" \
-  			"<html>\n" \
-  			"<iframe src=\"/static/app/" + app_name + "/" + app_name + ".html\" style=\"width:100%; height: 800px;\"/>\n" \
-  		   	"</html>\n" \
-  		   	"</row>\n"\
-		   	"</dashboard>\n" \
+	template_file_name = os.path.abspath(os.getcwd() + "/../template_files/Documentation.xml")
+	config = io.open(file_name,'w')
 
-	fp = open(file_name,'w')	   
-	fp.write(data)
-	fp.close()
+	for line in io.open(template_file_name, 'r'):
+		line = line.replace('$app-name',app_name)
+		config.write(line)
+
+	config.close()
+	
+def create_indexes_conf_file(family_name,app_name,class_name):
+	file_name = os.path.join(os.getcwd(),"indexes.conf")
+	template_file_name = os.path.abspath(os.getcwd() + "/../template_files/indexes.conf")
+	config = io.open(file_name,'w')
+
+	for line in io.open(template_file_name, 'r'):
+		line = line.replace('$app-name',app_name)
+		line = line.replace('$family-name',family_name)
+		line = line.replace('$class-name',class_name)
+		config.write(line)
+
+	config.close()
+
+def create_app_conf_file(family_name,version):
+	file_name = os.path.join(os.getcwd(),"app.conf")
+	template_file_name = os.path.abspath(os.getcwd() + "/../template_files/app.conf")
+	config = io.open(file_name,'w')
+
+	for line in io.open(template_file_name, 'r'):
+		line = line.replace('$family-name',family_name)
+		line = line.replace('$version',version)
+		config.write(line)
+
+	config.close()
 
 def create_html_documentation(app_name, static_folder_path):
 	file_name = os.path.join(static_folder_path,app_name + ".html")
 
 	data = "<html>\n<head>\n<title>" + app_name + "</title>\n</head>\n<body></body>\n</html>";
-	fp = open(file_name,'w')
-	fp.write(data)
-	fp.close()
-
-# default_folder,family_name,class_name,app_name,verion
-def create_config_files(default_folder,family_name,class_name,app_name,version):
-	os.chdir(default_folder)
-	create_indexes_conf_file(family_name,class_name,app_name)
-	create_apps_conf_file(family_name,class_name,app_name,version)
-	
-def create_indexes_conf(family_name,app_name,class_name):
-	file_name = os.path.join(os.getcwd(),"indexes.conf")
-	data = "[provider-family:" + family_name +"]\n" \
-			"vix.command = $SPLUNK_HOME/etc/apps/" + app_name + "/bin/erp_script.sh\n" \
-			"vix.command.arg.1 = " + class_name + "\n" \
-	fp =open(file_name,'w')		
-	fp.write(data)
-	fp.close()
-
-def create_apps_conf(family_name,app_name,class_name,version):
-	file_name = os.path.join(os.getcwd(),"apps.conf")
-	data = "# Splunk App Configuration file #\n" \
-			"\n" \
-			"[install]\n" \
-			"is_configured = 0" \
-			"\n" \
-			"[ui]\n" \
-			"is_visible = 1\n" \
-			"label = " + app_name + "\n" \
-			"\n" \
-			"[launcher]\n" \
-			"author = \n" \
-			"description = \n" \
-			"version = " + version "\n" \
-
 	fp = open(file_name,'w')
 	fp.write(data)
 	fp.close()
