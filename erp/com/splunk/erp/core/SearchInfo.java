@@ -52,19 +52,13 @@ public class SearchInfo {
 	
 	/**
 	 * Get value for _timestamp field from info element of JSON
-	 * @return int (timestamp)
+	 * @return Double (timestamp)
 	 */
-	public int getTimestampInfo() {
+	public Double getTimestampInfo() {
 		String timestamp = fields.get("_timestamp");
-		Integer timestampVal = null; 
+		Double timestampVal = null; 
 		if(timestamp != null) {
-			try {
-				timestampVal = Integer.parseInt(timestamp);
-			} catch (NumberFormatException ex) {
-				if(timestamp.matches("[\\d]*\\.[\\d]*")) {
-					timestampVal = Integer.parseInt(timestamp.split(".")[0]);
-				}
-			}
+			timestampVal = Double.parseDouble(timestamp);
 		}
 		return timestampVal;
 	}
@@ -80,38 +74,26 @@ public class SearchInfo {
 	
 	/**
 	 * Get earliest time for search
-	 * @return int (timestamp)
+	 * @return Double (timestamp)
 	 */
-	public int getEarliestTime() {
+	public Double getEarliestTime() {
 		String timestamp = fields.get("_search_et");
-		Integer timestampVal = null; 
+		Double timestampVal = null; 
 		if(timestamp != null) {
-			try {
-				timestampVal = Integer.parseInt(timestamp);
-			} catch (NumberFormatException ex) {
-				if(timestamp.matches("[\\d]*\\.[\\d]*")) {
-					timestampVal = Integer.parseInt(timestamp.split(".")[0]);
-				}
-			}
+				timestampVal = Double.parseDouble(timestamp);
 		}
 		return timestampVal;
 	}
 	
 	/**
 	 * Get latest time for search
-	 * @return int (timestamp)
+	 * @return Double (timestamp)
 	 */
-	public int getLatestTime() {
+	public Double getLatestTime() {
 		String timestamp = fields.get("_search_lt");
-		Integer timestampVal = null; 
+		Double timestampVal = null; 
 		if(timestamp != null) {
-			try {
-				timestampVal = Integer.parseInt(timestamp);
-			} catch (NumberFormatException ex) {
-				if(timestamp.matches("[\\d]*\\.[\\d]*")) {
-					timestampVal = Integer.parseInt(timestamp.split(".")[0]);
-				}
-			}
+				timestampVal = Double.parseDouble(timestamp);
 		}
 		return timestampVal;
 	}

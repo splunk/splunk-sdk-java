@@ -28,7 +28,7 @@ public class SearchElement {
 		this.type = node.get("type").getTextValue();
 	}
 	
-	public static SearchElement getByType(String type) {
+	public static SearchElement getByType(String type) throws IllegalArgumentException{
 		if(type.equalsIgnoreCase("cmp")) 
 			return new SearchCompareElement();
 		else if (type.equalsIgnoreCase("group")) 

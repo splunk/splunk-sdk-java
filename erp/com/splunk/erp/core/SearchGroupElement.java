@@ -57,10 +57,10 @@ public class SearchGroupElement extends SearchElement{
 	}
 	
 	/**
-	 * Initialize SearchGroupElement from JsonNode object
+	 * Initialize SearchGroupElement from JsonNode arguments
 	 * @param JsonNode object
 	 */
-	public void initFrom(JsonNode groupNode) {
+	public void initFrom(JsonNode groupNode) throws IllegalArgumentException {
 		
 		if(!VALID_OP.contains(groupNode.get("op").getTextValue())) 
 			throw new IllegalArgumentException("Not a valid operator for SearchGroupElement");

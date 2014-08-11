@@ -1,7 +1,11 @@
 package com.splunk.erp.core;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 
 import com.splunk.io.SearchMetricsReporter;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
@@ -31,7 +35,7 @@ public interface ResultWriterProxy extends SearchMetricsReporter {
 	 * @param List of records/documents
 	 * @throws Exception : Throws exception if any serializing object 
 	 */
-	public void append(List<?> recordBatch) throws Exception;
+	public void append(List<?> recordBatch) throws JsonGenerationException,JsonMappingException,IOException;
 	
 	/**
 	 * This method takes serialized JSON string and keep appending it to {@link ByteOutputStream}. and streams 
@@ -39,7 +43,7 @@ public interface ResultWriterProxy extends SearchMetricsReporter {
 	 * @param String : serialied JSON String
 	 * @throws Exception : Throws exception if any while streaming results
 	 */
-	public void append(String record) throws Exception;
+	public void append(String record) throws IOException;
 	
 //	public boolean addHeaderField(String field, String fieldValue);
 //	
