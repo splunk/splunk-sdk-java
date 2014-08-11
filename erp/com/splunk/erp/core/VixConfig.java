@@ -16,16 +16,15 @@ import org.codehaus.jackson.JsonNode;
  */
 public class VixConfig {
  	
-	private String indexName;
+	private String name;
 	private Map<String, String> configParams;
-	
-	//review ledion: add an instance var for the provider this vix belongs to 
-	
+	private String provider;
 	//TODO Decide on whether we want to use subclass of ParseNode or subclass of SearchElement
 	private SearchElement searchExpression;
 	
-	public VixConfig(String indexName, Map<String,String> configParams,SearchElement searchExpression) {
-		this.indexName = indexName;
+	public VixConfig(String indexName,String provider, Map<String,String> configParams,SearchElement searchExpression) {
+		this.name = indexName;
+		this.provider = provider;
 		this.configParams = configParams;
 		this.searchExpression = searchExpression;
 	}
@@ -39,7 +38,11 @@ public class VixConfig {
 	}
 
 	public String getIndexName() {
-		return indexName;
+		return name;
+	}
+	
+	public String getProviderName() {
+		return provider;
 	}
 	
 	/**
@@ -71,7 +74,8 @@ public class VixConfig {
 			SearchElement searchExpression = SearchElement.getByType(searchExprNode.get("type").getTextValue());
 			searchExpression.initFrom(searchExprNode);
 			String vixName = vixConfigNode.get("name").getTextValue(); 
-			vixesConfig[vixCount++] = new VixConfig(vixName,params,searchExpression);
+			String providerName = vixConfigNode.get("provider").getTextValue();
+			vixesConfig[vixCount++] = new VixConfig(vixName, providerName, params, searchExpression);
 		}
 		return vixesConfig;
 	}
