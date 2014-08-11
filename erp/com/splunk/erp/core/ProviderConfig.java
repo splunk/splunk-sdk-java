@@ -20,23 +20,38 @@ import com.splunk.erp.commons.ERPUtils;
 public class ProviderConfig {
 
 	protected String familyName;
+	protected String name;
+	protected String mode;
 	//Provider specific properties are stored in a Map
-	protected Map<String, String> properties;
+	protected Map<String, String> configParams;
 	
-	//Review ledion: need to expose the following info as instance vars in addition to family:
-	//               a) provider name, b) mode 
-	
-	public ProviderConfig(String familyName, Map<String, String> properties) {
+	public ProviderConfig(String familyName,String providerName,String mode, Map<String, String> configParams) {
 		this.familyName = familyName;
-		this.properties = properties;
+		this.configParams = configParams;
+		this.mode = mode;
+		this.name = providerName;
 	}
 
-	public Map<String, String> getProperties() {
-		return Collections.unmodifiableMap(properties);
+	public Map<String, String> getConfigParams() {
+		return Collections.unmodifiableMap(configParams);
 	}
 
 	public String getFamilyName() {
 		return familyName;
+	}
+	
+	public String getProviderName() {
+		return name;
+	}
+
+	public String getMode() {
+		return mode;
+	}
+	
+	public boolean isDebugModeSet() {
+		boolean isDebugModeSet = false;
+		isDebugModeSet = (Integer.parseInt(configParams.get("splunk.search.debug")) == 1) ? true : false;
+		return isDebugModeSet;
 	}
 
 //	/**
@@ -59,12 +74,15 @@ public class ProviderConfig {
 	 */
 	public static ProviderConfig getProviderConfigInstance(JsonNode providerConfigNode) {
 		String familyName = ERPUtils.getFamilyName(providerConfigNode);
+		String providerName = ERPUtils.getProviderName(providerConfigNode);
+		String mode = ERPUtils.getSearchMode(providerConfigNode);
+		
 		Map<String,String> params = new HashMap<String, String>();
 		Iterator<String> fieldIterator = providerConfigNode.getFieldNames();
 		while(fieldIterator.hasNext()){
 			String field = fieldIterator.next();
 			params.put(field,providerConfigNode.get(field).getTextValue());
 		}
-		return new ProviderConfig(familyName, params);
+		return new ProviderConfig(familyName,providerName,mode,params);
 	}
 }
