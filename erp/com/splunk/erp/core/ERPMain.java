@@ -1,9 +1,9 @@
 package com.splunk.erp.core;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 
 import com.splunk.erp.commons.ERPUtils;
-import com.splunk.erp.commons.ERPLogger;
 import com.splunk.util.WildcardList;
 
 /**
@@ -14,7 +14,9 @@ import com.splunk.util.WildcardList;
  */
 
 public class ERPMain {
-		
+	
+	private static Logger logger = ERPUtils.getLogger(ERPMain.class);
+	
 //	public static void main(String[] args) throws Exception 
 //	{
 //		ResultWriter resultWriter = new ResultWriter(ERPUtils.getHostName());
@@ -57,39 +59,60 @@ public class ERPMain {
 	public static void main(String[] args) throws Exception 
 	{
 		String className = args[0];
-		ResultWriter resultWriter = new ResultWriter(ERPUtils.getHostName());
-		
+		ResultWriter resultWriter = null;
+		logger.info("Starting search process over external resource provider...");
 		try{
 			/* S-2-ERP protocol JSON is passed to ERPMain process using System console
 			 * Create JsonNode object from JSON string and create instances of ProviderConfig, VixConfig,
 			 * SearchInfo and WildcardList			
 			 */
+			logger.info("Reading arguments for search process");
 			JsonNode argsForERP = ERPUtils.readArgsForERP(System.in);
+			logger.info("Creating provider instance with class name : " + className);
 			IProvider provider = ERPUtils.getProviderInstance(className);
 			
 			JsonNode providerConfigNode = ERPUtils.getProviderConfigNode(argsForERP);	
 			JsonNode vixesConfigNode = ERPUtils.getVixesConfigNode(argsForERP);		
 			
+			logger.info("Obtained provider config");
 			ProviderConfig providerConf = ProviderConfig.getProviderConfigInstance(providerConfigNode);
-			VixConfig[] vixesConf = VixConfig.getVixesConfig(vixesConfigNode);
 			
+			VixConfig[] vixesConf = VixConfig.getVixesConfig(vixesConfigNode);
+			logger.info("Obtained virtual indexes config");
 			SearchInfo searchInfo = SearchInfo.getSearchInfoInstance(argsForERP);
+			logger.info("Obtained search info");
 			WildcardList requiredFieldList = ERPUtils.getRequiredFieldList(argsForERP);
+			logger.info("Obtained required field list");
+			
+			logger.info("Creating result writer for provider");
+			if(providerConf.isDebugModeSet()) {
+				logger.debug("Debug mode set");
+				resultWriter = new ResultWriter(ERPUtils.getHostName(),true);
+			}
+			else {
+				resultWriter = new ResultWriter(ERPUtils.getHostName());
+			}
 			
 			//Pass down the proxy for ResultWriter to IProvider implementing class
+			logger.info("Creating proxy to result writer");
 			ResultWriterProxy resultWriterProxy = resultWriter;
 			
+			logger.info("Initializing provider...");
 			//Make the ERP ready for fetching results
 			provider.init(providerConf, vixesConf, searchInfo, requiredFieldList);
 			//Start fetching the results/records
+			logger.info("Start record fetching");
 			provider.run(resultWriterProxy);
-			//Close the ERP when results/record fetching is completed. 
+			//Close the ERP when results/record fetching is completed.
+			logger.info("Record fetching complete, closing provider");
 			provider.close();
 			
 		} catch (Exception ex) {
-			ERPLogger.logError("Error while executing ERPMain process - " + ex.getMessage());
+			logger.error("Error executing search process - " + ex.getMessage(),ex);
 		} finally {
-			resultWriter.close();
+			logger.info("Closing result writer");
+			if(resultWriter != null)
+				resultWriter.close();
 		}
 	}
 }
