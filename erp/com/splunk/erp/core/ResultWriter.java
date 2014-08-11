@@ -1,27 +1,34 @@
 package com.splunk.erp.core;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.splunk.erp.commons.ERPLogger;
+import com.splunk.erp.commons.ERPUtils;
 import com.splunk.io.ChunkedOutputStream;
 import com.splunk.io.SearchOutputStream;
 
 /**
  * This class has methods by which ERP developers push the list of records/documents to Splunkd process.<br>
  * It takes control of batching the results and streaming the results to Splunkd process.<br>
- * It implements {@link ResultWriterProxy} interface which defines method to push results, add header fields 
+ * It implements {@link ResultWriterProxy} interface which defines method to push results, add header fields <br> 
  * and send metrics and messages for search process using {@link SearchOutputStream}.
  * @author smetkar
  *
  */
 public class ResultWriter implements ResultWriterProxy{
+	
+	private static Logger logger = ERPUtils.getLogger(ResultWriter.class);
 	
 	private static int OUTPUT_BUFFER_LIMIT = 32 * 1024;
 	private static int MAX_BUFFER_FLUSH_SIZE = (int) (OUTPUT_BUFFER_LIMIT * 0.9);
@@ -50,44 +57,49 @@ public class ResultWriter implements ResultWriterProxy{
 		
 		eventsCollector = new ByteArrayOutputStream(OUTPUT_BUFFER_LIMIT);
 		bufferFlushSize = INITIAL_BUFFER_FLUSH_SIZE;
-		
-		//REVIEW ledion: DO NOT use System.out as PrintStream objects "swallow" exceptions
-		//               also, see SplunkMR.java for how to replace System.out with System.err so 
-		//               that any printing to system.out does not mess up the protocol
-		outputStream = new SearchOutputStream(new ChunkedOutputStream(System.out)); 
+
+		OutputStream stdout = new FileOutputStream(FileDescriptor.out);
+		outputStream = new SearchOutputStream(new ChunkedOutputStream(stdout));
 		outputStream.setStreamType("raw");
+    	
+		System.setOut(System.err);
+	}
+	
+	public ResultWriter(String hostName, boolean debug){
+		this(hostName);
+		logger.setLevel(Level.DEBUG);
 	}
 	
 	/**
 	 * Writes content of {@link ByteArrayOutputStream} to {@link SearchOutputStream} and stream header 
 	 * if header fields are updated.  
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	 // Review ledion: why are you throwing Exception instead of IOException 
-	private void stream() throws Exception{
-		try {
-			if(isHeaderUpdated) {
-				outputStream.addHeader(headerFields);
-				isHeaderUpdated = false;
-			}
-			outputStream.write(eventsCollector);
-			eventsCollector.reset();
-		} catch (IOException e) {
-			ERPLogger.logError( e.getMessage());  // reveiw ledion: you are loosing the stack trace here 
-			throw new Exception("Error while streaming results to Splunk");  // review ledion: no need to create a more generic exception
+	private void stream() throws IOException{
+		if(isHeaderUpdated) {
+			logger.info("Updating stream header");
+			logger.debug("Header fields : " + headerFields);
+			outputStream.addHeader(headerFields);
+			isHeaderUpdated = false;
 		}
+		outputStream.write(eventsCollector);
+		eventsCollector.reset();
 	}
 	
 	/**
 	 * Close SearchOutputStream
 	 * @throws IOException
 	 */
-	public void close() throws Exception  // review ledion: why throw exception instead of ioexception?
-	{
-		if(eventsCollector.size() > 0)
+	public void close() {
+		try
 		{
-			stream();
-			outputStream.flush();
+			if(eventsCollector.size() > 0)
+			{
+				stream();
+				outputStream.flush();
+			}
+		} catch(IOException ioe) {
+			logger.error("Error while closing result writer , Message - " + ioe.getMessage());
 		}
 	}
 	
@@ -101,6 +113,7 @@ public class ResultWriter implements ResultWriterProxy{
 	
 	@Override
 	public void initializeWriter(String index, String source, String sourcetype, Map<String, String> streamHeaderFields) {
+		logger.info("Initializing result writer");
 		headerFields.clear();
 		headerFields.put("field.index", index);
 		headerFields.put("field.source", source);
@@ -110,48 +123,41 @@ public class ResultWriter implements ResultWriterProxy{
 	}
 	
 	@Override 
-	public void append(List<?> recordBatch) throws Exception {   // review ledion: why throw a generic exception instead of a number of more specific ones?
+	public void append(List<?> recordBatch) throws JsonGenerationException,JsonMappingException,IOException {
+		logger.debug("Appending " + recordBatch.size() + " records");
+		//Using third-party library for serializing record/event object to JSON string 
 		ObjectMapper mapper =  new ObjectMapper();
 		for(Object record : recordBatch)
 		{
-			try {
-				append(mapper.writeValueAsString(record));
-			}catch (JsonGenerationException jge) {
-				ERPLogger.logError(jge.getMessage());
-				throw new Exception("Error while serializing to JSON string");
-			}catch(JsonMappingException jme) {
-				ERPLogger.logError(jme.getMessage());
-				throw new Exception("Error while serializing to JSON string");
-			}catch(IOException ioe) {
-				ERPLogger.logError(ioe.getMessage());
-				throw new Exception("Error while serializing to JSON string");
-			}
+			append(mapper.writeValueAsString(record));
 		}	
 	}
 	
 	@Override
-	public void append(String result) throws Exception {
-		try {
-			eventsCollector.write(result.getBytes());
-			eventsCollector.write(NEWLINE.getBytes());
-			if(eventsCollector.size() > bufferFlushSize) // review ledion: do you need to check count against batch size?
-			{
-				stream();
-				bufferFlushSize *= 2;
-				if(bufferFlushSize > MAX_BUFFER_FLUSH_SIZE)
-					bufferFlushSize = MAX_BUFFER_FLUSH_SIZE;
-			}
-			
-			count++;
-			if(count == currentBatchSize) {
-				currentBatchSize *= 2;
-				if(currentBatchSize > MAX_BATCH_SIZE)
-					currentBatchSize = MAX_BATCH_SIZE;
-				count = 0;
-			}
-		} catch (IOException ioe) {
-			ERPLogger.logError(ioe.getMessage());
-			throw new Exception("Error while writing to event collector");
+	public void append(String result) throws IOException {
+		eventsCollector.write(result.getBytes());
+		eventsCollector.write(NEWLINE.getBytes());
+		
+		//Intermittent streaming of results to give a view of continuous result streaming to user
+		//Double the buffer flush size for a maximum of MAX_BUFFER_FLUSH_SIZE
+		if(eventsCollector.size() > bufferFlushSize)
+		{
+			stream();
+			bufferFlushSize *= 2;
+			if(bufferFlushSize > MAX_BUFFER_FLUSH_SIZE)
+				bufferFlushSize = MAX_BUFFER_FLUSH_SIZE;
+		}
+		
+		//keep track of records/events streamed so far
+		//batchsize is used by ERP developer to understand what is the expected batch size while 
+		//pushing records/events to Splunkd process
+		count++;
+		if(count == currentBatchSize) {
+			currentBatchSize *= 2;
+			if(currentBatchSize > MAX_BATCH_SIZE)
+				currentBatchSize = MAX_BATCH_SIZE;
+			count = 0;
+			logger.debug("Updating batchsize to " + currentBatchSize);
 		}
 	}
 	
@@ -217,12 +223,14 @@ public class ResultWriter implements ResultWriterProxy{
 	
 	@Override
 	public void setTimestampFieldPrefix(String timestampPrefix) {
+		logger.info("Setting timestamp prefix to " + timestampPrefix);
 		headerFields.put("props.TIME_PREFIX", timestampPrefix);
 		isHeaderUpdated = true;
 	}
 	
 	@Override
 	public void setTimestampFormat(String format) {
+		logger.info("Setting timestamp format to " + format);
 		headerFields.put("props.TIME_FORMAT", format);
 		isHeaderUpdated = true;
 	}
@@ -231,11 +239,13 @@ public class ResultWriter implements ResultWriterProxy{
 	 * Set count metric for search process
 	 */
 	public void addCountMetric(String name, long input, long output) {
+		logger.info("Setting count metric : " + name + " { input : " + input + " output : " + output +"}");
 		outputStream.addCountMetric(name, input, output);
 		isHeaderUpdated = true;
 	}
 
 	public void addLink(String name, String url) {
+		logger.info("Adding link : " + name + " url : " + url);
 		outputStream.addLink(name, url);
 		isHeaderUpdated = true;
 	}
@@ -244,6 +254,7 @@ public class ResultWriter implements ResultWriterProxy{
 	 * Set message for search process
 	 */
 	public void addMessage(String message, String value) {
+		logger.info("Adding message - " + value );
 		outputStream.addMessage(message, value);
 		isHeaderUpdated = true;
 	}
@@ -252,6 +263,7 @@ public class ResultWriter implements ResultWriterProxy{
 	 * Set exception message for search process
 	 */
 	public void addMessage(String message, Exception exception) {
+		logger.info("Adding exception message - " + message);
 		outputStream.addMessage(message, exception);
 		isHeaderUpdated = true;
 		
@@ -261,6 +273,7 @@ public class ResultWriter implements ResultWriterProxy{
 	 * Set metric for search process
 	 */
 	public void addMetric(String metricName, long elapsed_ms, long calls) {
+		logger.info("Adding metric - " + metricName);
 		outputStream.addMetric(metricName, elapsed_ms, calls);
 		isHeaderUpdated = true;
 	}
@@ -269,6 +282,7 @@ public class ResultWriter implements ResultWriterProxy{
 	 * Set prefix for field from metric should be extracted
 	 */
 	public void setMetricPrefix(String prefix) {
+		logger.info("Setting metric prefix to " + prefix);
 		outputStream.setMetricPrefix(prefix);
 		isHeaderUpdated = true;
 	}
