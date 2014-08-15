@@ -22,7 +22,7 @@ if [ -z "$JAVA_CMD" ] || [ ! -x "$JAVA_CMD" ]; then
 fi
 
 CLASS_NAME=$1
-//find current directory and add bin directory to classpath
+#find current directory and add bin directory to classpath
 CLASS_PATH=$SPLUNK_HOME/bin/jars/SplunkMR-s6.0-h1.0.jar:$SPLUNK_HOME/etc/apps/$app-name/bin/*
 
 $JAVA_CMD $JAVA_OPTS -cp $CLASS_PATH $CLASS_NAME
