@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -65,11 +64,6 @@ public class ResultWriter implements ResultWriterProxy{
 		System.setOut(System.err);
 	}
 	
-	public ResultWriter(String hostName, boolean debug){
-		this(hostName);
-		logger.setLevel(Level.DEBUG);
-	}
-	
 	/**
 	 * Writes content of {@link ByteArrayOutputStream} to {@link SearchOutputStream} and stream header 
 	 * if header fields are updated.  
@@ -123,7 +117,7 @@ public class ResultWriter implements ResultWriterProxy{
 	}
 	
 	@Override 
-	public void append(List<?> recordBatch) throws JsonGenerationException,JsonMappingException,IOException {
+	public void append(List<Object> recordBatch) throws JsonGenerationException,JsonMappingException,IOException {
 		logger.debug("Appending " + recordBatch.size() + " records");
 		//Using third-party library for serializing record/event object to JSON string 
 		ObjectMapper mapper =  new ObjectMapper();

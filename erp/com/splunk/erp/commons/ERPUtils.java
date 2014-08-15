@@ -224,10 +224,10 @@ public class ERPUtils {
 		ConsoleAppender console = new ConsoleAppender();
 		console.setTarget("System.err");
 		
-		String pattern = "%p %C{2} - %m%n";
+		String pattern = "%p %C{1} - %m%n";
 		console.setLayout(new PatternLayout(pattern));
 		console.activateOptions();
-		console.setThreshold(Level.INFO);
+		console.setThreshold(Level.DEBUG);
 		
 		logger.addAppender(console);
 		return logger;

@@ -85,13 +85,7 @@ public class ERPMain {
 			logger.info("Obtained required field list");
 			
 			logger.info("Creating result writer for provider");
-			if(providerConf.isDebugModeSet()) {
-				logger.debug("Debug mode set");
-				resultWriter = new ResultWriter(ERPUtils.getHostName(),true);
-			}
-			else {
-				resultWriter = new ResultWriter(ERPUtils.getHostName());
-			}
+			resultWriter = new ResultWriter(ERPUtils.getHostName());
 			
 			//Pass down the proxy for ResultWriter to IProvider implementing class
 			logger.info("Creating proxy to result writer");

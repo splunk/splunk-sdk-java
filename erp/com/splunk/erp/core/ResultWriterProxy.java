@@ -35,7 +35,7 @@ public interface ResultWriterProxy extends SearchMetricsReporter {
 	 * @param List of records/documents
 	 * @throws Exception : Throws exception if any serializing object 
 	 */
-	public void append(List<?> recordBatch) throws JsonGenerationException,JsonMappingException,IOException;
+	public void append(List<Object> recordBatch) throws JsonGenerationException,JsonMappingException,IOException;
 	
 	/**
 	 * This method takes serialized JSON string and keep appending it to {@link ByteOutputStream}. and streams 

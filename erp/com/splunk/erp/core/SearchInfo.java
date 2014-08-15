@@ -47,9 +47,6 @@ public class SearchInfo {
 		return fields.get(fieldName) != null ? true : false;
 	}
 	
-	
-	//review ledion: why are you parsing timestamps as ints and thus loosing the subsecond info!?
-	
 	/**
 	 * Get value for _timestamp field from info element of JSON
 	 * @return Double (timestamp)

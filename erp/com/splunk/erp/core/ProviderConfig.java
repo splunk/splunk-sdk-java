@@ -48,12 +48,6 @@ public class ProviderConfig {
 		return mode;
 	}
 	
-	public boolean isDebugModeSet() {
-		boolean isDebugModeSet = false;
-		isDebugModeSet = (Integer.parseInt(configParams.get("splunk.search.debug")) == 1) ? true : false;
-		return isDebugModeSet;
-	}
-
 //	/**
 //	 * Get Provider implementation class name from S-2-ERP protocol JSON
 //	 * @return String
