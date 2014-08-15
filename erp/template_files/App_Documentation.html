@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+      <title>Sample Documentation page for MongoDB App</title>
+        <meta name="generator" content="MediaWiki 1.17.0" />
+        <link rel="alternate" type="application/x-wiki" title="Edit" href="/index.php?title=MongoDBApp&amp;action=edit" />
+        <link rel="edit" title="Edit" href="/index.php?title=MongoDBApp&amp;action=edit" />
+        <link rel="shortcut icon" href="" />
+        <link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="ESWiki (en)" />
+        <link rel="EditURI" type="application/rsd+xml" href="http://eswiki.splunk.com/api.php?action=rsd" />
+        <link rel="alternate" type="application/atom+xml" title="ESWiki Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom" />
+        <link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint%2Cshared%7Cskins.vector&amp;only=styles&amp;skin=vector&amp;*" />
+        <link rel="stylesheet" href="/extensions/HeaderTabs/skins-jquery/ext.headertabs.jquery-large.css" /><meta name="ResourceLoaderDynamicStyles" content="" /><link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=vector&amp;*" />
+        <link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=vector&amp;*" />
+        <link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=vector&amp;*" />
+
+<!--[if lt IE 7]><style type="text/css">body{behavior:url("/skins/vector/csshover.min.htc")}</style><![endif]-->
+  </head>
+
+  <body class="mediawiki ltr ns-0 ns-subject page-MongoDBApp skin-vector">
+		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<!-- content -->
+		<div id="content">
+			<a id="top"></a>
+			<div id="mw-js-message" style="display:none;"></div>
+						<!-- firstHeading -->
+			<h1 id="firstHeading" class="firstHeading">MongoDB App</h1>
+			<!-- /firstHeading -->
+			<!-- bodyContent -->
+			<div id="bodyContent">
+				<!-- tagline -->
+				<table id="toc" class="toc">
+          <tr>
+            <td>
+              <div id="toctitle"><h2>Contents</h2></div>
+              <ul>
+                <li class="toclevel-1 tocsection-1"><a href="#Overview"><span class="tocnumber">1</span> <span class="toctext">Overview</span></a>
+                  
+                </li>
+                <li class="toclevel-1 tocsection-2"><a href="#MongoDB_Provider"><span class="tocnumber">2</span> <span class="toctext">
+                      Specifying MongoDB Provider</span></a>
+                      <ul>
+                        <li class="toclevel-2 tocsection-3"><a href="#MongoDB_Host"><span class="tocnumber">2.1</span><span class="toctext"> MongoDB Host Details</span></a>
+                        </li>
+                      </ul>
+                </li>
+                <li class="toclevel-1 tocsection-4"><a href="#Virtual Indexes"><span class="tocnumber">3</span> <span class="toctext">Specifying Virtual Indexes</span></a>
+                  <ul>
+                        <li class="toclevel-2 tocsection-4"><a href="#Virtual_Index_Config"><span class="tocnumber">3.1</span><span class="toctext"> Understanding Virtual Index configuration </span></a>
+                        </li>
+                  </ul>
+                </li>
+                </ul>
+            </td>
+          </tr>
+        </table>
+
+        <h1><span class="mw-headline" id="Overview"> Overview </span></h1>
+        <p>MongoDB is a popular document-oriented database with dynamic schema and provides efficient way to store and retrieve documents with minimum latency. Using Hunk you can tap into the insights hidden into your data and use it to get better understanding of huge amount of data stored in your MongoDB database. Hunk enables you to explore, analyze and visualize the data and get better usable insights. Using MongoDB App, Hunk users can take advantage of Splunk`s interactive query and analytic dashboard using Hunk platform.<p> 
+
+        <h1><span class="mw-headline" id="MongoDB_Provider"> Specifying MongoDB Provider </span></h1>
+          <p> Once you have uploaded the app using 'Manage App' menu, a new app named 'MongoDB App' will be added in your list of installed apps. You need to specify the required MongoDB host details using 'Edit Provider' feature available under Virtual Indexes which can be found in Settings tab. </p>
+          <ul>
+          <li> <h3><span class="mw-headline" id="MongoDB_Host"> MongoDB Host details </span></h3> 
+            <p> MongoDB host details can be provided using 'vix.mongodb.host' property. Please note that this property can also be set in 'indexes.conf'. <pre><b> eg. vix.mongodb.host = localhost:27017 </b></pre> 
+            </p>
+          </li>
+          </ul>     
+
+        <h1><span class="mw-headline" id="Virtual_Indexes"> Specifying Virtual Indexes </span></h1>
+        <p> When you install the 'MongoDB App', you can see a virtual index, named 'mongodb_vix' (spcific to MongoDB) created under Virtual Indexes list. The virtual index helps you to specify the details about the collection and databse name from which you want to analyse the data. 
+          <ul>
+            <li> <h3> <span class="mw-headline" id="Virtual_Index_Config"> Understanding Virtual Index configuration </span> </h3>
+              <table>
+                <tr>
+                  <th> Attribute </th>
+                  <th> Explaination </th>
+                </tr>
+                <tr>
+                  <td> <pre> &nbsp; vix.mongodb.collection &nbsp; </pre> </td>
+                  <td> &nbsp; Name of the collection from which to analyse the data </td>
+                </tr>
+              </table>
+            </li>
+           
+         </ul>
+        </p>
+    </div>
+  </body>
+</html>
