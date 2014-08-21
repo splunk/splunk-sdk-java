@@ -1,5 +1,11 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.3.1
+
+* Removed deprecated functions from `DistributedConfiguration` class.
+* Oneshot searches, called from `Index.upload`, can now be passed search arguments.
+* Fixed a resource leak in the `Command.load` function.
+
 ## Version 1.3
 
 ### New features and APIs

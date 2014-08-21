@@ -33,7 +33,7 @@ public class DataModelTransaction extends DataModelObject {
     }
 
     /**
-     * Return the fields that will be used to group events into transactions.
+     * @return the fields that will be used to group events into transactions.
      *
      * Contiguous events with identical values of the fields named in this collection
      * will be grouped into transactions.
@@ -41,7 +41,7 @@ public class DataModelTransaction extends DataModelObject {
     public Collection<String> getGroupByFields() { return this.groupByFields; }
 
     /**
-     * Returns the names of the data model objects that should be unioned and split into transactions.
+     * @return the names of the data model objects that should be unioned and split into transactions.
      */
     public Collection<String> getObjectsToGroup() { return this.objectsToGroup; }
 

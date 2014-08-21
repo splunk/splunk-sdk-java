@@ -186,7 +186,7 @@ public class PivotSpecification {
      *
      * for example
      *
-     *     height > 6
+     *     {@code height > 6}
      *
      * @param field the name of the field
      * @param comparison a comparison operator for the filter
@@ -254,11 +254,12 @@ public class PivotSpecification {
 
     /**
      * Add a row split on a numeric field, splitting into numeric ranges.
-     *
+     * 
      * This split generates bins with edges equivalent to the
-     * classic loop 'for i in <start> to <end> by <step>' but with a maximum
-     * number of bins <limit>. This dispatches to the stats and xyseries search commands.
+     * classic loop {@code 'for i in <start> to <end> by <step>' } but with a maximum
+     * number of bins {@code <limit> }. This dispatches to the stats and xyseries search commands.
      * See their documentation for more details.
+     * 
      *
      * @param field The field to split on
      * @param label a human readable name for this set of rows

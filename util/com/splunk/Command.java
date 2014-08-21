@@ -122,10 +122,13 @@ public class Command {
                 while (true) {
                     String line;
                     line = reader.readLine();
-                    if (line == null) break;
-                    if (line.startsWith("#")) continue;
+                    if (line == null)
+                        break;
+                    if (line.startsWith("#")) 
+                        continue;
                     line = line.trim();
-                    if (line.length() == 0) continue;
+                    if (line.length() == 0) 
+                        continue;
                     if (!line.startsWith("-"))
                         line = "--" + line;
                     argList.add(line);

@@ -340,6 +340,7 @@ public class Entity extends Resource implements Map<String, Object> {
      * Returns whether this entity's name can be changed via {@link #update}.
      * 
      * Most entity names cannot be changed in this way.
+     * @return false.
      */
     protected boolean isNameChangeAllowed() {
         return false;

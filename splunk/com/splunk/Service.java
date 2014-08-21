@@ -1318,9 +1318,9 @@ public class Service extends BaseService {
      * Returns a value indicating how the version of this Splunk instance 
      * compares to a given version: 
      * <ul>
-     * <li>{@code -1} if this version < the given version</li>
-     * <li>{@code  0} if this version = the given version</li>
-     * <li>{@code  1} if this version > the given version</li>
+     * <li>{@code -1 if this version < the given version}</li>
+     * <li>{@code  0 if this version = the given version}</li>
+     * <li>{@code  1 if this version > the given version}</li>
      * </ul>
      * 
      * @param otherVersion The other version to compare to. 

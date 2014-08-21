@@ -284,8 +284,6 @@ public class DistributedConfiguration extends Entity {
      * Sets the initial peer server list. You don't need to set servers here
      * if you are operating completely in {@code autoAddServers} mode
      * (discovered servers are automatically added).
-     * @see #getAutoAddServers
-     * @see #setAutoAddServers
      *
      * @param servers A comma-separated list of peer servers.
      */

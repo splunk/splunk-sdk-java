@@ -180,7 +180,7 @@ public class Job extends Entity {
     }
 
     /**
-     * Returns the dispatch state for this job. </br>
+     * Returns the dispatch state for this job. <br>
      * Valid values are: QUEUED, PARSING, RUNNING, PAUSED, FINALIZING, FAILED,
      * or DONE.
      *
@@ -193,7 +193,7 @@ public class Job extends Entity {
 
     /**
      * Returns the approximate progress of the job, in the range of 0.0 to 1.0.
-     * </br>
+     * <br>
      * {@code doneProgress = (latestTime-cursorTime)/(latestTime-earliestTime)}
      * @see #getLatestTime
      * @see #getCursorTime

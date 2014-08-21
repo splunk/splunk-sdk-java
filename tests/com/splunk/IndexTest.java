@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import static org.junit.Assert.*;
 import junit.framework.AssertionFailedError;
 
 import org.junit.After;
@@ -624,10 +623,10 @@ public class IndexTest extends SDKTestCase {
         // The index argument cannot be passed into the upload function. 
         try{
             index.upload(fileToUpload, args);
-            fail("Uploading to an index with an index argument? No need for redundency!");
+            Assert.fail("Uploading to an index with an index argument? No need for redundency!");
         }
         catch(Exception e){
-            Assert.assertTrue(e.getMessage() == "The 'index' parameter cannot be passed to an index's oneshot upload.");
+            Assert.assertEquals(e.getMessage(), "The 'index' parameter cannot be passed to an index's oneshot upload.");
         }
             
     }
