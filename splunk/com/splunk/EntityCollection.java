@@ -33,7 +33,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
      */
-    public EntityCollection(Service service, String path) {
+    EntityCollection(Service service, String path) {
         super(service, path, Entity.class);
     }
 
@@ -45,7 +45,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @param args Collection arguments that specify the number of entities to 
      * return and how to sort them (see {@link CollectionArgs}).
      */
-    public EntityCollection(Service service, String path, Args args) {
+    EntityCollection(Service service, String path, Args args) {
         super(service, path, Entity.class, args);
     }
 
@@ -56,7 +56,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @param path The entity's endpoint.
      * @param itemClass The entity's class.
      */
-    public EntityCollection(Service service, String path, Class itemClass) {
+    EntityCollection(Service service, String path, Class itemClass) {
         super(service, path, itemClass);
     }
 

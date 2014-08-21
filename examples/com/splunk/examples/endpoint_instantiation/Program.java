@@ -33,7 +33,7 @@ public class Program {
         
         String mySplunkRESTPath = "apps/local";
         
-        EntityCollection myCollection = new EntityCollection(service, mySplunkRESTPath);
+        EntityCollection myCollection = new EntityCollection(service, mySplunkRESTPath, Entity.class, new Args());
         LinkedList<Entity> myEntities = (LinkedList<Entity>) myCollection.values();
         
         System.out.println("Found " + myEntities.size() + " Splunk apps:");
