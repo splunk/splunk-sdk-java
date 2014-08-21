@@ -38,8 +38,7 @@ public class Program {
         
         System.out.println("Found " + myEntities.size() + " Splunk apps:");
         
-        for (int i = 0; i < myEntities.size(); i++) {
-        	Entity myEntity = myEntities.get(i);
+        for (Entity myEntity : (LinkedList<Entity>) myCollection.values()) {
         	System.out.println("\t" + myEntity.getName());
         }
     }
