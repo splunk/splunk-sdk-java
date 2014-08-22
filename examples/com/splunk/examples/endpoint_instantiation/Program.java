@@ -34,9 +34,8 @@ public class Program {
         String mySplunkRESTPath = "apps/local";
         
         EntityCollection myCollection = new EntityCollection(service, mySplunkRESTPath, Entity.class, new Args());
-        LinkedList<Entity> myEntities = (LinkedList<Entity>) myCollection.values();
         
-        System.out.println("Found " + myEntities.size() + " Splunk apps:");
+        System.out.println("Found " + myCollection.values().size() + " Splunk apps:");
         
         for (Entity myEntity : (LinkedList<Entity>) myCollection.values()) {
         	System.out.println("\t" + myEntity.getName());
