@@ -28,7 +28,7 @@ import java.util.Set;
 
 public class Program {
     public static void main(String[] args) {
-    	Command command = Command.splunk("info").parse(args);
+        Command command = Command.splunk("info").parse(args);
         Service service = Service.connect(command.opts);
         
         String mySplunkRESTPath = "apps/local";
@@ -38,7 +38,7 @@ public class Program {
         System.out.println("Found " + myCollection.size() + " Splunk apps:");
         
         for (Entity myEntity : (LinkedList<Entity>) myCollection.values()) {
-        	System.out.println("\t" + myEntity.getName());
+            System.out.println("\t" + myEntity.getName());
         }
     }
 }
