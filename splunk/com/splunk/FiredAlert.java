@@ -63,6 +63,18 @@ public class FiredAlert extends Entity {
     public String getExpirationTime() {
         return getString("expiration_time_rendered", null);
     }
+    
+    /**
+     * Returns the rendered expiration time for this alert,
+     * parsed as a Date object.
+     * This method is available in Splunk 4.3 and later.
+     *
+     * @return This alert's rendered expiration time, or {@code null} if not
+     * available.
+     */
+    public Date getParsedExpirationTime() {
+        return getDate("expiration_time_rendered", null);
+    }
 
     /**
      * Returns the saved search for this alert.
