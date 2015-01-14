@@ -36,7 +36,7 @@ public class Job extends Entity {
      * @param service The connected {@code Service} instance.
      * @param path The search jobs endpoint.
      */
-    Job(Service service, String path) {
+    public Job(Service service, String path) {
         super(service, path);
     }
 
