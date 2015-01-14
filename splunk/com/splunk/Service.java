@@ -630,6 +630,16 @@ public class Service extends BaseService {
     }
 
     /**
+     * Returns a Job by the provided sid.
+     *
+     * @param sid The sid for a job.
+     * @return A Job.
+     */
+    public Job getJob(String sid) {
+        return new Job(this, "search/jobs/" + sid);
+    }
+
+    /**
      * Returns a collection of license group configurations.
      *
      * @return A collection of license group configurations.

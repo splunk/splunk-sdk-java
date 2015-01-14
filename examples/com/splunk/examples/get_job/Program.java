@@ -36,5 +36,21 @@ public class Program {
 
         // Now job is done
         System.out.println(job.getEventCount());
+
+
+        // Using service.getJob();
+
+        Job job2 = service.getJob(sid);
+
+        while (!job2.isDone()) {
+            job2.refresh();
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        System.out.println(job2.getEventCount());
     }
 }
