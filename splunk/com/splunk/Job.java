@@ -820,7 +820,9 @@ public class Job extends Entity {
      * not.
      */
     public boolean isReady() {
-        this.refresh();
+        if (!isReady) {
+            this.refresh();
+        }
         return isReady;
     }
 
