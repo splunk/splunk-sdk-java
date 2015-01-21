@@ -18,14 +18,6 @@ package com.splunk.examples.endpoint_instantiation;
 
 import com.splunk.*;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Set;
-
 public class Program {
     public static void main(String[] args) {
         Command command = Command.splunk("info").parse(args);
@@ -36,9 +28,10 @@ public class Program {
         EntityCollection myCollection = new EntityCollection(service, mySplunkRESTPath, Entity.class, new Args());
         
         System.out.println("Found " + myCollection.size() + " Splunk apps:");
-        
-        for (Entity myEntity : (LinkedList<Entity>) myCollection.values()) {
-            System.out.println("\t" + myEntity.getName());
+
+        for (Object myEntity : myCollection.values()) {
+            Entity entity = (Entity) myEntity;
+            System.out.println("\t" + entity.getName());
         }
     }
 }
