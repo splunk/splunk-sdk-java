@@ -120,6 +120,7 @@ public class FiredAlertsTest extends SDKTestCase {
             firedAlert.getAlertType();
             firedAlert.getExpirationTime();
             firedAlert.getParsedExpirationTime();
+            firedAlert.getParsedExpirationTime();
             firedAlert.getSavedSearchName();
             firedAlert.getSeverity();
             firedAlert.getSid();

@@ -70,6 +70,21 @@ public class SearchJobTest extends SDKTestCase {
 
         job.cancel();
     }
+    
+    @Test
+    public void testGetJobBySid() {
+
+        String sid = service.search(QUERY).getSid();
+        Assert.assertTrue(sid.length() > 0);
+
+        Job job = service.getJob(sid);
+        Assert.assertNotNull(job);
+        
+        waitUntilDone(job);
+
+        Assert.assertEquals(10, job.getEventCount());
+        Assert.assertEquals(10, job.getResultCount());
+    }
 
     @Test
     public void testBlockingSearch() {
