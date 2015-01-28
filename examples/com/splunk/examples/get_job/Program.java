@@ -13,9 +13,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 package com.splunk.examples.get_job;
 
 import com.splunk.*;
+
+/**
+ * This example shows a better way to retrieve a Job by it's sid
+ * using the new getJob() method.
+ * 
+ * Previously, the only way to do this would be the following:
+ *
+ *     Job job = service.getJobs().get(sid);
+ *
+ * The above has a significant overhead of getting all search jobs from
+ * the Splunk REST API in order to get a single Job.
+ *
+ */
 
 public class Program {
     public static void main(String[] args) {
