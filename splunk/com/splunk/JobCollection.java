@@ -26,14 +26,14 @@ import java.util.Map;
 public class JobCollection extends EntityCollection<Job> {
     static String oneShotNotAllowed = String.format(
          "Oneshot not allowed, use service oneshot search method");
-
+    static final String REST_PATH = "search/jobs";
     /**
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
      */
     JobCollection(Service service) {
-        super(service, "search/jobs", Job.class);
+        super(service, REST_PATH, Job.class);
         this.refreshArgs.put("count", "0");
     }
 
@@ -45,7 +45,7 @@ public class JobCollection extends EntityCollection<Job> {
      * return and how to sort them (see {@link CollectionArgs}).
      */
     JobCollection(Service service, Args args) {
-        super(service, "search/jobs", Job.class, args);
+        super(service, REST_PATH, Job.class, args);
         this.refreshArgs.put("count", "0");
     }
 
@@ -86,7 +86,7 @@ public class JobCollection extends EntityCollection<Job> {
             .item(0)
             .getTextContent();
 
-        Job job = new Job(service, "search/jobs/" + sid);
+        Job job = new Job(service, REST_PATH + "/" + sid);
         job.refresh();
 
         return job;

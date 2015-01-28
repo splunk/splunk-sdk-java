@@ -215,7 +215,7 @@ public class Service extends BaseService {
         if (!args.containsKey("segmentation")) {
             args.put("segmentation", "none");
         }
-        ResponseMessage response = get("search/jobs/export", args);
+        ResponseMessage response = get(JobCollection.REST_PATH + "/export", args);
         return new ExportResultsStream(response.getContent());
     }
     
@@ -636,7 +636,7 @@ public class Service extends BaseService {
      * @return A Job.
      */
     public Job getJob(String sid) {
-        return new Job(this, "search/jobs/" + sid);
+        return new Job(this, JobCollection.REST_PATH + "/" + sid);
     }
 
     /**
@@ -1165,7 +1165,7 @@ public class Service extends BaseService {
             args.put("segmentation", "none");
         }
 
-        ResponseMessage response = post("search/jobs", args);
+        ResponseMessage response = post(JobCollection.REST_PATH, args);
         return response.getContent();
     }
 
