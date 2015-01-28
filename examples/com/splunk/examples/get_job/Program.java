@@ -19,7 +19,7 @@ package com.splunk.examples.get_job;
 import com.splunk.*;
 
 /**
- * This example shows a better way to retrieve a Job by it's sid
+ * This example shows a better way to retrieve a Job by its sid
  * using the new getJob() method.
  * 
  * Previously, the only way to do this would be the following:
