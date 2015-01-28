@@ -196,6 +196,7 @@
         <copy file="${opencsv}" todir="${dist}"/>
 
         <!-- Now, the examples -->
+        <standalone-example-jar name="endpoint_instantiation"/>
         <standalone-example-jar name="explorer">
             <dependencies>
                 <zipgroupfileset dir="lib" includes="gson-2.2.4.jar"/>
@@ -206,6 +207,7 @@
 
         <standalone-example-jar name="export"/>
         <standalone-example-jar name="genevents"/>
+        <standalone-example-jar name="get_job"/>
         <standalone-example-jar name="index"/>
         <standalone-example-jar name="info"/>
         <standalone-example-jar name="input"/>
