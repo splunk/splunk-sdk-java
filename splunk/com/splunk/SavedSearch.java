@@ -88,7 +88,7 @@ public class SavedSearch extends Entity {
 
         // if job not yet scheduled, create an empty job object
         if (job == null) {
-            job = new Job(service, "search/jobs/" + sid);
+            job = new Job(service, JobCollection.REST_PATH + "/" + sid);
         }
 
         return job;
@@ -123,7 +123,7 @@ public class SavedSearch extends Entity {
         Job[] result = new Job[count];
         for (int i = 0; i < count; ++i) {
             String sid = feed.entries.get(i).title;
-            result[i] = new Job(service, "search/jobs/" + sid);
+            result[i] = new Job(service, JobCollection.REST_PATH + "/" + sid);
         }
         return result;
     }
