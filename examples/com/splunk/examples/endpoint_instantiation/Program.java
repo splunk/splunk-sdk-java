@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Splunk, Inc.
+ * Copyright 2015 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,6 +17,30 @@
 package com.splunk.examples.endpoint_instantiation;
 
 import com.splunk.*;
+
+/**
+ * This example shows how to access any Splunk REST API endpoint.
+ * Here, we are just getting an EntityCollection of Entity objects representing
+ * apps on the Splunk server.
+ *
+ * You can also write a class which inherits from the Entity class.
+ * A minimal example of this is:
+ *
+ *     public class MyEntity extends Entity {
+ *         MyEntity(Service service, String path) {
+ *            super(service, path);
+ *         }
+ *     }
+ *
+ * Then, you can write a class which inherits from the EntityCollection class.
+ * A minimal example of this is:
+ *
+ *     public class MyEntityCollection extends EntityCollection<MyEntity> {
+ *         MyEntityCollection(Service service) {
+ *             super(service, "path/hardcoded", MyEntity.class, new Args());
+ *         }
+ *     }
+ */
 
 public class Program {
     public static void main(String[] args) {

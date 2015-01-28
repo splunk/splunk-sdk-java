@@ -1,5 +1,23 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.3.2
+
+### Performance improvements
+
+* `Job` objects will only be refreshed by `isReady()` if the `Job` is not ready. This minimizes HTTP requests when getting properties of the `Job`.
+* The `Service` class now has a `getJob()` method that to retrieve a `Job` object by its sid String. This is better than calling `service.getJobs().get(sid)`, which has the overhead of getting all `Job` objects from Splunk in order to access a single `Job`.
+
+### New examples
+
+* `endpoint_instantiation`: shows how to manually instantiate any Splunk REST API endpoint.
+* `get_job`: shows how to get a `Job` by its sid using the new `Service.getJob()` method.
+
+### Minor changes
+
+* The `Entity` and `EntityCollection` classes each have a public constructor, so any Splunk endpoint can be manually instantiated.
+* The `FiredAlert` class now has a `getParsedExpirationTime()` method that returns a `Date` object.
+* Some test have been modified to work with the latest release of Splunk Enterprise (6.2.x).
+
 ## Version 1.3.1
 
 * Removed deprecated functions from `DistributedConfiguration` class.
