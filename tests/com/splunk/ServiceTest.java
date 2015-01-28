@@ -404,7 +404,7 @@ public class ServiceTest extends SDKTestCase {
         User user;
 
         String username = "sdk-user";
-        String password = "changeme";
+        String password = "changeme!";
 
         UserCollection users = service.getUsers();
 

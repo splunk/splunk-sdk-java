@@ -160,7 +160,7 @@ public class NamespaceTest extends SDKTestCase {
     @Test
     public void testLiveNamespace1() throws Exception {
         String username = "sdk-user@somedomain!";
-        String password = "changeme";
+        String password = "changeme!";
         String savedSearch = "sdk-test1";
         String searchString = "search index=main * | head 10";
 

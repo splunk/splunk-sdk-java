@@ -64,8 +64,11 @@ public class LicenseTest extends SDKTestCase {
             Assert.assertTrue(license.getExpirationTime().after(new Date(0)));
             Assert.assertTrue(license.getQuota() > 0);
             Assert.assertEquals(64, license.getLicenseHash().length());
-            for (String feature: license.getFeatures()) {
-                Assert.assertTrue(KNOWN_FEATURES.contains(feature));
+            // License features changed in 6.2, so don't check against our hardcoded list
+            if (service.versionIsEarlierThan("6.2")) {
+                for (String feature: license.getFeatures()) {
+                    Assert.assertTrue(KNOWN_FEATURES.contains(feature));
+                }
             }
             Assert.assertTrue(KNOWN_GROUP_IDS.contains(license.getGroupId()));
             Assert.assertTrue(license.getLabel().length() > 0);

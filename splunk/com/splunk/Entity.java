@@ -31,7 +31,7 @@ public class Entity extends Resource implements Map<String, Object> {
      * @param service The connected {@code Service} instance.
      * @param path The entity's endpoint.
      */
-    Entity(Service service, String path) {
+    public Entity(Service service, String path) {
         super(service, path);
     }
 

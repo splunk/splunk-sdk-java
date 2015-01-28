@@ -69,7 +69,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
      * @param args Collection arguments that specify the number of entities to 
      * return and how to sort them (see {@link CollectionArgs}).
      */
-    EntityCollection(Service service, String path, Class itemClass, Args args) {
+    public EntityCollection(Service service, String path, Class itemClass, Args args) {
         super(service, path, itemClass, args);
     }
 
