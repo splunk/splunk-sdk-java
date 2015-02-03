@@ -5,7 +5,7 @@
 ### Performance improvements
 
 * `Job` objects will only be refreshed by `isReady()` if the `Job` is not ready. This minimizes HTTP requests when getting properties of the `Job`.
-* The `Service` class now has a `getJob()` method that to retrieve a `Job` object by its sid String. This is better than calling `service.getJobs().get(sid)`, which has the overhead of getting all `Job` objects from Splunk in order to access a single `Job`.
+* The `Service` class now has a `getJob()` method that is used to retrieve a `Job` object by its sid String. This is better than calling `service.getJobs().get(sid)`, which has the overhead of getting all `Job` objects from Splunk in order to access a single `Job`.
 
 ### New examples
 
