@@ -397,7 +397,7 @@ public class HttpService {
                 }
         };
         try {
-            SSLContext context = SSLContext.getInstance("SSL");
+            SSLContext context = SSLContext.getInstance("TLSv1.2");
             context.init(null, trustAll, new java.security.SecureRandom());
             return new SSLv3SocketFactory(context.getSocketFactory());
         } catch (Exception e) {
@@ -408,7 +408,7 @@ public class HttpService {
     private static final class SSLv3SocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
 
-        public static final String[] PROTOCOLS = {"SSLv3"};
+        public static final String[] PROTOCOLS = {"TLSv1.2"};
 
         private SSLv3SocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
