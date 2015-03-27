@@ -35,8 +35,7 @@ import java.util.Map.Entry;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-
-    private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
+    private static SSLSocketFactory sslSocketFactory = createDefaultSSLSocketFactory();
     
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
@@ -277,7 +276,7 @@ public class HttpService {
      */
     Socket open() throws IOException {
         if (this.scheme.equals("https")) {
-            return SSL_SOCKET_FACTORY.createSocket(this.host, this.port);
+            return sslSocketFactory.createSocket(this.host, this.port);
         }
         return new Socket(this.host, this.port);
     }
@@ -303,7 +302,7 @@ public class HttpService {
             throw new RuntimeException(e.getMessage(), e);
         }
         if(cn instanceof HttpsURLConnection) {
-            ((HttpsURLConnection)cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
+            ((HttpsURLConnection)cn).setSSLSocketFactory(sslSocketFactory);
             ((HttpsURLConnection)cn).setHostnameVerifier(HOSTNAME_VERIFIER);
         }
         cn.setUseCaches(false);
@@ -388,7 +387,17 @@ public class HttpService {
         return response;
     }
 
-    private static SSLSocketFactory createSSLFactory() {
+    public static void setSSLSocketFactory(SSLSocketFactory sslSocketFactory){
+        if(sslSocketFactory == null)
+            throw new IllegalArgumentException("The SSLSocketFactory cannot be null.");
+        HttpService.sslSocketFactory = sslSocketFactory;
+    }
+
+    public static SSLSocketFactory getSSLSocketFactory(){
+        return HttpService.sslSocketFactory;
+    }
+
+    public static SSLSocketFactory createDefaultSSLSocketFactory() {
         TrustManager[] trustAll = new TrustManager[]{
                 new X509TrustManager() {
                     public X509Certificate[] getAcceptedIssuers() { return null; }
