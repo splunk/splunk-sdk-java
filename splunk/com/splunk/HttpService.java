@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,9 +35,7 @@ import java.util.Map.Entry;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-
-    private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
-
+    private static SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
 
@@ -389,7 +386,17 @@ public class HttpService {
         return response;
     }
 
-    private static SSLSocketFactory createSSLFactory() {
+    public static void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
+        if(sslSocketFactory == null)
+            throw new IllegalArgumentException("The sslSocketFactory cannot be null.");
+        HttpService.SSL_SOCKET_FACTORY = sslSocketFactory;
+    }
+
+    public static SSLSocketFactory getSSLSocketFactory() {
+        return HttpService.SSL_SOCKET_FACTORY;
+    }
+
+    public static SSLSocketFactory createSSLFactory() {
         TrustManager[] trustAll = new TrustManager[]{
                 new X509TrustManager() {
                     public X509Certificate[] getAcceptedIssuers() { return null; }
