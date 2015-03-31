@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class HttpService {
     private static final boolean VERBOSE_REQUESTS = false;
 
     private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
-    
+
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
 
@@ -46,7 +47,7 @@ public class HttpService {
             return true;
         }
     };
-    
+
     /** A variable to hold an optional custom HTTPS handler */
     protected URLStreamHandler httpsHandler = null;
 
@@ -96,7 +97,7 @@ public class HttpService {
      *
      * @param host The host name of the service.
      * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service ({@code http} or 
+     * @param scheme Scheme for accessing the service ({@code http} or
      * {@code https}).
      */
     public HttpService(String host, int port, String scheme) {
@@ -104,17 +105,17 @@ public class HttpService {
         this.port = port;
         this.scheme = scheme;
     }
-    
+
     /**
      * Constructs a new {@code HttpService} instance using the given host,
      * port, and scheme, and instructing it to use the specified HTTPS handler.
      *
      * @param host The host name of the service.
      * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service ({@code http} or 
+     * @param scheme Scheme for accessing the service ({@code http} or
      * {@code https}).
      */
-    public HttpService(String host, int port, String scheme, 
+    public HttpService(String host, int port, String scheme,
     		URLStreamHandler httpsHandler) {
         this.host = host;
         this.port = port;
@@ -202,10 +203,10 @@ public class HttpService {
     public URL getUrl(String path) {
         try {
         	if (HTTPS_SCHEME.equals(getScheme()) && httpsHandler != null) {
-        		// This branch is not currently covered by unit tests as I 
+        		// This branch is not currently covered by unit tests as I
         		// could not figure out a generic way to get the default
         		// HTTPS handler.
-        		return new URL(getScheme(), getHost(), getPort(), path, 
+        		return new URL(getScheme(), getHost(), getPort(), path,
         				httpsHandler);
         	} else {
         		return new URL(getScheme(), getHost(), getPort(), path);
@@ -397,7 +398,9 @@ public class HttpService {
                 }
         };
         try {
-            SSLContext context = SSLContext.getInstance("SSL");
+            // Try any version of TLS in order to support Java 6-8
+            SSLContext context = SSLContext.getInstance("TLS");
+
             context.init(null, trustAll, new java.security.SecureRandom());
             return new SSLv3SocketFactory(context.getSocketFactory());
         } catch (Exception e) {
@@ -407,8 +410,7 @@ public class HttpService {
 
     private static final class SSLv3SocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
-
-        public static final String[] PROTOCOLS = {"SSLv3"};
+        public static String[] PROTOCOLS = {"TLSv1.2"};
 
         private SSLv3SocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
@@ -416,7 +418,21 @@ public class HttpService {
 
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
-                ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                // Try every version of TLS in order to support Java 6-8
+                try {
+                    ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                }
+                catch (IllegalArgumentException e) {
+                    try {
+                        PROTOCOLS[0] = "TLSv1.1";
+                        ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                    }
+                    catch (IllegalArgumentException e1) {
+                        PROTOCOLS[0] = "TLSv1";
+                        ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                    }
+                }
+
             }
             return socket;
         }
