@@ -410,7 +410,7 @@ public class HttpService {
 
     private static final class SSLv3SocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
-        public static String[] PROTOCOLS = {"TLSv1.2"};
+        public static String[] PROTOCOLS = {"TLSv1.2", "TLSv1.1", "TLSv1"};
 
         private SSLv3SocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
@@ -419,20 +419,19 @@ public class HttpService {
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
                 // Try every version of TLS in order to support Java 6-8
-                try {
-                    ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
-                }
-                catch (IllegalArgumentException e) {
+                for (String protocol : PROTOCOLS) {
                     try {
-                        PROTOCOLS[0] = "TLSv1.1";
-                        ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                        ((SSLSocket) socket).setEnabledProtocols(new String[]{ protocol });
+                        // If no exception, we found a valid protocol
+                        break;
                     }
-                    catch (IllegalArgumentException e1) {
-                        PROTOCOLS[0] = "TLSv1";
-                        ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                    catch (IllegalArgumentException e) {
+                        // Swallow exceptions related to an invalid protocol, unless they're for "TLSv1"
+                        if (protocol.equalsIgnoreCase("TLSv1")) {
+                            throw e;
+                        }
                     }
                 }
-
             }
             return socket;
         }
