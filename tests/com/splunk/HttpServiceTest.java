@@ -19,7 +19,9 @@ package com.splunk;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -28,6 +30,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 public class HttpServiceTest extends SDKTestCase {
@@ -85,5 +90,17 @@ public class HttpServiceTest extends SDKTestCase {
         ResponseMessage response = new ResponseMessage(200);
         Assert.assertEquals(response.getStatus(), 200);
         Assert.assertTrue(response.getHeader() != null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSSLSocketFactorySetNull(){
+        HttpService.setSSLSocketFactory(null);
+    }
+
+    @Test
+    public void testSSLSocketFactory(){
+        SSLSocketFactory factory = HttpService.createDefaultSSLSocketFactory();
+        HttpService.setSSLSocketFactory(factory);
+        Assert.assertSame(factory, HttpService.getSSLSocketFactory());
     }
 }
