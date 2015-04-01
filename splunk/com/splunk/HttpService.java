@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
@@ -405,9 +406,15 @@ public class HttpService {
                 }
         };
         try {
-            // Try any version of TLS in order to support Java 6-8
-            SSLContext context = SSLContext.getInstance("TLS");
-
+            SSLContext context;
+            // Try any version of TLS
+            try {
+                context = SSLContext.getInstance("TLS");
+            }
+            // Then try any version of SSL
+            catch (NoSuchAlgorithmException e) {
+                context = SSLContext.getInstance("SSL");
+            }
             context.init(null, trustAll, new java.security.SecureRandom());
             return new SSLv3SocketFactory(context.getSocketFactory());
         } catch (Exception e) {
@@ -417,7 +424,7 @@ public class HttpService {
 
     private static final class SSLv3SocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
-        public static String[] PROTOCOLS = {"TLSv1.2", "TLSv1.1", "TLSv1"};
+        public static String[] PROTOCOLS = {"TLSv1.2", "TLSv1.1", "TLSv1", "SSLv3", "SSLv2"};
 
         private SSLv3SocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
@@ -425,7 +432,7 @@ public class HttpService {
 
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
-                // Try every version of TLS in order to support Java 6-8
+                // Try every version of SSL/TLS to support Java 6-8
                 for (String protocol : PROTOCOLS) {
                     try {
                         ((SSLSocket) socket).setEnabledProtocols(new String[]{ protocol });
@@ -433,8 +440,8 @@ public class HttpService {
                         break;
                     }
                     catch (IllegalArgumentException e) {
-                        // Swallow exceptions related to an invalid protocol, unless they're for "TLSv1"
-                        if (protocol.equalsIgnoreCase("TLSv1")) {
+                        // Swallow exceptions related to an invalid protocol, unless they're after trying "SSLv2"
+                        if (protocol.equalsIgnoreCase("SSLv2")) {
                             throw e;
                         }
                     }
