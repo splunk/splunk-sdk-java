@@ -440,8 +440,8 @@ public class HttpService {
                         break;
                     }
                     catch (IllegalArgumentException e) {
-                        // Swallow exceptions related to an invalid protocol, unless they're after trying "SSLv2"
-                        if (protocol.equalsIgnoreCase("SSLv2")) {
+                        // Swallow exceptions related to an invalid protocol, unless trying the last protocol fails
+                        if (protocol.equalsIgnoreCase(PROTOCOLS[PROTOCOLS.length - 1])) {
                             throw e;
                         }
                     }
