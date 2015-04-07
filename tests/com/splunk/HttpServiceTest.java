@@ -86,17 +86,7 @@ public class HttpServiceTest extends SDKTestCase {
         HttpService.setSSLSocketFactory(null);
     }
 
-    /**
-     * Tries to parse the {@code "java.version"} JVM property and
-     * return an integer representing the major Java version.
-     * Ex: 6, 7, or 8
-     *
-     * @return The major Java version as an integer.
-     */
-    public static Integer getJavaVersion() {
-        String ver = System.getProperty("java.version");
-        return Integer.parseInt(ver.substring(2, 3));
-    }
+
 
     @Test
     public void testSSLSocketFactory() {

@@ -78,11 +78,20 @@ public abstract class SDKTestCase {
         }
     }
 
+    public static Integer getJavaVersion() {
+        String ver = System.getProperty("java.version");
+        return Integer.parseInt(ver.substring(2, 3));
+    }
+
     @Before
     public void setUp() throws Exception {
         // If using Charles Proxy for debugging, uncomment these lines.
         //System.setProperty("https.proxyHost", "127.0.0.1");
         //System.setProperty("https.proxyPort", "8888");
+
+        if (getJavaVersion() >= 8) {
+            HttpService.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1);
+        }
 
         command = Command.splunk();
         connect();
