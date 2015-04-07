@@ -1,8 +1,5 @@
 package com.splunk;
 
-/**
- * Created by fross on 2/28/14.
- */
 public enum StatsFunction {
     LIST {
         public String toString() { return "list"; }

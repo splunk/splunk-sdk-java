@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +35,7 @@ import java.util.Map.Entry;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
+    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.SSLv3;
     private static SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
@@ -44,84 +44,85 @@ public class HttpService {
         public boolean verify(String s, SSLSession sslSession) {
             return true;
         }
-    };
+        };
 
-    /** A variable to hold an optional custom HTTPS handler */
-    protected URLStreamHandler httpsHandler = null;
+        /** A variable to hold an optional custom HTTPS handler */
+        protected URLStreamHandler httpsHandler = null;
 
-    /** The scheme used to access the service. */
-    protected String scheme = "https";
+        /** The scheme used to access the service. */
+        protected String scheme = "https";
 
-    /** The host name of the service. */
-    protected String host = "localhost";
+        /** The host name of the service. */
+        protected String host = "localhost";
 
-    /** The port number of the service. */
-    protected int port = 8089;
+        /** The port number of the service. */
+        protected int port = 8089;
 
-    private String prefix = null;
+        private String prefix = null;
 
-    static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.3.2");
-        put("Accept", "*/*");
-    }};
+        static Map<String, String> defaultHeader = new HashMap<String, String>() {{
+            put("User-Agent", "splunk-sdk-java/1.3.2");
+            put("Accept", "*/*");
+        }};
 
-    /** Constructs a new {@code HttpService} instance. */
-    public HttpService() {
-    }
+        /** Constructs a new {@code HttpService} instance. */
+        public HttpService() {
+        }
 
-    /**
-     * Constructs a new {@code HttpService} instance at the given host.
-     *
-     * @param host The host name of the service.
-     */
-    public HttpService(String host) {
-        this.host = host;
-    }
+        /**
+         * Constructs a new {@code HttpService} instance at the given host.
+         *
+         * @param host The host name of the service.
+         */
+        public HttpService(String host) {
+            this.host = host;
+        }
 
-    /**
-     * Constructs a new {@code HttpService} instance at the given host and port.
-     *
-     * @param host The host name of the service.
-     * @param port The port number of the service.
-     */
-    public HttpService(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
+        /**
+         * Constructs a new {@code HttpService} instance at the given host and port.
+         *
+         * @param host The host name of the service.
+         * @param port The port number of the service.
+         */
+        public HttpService(String host, int port) {
+            this.host = host;
+            this.port = port;
+        }
 
-    /**
-     * Constructs a new {@code HttpService} instance using the given host,
-     * port, and scheme.
-     *
-     * @param host The host name of the service.
-     * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service ({@code http} or
-     * {@code https}).
-     */
-    public HttpService(String host, int port, String scheme) {
-        this.host = host;
-        this.port = port;
-        this.scheme = scheme;
-    }
+        /**
+         * Constructs a new {@code HttpService} instance using the given host,
+         * port, and scheme.
+         *
+         * @param host The host name of the service.
+         * @param port The port number of the service.
+         * @param scheme Scheme for accessing the service ({@code http} or
+         * {@code https}).
+         */
+        public HttpService(String host, int port, String scheme) {
+            this.host = host;
+            this.port = port;
+            this.scheme = scheme;
+        }
 
-    /**
-     * Constructs a new {@code HttpService} instance using the given host,
-     * port, and scheme, and instructing it to use the specified HTTPS handler.
-     *
-     * @param host The host name of the service.
-     * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service ({@code http} or
-     * {@code https}).
-     */
-    public HttpService(String host, int port, String scheme,
-    		URLStreamHandler httpsHandler) {
-        this.host = host;
-        this.port = port;
-        this.scheme = scheme;
-        this.httpsHandler = httpsHandler;
-    }
+        /**
+         * Constructs a new {@code HttpService} instance using the given host,
+         * port, and scheme, and instructing it to use the specified HTTPS handler.
+         *
+         * @param host The host name of the service.
+         * @param port The port number of the service.
+         * @param scheme Scheme for accessing the service ({@code http} or
+         * {@code https}).
+         * @param httpsHandler A custom URL Stream handler.
+         */
+        public HttpService(String host, int port, String scheme,
+                URLStreamHandler httpsHandler) {
+            this.host = host;
+            this.port = port;
+            this.scheme = scheme;
+            this.httpsHandler = httpsHandler;
+        }
 
-    // Returns the count of arguments in the given {@code args} map.
+        // Returns the count of arguments in the given {@code args} map.
     private static int count(Map<String, Object> args) {
         if (args == null) return 0;
         return args.size();
@@ -171,6 +172,26 @@ public class HttpService {
     }
 
     /**
+     * Returns the SSL security protocol of this service.
+     *
+     * @return The SSL security protocol.
+     */
+    public static SSLSecurityProtocol getSslSecurityProtocol() {
+        return sslSecurityProtocol;
+    }
+
+    /**
+     * Sets the SSL security protocol of this service.
+     */
+    public static void setSslSecurityProtocol(SSLSecurityProtocol securityProtocol) {
+        // Only update the SSL_SOCKET_FACTORY if changing protocols
+        if (sslSecurityProtocol != securityProtocol) {
+            sslSecurityProtocol = securityProtocol;
+            SSL_SOCKET_FACTORY = new SSLv3SocketFactory(createSSLFactory(), securityProtocol);
+        }
+    }
+
+    /**
      * Returns the URL prefix of this service, consisting of
      * {@code scheme://host[:port]}.
      *
@@ -179,7 +200,7 @@ public class HttpService {
     public String getPrefix() {
         if (this.prefix == null)
             this.prefix = String.format("%s://%s:%s",
-                this.scheme, this.host, this.port);
+                    this.scheme, this.host, this.port);
         return this.prefix;
     }
 
@@ -200,15 +221,15 @@ public class HttpService {
      */
     public URL getUrl(String path) {
         try {
-        	if (HTTPS_SCHEME.equals(getScheme()) && httpsHandler != null) {
-        		// This branch is not currently covered by unit tests as I
-        		// could not figure out a generic way to get the default
-        		// HTTPS handler.
-        		return new URL(getScheme(), getHost(), getPort(), path,
-        				httpsHandler);
-        	} else {
-        		return new URL(getScheme(), getHost(), getPort(), path);
-        	}
+            if (HTTPS_SCHEME.equals(getScheme()) && httpsHandler != null) {
+                // This branch is not currently covered by unit tests as I
+                // could not figure out a generic way to get the default
+                // HTTPS handler.
+                return new URL(getScheme(), getHost(), getPort(), path,
+                        httpsHandler);
+            } else {
+                return new URL(getScheme(), getHost(), getPort(), path);
+            }
         }
         catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -236,7 +257,7 @@ public class HttpService {
     public ResponseMessage post(String path, Map<String, Object> args) {
         RequestMessage request = new RequestMessage("POST");
         request.getHeader().put(
-            "Content-Type", "application/x-www-form-urlencoded");
+                "Content-Type", "application/x-www-form-urlencoded");
         if (count(args) > 0)
             request.setContent(Args.encode(args));
         return send(path, request);
@@ -367,8 +388,8 @@ public class HttpService {
         InputStream input = null;
         try {
             input = status >= 400
-                ? cn.getErrorStream()
-                : cn.getInputStream();
+                    ? cn.getErrorStream()
+                    : cn.getInputStream();
         }
         catch (IOException e) { assert(false); }
 
@@ -388,7 +409,7 @@ public class HttpService {
     }
 
     public static void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
-        if(sslSocketFactory == null)
+        if (sslSocketFactory == null)
             throw new IllegalArgumentException("The sslSocketFactory cannot be null.");
         HttpService.SSL_SOCKET_FACTORY = sslSocketFactory;
     }
@@ -396,7 +417,7 @@ public class HttpService {
     public static SSLSocketFactory getSSLSocketFactory() {
         return HttpService.SSL_SOCKET_FACTORY;
     }
-
+    
     public static SSLSocketFactory createSSLFactory() {
         TrustManager[] trustAll = new TrustManager[]{
                 new X509TrustManager() {
@@ -407,16 +428,18 @@ public class HttpService {
         };
         try {
             SSLContext context;
-            // Try any version of TLS
-            try {
-                context = SSLContext.getInstance("TLS");
+            switch (HttpService.sslSecurityProtocol) {
+                case TLSv1_2:
+                case TLSv1_1:
+                case TLSv1:
+                    context = SSLContext.getInstance("TLS");
+                    break;
+                default:
+                    context = SSLContext.getInstance("SSL");
             }
-            // Then try any version of SSL
-            catch (NoSuchAlgorithmException e) {
-                context = SSLContext.getInstance("SSL");
-            }
+
             context.init(null, trustAll, new java.security.SecureRandom());
-            return new SSLv3SocketFactory(context.getSocketFactory());
+            return new SSLv3SocketFactory(context.getSocketFactory(), HttpService.sslSecurityProtocol);
         } catch (Exception e) {
             throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
         }
@@ -424,28 +447,21 @@ public class HttpService {
 
     private static final class SSLv3SocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
-        public static String[] PROTOCOLS = {"TLSv1.2", "TLSv1.1", "TLSv1", "SSLv3", "SSLv2"};
+        private SSLSecurityProtocol sslSecurityProtocol;
 
         private SSLv3SocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
+            this.sslSecurityProtocol = HttpService.sslSecurityProtocol;
+        }
+
+        private SSLv3SocketFactory(SSLSocketFactory delegate, SSLSecurityProtocol securityProtocol) {
+            this.delegate = delegate;
+            this.sslSecurityProtocol = securityProtocol;
         }
 
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
-                // Try every version of SSL/TLS to support Java 6-8
-                for (String protocol : PROTOCOLS) {
-                    try {
-                        ((SSLSocket) socket).setEnabledProtocols(new String[]{ protocol });
-                        // If no exception, we found a valid protocol
-                        break;
-                    }
-                    catch (IllegalArgumentException e) {
-                        // Swallow exceptions related to an invalid protocol, unless they're after trying "SSLv2"
-                        if (protocol.equalsIgnoreCase("SSLv2")) {
-                            throw e;
-                        }
-                    }
-                }
+                ((SSLSocket) socket).setEnabledProtocols(new String[]{ sslSecurityProtocol.toString() });
             }
             return socket;
         }

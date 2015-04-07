@@ -19,21 +19,10 @@ package com.splunk;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.HashMap;
 
 public class HttpServiceTest extends SDKTestCase {
     private HttpService httpService;
@@ -97,10 +86,56 @@ public class HttpServiceTest extends SDKTestCase {
         HttpService.setSSLSocketFactory(null);
     }
 
+    /**
+     * Tries to parse the {@code "java.version"} JVM property and
+     * return an integer representing the major Java version.
+     * Ex: 6, 7, or 8
+     *
+     * @return The major Java version as an integer.
+     */
+    public static Integer getJavaVersion() {
+        String ver = System.getProperty("java.version");
+        return Integer.parseInt(ver.substring(2, 3));
+    }
+
     @Test
-    public void testSSLSocketFactory(){
-        SSLSocketFactory factory = HttpService.createSSLFactory();
-        HttpService.setSSLSocketFactory(factory);
-        Assert.assertSame(factory, HttpService.getSSLSocketFactory());
+    public void testSSLSocketFactory() {
+        try {
+            SSLSocketFactory factory = Service.getSSLSocketFactory();
+            SSLSocket socket = (SSLSocket) factory.createSocket("localhost", 8089);
+            String[] protocols = socket.getEnabledProtocols();
+            Assert.assertTrue(protocols.length > 0);
+        }
+        catch (Exception e) {
+            Assert.assertNull(e);
+        }
+    }
+
+    public void validateSSLProtocol(Service s, SSLSecurityProtocol securityProtocol) {
+        Service.setSslSecurityProtocol(securityProtocol);
+        s.login(service.getUsername(), service.getPassword());
+        s.getInfo();
+    }
+
+    @Test
+    public void testSSLSecurityProtocols() {
+        Service s = new Service("localhost");
+
+        Integer javaVersion = getJavaVersion();
+        Assert.assertNotNull(javaVersion);
+
+        // TLSv1.1 and TLSv1.2 were added in Java 7
+        if (javaVersion >= 7) {
+            validateSSLProtocol(s, SSLSecurityProtocol.TLSv1_2);
+            validateSSLProtocol(s, SSLSecurityProtocol.TLSv1_1);
+        }
+
+        // TLSv1 is supported in Java 6-8, always check
+        validateSSLProtocol(s, SSLSecurityProtocol.TLSv1);
+
+        // SSLv3 is disabled by default in Java 8
+        if (javaVersion < 8) {
+            validateSSLProtocol(s, SSLSecurityProtocol.SSLv3);
+        }
     }
 }
