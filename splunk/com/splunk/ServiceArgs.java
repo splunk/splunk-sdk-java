@@ -131,6 +131,14 @@ public class ServiceArgs extends Args {
         this.scheme = scheme; // for backward compatibility
         this.put("scheme", scheme);
     }
+
+    /**
+     * @param securityProtocol
+     *      The SSL security protocol for the service.
+     */
+    public void setSSLSecurityProtocol(SSLSecurityProtocol securityProtocol) {
+        this.put("SSLSecurityProtocol", securityProtocol);
+    }
     
     /**
      * @param token
