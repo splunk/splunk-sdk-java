@@ -29,10 +29,10 @@ import com.splunk.Service;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 
 public class Program {
@@ -101,14 +101,18 @@ public class Program {
         try {
             // Create an SSLSocketFactory configured to use SSL only
             SSLContext sslContext = SSLContext.getInstance("SSL");
-            TrustManager[] byPassTrustManagers = new TrustManager[] {
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return new X509Certificate[0];
+            TrustManager[] byPassTrustManagers = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[0];
+                        }
+
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                        }
+
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                        }
                     }
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-                    public void checkServerTrusted(X509Certificate[] chain, String authType) {}
-                }
             };
             sslContext.init(null, byPassTrustManagers, new SecureRandom());
             SSLSocketFactory SSLOnlySSLFactory = sslContext.getSocketFactory();
@@ -126,14 +130,18 @@ public class Program {
         try {
             // Create an SSLSocketFactory configured to use TLS only
             SSLContext sslContext = SSLContext.getInstance("TLS");
-            TrustManager[] byPassTrustManagers = new TrustManager[] {
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return new X509Certificate[0];
+            TrustManager[] byPassTrustManagers = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[0];
+                        }
+
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                        }
+
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                        }
                     }
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-                    public void checkServerTrusted(X509Certificate[] chain, String authType) {}
-                }
             };
             sslContext.init(null, byPassTrustManagers, new SecureRandom());
             SSLSocketFactory TLSOnlySSLFactory = sslContext.getSocketFactory();
