@@ -16,21 +16,20 @@
 
 /**
  * This example will demonstrate how to use a specific SSL/TLS
- * protocol with the Splunk SDK for Java.
- *
+ * protocol to connect to Splunk.
  * Additionally, there's a small code sample showing how to
- * use a custom SSLSocketFactory.
+ * use a custom SSLSocketFactory to connect to Splunk.
  */
 
 package com.splunk.examples.ssl_protocols;
 
-import com.splunk.*;
+import com.splunk.Command;
+import com.splunk.SSLSecurityProtocol;
+import com.splunk.Service;
 
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.security.SecureRandom;
 
 public class Program {
 
@@ -41,76 +40,88 @@ public class Program {
 
     public static void main(String[] args) {
         Command command = Command.splunk("info").parse(args);
-        Service service = Service.connect(command.opts);
+
+        int version = getJavaVersion();
+        System.out.println("Your Java version is: " + version);
 
         // At this point, the default protocol is SSLv3.
         // Possible values are TLSv1.2, TLSv1.1, TLSv1 & SSLv3
         // These are defined by the SSLSecurityProtocol enum
         // Java 8 disables SSLv3 by default
-
-        int version = getJavaVersion();
-        System.out.println("Your Java version is: " + version);
-
-        // Use TLSv1, should be available in every version of Java
-        System.out.println("Now trying to connect to Splunk using TLSv1");
-        Service.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1);
-        service.login();
-
-        if (version >= 7) {
-            // Use TLSv1.1, available in Java 7 and up
-            System.out.println("Now trying to connect to Splunk using TLSv1.1");
-            Service.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_1);
-            service.login();
-
-            // Use TLSv1.2, available in Java 7 and up
-            System.out.println("Now trying to connect to Splunk using TLSv1.2");
-            Service.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_2);
-            service.login();
+        System.out.println("Now trying to connect to Splunk using SSLv3");
+        try {
+            Service.setSslSecurityProtocol(SSLSecurityProtocol.SSLv3);
+            Service serviceSSLv3 = Service.connect(command.opts);
+            serviceSSLv3.login();
+            System.out.println("\t Success!");
+        } catch (RuntimeException e) {
+            System.out.println("\t Failure! ");
         }
 
-        System.out.println("Your Splunk version is " + service.getInfo().getVersion());
+        // TLSv1 is available by default in every modern version of Java
+        System.out.println("Now trying to connect to Splunk using TLSv1");
+        try {
+            Service.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1);
+            Service serviceTLSv1 = Service.connect(command.opts);
+            serviceTLSv1.login();
+            System.out.println("\t Success!");
+        } catch (RuntimeException e) {
+            System.out.println("\t Failure! ");
+        }
 
-        // You can also specify your own SSLSocketFactory by using the following static method.
-        Service.setSSLSocketFactory(createSSLSocketFactory());
-    }
 
-    public static SSLSocketFactory createSSLSocketFactory() {
-        // Implement your custom SSLSocketFactory in a method like this
-        return new SSLSocketFactory() {
-            @Override
-            public String[] getDefaultCipherSuites() {
-                return new String[0];
-            }
+        // TLSv1.1 is available by default in Java 7 and up
+        System.out.println("Now trying to connect to Splunk using TLSv1.1");
+        try {
+            Service.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_1);
+            Service serviceTLSv1_1 = Service.connect(command.opts);
+            serviceTLSv1_1.login();
+            System.out.println("\t Success!");
+        } catch (RuntimeException e) {
+            System.out.println("\t Failure! ");
+        }
 
-            @Override
-            public String[] getSupportedCipherSuites() {
-                return new String[0];
-            }
+        // TLSv1.2 is available by default in Java 7 and up
+        System.out.println("Now trying to connect to Splunk using TLSv1.2");
+        try {
+            Service.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_2);
+            Service serviceTLSv1_2 = Service.connect(command.opts);
+            serviceTLSv1_2.login();
+            System.out.println("\t Success!");
+        } catch (RuntimeException e) {
+            System.out.println("\t Failure! ");
+        }
 
-            @Override
-            public Socket createSocket(Socket socket, String s, int i, boolean b) throws IOException {
-                return null;
-            }
+        // You can also specify your own SSLSocketFactory, in this case any version of SSL
+        System.out.println("Now trying to connect to Splunk using a custom SSL only SSLSocketFactory");
+        try {
+            // Create an SSLSocketFactory configured to use SSL only
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, null, new SecureRandom());
+            SSLSocketFactory TLSOnlySSLFactory = sslContext.getSocketFactory();
+            Service.setSSLSocketFactory(TLSOnlySSLFactory);
 
-            @Override
-            public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
-                return null;
-            }
+            Service serviceCustomSSLFactory = Service.connect(command.opts);
+            serviceCustomSSLFactory.login();
+            System.out.println("\t Success!");
+        } catch (Exception e) {
+            System.out.println("\t Failure!");
+        }
 
-            @Override
-            public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
-                return null;
-            }
+        // You can also specify your own SSLSocketFactory, in this case any version of TLS
+        System.out.println("Now trying to connect to Splunk using a custom TLS only SSLSocketFactory");
+        try {
+            // Create an SSLSocketFactory configured to use TLS only
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, null, new SecureRandom());
+            SSLSocketFactory TLSOnlySSLFactory = sslContext.getSocketFactory();
+            Service.setSSLSocketFactory(TLSOnlySSLFactory);
 
-            @Override
-            public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
-                return null;
-            }
-
-            @Override
-            public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
-                return null;
-            }
-        };
+            Service serviceCustomSSLFactory = Service.connect(command.opts);
+            serviceCustomSSLFactory.login();
+            System.out.println("\t Success!");
+        } catch (Exception e) {
+            System.out.println("\t Failure!");
+        }
     }
 }
