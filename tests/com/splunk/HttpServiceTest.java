@@ -20,9 +20,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.*;
 import java.io.ByteArrayOutputStream;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 public class HttpServiceTest extends SDKTestCase {
     private HttpService httpService;
@@ -101,15 +102,90 @@ public class HttpServiceTest extends SDKTestCase {
         }
     }
 
-    public void validateSSLProtocol(Service s, SSLSecurityProtocol securityProtocol) {
-        Service.setSslSecurityProtocol(securityProtocol);
+    public void validateSSLSocketFactory(SSLSocketFactory factory) {
+        // Backup the old value
+        SSLSocketFactory old = Service.getSSLSocketFactory();
+
+        Service.setSSLSocketFactory(factory);
+        Service s = new Service(service.getHost());
         s.login(service.getUsername(), service.getPassword());
-        s.getInfo();
+        Assert.assertEquals(service.getUsername(), s.getUsername());
+        Assert.assertEquals(service.getPassword(), s.getPassword());
+        Assert.assertEquals(service.getInfo().keySet(), s.getInfo().keySet());
+        Assert.assertEquals(service.getInfo().getVersion(), s.getInfo().getVersion());
+
+        // Restore the old value
+        Service.setSSLSocketFactory(old);
+    }
+
+    @Test
+    public void testCustomSSLSocketFactories() {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            TrustManager[] byPassTrustManagers = new TrustManager[] {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                }
+            };
+            sslContext.init(null, byPassTrustManagers, new SecureRandom());
+            SSLSocketFactory TLSOnlySSLFactory = sslContext.getSocketFactory();
+            Service.setSSLSocketFactory(TLSOnlySSLFactory);
+
+            validateSSLSocketFactory(TLSOnlySSLFactory);
+        }
+        catch (Exception e) {
+            Assert.assertNull(e);
+        }
+
+        try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            TrustManager[] byPassTrustManagers = new TrustManager[] {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                }
+            };
+            sslContext.init(null, byPassTrustManagers, new SecureRandom());
+            SSLSocketFactory SSLOnlySSLFactory = sslContext.getSocketFactory();
+            Service.setSSLSocketFactory(SSLOnlySSLFactory);
+
+            validateSSLSocketFactory(SSLOnlySSLFactory);
+        }
+        catch (Exception e) {
+            // Swallow exceptions for Java 8, since we know SSLv3 is disabled
+            // by default
+            if (getJavaVersion() < 8) {
+                Assert.assertNull(e);
+            }
+        }
+    }
+
+    public void validateSSLProtocol(Service s, SSLSecurityProtocol securityProtocol) {
+        // Backup the old value
+        SSLSecurityProtocol old = Service.getSslSecurityProtocol();
+
+        Service.setSslSecurityProtocol(securityProtocol);
+
+        s.login(service.getUsername(), service.getPassword());
+        Assert.assertEquals(service.getUsername(), s.getUsername());
+        Assert.assertEquals(service.getPassword(), s.getPassword());
+        Assert.assertEquals(service.getInfo().keySet(), s.getInfo().keySet());
+        Assert.assertEquals(service.getInfo().getVersion(), s.getInfo().getVersion());
+
+        // Restore the value
+        Service.setSslSecurityProtocol(old);
     }
 
     @Test
     public void testSSLSecurityProtocols() {
-        Service s = new Service("localhost");
+        Service s = new Service(service.getHost());
 
         Integer javaVersion = getJavaVersion();
         Assert.assertNotNull(javaVersion);

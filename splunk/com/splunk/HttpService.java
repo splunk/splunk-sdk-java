@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
@@ -418,7 +417,7 @@ public class HttpService {
     public static SSLSocketFactory getSSLSocketFactory() {
         return HttpService.SSL_SOCKET_FACTORY;
     }
-    
+
     public static SSLSocketFactory createSSLFactory() {
         TrustManager[] trustAll = new TrustManager[]{
                 new X509TrustManager() {
