@@ -36,7 +36,7 @@ public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
     protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.SSLv3;
-    private static SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
+    private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
 
@@ -187,7 +187,7 @@ public class HttpService {
         // Only update the SSL_SOCKET_FACTORY if changing protocols
         if (sslSecurityProtocol != securityProtocol) {
             sslSecurityProtocol = securityProtocol;
-            SSL_SOCKET_FACTORY = new SSLv3SocketFactory(createSSLFactory(), securityProtocol);
+            sslSocketFactory = new SSLv3SocketFactory(createSSLFactory(), securityProtocol);
         }
     }
 
@@ -297,7 +297,7 @@ public class HttpService {
      */
     Socket open() throws IOException {
         if (this.scheme.equals("https")) {
-            return SSL_SOCKET_FACTORY.createSocket(this.host, this.port);
+            return sslSocketFactory.createSocket(this.host, this.port);
         }
         return new Socket(this.host, this.port);
     }
@@ -323,7 +323,7 @@ public class HttpService {
             throw new RuntimeException(e.getMessage(), e);
         }
         if(cn instanceof HttpsURLConnection) {
-            ((HttpsURLConnection)cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
+            ((HttpsURLConnection)cn).setSSLSocketFactory(sslSocketFactory);
             ((HttpsURLConnection)cn).setHostnameVerifier(HOSTNAME_VERIFIER);
         }
         cn.setUseCaches(false);
@@ -411,11 +411,11 @@ public class HttpService {
     public static void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
         if (sslSocketFactory == null)
             throw new IllegalArgumentException("The sslSocketFactory cannot be null.");
-        HttpService.SSL_SOCKET_FACTORY = sslSocketFactory;
+        HttpService.sslSocketFactory = sslSocketFactory;
     }
 
     public static SSLSocketFactory getSSLSocketFactory() {
-        return HttpService.SSL_SOCKET_FACTORY;
+        return HttpService.sslSocketFactory;
     }
 
     public static SSLSocketFactory createSSLFactory() {
