@@ -44,85 +44,95 @@ public class HttpService {
         public boolean verify(String s, SSLSession sslSession) {
             return true;
         }
-        };
+    };
 
-        /** A variable to hold an optional custom HTTPS handler */
-        protected URLStreamHandler httpsHandler = null;
+    /**
+     * A variable to hold an optional custom HTTPS handler
+     */
+    protected URLStreamHandler httpsHandler = null;
 
-        /** The scheme used to access the service. */
-        protected String scheme = "https";
+    /**
+     * The scheme used to access the service.
+     */
+    protected String scheme = "https";
 
-        /** The host name of the service. */
-        protected String host = "localhost";
+    /**
+     * The host name of the service.
+     */
+    protected String host = "localhost";
 
-        /** The port number of the service. */
-        protected int port = 8089;
+    /**
+     * The port number of the service.
+     */
+    protected int port = 8089;
 
-        private String prefix = null;
+    private String prefix = null;
 
-        static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-            put("User-Agent", "splunk-sdk-java/1.3.2");
-            put("Accept", "*/*");
-        }};
+    static Map<String, String> defaultHeader = new HashMap<String, String>() {{
+        put("User-Agent", "splunk-sdk-java/1.3.2");
+        put("Accept", "*/*");
+    }};
 
-        /** Constructs a new {@code HttpService} instance. */
-        public HttpService() {
-        }
+    /**
+     * Constructs a new {@code HttpService} instance.
+     */
+    public HttpService() {
+    }
 
-        /**
-         * Constructs a new {@code HttpService} instance at the given host.
-         *
-         * @param host The host name of the service.
-         */
-        public HttpService(String host) {
-            this.host = host;
-        }
+    /**
+     * Constructs a new {@code HttpService} instance at the given host.
+     *
+     * @param host The host name of the service.
+     */
+    public HttpService(String host) {
+        this.host = host;
+    }
 
-        /**
-         * Constructs a new {@code HttpService} instance at the given host and port.
-         *
-         * @param host The host name of the service.
-         * @param port The port number of the service.
-         */
-        public HttpService(String host, int port) {
-            this.host = host;
-            this.port = port;
-        }
+    /**
+     * Constructs a new {@code HttpService} instance at the given host and port.
+     *
+     * @param host The host name of the service.
+     * @param port The port number of the service.
+     */
+    public HttpService(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
 
-        /**
-         * Constructs a new {@code HttpService} instance using the given host,
-         * port, and scheme.
-         *
-         * @param host The host name of the service.
-         * @param port The port number of the service.
-         * @param scheme Scheme for accessing the service ({@code http} or
-         * {@code https}).
-         */
-        public HttpService(String host, int port, String scheme) {
-            this.host = host;
-            this.port = port;
-            this.scheme = scheme;
-        }
+    /**
+     * Constructs a new {@code HttpService} instance using the given host,
+     * port, and scheme.
+     *
+     * @param host   The host name of the service.
+     * @param port   The port number of the service.
+     * @param scheme Scheme for accessing the service ({@code http} or
+     *               {@code https}).
+     */
+    public HttpService(String host, int port, String scheme) {
+        this.host = host;
+        this.port = port;
+        this.scheme = scheme;
+    }
 
-        /**
-         * Constructs a new {@code HttpService} instance using the given host,
-         * port, and scheme, and instructing it to use the specified HTTPS handler.
-         *
-         * @param host The host name of the service.
-         * @param port The port number of the service.
-         * @param scheme Scheme for accessing the service ({@code http} or
-         * {@code https}).
-         * @param httpsHandler A custom URL Stream handler.
-         */
-        public HttpService(String host, int port, String scheme,
-                URLStreamHandler httpsHandler) {
-            this.host = host;
-            this.port = port;
-            this.scheme = scheme;
-            this.httpsHandler = httpsHandler;
-        }
+    /**
+     * Constructs a new {@code HttpService} instance using the given host,
+     * port, and scheme, and instructing it to use the specified HTTPS handler.
+     *
+     * @param host         The host name of the service.
+     * @param port         The port number of the service.
+     * @param scheme       Scheme for accessing the service ({@code http} or
+     *                     {@code https}).
+     * @param httpsHandler A custom URL Stream handler.
+     */
+    public HttpService(String host, int port, String scheme,
+                       URLStreamHandler httpsHandler) {
+        this.host = host;
+        this.port = port;
+        this.scheme = scheme;
+        this.httpsHandler = httpsHandler;
+    }
 
-        // Returns the count of arguments in the given {@code args} map.
+    // Returns the count of arguments in the given {@code args} map.
     private static int count(Map<String, Object> args) {
         if (args == null) return 0;
         return args.size();
@@ -230,8 +240,7 @@ public class HttpService {
             } else {
                 return new URL(getScheme(), getHost(), getPort(), path);
             }
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -306,7 +315,7 @@ public class HttpService {
      * Issue an HTTP request against the service using a given path and
      * request message.
      *
-     * @param path The request path.
+     * @param path    The request path.
      * @param request The request message.
      * @return The HTTP response.
      */
@@ -317,14 +326,13 @@ public class HttpService {
         // Create and initialize the connection object
         HttpURLConnection cn;
         try {
-            cn = (HttpURLConnection)url.openConnection();
-        }
-        catch (IOException e) {
+            cn = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        if(cn instanceof HttpsURLConnection) {
-            ((HttpsURLConnection)cn).setSSLSocketFactory(sslSocketFactory);
-            ((HttpsURLConnection)cn).setHostnameVerifier(HOSTNAME_VERIFIER);
+        if (cn instanceof HttpsURLConnection) {
+            ((HttpsURLConnection) cn).setSSLSocketFactory(sslSocketFactory);
+            ((HttpsURLConnection) cn).setHostnameVerifier(HOSTNAME_VERIFIER);
         }
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
@@ -333,8 +341,7 @@ public class HttpService {
         String method = request.getMethod();
         try {
             cn.setRequestMethod(method);
-        }
-        catch (ProtocolException e) {
+        } catch (ProtocolException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
@@ -357,11 +364,10 @@ public class HttpService {
                 cn.setDoOutput(true);
                 OutputStream stream = cn.getOutputStream();
                 OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF-8");
-                writer.write((String)content);
+                writer.write((String) content);
                 writer.close();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
@@ -372,16 +378,14 @@ public class HttpService {
         // Execute the request
         try {
             cn.connect();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
         int status;
         try {
             status = cn.getResponseCode();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
@@ -390,8 +394,9 @@ public class HttpService {
             input = status >= 400
                     ? cn.getErrorStream()
                     : cn.getInputStream();
+        } catch (IOException e) {
+            assert (false);
         }
-        catch (IOException e) { assert(false); }
 
         ResponseMessage response = new ResponseMessage(status, input);
 
@@ -421,9 +426,15 @@ public class HttpService {
     public static SSLSocketFactory createSSLFactory() {
         TrustManager[] trustAll = new TrustManager[]{
                 new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() { return null; }
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) { }
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
                 }
         };
         try {
@@ -461,7 +472,7 @@ public class HttpService {
 
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
-                ((SSLSocket) socket).setEnabledProtocols(new String[]{ sslSecurityProtocol.toString() });
+                ((SSLSocket) socket).setEnabledProtocols(new String[]{sslSecurityProtocol.toString()});
             }
             return socket;
         }
