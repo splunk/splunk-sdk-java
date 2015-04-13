@@ -56,7 +56,7 @@ You'll need Java SE version 6 or higher, which you can download from the
 You'll also need Ant, which you can install from the 
 [Apache website](http://ant.apache.org/bindownload.cgi). 
 
-**To use the Splunk SDK for Java with Java 8** (it disables SSLv3 by default) you will need to use version 1.4.0+ and use a TLS protocol - see the [`ssl_protcols`](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Program.java) example for how to do this". Alternatively, you can re-enable SSLv3 in Java settings - this is not recommended.
+The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [`ssl_protocols`](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
 
 If you are using Windows, you'll need to make sure the following system 
 variables are created and set: 
