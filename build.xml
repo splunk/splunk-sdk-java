@@ -18,7 +18,7 @@
 
 <project name="splunk-sdk-java" basedir="." default="dist" xmlns:jacoco="antlib:org.jacoco.ant"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="antlib:org.jacoco.ant ">
-    <property name="version.number" value="1.3.2"/>
+    <property name="version.number" value="1.4.0"/>
     
     <!-- Paths within the repository that are referenced
          multiple times. -->
@@ -179,7 +179,8 @@
         <jar destfile="${dist}/splunk-${version.number}.jar">
             <fileset dir="${build.splunk}"
                      includes="**/*.class"/>
-
+            <fileset dir="${build.splunk}"
+                     includes="**/Command.class"/>
             <fileset dir="splunk" includes="**/*"/>
 
             <manifest>
@@ -196,6 +197,7 @@
         <copy file="${opencsv}" todir="${dist}"/>
 
         <!-- Now, the examples -->
+        <standalone-example-jar name="endpoint_instantiation"/>
         <standalone-example-jar name="explorer">
             <dependencies>
                 <zipgroupfileset dir="lib" includes="gson-2.2.4.jar"/>
@@ -206,6 +208,7 @@
 
         <standalone-example-jar name="export"/>
         <standalone-example-jar name="genevents"/>
+        <standalone-example-jar name="get_job"/>
         <standalone-example-jar name="index"/>
         <standalone-example-jar name="info"/>
         <standalone-example-jar name="input"/>
@@ -224,6 +227,7 @@
         <standalone-example-jar name="search_saved"/>
         <standalone-example-jar name="search_simple"/>
         <standalone-example-jar name="spurl"/>
+        <standalone-example-jar name="ssl_protocols"/>
         <standalone-example-jar name="tail"/>
         <standalone-example-jar name="pivot">
             <dependencies>

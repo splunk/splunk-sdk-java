@@ -1,6 +1,6 @@
 # The Splunk Software Development Kit for Java
 
-#### Version 1.3.2
+#### Version 1.4.0
 
 The Splunk Software Development Kit (SDK) for Java contains library code and 
 examples designed to enable developers to build applications using Splunk.
@@ -55,6 +55,8 @@ You'll need Java SE version 6 or higher, which you can download from the
 
 You'll also need Ant, which you can install from the 
 [Apache website](http://ant.apache.org/bindownload.cgi). 
+
+The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [`ssl_protocols`](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
 
 If you are using Windows, you'll need to make sure the following system 
 variables are created and set: 

@@ -1,5 +1,20 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.4.0
+
+### New features and APIs
+
+* Added support for Java 8, when manually configuring the `Service` class to use TLSv1.2, TLSv1.1, or TLSv1 defined in the `SSLSecurityProtocol` enum. The default is still SSLv3.
+* Allow setting a custom `SSLSocketFactory` on the `HTTPService` and `Service` classes.
+
+### New examples
+
+* `ssl_protocols`: tries to connect to Splunk over HTTPS using different SSL/TLS protocols, then using a custom SSL and TLS `SSLSocketFactory`.
+
+### Minor changes
+
+* The SDK is now compiled with the `Command` class used in examples.
+
 ## Version 1.3.2
 
 ### Performance improvements

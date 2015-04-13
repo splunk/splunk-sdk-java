@@ -149,6 +149,7 @@ public class Service extends BaseService {
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
+        this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
     }
 
     /**
@@ -167,6 +168,7 @@ public class Service extends BaseService {
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
+        this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
     }
 
     /**

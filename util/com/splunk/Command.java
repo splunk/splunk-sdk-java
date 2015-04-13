@@ -32,7 +32,11 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
-// Processes and capture command options and arguments
+/**
+ * This class serves as an example and is unsupported.
+ *
+ * Processes and capture command options and arguments
+ */
 public class Command {
     private String appName;
     private Options rules = new Options();

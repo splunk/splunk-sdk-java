@@ -35,9 +35,8 @@ import java.util.Map.Entry;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-
-    private static final SSLSocketFactory SSL_SOCKET_FACTORY = createSSLFactory();
-    
+    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.SSLv3;
+    private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
 
@@ -46,27 +45,37 @@ public class HttpService {
             return true;
         }
     };
-    
-    /** A variable to hold an optional custom HTTPS handler */
+
+    /**
+     * A variable to hold an optional custom HTTPS handler
+     */
     protected URLStreamHandler httpsHandler = null;
 
-    /** The scheme used to access the service. */
+    /**
+     * The scheme used to access the service.
+     */
     protected String scheme = "https";
 
-    /** The host name of the service. */
+    /**
+     * The host name of the service.
+     */
     protected String host = "localhost";
 
-    /** The port number of the service. */
+    /**
+     * The port number of the service.
+     */
     protected int port = 8089;
 
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.3.2");
+        put("User-Agent", "splunk-sdk-java/1.4.0");
         put("Accept", "*/*");
     }};
 
-    /** Constructs a new {@code HttpService} instance. */
+    /**
+     * Constructs a new {@code HttpService} instance.
+     */
     public HttpService() {
     }
 
@@ -94,28 +103,29 @@ public class HttpService {
      * Constructs a new {@code HttpService} instance using the given host,
      * port, and scheme.
      *
-     * @param host The host name of the service.
-     * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service ({@code http} or 
-     * {@code https}).
+     * @param host   The host name of the service.
+     * @param port   The port number of the service.
+     * @param scheme Scheme for accessing the service ({@code http} or
+     *               {@code https}).
      */
     public HttpService(String host, int port, String scheme) {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
     }
-    
+
     /**
      * Constructs a new {@code HttpService} instance using the given host,
      * port, and scheme, and instructing it to use the specified HTTPS handler.
      *
-     * @param host The host name of the service.
-     * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service ({@code http} or 
-     * {@code https}).
+     * @param host         The host name of the service.
+     * @param port         The port number of the service.
+     * @param scheme       Scheme for accessing the service ({@code http} or
+     *                     {@code https}).
+     * @param httpsHandler A custom URL Stream handler.
      */
-    public HttpService(String host, int port, String scheme, 
-    		URLStreamHandler httpsHandler) {
+    public HttpService(String host, int port, String scheme,
+                       URLStreamHandler httpsHandler) {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
@@ -172,6 +182,26 @@ public class HttpService {
     }
 
     /**
+     * Returns the SSL security protocol of this service.
+     *
+     * @return The SSL security protocol.
+     */
+    public static SSLSecurityProtocol getSslSecurityProtocol() {
+        return sslSecurityProtocol;
+    }
+
+    /**
+     * Sets the SSL security protocol of this service.
+     */
+    public static void setSslSecurityProtocol(SSLSecurityProtocol securityProtocol) {
+        // Only update the SSL_SOCKET_FACTORY if changing protocols
+        if (sslSecurityProtocol != securityProtocol) {
+            sslSecurityProtocol = securityProtocol;
+            sslSocketFactory = new SplunkHttpsSocketFactory(createSSLFactory(), securityProtocol);
+        }
+    }
+
+    /**
      * Returns the URL prefix of this service, consisting of
      * {@code scheme://host[:port]}.
      *
@@ -180,7 +210,7 @@ public class HttpService {
     public String getPrefix() {
         if (this.prefix == null)
             this.prefix = String.format("%s://%s:%s",
-                this.scheme, this.host, this.port);
+                    this.scheme, this.host, this.port);
         return this.prefix;
     }
 
@@ -201,17 +231,16 @@ public class HttpService {
      */
     public URL getUrl(String path) {
         try {
-        	if (HTTPS_SCHEME.equals(getScheme()) && httpsHandler != null) {
-        		// This branch is not currently covered by unit tests as I 
-        		// could not figure out a generic way to get the default
-        		// HTTPS handler.
-        		return new URL(getScheme(), getHost(), getPort(), path, 
-        				httpsHandler);
-        	} else {
-        		return new URL(getScheme(), getHost(), getPort(), path);
-        	}
-        }
-        catch (MalformedURLException e) {
+            if (HTTPS_SCHEME.equals(getScheme()) && httpsHandler != null) {
+                // This branch is not currently covered by unit tests as I
+                // could not figure out a generic way to get the default
+                // HTTPS handler.
+                return new URL(getScheme(), getHost(), getPort(), path,
+                        httpsHandler);
+            } else {
+                return new URL(getScheme(), getHost(), getPort(), path);
+            }
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -237,7 +266,7 @@ public class HttpService {
     public ResponseMessage post(String path, Map<String, Object> args) {
         RequestMessage request = new RequestMessage("POST");
         request.getHeader().put(
-            "Content-Type", "application/x-www-form-urlencoded");
+                "Content-Type", "application/x-www-form-urlencoded");
         if (count(args) > 0)
             request.setContent(Args.encode(args));
         return send(path, request);
@@ -277,7 +306,7 @@ public class HttpService {
      */
     Socket open() throws IOException {
         if (this.scheme.equals("https")) {
-            return SSL_SOCKET_FACTORY.createSocket(this.host, this.port);
+            return sslSocketFactory.createSocket(this.host, this.port);
         }
         return new Socket(this.host, this.port);
     }
@@ -286,7 +315,7 @@ public class HttpService {
      * Issue an HTTP request against the service using a given path and
      * request message.
      *
-     * @param path The request path.
+     * @param path    The request path.
      * @param request The request message.
      * @return The HTTP response.
      */
@@ -297,14 +326,13 @@ public class HttpService {
         // Create and initialize the connection object
         HttpURLConnection cn;
         try {
-            cn = (HttpURLConnection)url.openConnection();
-        }
-        catch (IOException e) {
+            cn = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        if(cn instanceof HttpsURLConnection) {
-            ((HttpsURLConnection)cn).setSSLSocketFactory(SSL_SOCKET_FACTORY);
-            ((HttpsURLConnection)cn).setHostnameVerifier(HOSTNAME_VERIFIER);
+        if (cn instanceof HttpsURLConnection) {
+            ((HttpsURLConnection) cn).setSSLSocketFactory(sslSocketFactory);
+            ((HttpsURLConnection) cn).setHostnameVerifier(HOSTNAME_VERIFIER);
         }
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
@@ -313,8 +341,7 @@ public class HttpService {
         String method = request.getMethod();
         try {
             cn.setRequestMethod(method);
-        }
-        catch (ProtocolException e) {
+        } catch (ProtocolException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
@@ -337,11 +364,10 @@ public class HttpService {
                 cn.setDoOutput(true);
                 OutputStream stream = cn.getOutputStream();
                 OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF-8");
-                writer.write((String)content);
+                writer.write((String) content);
                 writer.close();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
@@ -352,26 +378,25 @@ public class HttpService {
         // Execute the request
         try {
             cn.connect();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
         int status;
         try {
             status = cn.getResponseCode();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
         InputStream input = null;
         try {
             input = status >= 400
-                ? cn.getErrorStream()
-                : cn.getInputStream();
+                    ? cn.getErrorStream()
+                    : cn.getInputStream();
+        } catch (IOException e) {
+            assert (false);
         }
-        catch (IOException e) { assert(false); }
 
         ResponseMessage response = new ResponseMessage(status, input);
 
@@ -388,35 +413,66 @@ public class HttpService {
         return response;
     }
 
-    private static SSLSocketFactory createSSLFactory() {
+    public static void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
+        if (sslSocketFactory == null)
+            throw new IllegalArgumentException("The sslSocketFactory cannot be null.");
+        HttpService.sslSocketFactory = sslSocketFactory;
+    }
+
+    public static SSLSocketFactory getSSLSocketFactory() {
+        return HttpService.sslSocketFactory;
+    }
+
+    public static SSLSocketFactory createSSLFactory() {
         TrustManager[] trustAll = new TrustManager[]{
                 new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() { return null; }
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) { }
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
                 }
         };
         try {
-            SSLContext context = SSLContext.getInstance("SSL");
+            SSLContext context;
+            switch (HttpService.sslSecurityProtocol) {
+                case TLSv1_2:
+                case TLSv1_1:
+                case TLSv1:
+                    context = SSLContext.getInstance("TLS");
+                    break;
+                default:
+                    context = SSLContext.getInstance("SSL");
+            }
+
             context.init(null, trustAll, new java.security.SecureRandom());
-            return new SSLv3SocketFactory(context.getSocketFactory());
+            return new SplunkHttpsSocketFactory(context.getSocketFactory(), HttpService.sslSecurityProtocol);
         } catch (Exception e) {
             throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
         }
     }
 
-    private static final class SSLv3SocketFactory extends SSLSocketFactory {
+    private static final class SplunkHttpsSocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
+        private SSLSecurityProtocol sslSecurityProtocol;
 
-        public static final String[] PROTOCOLS = {"SSLv3"};
-
-        private SSLv3SocketFactory(SSLSocketFactory delegate) {
+        private SplunkHttpsSocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
+            this.sslSecurityProtocol = HttpService.sslSecurityProtocol;
+        }
+
+        private SplunkHttpsSocketFactory(SSLSocketFactory delegate, SSLSecurityProtocol securityProtocol) {
+            this.delegate = delegate;
+            this.sslSecurityProtocol = securityProtocol;
         }
 
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
-                ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                ((SSLSocket) socket).setEnabledProtocols(new String[]{sslSecurityProtocol.toString()});
             }
             return socket;
         }

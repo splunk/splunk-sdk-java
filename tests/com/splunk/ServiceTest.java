@@ -306,7 +306,7 @@ public class ServiceTest extends SDKTestCase {
         Job job = jobs.create("search * | head 1");
 
         while (!job.isDone()) {
-            Thread.sleep(150);
+            Thread.sleep(500);
         }
 
         testGetters(job);
@@ -618,7 +618,7 @@ public class ServiceTest extends SDKTestCase {
 
         Job job = service.search(QUERY, new Args());
         while (!job.isDone()) {
-            sleep(50);
+            sleep(200);
         }
         
         InputStream jobOutput = job.getResults();
