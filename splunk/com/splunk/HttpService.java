@@ -187,7 +187,7 @@ public class HttpService {
         // Only update the SSL_SOCKET_FACTORY if changing protocols
         if (sslSecurityProtocol != securityProtocol) {
             sslSecurityProtocol = securityProtocol;
-            sslSocketFactory = new SSLv3SocketFactory(createSSLFactory(), securityProtocol);
+            sslSocketFactory = new SplunkHttpsSocketFactory(createSSLFactory(), securityProtocol);
         }
     }
 
@@ -439,22 +439,22 @@ public class HttpService {
             }
 
             context.init(null, trustAll, new java.security.SecureRandom());
-            return new SSLv3SocketFactory(context.getSocketFactory(), HttpService.sslSecurityProtocol);
+            return new SplunkHttpsSocketFactory(context.getSocketFactory(), HttpService.sslSecurityProtocol);
         } catch (Exception e) {
             throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
         }
     }
 
-    private static final class SSLv3SocketFactory extends SSLSocketFactory {
+    private static final class SplunkHttpsSocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
         private SSLSecurityProtocol sslSecurityProtocol;
 
-        private SSLv3SocketFactory(SSLSocketFactory delegate) {
+        private SplunkHttpsSocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
             this.sslSecurityProtocol = HttpService.sslSecurityProtocol;
         }
 
-        private SSLv3SocketFactory(SSLSocketFactory delegate, SSLSecurityProtocol securityProtocol) {
+        private SplunkHttpsSocketFactory(SSLSocketFactory delegate, SSLSecurityProtocol securityProtocol) {
             this.delegate = delegate;
             this.sslSecurityProtocol = securityProtocol;
         }
