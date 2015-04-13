@@ -227,6 +227,7 @@
         <standalone-example-jar name="search_saved"/>
         <standalone-example-jar name="search_simple"/>
         <standalone-example-jar name="spurl"/>
+        <standalone-example-jar name="ssl_protocols"/>
         <standalone-example-jar name="tail"/>
         <standalone-example-jar name="pivot">
             <dependencies>
