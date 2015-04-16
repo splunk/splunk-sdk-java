@@ -63,7 +63,8 @@ public class HttpException extends RuntimeException {
             s.appendCodePoint(c);
         }
 
-        String detail = "";
+        // Initialize detail with raw response data. Prevents XML parser failures.
+        String detail = s.toString();
         try {
             // Attempt to read the error detail from the error response content as XML
             Document document = Xml.parse(new ByteArrayInputStream(detail.getBytes()));
@@ -72,8 +73,7 @@ public class HttpException extends RuntimeException {
                 detail = msgs.item(0).getTextContent();
         }
         catch (Exception e) {
-            // Not an XML document; return the raw string.
-            detail = s.toString();
+            // Not an XML document; keep the raw string.
         }
 
         String message = String.format("HTTP %d", status);  
