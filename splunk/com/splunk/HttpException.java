@@ -67,7 +67,7 @@ public class HttpException extends RuntimeException {
         String detail = s.toString();
         try {
             // Attempt to read the error detail from the error response content as XML
-            Document document = Xml.parse(new ByteArrayInputStream(detail.getBytes()));
+            Document document = Xml.parse(new ByteArrayInputStream(detail.getBytes()), true);
             NodeList msgs = document.getElementsByTagName("msg");
             if (msgs.getLength() > 0)
                 detail = msgs.item(0).getTextContent();
