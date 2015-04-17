@@ -16,18 +16,28 @@ public class HttpExceptionTest {
             + responseMessage
             + "</msg></messages></response>";
 
-    private ResponseMessage response;
+    private ResponseMessage xmlResponse;
+    private ResponseMessage stringResponse;
 
     @Before
     public void setUp() {
-        InputStream in = new ByteArrayInputStream(responseMessageXML.getBytes());
-        response = new ResponseMessage(503, in);
+        InputStream inXml = new ByteArrayInputStream(responseMessageXML.getBytes());
+        xmlResponse = new ResponseMessage(503, inXml);
+        InputStream inString = new ByteArrayInputStream(responseMessage.getBytes());
+        stringResponse = new ResponseMessage(503, inString);
     }
 
     @Test
-    public void testCreate() {
-        HttpException e = HttpException.create(response);
-        assertEquals("Couldn't parse error details", responseMessage, e.getDetail());
-        assertEquals("create() modified response code", 503, e.getStatus());
+    public void testCreateFromXML() {
+        HttpException e = HttpException.create(xmlResponse);
+        assertEquals("Couldn't parse XML error details", responseMessage, e.getDetail());
+        assertEquals("create() modified response status code", 503, e.getStatus());
+    }
+
+    @Test
+    public void testCreateFromString() {
+        HttpException e = HttpException.create(stringResponse);
+        assertEquals("Raw response message was modified", responseMessage, e.getDetail());
+        assertEquals("create() modified response status code", 503, e.getStatus());
     }
 }
