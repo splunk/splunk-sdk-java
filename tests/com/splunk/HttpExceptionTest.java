@@ -1,6 +1,6 @@
 package com.splunk;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -16,11 +16,11 @@ public class HttpExceptionTest {
             + responseMessage
             + "</msg></messages></response>";
 
-    private ResponseMessage xmlResponse;
-    private ResponseMessage stringResponse;
+    private static ResponseMessage xmlResponse;
+    private static ResponseMessage stringResponse;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         InputStream inXml = new ByteArrayInputStream(responseMessageXML.getBytes());
         xmlResponse = new ResponseMessage(503, inXml);
         InputStream inString = new ByteArrayInputStream(responseMessage.getBytes());
