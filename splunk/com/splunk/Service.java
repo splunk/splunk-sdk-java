@@ -45,6 +45,9 @@ public class Service extends BaseService {
     /** The current session token. */
     protected String token = null;
 
+    /** The current session cookie. */
+    protected String cookie = null;
+
     /** The current owner context. A value of "nobody" means that all users
      * have access to the resource.
      */
@@ -117,7 +120,7 @@ public class Service extends BaseService {
      * {@code https}).
      */
     public Service(String host, int port, String scheme, 
-    		URLStreamHandler httpsHandler) {
+        URLStreamHandler httpsHandler) {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
@@ -1108,12 +1111,14 @@ public class Service extends BaseService {
         Args args = new Args();
         args.put("username", username);
         args.put("password", password);
+        args.put("cookie", "1");
         ResponseMessage response = post("/services/auth/login", args);
         String sessionKey = Xml.parse(response.getContent())
             .getElementsByTagName("sessionKey")
             .item(0)
             .getTextContent();
         this.token = "Splunk " + sessionKey;
+        this.cookie = response.getHeader().get("Cookie");
         this.version = this.getInfo().getVersion();
         if (versionCompare("4.3") >= 0)
             this.passwordEndPoint = "storage/passwords";
@@ -1274,7 +1279,10 @@ public class Service extends BaseService {
      * @return The HTTP response.
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
-        if (token != null) {
+        if (cookie != null) {
+            request.getHeader().put("Cookie", cookie);
+        }
+        else if (token != null) {
             request.getHeader().put("Authorization", token);
         }
         return super.send(fullpath(path), request);

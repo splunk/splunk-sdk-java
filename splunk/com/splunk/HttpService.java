@@ -349,14 +349,12 @@ public class HttpService {
         Map<String, String> header = request.getHeader();
         for (Entry<String, String> entry : header.entrySet())
             cn.setRequestProperty(entry.getKey(), entry.getValue());
-
         // Add default headers that were absent from the request message
         for (Entry<String, String> entry : defaultHeader.entrySet()) {
             String key = entry.getKey();
             if (header.containsKey(key)) continue;
             cn.setRequestProperty(key, entry.getValue());
         }
-
         // Write out request content, if any
         try {
             Object content = request.getContent();
@@ -399,7 +397,9 @@ public class HttpService {
         }
 
         ResponseMessage response = new ResponseMessage(status, input);
-
+	//Add cookie to response header
+        response.getHeader().put(
+                "Cookie", cn.getHeaderField("Set-Cookie"));
         if (VERBOSE_REQUESTS) {
             System.out.format("%d\n", status);
             if (method.equals("POST")) {
