@@ -73,6 +73,7 @@ public class HttpService {
         put("Accept", "*/*");
     }};
 
+    static Map<String,String> cookies = new HashMap<String, String>();
     /**
      * Constructs a new {@code HttpService} instance.
      */
@@ -396,8 +397,11 @@ public class HttpService {
             assert (false);
         }
 
+        //cookies.put()
         ResponseMessage response = new ResponseMessage(status, input);
-	//Add cookie to response header
+        //Add cookie to response header
+        System.out.println(cn.getHeaderField("Set-Cookie"));
+
         response.getHeader().put(
                 "Cookie", cn.getHeaderField("Set-Cookie"));
         if (VERBOSE_REQUESTS) {
