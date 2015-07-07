@@ -73,7 +73,8 @@ public class HttpService {
         put("Accept", "*/*");
     }};
 
-    static Map<String,String> cookies = new HashMap<String, String>();
+    static SimpleCookieStore cookieStore = new SimpleCookieStore();
+
     /**
      * Constructs a new {@code HttpService} instance.
      */
@@ -356,6 +357,9 @@ public class HttpService {
             if (header.containsKey(key)) continue;
             cn.setRequestProperty(key, entry.getValue());
         }
+
+        //Add cookes
+        cn.setRequestProperty("Cookie", cookieStore.getCookies());
         // Write out request content, if any
         try {
             Object content = request.getContent();
@@ -396,14 +400,11 @@ public class HttpService {
         } catch (IOException e) {
             assert (false);
         }
+        //Add cookies to cookie Store
+        cookieStore.add(cn.getHeaderField("Set-Cookie"));
 
-        //cookies.put()
         ResponseMessage response = new ResponseMessage(status, input);
-        //Add cookie to response header
-        System.out.println(cn.getHeaderField("Set-Cookie"));
 
-        response.getHeader().put(
-                "Cookie", cn.getHeaderField("Set-Cookie"));
         if (VERBOSE_REQUESTS) {
             System.out.format("%d\n", status);
             if (method.equals("POST")) {
