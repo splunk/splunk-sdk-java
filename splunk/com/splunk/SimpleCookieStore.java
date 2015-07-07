@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2012 Splunk, Inc.
+ * Copyright 2015 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -17,15 +17,18 @@
 
 package com.splunk;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.List;
+import java.net.HttpCookie;
+import java.net.CookieStore;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
 /**
  * The {@code SimpleCookieStore} class stores cookies for authentication.
  * */
 class SimpleCookieStore {
 
-    Map<String, String> cookies = new HashMap<String, String>();
+    private CookieStore cookieJar = new CookieManager(null, CookiePolicy.ACCEPT_ALL).getCookieStore();
     /**
      * Adds cookies from a "Set-Cookie" header to the cookie store.
      *
@@ -33,10 +36,10 @@ class SimpleCookieStore {
      */
     public void add(String setCookieHeader) {
         if (setCookieHeader != null) {
-            setCookieHeader = setCookieHeader.split(";")[0];
-            String cookieKey = setCookieHeader.split("=")[0];
-            String cookieValue = setCookieHeader.split("=")[1];
-            cookies.put(cookieKey, cookieValue);
+            List<HttpCookie> cookies = HttpCookie.parse(setCookieHeader);
+            for (HttpCookie cookie : cookies) {
+                cookieJar.add(null, cookie);
+            }
         }
     }
 
@@ -47,9 +50,19 @@ class SimpleCookieStore {
      */
     public String getCookies() {
         String cookieString = "";
-        for (String key : cookies.keySet()) {
-            cookieString = cookieString.concat(key + "=" + cookies.get(key) + "; ");
+        for (HttpCookie cookie : cookieJar.getCookies()) {
+            cookieString = cookieString.concat(cookie.toString() + "; ");
         }
         return cookieString;
     }
+
+    /**
+     * Returns true if the cookie store is empty, false otherwise
+     *
+     * @return Boolean for whether or not the cookie store is empty
+     */
+    public Boolean isEmpty() {
+        return cookieJar.getCookies().isEmpty();
+    }
+
 }

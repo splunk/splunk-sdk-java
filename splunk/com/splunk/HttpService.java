@@ -73,7 +73,7 @@ public class HttpService {
         put("Accept", "*/*");
     }};
 
-    static SimpleCookieStore cookieStore = new SimpleCookieStore();
+    protected SimpleCookieStore cookieStore = new SimpleCookieStore();
 
     /**
      * Constructs a new {@code HttpService} instance.
@@ -358,8 +358,9 @@ public class HttpService {
             cn.setRequestProperty(key, entry.getValue());
         }
 
-        //Add cookes
+        // Add cookies to header
         cn.setRequestProperty("Cookie", cookieStore.getCookies());
+
         // Write out request content, if any
         try {
             Object content = request.getContent();
@@ -400,7 +401,8 @@ public class HttpService {
         } catch (IOException e) {
             assert (false);
         }
-        //Add cookies to cookie Store
+
+        // Add cookies to cookie Store
         cookieStore.add(cn.getHeaderField("Set-Cookie"));
 
         ResponseMessage response = new ResponseMessage(status, input);

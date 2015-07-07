@@ -1275,7 +1275,8 @@ public class Service extends BaseService {
      * @return The HTTP response.
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
-        if (token != null) {
+        // cookieStore is a protected member of HttpService
+        if (token != null && cookieStore.isEmpty()) {
             request.getHeader().put("Authorization", token);
         }
         return super.send(fullpath(path), request);
