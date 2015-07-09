@@ -252,7 +252,7 @@ public class HttpService {
      *
      * @return All cookies as in a string in the format key=value; key=value; etc=etc
      */
-    public String getCookies() {
+    public String stringifyCookies() {
         return cookieStore.getCookies();
     }
 

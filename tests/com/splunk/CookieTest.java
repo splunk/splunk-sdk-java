@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Splunk, Inc.
+ * Copyright 2015 Splunk, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"): you may
  * not use this file except in compliance with the License. You may obtain
@@ -44,12 +44,12 @@ public class CookieTest extends SDKTestCase {
 
         s.login();
 
-        Assert.assertNotEquals(s.getCookies().length(), 0);
+        Assert.assertNotEquals(s.stringifyCookies().length(), 0);
     }
 
     @Test
     public void testLoginWithCookie() {
-        String validCookie = service.getCookies();
+        String validCookie = service.stringifyCookies();
 
         Service s  = new Service(service.getHost(), service.getPort());
 
@@ -62,7 +62,7 @@ public class CookieTest extends SDKTestCase {
         // Make sure we're still using the same token.
         // In particular we don't want to trigger auto-login functionality
         // that may get a new cookie.
-        Assert.assertEquals(s.getCookies(), validCookie);
+        Assert.assertEquals(s.stringifyCookies(), validCookie);
     }
 
     @Test(expected=HttpException.class)
@@ -83,7 +83,7 @@ public class CookieTest extends SDKTestCase {
 
     @Test
     public void testLoginWithMultipleCookies() {
-        String validCookie = service.getCookies();
+        String validCookie = service.stringifyCookies();
 
         Service s  = new Service(service.getHost(), service.getPort());
 
@@ -93,6 +93,22 @@ public class CookieTest extends SDKTestCase {
         s.getSettings().refresh();
     }
 
+    @Test
+    public void testLoginWithMultipleCookiesReversed() {
+        String validCookie = service.stringifyCookies();
 
+        Service s  = new Service(service.getHost(), service.getPort());
 
+        s.addCookie("bad=cookie");
+        s.addCookie(validCookie);
+
+        s.getSettings().refresh();
+    }
+
+   // @Test
+   // public void testTokenNotSentIfCookiePresent() {
+   //    Assert.assertNotEquals(service.stringifyCookies().length(), 0);
+
+   //    service.get("/services/authentication/users").getHeader().
+   // }
 }
