@@ -19,16 +19,14 @@ package com.splunk;
 
 import java.util.List;
 import java.net.HttpCookie;
-import java.net.CookieStore;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-
+import java.util.Map;
+import java.util.HashMap;
 /**
  * The {@code SimpleCookieStore} class stores cookies for authentication.
  * */
 class SimpleCookieStore {
 
-    private CookieStore cookieJar = new CookieManager(null, CookiePolicy.ACCEPT_ALL).getCookieStore();
+    private Map<String, String> cookieJar = new HashMap<String, String>();
     /**
      * Adds cookies from a "Set-Cookie" header to the cookie store.
      *
@@ -38,7 +36,7 @@ class SimpleCookieStore {
         if (setCookieHeader != null) {
             List<HttpCookie> cookies = HttpCookie.parse(setCookieHeader);
             for (HttpCookie cookie : cookies) {
-                cookieJar.add(null, cookie);
+                cookieJar.put(cookie.getName(), cookie.getValue());
             }
         }
     }
@@ -50,8 +48,8 @@ class SimpleCookieStore {
      */
     public String getCookies() {
         String cookieString = "";
-        for (HttpCookie cookie : cookieJar.getCookies()) {
-            cookieString = cookieString.concat(cookie.toString() + "; ");
+        for (Map.Entry<String, String> cookie : cookieJar.entrySet()) {
+            cookieString = cookieString.concat(cookie.getKey() + "=" + cookie.getValue() + "; ");
         }
         return cookieString;
     }
@@ -62,7 +60,14 @@ class SimpleCookieStore {
      * @return Boolean for whether or not the cookie store is empty
      */
     public Boolean isEmpty() {
-        return cookieJar.getCookies().isEmpty();
+        return cookieJar.isEmpty();
+    }
+
+    /**
+     * Removes all cookies from SimpleCookieStore
+     */
+    public void removeAll() {
+        cookieJar.clear();
     }
 
 }

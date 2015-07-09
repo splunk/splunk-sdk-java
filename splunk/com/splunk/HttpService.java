@@ -248,6 +248,31 @@ public class HttpService {
     }
 
     /**
+     * Returns all the stored cookies
+     *
+     * @return All cookies as in a string in the format key=value; key=value; etc=etc
+     */
+    public String getCookies() {
+        return cookieStore.getCookies();
+    }
+
+    /**
+     * Adds the passed cookie header to the cookieStore
+     *
+     * @param setCookieHeader The result from a getRequestHeader("Set-Cookie") call
+     */
+    public void addCookie(String setCookieHeader) {
+        cookieStore.add(setCookieHeader);
+    }
+
+    /**
+     * Removes all cookies from the cookieStore
+     */
+    public void removeAllCookies() {
+        cookieStore.removeAll();
+    }
+
+    /**
      * Issues a POST request against the service using a given path.
      *
      * @param path The request path.
