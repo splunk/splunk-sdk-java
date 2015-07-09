@@ -33,14 +33,30 @@ public class CookieTest extends SDKTestCase {
     }
 
     @Test
+    public void testGotCookieOnLogin() {
+        ServiceArgs args = new ServiceArgs();
+        args.setHost((String) command.opts.get("host"));
+        args.setPort((Integer) command.opts.get("port"));
+        args.setScheme((String) command.opts.get("scheme"));
+        args.setUsername((String) command.opts.get("username"));
+        args.setPassword((String) command.opts.get("password"));
+        Service s = new Service(args);
+
+        s.login();
+
+        Assert.assertNotEquals(s.getCookies().length(), 0);
+    }
+
+    @Test
     public void testLoginWithCookie() {
         String validCookie = service.getCookies();
 
         Service s  = new Service(service.getHost(), service.getPort());
 
+        s.addCookie(validCookie);
+
         // Ensure we can perform some action.
         // In particular we don't expect an unauthenticated error.
-        s.addCookie(validCookie);
         s.getSettings().refresh();
 
         // Make sure we're still using the same token.
@@ -49,21 +65,34 @@ public class CookieTest extends SDKTestCase {
         Assert.assertEquals(s.getCookies(), validCookie);
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected=HttpException.class)
     public void testLoginFailsWithBadCookie() {
-        ServiceArgs args = new ServiceArgs();
-        args.setHost((String) command.opts.get("host"));
-        args.setPort((Integer) command.opts.get("port"));
-        args.setScheme((String) command.opts.get("scheme"));
-        Service s = new Service(args);
+        Service s  = new Service(service.getHost(), service.getPort());
 
         s.addCookie("bad=cookie;");
 
-        s.login();
-
-
-
+        s.getSettings().refresh();
     }
+
+    @Test(expected=HttpException.class)
+    public void testLoginFailsWithNoCookieOrLogin() {
+        Service s  = new Service(service.getHost(), service.getPort());
+
+        s.getSettings().refresh();
+    }
+
+    @Test
+    public void testLoginWithMultipleCookies() {
+        String validCookie = service.getCookies();
+
+        Service s  = new Service(service.getHost(), service.getPort());
+
+        s.addCookie(validCookie);
+        s.addCookie("bad=cookie");
+
+        s.getSettings().refresh();
+    }
+
 
 
 }
