@@ -52,7 +52,10 @@ class SimpleCookieStore {
         StringBuilder cookieString = new StringBuilder();
         //String cookieString = "";
         for (Map.Entry<String, String> cookie : cookieJar.entrySet()) {
-            cookieString.append(cookie.getKey() + "=" + cookie.getValue() + "; ");
+            cookieString.append(cookie.getKey());
+            cookieString.append("=");
+            cookieString.append(cookie.getValue());
+            cookieString.append("; ");
         }
         return cookieString.toString();
     }

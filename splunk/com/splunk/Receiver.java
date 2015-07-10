@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
-
+import java.lang.StringBuilder;
 /**
  * The {@code Receiver} class represents a named index and unnamed index
  * receivers.
@@ -94,29 +94,26 @@ public class Receiver {
             postUrl = postUrl + args.encode();
         }
 
-        String header;
+        StringBuilder header = new StringBuilder(String.format(
+                "%s HTTP/1.1\r\n" +
+                "Host: %s:%d\r\n" +
+                "Accept-Encoding: identity\r\n" +
+                "X-Splunk-Input-Mode: Streaming\r\n",
+                postUrl,
+                service.getHost(), service.getPort()
+                ));
+
         if (service.hasCookies()) {
-            header = String.format(
-                "%s HTTP/1.1\r\n" +
-                "Host: %s:%d\r\n" +
-                "Accept-Encoding: identity\r\n" +
-                "Cookie: %s\r\n" +
-                "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-                postUrl,
-                service.getHost(), service.getPort(),
-                service.stringifyCookies());
+            header.append("Cookie: ");
+            header.append(service.stringifyCookies());
+
         } else {
-            header = String.format(
-                "%s HTTP/1.1\r\n" +
-                "Host: %s:%d\r\n" +
-                "Accept-Encoding: identity\r\n" +
-                "Authorization: %s\r\n" +
-                "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-                postUrl,
-                service.getHost(), service.getPort(),
-                service.getToken());
+            header.append("Authorization: ");
+            header.append(service.getToken());
         }
-        out.write(header);
+        header.append("\r\n\r\n");
+
+        out.write(header.toString());
         out.flush();
         return socket;
     }
