@@ -169,6 +169,7 @@ public class Service extends BaseService {
         this.password = (String)args.get("password");
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
+        this.addCookie((String)args.get("cookie"));
     }
 
     /**
@@ -1129,6 +1130,7 @@ public class Service extends BaseService {
      */
     public Service logout() {
         this.token = null;
+        this.removeAllCookies();
         return this;
     }
 

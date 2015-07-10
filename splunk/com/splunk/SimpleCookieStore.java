@@ -21,9 +21,11 @@ import java.util.List;
 import java.net.HttpCookie;
 import java.util.Map;
 import java.util.HashMap;
+import java.lang.StringBuilder;
+
 /**
  * The {@code SimpleCookieStore} class stores cookies for authentication.
- * */
+ */
 class SimpleCookieStore {
 
     private Map<String, String> cookieJar = new HashMap<String, String>();
@@ -47,11 +49,12 @@ class SimpleCookieStore {
      * @return Cookie String in the format "Key=Value; Key=Value; ect"
      */
     public String getCookies() {
-        String cookieString = "";
+        StringBuilder cookieString = new StringBuilder();
+        //String cookieString = "";
         for (Map.Entry<String, String> cookie : cookieJar.entrySet()) {
-            cookieString = cookieString.concat(cookie.getKey() + "=" + cookie.getValue() + "; ");
+            cookieString.append(cookie.getKey() + "=" + cookie.getValue() + "; ");
         }
-        return cookieString;
+        return cookieString.toString();
     }
 
     /**

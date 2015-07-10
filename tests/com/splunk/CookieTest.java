@@ -20,6 +20,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Assume;
 import org.junit.Test;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CookieTest extends SDKTestCase {
 
@@ -34,12 +36,10 @@ public class CookieTest extends SDKTestCase {
 
     @Test
     public void testGotCookieOnLogin() {
-        ServiceArgs args = new ServiceArgs();
-        args.setHost((String) command.opts.get("host"));
-        args.setPort((Integer) command.opts.get("port"));
-        args.setScheme((String) command.opts.get("scheme"));
-        args.setUsername((String) command.opts.get("username"));
-        args.setPassword((String) command.opts.get("password"));
+        Map<String, Object> args = getStandardArgs();
+        args.put("scheme", (String) command.opts.get("scheme"));
+        args.put("username", (String) command.opts.get("username"));
+        args.put("password", (String) command.opts.get("password"));
         Service s = new Service(args);
 
         s.login();
@@ -51,9 +51,10 @@ public class CookieTest extends SDKTestCase {
     public void testLoginWithCookie() {
         String validCookie = service.stringifyCookies();
 
-        Service s  = new Service(service.getHost(), service.getPort());
+        Map<String, Object> args = getStandardArgs();
+        args.put("cookie", (String) validCookie);
 
-        s.addCookie(validCookie);
+        Service s = new Service(args);
 
         // Ensure we can perform some action.
         // In particular we don't expect an unauthenticated error.
@@ -67,15 +68,16 @@ public class CookieTest extends SDKTestCase {
 
     @Test(expected=HttpException.class)
     public void testLoginFailsWithBadCookie() {
-        Service s  = new Service(service.getHost(), service.getPort());
+        Map<String, Object> args = getStandardArgs();
+        args.put("cookie", (String) "bad=cookie");
 
-        s.addCookie("bad=cookie;");
+        Service s  = new Service(args);
 
         s.getSettings().refresh();
     }
 
     @Test(expected=HttpException.class)
-    public void testLoginFailsWithNoCookieOrLogin() {
+    public void testAuthenticationFailsWithNoCookieOrLogin() {
         Service s  = new Service(service.getHost(), service.getPort());
 
         s.getSettings().refresh();
@@ -85,9 +87,11 @@ public class CookieTest extends SDKTestCase {
     public void testLoginWithMultipleCookies() {
         String validCookie = service.stringifyCookies();
 
-        Service s  = new Service(service.getHost(), service.getPort());
+        Map<String, Object> args = getStandardArgs();
+        args.put("cookie", (String) validCookie);
 
-        s.addCookie(validCookie);
+        Service s  = new Service(args);
+
         s.addCookie("bad=cookie");
 
         s.getSettings().refresh();
@@ -97,18 +101,68 @@ public class CookieTest extends SDKTestCase {
     public void testLoginWithMultipleCookiesReversed() {
         String validCookie = service.stringifyCookies();
 
-        Service s  = new Service(service.getHost(), service.getPort());
+        Map<String, Object> args = getStandardArgs();
+        args.put("cookie", (String) "bad=cookie");
+        Service s  = new Service(args);
 
-        s.addCookie("bad=cookie");
         s.addCookie(validCookie);
 
         s.getSettings().refresh();
     }
 
-   // @Test
-   // public void testTokenNotSentIfCookiePresent() {
-   //    Assert.assertNotEquals(service.stringifyCookies().length(), 0);
+    @Test
+    public void testHttpServiceWithValidCookie() {
+        String validCookie = service.stringifyCookies();
 
-   //    service.get("/services/authentication/users").getHeader().
-   // }
+        HttpService httpService;
+
+        httpService = new HttpService(
+                (String)command.opts.get("host"),
+                (Integer)command.opts.get("port"),
+                (String)command.opts.get("scheme")
+        );
+
+        httpService.addCookie(validCookie);
+
+        httpService.get("/services/authentication/users");
+
+        Assert.assertEquals(validCookie, httpService.stringifyCookies());
+    }
+
+    @Test(expected=HttpException.class)
+    public void testHttpServiceWithInvalidCookie() {
+        HttpService httpService;
+
+        httpService = new HttpService(
+                (String)command.opts.get("host"),
+                (Integer)command.opts.get("port"),
+                (String)command.opts.get("scheme")
+        );
+
+        httpService.addCookie("bad=cookie");
+
+        httpService.get("/services/authentication/users");
+    }
+
+    @Test(expected=HttpException.class)
+    public void testHttpServiceWithNoCookie() {
+        HttpService httpService;
+
+        httpService = new HttpService(
+                (String)command.opts.get("host"),
+                (Integer)command.opts.get("port"),
+                (String)command.opts.get("scheme")
+        );
+
+        httpService.get("/services/authentication/users");
+    }
+
+    private Map<String, Object> getStandardArgs() {
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("host", (String)command.opts.get("host"));
+        args.put("port", (Integer) command.opts.get("port"));
+
+        return args;
+    }
+
 }

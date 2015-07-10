@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class ServiceTest extends SDKTestCase {
     private static final String QUERY = "search index=_internal | head 10";
-    
+
     @Test
     public void testCapabilities() throws Exception {
         List<String> expected = Arrays.asList(
@@ -57,75 +57,11 @@ public class ServiceTest extends SDKTestCase {
 
     // Make a few simple requests and make sure the results look ok.
     @Test
-    public void testReceiver() {
-        Receiver receiver = service.getReceiver();
-
-        final String indexName = service.getIndexes().get("_internal").getDefaultDatabase();
-        final Index index = service.getIndexes().get(indexName);
-        final int originalEventCount = index.getTotalEventCount();
-
-        try {
-            Socket socket1 = receiver.attach();
-            OutputStream stream = socket1.getOutputStream();
-
-            String s = createTimestamp() + " Boris the mad baboon1!\r\n";
-            stream.write(s.getBytes("UTF-8"));
-            // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
-            // has been written.
-            stream.close();
-            socket1.close();
-        } catch (IOException e) {
-            Assert.fail("Exception on attach");
-        }
-
-        try {
-            Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
-            OutputStream stream = socket1.getOutputStream();
-
-            String s = createTimestamp() + " Boris the mad baboon2!\r\n";
-            stream.write(s.getBytes("UTF-8"));
-            // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
-            // has been written.
-            stream.close();
-            socket1.close();
-        } catch (IOException e) {
-            Assert.fail("Exception on attach");
-        }
-
-        receiver.submit("Boris the mad baboon3!\r\n");
-        receiver.submit(Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon4!\r\n");
-        receiver.log("Boris the mad baboon5!\r\n");
-        receiver.log("main", "Boris the mad baboon6!\r\n");
-        receiver.log(Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon7!\r\n");
-        receiver.log(indexName, Args.create("sourcetype", "mysourcetype"), "Boris the mad baboon8!\r\n");
-
-        assertEventuallyTrue(new EventuallyTrueBehavior() {
-            {
-                tries = 200;
-            }
-
-            @Override
-            public boolean predicate() {
-                index.refresh();
-                int eventCount = index.getTotalEventCount();
-                // WORKAROUND (SPL-75109): Splunk 6.0 on Windows doesn't record events submitted to the streaming
-                // HTTP input without a sourcetype.
-                if (service.versionCompare("6.0.0") == 0 && service.getInfo().getOsName().equals("Windows")) {
-                    return eventCount == originalEventCount + 7;
-                } else {
-                    return eventCount == originalEventCount + 8;
-                }
-            }
-        });
-    }
-
-    // Make a few simple requests and make sure the results look ok.
-    @Test
     public void testGet() {
         // Check a few paths that we know exist
-        String[] paths = { 
-            "/", 
-            "/services", 
+        String[] paths = {
+            "/",
+            "/services",
             "/services/search/jobs",
             "search/jobs",
             "authentication/users"
@@ -172,7 +108,7 @@ public class ServiceTest extends SDKTestCase {
         info.isFree();
         info.isRtSearchEnabled();
         info.isTrial();
-        
+
         Assert.assertEquals(info.getService(), service);
     }
 
@@ -181,7 +117,7 @@ public class ServiceTest extends SDKTestCase {
         response = service.get("/services/authentication/users");
         checkResponse(response);
     }
-    
+
     protected void checkNotLoggedIn(Service service) {
         try {
             service.get("/services/authentication/users");
@@ -191,7 +127,7 @@ public class ServiceTest extends SDKTestCase {
             Assert.assertEquals(401, e.getStatus());
         }
     }
-    
+
     @Test
     public void testLogin() {
         Service service = new Service(
@@ -212,7 +148,7 @@ public class ServiceTest extends SDKTestCase {
         service.logout();
         checkNotLoggedIn(service);
     }
-    
+
     @Test
     public void testLoginWithoutArguments() {
         ServiceArgs args = new ServiceArgs();
@@ -222,16 +158,16 @@ public class ServiceTest extends SDKTestCase {
         args.setUsername((String) command.opts.get("username"));
         args.setPassword((String) command.opts.get("password"));
         Service service = new Service(args);
-        
+
         checkNotLoggedIn(service);
-        
+
         service.login();
         checkLoggedIn(service);
-        
+
         service.logout();
         checkNotLoggedIn(service);
     }
-    
+
     @Test
     public void testLoginWithArgumentsOverridesServiceArgs() {
         ServiceArgs args = new ServiceArgs();
@@ -241,19 +177,19 @@ public class ServiceTest extends SDKTestCase {
         args.setUsername("I can't possibly be a user");
         args.setPassword("This password is nonsense.");
         Service service = new Service(args);
-        
+
         checkNotLoggedIn(service);
-        
+
         service.login(
             (String) command.opts.get("username"),
             (String) command.opts.get("password")
         );
         checkLoggedIn(service);
-        
+
         service.logout();
         checkNotLoggedIn(service);
     }
-    
+
     @Test(expected=IllegalStateException.class)
     public void testLoginWithoutAnyUsernameFails() {
         ServiceArgs args = new ServiceArgs();
@@ -261,29 +197,29 @@ public class ServiceTest extends SDKTestCase {
         args.setPort((Integer) command.opts.get("port"));
         args.setScheme((String) command.opts.get("scheme"));
         Service service = new Service(args);
-        
+
         service.login();
     }
-    
+
     @Test
     public void testLoginWithToken() {
         String validToken = service.getToken();
-        
+
         Assert.assertTrue(validToken.startsWith("Splunk "));
-        
+
         Service s = new Service(service.getHost(), service.getPort());
         s.setToken(validToken);
-        
+
         // Ensure we can perform some action.
         // In particular we don't expect an unauthenticated error.
         s.getSettings().refresh();
-        
+
         // Make sure we're still using the same token.
         // In particular we don't want to trigger auto-login functionality
         // that gets a new token.
         Assert.assertEquals(s.getToken(), validToken);
     }
-    
+
     @Test
     public void testLoginGetters() {
         Service s = new Service("theHost");
@@ -292,7 +228,7 @@ public class ServiceTest extends SDKTestCase {
         } catch (Exception e) {
             // Don't care if login fails. It probably will.
         }
-        
+
         Assert.assertEquals("theUser", s.getUsername());
         Assert.assertEquals("thePassword", s.getPassword());
     }
@@ -312,7 +248,7 @@ public class ServiceTest extends SDKTestCase {
         testGetters(job);
         job.cancel();
     }
-        
+
     // Perform some non-intrusive inspection of the given Job object.
     private void testGetters(Job job) {
         ready(job);
@@ -362,7 +298,7 @@ public class ServiceTest extends SDKTestCase {
     @Test
     public void testSettersAndGettersPattern() {
         Settings settings = service.getSettings();
-        
+
         // Save
         String originalHost = settings.getHost();
         int originalMinSpace = settings.getMinFreeSpace();
@@ -387,12 +323,12 @@ public class ServiceTest extends SDKTestCase {
             settings.setHost(originalHost);
             settings.setMinimumFreeSpace(originalMinSpace);
             settings.update();
-            
+
             Assert.assertEquals(settings.getMinFreeSpace(),
                     originalMinSpace);
             Assert.assertEquals(settings.getHost(), originalHost);
         }
-        
+
         // Twiddling the host value makes Splunk want to restart.
         // No actual instability results, though.
         clearRestartMessage();
@@ -418,25 +354,25 @@ public class ServiceTest extends SDKTestCase {
             args.put("password", password);
             args.put("roles", "power");
             user = users.create(username, args);
-            
+
             Assert.assertTrue(users.containsKey(username));
             Assert.assertEquals(username, user.getName());
             Assert.assertEquals(1, user.getRoles().length);
             Assert.assertTrue(contains(user.getRoles(), "power"));
-            
+
             users.remove(username);
             Assert.assertFalse(users.containsKey(username));
         }
 
-        // Create user using derived create method 
+        // Create user using derived create method
         {
             user = users.create(username, password, "power");
-            
+
             Assert.assertTrue(users.containsKey(username));
             Assert.assertEquals(username, user.getName());
             Assert.assertEquals(1, user.getRoles().length);
             Assert.assertTrue(contains(user.getRoles(), "power"));
-    
+
             users.remove(username);
             Assert.assertFalse(users.containsKey(username));
         }
@@ -445,13 +381,13 @@ public class ServiceTest extends SDKTestCase {
         {
             user = users.create(
                 username, password, new String[] { "power", "user" });
-            
+
             Assert.assertTrue(users.containsKey(username));
             Assert.assertEquals(username, user.getName());
             Assert.assertEquals(2, user.getRoles().length);
             Assert.assertTrue(contains(user.getRoles(), "power"));
             Assert.assertTrue(contains(user.getRoles(), "user"));
-    
+
             users.remove(username);
             Assert.assertFalse(users.containsKey(username));
         }
@@ -464,7 +400,7 @@ public class ServiceTest extends SDKTestCase {
             args.put("defaultApp", "search");
             user = users.create(
                 username, password, new String[] { "power", "user" }, args);
-            
+
             Assert.assertTrue(users.containsKey(username));
             Assert.assertEquals(username, user.getName());
             Assert.assertEquals(2, user.getRoles().length);
@@ -477,11 +413,11 @@ public class ServiceTest extends SDKTestCase {
             user.getDefaultAppIsUserOverride();
             Assert.assertNotNull(user.getDefaultAppSourceRole());
             Assert.assertNotNull(user.getType());
-    
+
             // Probe
             {
                 String tz = user.getTz();
-                
+
                 user.setDefaultApp("search");
                 user.setEmail("none@noway.com");
                 user.setPassword("new-password");
@@ -493,7 +429,7 @@ public class ServiceTest extends SDKTestCase {
                 user.setRoles("power");
                 user.update();
                 user.refresh();
-        
+
                 Assert.assertEquals("search", user.getDefaultApp());
                 Assert.assertEquals("none@noway.com", user.getEmail());
                 Assert.assertEquals("SDK-name", user.getRealName());
@@ -502,7 +438,7 @@ public class ServiceTest extends SDKTestCase {
                     Assert.assertEquals("Pacific/Midway", user.getTz());
                 }
                 Assert.assertTrue(contains(user.getRoles(), "power"));
-                
+
                 if (service.versionIsAtLeast("4.3")) {
                     user.setTz(tz == null ? "" : tz);
                 }
@@ -511,12 +447,12 @@ public class ServiceTest extends SDKTestCase {
                 user.refresh();
                 Assert.assertTrue(contains(user.getRoles(), "power"));
             }
-    
+
             users.remove(username);
             Assert.assertFalse(users.containsKey(username));
         }
     }
-    
+
     @SuppressWarnings("deprecation")
     @Test
     public void testClassicServiceArgs() {
@@ -527,7 +463,7 @@ public class ServiceTest extends SDKTestCase {
         args.port = 9999;
         args.scheme = "https";
         args.token = "Splunk MY_SESSION_KEY";
-        
+
         Service service = new Service(args);
         Assert.assertEquals(args.app, service.getApp());
         Assert.assertEquals(args.host, service.getHost());
@@ -536,7 +472,7 @@ public class ServiceTest extends SDKTestCase {
         Assert.assertEquals(args.scheme, service.getScheme());
         Assert.assertEquals(args.token, service.getToken());
     }
-    
+
     @SuppressWarnings("deprecation")
     @Test
     public void testNewServiceArgs() {
@@ -547,10 +483,10 @@ public class ServiceTest extends SDKTestCase {
         args.setPort(9999);
         args.setScheme("https");
         args.setToken("Splunk MY_SESSION_KEY");
-        
+
         Assert.assertEquals("Arg setters didn't replicate value to deprecated fields.",
                 args.app, "myapp");
-        
+
         Service service = new Service(args);
         Assert.assertEquals(args.app, service.getApp());
         Assert.assertEquals(args.host, service.getHost());
@@ -559,7 +495,7 @@ public class ServiceTest extends SDKTestCase {
         Assert.assertEquals(args.scheme, service.getScheme());
         Assert.assertEquals(args.token, service.getToken());
     }
-    
+
     @Test
     public void testNewServiceArgsAsMap() {
         ServiceArgs args = new ServiceArgs();
@@ -569,7 +505,7 @@ public class ServiceTest extends SDKTestCase {
         args.put("port", 9999);
         args.put("scheme", "https");
         args.put("token", "Splunk MY_SESSION_KEY");
-        
+
         Service service = new Service(args);
         Assert.assertEquals("myapp", service.getApp());
         Assert.assertEquals("myhost.splunk.com", service.getHost());
@@ -578,11 +514,11 @@ public class ServiceTest extends SDKTestCase {
         Assert.assertEquals("https", service.getScheme());
         Assert.assertEquals("Splunk MY_SESSION_KEY", service.getToken());
     }
-    
+
     @Test
     public void testNewServiceArgsWithDefaults() {
         ServiceArgs args = new ServiceArgs();
-        
+
         Service service = new Service(args);
         Assert.assertEquals(null, service.getApp());
         Assert.assertEquals("localhost", service.getHost());
@@ -591,27 +527,27 @@ public class ServiceTest extends SDKTestCase {
         Assert.assertEquals("https", service.getScheme());
         Assert.assertEquals(null, service.getToken());
     }
-    
+
     @Test
     public void testConstructors() {
         Service s;
-        
+
         s = new Service("localhost");
         Assert.assertEquals("localhost", s.getHost());
         Assert.assertEquals(8089, s.getPort());
         Assert.assertEquals("https", s.getScheme());
-        
+
         s = new Service("localhost", 9999);
         Assert.assertEquals("localhost", s.getHost());
         Assert.assertEquals(9999, s.getPort());
         Assert.assertEquals("https", s.getScheme());
-        
+
         s = new Service("localhost", 9999, "http");
         Assert.assertEquals("localhost", s.getHost());
         Assert.assertEquals(9999, s.getPort());
         Assert.assertEquals("http", s.getScheme());
     }
-    
+
     @Test
     public void testSearch() throws IOException {
         service.search(QUERY);    // throws no exception
@@ -620,66 +556,66 @@ public class ServiceTest extends SDKTestCase {
         while (!job.isDone()) {
             sleep(200);
         }
-        
+
         InputStream jobOutput = job.getResults();
         try {
             ResultsReaderXml resultsReader = new ResultsReaderXml(jobOutput);
-        
+
             Map<String, String> event;
             int nEvents = 0;
-        
+
             do {
                 event = resultsReader.getNextEvent();
                 if (event != null) {
                     nEvents += 1;
                 }
             } while (event != null);
-        
+
             Assert.assertEquals(10, nEvents);
         }
         finally {
             jobOutput.close();
         }
     }
-    
+
     @Test
     public void testOneshot() throws IOException {
         service.oneshotSearch(QUERY); // throws no exception
-        
+
         InputStream jobOutput = service.oneshotSearch(
             QUERY,
             new Args("output_mode", "json")
         );
- 
+
         try {
             ResultsReaderJson resultsReader = new ResultsReaderJson(jobOutput);
-        
+
             Map<String, String> event;
             int nEvents = 0;
-        
+
             do {
                 event = resultsReader.getNextEvent();
                 if (event != null) {
                     nEvents += 1;
                 }
             } while (event != null);
-        
+
             Assert.assertEquals(10, nEvents);
         }
         finally {
             jobOutput.close();
         }
     }
-    
+
     // === Utility ===
-    
+
     private static void checkResponse(ResponseMessage response) {
         Assert.assertEquals(200, response.getStatus());
-        
+
         // Make sure we can at least load the Atom response
         AtomFeed.parseStream(response.getContent());
     }
-    
+
     // Wait for the given job to be ready
     private static Job ready(Job job) {
         while (!job.isReady()) {

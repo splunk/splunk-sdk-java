@@ -273,6 +273,15 @@ public class HttpService {
     }
 
     /**
+     * Returns true if the cookeStore has any cookies, false otherwise
+     *
+     * @return True if there are cookies, false otherwise
+     */
+    public Boolean hasCookies() {
+        return !cookieStore.isEmpty();
+    }
+
+    /**
      * Issues a POST request against the service using a given path.
      *
      * @param path The request path.

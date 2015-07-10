@@ -19,13 +19,13 @@ package com.splunk;
 import java.net.URLStreamHandler;
 
 /**
- * The {@code ServiceArgs} class contains a collection of arguments that are 
+ * The {@code ServiceArgs} class contains a collection of arguments that are
  * used to initialize a Splunk {@code Service} instance.
  */
 public class ServiceArgs extends Args {
     /**
      * The application context of the service.
-     * 
+     *
      * @deprecated
      *      Use {@link #setApp(String)} instead.
      */
@@ -33,7 +33,7 @@ public class ServiceArgs extends Args {
 
     /**
      * The host name of the service.
-     * 
+     *
      * @deprecated
      *      Use {@link #setHost(String)} instead.
      */
@@ -41,7 +41,7 @@ public class ServiceArgs extends Args {
 
     /**
      * The owner context of the service.
-     * 
+     *
      * @deprecated
      *      Use {@link #setOwner(String)} instead.
      */
@@ -49,7 +49,7 @@ public class ServiceArgs extends Args {
 
     /**
      * The port number of the service.
-     * 
+     *
      * @deprecated
      *      Use {@link #setPort(int)} instead.
      */
@@ -57,7 +57,7 @@ public class ServiceArgs extends Args {
 
     /**
      * The scheme to use for accessing the service.
-     * 
+     *
      * @deprecated
      *      Use {@link #setScheme(String)} instead.
      */
@@ -65,12 +65,12 @@ public class ServiceArgs extends Args {
 
     /**
      * A Splunk authentication token to use for the session.
-     * 
+     *
      * @deprecated
      *      Use {@link #setToken(String)} instead.
      */
     public String token = null;
-    
+
     /**
      * @param app
      *      The application context of the service.
@@ -79,7 +79,7 @@ public class ServiceArgs extends Args {
         this.app = app; // for backward compatibility
         this.put("app", app);
     }
-    
+
     /**
      * @param host
      *      The host name of the service.
@@ -88,7 +88,7 @@ public class ServiceArgs extends Args {
         this.host = host; // for backward compatibility
         this.put("host", host);
     }
-    
+
     /**
      * @param handler
      *      A URLStreamHandler to handle HTTPS requests for the service.
@@ -96,7 +96,7 @@ public class ServiceArgs extends Args {
     public void setHTTPSHandler(URLStreamHandler handler) {
     	this.put("httpsHandler", handler);
     }
-    
+
     /**
      * @param owner
      *      The owner context of the service.
@@ -105,7 +105,7 @@ public class ServiceArgs extends Args {
         this.owner = owner; // for backward compatibility
         this.put("owner", owner);
     }
-    
+
     /**
      * @param password
      *      The password to use when logging in.
@@ -113,7 +113,7 @@ public class ServiceArgs extends Args {
     public void setPassword(String password) {
         this.put("password", password);
     }
-    
+
     /**
      * @param port
      *      The port number of the service.
@@ -122,7 +122,7 @@ public class ServiceArgs extends Args {
         this.port = port; // for backward compatibility
         this.put("port", port);
     }
-    
+
     /**
      * @param scheme
      *      The scheme to use for accessing the service.
@@ -139,7 +139,7 @@ public class ServiceArgs extends Args {
     public void setSSLSecurityProtocol(SSLSecurityProtocol securityProtocol) {
         this.put("SSLSecurityProtocol", securityProtocol);
     }
-    
+
     /**
      * @param token
      *      A Splunk authentication token to use for the session.
@@ -148,12 +148,20 @@ public class ServiceArgs extends Args {
         this.token = token; // for backward compatibility
         this.put("token", token);
     }
-    
+
     /**
      * @param username
      *     The username to use when logging in.
      */
     public void setUsername(String username) {
         this.put("username", username);
+    }
+
+    /**
+     * @param cookie
+     *     A valid login cookie.
+     */
+    public void setCookie(String cookie) {
+        this.put("cookie", cookie);
     }
 }
