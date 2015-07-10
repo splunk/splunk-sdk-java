@@ -106,7 +106,6 @@ public class Receiver {
         if (service.hasCookies()) {
             header.append("Cookie: ");
             header.append(service.stringifyCookies());
-
         } else {
             header.append("Authorization: ");
             header.append(service.getToken());
