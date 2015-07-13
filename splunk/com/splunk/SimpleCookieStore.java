@@ -49,15 +49,15 @@ class SimpleCookieStore {
      * @return Cookie String in the format "Key=Value; Key=Value; ect"
      */
     public String getCookies() {
-        StringBuilder cookieString = new StringBuilder();
-        //String cookieString = "";
+        StringBuilder cookieStringBuilder = new StringBuilder();
+
         for (Map.Entry<String, String> cookie : cookieJar.entrySet()) {
-            cookieString.append(cookie.getKey());
-            cookieString.append("=");
-            cookieString.append(cookie.getValue());
-            cookieString.append("; ");
+            cookieStringBuilder.append(cookie.getKey());
+            cookieStringBuilder.append("=");
+            cookieStringBuilder.append(cookie.getValue());
+            cookieStringBuilder.append("; ");
         }
-        return cookieString.toString();
+        return cookieStringBuilder.toString();
     }
 
     /**
