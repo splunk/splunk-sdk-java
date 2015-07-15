@@ -906,6 +906,36 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
+    @Test
+    public void testDone() throws InterruptedException {
+        if (!hasTestData()) {
+            System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
+            return;
+        }
+
+        installApplicationFromTestData("sleep_command");
+
+        String query = "search index=_internal earliest=-1h | sleep 5";
+        final Job job = jobs.create(query);
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
+
+        // Job shouldn't be done yet due to the sleep command
+        Assert.assertFalse(job.getBoolean("isDone"));
+        Thread.sleep(6000);
+        // Job still shouldn't be done
+        Assert.assertFalse(job.getBoolean("isDone"));
+        // Job should be done after the refresh
+        while(!job.isDone()) {
+            Thread.sleep(1000);
+        }
+        Assert.assertTrue(job.getBoolean("isDone"));
+
+        job.cancel();
+    }
+
     // === Utility ===
 
     private int countEvents(InputStream stream) {
