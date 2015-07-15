@@ -932,7 +932,7 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(1000);
         }
         Assert.assertTrue(job.getBoolean("isDone"));
-
+        Assert.assertTrue(job.isDone());
         job.cancel();
     }
 
