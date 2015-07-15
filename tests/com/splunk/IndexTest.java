@@ -34,7 +34,7 @@ public class IndexTest extends SDKTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        
+
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -55,8 +55,66 @@ public class IndexTest extends SDKTestCase {
         } else {
             // Can't delete indexes via the REST API. Just let them build up.
         }
-        
+
         super.tearDown();
+    }
+
+    @Test
+    public void testAttachWithCookieHeader() throws IOException {
+        if (service.versionIsEarlierThan("6.2")) {
+            // Cookies not implemented before version 6.2
+            return;
+        }
+
+        Assert.assertTrue(getResultCountOfIndex() == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
+
+        Assert.assertTrue(service.hasCookies());
+
+        String validCookie = service.stringifyCookies();
+
+        Args args = new Args();
+        args.put("cookie", (String) validCookie);
+
+        Service s = new Service(args);
+
+
+        Index localIndex = s.getIndexes().get(indexName);
+        Socket socket = localIndex.attach();
+
+        OutputStream ostream = socket.getOutputStream();
+        Writer out = new OutputStreamWriter(ostream, "UTF-8");
+        out.write(createTimestamp() + " Hello world!\u0150\r\n");
+        out.write(createTimestamp() + " Goodbye world!\u0150\r\n");
+
+        out.flush();
+        socket.close();
+
+        localIndex.refresh();
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            { tries = 60; }
+
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                return getResultCountOfIndex() == 2;
+            }
+        });
+
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+
+                // Some versions of Splunk only increase event count by 1.
+                // Event count should never go up by more than the result count.
+                int tec = index.getTotalEventCount();
+                return (1 <= tec) && (tec <= 2);
+            }
+        });
+
+
     }
 
     @Test
@@ -65,9 +123,9 @@ public class IndexTest extends SDKTestCase {
             // Can't delete indexes via the REST API.
             return;
         }
-        
+
         Assert.assertTrue(service.getIndexes().containsKey(indexName));
-        
+
         index.remove();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
@@ -83,10 +141,10 @@ public class IndexTest extends SDKTestCase {
             // Can't delete indexes via the REST API.
             return;
         }
-        
+
         Assert.assertTrue(service.getIndexes().containsKey(indexName));
         service.getIndexes().remove(indexName);
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -98,14 +156,14 @@ public class IndexTest extends SDKTestCase {
     @Test
     public void testAttachWith() throws IOException {
         final int originalEventCount = index.getTotalEventCount();
-        
+
         index.attachWith(new ReceiverBehavior() {
             public void run(OutputStream stream) throws IOException {
                 String s = createTimestamp() + " Boris the mad baboon!\r\n";
                 stream.write(s.getBytes("UTF-8"));
             }
         });
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             { tries = 60; }
 
@@ -170,7 +228,7 @@ public class IndexTest extends SDKTestCase {
         index.getTotalEventCount();
         index.isDisabled();
         index.isInternal();
-        
+
         // Fields only available from 5.0 on.
         if (service.versionIsAtLeast("5.0.0")) {
             index.getBucketRebuildMemoryHint();
@@ -234,7 +292,7 @@ public class IndexTest extends SDKTestCase {
             newMaxBloomBackfillBucketAge = "20d";
             index.setMaxBloomBackfillBucketAge(newMaxBloomBackfillBucketAge);
         }
-        
+
         String newBucketRebuildMemoryHint = null;
         int newMaxTimeUnreplicatedNoAcks = -1;
         int newMaxTimeUnreplicatedWithAcks = -1;
@@ -298,10 +356,10 @@ public class IndexTest extends SDKTestCase {
                     index.getMaxTimeUnreplicatedWithAcks()
             );
         }
-        
+
         index.setColdToFrozenDir(coldToFrozenDir == null ? "" : coldToFrozenDir);
         index.update();
-        
+
         String coldToFrozenScript = index.getColdToFrozenScript();
         index.setColdToFrozenScript("/bin/sh");
         index.update();
@@ -309,7 +367,7 @@ public class IndexTest extends SDKTestCase {
         index.setColdToFrozenScript(coldToFrozenScript == null ? "" : coldToFrozenScript);
         index.update();
         //index.setColdToFrozenScript(coldToFrozenScript);
-        
+
         if (restartRequired()) {
             splunkRestart();
         }
@@ -318,7 +376,7 @@ public class IndexTest extends SDKTestCase {
     @Test
     public void testEnable() {
         Assert.assertFalse(index.isDisabled());
-        
+
         // Force the index to be disabled
         index.disable();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -349,26 +407,26 @@ public class IndexTest extends SDKTestCase {
         try {
             tryTestSubmitOne();
         } catch (AssertionFailedError e) {
-            if (e.getMessage().contains("Test timed out before true.") && 
+            if (e.getMessage().contains("Test timed out before true.") &&
                     restartRequired()) {
                 System.out.println(
                         "WARNING: Splunk indicated restart required while " +
                         "running a test. Trying to recover...");
                 splunkRestart();
-                
+
                 tryTestSubmitOne();
             } else {
                 throw e;
             }
         }
     }
-    
+
     private void tryTestSubmitOne() {
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
-        
+
         index.submit(createTimestamp() + " This is a test of the emergency broadcasting system.");
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -389,27 +447,27 @@ public class IndexTest extends SDKTestCase {
         try {
             tryTestSubmitOneArgs();
         } catch (AssertionFailedError e) {
-            if (e.getMessage().contains("Test timed out before true.") && 
+            if (e.getMessage().contains("Test timed out before true.") &&
                     restartRequired()) {
                 System.out.println(
                         "WARNING: Splunk indicated restart required while " +
                         "running a test. Trying to recover...");
                 splunkRestart();
-                
+
                 tryTestSubmitOne();
             } else {
                 throw e;
             }
         }
     }
-    
+
     private void tryTestSubmitOneArgs() {
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
-        
+
         Args args = Args.create("sourcetype", "mysourcetype");
         index.submit(args, createTimestamp() + " This is a test of the emergency broadcasting system.");
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -424,15 +482,15 @@ public class IndexTest extends SDKTestCase {
             }
         });
     }
-    
+
     @Test
     public void testSubmitOneInEachCall() {
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
-        
+
         index.submit(createTimestamp() + " Hello world!\u0150");
         index.submit(createTimestamp() + " Goodbye world!\u0150");
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -443,7 +501,7 @@ public class IndexTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                
+
                 // Some versions of Splunk only increase event count by 1.
                 // Event count should never go up by more than the result count.
                 int tec = index.getTotalEventCount();
@@ -451,16 +509,16 @@ public class IndexTest extends SDKTestCase {
             }
         });
     }
-    
+
     @Test
     public void testSubmitMultipleInOneCall() {
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
-        
+
         index.submit(
                 createTimestamp() + " Hello world!\u0150" + "\r\n" +
                 createTimestamp() + " Goodbye world!\u0150");
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -471,7 +529,7 @@ public class IndexTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                
+
                 // Some versions of Splunk only increase event count by 1.
                 // Event count should never go up by more than the result count.
                 int tec = index.getTotalEventCount();
@@ -511,7 +569,7 @@ public class IndexTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                
+
                 // Some versions of Splunk only increase event count by 1.
                 // Event count should never go up by more than the result count.
                 int tec = index.getTotalEventCount();
@@ -524,7 +582,7 @@ public class IndexTest extends SDKTestCase {
     public void testAttachArgs() throws IOException {
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
-        
+
         Args args = Args.create("sourcetype", "mysourcetype");
         Socket socket = index.attach(args);
         OutputStream ostream = socket.getOutputStream();
@@ -535,7 +593,7 @@ public class IndexTest extends SDKTestCase {
 
         out.flush();
         socket.close();
-        
+
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             { tries = 60; }
             @Override
@@ -548,7 +606,7 @@ public class IndexTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                
+
                 // Some versions of Splunk only increase event count by 1.
                 // Event count should never go up by more than the result count.
                 int tec = index.getTotalEventCount();
@@ -563,7 +621,7 @@ public class IndexTest extends SDKTestCase {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
-        
+
         installApplicationFromTestData("file_to_upload");
 
         Assert.assertTrue(getResultCountOfIndex() == 0);
@@ -572,12 +630,12 @@ public class IndexTest extends SDKTestCase {
         String fileToUpload = joinServerPath(new String[] {
                 service.getSettings().getSplunkHome(),
                 "etc", "apps", "file_to_upload", "log.txt"});
-        
+
         Args args = new Args();
         args.add("sourcetype", "log");
         args.add("host", "IndexTest");
         args.add("rename-source", "IndexTestSrc");
-        
+
         index.upload(fileToUpload, args);
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -599,7 +657,7 @@ public class IndexTest extends SDKTestCase {
             }
         });
     }
-    
+
     @Test
     public void testUploadArgsFailure() throws Exception{
         if (!hasTestData()) {
@@ -607,20 +665,20 @@ public class IndexTest extends SDKTestCase {
             return;
         }
         installApplicationFromTestData("file_to_upload");
-        
+
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
 
         String fileToUpload = joinServerPath(new String[] {
                 service.getSettings().getSplunkHome(),
                 "etc", "apps", "file_to_upload", "log.txt"});
-        
+
         Args args = new Args();
         args.add("sourcetype", "log");
         args.add("host", "IndexTest");
         args.add("index", index.getTitle());
         args.add("rename-source", "IndexTestSrc");
-        // The index argument cannot be passed into the upload function. 
+        // The index argument cannot be passed into the upload function.
         try{
             index.upload(fileToUpload, args);
             Assert.fail("Uploading to an index with an index argument? No need for redundency!");
@@ -628,22 +686,22 @@ public class IndexTest extends SDKTestCase {
         catch(Exception e){
             Assert.assertEquals(e.getMessage(), "The 'index' parameter cannot be passed to an index's oneshot upload.");
         }
-            
+
     }
-            
-        
-    
-    
-    
+
+
+
+
+
     @Test
     public void testUpload() throws Exception {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
             return;
         }
-        
+
         installApplicationFromTestData("file_to_upload");
-        
+
         Assert.assertTrue(getResultCountOfIndex() == 0);
         Assert.assertTrue(index.getTotalEventCount() == 0);
 
@@ -662,7 +720,7 @@ public class IndexTest extends SDKTestCase {
             @Override
             public boolean predicate() {
                 index.refresh();
-                
+
                 // Some versions of Splunk only increase event count by 1.
                 // Event count should never go up by more than the result count.
                 int tec = index.getTotalEventCount();
@@ -684,17 +742,17 @@ public class IndexTest extends SDKTestCase {
                         "WARNING: Index clean timed out. Trying again on a " +
                         "freshly restarted Splunk instance...");
                 uncheckedSplunkRestart();
-                
+
                 tryTestSubmitAndClean();
             } else {
                 throw e;
             }
         }
     }
-    
+
     private void tryTestSubmitAndClean() throws InterruptedException {
         Assert.assertTrue(getResultCountOfIndex() == 0);
-        
+
         // Make sure the index is not empty.
         index.submit("Hello world");
         assertEventuallyTrue(new EventuallyTrueBehavior() {
@@ -707,13 +765,13 @@ public class IndexTest extends SDKTestCase {
                 return getResultCountOfIndex() == 1;
             }
         });
-        
+
         // Clean the index and make sure it's empty.
         // NOTE: Average time for this is 65s (!!!). Have seen 110+.
         index.clean(150);
         Assert.assertTrue(getResultCountOfIndex() == 0);
     }
-    
+
     @Test
     public void testUpdateNameShouldFail() {
         try {
@@ -724,14 +782,14 @@ public class IndexTest extends SDKTestCase {
             // Good
         }
     }
-    
+
     // === Utility ===
 
     private int getResultCountOfIndex() {
         InputStream results = service.oneshotSearch("search index=" + indexName);
         try {
             ResultsReaderXml resultsReader = new ResultsReaderXml(results);
-            
+
             int numEvents = 0;
             while (resultsReader.getNextEvent() != null) {
                 numEvents++;
