@@ -769,6 +769,9 @@ public class Job extends Entity {
     public boolean isDone() {
         if (!isReady())
             return false;
+        if (!getBoolean("isDone")) {
+            this.refresh();
+        }
         return getBoolean("isDone");
     }
 
