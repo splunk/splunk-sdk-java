@@ -52,7 +52,7 @@ public class CookieTest extends SDKTestCase {
         String validCookie = service.stringifyCookies();
 
         Map<String, Object> args = getStandardArgs();
-        args.put("cookie", (String) validCookie);
+        args.put("cookie", validCookie);
 
         Service s = new Service(args);
 
@@ -69,7 +69,7 @@ public class CookieTest extends SDKTestCase {
     @Test(expected=HttpException.class)
     public void testLoginFailsWithBadCookie() {
         Map<String, Object> args = getStandardArgs();
-        args.put("cookie", (String) "bad=cookie");
+        args.put("cookie", "bad=cookie");
 
         Service s  = new Service(args);
 
@@ -88,7 +88,7 @@ public class CookieTest extends SDKTestCase {
         String validCookie = service.stringifyCookies();
 
         Map<String, Object> args = getStandardArgs();
-        args.put("cookie", (String) validCookie);
+        args.put("cookie", validCookie);
 
         Service s  = new Service(args);
 
@@ -102,7 +102,7 @@ public class CookieTest extends SDKTestCase {
         String validCookie = service.stringifyCookies();
 
         Map<String, Object> args = getStandardArgs();
-        args.put("cookie", (String) "bad=cookie");
+        args.put("cookie", "bad=cookie");
         Service s  = new Service(args);
 
         s.addCookie(validCookie);

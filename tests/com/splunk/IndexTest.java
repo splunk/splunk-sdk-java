@@ -71,7 +71,7 @@ public class IndexTest extends SDKTestCase {
         // Make a service that only has that cookie
         String validCookie = service.stringifyCookies();
         Args args = new Args();
-        args.put("cookie", (String) validCookie);
+        args.put("cookie", validCookie);
         final Service s = new Service(args);
 
         // Get the index with our service that only has a cookie
