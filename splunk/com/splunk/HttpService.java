@@ -73,6 +73,8 @@ public class HttpService {
         put("Accept", "*/*");
     }};
 
+    protected SimpleCookieStore cookieStore = new SimpleCookieStore();
+
     /**
      * Constructs a new {@code HttpService} instance.
      */
@@ -246,6 +248,40 @@ public class HttpService {
     }
 
     /**
+     * Returns all the stored cookies
+     *
+     * @return All cookies as in a string in the format key=value; key=value; etc=etc
+     */
+    public String stringifyCookies() {
+        return cookieStore.getCookies();
+    }
+
+    /**
+     * Adds the passed cookie header to the cookieStore
+     *
+     * @param setCookieHeader The result from a getRequestHeader("Set-Cookie") call
+     */
+    public void addCookie(String setCookieHeader) {
+        cookieStore.add(setCookieHeader);
+    }
+
+    /**
+     * Removes all cookies from the cookieStore
+     */
+    public void removeAllCookies() {
+        cookieStore.removeAll();
+    }
+
+    /**
+     * Returns true if the cookeStore has any cookies, false otherwise
+     *
+     * @return True if there are cookies, false otherwise
+     */
+    public Boolean hasCookies() {
+        return !cookieStore.isEmpty();
+    }
+
+    /**
      * Issues a POST request against the service using a given path.
      *
      * @param path The request path.
@@ -349,13 +385,15 @@ public class HttpService {
         Map<String, String> header = request.getHeader();
         for (Entry<String, String> entry : header.entrySet())
             cn.setRequestProperty(entry.getKey(), entry.getValue());
-
         // Add default headers that were absent from the request message
         for (Entry<String, String> entry : defaultHeader.entrySet()) {
             String key = entry.getKey();
             if (header.containsKey(key)) continue;
             cn.setRequestProperty(key, entry.getValue());
         }
+
+        // Add cookies to header
+        cn.setRequestProperty("Cookie", cookieStore.getCookies());
 
         // Write out request content, if any
         try {
@@ -397,6 +435,9 @@ public class HttpService {
         } catch (IOException e) {
             assert (false);
         }
+
+        // Add cookies to cookie Store
+        cookieStore.add(cn.getHeaderField("Set-Cookie"));
 
         ResponseMessage response = new ResponseMessage(status, input);
 
