@@ -150,6 +150,7 @@ public class Service extends BaseService {
         this.password = (String)args.get("password");
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
+        this.addCookie((String)args.get("cookie"));
     }
 
     /**
@@ -1082,12 +1083,22 @@ public class Service extends BaseService {
      * Authenticates the {@code Service} instance with the username and password
      * that were specified when the instance was created.
      *
+     * Three cases:
+     * 1. If we have a cookie, but are missing username and/or password, login is noop
+     * 2. If we don't have a cookie, and are missing username and/or password we can't login
+     * 3.  Otherwise login as usual
+     *
      * @return The current {@code Service} instance.
      */
     public Service login() {
-        if (this.username == null || this.password == null) {
+        if (!this.cookieStore.isEmpty() && (this.username == null || this.password == null)) {
+            return this;
+        }
+
+        else if (this.username == null || this.password == null) {
             throw new IllegalStateException("Missing username or password.");
         }
+
         else {
             return login(this.username, this.password);
         }
