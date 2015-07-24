@@ -150,6 +150,7 @@ public class Service extends BaseService {
         this.password = (String)args.get("password");
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
+        this.addCookie((String)args.get("cookie"));
     }
 
     /**
@@ -1085,7 +1086,10 @@ public class Service extends BaseService {
      * @return The current {@code Service} instance.
      */
     public Service login() {
-        if (this.username == null || this.password == null) {
+        if (!this.cookieStore.isEmpty() && (this.username == null || this.password == null)) {
+            return this;
+        }
+        else if (this.username == null || this.password == null) {
             throw new IllegalStateException("Missing username or password.");
         }
         else {

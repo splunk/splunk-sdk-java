@@ -66,6 +66,32 @@ public class CookieTest extends SDKTestCase {
         Assert.assertEquals(s.stringifyCookies(), validCookie);
     }
 
+    @Test
+    public void testLoginWithCookieFromAnotherService() {
+        String validCookie = service.stringifyCookies();
+
+        Map<String, Object> args = getStandardArgs();
+        args.put("cookie", validCookie);
+
+        Service s = new Service(args);
+
+        // Ensure we can perform some action.
+        // In particular we don't expect an unauthenticated error.
+        s.getSettings().refresh();
+
+        // Make sure we're still using the same token.
+        // In particular we don't want to trigger auto-login functionality
+        // that may get a new cookie.
+        Assert.assertEquals(s.stringifyCookies(), validCookie);
+
+        // Now we should be able to login with only a cookie
+        args.remove("username");
+        args.remove("password");
+        Service s2 = new Service(args);
+
+        s2.getApplications();
+    }
+
     @Test(expected=HttpException.class)
     public void testLoginFailsWithBadCookie() {
         Map<String, Object> args = getStandardArgs();
