@@ -1094,11 +1094,9 @@ public class Service extends BaseService {
         if (!this.cookieStore.isEmpty() && (this.username == null || this.password == null)) {
             return this;
         }
-
         else if (this.username == null || this.password == null) {
             throw new IllegalStateException("Missing username or password.");
         }
-
         else {
             return login(this.username, this.password);
         }
