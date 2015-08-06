@@ -179,7 +179,7 @@
         <jar destfile="${dist}/splunk-${version.number}.jar">
             <fileset dir="${build.splunk}"
                      includes="**/*.class"/>
-            <fileset dir="${build.splunk}"
+            <fileset dir="${build.util}"
                      includes="**/Command.class"/>
             <fileset dir="splunk" includes="**/*"/>
 
