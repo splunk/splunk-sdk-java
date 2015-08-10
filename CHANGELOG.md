@@ -1,5 +1,20 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.5.0
+
+### New features and APIs
+
+* Added support for cookie-based authentication, for Splunk 6.2+.
+
+### Bug Fixes
+
+* Fixed failure parsing XML responses. Pull Request #76.
+* Fixed bug where `Job` is never ready leading to infinite loops.
+
+### Minor changes
+
+* The SDK is now properly compiled with the `Command` class used in examples.
+
 ## Version 1.4.0
 
 ### New features and APIs
@@ -65,7 +80,7 @@
 
 ### Bug fixes
 
-* **JobCollection.create()** previously invalidated the collection and refreshed it to see whether the job had 
+* **JobCollection.create()** previously invalidated the collection and refreshed it to see whether the job had
   appeared. This was problematic for Splunk Enterprise instances running many jobs at once. The method has been changed
   to only interact with the endpoint specific to the newly created job.
 * Namespaces that contain special characters such as '@' in their owner or app are now handled correctly.
@@ -79,11 +94,11 @@
 
 ### Known issues
 
-* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on OS X v10.8 Mountain Lion and 
-  OS X v10.9 Mavericks running Splunk 6.0.0. This issue is not present when running Splunk Enterprise on earlier 
+* Certain combinations of requests and restarts of splunkd can cause splunkd to hang on OS X v10.8 Mountain Lion and
+  OS X v10.9 Mavericks running Splunk 6.0.0. This issue is not present when running Splunk Enterprise on earlier
   versions of OS X. This will be fixed in a future release.
 
-* The modular input support in the Splunk SDK for Java is not compatible with Windows Server 2003 or Windows Server 
+* The modular input support in the Splunk SDK for Java is not compatible with Windows Server 2003 or Windows Server
   2003 R2.
 
 ## Version 1.2
@@ -102,29 +117,29 @@
 
 ### Breaking changes
 
-* The default setting for all search jobs is now `segmentation=none` unless 
+* The default setting for all search jobs is now `segmentation=none` unless
   you explicitly set it otherwise. This setting returns results as a raw-text
   string rather than a string in XML format.
-  
-* The `ResultReaderCsv` class no longer supports streams from the `Service.export` method. 
-  Instead, use the `ResultReaderXml` class with XML output, or use the `ResultReaderJson` 
+
+* The `ResultReaderCsv` class no longer supports streams from the `Service.export` method.
+  Instead, use the `ResultReaderXml` class with XML output, or use the `ResultReaderJson`
   class with JSON output.
-  
+
 ### New features and APIs
 
-* New classes have been added, `MultiResultsReaderXml` and `MultiResultsReaderJson`, 
+* New classes have been added, `MultiResultsReaderXml` and `MultiResultsReaderJson`,
   to read search results streams with multiple result sets from `Service.Export` methods.
- 
+
 * The `ResultsReader` classes now support `Iterable` and `Iterator` interfaces.
 
-* The `Event.getSegmentedRaw` method has been added to return raw data from events, preserving 
-  segmentation information. 
-  	
+* The `Event.getSegmentedRaw` method has been added to return raw data from events, preserving
+  segmentation information.
+
 ### Bug fixes
 
-* The `ServiceInfo` class now uses the `services/*` endpoint rather than the 
-  default namespace (`servicesNS/*`) for HTTP requests. This change is a workaround to 
-  avoid a bug in Splunk that returns HTTP code 403 when the `server/info` endpoint 
+* The `ServiceInfo` class now uses the `services/*` endpoint rather than the
+  default namespace (`servicesNS/*`) for HTTP requests. This change is a workaround to
+  avoid a bug in Splunk that returns HTTP code 403 when the `server/info` endpoint
   is accessed using certain namespaces.
 
 * The `ResultsReaderXml` class can now read search results streams from the
@@ -134,7 +149,7 @@
 
 ### New features and APIs
 
-* Specialized *args* classes have been added to make it easier to pass 
+* Specialized *args* classes have been added to make it easier to pass
   entity-specific arguments:
     - `CollectionArgs`
     - `IndexCollectionArgs`
@@ -146,8 +161,8 @@
     - `JobSummaryArgs`
     - `SavedSearchCollectionArgs`
     - `SavedSearchDispatchArgs`
-        
-    These new *args* classes are used with the following methods: 
+
+    These new *args* classes are used with the following methods:
     - `Service` constructor
     - `Service.getSavedSearches` method
     - `Service.getJobs` method
@@ -165,35 +180,35 @@
   with older code that expects a `HashMap<String, String>`. However this new
   `Event` object is read-only.
 
-* Modular input functionality has been implemented (requiring Splunk 5.0+) 
+* Modular input functionality has been implemented (requiring Splunk 5.0+)
   and the following classes have been added:
     - `ModularInputKind`
     - `ModularInputKindArgument`
-  
+
   The `InputCollection` class also now handles arbitrary input kinds represented
   by modular inputs. You can call `InputCollection.getInputKinds` to get the set
   of `InputKinds` on the connected Splunk instance.
 
 * The `ReceiverBehavior` interface has been added to work with output streams.
 
-* The `IndexCollection` class has been added as a specialized collection class 
+* The `IndexCollection` class has been added as a specialized collection class
   for indexes.
 
 * The `JobCollection` class has been added as a specialized collection class for
   jobs.
 
-* You can now programatically remove indexes using the `IndexCollection.remove` 
+* You can now programatically remove indexes using the `IndexCollection.remove`
   method (requires Splunk 5.0+).
 
-* You can now send data to an input using the `TcpInputs.attach`, 
+* You can now send data to an input using the `TcpInputs.attach`,
   `TcpInputs.submit`, and `UdpInput.submit` convenience methods.
 
 * You can now restrict inputs to a specified host using the `setRestrictToHost`
-  method on `TcpInput`, `TcpSplunkInput`, and `UdpInput` (this method requires 
+  method on `TcpInput`, `TcpSplunkInput`, and `UdpInput` (this method requires
   Splunk 5.0+).
 
-* The `DistributedConfiguration.enable` and `DistributedConfiguration.disable` 
-  convenience methods have been added, allowing you to immediately enable or 
+* The `DistributedConfiguration.enable` and `DistributedConfiguration.disable`
+  convenience methods have been added, allowing you to immediately enable or
   disable the configuration.
 
 * The following methods have been added to the `Index` class:
@@ -206,50 +221,50 @@
 
 ### Breaking changes
 
-* The JAR files have changed so that everything is now included in the 
-  **splunk.jar** file. The **splunk-external.jar** and **splunk-sdk.jar** files 
+* The JAR files have changed so that everything is now included in the
+  **splunk.jar** file. The **splunk-external.jar** and **splunk-sdk.jar** files
   have been removed.
 
-* Arguments are now submitted to Splunk in a consistent order, which improves 
+* Arguments are now submitted to Splunk in a consistent order, which improves
   behavior in certain cases.
-  
+
 * The `InputKind` enum is now a class. The `InputKind` class has static members
-  identical to the enum values, but you can no longer use a `switch` statement 
-  over the values. Instead, use a series of `if-else` blocks. This change was 
+  identical to the enum values, but you can no longer use a `switch` statement
+  over the values. Instead, use a series of `if-else` blocks. This change was
   necessary to support arbitrary modular input kinds.
 
 * All text is now consistently UTF-8 encoded. Previously, the platform-native
-  encoding was used in certain cases. For example: 
-    - HTTP requests are sent in UTF-8. In particular the values of *args* 
+  encoding was used in certain cases. For example:
+    - HTTP requests are sent in UTF-8. In particular the values of *args*
       classes are always encoded in UTF-8.
     - Results and events from jobs are read as UTF-8.
 
-* The `Index.setAssureUTF8` method fails for Splunk 5.0+ because this field has 
+* The `Index.setAssureUTF8` method fails for Splunk 5.0+ because this field has
   become a global setting rather than a per-index setting.
 
 * The `Index.clean` method now throws `SplunkException.INTERRUPTED` when
-  interrupted. Additionally, the `maxSeconds` parameter is obeyed more 
+  interrupted. Additionally, the `maxSeconds` parameter is obeyed more
   accurately.
 
-* The `WindowsRegistryInput.getType` and `WindowsRegistryInput.setType` method 
+* The `WindowsRegistryInput.getType` and `WindowsRegistryInput.setType` method
   type has changed to `String[]` instead of `String`.
 
-* The `DistributedPeer.getBuild` method now returns an `int` instead of a 
+* The `DistributedPeer.getBuild` method now returns an `int` instead of a
   `String` to be consistent with the `ServiceInfo.getBuild` method.
 
 * The `setRestrictToHost` method on `TcpInput`, `TcpSplunkInput`, and `UdpInput`
   throws an exception for Splunk 4.x. Previously, this method failed silently.
 
-* The `StormService` class has been removed, but will be restored in a 
+* The `StormService` class has been removed, but will be restored in a
   subsequent release.
 
-* The methods in the `ResultsReader` class now throw `IOException` instead of a 
+* The methods in the `ResultsReader` class now throw `IOException` instead of a
   plain `Exception`, so callers no longer need to handle a plain `Exception`.
 
 * The `SplunkException` class now provides error messages when printed.
 
-* The test suite has been completely cleaned up, resulting in better coverage 
-  and faster performance, mostly by eliminating unnecessary restarts. The test 
+* The test suite has been completely cleaned up, resulting in better coverage
+  and faster performance, mostly by eliminating unnecessary restarts. The test
   suite strictly requires tests to handle restart requests.
 
 * The `get`, `remove`, and `contains` methods for entity collections now throw
@@ -259,7 +274,7 @@
 * The `HashMap` and `Event` objects returned by `ResultsReader.getNextEvent` are
   now read-only.
 
-* The `SavedSearch.getDispatchMaxTime` method previously returned a `String`, 
+* The `SavedSearch.getDispatchMaxTime` method previously returned a `String`,
   but now returns an `int`.
 
 * The `LicensePool.getSlavesUsageBytes` method now returns a map from each slave
@@ -271,7 +286,7 @@
   has been removed, because `outputArgs` had no effect.
 
 * The `SavedSearch.setArgsWildcard` method has been removed. To set a wildcard
-  parameter, specify it as a key-value pair in a map and pass it to the 
+  parameter, specify it as a key-value pair in a map and pass it to the
   `SavedSearch.dispatch(java.util.Map args)` method.
 
 * The `SavedSearch.setActionWildcard` method has been removed. Use the specific
@@ -287,42 +302,42 @@
 
 * The `Entity.toUpdate` field is no longer public.
 
-* The `Service.search(query)` and `Service.search(query, args)` methods now 
-  return a search job instead of blocking and returning results. 
-  
+* The `Service.search(query)` and `Service.search(query, args)` methods now
+  return a search job instead of blocking and returning results.
+
 * The `Service.search(query, inputArgs, outputArgs)` overload has been removed.
 
-* The `OutputServer.setsslRootCAPPath` method has been renamed to 
+* The `OutputServer.setsslRootCAPPath` method has been renamed to
   `setSslRootCAPPath`.
 
 * The `SavedSearch.getDispatchReduceFreq` method, which returned a `String`, has
   been replaced with `getDispatchReduceFrequency`, which returns an `int`.
 
-* The `setRestrictToHost` method has been removed from the `TcpInput` and 
+* The `setRestrictToHost` method has been removed from the `TcpInput` and
   `UdpInput` classes.
 
-* The `Settings.setMgmtHostPort` method has been renamed to `setMgmtPort` and 
+* The `Settings.setMgmtHostPort` method has been renamed to `setMgmtPort` and
   this method now returns an `int`.
 
 ### Bug fixes
 
 * The `Service.versionCompare` method has been fixed to work as expected.
 
-* The `OutputDefault.update` method has been fixed so that when a "name" 
-  parameter is not specified, the method no longer fails. 
+* The `OutputDefault.update` method has been fixed so that when a "name"
+  parameter is not specified, the method no longer fails.
 
 ### Deprecated features
 
 The following list contains the main features that have been deprecated (trivial
-changes are not included): 
+changes are not included):
 
-* The public fields in the `ServiceArgs` class have been deprecated in favor of 
+* The public fields in the `ServiceArgs` class have been deprecated in favor of
   the new setter methods to maintain consistency with the new *args* subclasses.
 
-* The `Application.isManageable` and `Application.setManageable` methods have 
+* The `Application.isManageable` and `Application.setManageable` methods have
   been deprecated in Splunk 5.0 and later.
 
-* The `DistributedConfiguration.getServerTimeout` method has been deprecated in 
+* The `DistributedConfiguration.getServerTimeout` method has been deprecated in
   Splunk 5.0 and later.
 
 
