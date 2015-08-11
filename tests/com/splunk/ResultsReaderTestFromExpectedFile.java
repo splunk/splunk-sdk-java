@@ -77,6 +77,7 @@ public class ResultsReaderTestFromExpectedFile {
 
     @Test
     public void testResultsReader() throws IOException, XMLStreamException {
+        // TODO: This test fails on Windows due to XML attributes being out of order
         ResultsReaderXml resultsReader = new ResultsReaderXml(this.xmlStream);
         List<Map<String, Object>> expectedEvents =
             (List<Map<String, Object>>)this.expectedResultsSet.get("results");

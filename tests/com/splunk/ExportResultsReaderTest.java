@@ -96,6 +96,7 @@ public class ExportResultsReaderTest {
 
     @Test
     public void testExportNonreporting() throws IOException, XMLStreamException {
+        // TODO: This test fails on Windows due to XML attributes being out of order
         Map<String, Object> thisVersion = (Map<String, Object>)expectedData.get(this.version);
         if (!thisVersion.containsKey("nonreporting")) {
             return; // No test case
