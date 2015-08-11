@@ -106,18 +106,18 @@ public class Service extends BaseService {
     public Service(String host, int port, String scheme) {
         super(host, port, scheme);
     }
-    
+
     /**
      * Constructs a new {@code Service} instance using the given host,
      * port, and scheme, and instructing it to use the specified HTTPS handler.
      *
      * @param host The host name of the service.
      * @param port The port number of the service.
-     * @param scheme Scheme for accessing the service ({@code http} or 
+     * @param scheme Scheme for accessing the service ({@code http} or
      * {@code https}).
      */
-    public Service(String host, int port, String scheme, 
-    		URLStreamHandler httpsHandler) {
+    public Service(String host, int port, String scheme,
+        URLStreamHandler httpsHandler) {
         this.host = host;
         this.port = port;
         this.scheme = scheme;
@@ -150,6 +150,7 @@ public class Service extends BaseService {
         this.password = (String)args.get("password");
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
+        this.addCookie((String)args.get("cookie"));
     }
 
     /**
@@ -169,11 +170,12 @@ public class Service extends BaseService {
         this.password = (String)args.get("password");
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
+        this.addCookie((String)args.get("cookie"));
     }
 
     /**
-     * Establishes a connection to a Splunk service using a map of arguments. 
-     * This member creates a new {@code Service} instance and authenticates 
+     * Establishes a connection to a Splunk service using a map of arguments.
+     * This member creates a new {@code Service} instance and authenticates
      * the session using credentials passed in from the {@code args} map.
      *
      * @param args The {@code args} map.
@@ -188,7 +190,7 @@ public class Service extends BaseService {
     }
 
     /**
-     * Runs an export search (using the {@code search/jobs/export} endpoint), 
+     * Runs an export search (using the {@code search/jobs/export} endpoint),
      * and streams results back in an input stream.
      *
      * @param search The search query to run.
@@ -203,12 +205,12 @@ public class Service extends BaseService {
      * endpoint), and streams results back in an input stream.
      *
      * @param search The search query to run.
-     * @param args Additional search arguments. 
+     * @param args Additional search arguments.
      * For a list of possible parameters, see
-     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ#savedsearchparams" 
-     * target="_blank">Saved search parameters</a> on 
-     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ" 
-     * target="_blank">dev.splunk.com</a>. 
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ#savedsearchparams"
+     * target="_blank">Saved search parameters</a> on
+     * <a href="http://dev.splunk.com/view/SP-CAAAEHQ"
+     * target="_blank">dev.splunk.com</a>.
      * @return The {@code InputStream} object that contains the search results.
      */
     public InputStream export(String search, Map args) {
@@ -220,7 +222,7 @@ public class Service extends BaseService {
         ResponseMessage response = get(JobCollection.REST_PATH + "/export", args);
         return new ExportResultsStream(response.getContent());
     }
-    
+
     /**
      * Runs an export search with arguments (using the {@code search/jobs/export}
      * endpoint), and streams results back in an input stream.
@@ -237,7 +239,7 @@ public class Service extends BaseService {
 
     /**
      * Ensures that the given path is fully qualified, prepending a path
-     * prefix if necessary. The path prefix is constructed using the current 
+     * prefix if necessary. The path prefix is constructed using the current
      * owner and app context when available.
      *
      * @param path The path to verify.
@@ -317,8 +319,8 @@ public class Service extends BaseService {
     }
 
     /**
-     * Returns the app context for this {@code Service} instance. 
-     * A {@code null} value indicates no app context, and a value of 
+     * Returns the app context for this {@code Service} instance.
+     * A {@code null} value indicates no app context, and a value of
      * {@code "-"} indicates an app wildcard.
      *
      * @return The app context.
@@ -349,7 +351,7 @@ public class Service extends BaseService {
     /**
      * Returns the collection of configurations.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return The configurations collection.
      */
@@ -395,7 +397,7 @@ public class Service extends BaseService {
     /**
      * Returns the collection of deployment servers.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return The configuration of deployment servers.
      */
@@ -422,7 +424,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of class configurations for a deployment server.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of server class configurations.
      */
@@ -450,7 +452,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of multi-tenant configurations.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of multi-tenant configurations.
      */
@@ -486,7 +488,7 @@ public class Service extends BaseService {
      * The Splunk server where the search originates is referred to as the
      * <i>search head</i>.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search peers.
      */
@@ -508,7 +510,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of saved event types.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of saved event types.
      */
@@ -528,7 +530,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of alerts that have been fired by the service.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of fired alerts.
      */
@@ -544,11 +546,11 @@ public class Service extends BaseService {
     public IndexCollection getIndexes() {
         return getIndexes((IndexCollectionArgs)null);
     }
-    
+
     /**
      * Returns a collection of Splunk indexes.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link IndexCollectionArgs}.
      * @return A collection of indexes.
      */
@@ -561,7 +563,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of Splunk indexes.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link IndexCollectionArgs}.
      * @return A collection of indexes.
      */
@@ -590,7 +592,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of configured inputs.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of inputs.
      */
@@ -606,11 +608,11 @@ public class Service extends BaseService {
     public JobCollection getJobs() {
         return getJobs((CollectionArgs)null);
     }
-    
+
     /**
      * Returns a collection of current search jobs.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search jobs.
      */
@@ -623,7 +625,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of current search jobs.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of search jobs.
      */
@@ -653,7 +655,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of license group configurations.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of license group configurations.
      */
@@ -674,7 +676,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of messages from the licenser.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser messages.
      */
@@ -684,8 +686,8 @@ public class Service extends BaseService {
     }
 
     /**
-     * Returns the current owner context for this {@code Service} instance. 
-     * A value of {@code "-"} indicates a wildcard, and a {@code null} value 
+     * Returns the current owner context for this {@code Service} instance.
+     * A value of {@code "-"} indicates a wildcard, and a {@code null} value
      * indicates no owner context.
      *
      * @return The current owner context.
@@ -706,7 +708,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of licenser pool configurations.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser pool configurations.
      */
@@ -726,7 +728,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of slaves reporting to this license master.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenser slaves.
      */
@@ -747,7 +749,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of license stack configurations.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of license stack configurations.
      */
@@ -768,7 +770,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of licenses for this service.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of licenses.
      */
@@ -789,7 +791,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of service logging categories and their status.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of logging categories.
      */
@@ -810,14 +812,14 @@ public class Service extends BaseService {
     /**
      * Returns a collection of system messages.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of system messages.
      */
     public MessageCollection getMessages(Args args) {
         return new MessageCollection(this, args);
     }
-    
+
     /**
      * Returns a collection of modular inputs.
      *
@@ -830,7 +832,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of modular inputs.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of modular inputs.
      */
@@ -860,7 +862,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of output group configurations.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of output group configurations.
      */
@@ -881,7 +883,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of data-forwarding configurations.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of data-forwarding configurations.
      */
@@ -904,7 +906,7 @@ public class Service extends BaseService {
      * Returns a collection of configurations for forwarding data in standard
      * syslog format.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of syslog forwarders.
      */
@@ -936,7 +938,7 @@ public class Service extends BaseService {
      * Returns a collection of passwords. This collection is used for managing
      * secure credentials.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of passwords.
      */
@@ -965,7 +967,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of Splunk user roles.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of user roles.
      */
@@ -982,11 +984,11 @@ public class Service extends BaseService {
     public SavedSearchCollection getSavedSearches() {
         return getSavedSearches((SavedSearchCollectionArgs)null);
     }
-    
+
     /**
      * Returns a collection of saved searches.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link SavedSearchCollectionArgs}.
      * @return A collection of saved searches.
      */
@@ -999,7 +1001,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of saved searches.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of saved searches.
      */
@@ -1069,7 +1071,7 @@ public class Service extends BaseService {
     /**
      * Returns a collection of Splunk users.
      *
-     * @param args Collection arguments that specify the number of entities to 
+     * @param args Collection arguments that specify the number of entities to
      * return and how to sort them. See {@link CollectionArgs}.
      * @return A collection of users.
      */
@@ -1080,21 +1082,29 @@ public class Service extends BaseService {
     /**
      * Authenticates the {@code Service} instance with the username and password
      * that were specified when the instance was created.
-     * 
+     *
+     * Three cases:
+     * 1. If we have a cookie, but are missing username and/or password, login is noop
+     * 2. If we don't have a cookie, and are missing username and/or password we can't login
+     * 3.  Otherwise login as usual
+     *
      * @return The current {@code Service} instance.
      */
     public Service login() {
-        if (this.username == null || this.password == null) {
+        if (!this.cookieStore.isEmpty() && (this.username == null || this.password == null)) {
+            return this;
+        }
+        else if (this.username == null || this.password == null) {
             throw new IllegalStateException("Missing username or password.");
         }
         else {
             return login(this.username, this.password);
         }
     }
-    
+
     /**
-     * Authenticates the {@code Service} instance with a specified username and 
-     * password. Note that these values override any previously-set values for 
+     * Authenticates the {@code Service} instance with a specified username and
+     * password. Note that these values override any previously-set values for
      * username and password.
      *
      * @param username The Splunk account username.
@@ -1108,6 +1118,7 @@ public class Service extends BaseService {
         Args args = new Args();
         args.put("username", username);
         args.put("password", password);
+        args.put("cookie", "1");
         ResponseMessage response = post("/services/auth/login", args);
         String sessionKey = Xml.parse(response.getContent())
             .getElementsByTagName("sessionKey")
@@ -1128,6 +1139,7 @@ public class Service extends BaseService {
      */
     public Service logout() {
         this.token = null;
+        this.removeAllCookies();
         return this;
     }
 
@@ -1148,11 +1160,11 @@ public class Service extends BaseService {
      * @param args The search arguments:<ul>
      * <li>"output_mode": Specifies the output format of the results (XML, JSON,
      * or CSV).</li>
-     * <li>"earliest_time": Specifies the earliest time in the time range to 
-     * search. The time string can be a UTC time (with fractional seconds), a 
+     * <li>"earliest_time": Specifies the earliest time in the time range to
+     * search. The time string can be a UTC time (with fractional seconds), a
      * relative time specifier (to now), or a formatted time string.</li>
      * <li>"latest_time": Specifies the latest time in the time range to search.
-     * The time string can be a UTC time (with fractional seconds), a relative 
+     * The time string can be a UTC time (with fractional seconds), a relative
      * time specifier (to now), or a formatted time string.</li>
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
@@ -1178,11 +1190,11 @@ public class Service extends BaseService {
      * @param args The search arguments:<ul>
      * <li>"output_mode": Specifies the output format of the results (XML, JSON,
      * or CSV).</li>
-     * <li>"earliest_time": Specifies the earliest time in the time range to 
-     * search. The time string can be a UTC time (with fractional seconds), a 
+     * <li>"earliest_time": Specifies the earliest time in the time range to
+     * search. The time string can be a UTC time (with fractional seconds), a
      * relative time specifier (to now), or a formatted time string.</li>
      * <li>"latest_time": Specifies the latest time in the time range to search.
-     * The time string can be a UTC time (with fractional seconds), a relative 
+     * The time string can be a UTC time (with fractional seconds), a relative
      * time specifier (to now), or a formatted time string.</li>
      * <li>"rf": Specifies one or more fields to add to the search.</li></ul>
      * @return The search results.
@@ -1204,7 +1216,7 @@ public class Service extends BaseService {
     }
 
     /**
-     * Parses a search query and returns a semantic map for the search in JSON 
+     * Parses a search query and returns a semantic map for the search in JSON
      * format.
      *
      * @param query The search query.
@@ -1263,10 +1275,10 @@ public class Service extends BaseService {
     }
 
     /**
-     * Issues an HTTP request against the service using a request path and 
-     * message. 
+     * Issues an HTTP request against the service using a request path and
+     * message.
      * This method overrides the base {@code HttpService.send} method
-     * and applies the Splunk authorization header, which is required for 
+     * and applies the Splunk authorization header, which is required for
      * authenticated interactions with the Splunk service.
      *
      * @param path The request path.
@@ -1274,18 +1286,19 @@ public class Service extends BaseService {
      * @return The HTTP response.
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
-        if (token != null) {
+        // cookieStore is a protected member of HttpService
+        if (token != null && cookieStore.isEmpty()) {
             request.getHeader().put("Authorization", token);
         }
         return super.send(fullpath(path), request);
     }
 
     /**
-     * Provides a session token for use by this {@code Service} instance. 
+     * Provides a session token for use by this {@code Service} instance.
      * Session tokens can be shared across multiple {@code Service} instances.
      *
-     * @param value The session token, which is a basic authorization header in 
-     * the format "Basic <i>sessiontoken</i>", where <i>sessiontoken</i> is the 
+     * @param value The session token, which is a basic authorization header in
+     * the format "Basic <i>sessiontoken</i>", where <i>sessiontoken</i> is the
      * Base64-encoded "username:password" string.
      */
     public void setToken(String value) {
@@ -1327,23 +1340,23 @@ public class Service extends BaseService {
     }
 
     /**
-     * Returns a value indicating how the version of this Splunk instance 
-     * compares to a given version: 
+     * Returns a value indicating how the version of this Splunk instance
+     * compares to a given version:
      * <ul>
      * <li>{@code -1 if this version < the given version}</li>
      * <li>{@code  0 if this version = the given version}</li>
      * <li>{@code  1 if this version > the given version}</li>
      * </ul>
-     * 
-     * @param otherVersion The other version to compare to. 
-     * @return -1 if this version is less than, 0 if this version is equal to, 
+     *
+     * @param otherVersion The other version to compare to.
+     * @return -1 if this version is less than, 0 if this version is equal to,
      *         or 1 if this version is greater than the given version.
      */
     public int versionCompare(String otherVersion) {
         String[] components1 = this.version.split("\\.");
         String[] components2 = otherVersion.split("\\.");
         int numComponents = Math.max(components1.length, components2.length);
-        
+
         for (int i = 0; i < numComponents; i++) {
             int c1 = (i < components1.length)
                     ? Integer.parseInt(components1[i], 10) : 0;

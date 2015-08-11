@@ -21,9 +21,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
-
+import java.lang.StringBuilder;
 /**
- * The {@code Receiver} class represents a named index and unnamed index 
+ * The {@code Receiver} class represents a named index and unnamed index
  * receivers.
  */
 public class Receiver {
@@ -63,7 +63,7 @@ public class Receiver {
     /**
      * Creates a writable socket to this index.
      *
-     * @param args Optional arguments for this stream. Valid parameters are: 
+     * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
      * @throws IOException
@@ -76,7 +76,7 @@ public class Receiver {
      * Creates a writable socket to this index.
      *
      * @param indexName The index to write to.
-     * @param args Optional arguments for this stream. Valid parameters are: 
+     * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
      * @throws IOException
@@ -93,16 +93,26 @@ public class Receiver {
             postUrl = postUrl +  ((indexName == null) ? "?" : "&");
             postUrl = postUrl + args.encode();
         }
-        String header = String.format(
-            "%s HTTP/1.1\r\n" +
-            "Host: %s:%d\r\n" +
-            "Accept-Encoding: identity\r\n" +
-            "Authorization: %s\r\n" +
-            "X-Splunk-Input-Mode: Streaming\r\n\r\n",
-            postUrl,
-            service.getHost(), service.getPort(),
-            service.getToken());
-        out.write(header);
+
+        StringBuilder header = new StringBuilder(String.format(
+                "%s HTTP/1.1\r\n" +
+                "Host: %s:%d\r\n" +
+                "Accept-Encoding: identity\r\n" +
+                "X-Splunk-Input-Mode: Streaming\r\n",
+                postUrl,
+                service.getHost(), service.getPort()
+                ));
+
+        if (service.hasCookies()) {
+            header.append("Cookie: ");
+            header.append(service.stringifyCookies());
+        } else {
+            header.append("Authorization: ");
+            header.append(service.getToken());
+        }
+        header.append("\r\n\r\n");
+
+        out.write(header.toString());
         out.flush();
         return socket;
     }
@@ -130,7 +140,7 @@ public class Receiver {
      * Submits an event to this index through HTTP POST.
      *
      * @param data A string containing event data.
-     * @param args Optional arguments for this stream. Valid parameters are: 
+     * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      */
     public void submit(Args args, String data) {
@@ -142,7 +152,7 @@ public class Receiver {
      *
      * @param indexName The index to write to.
      * @param data A string containing event data.
-     * @param args Optional arguments for this stream. Valid parameters are: 
+     * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      */
     public void submit(String indexName, Args args, String data) {
@@ -190,7 +200,7 @@ public class Receiver {
      * Submits an event to this index through HTTP POST. This method is an alias
      * for {@code submit()}.
      *
-     * @param args Optional arguments for this stream. Valid parameters are: 
+     * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      * @param data A string containing event data.
      */
@@ -203,7 +213,7 @@ public class Receiver {
      * for {@code submit()}.
      *
      * @param indexName The index to write to.
-     * @param args Optional arguments for this stream. Valid parameters are: 
+     * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      * @param data A string containing event data.
      */
