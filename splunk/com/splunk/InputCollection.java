@@ -240,35 +240,38 @@ public class InputCollection extends EntityCollection<Input> {
      */
     private Set<InputKind> assembleInputKindSet(List<String> subPath) {
         Set<InputKind> kinds = new HashSet<InputKind>();
-        ResponseMessage response = service.get(this.path + "/" + Util.join("/", subPath));
-        AtomFeed feed = AtomFeed.parseStream(response.getContent());
-        for (AtomEntry entry : feed.entries) {
-            String itemKeyName = itemKey(entry);
+        try {
+            ResponseMessage response = service.get(this.path + "/" + Util.join("/", subPath));
+            AtomFeed feed = AtomFeed.parseStream(response.getContent());
+            for (AtomEntry entry : feed.entries) {
+                String itemKeyName = itemKey(entry);
 
-            boolean hasCreateLink = false;
-            for (String linkName : entry.links.keySet()) {
-                if (linkName.equals("create")) {
-                    hasCreateLink = true;
+                boolean hasCreateLink = false;
+                for (String linkName : entry.links.keySet()) {
+                    if (linkName.equals("create")) {
+                        hasCreateLink = true;
+                    }
+                }
+
+                List<String> thisSubPath = new ArrayList<String>(subPath);
+                thisSubPath.add(itemKeyName);
+
+                String relpath = Util.join("/", thisSubPath);
+
+                if (relpath.equals("all") || relpath.equals("tcp/ssl")) {
+                    // Skip these input types
+                    continue;
+                } else if (hasCreateLink) {
+                    // Found an InputKind leaf
+                    InputKind newKind = InputKind.create(relpath);
+                    kinds.add(newKind);
+                } else {
+                    Set<InputKind> subKinds = assembleInputKindSet(thisSubPath);
+                    kinds.addAll(subKinds);
                 }
             }
-
-            List<String> thisSubPath = new ArrayList<String>(subPath);
-            thisSubPath.add(itemKeyName);
-            
-            String relpath = Util.join("/", thisSubPath);
-
-            if (relpath.equals("all") || relpath.equals("tcp/ssl")) {
-                // Skip these input types
-                continue;
-            } else if (hasCreateLink) {
-                // Found an InputKind leaf
-                InputKind newKind = InputKind.create(relpath);
-                kinds.add(newKind);
-            } else {
-                Set<InputKind> subKinds = assembleInputKindSet(thisSubPath);
-                kinds.addAll(subKinds);
-            }
         }
+        catch (Exception ignored) { }
         return kinds;
     }
 
