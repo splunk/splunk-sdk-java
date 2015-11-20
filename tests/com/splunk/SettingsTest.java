@@ -39,7 +39,9 @@ public class SettingsTest extends SDKTestCase {
         settings.getTrustedIP();
     }
     
-    @Test
+    // This test can't properly work when Splunk is running on a different
+    // machine, so we just remove it for now.
+    /*@Test
     public void testHttpPortSetter() throws Exception {
         Settings settings = service.getSettings();
 
@@ -65,7 +67,7 @@ public class SettingsTest extends SDKTestCase {
         changeHttpPort(originalHttpPort);
         Assert.assertTrue(isPortInUse(originalHttpPort));
         Assert.assertFalse(isPortInUse(newPort));
-    }
+    }*/
 
     private void changeHttpPort(int newHttpPort) {
         Settings settings = service.getSettings();

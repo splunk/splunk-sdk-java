@@ -20,12 +20,23 @@ import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.*;
 
 import static junit.framework.TestCase.*;
@@ -84,6 +95,24 @@ public class ResultsReaderTestFromExpectedFile {
         verifyResultsReader(resultsReader, expectedEvents);
     }
 
+    static String xmlToString(String originalXml) throws Exception
+    {
+        DocumentBuilderFactory fctr = DocumentBuilderFactory.newInstance();
+        DocumentBuilder bldr = fctr.newDocumentBuilder();
+        InputSource insrc = new InputSource(new StringReader(originalXml));
+        Document xml = bldr.parse(insrc);
+        xml.normalize();
+        
+        DOMSource domSource = new DOMSource(xml);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.transform(domSource, result);
+        
+        return writer.toString();
+    }
+
     static void verifyResultsReader(
             ResultsReaderXml resultsReader,
             List<Map<String, Object>> expectedEvents)
@@ -96,7 +125,14 @@ public class ResultsReaderTestFromExpectedFile {
             if (foundEvent.containsKey("_raw")) {
                 final String segmentedRaw = foundEvent.getSegmentedRaw();
                 final String keySegmentedRaw = "RAW_XML";
-                assertEquals(expectedEvent.get(keySegmentedRaw), segmentedRaw);
+                try {
+                    final String parsedExpected = xmlToString((String)expectedEvent.get(keySegmentedRaw));
+                    final String parsedReceived = xmlToString(segmentedRaw);
+					assertEquals(parsedExpected, parsedReceived);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					assertFalse(true);
+				}
                 verifyXml(segmentedRaw);
             }
             Map<String, Object> expectedFields =

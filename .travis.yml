@@ -1,0 +1,41 @@
+notifications:
+    email: false
+
+sudo: required
+
+services:
+    - docker
+
+before_install:
+    # Create .splunkrc file with default credentials
+    - echo host=localhost >> $HOME/.splunkrc
+    - echo username=admin >> $HOME/.splunkrc
+    - echo password=changeme >> $HOME/.splunkrc
+    # Set env vars for TCP/UDP tests (we've punched these through Docker)
+    - export TEST_TCP_PORT=10667
+    - export TEST_UDP_PORT=10668
+    # Set SPLUNK_HOME
+    - export SPLUNK_HOME="/opt/splunk"
+    # Pull docker image
+    - docker pull splunk/splunk-sdk-travis-ci:$SPLUNK_VERSION
+    # Add DOCKER to iptables, 1/10 times this is needed, force 0 exit status
+    - sudo iptables -N DOCKER || true
+    # Start Docker container
+    - docker run -p 127.0.0.1:8089:8089 -p 127.0.0.1:$TEST_TCP_PORT:$TEST_TCP_PORT -p 127.0.0.1:$TEST_UDP_PORT:$TEST_UDP_PORT/udp -d splunk/splunk-sdk-travis-ci:$SPLUNK_VERSION
+    # curl Splunk until it returns valid data indicating it has been setup, try 20 times maximum
+    - for i in `seq 0 20`; do if curl --fail -k https://localhost:8089/services/server/info &> /dev/null; then break; fi; echo $i; sleep 1; done
+
+env:
+    - SPLUNK_VERSION=6.2.6-sdk
+    - SPLUNK_VERSION=6.3.1-sdk
+
+language: java
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+
+before_script:
+    - ant
+
+script: ant travis

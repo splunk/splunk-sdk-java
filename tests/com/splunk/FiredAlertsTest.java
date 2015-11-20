@@ -65,7 +65,7 @@ public class FiredAlertsTest extends SDKTestCase {
     @After
     @Override
     public void tearDown() throws Exception {
-        if (service.versionIsAtLeast("5.0.0")) {
+        if (service.versionIsAtLeast("5.0.0") && System.getenv("TRAVIS") == null) {
             index.remove();
         }
         

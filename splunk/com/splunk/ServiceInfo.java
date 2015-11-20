@@ -34,8 +34,8 @@ public class ServiceInfo extends Entity {
      *
      * @return The build number.
      */
-    public int getBuild() {
-        return getInteger("build");
+    public String getBuild() {
+        return getString("build");
     }
 
     /**

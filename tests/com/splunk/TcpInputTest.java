@@ -39,7 +39,15 @@ public class TcpInputTest extends SDKTestCase {
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
 
-        tcpPort = findNextUnusedPort(10000);
+        String tcpPortString = System.getenv("TEST_TCP_PORT");
+        
+        if (tcpPortString == null) {
+        	tcpPort = findNextUnusedPort(10000);
+        }
+        else {
+        	tcpPort = Integer.parseInt(tcpPortString);
+        }
+        
         tcpInput = service.getInputs().create(
                 String.valueOf(tcpPort),
                 InputKind.Tcp,
@@ -48,7 +56,7 @@ public class TcpInputTest extends SDKTestCase {
 
     @After
     public void tearDown() throws Exception {
-        if (index != null && service.versionCompare("5.0") >= 0) {
+        if (index != null && service.versionCompare("5.0") >= 0 && System.getenv("TRAVIS") == null) {
             index.remove();
         }
 
