@@ -24,6 +24,7 @@ import javax.net.ssl.*;
 import java.io.ByteArrayOutputStream;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.security.NoSuchAlgorithmException;
 
 public class HttpServiceTest extends SDKTestCase {
     private HttpService httpService;
@@ -93,7 +94,7 @@ public class HttpServiceTest extends SDKTestCase {
     public void testSSLSocketFactory() {
         try {
             SSLSocketFactory factory = Service.getSSLSocketFactory();
-            SSLSocket socket = (SSLSocket) factory.createSocket("localhost", 8089);
+            SSLSocket socket = (SSLSocket) factory.createSocket((String)command.opts.get("host"), 8089);
             String[] protocols = socket.getEnabledProtocols();
             Assert.assertTrue(protocols.length > 0);
         }
@@ -192,8 +193,19 @@ public class HttpServiceTest extends SDKTestCase {
 
         // TLSv1.1 and TLSv1.2 were added in Java 7
         if (javaVersion >= 7) {
-            validateSSLProtocol(s, SSLSecurityProtocol.TLSv1_2);
-            validateSSLProtocol(s, SSLSecurityProtocol.TLSv1_1);
+            String[] supportedProtos = new String[0];
+            try {
+                supportedProtos = SSLContext.getDefault().getSupportedSSLParameters().getProtocols();
+            } catch (NoSuchAlgorithmException e) {
+            }
+
+           for (String proto : supportedProtos) {
+               if (proto.equals(SSLSecurityProtocol.TLSv1_2.toString())) {
+                   validateSSLProtocol(s, SSLSecurityProtocol.TLSv1_2);
+               } else if (proto.equals(SSLSecurityProtocol.TLSv1_1.toString())) {
+                   validateSSLProtocol(s, SSLSecurityProtocol.TLSv1_1);
+               }
+           }
         }
 
         // TLSv1 is supported in Java 6-8, always check

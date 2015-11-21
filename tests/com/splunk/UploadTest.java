@@ -22,6 +22,9 @@ public class UploadTest extends SDKTestCase {
     @Test
     public void testOneshot() {
         String filename = locateSystemLog();
+        if (System.getenv("SPLUNK_HOME") != null) {
+            filename = System.getenv("SPLUNK_HOME") + "/var/log/splunk/splunkd.log";
+        }
 
         service.getUploads().create(filename);
         

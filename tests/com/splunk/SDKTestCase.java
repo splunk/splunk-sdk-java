@@ -298,7 +298,7 @@ public abstract class SDKTestCase {
         // (And update 'service'.)
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             {
-                tries = 60;
+                tries = 120;
                 pauseTime = 1000;
             }
             

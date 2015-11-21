@@ -323,7 +323,7 @@
 
     <!-- Run the test suite -->
     <target name="test" depends="build">
-        <junit fork="yes" haltonfailure="no">
+        <junit fork="yes" haltonfailure="no" failureproperty="test.failed" printsummary="on">
             <classpath>
                 <pathelement location="${build.tests}"/>
                 <pathelement location="${build.util}"/>
@@ -338,12 +338,46 @@
                 <fileset dir="${build.tests}">
                     <include name="**/${testcase}.class"/>
                 </fileset>
-		<formatter type="xml" />
+                <formatter type="xml" />
             </batchtest>
 
             <formatter type="xml" />
             <formatter type="plain" usefile="false"/>
+            <jvmarg value="-Dhttps.protocols=TLSv1.1,TLSv1.2"/>
         </junit>
+        <fail message="Test failure detected, check test results." if="test.failed" />
+    </target>
+
+<target name="print-version"> 
+   <echo>Java/JVM version: ${ant.java.version}</echo> 
+   <echo>Java/JVM detail version: ${java.version}</echo> 
+</target>
+
+    <!-- Run the test suite -->
+    <target name="travis" depends="build">
+        <junit fork="yes" haltonfailure="no" failureproperty="test.failed" printsummary="yes" showoutput="yes">
+            <classpath>
+                <pathelement location="${build.tests}"/>
+                <pathelement location="${build.util}"/>
+                <pathelement location="lib/commons-cli-1.2.jar"/>
+                <pathelement location="${build.splunk}"/>
+                <pathelement location="${junit}"/>
+                <pathelement location="${gson}"/>
+                <pathelement location="${opencsv}"/>
+            </classpath>
+
+            <batchtest>
+                <fileset dir="${build.tests}">
+                    <include name="**/${testcase}.class"/>
+                </fileset>
+                <formatter type="xml" />
+            </batchtest>
+
+            <formatter type="xml" />
+            <formatter type="plain" usefile="false"/>
+            <jvmarg value="-Dhttps.protocols=TLSv1.1,TLSv1.2"/>
+        </junit>
+        <fail message="Test failure detected, check test results." if="test.failed" />
     </target>
 
     <target name="testreport" depends="test">

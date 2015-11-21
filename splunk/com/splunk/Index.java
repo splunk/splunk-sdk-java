@@ -152,25 +152,6 @@ public class Index extends Entity {
     }
 
     /**
-     * Returns the block signature database for this index.
-     *
-     * @return The block signature database.
-     */
-    public String getBlockSignatureDatabase() {
-        return getString("blockSignatureDatabase");
-    }
-
-    /**
-     * Returns the number of events that make up a block for block signatures. 
-     *
-     * @return The block sign size. A value of 0 means block signing has been 
-     * disabled.
-     */
-    public int getBlockSignSize() {
-        return getInteger("blockSignSize");
-    }
-
-    /**
      * Returns the total size of all bloom filter files.
      *
      * @return The total size of all bloom filter files, in KB.

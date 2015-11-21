@@ -207,7 +207,7 @@ public class SearchJobTest extends SDKTestCase {
         args.setMaximumLines(1);
         args.setOutputMode(JobExportArgs.OutputMode.XML);
         args.setEarliestTime("-10m");
-        args.setLatestTime("-5m");
+        args.setLatestTime("-1s");
         args.setTruncationMode(JobExportArgs.TruncationMode.TRUNCATE);
         args.setOutputTimeFormat("%s.%Q");
         args.setRequiredFieldList(new String[] { "_raw", "date_hour" });
@@ -255,7 +255,7 @@ public class SearchJobTest extends SDKTestCase {
         args.setMaximumCount(10);
         args.setStatusBuckets(1);
         args.setEarliestTime("-600m");
-        args.setLatestTime("-5m");
+        args.setLatestTime("-1s");
         args.setRequiredFieldList(new String[] { "_raw", "date_hour" });
         args.setSearchMode(JobArgs.SearchMode.NORMAL);
         args.setId(name);

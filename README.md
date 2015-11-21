@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/splunk/splunk-sdk-java.svg?branch=master)](https://travis-ci.org/splunk/splunk-sdk-java)
 # The Splunk Software Development Kit for Java
 
 #### Version 1.5.0

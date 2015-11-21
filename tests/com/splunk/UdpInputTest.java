@@ -33,9 +33,16 @@ public class UdpInputTest extends SDKTestCase {
         indexName = createTemporaryName();
         index = service.getIndexes().create(indexName);
 
-        udpPort = 10000;
-        while (service.getInputs().containsKey(Integer.toString(udpPort))) {
-            udpPort++;
+        String udpPortString = System.getenv("TEST_UDP_PORT");
+        
+        if (udpPortString == null) {
+	        udpPort = 10000;
+	        while (service.getInputs().containsKey(Integer.toString(udpPort))) {
+	            udpPort++;
+	        }
+        }
+        else {
+        	udpPort = Integer.parseInt(udpPortString);
         }
 
         udpInput = service.getInputs().create(
@@ -46,7 +53,7 @@ public class UdpInputTest extends SDKTestCase {
 
     @After
     public void tearDown() throws Exception {
-        if (index != null && service.versionCompare("5.0") >= 0) {
+        if (index != null && service.versionCompare("5.0") >= 0 && System.getenv("TRAVIS") == null) {
             index.remove();
         }
         if (udpInput != null) {
