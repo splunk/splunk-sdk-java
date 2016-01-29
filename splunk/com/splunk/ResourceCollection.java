@@ -259,6 +259,12 @@ public class ResourceCollection<T extends Resource>
 
         HashMap<String, String> entityMetadata =
                 (HashMap<String, String>)entry.content.get("eai:acl");
+        
+        // If there is no ACL info, we just create an empty map
+        if (entityMetadata == null) {
+        	entityMetadata = new HashMap<String, String>();
+        }        
+        
         if (entityMetadata.containsKey("owner"))
             namespace.put("owner", entityMetadata.get("owner"));
         if (entityMetadata.containsKey("app"))
