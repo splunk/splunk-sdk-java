@@ -16,6 +16,8 @@
 
 package com.splunk;
 
+import java.util.LinkedList;
+
 /**
  * The {@code PasswordCollection} class represents a collection of credentials.
  */
@@ -70,12 +72,63 @@ public class PasswordCollection extends EntityCollection<Password> {
     }
 
     /**
-     * Returns the username for a credential.
+     * Get a credential with realm and name.
      *
-     * @param entry The {@code AtomEntry} object describing the credential.
-     * @return The username.
+     * @param realm The credential realm.
+     * @param name The username.
+     * @return The credential, or null if not found.
      */
-    @Override protected String itemKey(AtomEntry entry) {
-        return (String)entry.content.get("username");
+    public Password get(String realm, String name) {
+        return super.get(String.format("%s:%s:", realm, name));
+    }
+
+    @Override
+    public Password get(Object key) {
+        // Make it compatible with the old way (low-efficient)
+        if (key instanceof String && !((String) key).contains(":")) {
+            return getByUsername((String) key);
+        }
+        return super.get(key);
+    }
+
+    /**
+     * Remove a credential with realm and name.
+     *
+     * @param realm The credential realm.
+     * @param name The username.
+     * @return The removed credential, or null if not found.
+     */
+    public Password remove(String realm, String name) {
+        return super.remove(String.format("%s:%s:", realm, name));
+    }
+
+    @Override
+    public Password remove(String key) {
+        // Make it compatible with the old way (low-efficient)
+        if (!key.contains(":")) {
+            Password password = getByUsername((String) key);
+            validate();
+            if (password == null) return null;
+            password.remove();
+            // by invalidating any access to items will get refreshed
+            invalidate();
+            return password;
+        }
+        return super.remove(key);
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        if (key instanceof String && !((String) key).contains(":")) {
+            return getByUsername((String) key) != null;
+        }
+        return super.containsKey(key);
+    }
+
+    private Password getByUsername(String name) {
+        for (Password password : this.values()) {
+            if (password.getUsername().equals(name)) return password;
+        }
+        return null;
     }
 }
