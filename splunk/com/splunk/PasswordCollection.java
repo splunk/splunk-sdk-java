@@ -16,8 +16,6 @@
 
 package com.splunk;
 
-import java.util.LinkedList;
-
 /**
  * The {@code PasswordCollection} class represents a collection of credentials.
  */
