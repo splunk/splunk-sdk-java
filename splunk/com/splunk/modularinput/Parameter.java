@@ -77,7 +77,7 @@ public abstract class Parameter {
                 MultiValueParameter parameter = new MultiValueParameter(name);
                 for (Node valueNode = child.getFirstChild(); valueNode != null; valueNode = valueNode.getNextSibling()) {
                     if (valueNode.getNodeType() == Node.TEXT_NODE) continue;
-                    if ("value".equals(valueNode.getNodeName())) {
+                    if (!"value".equals(valueNode.getNodeName())) {
                         throw new MalformedDataException("Expected a value element in parameter named " +
                                 child.getNodeName() + "; found " + valueNode.getNodeName());
                     } else {
