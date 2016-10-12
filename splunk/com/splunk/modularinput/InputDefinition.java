@@ -16,7 +16,6 @@
 
 package com.splunk.modularinput;
 
-import com.splunk.modularinput.Parameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -180,11 +179,11 @@ public class InputDefinition {
 
         InputDefinition definition = new InputDefinition();
         for (Node node = doc.getDocumentElement().getFirstChild(); node != null; node = node.getNextSibling()) {
-            if (node.getNodeType() == node.TEXT_NODE) {
+            if (node.getNodeType() == Node.TEXT_NODE) {
                 continue;
             } else if (node.getNodeName().equals("configuration")) {
                 for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-                    if (child.getNodeType() == child.TEXT_NODE) {
+                    if (child.getNodeType() == Node.TEXT_NODE) {
                         continue;
                     }
                     if (!child.getNodeName().equals("stanza")) {

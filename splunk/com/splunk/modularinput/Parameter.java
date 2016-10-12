@@ -63,21 +63,21 @@ public abstract class Parameter {
         List<Parameter> parameters = new ArrayList<Parameter>();
 
         for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-            if (child.getNodeType() == child.TEXT_NODE) {
+            if (child.getNodeType() == Node.TEXT_NODE) {
                 continue;
             }
-            if (child.getNodeName() == "param") {
+            if ("param".equals(child.getNodeName())) {
                 // This is a single value parameter
                 String name = child.getAttributes().getNamedItem("name").getNodeValue();
                 String value = XmlUtil.textInNode(child, "Element param with name=\"" + name +
                         "\" did not contain text.");
                 parameters.add(new SingleValueParameter(name, value));
-            } else if (child.getNodeName() == "param_list") {
+            } else if ("param_list".equals(child.getNodeName())) {
                 String name = child.getAttributes().getNamedItem("name").getNodeValue();
                 MultiValueParameter parameter = new MultiValueParameter(name);
                 for (Node valueNode = child.getFirstChild(); valueNode != null; valueNode = valueNode.getNextSibling()) {
-                    if (valueNode.getNodeType() == valueNode.TEXT_NODE) continue;
-                    if (valueNode.getNodeName() != "value") {
+                    if (valueNode.getNodeType() == Node.TEXT_NODE) continue;
+                    if (!"value".equals(valueNode.getNodeName())) {
                         throw new MalformedDataException("Expected a value element in parameter named " +
                                 child.getNodeName() + "; found " + valueNode.getNodeName());
                     } else {

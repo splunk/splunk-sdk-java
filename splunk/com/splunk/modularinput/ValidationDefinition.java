@@ -199,7 +199,7 @@ public class ValidationDefinition {
 
         ValidationDefinition definition = new ValidationDefinition();
         for (Node node = doc.getDocumentElement().getFirstChild(); node != null; node = node.getNextSibling()) {
-            if (node.getNodeType() == node.TEXT_NODE || node.getNodeType() == node.COMMENT_NODE) {
+            if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.COMMENT_NODE) {
                 continue;
             } else if (node.getNodeName().equals("item")) {
                 String name = node.getAttributes().getNamedItem("name").getNodeValue();
