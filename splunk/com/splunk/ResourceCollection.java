@@ -262,8 +262,8 @@ public class ResourceCollection<T extends Resource>
         
         // If there is no ACL info, we just create an empty map
         if (entityMetadata == null) {
-        	entityMetadata = new HashMap<String, String>();
-        }        
+            entityMetadata = new HashMap<String, String>();
+        }
         
         if (entityMetadata.containsKey("owner"))
             namespace.put("owner", entityMetadata.get("owner"));
