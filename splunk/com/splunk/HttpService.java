@@ -66,6 +66,9 @@ public class HttpService {
      */
     protected int port = 8089;
 
+    protected Integer connectTimeout = null;
+    protected Integer readTimeout = null;
+
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
@@ -282,6 +285,42 @@ public class HttpService {
     }
 
     /**
+     * Returns the connect timeout used by this service.
+     *
+     * @return The timeout in milliseconds.
+     */
+    public Integer getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    /**
+     * Sets a specified timeout value, in milliseconds, to be used when opening a communications link.
+     * 
+     * @param connectTimeout timeout in milliseconds, a timeout of zero is interpreted as an infinite timeout.
+     */
+    public void setConnectTimeout(Integer connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    /**
+     * Returns the read timeout used by this service.
+     *
+     * @return The timeout in milliseconds.
+     */
+    public Integer getReadTimeout() {
+        return readTimeout;
+    }
+
+    /**
+     * Sets a specified timeout value, in milliseconds, to be used when reading from a communications link.
+     * 
+     * @param readTimeout timeout in milliseconds, a timeout of zero is interpreted as an infinite timeout.
+     */
+    public void setReadTimeout(Integer readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+
+	/**
      * Issues a POST request against the service using a given path.
      *
      * @param path The request path.
@@ -372,6 +411,8 @@ public class HttpService {
         }
         cn.setUseCaches(false);
         cn.setAllowUserInteraction(false);
+        cn.setConnectTimeout(connectTimeout == null ? 0 : connectTimeout);
+        cn.setReadTimeout(readTimeout == null ? 0 : readTimeout);
 
         // Set the request method
         String method = request.getMethod();
