@@ -1164,6 +1164,24 @@ public class SavedSearch extends Entity {
     }
 
     /**
+     * Indicates whether embedding is enabled for the search.
+     *
+     * @return {@code true} if the search is enabled for the search, {@code false} if not.
+     */
+    public boolean isEmbedEnabled() {
+        return getBoolean("embed.enabled");
+    }
+
+    /**
+     * Returns the authorization token for embedding the search.
+     *
+     * @return The authorization token for embedding the search.
+     */
+    public String getEmbedToken() {
+        return getString("embed.token", null);
+    }
+
+    /**
      * Sets the password to use when authenticating with the SMTP server.
      * Normally this value will be set when editing the email settings, however
      * you can set a clear text password here and it will be encrypted on the
