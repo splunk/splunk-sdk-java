@@ -31,6 +31,8 @@ public class SavedSearchTest extends SDKTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        
+        Service.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_1);
 
         savedSearchName = createTemporaryName();
         savedSearches = service.getSavedSearches();
@@ -239,6 +241,20 @@ public class SavedSearchTest extends SDKTestCase {
         Assert.assertFalse(savedSearch.getActionSummaryIndexTrackAlert());
         Assert.assertEquals("65", savedSearch.getActionSummaryIndexTtl());
         Assert.assertEquals(savedSearch.isVisible(), !isVisible);
+        
+        boolean isPre620 = service.versionIsEarlierThan("6.2.0");
+        try {
+        	Assert.assertEquals(savedSearch.isEmbedEnabled(), false);
+            Assert.assertNull(savedSearch.getEmbedToken());
+            if (isPre620)
+            	Assert.fail("Expected UnsupportedOperationException");
+        } catch(UnsupportedOperationException uoe) {
+        	if (!isPre620)
+        		Assert.fail("Unexpected UnsupportedOperationException");
+        	else
+        		Assert.assertNotNull(uoe);
+        }
+        
         Assert.assertNull(savedSearch.getNextScheduledTime());
         if (service.versionIsEarlierThan("4.3")) {
             Assert.assertEquals("search  search index=boris abcd", savedSearch.getQualifiedSearch());

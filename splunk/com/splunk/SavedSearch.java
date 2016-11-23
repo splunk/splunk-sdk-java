@@ -1169,6 +1169,9 @@ public class SavedSearch extends Entity {
      * @return {@code true} if the search is enabled for the search, {@code false} if not.
      */
     public boolean isEmbedEnabled() {
+        if (service.versionIsEarlierThan("6.2.0")){
+        	throw new UnsupportedOperationException();
+        }
         return getBoolean("embed.enabled");
     }
 
@@ -1178,6 +1181,9 @@ public class SavedSearch extends Entity {
      * @return The authorization token for embedding the search.
      */
     public String getEmbedToken() {
+    	if (service.versionIsEarlierThan("6.2.0")) {
+        	throw new UnsupportedOperationException();
+        }
         return getString("embed.token", null);
     }
 
