@@ -82,9 +82,7 @@ public class SavedSearch extends Entity {
         invalidate();
         String sid = Job.getSid(response);
 
-        Job job;
-        JobCollection jobs = service.getJobs();
-        job = jobs.get(sid);
+        Job job = service.getJob(sid);
 
         // if job not yet scheduled, create an empty job object
         if (job == null) {
