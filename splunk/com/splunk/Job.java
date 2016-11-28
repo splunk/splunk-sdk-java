@@ -253,6 +253,16 @@ public class Job extends Entity {
     }
 
     /**
+     * Returns the count of events (pre-transforming) that were generated as a long.
+     *
+     * @return The number of events.
+     */
+    public long getEventCountLong() {
+        checkReady();
+        return getLong("eventCount");
+    }
+
+    /**
      * Returns the count of event fields.
      *
      * @return The number of event fields.
@@ -470,6 +480,18 @@ public class Job extends Entity {
         checkReady();
         return getInteger("resultCount");
     }
+    
+    /**
+     * Returns the total count of results returned for this search job as a long.
+     * This is the subset of scanned events that actually matches the search
+     * terms.
+     *
+     * @return The number of results.
+     */
+    public long getResultCountLong() {
+        checkReady();
+        return getLong("resultCount");
+    }
 
     /**
      * Indicates whether the job's results are available by streaming.
@@ -587,6 +609,17 @@ public class Job extends Entity {
     public int getScanCount() {
         checkReady();
         return getInteger("scanCount");
+    }
+    
+    /**
+     * Returns the number of events that are scanned or read off disk
+     * as a long.
+     *
+     * @return The number of events.
+     */
+    public long getScanCountLong() {
+        checkReady();
+        return getLong("scanCount");
     }
 
     /**
