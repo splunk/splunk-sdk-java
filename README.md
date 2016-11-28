@@ -74,6 +74,42 @@ For full installation instructions, you can find more information here:
 
 *   [Installing Apache Ant](http://ant.apache.org/manual/install.html)
 
+#### Using Maven
+
+You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects. With a few updates to your project's `pom.xml` file, it will retrieve all necessary dependencies and seamlessly build your project.
+
+To add the Splunk SDK for Java `.JAR` file as a dependency:
+
+1. Add the repository to your project's `pom.xml` file:
+
+```xml
+<repositories>
+  ...
+  <repository>
+    <id>splunk-artifactory</id>
+    <name>Splunk Releases</name>
+    <url>http://splunk.artifactoryonline.com/splunk/ext-releases-local</url>
+  </repository>
+</repositories>
+```
+
+2. Add the dependency to the `pom.xml` file:
+
+```xml
+<dependencies>
+  ...
+  <dependency>
+    <groupId>com.splunk</groupId>
+    <artifactId>splunk</artifactId>
+    <version>1.5.0.0</version>
+  </dependency>
+</dependencies>
+```
+
+Be sure to update the version number to match the version of the Splunk SDK for Java that you are using.
+
+> Note: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
+
 ### Building the SDK and documentation
 
 To build the SDK, open a command prompt in the **/splunk-sdk-java**
