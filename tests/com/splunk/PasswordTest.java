@@ -91,4 +91,42 @@ public class PasswordTest extends SDKTestCase {
         passwords.remove(name);
         Assert.assertFalse(passwords.containsKey(name));
     }
+
+    @Test
+    public void testPasswordsSameNamesButUniqueRealms() {
+        PasswordCollection passwords = service.getPasswords();
+
+        String realmA = "sdk-test-realm-a";
+        String realmB = "sdk-test-realm-b";
+        String passwordA = "sdk-test-password-a";
+        String passwordB = "sdk-test-password-b";
+        String username = "sdk-test-username";
+
+        passwords.create(username, passwordA, realmA);
+        passwords.create(username, passwordB, realmB);
+
+        Assert.assertEquals(passwordA, passwords.get(realmA, username).getClearPassword());
+        Assert.assertEquals(passwordB, passwords.get(realmB, username).getClearPassword());
+
+        passwords.remove(realmA, username);
+        passwords.remove(realmB, username);
+
+        Assert.assertNull(passwords.get(realmA, username));
+        Assert.assertNull(passwords.get(realmB, username));
+    }
+
+    @Test
+    public void testPasswordsCompatibleGetByName() {
+        PasswordCollection passwords = service.getPasswords();
+
+        String realm = "sdk-test-realm-c";
+        String password = "sdk-test-password";
+        String username = "sdk-test-username";
+
+        passwords.create(username, password, realm);
+        Assert.assertEquals(password, passwords.get(username).getClearPassword());
+
+        passwords.remove(username);
+        Assert.assertNull(passwords.get(username));
+    }
 }
