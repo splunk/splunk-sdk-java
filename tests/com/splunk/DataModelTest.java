@@ -181,6 +181,7 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertTrue(model.isAccelerated());
         Assert.assertEquals("-2mon", model.getEarliestAcceleratedTime());
         Assert.assertEquals("5/* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertFalse(model.isManualRebuilds());
 
         model.update(); // An empty update should also work
         model.refresh();
@@ -188,6 +189,7 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertTrue(model.isAccelerated());
         Assert.assertEquals("-2mon", model.getEarliestAcceleratedTime());
         Assert.assertEquals("5/* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertFalse(model.isManualRebuilds());
 
         model.setAcceleration(false);
         model.setEarliestAcceleratedTime("-1mon");
@@ -197,6 +199,15 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertFalse(model.isAccelerated());
         Assert.assertEquals("-1mon", model.getEarliestAcceleratedTime());
         Assert.assertEquals("* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertFalse(model.isManualRebuilds());
+
+        model.setManualRebuilds(true);
+        model.update();
+
+        Assert.assertFalse(model.isAccelerated());
+        Assert.assertEquals("-1mon", model.getEarliestAcceleratedTime());
+        Assert.assertEquals("* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertTrue(model.isManualRebuilds());
     }
 
     @Test

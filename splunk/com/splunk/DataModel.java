@@ -44,6 +44,7 @@ public class DataModel extends Entity {
     private boolean accelerationEnabled;
     private String earliestAcceleratedTime;
     private String accelerationCronSchedule;
+    private boolean manualRebuilds;
 
     DataModel(Service service, String path) {
         super(service, path);
@@ -187,6 +188,15 @@ public class DataModel extends Entity {
                 earliestAcceleratedTime = entry.getValue().getAsString();
             } else if (entry.getKey().equals("cron_schedule")) {
                 accelerationCronSchedule = entry.getValue().getAsString();
+            } else if (entry.getKey().equals("manual_rebuilds")) {
+                if (((JsonPrimitive)entry.getValue()).isBoolean()) {
+                    manualRebuilds = entry.getValue().getAsBoolean();
+                } else if (((JsonPrimitive)entry.getValue()).isNumber()) {
+                    manualRebuilds = entry.getValue().getAsInt() != 0;
+                } else {
+                    throw new RuntimeException("splunkd returned an unknown value " + entry.getValue().toString() +
+                            " for whether manual_rebuilds is enabled.");
+                }
             } else {
                 // Allow new keys without complaining
             }
@@ -250,12 +260,32 @@ public class DataModel extends Entity {
         toUpdate.put("cron_schedule", accelerationCronSchedule);
     }
 
+    /**
+     * This setting prevents outdated summaries from being rebuilt by the
+     * 'summarize' command.
+     *
+     * @return whether manual rebuilds are enabled for this data model.
+     */
+    public boolean isManualRebuilds() {
+        return this.manualRebuilds;
+    }
+
+    /**
+     * Enable or disable manual rebuilds on this data model.
+     *
+     * @param enabled true enabled, false disables.
+     */
+    public void setManualRebuilds(boolean enabled) {
+        this.manualRebuilds = enabled;
+        toUpdate.put("manual_rebuilds", enabled);
+    }
+
     @Override
     public void update() {
         // We have to do some munging on the acceleration fields to pass them as JSON
         // to the server.
         Map<String, Object> accelerationMap = new HashMap<String, Object>();
-        for (String key : new String[] {"enabled", "earliest_time", "cron_schedule"}) {
+        for (String key : new String[] {"enabled", "earliest_time", "cron_schedule", "manual_rebuilds"}) {
             if (toUpdate.containsKey(key)) {
                 accelerationMap.put(key, toUpdate.get(key));
                 toUpdate.remove(key);
