@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -226,12 +227,13 @@ public class SearchJobTest extends SDKTestCase {
         args.setLatestTime("-1s");
         args.setTruncationMode(JobExportArgs.TruncationMode.TRUNCATE);
         args.setOutputTimeFormat("%s.%Q");
-        args.setRequiredFieldList(new String[] { "_raw", "date_hour" });
+        args.setFieldList(new String[] { "_raw", "date_hour", "foo" });
+        args.setRequiredFieldList(new String[] { "_raw", "date_hour", "foo2" });
         args.setSearchMode(JobExportArgs.SearchMode.NORMAL);
 
         InputStream input = service.export("search index=_internal | head 200", args);
         ResultsReaderXml reader = new ResultsReaderXml(input);
-
+        
         int count = 0;
         while(true) {
             HashMap<String, String> found = reader.getNextEvent();
@@ -250,6 +252,8 @@ public class SearchJobTest extends SDKTestCase {
                 }
                 Assert.assertEquals(1, numLines);
                 Assert.assertFalse(found.containsKey("date_month"));
+                Assert.assertFalse(found.containsKey("foo"));
+                Assert.assertFalse(found.containsKey("foo2"));
             }
             else {
                 break;

@@ -292,12 +292,22 @@ public class JobExportArgs extends Args {
         
         this.put("remote_server_list", String.valueOf(csv));
     }
+
+    /**
+     * Sets one or more fields to the search. These fields, even if not referenced or used directly by the search, are still included by the events and summary endpoints. Splunk Web uses these fields to prepopulate panels in the Search view.
+     * 
+     * @param fieldList
+     *      The list of fields.
+     */
+    public void setFieldList(String[] fieldList) {
+        this.put("f", fieldList);
+    }
     
     /**
      * Sets one or more required fields to the search. These fields, even if not referenced or used directly by the search, are still included by the events and summary endpoints. Splunk Web uses these fields to prepopulate panels in the Search view.
      * 
      * @param requiredFieldList
-     *      The list of fields.
+     *      The list of required fields.
      */
     public void setRequiredFieldList(String[] requiredFieldList) {
         this.put("rf", requiredFieldList);
