@@ -43,8 +43,11 @@ public class BooleanPivotFilter extends PivotFilter {
 
         addCommonFields(root);
 
-        root.add("comparator", new JsonPrimitive(this.comparison.toString()));
-        root.add("compareTo", new JsonPrimitive(this.comparisonValue));
+        JsonObject filterRule = new JsonObject();
+        filterRule.add("comparator", new JsonPrimitive(this.comparison.toString()));
+        filterRule.add("compareTo", new JsonPrimitive(this.comparisonValue));
+
+        root.add("rule", filterRule);
 
         return root;
     }

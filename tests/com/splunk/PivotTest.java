@@ -27,6 +27,7 @@ import java.io.*;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 
@@ -141,11 +142,14 @@ public class PivotTest extends SDKTestCase {
             Assert.assertTrue(o.has("type"));
             Assert.assertEquals(new JsonPrimitive("boolean"), o.get("type"));
 
-            Assert.assertTrue(o.has("comparator"));
-            Assert.assertEquals(new JsonPrimitive("="), o.get("comparator"));
+            Assert.assertTrue(o.has("rule"));
+            JsonObject rule = o.getAsJsonObject("rule");
 
-            Assert.assertTrue(o.has("compareTo"));
-            Assert.assertEquals(new JsonPrimitive(true), o.get("compareTo"));
+            Assert.assertTrue(rule.has("comparator"));
+            Assert.assertEquals(new JsonPrimitive("="), rule.get("comparator"));
+
+            Assert.assertTrue(rule.has("compareTo"));
+            Assert.assertEquals(new JsonPrimitive(true), rule.get("compareTo"));
         }
     }
 
@@ -178,13 +182,41 @@ public class PivotTest extends SDKTestCase {
 
             Assert.assertTrue(o.has("type"));
             Assert.assertEquals(new JsonPrimitive("string"), o.get("type"));
+            
+            Assert.assertTrue(o.has("rule"));
+            JsonObject rule = o.getAsJsonObject("rule");
 
-            Assert.assertTrue(o.has("comparator"));
-            Assert.assertEquals(new JsonPrimitive("contains"), o.get("comparator"));
+            Assert.assertTrue(rule.has("comparator"));
+            Assert.assertEquals(new JsonPrimitive("contains"), rule.get("comparator"));
 
-            Assert.assertTrue(o.has("compareTo"));
-            Assert.assertEquals(new JsonPrimitive("abc"), o.get("compareTo"));
+            Assert.assertTrue(rule.has("compareTo"));
+            Assert.assertEquals(new JsonPrimitive("abc"), rule.get("compareTo"));
         }
+    }
+    
+    @Test
+    public void testAddStringFilterAgainstSplunk() {
+    	DataModel dm = (DataModel)service.getDataModels().get("internal_audit_logs");
+    	DataModelObject dmo = dm.getObject("searches");
+        PivotSpecification pivotSpec = dmo.createPivotSpecification();
+        
+        pivotSpec.addCellValue("host", "host_count", StatsFunction.COUNT);
+        
+        pivotSpec.addFilter("host", StringComparison.DOES_NOT_CONTAIN, "<$@^*%>");
+        pivotSpec.addFilter("host", StringComparison.CONTAINS, ".");
+        
+        Pivot p =  pivotSpec.pivot();
+        Job j = p.run();
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+			
+			@Override
+			public boolean predicate() {
+				if (!j.isDone()) {
+					j.refresh();
+				}
+				return j.isDone();
+			}
+		});
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -217,11 +249,14 @@ public class PivotTest extends SDKTestCase {
             Assert.assertTrue(o.has("type"));
             Assert.assertEquals(new JsonPrimitive("ipv4"), o.get("type"));
 
-            Assert.assertTrue(o.has("comparator"));
-            Assert.assertEquals(new JsonPrimitive("startsWith"), o.get("comparator"));
+            Assert.assertTrue(o.has("rule"));
+            JsonObject rule = o.getAsJsonObject("rule");
 
-            Assert.assertTrue(o.has("compareTo"));
-            Assert.assertEquals(new JsonPrimitive("192.168"), o.get("compareTo"));
+            Assert.assertTrue(rule.has("comparator"));
+            Assert.assertEquals(new JsonPrimitive("startsWith"), rule.get("comparator"));
+
+            Assert.assertTrue(rule.has("compareTo"));
+            Assert.assertEquals(new JsonPrimitive("192.168"), rule.get("compareTo"));
         }
     }
 
@@ -255,11 +290,14 @@ public class PivotTest extends SDKTestCase {
             Assert.assertTrue(o.has("type"));
             Assert.assertEquals(new JsonPrimitive("number"), o.get("type"));
 
-            Assert.assertTrue(o.has("comparator"));
-            Assert.assertEquals(new JsonPrimitive(">="), o.get("comparator"));
+            Assert.assertTrue(o.has("rule"));
+            JsonObject rule = o.getAsJsonObject("rule");
 
-            Assert.assertTrue(o.has("compareTo"));
-            Assert.assertEquals(new JsonPrimitive((double)2.3), o.get("compareTo"));
+            Assert.assertTrue(rule.has("comparator"));
+            Assert.assertEquals(new JsonPrimitive(">="), rule.get("comparator"));
+
+            Assert.assertTrue(rule.has("compareTo"));
+            Assert.assertEquals(new JsonPrimitive((double)2.3), rule.get("compareTo"));
         }
     }
 
