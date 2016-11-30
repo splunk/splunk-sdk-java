@@ -1,5 +1,26 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.6.0
+
+### New features and APIs
+
+* Add support for retrieving `Password` entities scoped by realm and username.
+* Add getter methods for embed `SavedSearch` properties.
+* Add support for custom `HttpURLConnection` connection timeouts on `HttpService`.
+* Performance improvement to `SavedSearch.dispatch()`.
+* Add getter methods to the `Job` class for retrieving `long` values (`getEventCountLong`, `getResultCountLong`, `getScanCountLong`).
+* Add `setFieldList()` to the `JobExportArgs` class.
+* Add support for the `manualRebuilds` `DataModel` setting.
+
+### Bug Fixes
+
+* Fix `SavedSearch.Dispatch()` throwing a `NullPointerException` in some load-balanced search head clustering environments.
+* Fix non-limit `PivotFilter` constructing the wrong JSON blob.
+
+### Minor changes
+
+* Added support for Travis CI.
+
 ## Version 1.5.0
 
 ### New features and APIs

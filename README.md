@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/splunk/splunk-sdk-java.svg?branch=master)](https://travis-ci.org/splunk/splunk-sdk-java)
 # The Splunk Software Development Kit for Java
 
-#### Version 1.5.0
+#### Version 1.6.0
 
 The Splunk Software Development Kit (SDK) for Java contains library code and
 examples designed to enable developers to build applications using Splunk.
