@@ -4,18 +4,18 @@
 
 ### New features and APIs
 
-* Add support for retrieving `Password` entities scoped by realm and username.
-* Add getter methods for embed `SavedSearch` properties.
-* Add support for custom `HttpURLConnection` connection timeouts on `HttpService`.
+* Added support for retrieving `Password` entities scoped by realm and username.
+* Added getter methods for embed `SavedSearch` properties.
+* Added support for custom `HttpURLConnection` connection timeouts on `HttpService`.
 * Performance improvement to `SavedSearch.dispatch()`.
-* Add getter methods to the `Job` class for retrieving `long` values (`getEventCountLong`, `getResultCountLong`, `getScanCountLong`).
-* Add `setFieldList()` to the `JobExportArgs` class.
-* Add support for the `manualRebuilds` `DataModel` setting.
+* Added getter methods to the `Job` class for retrieving `long` values (`getEventCountLong`, `getResultCountLong`, `getScanCountLong`).
+* Added `setFieldList()` to the `JobExportArgs` class.
+* Added support for the `manualRebuilds` `DataModel` setting.
 
 ### Bug Fixes
 
-* Fix `SavedSearch.Dispatch()` throwing a `NullPointerException` in some load-balanced search head clustering environments.
-* Fix non-limit `PivotFilter` constructing the wrong JSON blob.
+* Fixed `SavedSearch.Dispatch()` throwing a `NullPointerException` in some load-balanced search head clustering environments.
+* Fixed non-limit `PivotFilter` constructing the wrong JSON blob.
 
 ### Minor changes
 
