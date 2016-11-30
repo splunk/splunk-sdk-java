@@ -206,7 +206,7 @@ public class PivotTest extends SDKTestCase {
         pivotSpec.addFilter("host", StringComparison.CONTAINS, ".");
         
         Pivot p =  pivotSpec.pivot();
-        Job j = p.run();
+        final Job j = p.run();
         assertEventuallyTrue(new EventuallyTrueBehavior() {
 			
 			@Override
