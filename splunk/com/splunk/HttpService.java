@@ -321,7 +321,7 @@ public class HttpService {
         this.readTimeout = readTimeout;
     }
 
-	/**
+    /**
      * Issues a POST request against the service using a given path.
      *
      * @param path The request path.
@@ -480,18 +480,15 @@ public class HttpService {
         
         // Add cookies to cookie Store
         Map<String, List<String>> headers = cn.getHeaderFields();
-        System.out.println("-----------KEYS-------------");
-    	if (headers.containsKey("Set-Cookie")) {
-    		System.out.print("\tvalues");
-    		for(String val : headers.get("Set-Cookie")) {
-    			System.out.print("\t*" + val);
-    			cookieStore.add(val);
-    		}
-    	}
+        if (headers.containsKey("Set-Cookie")) {
+            for (String val : headers.get("Set-Cookie")) {
+                cookieStore.add(val);
+            }
+        }
         
         if (header.containsKey("Set-Cookie")) {
-        	for (String cookieHeader : headers.get("Set-Cookie")) {
-        		cookieStore.add(cookieHeader);
+            for (String cookieHeader : headers.get("Set-Cookie")) {
+                cookieStore.add(cookieHeader);
             }
         }
 
