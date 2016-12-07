@@ -479,13 +479,7 @@ public class HttpService {
         }
         
         // Add cookies to cookie Store
-        Map<String, List<String>> headers = cn.getHeaderFields();
-        if (headers.containsKey("Set-Cookie")) {
-            for (String val : headers.get("Set-Cookie")) {
-                cookieStore.add(val);
-            }
-        }
-        
+        Map<String, List<String>> headers = cn.getHeaderFields();        
         if (header.containsKey("Set-Cookie")) {
             for (String cookieHeader : headers.get("Set-Cookie")) {
                 cookieStore.add(cookieHeader);
