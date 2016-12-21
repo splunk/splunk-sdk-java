@@ -16,12 +16,13 @@
 
 package com.splunk;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Assume;
-import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CookieTest extends SDKTestCase {
 
@@ -119,6 +120,21 @@ public class CookieTest extends SDKTestCase {
         Service s  = new Service(args);
 
         s.addCookie("bad=cookie");
+
+        s.getSettings().refresh();
+    }
+
+    @Test
+    public void testLoginWithMultipleInvalidCookies() {
+        String validCookie = service.stringifyCookies();
+
+        Map<String, Object> args = getStandardArgs();
+
+        Service s  = new Service(args);
+
+        s.addCookie("bad=cookie");
+        s.addCookie(validCookie);
+        s.addCookie("another_bad=cookie");
 
         s.getSettings().refresh();
     }

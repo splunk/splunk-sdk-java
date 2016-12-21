@@ -1,5 +1,11 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.6.1
+
+### Bug Fixes
+
+* Fix authentication issues when the Splunk `Set-Cookie` header is not the first one.
+
 ## Version 1.6.0
 
 ### New features and APIs
