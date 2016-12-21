@@ -650,11 +650,7 @@ public class ServiceTest extends SDKTestCase {
         try {
             service.export("notasearchcommand", exportArgs);
         } catch (Exception e) {
-            Assert.assertEquals(
-                    "HTTP 400 -- {\"messages\":[{\"type\":\"FATAL\",\"text\":" +
-                            "\"Unknown search command 'notasearchcommand'.\"}]}",
-                    e.getMessage()
-            );
+        	Assert.assertTrue(e.getMessage().contains("Unknown search command"));
             return;
         }
         Assert.fail();

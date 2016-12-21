@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -320,7 +321,7 @@ public class HttpService {
         this.readTimeout = readTimeout;
     }
 
-	/**
+    /**
      * Issues a POST request against the service using a given path.
      *
      * @param path The request path.
@@ -476,9 +477,15 @@ public class HttpService {
         } catch (IOException e) {
             assert (false);
         }
-
+        
         // Add cookies to cookie Store
-        cookieStore.add(cn.getHeaderField("Set-Cookie"));
+        Map<String, List<String>> headers = cn.getHeaderFields();        
+        if (headers.containsKey("Set-Cookie")) {
+            for (String cookieHeader : headers.get("Set-Cookie")) {
+               if (cookieHeader != null && cookieHeader.length() > 0)
+                    cookieStore.add(cookieHeader);
+            }
+        }
 
         ResponseMessage response = new ResponseMessage(status, input);
 
