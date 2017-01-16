@@ -25,6 +25,7 @@ int _tmain(int argc, _TCHAR* argv[])
     HANDLE processHandles[2] = {NULL, NULL};
     HANDLE &splunkdHandle = processHandles[0];
     HANDLE &jvmHandle = processHandles[1];
+    HANDLE ghJob = NULL;
     PTSTR jarPath = NULL, jvmOptions = NULL, jvmCommandLine = NULL;
     DWORD waitOutcome, exitCode;
 
@@ -49,7 +50,7 @@ int _tmain(int argc, _TCHAR* argv[])
     }
 
     // create a job
-    HANDLE ghJob = CreateJobObject(NULL, NULL);
+    ghJob = CreateJobObject(NULL, NULL);
     if(ghJob == NULL) {
         printErrorMessage(GetLastError());
 
@@ -120,6 +121,7 @@ CLEAN_UP_AND_EXIT:
 
     if (NULL != splunkdHandle) CloseHandle(splunkdHandle);
     if (NULL != jvmHandle)     CloseHandle(jvmHandle);
+    if (NULL != ghJob)         CloseHandle(ghJob);
 
     return returnCode;
 }
