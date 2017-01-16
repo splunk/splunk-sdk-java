@@ -48,6 +48,26 @@ int _tmain(int argc, _TCHAR* argv[])
         goto CLEAN_UP_AND_EXIT;
     }
 
+    // create a job
+    HANDLE ghJob = CreateJobObject(NULL, NULL);
+    if(ghJob == NULL) {
+        printErrorMessage(GetLastError());
+
+        returnCode = 1;
+        goto CLEAN_UP_AND_EXIT;
+    }else {
+        JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
+
+        // Configure all child processes associated with the job to terminate when the main process terminated
+        jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        if(0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli))) {
+            printErrorMessage(GetLastError());
+
+            returnCode = 1;
+            goto CLEAN_UP_AND_EXIT;
+        }
+    }
+
     jarPath = getPathToJar();
     jvmOptions = readJvmOptions(jarPath);
     jvmCommandLine = assembleJvmCommand(jarPath, jvmOptions, argc, argv);
@@ -55,6 +75,14 @@ int _tmain(int argc, _TCHAR* argv[])
     if (!CreateProcess(NULL, jvmCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         // Process creation failed.
         printErrorMessage(GetLastError(), jvmCommandLine);
+
+        returnCode = 1;
+        goto CLEAN_UP_AND_EXIT;
+    }
+
+    // bind java process to this job
+    if(0 == AssignProcessToJobObject(ghJob, pi.hProcess)) {
+        printErrorMessage(GetLastError());
 
         returnCode = 1;
         goto CLEAN_UP_AND_EXIT;
