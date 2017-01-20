@@ -167,6 +167,8 @@ PTSTR readJvmOptions(PTSTR jarPath) {
     }
     buffer[nRead] = NULL; // Ensure options are null terminated.
 
+    if (NULL != vmoptsHandle) CloseHandle(vmoptsHandle);
+
 #ifdef _UNICODE
     // Calculate how much space is needed.
     DWORD nWchars = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, buffer, nRead, NULL, 0);
