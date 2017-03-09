@@ -73,13 +73,17 @@ PTSTR getPathToJar();
  */
 PTSTR readJvmOptions(PTSTR pathToJar);
 
+/**
+ * get the customized java command
+ */
+PTSTR getCustomizedJavaCmd();
 
 /**
  * Construct the full command to run the jar. This will return a new buffer containing
  *
  *     java [jvmOptions] -jar "[jarPath]" [argv[0]] [argv[1]] ...
  */
-PTSTR assembleJvmCommand(PTSTR pathToJar, PTSTR jvmOptions, int argc, _TCHAR* argv[]);
+PTSTR assembleJvmCommand(PTSTR customizedJavaCmd, PTSTR pathToJar, PTSTR jvmOptions, int argc, _TCHAR* argv[]);
 
 
 /**

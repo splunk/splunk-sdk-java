@@ -4,6 +4,10 @@
 # input is contained in, and the jar is assumed to be in
 # jars/${INPUTNAME}.jar in the app.
 #
+# If ${PLATFORM}/bin/customized.java.path exists, this script will
+# use cmd defined in this file to start jvm, eles default java
+# will be used.
+#
 # Extra arguments to the JVM (i.e., -Xms512M) can be put in
 # a file jars/${INPUTNAME}.vmopts and will be interpolated
 # into the command to run the JVM.
@@ -20,6 +24,13 @@ done
 
 BASENAME=$(basename "$SCRIPT" .sh)
 JAR_DIR=`pwd -P`/../../jars
+CUSTOMIZED_JAVA_PATH_FILE=`pwd -P`/customized.java.path
+
+if [ -f $CUSTOMIZED_JAVA_PATH_FILE ]; then
+   JAVA_CMD=`cat $CUSTOMIZED_JAVA_PATH_FILE`
+else
+    JAVA_CMD="java"
+fi
 
 if [ -f $JAR_DIR/$BASENAME.vmopts ]; then
     VMOPTS=`cat $JAR_DIR/$BASENAME.vmopts`
@@ -27,4 +38,5 @@ else
     VMOPTS=""
 fi
 
-exec java $VMOPTS -jar $JAR_DIR/$BASENAME.jar $@
+exec $JAVA_CMD $VMOPTS -jar $JAR_DIR/$BASENAME.jar $@
+
