@@ -5,7 +5,7 @@
 # jars/${INPUTNAME}.jar in the app.
 #
 # If ${PLATFORM}/bin/customized.java.path exists, this script will
-# use cmd defined in this file to start jvm, eles default java
+# use java cmd defined in this file to start jvm, else default java
 # will be used.
 #
 # Extra arguments to the JVM (i.e., -Xms512M) can be put in
