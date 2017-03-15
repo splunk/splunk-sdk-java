@@ -24,6 +24,8 @@ before_install:
     - docker run -p 127.0.0.1:8089:8089 -p 127.0.0.1:$TEST_TCP_PORT:$TEST_TCP_PORT -p 127.0.0.1:$TEST_UDP_PORT:$TEST_UDP_PORT/udp -d splunk/splunk-sdk-travis-ci:$SPLUNK_VERSION
     # curl Splunk until it returns valid data indicating it has been setup, try 20 times maximum
     - for i in `seq 0 20`; do if curl --fail -k https://localhost:8089/services/server/info &> /dev/null; then break; fi; echo $i; sleep 1; done
+    # Additional sleep to make sure splunkd is
+    - sleep 30
 
 env:
     - SPLUNK_VERSION=6.2.6-sdk

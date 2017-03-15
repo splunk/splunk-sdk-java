@@ -25,7 +25,8 @@ int _tmain(int argc, _TCHAR* argv[])
     HANDLE processHandles[2] = {NULL, NULL};
     HANDLE &splunkdHandle = processHandles[0];
     HANDLE &jvmHandle = processHandles[1];
-    PTSTR jarPath = NULL, jvmOptions = NULL, jvmCommandLine = NULL;
+    HANDLE ghJob = NULL;
+    PTSTR customizedJavaCmd = NULL, jarPath = NULL, jvmOptions = NULL, jvmCommandLine = NULL;
     DWORD waitOutcome, exitCode;
 
     DWORD returnCode = 0;
@@ -39,7 +40,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)killJvm, TRUE);
     splunkdHandle = getSplunkdHandle();
-    
+
     if (NULL == splunkdHandle) {
         // Couldn't get a handle to splunkd.
         printErrorMessage(GetLastError());
@@ -48,13 +49,42 @@ int _tmain(int argc, _TCHAR* argv[])
         goto CLEAN_UP_AND_EXIT;
     }
 
+    // create a job
+    ghJob = CreateJobObject(NULL, NULL);
+    if(ghJob == NULL) {
+        printErrorMessage(GetLastError());
+
+        returnCode = 1;
+        goto CLEAN_UP_AND_EXIT;
+    }else {
+        JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
+
+        // Configure all child processes associated with the job to terminate when the main process terminated
+        jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        if(0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli))) {
+            printErrorMessage(GetLastError());
+
+            returnCode = 1;
+            goto CLEAN_UP_AND_EXIT;
+        }
+    }
+
+    customizedJavaCmd = getCustomizedJavaCmd();
     jarPath = getPathToJar();
     jvmOptions = readJvmOptions(jarPath);
-    jvmCommandLine = assembleJvmCommand(jarPath, jvmOptions, argc, argv);
+    jvmCommandLine = assembleJvmCommand(customizedJavaCmd, jarPath, jvmOptions, argc, argv);
 
     if (!CreateProcess(NULL, jvmCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         // Process creation failed.
         printErrorMessage(GetLastError(), jvmCommandLine);
+
+        returnCode = 1;
+        goto CLEAN_UP_AND_EXIT;
+    }
+
+    // bind java process to this job
+    if(0 == AssignProcessToJobObject(ghJob, pi.hProcess)) {
+        printErrorMessage(GetLastError());
 
         returnCode = 1;
         goto CLEAN_UP_AND_EXIT;
@@ -89,9 +119,11 @@ CLEAN_UP_AND_EXIT:
     if (NULL != jvmCommandLine) LocalFree(jvmCommandLine);
     if (NULL != jvmOptions)     LocalFree(jvmOptions);
     if (NULL != jarPath)        LocalFree(jarPath);
+    if (NULL != customizedJavaCmd) LocalFree(customizedJavaCmd);
 
     if (NULL != splunkdHandle) CloseHandle(splunkdHandle);
     if (NULL != jvmHandle)     CloseHandle(jvmHandle);
+    if (NULL != ghJob)         CloseHandle(ghJob);
 
     return returnCode;
 }
@@ -113,7 +145,7 @@ void printErrorMessage(DWORD errorCode, ...) {
     va_list args = NULL;
     va_start(args, errorCode);
 
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, 
+    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
         NULL, errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer, 0, &args);
 
     fwprintf(stderr, TEXT("ERROR %s\r\n"), buffer);
@@ -140,7 +172,7 @@ PTSTR readJvmOptions(PTSTR jarPath) {
 
     _tcscpy_s(suffixPtr, 8, TEXT(".vmopts"));
 
-    HANDLE vmoptsHandle = CreateFile(vmoptsPath, GENERIC_READ, FILE_SHARE_READ, 
+    HANDLE vmoptsHandle = CreateFile(vmoptsPath, GENERIC_READ, FILE_SHARE_READ,
         NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (INVALID_HANDLE_VALUE == vmoptsHandle) {
@@ -167,6 +199,8 @@ PTSTR readJvmOptions(PTSTR jarPath) {
     }
     buffer[nRead] = NULL; // Ensure options are null terminated.
 
+    if (NULL != vmoptsHandle) CloseHandle(vmoptsHandle);
+
 #ifdef _UNICODE
     // Calculate how much space is needed.
     DWORD nWchars = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, buffer, nRead, NULL, 0);
@@ -182,7 +216,7 @@ PTSTR readJvmOptions(PTSTR jarPath) {
 }
 
 
-PTSTR assembleJvmCommand(PTSTR jarPath, PTSTR jvmOptions, int argc, _TCHAR* argv[]) {
+PTSTR assembleJvmCommand(PTSTR customizedJavaCmd, PTSTR jarPath, PTSTR jvmOptions, int argc, _TCHAR* argv[]) {
     PTSTR buffer, index;
     size_t len;
     int i;
@@ -192,16 +226,20 @@ PTSTR assembleJvmCommand(PTSTR jarPath, PTSTR jvmOptions, int argc, _TCHAR* argv
         len += _tcslen(argv[i]) + 1; // The +1 accounts for a space to separate the arguments
     }
 
-    // 13 = number of characters for java and -jar sections; +1 at the end is for the null terminator.
-    buffer = (PTSTR)malloc((13 + _tcslen(jarPath) + _tcslen(jvmOptions) + len + 1) * sizeof(TCHAR));
+    // 9 + max(command) = number of characters for java cmd and -jar sections; +1 at the end is for the null terminator.
+    buffer = (PTSTR)malloc((9 + max(_tcslen(customizedJavaCmd), 4) + _tcslen(jarPath) + _tcslen(jvmOptions) + len + 1) * sizeof(TCHAR));
     index = buffer;
 
 #define APPEND_TCS(literal) { \
     _tcscpy_s(index, _tcslen(literal)+1, literal); \
     index += _tcslen(literal); \
 }
-
-    APPEND_TCS(TEXT("java "));
+    if (NULL != customizedJavaCmd && 0 != _tcslen(customizedJavaCmd)) {
+        APPEND_TCS(customizedJavaCmd);
+        APPEND_TCS(TEXT(" "));
+    } else {
+        APPEND_TCS(TEXT("java "));
+    }
     APPEND_TCS(jvmOptions);
     APPEND_TCS(TEXT(" -jar \""));
     APPEND_TCS(jarPath);
@@ -247,7 +285,7 @@ HANDLE getSplunkdHandle() {
     }
 
     free(pidBuffer);
-    
+
     return OpenProcess(SYNCHRONIZE, FALSE, splunkdPid);
 }
 
@@ -265,7 +303,7 @@ PTSTR getPathToJar() {
     if (N == GetModuleFileName(NULL, thisPath, N) && ERROR_INSUFFICIENT_BUFFER == GetLastError()) {
         return NULL;
     }
-    
+
     // The following code removes the last two path segments before the executable name in the buffer,
     // puts a \jars\ on the path, then shifts the base name of the executable over and adds .jar to it.
     // Graphically, with 0 representing null terminators, the steps are:
@@ -274,7 +312,7 @@ PTSTR getPathToJar() {
     // 2. $SPLUNK_HOME$\etc\apps\myapp\jars\0             myinput.exe0
     // 3. $SPLUNK_HOME$\etc\apps\myapp\jars\myinput0
     // 4. $SPLUNK_HOME$\etc\apps\myapp\jars\myinput.jar0
-    
+
     // Find 'myinput.exe', just after the last \.
     endPtr = _tcsrchr(thisPath, '\\');
     baseName = endPtr+1; // This is 'myinput.exe'
@@ -302,4 +340,66 @@ PTSTR getPathToJar() {
     _tcscpy_s(endPtr, jarSuffixLen, jarSuffix);
 
     return thisPath;
+}
+
+PTSTR getCustomizedJavaCmd() {
+    PTSTR javaHomePath, endPtr;
+    PCTSTR javaHomeFragment = TEXT("\\customized.java.path");
+    const DWORD javaHomeFragmentLen = 22;
+    const size_t N = 1024;
+    DWORD baseNameLen;
+
+    javaHomePath = (PTSTR)malloc(N*sizeof(TCHAR));
+    if (N == GetModuleFileName(NULL, javaHomePath, N) && ERROR_INSUFFICIENT_BUFFER == GetLastError()) {
+        return NULL;
+    }
+
+    // thisPath is: $SPLUNK_HOME$\etc\apps\myapp\windows_x86_64\bin\myinput.exe0
+    // Take three directory levels off this path.
+    endPtr = _tcsrchr(javaHomePath, '\\');
+    _tcscpy_s(endPtr, javaHomeFragmentLen, javaHomeFragment);
+    endPtr += javaHomeFragmentLen;
+    *endPtr = NULL;
+
+    HANDLE javaHomeHandle = CreateFile(javaHomePath, GENERIC_READ, FILE_SHARE_READ,
+        NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+    if (INVALID_HANDLE_VALUE == javaHomeHandle) {
+        if (ERROR_FILE_NOT_FOUND == GetLastError() || ERROR_PATH_NOT_FOUND == GetLastError()) {
+            // We can't return a literal because we will try to deallocate it later.
+            free(javaHomePath);
+            javaHomePath = (PTSTR)malloc(sizeof(TCHAR));
+            _tcscpy_s(javaHomePath, 1, TEXT(""));
+            return javaHomePath;
+        } else {
+            return NULL;
+        }
+    }
+
+    DWORD fileSize = GetFileSize(javaHomeHandle, NULL);
+    if (INVALID_FILE_SIZE == fileSize) {
+        return NULL;
+    }
+
+    DWORD nRead;
+    char* buffer = (char*)malloc((fileSize+1) * sizeof(char)); // +1 to give space for a NULL character.
+    if (!ReadFile(javaHomeHandle, buffer, fileSize, &nRead, NULL)) {
+        return NULL;
+    }
+    buffer[nRead] = NULL; // Ensure options are null terminated.
+
+    if (NULL != javaHomeHandle) CloseHandle(javaHomeHandle);
+
+#ifdef _UNICODE
+    // Calculate how much space is needed.
+    DWORD nWchars = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, buffer, nRead, NULL, 0);
+    wchar_t *javaHome = (wchar_t*)malloc(sizeof(wchar_t) * (nWchars+1));
+    if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, buffer, nRead, javaHome, nWchars)) {
+        return NULL;
+    }
+    javaHome[nWchars] = NULL;
+    return javaHome;
+#else
+    return buffer;
+#endif
 }

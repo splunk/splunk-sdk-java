@@ -1,5 +1,11 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.6.2
+
+### Bug Fixes
+
+* Update modular input shims to ensure Java processes are killed (GitHub issue [#92](https://github.com/splunk/splunk-sdk-java/issues/92)).
+
 ## Version 1.6.1
 
 ### Bug Fixes
