@@ -88,7 +88,7 @@ To add the Splunk SDK for Java `.JAR` file as a dependency:
   <repository>
     <id>splunk-artifactory</id>
     <name>Splunk Releases</name>
-    <url>http://splunk.artifactoryonline.com/splunk/ext-releases-local</url>
+    <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
   </repository>
 </repositories>
 ```
@@ -101,7 +101,7 @@ To add the Splunk SDK for Java `.JAR` file as a dependency:
   <dependency>
     <groupId>com.splunk</groupId>
     <artifactId>splunk</artifactId>
-    <version>1.5.0.0</version>
+    <version>1.6.2.0</version>
   </dependency>
 </dependencies>
 ```
