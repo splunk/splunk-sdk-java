@@ -130,10 +130,10 @@ public abstract class Resource {
     }
 
     /**
-     * Return the updated of this resource, which corresponds to the Atom
-     * {@code <title>} element.
+     * Return the last updated time of this resource, which corresponds to the Atom
+     * {@code <updated>} element.
      *
-     * @return The resource title.
+     * @return The resource last updated time.
      */
     public String getUpdated() {
         return validate().updated;
