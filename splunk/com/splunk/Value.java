@@ -102,9 +102,6 @@ class Value {
         }
 
         for (SimpleDateFormat simpleDateFormat: dateFormat)  {
-            // Must first remove the colon (':') from the timezone
-            // field, or SimpleDataFormat will not parse correctly.
-            // Eg: 2010-01-01T12:00:00+01:00 => 2010-01-01T12:00:00+0100
             try {
 
                 Matcher matcher = datePattern.matcher(value);
