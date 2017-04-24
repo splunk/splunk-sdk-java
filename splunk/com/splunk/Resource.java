@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -35,7 +35,7 @@ public abstract class Resource {
     /* Initialized by {@link #load()}. */
     protected Map<String, String> actions;
     protected String title;
-    protected String updated;
+    protected Date updated;
     private boolean maybeValid = false;
 
     /**
@@ -135,7 +135,7 @@ public abstract class Resource {
      *
      * @return The resource last updated time.
      */
-    public String getUpdated() {
+    public Date getUpdated() {
         return validate().updated;
     }
 
