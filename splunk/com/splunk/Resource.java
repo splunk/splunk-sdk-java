@@ -16,7 +16,7 @@
 
 package com.splunk;
 
-
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -35,6 +35,7 @@ public abstract class Resource {
     /* Initialized by {@link #load()}. */
     protected Map<String, String> actions;
     protected String title;
+    protected Date updated;
     private boolean maybeValid = false;
 
     /**
@@ -129,6 +130,16 @@ public abstract class Resource {
     }
 
     /**
+     * Return the last updated time of this resource, which corresponds to the Atom
+     * {@code <updated>} element.
+     *
+     * @return The resource last updated time.
+     */
+    public Date getUpdated() {
+        return validate().updated;
+    }
+
+    /**
      * Marks the local state of this resource as no longer current.
      *
      * @return The current {@code Resource} instance.
@@ -152,6 +163,7 @@ public abstract class Resource {
         else {
             this.actions = value.links;
             this.title = value.title;
+            this.updated = Value.toDate(value.updated);
         }
         this.maybeValid = true;
         return this;
