@@ -163,7 +163,7 @@ public abstract class Resource {
         else {
             this.actions = value.links;
             this.title = value.title;
-            this.updated = value.updated;
+            this.updated = Value.toDate(value.updated);
         }
         this.maybeValid = true;
         return this;

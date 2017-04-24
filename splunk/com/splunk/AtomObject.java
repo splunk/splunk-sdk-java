@@ -17,9 +17,6 @@
 package com.splunk;
 
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.stream.Location;
@@ -33,9 +30,6 @@ import javax.xml.stream.XMLStreamConstants;
  * a common base class shared by {@code AtomFeed} and {@code AtomEntry}.
  */
 public class AtomObject {
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
     /** The value of the Atom {@code <id>} element. */
     public String id;
 
@@ -46,7 +40,7 @@ public class AtomObject {
     public String title;
 
     /** The value of the Atom {@code <updated>} element. */
-    public Date updated;
+    public String updated;
 
     /**
      * Instantiates the XMLStreamReader, advances to the root element and 
@@ -104,7 +98,7 @@ public class AtomObject {
             this.title = parseText(reader);
         }
         else if (name.equals("updated")) {
-            this.updated = parseDate(reader);
+            this.updated = parseText(reader);
         }
         else {
             parseEnd(reader); // Ignore
@@ -164,25 +158,6 @@ public class AtomObject {
         scan(reader); // Consume the end element
 
         return value;
-    }
-
-    /**
-     * Parses and returns the Date object of the time element text at the current cursor
-     * position and reads the corresponding end element.
-     *
-     * @param reader The XML reader.
-     * @return The element's Date object.
-     */
-    protected Date parseDate(XMLStreamReader reader) {
-        String dateString = parseText(reader);
-
-        synchronized (dateFormat) {
-            try {
-                return dateFormat.parse(dateString);
-            } catch (ParseException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
     }
 
     //
