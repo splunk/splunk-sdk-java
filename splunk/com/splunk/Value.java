@@ -82,7 +82,7 @@ class Value {
      */
     static Date toDate(String value) {
         if (dateFormat == null) {
-            dateFormat = new SimpleDateFormat[4];
+            dateFormat = new SimpleDateFormat[6];
             dateFormat[0] = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
             dateFormat[0].setLenient(true);
             dateFormat[1] = new SimpleDateFormat("E MMM d HH:mm:ss z y");
@@ -91,6 +91,10 @@ class Value {
             dateFormat[2].setLenient(true);
             dateFormat[3] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
             dateFormat[3].setLenient(true);
+            dateFormat[4] = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+            dateFormat[4].setLenient(true);
+            dateFormat[5] = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            dateFormat[5].setLenient(true);
         }
         if (datePattern == null) {
             String pattern = "(.*)\\.\\d+([\\-+]\\d+):(\\d+)";
@@ -98,9 +102,6 @@ class Value {
         }
 
         for (SimpleDateFormat simpleDateFormat: dateFormat)  {
-            // Must first remove the colon (':') from the timezone
-            // field, or SimpleDataFormat will not parse correctly.
-            // Eg: 2010-01-01T12:00:00+01:00 => 2010-01-01T12:00:00+0100
             try {
 
                 Matcher matcher = datePattern.matcher(value);
