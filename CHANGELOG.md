@@ -1,5 +1,11 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.6.3
+
+### New features and APIs
+
+* Added the `updated` property on all `Resource` objects (GitHub PR [#104](https://github.com/splunk/splunk-sdk-java/pull/104)).
+
 ## Version 1.6.2
 
 ### Bug Fixes
