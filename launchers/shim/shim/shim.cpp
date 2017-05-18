@@ -226,8 +226,22 @@ PTSTR assembleJvmCommand(PTSTR customizedJavaCmd, PTSTR jarPath, PTSTR jvmOption
         len += _tcslen(argv[i]) + 1; // The +1 accounts for a space to separate the arguments
     }
 
-    // 9 + max(command) = number of characters for java cmd and -jar sections; +1 at the end is for the null terminator.
-    buffer = (PTSTR)malloc((9 + max(_tcslen(customizedJavaCmd), 4) + _tcslen(jarPath) + _tcslen(jvmOptions) + len + 1) * sizeof(TCHAR));
+	const TCHAR* JAVA_HOME_ENVVAR = TEXT("JAVA_HOME");
+
+    size_t bufferSize;
+	size_t javaHomeSize = 0;
+    PTSTR javaHome = NULL;
+
+    // Find how large a buffer we need.
+    _tgetenv_s(&bufferSize, NULL, 0, JAVA_HOME_ENVVAR);
+    if (bufferSize > 0) {
+        javaHome = (PTSTR)malloc(bufferSize * sizeof(TCHAR));
+		_tgetenv_s(&bufferSize, javaHome, bufferSize, JAVA_HOME_ENVVAR);
+		javaHomeSize = max(_tcslen(javaHome), 16);
+	}
+
+    // 25 + max(command) = number of characters for java cmd and -jar sections; +1 at the end is for the null terminator.
+	buffer = (PTSTR)malloc((25 + javaHomeSize + max(_tcslen(customizedJavaCmd), 4) + _tcslen(jarPath) + _tcslen(jvmOptions) + len + 1) * sizeof(TCHAR));
     index = buffer;
 
 #define APPEND_TCS(literal) { \
@@ -237,7 +251,10 @@ PTSTR assembleJvmCommand(PTSTR customizedJavaCmd, PTSTR jarPath, PTSTR jvmOption
     if (NULL != customizedJavaCmd && 0 != _tcslen(customizedJavaCmd)) {
         APPEND_TCS(customizedJavaCmd);
         APPEND_TCS(TEXT(" "));
-    } else {
+	} else if(NULL != javaHome && 0 != _tcslen(javaHome)){
+		APPEND_TCS(javaHome);
+		APPEND_TCS(TEXT("\\bin\\java.exe "));
+	} else {
         APPEND_TCS(TEXT("java "));
     }
     APPEND_TCS(jvmOptions);
