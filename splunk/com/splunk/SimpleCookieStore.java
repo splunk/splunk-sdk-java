@@ -18,7 +18,6 @@
 package com.splunk;
 
 import java.util.List;
-import java.net.HttpCookie;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.StringBuilder;
