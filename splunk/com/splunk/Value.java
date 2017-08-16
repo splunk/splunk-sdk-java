@@ -80,7 +80,7 @@ class Value {
      * @param value Value to convert.
      * @return Date value.
      */
-    static Date toDate(String value) {
+    static synchronized Date toDate(String value) {
         if (dateFormat == null) {
             dateFormat = new SimpleDateFormat[6];
             dateFormat[0] = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
