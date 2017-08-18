@@ -33,6 +33,11 @@ env:
 
 language: java
 
+addons:
+  apt:
+    packages:
+      - ant-optional
+
 jdk:
   - oraclejdk8
   - oraclejdk7
