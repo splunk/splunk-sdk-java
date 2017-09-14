@@ -36,7 +36,7 @@ import java.util.Map.Entry;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.SSLv3;
+    protected static SSLSecurityProtocol sslSecurityProtocol = resolveSslSecurityProtocol();
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
@@ -136,6 +136,14 @@ public class HttpService {
         this.port = port;
         this.scheme = scheme;
         this.httpsHandler = httpsHandler;
+    }
+
+    private static SSLSecurityProtocol resolveSslSecurityProtocol() {
+        String version = System.getProperty("java.version");
+        if (version != null && version.compareTo("1.8") >= 0) {
+            return SSLSecurityProtocol.TLSv1_2;
+        }
+        return SSLSecurityProtocol.SSLv3;
     }
 
     // Returns the count of arguments in the given {@code args} map.
