@@ -140,7 +140,7 @@ public class HttpService {
 
     private static SSLSecurityProtocol resolveSslSecurityProtocol() {
         String version = System.getProperty("java.version");
-        if (version != null && version.compareTo("1.8") >= 0) {
+        if (version != null && version.compareTo("1.7") >= 0) {
             return SSLSecurityProtocol.TLSv1_2;
         }
         return SSLSecurityProtocol.SSLv3;
