@@ -1243,7 +1243,7 @@ public class Service extends BaseService {
 
     /**
      * Restarts the service. The service will be unavailable until it has
-     * sucessfully restarted.
+     * successfully restarted.
      *
      * @return The restart response message.
      */

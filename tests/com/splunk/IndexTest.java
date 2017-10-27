@@ -680,7 +680,7 @@ public class IndexTest extends SDKTestCase {
         // The index argument cannot be passed into the upload function.
         try{
             index.upload(fileToUpload, args);
-            Assert.fail("Uploading to an index with an index argument? No need for redundency!");
+            Assert.fail("Uploading to an index with an index argument? No need for redundancy!");
         }
         catch(Exception e){
             Assert.assertEquals(e.getMessage(), "The 'index' parameter cannot be passed to an index's oneshot upload.");
