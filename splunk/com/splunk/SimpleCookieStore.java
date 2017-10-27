@@ -46,7 +46,7 @@ class SimpleCookieStore {
     /**
      * Returns a string to be set as a "Cookie" header
      *
-     * @return Cookie String in the format "Key=Value; Key=Value; ect"
+     * @return Cookie String in the format "Key=Value; Key=Value; etc"
      */
     public String getCookies() {
         StringBuilder cookieStringBuilder = new StringBuilder();
