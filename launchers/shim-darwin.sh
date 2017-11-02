@@ -28,6 +28,8 @@ CUSTOMIZED_JAVA_PATH_FILE=`pwd -P`/customized.java.path
 
 if [ -f $CUSTOMIZED_JAVA_PATH_FILE ]; then
    JAVA_CMD=`cat $CUSTOMIZED_JAVA_PATH_FILE`
+elif [ ! -z "$JAVA_HOME" ];then
+    JAVA_CMD="$JAVA_HOME/bin/java"
 else
     JAVA_CMD="java"
 fi
