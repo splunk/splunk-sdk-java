@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -88,9 +87,7 @@ public abstract class SDKTestCase {
         // If using Charles Proxy for debugging, uncomment these lines.
         //System.setProperty("https.proxyHost", "127.0.0.1");
         //System.setProperty("https.proxyPort", "8888");
-
-        HttpService.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1);
-
+        
         command = Command.splunk();
         connect();
         if (restartRequired()) {
