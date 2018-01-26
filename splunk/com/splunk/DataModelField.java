@@ -121,7 +121,12 @@ public class DataModelField {
             } else if (entry.getKey().equals("displayName")) {
                 field.displayName = entry.getValue().getAsString();
             } else if (entry.getKey().equals("comment")) {
-                field.comment = entry.getValue().getAsString();
+                //Before Splunk 7, comment value was just a string but now, its JSON ("comment": {"description": "The body of a message."})
+                if(entry.getValue().isJsonObject()) {
+                    field.comment = entry.getValue().getAsJsonObject().get("description").getAsString();
+                } else {
+                    field.comment = entry.getValue().getAsString();
+                }
             } else if (entry.getKey().equals("editable")) {
                 field.editable = entry.getValue().getAsBoolean();
             } else if (entry.getKey().equals("fieldSearch")) {
