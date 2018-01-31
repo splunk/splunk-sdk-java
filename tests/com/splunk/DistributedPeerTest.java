@@ -20,8 +20,8 @@ import org.junit.*;
 
 @Ignore
 /**
- * To execute these test we need a separate splunk instance. As post splunk6.4 it is no longer allow to connect to self
- * as a peer because of name conflicts.
+ * To execute these test we need a separate splunk instance. Post splunk6.4, it is no longer allowed to connect to
+ * self as a peer because of name conflicts.
  */
 public class DistributedPeerTest extends SDKTestCase {
     EntityCollection<DistributedPeer> peers;
