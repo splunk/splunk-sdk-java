@@ -14,6 +14,7 @@ TEST-com.splunk.*.xml
 
 # IntelliJ
 .idea/workspace.xml
+.idea/misc.xml
 
 # Unknown
 *.swp
