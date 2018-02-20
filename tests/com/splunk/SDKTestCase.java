@@ -89,7 +89,7 @@ public abstract class SDKTestCase {
         //System.setProperty("https.proxyHost", "127.0.0.1");
         //System.setProperty("https.proxyPort", "8888");
 
-        HttpService.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1);
+        HttpService.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_2);
 
         command = Command.splunk();
         connect();
