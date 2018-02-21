@@ -27,8 +27,7 @@ int _tmain(int argc, _TCHAR* argv[])
     HANDLE &jvmHandle = processHandles[1];
     HANDLE ghJob = NULL;
     PTSTR customizedJavaCmd = NULL, jarPath = NULL, jvmOptions = NULL, jvmCommandLine = NULL;
-    DWORD waitOutcome, exitCode;
-
+    DWORD waitOutcome;
     DWORD returnCode = 0;
 
     STARTUPINFO si;
@@ -74,7 +73,7 @@ int _tmain(int argc, _TCHAR* argv[])
     jvmOptions = readJvmOptions(jarPath);
     jvmCommandLine = assembleJvmCommand(customizedJavaCmd, jarPath, jvmOptions, argc, argv);
 
-    if (!CreateProcess(NULL, jvmCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+    if (!CreateProcess(NULL, jvmCommandLine, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, NULL, &si, &pi)) {
         // Process creation failed.
         printErrorMessage(GetLastError(), jvmCommandLine);
 
@@ -155,7 +154,7 @@ void printErrorMessage(DWORD errorCode, ...) {
 
 
 PTSTR readJvmOptions(PTSTR jarPath) {
-    DWORD jarPathLen = _tcslen(jarPath);
+    size_t jarPathLen = _tcslen(jarPath);
     // vmoptsPath is the same as jarPath, but ending with .vmopts instead of .jar. We allocate
     // 3 additional TCHARs for the additional length of .vmopts, and 1 more TCHAR for a NULL
     // terminator, so jarPathLen+4.
@@ -297,7 +296,7 @@ PTSTR getPathToJar() {
     PCTSTR jarSuffix = TEXT(".jar");
     const DWORD jarSuffixLen = 5;
     const size_t N = 1024;
-    DWORD baseNameLen;
+    size_t baseNameLen;
 
     thisPath = (PTSTR)malloc(N*sizeof(TCHAR));
     if (N == GetModuleFileName(NULL, thisPath, N) && ERROR_INSUFFICIENT_BUFFER == GetLastError()) {
@@ -325,7 +324,7 @@ PTSTR getPathToJar() {
     *endPtr = NULL;
     endPtr = _tcsrchr(thisPath, '\\');
 
-    if (baseName-endPtr < _tcslen(TEXT("\\jars\\"))) {
+    if ((size_t)(baseName-endPtr) < _tcslen(TEXT("\\jars\\"))) {
         return NULL; // Not enough space to copy the path fragment in without clobbering the jar name.
     }
 
@@ -347,7 +346,6 @@ PTSTR getCustomizedJavaCmd() {
     PCTSTR javaHomeFragment = TEXT("\\customized.java.path");
     const DWORD javaHomeFragmentLen = 22;
     const size_t N = 1024;
-    DWORD baseNameLen;
 
     javaHomePath = (PTSTR)malloc(N*sizeof(TCHAR));
     if (N == GetModuleFileName(NULL, javaHomePath, N) && ERROR_INSUFFICIENT_BUFFER == GetLastError()) {
