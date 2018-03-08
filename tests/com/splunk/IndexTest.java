@@ -26,6 +26,8 @@ import org.junit.Assume;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IndexTest extends SDKTestCase {
     private String indexName;
@@ -440,6 +442,45 @@ public class IndexTest extends SDKTestCase {
             }
         });
     }
+    
+    @Test
+    public void testSubmitOneWithNamespacedService() {
+        Map<String, Object> opts = new HashMap<String, Object>(command.opts);
+        opts.put("app", "search");
+        final Service service = Service.connect(opts);
+        Assert.assertNotNull(service);
+        
+        final String indexName = createTemporaryName();
+        final Index index = service.getIndexes().create(indexName);
+
+        Assert.assertTrue(getResultCountOfIndex(service) == 0);
+        Assert.assertTrue(index.getTotalEventCount() == 0);
+        index.submit(createTimestamp() + " This is a test of the emergency broadcasting system.");
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+
+            @Override
+            public boolean predicate() {
+                return getResultCountOfIndex(service, indexName) == 1;
+            }
+        });
+        
+        assertEventuallyTrue(new EventuallyTrueBehavior() {
+            @Override
+            public boolean predicate() {
+                index.refresh();
+                return index.getTotalEventCount() == 1;
+            }
+        });
+        try {
+            index.remove();
+        } catch (Exception e) {
+            System.out.println(
+                    "WARNING: index " + indexName + " cannot be deleted." +
+                            " Error: " + e.toString());
+        }
+    }
+    
 
     @Test
     public void testSubmitOneArgs() throws Exception {
@@ -689,9 +730,6 @@ public class IndexTest extends SDKTestCase {
     }
 
 
-
-
-
     @Test
     public void testUpload() throws Exception {
         if (!hasTestData()) {
@@ -785,6 +823,10 @@ public class IndexTest extends SDKTestCase {
     // === Utility ===
 
     private int getResultCountOfIndex(Service s) {
+        return getResultCountOfIndex(s, indexName);
+    }
+    
+    private int getResultCountOfIndex(Service s, String indexName) {
         InputStream results = s.oneshotSearch("search index=" + indexName);
         try {
             ResultsReaderXml resultsReader = new ResultsReaderXml(results);

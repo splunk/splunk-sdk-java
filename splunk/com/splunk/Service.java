@@ -58,7 +58,7 @@ public class Service extends BaseService {
     protected String password = null;
 
     /** The default simple receiver endpoint. */
-    protected String simpleReceiverEndPoint = "receivers/simple";
+    protected String simpleReceiverEndPoint = "/services/receivers/simple";
 
     /** The default password endpoint, can change over Splunk versions. */
     protected String passwordEndPoint = "admin/passwords";

@@ -74,17 +74,9 @@ public class ApplicationTest extends SDKTestCase {
 
     @Test
     public void testForEmptySetup() {
-        // Newly created applications have no setup.
-        try {
-            application.setup().getSetupXml();
-            Assert.fail("Expected HTTP 500.");
-        }
-        catch (HttpException e) {
-            Assert.assertEquals(500, e.getStatus());
-            Assert.assertTrue(
-                    e.getMessage().contains("does not exits") ||    // 4.3.2
-                            e.getMessage().contains("does not exist"));     // 5.0rc5
-        }
+        final String setupXml = application.setup().getSetupXml();
+        // Newly created applications now has a setup stub.
+        Assert.assertTrue(setupXml.contains("stub"));
     }
 
     @Test
