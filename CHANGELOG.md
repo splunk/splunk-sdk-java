@@ -1,5 +1,14 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.6.4
+
+### Bug Fixes
+
+* Fixed bug in modinput Windows shims that caused Splunk Enterprise to fail to restart (GitHub PR [#120](https://github.com/splunk/splunk-sdk-java/pull/120)).
+* Fixed bug with data model endpoint on Splunk Enterprise 7+ (GitHub PR [#117](https://github.com/splunk/splunk-sdk-java/pull/117)).
+* Fixed bug with invalid `Index.submit()` forming an invalid REST API path for namespaced services ([#118](https://github.com/splunk/splunk-sdk-java/pull/118)).
+* Fixed bug with `Value.toDate(string value)` not being thread safe (GitHub PR [#109](https://github.com/splunk/splunk-sdk-java/pull/109)).
+
 ## Version 1.6.3
 
 ### New features and APIs
