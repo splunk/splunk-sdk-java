@@ -1829,7 +1829,7 @@ public class SavedSearch extends Entity {
 
     /**
      * Specifies a list of fields to use for alert suppression. This attribute
-     * is required when alert supression and per-result alerting are enabled.
+     * is required when alert suppression and per-result alerting are enabled.
      * @see #setAlertSuppress
      * @see #isDigestMode
      *
