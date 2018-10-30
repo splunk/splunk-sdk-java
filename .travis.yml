@@ -28,8 +28,8 @@ before_install:
     - sleep 30
 
 env:
-    - SPLUNK_VERSION=6.6-sdk
     - SPLUNK_VERSION=7.0-sdk
+    - SPLUNK_VERSION=7.2-sdk
 
 language: java
 
