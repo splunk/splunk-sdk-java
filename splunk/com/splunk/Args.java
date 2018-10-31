@@ -28,7 +28,7 @@ import java.util.Map.Entry;
  *
  * This extension is used mainly for encoding arguments for UTF8 transmission
  * to a Splunk instance in a key=value pairing for a string, or
- * key=value1&key=value2 (and so on) for an array of strings.
+ * {@code key=value1&key=value2 } (and so on) for an array of strings.
  */
 public class Args extends LinkedHashMap<String, Object> {
 
