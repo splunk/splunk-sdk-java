@@ -1,5 +1,11 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.6.5
+
+### Bug Fixes
+
+* Fixed bug for push back buffer is full when exporting data in XML (GitHub PR [#125](https://github.com/splunk/splunk-sdk-java/pull/125)).
+
 ## Version 1.6.4
 
 ### Bug Fixes

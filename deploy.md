@@ -9,8 +9,8 @@ deploy \<repository-name>
 
 ##DESCRIPTION
 
-Deploy transmits **dist/splunk-1.6.4.jar**, **dist/splunk-1.6.4-javadoc.jar**, and 
-**dist/splunk-1.6.4-sources.jar** to the **local**, **staging**, or **production**
+Deploy transmits **dist/splunk-1.6.5.jar**, **dist/splunk-1.6.5-javadoc.jar**, and 
+**dist/splunk-1.6.5-sources.jar** to the **local**, **staging**, or **production**
 maven repository. Repository names are mapped to locations as follows.
 
 | repository-name | location                                                       |
@@ -21,18 +21,18 @@ maven repository. Repository names are mapped to locations as follows.
 
 After deployment you should find this tree structure at the location of your repository
 
-    com/splunk/splunk/1.6.4/
-    ├── splunk-1.6.4-javadoc.jar
-    ├── splunk-1.6.4-javadoc.jar.md5
-    ├── splunk-1.6.4-javadoc.jar.sha1
-    ├── splunk-1.6.4-sources.jar
-    ├── splunk-1.6.4-sources.jar.md5
-    ├── splunk-1.6.4-sources.jar.sha1
-    ├── splunk-1.6.4.jar
-    ├── splunk-1.6.4.jar.md5
-    ├── splunk-1.6.4.jar.sha1
-    ├── splunk-1.6.4.pom
-    ├── splunk-1.6.4.pom.md5
-    └── splunk-1.6.4.pom.sha1
+    com/splunk/splunk/1.6.5/
+    ├── splunk-1.6.5-javadoc.jar
+    ├── splunk-1.6.5-javadoc.jar.md5
+    ├── splunk-1.6.5-javadoc.jar.sha1
+    ├── splunk-1.6.5-sources.jar
+    ├── splunk-1.6.5-sources.jar.md5
+    ├── splunk-1.6.5-sources.jar.sha1
+    ├── splunk-1.6.5.jar
+    ├── splunk-1.6.5.jar.md5
+    ├── splunk-1.6.5.jar.sha1
+    ├── splunk-1.6.5.pom
+    ├── splunk-1.6.5.pom.md5
+    └── splunk-1.6.5.pom.sha1
 
 Verify this structure prior to release.
