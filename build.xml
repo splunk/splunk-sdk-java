@@ -18,7 +18,7 @@
 
 <project name="splunk-sdk-java" basedir="." default="dist" xmlns:jacoco="antlib:org.jacoco.ant"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="antlib:org.jacoco.ant ">
-    <property name="version.number" value="1.6.4"/>
+    <property name="version.number" value="1.6.5"/>
 
     <!-- Paths within the repository that are referenced
          multiple times. -->
