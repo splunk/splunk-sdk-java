@@ -205,6 +205,8 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertFalse(model.isManualRebuilds());
 
         model.setManualRebuilds(true);
+        // Acceleration must be set, or splunkd will crash
+        model.setAcceleration(false);
         model.update();
 
         Assert.assertFalse(model.isAccelerated());
