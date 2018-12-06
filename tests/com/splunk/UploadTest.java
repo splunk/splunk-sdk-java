@@ -22,7 +22,7 @@ public class UploadTest extends SDKTestCase {
     @Test
     public void testOneshot() throws InterruptedException {
         // Slow down for CI to wait for splunkd.log to exist
-        Thread.sleep(3000);
+        Thread.sleep(8000);
 
         String filename = locateSystemLog();
         if (System.getenv("SPLUNK_HOME") != null) {
