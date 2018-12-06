@@ -173,14 +173,17 @@ public class DataModelTest extends SDKTestCase {
         args.setRawJsonDescription(streamToString(openResource("data/datamodels/data_model_with_test_objects.json")));
         DataModel model = dataModels.create(createTemporaryName(), args);
 
+        final String crontabA = "*/5 * * * *";
+        final String crontabB = "* * * * *";
+
         model.setAcceleration(true);
         model.setEarliestAcceleratedTime("-2mon");
-        model.setAccelerationCronSchedule("5/* * * * *");
+        model.setAccelerationCronSchedule(crontabA);
         model.update();
 
         Assert.assertTrue(model.isAccelerated());
         Assert.assertEquals("-2mon", model.getEarliestAcceleratedTime());
-        Assert.assertEquals("5/* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertEquals(crontabA, model.getAccelerationCronSchedule());
         Assert.assertFalse(model.isManualRebuilds());
 
         model.update(); // An empty update should also work
@@ -188,25 +191,27 @@ public class DataModelTest extends SDKTestCase {
 
         Assert.assertTrue(model.isAccelerated());
         Assert.assertEquals("-2mon", model.getEarliestAcceleratedTime());
-        Assert.assertEquals("5/* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertEquals(crontabA, model.getAccelerationCronSchedule());
         Assert.assertFalse(model.isManualRebuilds());
 
         model.setAcceleration(false);
         model.setEarliestAcceleratedTime("-1mon");
-        model.setAccelerationCronSchedule("* * * * *");
+        model.setAccelerationCronSchedule(crontabB);
         model.update();
 
         Assert.assertFalse(model.isAccelerated());
         Assert.assertEquals("-1mon", model.getEarliestAcceleratedTime());
-        Assert.assertEquals("* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertEquals(crontabB, model.getAccelerationCronSchedule());
         Assert.assertFalse(model.isManualRebuilds());
 
         model.setManualRebuilds(true);
+        // Acceleration must be set, or splunkd will crash
+        model.setAcceleration(false);
         model.update();
 
         Assert.assertFalse(model.isAccelerated());
         Assert.assertEquals("-1mon", model.getEarliestAcceleratedTime());
-        Assert.assertEquals("* * * * *", model.getAccelerationCronSchedule());
+        Assert.assertEquals(crontabB, model.getAccelerationCronSchedule());
         Assert.assertTrue(model.isManualRebuilds());
     }
 

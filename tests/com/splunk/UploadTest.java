@@ -20,7 +20,10 @@ import org.junit.Test;
 
 public class UploadTest extends SDKTestCase {
     @Test
-    public void testOneshot() {
+    public void testOneshot() throws InterruptedException {
+        // Slow down for CI to wait for splunkd.log to exist
+        Thread.sleep(8000);
+
         String filename = locateSystemLog();
         if (System.getenv("SPLUNK_HOME") != null) {
             filename = System.getenv("SPLUNK_HOME") + "/var/log/splunk/splunkd.log";
