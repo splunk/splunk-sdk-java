@@ -51,8 +51,7 @@ If you want to contribute to the SDK, clone the repository from [GitHub](https:/
 
 #### Java and Ant
 
-You'll need Java SE version 6 or higher, which you can download from the
-[Oracle web site](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+You'll need Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java).
 
 You'll also need Ant, which you can install from the
 [Apache website](http://ant.apache.org/bindownload.cgi).
