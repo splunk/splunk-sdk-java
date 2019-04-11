@@ -73,7 +73,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.6.5");
+        put("User-Agent", "splunk-sdk-java/1.7.0");
         put("Accept", "*/*");
     }};
 
