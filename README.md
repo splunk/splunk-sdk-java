@@ -40,7 +40,7 @@ Here's what you need to get going with the Splunk SDK for Java.
 If you haven't already installed Splunk, download it
 [here](http://www.splunk.com/download). For more about installing and running
 Splunk and system requirements, see
-[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV).
+[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 6.6 and 7.0.
 
 #### Splunk SDK for Java
 
@@ -51,8 +51,7 @@ If you want to contribute to the SDK, clone the repository from [GitHub](https:/
 
 #### Java and Ant
 
-You'll need Java SE version 6 or higher, which you can download from the
-[Oracle web site](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+You'll need Java version 7 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java). The Splunk SDK for Java has been tested with OpenJDK v7 and v8, and Oracle JDK v7 and v8.
 
 You'll also need Ant, which you can install from the
 [Apache website](http://ant.apache.org/bindownload.cgi).
