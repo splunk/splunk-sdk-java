@@ -59,6 +59,9 @@ public class IndexTest extends SDKTestCase {
             // Can't delete indexes via the REST API. Just let them build up.
         }
 
+        // At least in CI the test exists with a required restart
+        super.splunkRestart();
+
         super.tearDown();
     }
 
