@@ -18,17 +18,27 @@ package com.splunk;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
+
 public class UploadTest extends SDKTestCase {
     @Test
-    public void testOneshot() throws InterruptedException {
-        // Slow down for CI to wait for splunkd.log to exist
-        Thread.sleep(8000);
-
+    public void testOneshot() throws IOException {
         String filename = locateSystemLog();
-        if (System.getenv("SPLUNK_HOME") != null) {
+        if (System.getenv("TRAVIS_CI") != null) {
+            File tempfile = File.createTempFile((new Date()).toString(), "");
+            tempfile.deleteOnExit();
+
+            FileWriter f = new FileWriter(tempfile, true);
+            f.append("some data here");
+
+            filename = tempfile.getAbsolutePath();
+        }
+        else if (System.getenv("SPLUNK_HOME") != null) {
             filename = System.getenv("SPLUNK_HOME") + "/var/log/splunk/splunkd.log";
         }
-
         service.getUploads().create(filename);
         
         for (Upload oneshot : service.getUploads().values()) {
