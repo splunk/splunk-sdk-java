@@ -28,7 +28,7 @@ public class UploadTest extends SDKTestCase {
     public void testOneshot() throws IOException {
         String filename = locateSystemLog();
         if (System.getenv("TRAVIS") != null) {
-            File tempfile = File.createTempFile((new Date()).toString(), "");
+            File tempfile = File.createTempFile(String.format("%d", (new Date()).getTime()), "");
             tempfile.deleteOnExit();
 
             FileWriter f = new FileWriter(tempfile, true);
