@@ -60,7 +60,7 @@ public class IndexTest extends SDKTestCase {
         }
 
         // At least in CI the test exists with a required restart
-        super.splunkRestart();
+        uncheckedSplunkRestart();
 
         super.tearDown();
     }
