@@ -79,8 +79,16 @@ public abstract class SDKTestCase {
     }
 
     public static Integer getJavaVersion() {
-        String ver = System.getProperty("java.version");
-        return Integer.parseInt(ver.substring(2, 3));
+        String version = System.getProperty("java.version");
+        if (version.startsWith("1.")) {
+            version = version.substring(2, 3);
+        } else {
+            int dot = version.indexOf(".");
+            if (dot != -1) {
+                version = version.substring(0, dot);
+            }
+        }
+        return Integer.parseInt(version);
     }
 
     @Before
