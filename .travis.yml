@@ -11,7 +11,7 @@ before_install:
     # Create .splunkrc file with default credentials
     - echo host=localhost >> $HOME/.splunkrc
     - echo username=admin >> $HOME/.splunkrc
-    - echo password=changeme >> $HOME/.splunkrc
+    - echo password=changed! >> $HOME/.splunkrc
     # Set env vars for TCP/UDP tests (we've punched these through Docker)
     - export TEST_TCP_PORT=10667
     - export TEST_UDP_PORT=10668
