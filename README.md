@@ -1,21 +1,35 @@
-[![Build Status](https://travis-ci.org/splunk/splunk-sdk-java.svg?branch=master)](https://travis-ci.org/splunk/splunk-sdk-java)
-# The Splunk Enterprise Software Development Kit for Java
+![Build Status](https://github.com/splunk/splunk-sdk-java/actions/workflows/release.yml/badge.svg?branch=master)
+# The Splunk Software Development Kit for Java
 
-#### Version 1.6.5
+#### Version 1.7.0
 
-The Splunk Enterprise Software Development Kit (SDK) for Java contains library code and examples designed to enable developers to build applications using the Splunk platform.
+The Splunk Software Development Kit (SDK) for Java contains library code and
+examples designed to enable developers to build applications using Splunk.
 
-The Splunk platform is a search engine and analytic environment that uses a distributed map-reduce architecture to efficiently index, search, and process large time-varying data sets.
+Splunk is a search engine and analytic environment that uses a distributed
+map-reduce architecture to efficiently index, search and process large
+time-varying data sets.
 
-The Splunk platform is popular with system administrators for aggregation and monitoring of IT machine data, security, compliance, and a wide variety of other scenarios that share a requirement to efficiently index, search, analyze, and generate real-time notifications from large volumes of time-series data.
+The Splunk product is popular with system administrators for aggregation and
+monitoring of IT machine data, security, compliance and a wide variety of
+other scenarios that share a requirement to efficiently index, search, analyze
+and generate real-time notifications from large volumes of time series data.
 
-The Splunk developer platform enables developers to take advantage of the same technology used by the Splunk platform to build exciting new applications.
+The Splunk developer platform enables developers to take advantage of the
+same technology used by the Splunk product to build exciting new applications
+that are enabled by Splunk's unique capabilities.
 
-For more information, see [Splunk Enterprise SDK for Java](https://dev.splunk.com/enterprise/docs/devtools/java/sdk-java/) on the Splunk Developer Portal.
 
-## Getting started with the Splunk Enterprise SDK for Java
+## Getting started with the Splunk SDK for Java
 
-The Splunk Enterprise SDK for Java contains library code and examples that show how to programmatically interact with the Splunk platform for a variety of scenarios including searching, saved searches, data inputs, and many more, along with building complete applications.
+The Splunk SDK for Java contains library code and examples that show how to
+programmatically interact with Splunk for a variety of scenarios including
+searching, saved searches, data inputs, and many more, along with building
+complete applications.
+
+The information in this Readme provides steps to get going quickly, but for more
+in-depth information be sure to visit the
+[Splunk Developer Portal](http://dev.splunk.com/view/java-sdk/SP-CAAAECN).
 
 ### Requirements
 
@@ -26,7 +40,7 @@ Here's what you need to get going with the Splunk SDK for Java.
 If you haven't already installed Splunk, download it
 [here](http://www.splunk.com/download). For more about installing and running
 Splunk and system requirements, see
-[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 6.6 and 7.0.
+[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 8.0 and 8.2.0.
 
 #### Splunk SDK for Java
 
@@ -34,40 +48,41 @@ Splunk and system requirements, see
 
 If you want to contribute to the SDK, clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java).
 
-### Java using Maven
-   
-   You can use [Apache Maven](http://maven.apache.org/) to build your Splunk Enterprise SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
-   
-   To add the Splunk SDK for Java JAR file as a dependency:
-   
-   1. Add the repository to your project's **pom.xml** file:
+#### Java using Maven
 
-      ```xml
-      <repositories>
-        ...
-        <repository>
-          <id>splunk-artifactory</id>
-          <name>Splunk Releases</name>
-          <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
-        </repository>
-      </repositories>
-      ```
+You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects. With a few updates to your project's `pom.xml` file, it will retrieve all necessary dependencies and seamlessly build your project.
 
-   2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk Enterprise SDK for Java that you are using:
+To add the Splunk SDK for Java `.JAR` file as a dependency:
 
-      ```xml
-      <dependencies>
-        ...
-        <dependency>
-          <groupId>com.splunk</groupId>
-          <artifactId>splunk</artifactId>
-          <version>1.7.0</version>
-        </dependency>
-      </dependencies>
-      ```
-      Be sure to update the version number to match the version of the Splunk SDK for Java that you are using.
+1. Add the repository to your project's `pom.xml` file:
 
-      >**Note**: You can make similar changes to use [Gradle](http://www.gradle.org/) as well.
+```xml
+<repositories>
+  ...
+  <repository>
+    <id>splunk-artifactory</id>
+    <name>Splunk Releases</name>
+    <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
+  </repository>
+</repositories>
+```
+
+2. Add the dependency to the `pom.xml` file:
+
+```xml
+<dependencies>
+  ...
+  <dependency>
+    <groupId>com.splunk</groupId>
+    <artifactId>splunk</artifactId>
+    <version>1.7.0</version>
+  </dependency>
+</dependencies>
+```
+
+Be sure to update the version number to match the version of the Splunk SDK for Java that you are using.
+
+> Note: You can make similar changes to use [Gradle](http://www.gradle.org/) as well.
 
 ### Building the SDK and documentation
 
