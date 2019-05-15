@@ -53,11 +53,23 @@ public class IndexTest extends SDKTestCase {
     public void tearDown() throws Exception {
         if (service.versionIsAtLeast("5.0.0")) {
             if (service.getIndexes().containsKey(indexName) && System.getenv("TRAVIS") == null) {
-                index.remove();
+                try {
+                    index.remove();
+                } catch(HttpException he) {
+                    if (he.getStatus() == 400) {
+                        uncheckedSplunkRestart();
+                        index.remove();
+                    } else {
+                        throw he;
+                    }
+                }
             }
         } else {
             // Can't delete indexes via the REST API. Just let them build up.
         }
+
+        // At least in CI the test exists with a required restart
+        uncheckedSplunkRestart();
 
         super.tearDown();
     }
@@ -132,7 +144,16 @@ public class IndexTest extends SDKTestCase {
 
         Assert.assertTrue(service.getIndexes().containsKey(indexName));
 
-        index.remove();
+        try {
+            index.remove();
+        } catch(HttpException he) {
+            if (he.getStatus() == 400) {
+                uncheckedSplunkRestart();
+                index.remove();
+            } else {
+                throw he;
+            }
+        }
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override
             public boolean predicate() {
@@ -149,7 +170,17 @@ public class IndexTest extends SDKTestCase {
         }
 
         Assert.assertTrue(service.getIndexes().containsKey(indexName));
-        service.getIndexes().remove(indexName);
+
+        try {
+            service.getIndexes().remove(indexName);
+        } catch(HttpException he) {
+            if (he.getStatus() == 400) {
+                uncheckedSplunkRestart();
+                service.getIndexes().remove(indexName);
+            } else {
+                throw he;
+            }
+        }
 
         assertEventuallyTrue(new EventuallyTrueBehavior() {
             @Override

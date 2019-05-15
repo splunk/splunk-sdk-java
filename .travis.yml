@@ -1,3 +1,4 @@
+
 notifications:
     email: false
 
@@ -10,7 +11,7 @@ before_install:
     # Create .splunkrc file with default credentials
     - echo host=localhost >> $HOME/.splunkrc
     - echo username=admin >> $HOME/.splunkrc
-    - echo password=changeme >> $HOME/.splunkrc
+    - echo password=changed! >> $HOME/.splunkrc
     # Set env vars for TCP/UDP tests (we've punched these through Docker)
     - export TEST_TCP_PORT=10667
     - export TEST_UDP_PORT=10668
@@ -39,8 +40,8 @@ addons:
       - ant-optional
 
 jdk:
-  - oraclejdk8
-  - openjdk7
+  - openjdk8
+  - openjdk11
 
 before_script:
     - ant

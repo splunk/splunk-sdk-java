@@ -25,20 +25,12 @@ import java.util.Date;
 
 public class UploadTest extends SDKTestCase {
     @Test
-    public void testOneshot() throws IOException {
+    public void testOneshot() {
         String filename = locateSystemLog();
-        if (System.getenv("TRAVIS_CI") != null) {
-            File tempfile = File.createTempFile((new Date()).toString(), "");
-            tempfile.deleteOnExit();
-
-            FileWriter f = new FileWriter(tempfile, true);
-            f.append("some data here");
-
-            filename = tempfile.getAbsolutePath();
+        if (System.getenv("SPLUNK_HOME") != null) {
+            filename = System.getenv("SPLUNK_HOME") + "/copyright.txt";
         }
-        else if (System.getenv("SPLUNK_HOME") != null) {
-            filename = System.getenv("SPLUNK_HOME") + "/var/log/splunk/splunkd.log";
-        }
+
         service.getUploads().create(filename);
         
         for (Upload oneshot : service.getUploads().values()) {
