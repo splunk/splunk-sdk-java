@@ -51,7 +51,7 @@ If you want to contribute to the SDK, clone the repository from [GitHub](https:/
 
 #### Java and Ant
 
-You'll need Java version 8 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java). The Splunk SDK for Java has been tested with OpenJDK v8 and v1.
+You'll need Java version 8 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java). The Splunk SDK for Java has been tested with OpenJDK v8 and v11.
 
 You'll also need Ant, which you can install from the
 [Apache website](http://ant.apache.org/bindownload.cgi).
