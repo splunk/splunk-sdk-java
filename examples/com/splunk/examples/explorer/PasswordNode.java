@@ -25,7 +25,6 @@ class PasswordNode extends EntityNode {
 
     @Override protected PropertyList getMetadata() {
         PropertyList list = super.getMetadata();
-        list.add(String.class, "getClearPassword");
         list.add(String.class, "getEncryptedPassword");
         list.add(String.class, "getPassword");
         list.add(String.class, "getRealm");

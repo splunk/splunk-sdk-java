@@ -28,7 +28,6 @@ public class PasswordTest extends SDKTestCase {
     }
     
     private void testGettersOf(Password password) {
-        password.getClearPassword();
         password.getEncryptedPassword();
         password.getPassword();
         password.getRealm();
@@ -53,14 +52,12 @@ public class PasswordTest extends SDKTestCase {
         password = passwords.create(name, value);
         Assert.assertTrue(passwords.containsKey(name));
         Assert.assertEquals(name, password.getUsername());
-        Assert.assertEquals(value, password.getClearPassword());
         Assert.assertEquals(null, password.getRealm());
 
         // Update the password
         password.update(new Args("password", "foobar"));
         Assert.assertTrue(passwords.containsKey(name));
         Assert.assertEquals(name, password.getUsername());
-        Assert.assertEquals("foobar", password.getClearPassword());
         Assert.assertEquals(null, password.getRealm());
 
         passwords.remove(name);
@@ -70,14 +67,12 @@ public class PasswordTest extends SDKTestCase {
         password = passwords.create(name, value, realm);
         Assert.assertTrue(passwords.containsKey(name));
         Assert.assertEquals(name, password.getUsername());
-        Assert.assertEquals(value, password.getClearPassword());
         Assert.assertEquals(realm, password.getRealm());
 
         // Update the password
         password.update(new Args("password", "bizbaz"));
         Assert.assertTrue(passwords.containsKey(name));
         Assert.assertEquals(name, password.getUsername());
-        Assert.assertEquals("bizbaz", password.getClearPassword());
         Assert.assertEquals(realm, password.getRealm());
 
         Assert.assertTrue(password.getEncryptedPassword().length() > 0);
@@ -105,8 +100,8 @@ public class PasswordTest extends SDKTestCase {
         passwords.create(username, passwordA, realmA);
         passwords.create(username, passwordB, realmB);
 
-        Assert.assertEquals(passwordA, passwords.get(realmA, username).getClearPassword());
-        Assert.assertEquals(passwordB, passwords.get(realmB, username).getClearPassword());
+        Assert.assertTrue(passwords.get(realmA, username).getEncryptedPassword().length() > 0);
+        Assert.assertTrue(passwords.get(realmB, username).getEncryptedPassword().length() > 0);
 
         passwords.remove(realmA, username);
         passwords.remove(realmB, username);
@@ -124,7 +119,7 @@ public class PasswordTest extends SDKTestCase {
         String username = "sdk-test-username";
 
         passwords.create(username, password, realm);
-        Assert.assertEquals(password, passwords.get(username).getClearPassword());
+        Assert.assertTrue(passwords.get(username).getEncryptedPassword().length() > 0);
 
         passwords.remove(username);
         Assert.assertNull(passwords.get(username));

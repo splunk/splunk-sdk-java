@@ -32,15 +32,6 @@ public class Password extends Entity {
     }
 
     /**
-     * Returns the clear-text password for this credential.
-     *
-     * @return The clear-text password.
-     */
-    public String getClearPassword() {
-        return getString("clear_password");
-    }
-
-    /**
      * Returns the encrypted password for this credential.
      *
      * @return The encrypted password.
