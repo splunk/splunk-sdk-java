@@ -40,6 +40,9 @@ public class HttpService {
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
+    private static String HTTP_PROXY_HOST= System.getenv("httpProxyHost");
+    private static String HTTP_PROXY_PORT= System.getenv("httpProxyPort");
+
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
@@ -402,7 +405,13 @@ public class HttpService {
         // Create and initialize the connection object
         HttpURLConnection cn;
         try {
-            cn = (HttpURLConnection) url.openConnection();
+        	System.out.println("Proxy Host: " + HTTP_PROXY_HOST + "Proxy Port: " + HTTP_PROXY_PORT );
+        	if( HTTP_PROXY_HOST !=null &&  HTTP_PROXY_HOST!="" && HTTP_PROXY_PORT !=null &&  HTTP_PROXY_PORT !="") {
+        		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(HTTP_PROXY_HOST, Integer.parseInt(HTTP_PROXY_PORT)));
+        		cn = (HttpURLConnection) url.openConnection(proxy);
+            }else {
+            	 cn = (HttpURLConnection) url.openConnection();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
