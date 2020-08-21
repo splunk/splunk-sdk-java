@@ -100,7 +100,7 @@ To add the Splunk SDK for Java `.JAR` file as a dependency:
   <dependency>
     <groupId>com.splunk</groupId>
     <artifactId>splunk</artifactId>
-    <version>1.6.3.0</version>
+    <version>1.6.5.0</version>
   </dependency>
 </dependencies>
 ```
