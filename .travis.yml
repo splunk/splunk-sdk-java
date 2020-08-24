@@ -39,7 +39,7 @@ addons:
       - ant-optional
 
 jdk:
-  - oraclejdk8
+  - openjdk8
   - openjdk7
 
 before_script:
