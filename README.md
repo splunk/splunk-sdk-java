@@ -11,6 +11,7 @@ The Splunk platform is popular with system administrators for aggregation and mo
 
 The Splunk developer platform enables developers to take advantage of the same technology used by the Splunk platform to build exciting new applications.
 
+For more information, see [Splunk Enterprise SDK for Java](https://dev.splunk.com/enterprise/docs/devtools/java/sdk-java/) on the Splunk Developer Portal.
 
 ## Getting started with the Splunk SDK for Java
 
@@ -27,7 +28,7 @@ For more information, see the Splunk Enterprise [Installation Manual](https://do
 
 #### Splunk SDK for Java
 
-Get the Splunk SDK for Java from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/). You can use [Maven](readme.md#Use-Maven), download a JAR and add it to your project, or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK.
+Get the Splunk SDK for Java JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven" "below.
 
 #### Java and Ant
 
@@ -35,7 +36,7 @@ You'll need Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) o
 
 You'll also need Ant, which you can install from the [Apache website](http://ant.apache.org/bindownload.cgi).
 
-The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [`ssl_protocols`](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
+The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
 
 If you are using Windows, you'll need to make sure the following system
 variables are created and set:
@@ -54,39 +55,37 @@ For full installation instructions, you can find more information here:
 
 #### Use Maven
 
-You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects. With a few updates to your project's `pom.xml` file, it will retrieve all necessary dependencies and seamlessly build your project.
+You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
 
-To add the Splunk SDK for Java `.JAR` file as a dependency:
+To add the Splunk SDK for Java JAR file as a dependency:
 
-1. Add the repository to your project's `pom.xml` file:
+1. Add the repository to your project's **pom.xml** file:
 
-```xml
-<repositories>
-  ...
-  <repository>
-    <id>splunk-artifactory</id>
-    <name>Splunk Releases</name>
-    <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
-  </repository>
-</repositories>
-```
+  ```xml
+  <repositories>
+    ...
+    <repository>
+      <id>splunk-artifactory</id>
+      <name>Splunk Releases</name>
+      <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
+    </repository>
+  </repositories>
+  ```
 
-2. Add the dependency to the `pom.xml` file:
+2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
 
-```xml
-<dependencies>
-  ...
-  <dependency>
-    <groupId>com.splunk</groupId>
-    <artifactId>splunk</artifactId>
-    <version>1.6.5.0</version>
-  </dependency>
-</dependencies>
-```
+  ```xml
+  <dependencies>
+    ...
+    <dependency>
+      <groupId>com.splunk</groupId>
+      <artifactId>splunk</artifactId>
+      <version>1.6.5.0</version>
+    </dependency>
+  </dependencies>
+  ```
 
-Be sure to update the version number to match the version of the Splunk SDK for Java that you are using.
-
-> Note: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
+  > **Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
 
 ### Build the SDK and documentation
 
@@ -98,7 +97,7 @@ or
 
     ant dist
 
-This command builds all of the .class and .jar files. If you just want to buildthe .class files, enter:
+This command builds all of the CLASS and JAR files. If you just want to build the CLASS files, enter:
 
     ant build
 
@@ -184,7 +183,7 @@ You can run specific test classes by passing the class to the `-Dtestcase=` opti
 
     ant test -Dtestcase=AtomFeedTest
 
-The ant configuration can produce a single HTML report of all the tests run using the target testreport (which can use the `-Dtestcase=` option): 
+The ant configuration can produce a single HTML report of all the tests run using the target testreport (which also takes the `-Dtestcase=` option): 
 
     ant testreport
 
@@ -261,7 +260,7 @@ If you would like to contribute to the SDK, see [Contributions to Splunk](https:
 
 ### Support
 
- *  You will be granted support if you or your company are already covered under an existing maintenance/support agreement. Submit a new case in the [Support Portal](https://www.splunk.com/en_us/support-and-services.html)) and include "Splunk SDK for Java" in the subject line.
+ *  You will be granted support if you or your company are already covered under an existing maintenance/support agreement. Submit a new case in the [Support Portal](https://www.splunk.com/en_us/support-and-services.html) and include "Splunk SDK for Java" in the subject line.
 
    If you are not covered under an existing maintenance/support agreement, you can find help through the broader community at [Splunk Answers](https://community.splunk.com/t5/Splunk-Development/ct-p/developer-tools).
 
