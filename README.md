@@ -22,41 +22,39 @@ The Splunk SDK for Java contains library code and examples that show how to prog
 Here's what you need to get going with the Splunk SDK for Java.
 
 *  Splunk
-
-  If you haven't already installed Splunk, download it [here](http://www.splunk.com/download). 
-  For more information, see the Splunk Enterprise [Installation Manual](https://docs.splunk.com/Documentation/Splunk/latest/Installation).
-
+  
+   If you haven't already installed Splunk, download it [here](http://www.splunk.com/download). 
+   For more information, see the Splunk Enterprise [Installation Manual](https://docs.splunk.com/Documentation/Splunk/latest/Installation).
+    
 *  Splunk SDK for Java
-
-  Get the JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven" "below.
-
+  
+   Get the JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven" "below.
+   
 *  Java and Ant
-
+   
    You'll need:
-
-  *  Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java).
-  *  Ant, which you can install from the [Apache website](http://ant.apache.org/bindownload.cgi).
-
-  The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
-
-  If you are using Windows, you'll need to make sure the following system
-  variables are created and set:
-
-  *   **ANT_HOME** should be set to the location where Ant is installed.
-  *   **JAVA_HOME** should be set to the directory where the JDK is installed.
-  *   **PATH** should include the path to the **%ANT_HOME%\bin** directory.
+   
+   *  Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java).
+   *  Ant, which you can install from the [Apache website](http://ant.apache.org/bindownload.cgi).
+   
+   The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
+ 
+   If you are using Windows, you'll need to make sure the following system variables are created and set:
+    *   **ANT_HOME** should be set to the location where Ant is installed.
+    *   **JAVA_HOME** should be set to the directory where the JDK is installed.
+    *   **PATH** should include the path to the **%ANT_HOME%\bin** directory.
 
   For installation instructions, see:
   *   [Java Platform Installation](http://www.oracle.com/technetwork/java/javase/index-137561.html)
   *   [Installing Apache Ant](http://ant.apache.org/manual/install.html)
 
 *  Maven (optional)
-
-  You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
-
-  To add the Splunk SDK for Java JAR file as a dependency:
-
-  1. Add the repository to your project's **pom.xml** file:
+   
+   You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
+   
+   To add the Splunk SDK for Java JAR file as a dependency:
+   
+   1. Add the repository to your project's **pom.xml** file:
 
     ```xml
     <repositories>
@@ -69,7 +67,7 @@ Here's what you need to get going with the Splunk SDK for Java.
     </repositories>
     ```
 
-  2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
+   2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
 
     ```xml
     <dependencies>
