@@ -51,29 +51,25 @@ If you are using Windows, make sure the following system variables are created a
    
    1. Add the repository to your project's **pom.xml** file:
 
-    ```
-    <repositories>
-      ...
-      <repository>
-        <id>splunk-artifactory</id>
-        <name>Splunk Releases</name>
-        <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
-      </repository>
-    </repositories>
-    ```
+      <repositories>
+        ...
+        <repository>
+          <id>splunk-artifactory</id>
+          <name>Splunk Releases</name>
+          <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
+        </repository>
+      </repositories>
 
    2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
 
-    ```
-    <dependencies>
-      ...
-      <dependency>
-        <groupId>com.splunk</groupId>
-        <artifactId>splunk</artifactId>
-        <version>1.6.5.0</version>
-      </dependency>
-    </dependencies>
-    ```
+      <dependencies>
+        ...
+        <dependency>
+          <groupId>com.splunk</groupId>
+          <artifactId>splunk</artifactId>
+          <version>1.6.5.0</version>
+        </dependency>
+      </dependencies>
 
     > **Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
 
