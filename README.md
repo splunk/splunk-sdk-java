@@ -62,6 +62,7 @@ If you are using Windows, make sure the following system variables are created a
 
    2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
 
+      ```
       <dependencies>
         ...
         <dependency>
@@ -70,6 +71,7 @@ If you are using Windows, make sure the following system variables are created a
           <version>1.6.5.0</version>
         </dependency>
       </dependencies>
+      ```
 
     > **Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
 
