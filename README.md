@@ -51,6 +51,7 @@ If you are using Windows, make sure the following system variables are created a
    
    1. Add the repository to your project's **pom.xml** file:
 
+      ```
       <repositories>
         ...
         <repository>
@@ -59,6 +60,7 @@ If you are using Windows, make sure the following system variables are created a
           <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
         </repository>
       </repositories>
+      ```
 
    2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
 
@@ -73,29 +75,29 @@ If you are using Windows, make sure the following system variables are created a
       </dependencies>
       ```
 
-    > **Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
+    >**Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
 
-  ### Use ant to build the SDK and documentation
+### Use ant to build the SDK and documentation
 
-  To build the SDK, open a command prompt in the **/splunk-sdk-java** directory and enter:
+To build the SDK (all of the CLASS and JAR files), open a command prompt in the **/splunk-sdk-java** directory and enter either of these commands: 
 
-      ant
+  ant
 
-  or
+or
 
-      ant dist
+  ant dist
 
-  This command builds all of the CLASS and JAR files. If you just want to build the CLASS files, enter:
+If you want to build only the CLASS files, enter:
 
-      ant build
+  ant build
 
-  To remove all build artifacts from the repository, enter:
+To remove all build artifacts from the repository, enter:
 
-      ant clean
+  ant clean
 
-  To build the documentation for the SDK, enter:
+To build the documentation for the SDK, enter:
 
-      ant javadoc
+  ant javadoc
 
 ### Examples and unit tests
 
