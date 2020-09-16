@@ -28,13 +28,13 @@ Here's what you need to get going with the Splunk SDK for Java.
     
 *  Splunk SDK for Java
   
-   Get the JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven" below.
+   Get the JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven to build projects" below.
    
 *  Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java). For instructions, see [Java Platform Installation](http://www.oracle.com/technetwork/java/javase/index-137561.html) on the Oracle website.
 
    The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, although this is not recommended.
 
-*  Ant, which you can install from the [Apache website](http://ant.apache.org/bindownload.cgi). For instructions, see [Installing Apache Ant](http://ant.apache.org/manual/install.html). 
+*  Ant, from the [Apache website](http://ant.apache.org/bindownload.cgi). For instructions, see [Installing Apache Ant](http://ant.apache.org/manual/install.html). 
 
 ### Set system variables (Windows)
 
@@ -51,7 +51,7 @@ If you are using Windows, make sure the following system variables are created a
    
    1. Add the repository to your project's **pom.xml** file:
 
-    ```xml
+    ```
     <repositories>
       ...
       <repository>
@@ -64,7 +64,7 @@ If you are using Windows, make sure the following system variables are created a
 
    2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
 
-    ```xml
+    ```
     <dependencies>
       ...
       <dependency>
