@@ -81,23 +81,23 @@ If you are using Windows, make sure the following system variables are created a
 
 To build the SDK (all of the CLASS and JAR files), open a command prompt in the **/splunk-sdk-java** directory and enter either of these commands: 
 
-  ant
+   ant
 
 or
 
-  ant dist
+   ant dist
 
 If you want to build only the CLASS files, enter:
 
-  ant build
+   ant build
 
 To remove all build artifacts from the repository, enter:
 
-  ant clean
+   ant clean
 
 To build the documentation for the SDK, enter:
 
-  ant javadoc
+   ant javadoc
 
 ### Examples and unit tests
 
