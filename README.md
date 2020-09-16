@@ -75,7 +75,7 @@ If you are using Windows, make sure the following system variables are created a
       </dependencies>
       ```
 
-    >**Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
+      >**Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
 
 ### Use ant to build the SDK and documentation
 
@@ -146,7 +146,7 @@ Save the file as **.splunkrc** in the current user's home directory.
 
 After you build the SDK, examples are put in the **/splunk-sdk-java/dist/examples** directory. To run the examples, run the Java interpreter at the command line using the `-jar` flag to specify the target example JAR file, and include any arguments that are required by the example. To get help for an example, use the `--help` argument with an example.
 
-For example, to see the command-line arguments for the Search example, open a command prompt in the **/splunk-sdk-java** directory and enter:
+To see the command-line arguments for the Search example, open a command prompt in the **/splunk-sdk-java** directory and enter:
 
     java -jar dist/examples/search.jar --help
 
@@ -154,11 +154,11 @@ To run the Search example, open a command prompt in the **/splunk-sdk-java** dir
 
     java -jar dist/examples/search.jar "search * | head 10" --output_mode=csv
 
-There is also a helper script called run in the root of the repository that simplifies running the SDK examples. For example, on Mac OS X you could enter:
+A `run` helper script in the root of the repository simplifies running the SDK examples. For example on Mac OS X, enter:
 
     ./run search "search * | head 10" --output_mode=csv
 
-All the the example jars are completely self contained and can be used independently of the SDK's repository.
+All the the example JARs are completely self-contained and you can use them independently of the SDK's repository.
 
 #### Run unit tests
 
@@ -202,16 +202,16 @@ To view the coverage report, open
 
 ## Repository
 
-| Directory      | Description                                                                  |
-|:-------------- |:---------------------------------------------------------------------------- |
-| /argsGenerator | This directory is created by the build and contains intermediate build ouputs|
-|/build          | This directory is created by the build and contains intermediate build ouputs|
-|/dist           | This directory is created by the build and contains final build outputs      |
-|/examples       | Examples demonstrating various SDK features                                  |
-|/lib            | Third-party libraries used by examples and unit tests                        |
-|/splunk         | Source for `com.splunk`                                                      |
-|/tests          | Source for unit tests                                                        |
-|/util           | Utilities shared by examples and units                                       |
+| Directory      | Description                                               |
+|:-------------- |:----------------------------------------------------------|
+| /argsGenerator | Created by the build. Contains intermediate build ouputs. |
+|/build          | Created by the build. Contains intermediate build ouputs. |
+|/dist           | Created by the build. Contains final build outputs.       |
+|/examples       | Examples demonstrating various SDK features.              |
+|/lib            | Third-party libraries used by examples and unit tests .   |
+|/splunk         | Source for `com.splunk`.                                  |
+|/tests          | Source for unit tests.                                    |
+|/util           | Utilities shared by examples and units.                   |
 
 ### Changelog
 
@@ -252,13 +252,13 @@ If you would like to contribute to the SDK, see [Contributions to Splunk](https:
 ### Support
 
  *  You will be granted support if you or your company are already covered under an existing maintenance/support agreement. Submit a new case in the [Support Portal](https://www.splunk.com/en_us/support-and-services.html) and include "Splunk SDK for Java" in the subject line.
-
+    
    If you are not covered under an existing maintenance/support agreement, you can find help through the broader community at [Splunk Answers](https://community.splunk.com/t5/Splunk-Development/ct-p/developer-tools).
-
+    
 *  Splunk will NOT provide support for SDKs if the core library (the code in the <b>/splunk</b> directory) has been modified. If you modify an SDK and want support, you can find help through the broader community and [Splunk Answers](https://community.splunk.com/t5/Splunk-Development/ct-p/developer-tools). 
-
+   
    We would also like to know why you modified the core library, so please send feedback to _devinfo@splunk.com_.
-
+   
 *  File any issues on [GitHub](https://github.com/splunk/splunk-sdk-java/issues).
 
 ### Contact Us
