@@ -21,101 +21,100 @@ The Splunk SDK for Java contains library code and examples that show how to prog
 
 Here's what you need to get going with the Splunk SDK for Java.
 
-#### Splunk
+*  Splunk
 
-If you haven't already installed Splunk, download it [here](http://www.splunk.com/download). 
-For more information, see the Splunk Enterprise [Installation Manual](https://docs.splunk.com/Documentation/Splunk/latest/Installation).
+  If you haven't already installed Splunk, download it [here](http://www.splunk.com/download). 
+  For more information, see the Splunk Enterprise [Installation Manual](https://docs.splunk.com/Documentation/Splunk/latest/Installation).
 
-#### Splunk SDK for Java
+*  Splunk SDK for Java
 
-Get the Splunk SDK for Java JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven" "below.
+  Get the JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven" "below.
 
-#### Java and Ant
+*  Java and Ant
 
-You'll need Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java).
+   You'll need:
 
-You'll also need Ant, which you can install from the [Apache website](http://ant.apache.org/bindownload.cgi).
+  *  Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java).
+  *  Ant, which you can install from the [Apache website](http://ant.apache.org/bindownload.cgi).
 
-The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
+  The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
 
-If you are using Windows, you'll need to make sure the following system
-variables are created and set:
+  If you are using Windows, you'll need to make sure the following system
+  variables are created and set:
 
-*   **ANT_HOME** should be set to the location where Ant is installed.
+  *   **ANT_HOME** should be set to the location where Ant is installed.
+  *   **JAVA_HOME** should be set to the directory where the JDK is installed.
+  *   **PATH** should include the path to the **%ANT_HOME%\bin** directory.
 
-*   **JAVA_HOME** should be set to the directory where the JDK is installed.
+  For installation instructions, see:
+  *   [Java Platform Installation](http://www.oracle.com/technetwork/java/javase/index-137561.html)
+  *   [Installing Apache Ant](http://ant.apache.org/manual/install.html)
 
-*   **PATH** should include the path to the **%ANT_HOME%\bin** directory.
+*  Maven (optional)
 
-For full installation instructions, you can find more information here:
+  You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
 
-*   [Java Platform Installation](http://www.oracle.com/technetwork/java/javase/index-137561.html)
+  To add the Splunk SDK for Java JAR file as a dependency:
 
-*   [Installing Apache Ant](http://ant.apache.org/manual/install.html)
+  1. Add the repository to your project's **pom.xml** file:
 
-#### Use Maven
+    ```xml
+    <repositories>
+      ...
+      <repository>
+        <id>splunk-artifactory</id>
+        <name>Splunk Releases</name>
+        <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
+      </repository>
+    </repositories>
+    ```
 
-You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
+  2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
 
-To add the Splunk SDK for Java JAR file as a dependency:
+    ```xml
+    <dependencies>
+      ...
+      <dependency>
+        <groupId>com.splunk</groupId>
+        <artifactId>splunk</artifactId>
+        <version>1.6.5.0</version>
+      </dependency>
+    </dependencies>
+    ```
 
-1. Add the repository to your project's **pom.xml** file:
+    > **Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
 
-  ```xml
-  <repositories>
-    ...
-    <repository>
-      <id>splunk-artifactory</id>
-      <name>Splunk Releases</name>
-      <url>http://splunk.jfrog.io/splunk/ext-releases-local</url>
-    </repository>
-  </repositories>
-  ```
+  ### Build the SDK and documentation
 
-2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
+  To build the SDK, open a command prompt in the **/splunk-sdk-java** directory and enter:
 
-  ```xml
-  <dependencies>
-    ...
-    <dependency>
-      <groupId>com.splunk</groupId>
-      <artifactId>splunk</artifactId>
-      <version>1.6.5.0</version>
-    </dependency>
-  </dependencies>
-  ```
+      ant
 
-  > **Note**: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
+  or
 
-### Build the SDK and documentation
+      ant dist
 
-To build the SDK, open a command prompt in the **/splunk-sdk-java** directory and enter:
+  This command builds all of the CLASS and JAR files. If you just want to build the CLASS files, enter:
 
-    ant
+      ant build
 
-or
+  To remove all build artifacts from the repository, enter:
 
-    ant dist
+      ant clean
 
-This command builds all of the CLASS and JAR files. If you just want to build the CLASS files, enter:
+  To build the documentation for the SDK, enter:
 
-    ant build
-
-To remove all build artifacts from the repository, enter:
-
-    ant clean
-
-To build the documentation for the SDK, enter:
-
-    ant javadoc
+      ant javadoc
 
 ### Examples and unit tests
 
 The Splunk SDK for Java includes several examples and unit tests to run at the command line.
 
-#### Convenience file (.splunkrc)
+#### Create a .splunkrc convenience file
 
 To connect to Splunk Enterprise, many of the SDK examples and unit tests take command-line arguments that specify values for the host, port, and login credentials for Splunk Enterprise. For convenience during development, you can store these arguments as key-value pairs in a text file named **.splunkrc**. Then, the SDK examples and unit tests use the values from the **.splunkrc** file when you don't specify them.
+
+>**Note**: Storing login credentials in the **.splunkrc** file is only for convenience during development. This file isn't part of the Splunk platform and shouldn't be used for storing user credentials for production. And, if you're at all concerned about the security of your credentials, enter them at the command line rather than saving them in this file.
 
 To use this convenience file, create a text file with the following format:
 
@@ -142,13 +141,11 @@ Save the file as **.splunkrc** in the current user's home directory.
 
         C:\Users\currentusername\.splunkrc
 
-    You might get errors in Windows when you try to name the file because ".splunkrc" appears to be a nameless file with an extension. You can use the command line to create this file by going to the **C:\Users\<currentusername** directory and entering the following command:
+    You might get errors in Windows when you try to name the file because ".splunkrc" appears to be a nameless file with an extension. You can use the command line to create this file by going to the **C:\Users\<currentusername>** directory and entering the following command:
 
         Notepad.exe .splunkrc
 
     Click **Yes**, then continue creating the file.
-
-**Note**: Storing login credentials in the **.splunkrc** file is only for convenience during development. This file isn't part of the Splunk platform and shouldn't be used for storing user credentials for production. And, if you're at all concerned about the security of your credentials, enter them at the command line rather than saving them in this file.
 
 
 #### Run examples
@@ -224,7 +221,7 @@ To view the coverage report, open
 
 ### Changelog
 
-The CHANGELOG.md file in the root of this repository contains a description of changes for each version of the SDK. For the latest version, see the [CHANGELOG.md](https://github.com/splunk/splunk-sdk-java/blob/master/CHANGELOG.md) on GitHub.
+The [CHANGELOG](CHANGELOG.md) contains a description of changes for each version of the SDK. For the latest version, see the [CHANGELOG.md](https://github.com/splunk/splunk-sdk-java/blob/master/CHANGELOG.md) on GitHub.
 
 ### Branches
 
@@ -254,7 +251,7 @@ Stay connected with other developers building on the Splunk platform.
 * [Twitter](https://twitter.com/splunkdev)
 
 
-### How to contribute
+### Contributions
 
 If you would like to contribute to the SDK, see [Contributions to Splunk](https://www.splunk.com/en_us/form/contributions.html).
 
