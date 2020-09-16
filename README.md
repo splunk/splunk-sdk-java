@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.org/splunk/splunk-sdk-java.svg?branch=master)](https://travis-ci.org/splunk/splunk-sdk-java)
-# The Splunk Software Development Kit for Java
+# The Splunk Enterprise Software Development Kit for Java
 
 #### Version 1.6.5
 
-The Splunk Software Development Kit (SDK) for Java contains library code and examples designed to enable developers to build applications using the Splunk platform.
+The Splunk Enterprise Software Development Kit (SDK) for Java contains library code and examples designed to enable developers to build applications using the Splunk platform.
 
 The Splunk platform is a search engine and analytic environment that uses a distributed map-reduce architecture to efficiently index, search, and process large time-varying data sets.
 
@@ -13,26 +13,26 @@ The Splunk developer platform enables developers to take advantage of the same t
 
 For more information, see [Splunk Enterprise SDK for Java](https://dev.splunk.com/enterprise/docs/devtools/java/sdk-java/) on the Splunk Developer Portal.
 
-## Getting started with the Splunk SDK for Java
+## Getting started with the Splunk Enterprise SDK for Java
 
-The Splunk SDK for Java contains library code and examples that show how to programmatically interact with the Splunk platform for a variety of scenarios including searching, saved searches, data inputs, and many more, along with building complete applications.
+The Splunk Enterprise SDK for Java contains library code and examples that show how to programmatically interact with the Splunk platform for a variety of scenarios including searching, saved searches, data inputs, and many more, along with building complete applications.
 
 ### Requirements
 
-Here's what you need to get going with the Splunk SDK for Java.
+Here's what you need to get going with the Splunk Enterprise SDK for Java.
 
-*  Splunk
+*  Splunk Enterprise
   
-   If you haven't already installed Splunk, download it [here](http://www.splunk.com/download). 
+   If you haven't already installed Splunk Enterprise, download it [here](http://www.splunk.com/download). 
    For more information, see the Splunk Enterprise [_Installation Manual_](https://docs.splunk.com/Documentation/Splunk/latest/Installation).
     
-*  Splunk SDK for Java
+*  Splunk Enterprise SDK for Java
   
    Get the JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven to build projects" below.
    
 *  Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java). For instructions, see [Java Platform Installation](http://www.oracle.com/technetwork/java/javase/index-137561.html) on the Oracle website.
 
-   The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, although this is not recommended.
+   The Splunk Enterprise SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [ssl_protocols](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, although this is not recommended.
 
 *  Ant, from the [Apache website](http://ant.apache.org/bindownload.cgi). For instructions, see [Installing Apache Ant](http://ant.apache.org/manual/install.html). 
 
@@ -45,9 +45,9 @@ If you are using Windows, make sure the following system variables are created a
 
 ### Use Maven to build projects
    
-   You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
+   You can use [Apache Maven](http://maven.apache.org/) to build your Splunk Enterprise SDK for Java projects with a few updates to your project's **pom.xml** file. You can retrieve all necessary dependencies and build your project.
    
-   To add the Splunk SDK for Java JAR file as a dependency:
+   To add the Splunk Enterprise SDK for Java JAR file as a dependency:
    
    1. Add the repository to your project's **pom.xml** file:
 
@@ -62,7 +62,7 @@ If you are using Windows, make sure the following system variables are created a
       </repositories>
       ```
 
-   2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk SDK for Java that you are using:
+   2. Add the dependency to the **pom.xml** file and update the version number to match the version of the Splunk Enterprise SDK for Java that you are using:
 
       ```
       <dependencies>
@@ -102,7 +102,7 @@ To build the documentation for the SDK, enter:
 
 ### Examples and unit tests
 
-The Splunk SDK for Java includes several examples and unit tests to run at the command line.
+The Splunk Enterprise SDK for Java includes several examples and unit tests to run at the command line.
 
 #### Create a .splunkrc convenience file
 
@@ -180,11 +180,11 @@ The ant configuration can produce a single HTML report of all the tests run usin
 
 The report is written in **build/reports/tests/index.html**.
 
-You can also run the units within Java IDEs such as IntelliJ and Eclipse. For example, to open the Splunk SDK for Java project in Eclipse:
+You can also run the units within Java IDEs such as IntelliJ and Eclipse. For example, to open the Splunk Enterprise SDK for Java project in Eclipse:
 
   1. Click **File**, then click **Import**.
   2. Click **General**, click **Existing Projects into Workspace**, then click **Next**.
-  3. In **Select root directory**, type the path to the Splunk SDK for Java root directory (or click **Browse** to locate it), then click **Finish**.
+  3. In **Select root directory**, type the path to the Splunk Enterprise SDK for Java root directory (or click **Browse** to locate it), then click **Finish**.
 
 #### Measure code coverage
 
@@ -228,7 +228,7 @@ To learn about our branching model, see [Branching Model](https://github.com/spl
 |:----------------------- |:----------- |
 | [Splunk Developer Portal](http://dev.splunk.com) | General developer documentation, tools, and examples |
 | [Integrate the Splunk platform using development tools for Java](https://dev.splunk.com/enterprise/docs/devtools/java)| Documentation for Java development |
-| [Splunk SDK for Java Reference](http://docs.splunk.com/Documentation/JavaSDK) | SDK API reference documentation |
+| [Splunk Enterprise SDK for Java Reference](http://docs.splunk.com/Documentation/JavaSDK) | SDK API reference documentation |
 | [REST API Reference Manual](https://docs.splunk.com/Documentation/Splunk/latest/RESTREF/RESTprolog) | Splunk REST API reference documentation |
 | [Splunk>Docs](https://docs.splunk.com/Documentation) | General documentation for the Splunk platform |
 | [GitHub Wiki](https://github.com/splunk/splunk-sdk-java/wiki/) | Documentation for this SDK's repository on GitHub |
@@ -251,7 +251,7 @@ If you would like to contribute to the SDK, see [Contributions to Splunk](https:
 
 ### Support
 
-*  You will be granted support if you or your company are already covered under an existing maintenance/support agreement. Submit a new case in the [Support Portal](https://www.splunk.com/en_us/support-and-services.html) and include "Splunk SDK for Java" in the subject line.
+*  You will be granted support if you or your company are already covered under an existing maintenance/support agreement. Submit a new case in the [Support Portal](https://www.splunk.com/en_us/support-and-services.html) and include "Splunk Enterprise SDK for Java" in the subject line.
    
    If you are not covered under an existing maintenance/support agreement, you can find help through the broader community at [Splunk Answers](https://community.splunk.com/t5/Splunk-Development/ct-p/developer-tools).
 
@@ -267,4 +267,4 @@ You can reach the Splunk Developer Platform team at _devinfo@splunk.com_.
 
 ## License
 
-The Splunk Software Development Kit for Java is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
+The Splunk Enterprise Software Development Kit for Java is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
