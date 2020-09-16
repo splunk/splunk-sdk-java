@@ -251,10 +251,10 @@ If you would like to contribute to the SDK, see [Contributions to Splunk](https:
 
 ### Support
 
- *  You will be granted support if you or your company are already covered under an existing maintenance/support agreement. Submit a new case in the [Support Portal](https://www.splunk.com/en_us/support-and-services.html) and include "Splunk SDK for Java" in the subject line.
+*  You will be granted support if you or your company are already covered under an existing maintenance/support agreement. Submit a new case in the [Support Portal](https://www.splunk.com/en_us/support-and-services.html) and include "Splunk SDK for Java" in the subject line.
    
    If you are not covered under an existing maintenance/support agreement, you can find help through the broader community at [Splunk Answers](https://community.splunk.com/t5/Splunk-Development/ct-p/developer-tools).
-   
+
 *  Splunk will NOT provide support for SDKs if the core library (the code in the <b>/splunk</b> directory) has been modified. If you modify an SDK and want support, you can find help through the broader community and [Splunk Answers](https://community.splunk.com/t5/Splunk-Development/ct-p/developer-tools). 
    
    We would also like to know why you modified the core library, so please send feedback to _devinfo@splunk.com_.
