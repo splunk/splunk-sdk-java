@@ -1,6 +1,6 @@
-# Modular input launchers for the Splunk SDK for Java
+# Modular input launchers for the Splunk Enterprise SDK for Java
 
-Splunk cannot launch Java programs as modular inputs directly. Instead, we need to provide a few small programs to launch a JVM and run a program. Since modular inputs written in Java need to work across all Splunk variants, including the universal forwarder, the launchers cannot rely on Python or anything else in the underlying system. Instead, we provide a set of C programs compiled for each of Linux, MacOS X, and Windows.
+Splunk Enterprise cannot launch Java programs as modular inputs directly. Instead, we need to provide a few small programs to launch a JVM and run a program. Since modular inputs written in Java need to work across all Splunk variants, including the universal forwarder, the launchers cannot rely on Python or anything else in the underlying system. Instead, we provide a set of C programs compiled for each of Linux, MacOS X, and Windows.
 
 The programs assume the following layout in an app: a jars/ directory containing a launchable jar containing the modular input, and a configuration file with a .ini suffix of the same base name that contains options for what JVM to launch and what options to pass to it. Then platform specific bin directories contain the launcher programs, named the base name of the target jar. For for a jar named myinput.jar, the layout would be
 
