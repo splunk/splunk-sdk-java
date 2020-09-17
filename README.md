@@ -25,12 +25,14 @@ Here's what you need to get going with the Splunk Enterprise SDK for Java.
   
    If you haven't already installed Splunk Enterprise, download it [here](http://www.splunk.com/download). 
    For more information, see the Splunk Enterprise [_Installation Manual_](https://docs.splunk.com/Documentation/Splunk/latest/Installation).
-
-    The Splunk Enterprise SDK for Java was tested with Splunk Enterprise 6.6 and 7.0.
+   
+   The Splunk Enterprise SDK for Java was tested with Splunk Enterprise 6.6 and 7.0.
         
 *  Splunk Enterprise SDK for Java
   
    Get the JAR from the [Splunk Developer Portal](https://dev.splunk.com/enterprise/downloads/) or clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java) if you want to contribute to the SDK. To use Maven, see "Use Maven to build projects" below.
+
+   The Splunk Enterprise SDK for Java was tested with OpenJDK 7 and Oracle JDK 8.
    
 *  Java version 6 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java). For instructions, see [Java Platform Installation](http://www.oracle.com/technetwork/java/javase/index-137561.html) on the Oracle website.
 
