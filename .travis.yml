@@ -27,8 +27,8 @@ before_install:
 language: java
 
 env:
-  - SPLUNK_VERSION=7.3
   - SPLUNK_VERSION=8.0
+  - SPLUNK_VERSION=8.1
 
 addons:
   apt:
@@ -36,7 +36,7 @@ addons:
       - ant-optional
 
 jdk:
-  - openjdk8
+  - openjdk9
 
 before_script:
     - ant
