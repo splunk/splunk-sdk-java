@@ -17,11 +17,9 @@
 package com.splunk;
 
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.*;
+import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +34,7 @@ import java.util.Map.Entry;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.SSLv3;
+    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.TLSv1_2;
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
@@ -527,6 +525,11 @@ public class HttpService {
                 }
         };
         try {
+            String keyPassphrase = "keystore";
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            keyStore.load(new FileInputStream("/Users/mayank.hooda/Documents/ArgusMonitoring/orchestra/orchestra-test/keys-copy/keystore.jks"), keyPassphrase.toCharArray());
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, keyPassphrase.toCharArray());
             SSLContext context;
             switch (HttpService.sslSecurityProtocol) {
                 case TLSv1_2:
@@ -538,7 +541,7 @@ public class HttpService {
                     context = SSLContext.getInstance("SSL");
             }
 
-            context.init(null, trustAll, new java.security.SecureRandom());
+            context.init(keyManagerFactory.getKeyManagers(), trustAll, new java.security.SecureRandom());
             return new SplunkHttpsSocketFactory(context.getSocketFactory(), HttpService.sslSecurityProtocol);
         } catch (Exception e) {
             throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
