@@ -95,6 +95,8 @@ public class Command {
         rules.addOption(null, "owner", true, "Owner/user context");
         // This is here only for compatibility with the JavaScript SDK's .splunkrc.
         rules.addOption(null, "version", true, "Version (irrelevant for Java)");
+        rules.addOption(null, "caDir", true, "Path for CA Directory");
+        rules.addOption(null, "certDir", true, "Path for Cert Directory");
         return this;
     }
 

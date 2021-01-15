@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact name="splunk:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/splunk_jar</output-path>
+    <root id="root">
+      <element id="archive" name="splunk.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/splunk/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="splunk" />
+      </element>
+      <element id="library" level="project" name="dynamic-keystore-impl-2.1.0" />
+      <element id="library" level="project" name="opencsv" />
+      <element id="library" level="project" name="dynamic-keystore-api-2.1.0" />
+      <element id="library" level="project" name="openide" />
+      <element id="library" level="project" name="gson" />
+    </root>
+  </artifact>
+</component>

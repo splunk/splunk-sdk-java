@@ -22,24 +22,39 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import com.salesforce.sds.keystore.DynamicKeyStoreBuilder;
+import com.salesforce.sds.keystore.DynamicKeyStore;
+import com.salesforce.sds.keystore.DynamicKeyStoreProvider;
+import com.salesforce.sds.pki.utils.BouncyIntegration;
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
  * address ({@code host:port}), accessed using a given protocol scheme
  * ({@code http} or {@code https}).
  */
 public class HttpService {
+    static {
+        BouncyIntegration.initWithoutFips();
+        if (Security.getProvider("PKI-KS") == null) {
+            Security.addProvider(new DynamicKeyStoreProvider());
+        }
+    }
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.SSLv3;
-    private static SSLSocketFactory sslSocketFactory = createSSLFactory();
+    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.TLSv1_2;
+    private static SSLSocketFactory sslSocketFactory = null;
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
+
+    //MTLS Support
+    protected String caDir;
+    protected String certDir;
+    private DynamicKeyStore dynamicKeyStore = null;
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
@@ -407,6 +422,7 @@ public class HttpService {
             throw new RuntimeException(e.getMessage(), e);
         }
         if (cn instanceof HttpsURLConnection) {
+            if(sslSocketFactory == null) sslSocketFactory = createSSLFactory(caDir, certDir);
             ((HttpsURLConnection) cn).setSSLSocketFactory(sslSocketFactory);
             ((HttpsURLConnection) cn).setHostnameVerifier(HOSTNAME_VERIFIER);
         }
@@ -545,6 +561,21 @@ public class HttpService {
         }
     }
 
+    public SSLSocketFactory createSSLFactory(String caDir, String certDir){
+        if(caDir==null || certDir==null) throw new IllegalArgumentException("CADir or CertDir missing!");
+        try {
+            if(dynamicKeyStore == null) {
+                dynamicKeyStore = (new DynamicKeyStoreBuilder()).withMonitoredDirectory(certDir).withCADirectory(caDir).withStartThread(true).build();
+                sslSocketFactory = dynamicKeyStore.getSSLContext().getSocketFactory();
+            }
+            return sslSocketFactory;
+
+        }catch(Exception e){
+            throw new RuntimeException("Error in setting up SSL socket factory: "+e, e);
+        }
+
+    }
+
     private static final class SplunkHttpsSocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
         private SSLSecurityProtocol sslSecurityProtocol;
@@ -606,6 +637,8 @@ public class HttpService {
             return configure(delegate.createSocket(inetAddress, i, inetAddress1, i1));
         }
     }
+
+
 
 }
 

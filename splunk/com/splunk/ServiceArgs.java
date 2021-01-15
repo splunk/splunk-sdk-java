@@ -164,4 +164,16 @@ public class ServiceArgs extends Args {
     public void setCookie(String cookie) {
         this.put("cookie", cookie);
     }
+
+    /**
+     *
+     * @param caDir Directory path which stores CA chain
+     */
+    public void setCaDir(String caDir){ this.put("caDir", caDir); }
+
+    /**
+     *
+     * @param certDir Directory path which stores certificates
+     */
+    public void setCertDir(String certDir) { this.put("certDir", certDir);}
 }
