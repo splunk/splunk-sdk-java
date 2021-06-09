@@ -1,0 +1,19 @@
+    
+[
+	{
+		"_cd": "184:21387",
+		"_indextime": "1353099184",
+		"_raw": "2012-11-16 12:53:04.502 -0800 Interrupt signal received",
+		"_serial": "0",
+		"_si": "dfoster-mbp17.local\n_internal",
+		"_sourcetype": "splunkd_stderr",
+		"_subsecond": ".502",
+		"_time": "2012-11-16T12:53:04.502-08:00",
+		"host": "dfoster-mbp17.local",
+		"index": "_internal",
+		"linecount": "1",
+		"source": "/Applications/splunk_434/var/log/splunk/splunkd_stderr.log",
+		"sourcetype": "splunkd_stderr",
+		"splunk_server": "dfoster-mbp17.local"
+	}
+]
