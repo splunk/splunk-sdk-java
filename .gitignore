@@ -8,6 +8,7 @@
 build
 dist
 out
+target/
 
 # Test & Coverage
 TEST-com.splunk.*.xml
@@ -15,6 +16,7 @@ TEST-com.splunk.*.xml
 # IntelliJ
 .idea/workspace.xml
 .idea/misc.xml
+.idea/
 
 # Unknown
 *.swp

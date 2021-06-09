@@ -24,12 +24,13 @@ init:
 .PHONY: test
 test:
 	@echo "$(ATTN_COLOR)==> test $(NO_COLOR)"
-	@ant test
+#	@ant test
+	@mvn test
 
 .PHONY: test_specific
 test_specific:
 	@echo "$(ATTN_COLOR)==> test_specific $(NO_COLOR)"
-	@sh ./scripts/test_specific.sh
+	@sh ./scripts/test_specific_mvn.sh
 
 .PHONY: up
 up:
