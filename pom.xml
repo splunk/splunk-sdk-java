@@ -49,6 +49,17 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <altDeploymentRepository>
+<!--                        local::file:./target/local-deploy-->
+                        localRepository::default::file:./target/local-deploy
+                    </altDeploymentRepository>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -59,13 +70,13 @@
             <url>https://splunk.jfrog.io/splunk/ext-releases-local</url>
         </repository>
     </repositories>
-    <distributionManagement>
+   <!-- <distributionManagement>
         <repository>
             <id>splunk-artifactory</id>
             <name>Splunk Releases</name>
             <url>https://splunk.jfrog.io/splunk/ext-releases-local</url>
         </repository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <licenses>
         <license>
