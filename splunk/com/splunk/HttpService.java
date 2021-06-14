@@ -535,8 +535,8 @@ public class HttpService {
         };
         try {
             String contextStr = "";
-            if(HttpService.sslSecurityProtocol != null){
-                contextStr = HttpService.sslSecurityProtocol.toString().contains("SSL")?"SSL":"TLS";
+            if(sslSecurityProtocol != null){
+                contextStr = sslSecurityProtocol.toString().contains("SSL")?"SSL":"TLSv1.2";
             }else if(useTLS||System.getProperty("java.version").compareTo("1.8")>=0){
                 contextStr = "TLSv1.2";
             }else{
