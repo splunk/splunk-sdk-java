@@ -24,7 +24,8 @@ init:
 .PHONY: test
 test:
 	@echo "$(ATTN_COLOR)==> test $(NO_COLOR)"
-	@ant test
+#	@ant test
+	@mvn test
 
 .PHONY: test_specific
 test_specific:

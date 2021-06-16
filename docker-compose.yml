@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
     splunk:
-        image: "splunk/splunk:${SPLUNK_VERSION}"
+        image: "splunk/splunk:8.0"
         container_name: splunk
         environment:
             - SPLUNK_START_ARGS=--accept-license
@@ -13,6 +13,8 @@ services:
             - 8000:8000
             - 8088:8088
             - 8089:8089
+            - 10667:10667
+            - 10668:10668/udp
         healthcheck:
             test: ['CMD', 'curl', '-f', 'http://localhost:8000']
             interval: 5s
