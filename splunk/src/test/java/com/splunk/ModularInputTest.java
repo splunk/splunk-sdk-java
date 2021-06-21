@@ -20,7 +20,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ModularInputTest extends InputTest {
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testModularInputKinds() {
         if (service.versionCompare("5.0") < 0 || !hasTestData()) {
             return;
@@ -40,8 +41,9 @@ public class ModularInputTest extends InputTest {
         }
         Assert.assertTrue(hasTest2);
     }
-    
-    @Test
+
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testListModularInputs() {
         if (service.versionCompare("5.0") < 0 || !hasTestData()) {
             return;

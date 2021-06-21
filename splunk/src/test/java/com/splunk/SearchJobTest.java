@@ -655,7 +655,8 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testEnablePreview() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -707,7 +708,8 @@ public class SearchJobTest extends SDKTestCase {
         waitForSleepingJobToDie(job);
     }
 
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testDisablePreview() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -778,8 +780,9 @@ public class SearchJobTest extends SDKTestCase {
             Thread.sleep(500);
         } catch (InterruptedException e) {}
     }
-    
-    @Test
+
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testSetPriority() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -829,7 +832,8 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testPause() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -862,7 +866,8 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testUnpause() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -895,7 +900,8 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testFinalize() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -925,7 +931,8 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testDone() throws InterruptedException {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
