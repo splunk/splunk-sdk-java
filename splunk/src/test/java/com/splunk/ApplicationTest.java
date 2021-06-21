@@ -79,7 +79,8 @@ public class ApplicationTest extends SDKTestCase {
         Assert.assertTrue(setupXml.contains("stub"));
     }
 
-    @Test
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testForSetupPresent() throws Exception {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -88,18 +89,18 @@ public class ApplicationTest extends SDKTestCase {
         installApplicationFromTestData("has_setup_xml");
         Assert.assertTrue(service.getApplications().containsKey("has_setup_xml"));
         Application applicationWithSetupXml = service.getApplications().get("has_setup_xml");
-        
+
         ApplicationSetup applicationSetup = applicationWithSetupXml.setup();
         Assert.assertEquals("has_setup_xml", applicationSetup.getName());
         Assert.assertFalse(applicationSetup.getRefresh());
-        
+
         String setupXml = applicationSetup.getSetupXml();
         Document parsedSetupXml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
             new ByteArrayInputStream(setupXml.getBytes("UTF-8")));
         parsedSetupXml.getDocumentElement().normalize();
-        
+
         Assert.assertEquals(parsedSetupXml.getDocumentElement().getNodeName(), "SetupInfo");
-        
+
         NodeList blocks = parsedSetupXml.getDocumentElement().getElementsByTagName("block");
         Assert.assertEquals(1, blocks.getLength());
         Node block = blocks.item(0);

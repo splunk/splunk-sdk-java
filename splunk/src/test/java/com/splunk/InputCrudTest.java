@@ -241,8 +241,9 @@ public class InputCrudTest extends InputTest {
             }
         });
     }
-    
-    @Test
+
+//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
+//    @Test
     public void testScriptInputCrud() {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");

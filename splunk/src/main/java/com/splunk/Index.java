@@ -358,10 +358,10 @@ public class Index extends Entity {
     /**
      * Returns the maximum number of hot buckets that can exist for this index.
      *
-     * @return The maximum number of hot buckets.
+     * @return The maximum number of hot buckets or "auto" (which means 3).
      */
-    public int getMaxHotBuckets() {
-        return getInteger("maxHotBuckets");
+    public String getMaxHotBuckets() {
+        return getString("maxHotBuckets");
     }
 
     /**
@@ -828,9 +828,9 @@ public class Index extends Entity {
      * @see #setMaxHotIdleSecs
      * @see #getMaxHotIdleSecs
      *
-     * @param size The maximum number of hot buckets per index.
+     * @param size The maximum number of hot buckets per index, or an 'auto' string.
      */
-    public void setMaxHotBuckets(int size) {
+    public void setMaxHotBuckets(String size) {
         setCacheValue("maxHotBuckets", size);
     }
 
