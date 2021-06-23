@@ -149,6 +149,7 @@ public abstract class Script {
      * The default implementation always passes.
      *
      * @param definition The parameters for the proposed input passed by splunkd.
+     * @throws Exception The exception instance
      */
     public void validateInput(ValidationDefinition definition) throws Exception {}
 
@@ -156,7 +157,11 @@ public abstract class Script {
      * Streams events into Splunk. It should do all of its output via
      * {@code EventWriter} rather than assuming that there is a console attached.
      *
+     * @param inputs InputDefinition instance
      * @param ew An object with methods to write events and log messages to Splunk.
+     * @throws MalformedDataException The MalformedDataException instance
+     * @throws XMLStreamException The XMLStreamException instance
+     * @throws IOException The IOException instance
      */
     public abstract void streamEvents(InputDefinition inputs, EventWriter ew)
             throws MalformedDataException, XMLStreamException, IOException;

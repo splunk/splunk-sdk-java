@@ -53,7 +53,7 @@ public class ResultsReaderXml
      * data, and only extracts finalized data.
      *
      * @param inputStream The XML stream to parse.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public ResultsReaderXml(InputStream inputStream) throws IOException {
         this(inputStream, false);

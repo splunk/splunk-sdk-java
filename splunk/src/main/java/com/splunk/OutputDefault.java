@@ -193,18 +193,18 @@ public class OutputDefault extends Entity {
     /**
      * Sets how long to wait before throwing out all new events until the output
      * queue has space. The default value is -1, which means to not drop events.
-     * <p><blockquote>
+     * <blockquote>
      * <b>Caution:</b> Do not set this value to a positive integer if you are
      * monitoring files.
      * </blockquote><p>
      * Setting this to -1 or 0 causes the output queue to block when it gets
      * full, which causes further blocking up the processing chain. If any
      * target group's queue is blocked, no more data reaches any other target
-     * group.
+     * group.</p>
      * <p>
      * Using auto load-balancing is the best way to minimize this condition,
      * because, in that case, multiple receivers must be down or jammed before 
-     * queue blocking can occur.
+     * queue blocking can occur.</p>
      * @see #getAutoLB
      *
      * @param dropEventsOnQueueFull The time to wait before throwing out events,

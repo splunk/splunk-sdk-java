@@ -40,7 +40,7 @@ public class Index extends Entity {
      * Creates a writable socket to this index.
      *
      * @return The writable socket.
-     * @throws IOException
+     * @throws IOException Throws exception if fails to write socket.
      */
     public Socket attach() throws IOException {
         Receiver receiver = service.getReceiver();
@@ -48,19 +48,20 @@ public class Index extends Entity {
     }
 
     /**
-     * Writes events to this index, reusing the connection. 
-     * This method passes an output stream connected to the index to the 
-     * {@code run} method of the {@code ReceiverBehavior} object, then handles 
+     * Writes events to this index, reusing the connection.
+     * This method passes an output stream connected to the index to the
+     * {@code run} method of the {@code ReceiverBehavior} object, then handles
      * setting up and tearing down the socket.
      * <p>
-     * For an example of how to use this method, see 
-     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" target="_blank">How to 
-     * get data into Splunk</a> on 
-     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
+     * For an example of how to use this method, see
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" target="_blank">How to
+     * get data into Splunk</a> on
+     * <a href="http://dev.splunk.com/view/SP-CAAAEJ2"
      * target="_blank">dev.splunk.com</a>.
-     * 
-     * @param behavior The body of a {@code try} block as an anonymous 
+     *
+     * @param behavior The body of a {@code try} block as an anonymous
      * implementation of the {@code ReceiverBehavior} interface.
+     * @throws IOException The IOException class
      */
     public void attachWith(ReceiverBehavior behavior) throws IOException {
         Socket socket = null;
@@ -82,7 +83,7 @@ public class Index extends Entity {
      * @param args Optional arguments for this stream. Valid parameters are: 
      * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
-     * @throws IOException
+     * @throws IOException The IOException class
      */
     public Socket attach(Args args) throws IOException {
         Receiver receiver = service.getReceiver();
@@ -327,6 +328,7 @@ public class Index extends Entity {
      * is older than this, Splunk does not create or rebuild its bloomfilter.  
      * The valid format is <i>number</i> followed by a time unit ("s", "m", "h",
      * or "d"). For example, "30d" for 30 days.
+     * @return String value
      */
     public String getMaxBloomBackfillBucketAge() {
         return getString("maxBloomBackfillBucketAge", null);
@@ -441,6 +443,7 @@ public class Index extends Entity {
      * If there are any acknowledged events sharing this raw slice, the 
      * {@code MaxTimeUnreplicatedWithAcksparamater} applies instead.
      * @see #getMaxTimeUnreplicatedWithAcks
+     * @return int value
      */
     public int getMaxTimeUnreplicatedNoAcks() {
         return getInteger("maxTimeUnreplicatedNoAcks");
@@ -451,6 +454,7 @@ public class Index extends Entity {
      * unacknowledged in a raw slice. This value only applies when indexer 
      * acknowledgement is enabled on forwarders and replication is enabled with 
      * clustering.
+     * @return int value
      */
     public int getMaxTimeUnreplicatedWithAcks() {
         return getInteger("maxTimeUnreplicatedWithAcks");
@@ -720,8 +724,7 @@ public class Index extends Entity {
     /**
      * Sets the destination path for the frozen archive, where Splunk
      * automatically puts frozen buckets. The bucket freezing policy is as
-     *follows:
-     * <p>
+     * follows:
      * <ul><li><b>New-style buckets (4.2 and later):</b> All files are removed
      * except the raw data. To thaw frozen buckets, run {@code Splunk rebuild
      * <bucket dir>} on the bucket, then move the buckets to the thawed

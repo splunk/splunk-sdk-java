@@ -257,6 +257,7 @@ public class UdpInput extends PortInput {
      * Send a string to this UDP input.
      *
      * @param eventBody The text to send.
+     * @throws IOException The IOException instance
      */
     public void submit(String eventBody) throws IOException {
         DatagramSocket socket = new DatagramSocket();

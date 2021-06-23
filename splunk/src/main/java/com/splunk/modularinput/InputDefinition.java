@@ -68,6 +68,7 @@ public class InputDefinition {
 
     /**
      * Sets the name of the server on which this modular input is being run.
+     * @param serverHost String value
      */
     public void setServerHost(String serverHost) {
         this.metadata.put(serverHostField, serverHost);

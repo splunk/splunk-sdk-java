@@ -39,6 +39,7 @@ public class Input extends Entity {
      * Returns an {@code InputKind} representing this input's type.
      *
      * The input kind is inferred from the input's path.
+     * @return InputKind instance
      */
     public InputKind getKind() {
         String[] pathComponents = 

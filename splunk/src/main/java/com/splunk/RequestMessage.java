@@ -32,7 +32,11 @@ public class RequestMessage {
     /** Creates a new {@code RequestMessage} instance. */
     public RequestMessage() {}
 
-    /** Creates a new {@code RequestMessage} instance with a given method */
+    /**
+     * Creates a new {@code RequestMessage} instance with a given method
+     *
+     * @param method String value
+     */
     public RequestMessage(String method) {
         this.method = method;
     }

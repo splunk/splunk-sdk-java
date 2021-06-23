@@ -206,6 +206,7 @@ public class HttpService {
 
     /**
      * Sets the SSL security protocol of this service.
+     * @param securityProtocol The SSLSecurityProtocal instance
      */
     public static void setSslSecurityProtocol(SSLSecurityProtocol securityProtocol) {
         // Only update the SSL_SOCKET_FACTORY if changing protocols

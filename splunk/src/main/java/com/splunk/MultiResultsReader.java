@@ -44,7 +44,7 @@ public class MultiResultsReader<T extends ResultsReader>
 
     /**
      * Closes the reader and releases resources.
-     * @throws IOException
+     * @throws IOException If reader is not closed.
      */
     public final void close() throws IOException {
         resultsReader.close();

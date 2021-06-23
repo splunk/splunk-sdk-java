@@ -49,6 +49,7 @@ public class PivotSpecification {
      * namespace for acceleration.
      *
      * @param namespace a string specifying a namespace.
+     * @return PivotSpecification instance
      */
     public PivotSpecification setAccelerationNamespace(String namespace) {
         this.accelerationNamespace = namespace;
@@ -60,6 +61,7 @@ public class PivotSpecification {
      * DataModelObject instance, as the acceleration cache for this pivot.
      *
      * @param sid the SID of a job.
+     * @return PivotSpecification instance
      */
     public PivotSpecification setAccelerationJob(String sid) {
         if (sid == null) {
@@ -75,6 +77,7 @@ public class PivotSpecification {
      * DataModelObject instance, as the acceleration cache for this pivot.
      *
      * @param job a Job object.
+     * @return PivotSpecification instance
      */
     public PivotSpecification setAccelerationJob(Job job) {
         setAccelerationJob(job.getSid());
@@ -282,6 +285,8 @@ public class PivotSpecification {
     /**
      * Add a row split on a boolean valued field.
      *
+     * @param field String value
+     * @param label String value
      * @param trueDisplayValue the string to display in the true valued row label.
      * @param falseDisplayValue the string to display in the false valued row label;
      * @return The PivotSpecification you are modifying.

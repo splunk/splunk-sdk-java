@@ -43,7 +43,7 @@ public class ResultsReaderCsv extends ResultsReader {
      * a different type of stream, unpredictable results may occur. 
      *
      * @param inputStream The CSV stream to parse.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public ResultsReaderCsv(InputStream inputStream) throws IOException {
         super(inputStream, false);

@@ -91,6 +91,7 @@ public class EventType extends Entity {
      * take effect immediately. 
      * @see Entity#disable
      * @see Entity#enable
+     * @param disabled The boolean flag
      */
     public void setDisabled(boolean disabled) {
         setCacheValue("disabled", disabled);

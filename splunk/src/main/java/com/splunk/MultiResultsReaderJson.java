@@ -34,7 +34,7 @@ public class MultiResultsReaderJson
      * may occur if you try to parse a stream with a different format.
      *
      * @param inputStream The JSON stream to parse.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public MultiResultsReaderJson(InputStream inputStream) throws IOException {
         super(new ResultsReaderJson(inputStream, true));

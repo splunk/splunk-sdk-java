@@ -115,6 +115,7 @@ public class Service extends BaseService {
      * @param port The port number of the service.
      * @param scheme Scheme for accessing the service ({@code http} or
      * {@code https}).
+     * @param httpsHandler The URLStreamHandler instance
      */
     public Service(String host, int port, String scheme,
         URLStreamHandler httpsHandler) {
@@ -373,6 +374,7 @@ public class Service extends BaseService {
 
     /**
      * Returns the collection of data models.
+     * @return DataModelCollection instance
      */
     public DataModelCollection getDataModels() {
         return new DataModelCollection(this);
@@ -1211,7 +1213,7 @@ public class Service extends BaseService {
      * @param port The port to open. This port must already have been
      * created as an allowable TCP input to the service.
      * @return The socket.
-     * @throws java.io.IOException
+     * @throws java.io.IOException The IOException instance
      */
     public Socket open(int port) throws IOException {
         return new Socket(this.host, port);
