@@ -54,6 +54,7 @@ public class LimitPivotFilter extends PivotFilter {
 
     /**
      * Return the name of the field to use for sorting.
+     * @return String value
      */
     public String getAttributeName() {
         return this.sortAttribute;

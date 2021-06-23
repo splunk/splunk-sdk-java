@@ -39,6 +39,8 @@ public class TcpInput extends PortInput {
 
     /**
      * Returns a socket attached to this raw TCP input.
+     * @return Socket instance
+     * @throws IOException The IOException instance
      */
     public Socket attach() throws IOException {
         return new Socket(this.service.getHost(), this.getPort());
@@ -54,7 +56,9 @@ public class TcpInput extends PortInput {
      * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" target="_blank">How to 
      * get data into Splunk</a> on 
      * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
-     * target="_blank">dev.splunk.com</a>. 
+     * target="_blank">dev.splunk.com</a>.
+     * @param behavior The ReceiverBehavior instance
+     * @throws IOException The IOException instance
      */
     public void attachWith(ReceiverBehavior behavior) throws IOException {
         Socket socket = null;
@@ -249,6 +253,7 @@ public class TcpInput extends PortInput {
      * @see #attachWith
      *
      * @param eventBody A string that contains the event.
+     * @throws IOException The IOException instance
      */
     public void submit(String eventBody) throws IOException {
         Socket socket = null;

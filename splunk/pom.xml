@@ -14,7 +14,7 @@
     <properties>
         <!-- <jvm.arg.https.protocol>-Dhttps.protocols=TLSv1.1,TLSv1.2</jvm.arg.https.protocol> -->
         <https.protocols>TLSv1.2</https.protocols>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
+<!--        <maven.javadoc.skip>true</maven.javadoc.skip>-->
     </properties>
     <dependencies>
         <dependency>

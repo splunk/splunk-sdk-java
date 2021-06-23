@@ -98,7 +98,7 @@ public class LicensePool extends Entity {
 
     /**
      * Returns the stack ID for this license pool. Valid values are:
-     * <p><ul>
+     * <ul>
      * <li>"download-trial"</li>
      * <li>"enterprise"</li>
      * <li>"forwarder"</li>

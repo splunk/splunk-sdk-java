@@ -58,6 +58,7 @@ public class SavedSearch extends Entity {
      * Runs the saved search.
      *
      * @return The search job.
+     * @throws InterruptedException The InterruptedException instance
      */
     public Job dispatch() throws InterruptedException {
         return dispatch(null);
@@ -76,6 +77,7 @@ public class SavedSearch extends Entity {
      * <li>"force_dispatch": A Boolean that indicates whether to start a new 
      * search if another instance of this search is already running.</li></ul>
      * @return The search job.
+     * @throws InterruptedException The InterruptedException instance
      */
     public Job dispatch(Map args) throws InterruptedException {
         ResponseMessage response = service.post(actionPath("dispatch"), args);
@@ -97,6 +99,7 @@ public class SavedSearch extends Entity {
      *
      * @param args Dispatch arguments (see {@link SavedSearchDispatchArgs}).
      * @return The search job.
+     * @throws InterruptedException The InterruptedException instance
      */
     // NOTE: This overload exists primarily to provide better documentation
     //       for the "args" parameter.

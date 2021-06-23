@@ -64,7 +64,7 @@ public class InputCollection extends EntityCollection<Input> {
      * <li> The stanza (for Windows Registry inputs)</li>
      * <li> The name of the configuration (for Windows AD inputs)</li></ul>
      * @return No return value.
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The UnsupportedOperationException instance
      */
     @Override public Input create(String name) {
         throw new UnsupportedOperationException();
@@ -88,7 +88,7 @@ public class InputCollection extends EntityCollection<Input> {
      * <a href="http://dev.splunk.com/view/SP-CAAAEJ2" 
      * target="_blank">dev.splunk.com</a>.
      * @return No return value.
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException The UnsupportedOperationException instance
      */
     @Override public Input create(String name, Map args) {
         throw new UnsupportedOperationException();
