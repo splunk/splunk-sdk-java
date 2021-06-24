@@ -18,6 +18,7 @@ package com.splunk;
 
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -242,8 +243,8 @@ public class InputCrudTest extends InputTest {
         });
     }
 
-//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
-//    @Test
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
+    @Test
     public void testScriptInputCrud() {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
