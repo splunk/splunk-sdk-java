@@ -16,10 +16,7 @@
 
 package com.splunk;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -79,8 +76,8 @@ public class ApplicationTest extends SDKTestCase {
         Assert.assertTrue(setupXml.contains("stub"));
     }
 
-//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
-//    @Test
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
+    @Test
     public void testForSetupPresent() throws Exception {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");

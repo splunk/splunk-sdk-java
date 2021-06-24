@@ -688,8 +688,8 @@ public class IndexTest extends SDKTestCase {
         });
     }
 
-//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
-//    @Test
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
+    @Test
     public void testUploadArgs() throws Exception {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -732,8 +732,8 @@ public class IndexTest extends SDKTestCase {
         });
     }
 
-//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
-//    @Test
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
+    @Test
     public void testUploadArgsFailure() throws Exception{
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
@@ -764,8 +764,8 @@ public class IndexTest extends SDKTestCase {
 
     }
 
-//    apps/appinstall endpoint is removed in version 8.1.0 so disabled it
-//    @Test
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
+    @Test
     public void testUpload() throws Exception {
         if (!hasTestData()) {
             System.out.println("WARNING: sdk-app-collection not installed in Splunk; skipping test.");
