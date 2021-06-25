@@ -166,8 +166,13 @@ public class InputCrudTest extends InputTest {
     
     @Test
     public void testMonitorInputCrud() {
-        final String filename = locateSystemLog();
-        
+        final String filename;
+        if (System.getenv("SPLUNK_HOME") != null) {
+            filename = System.getenv("SPLUNK_HOME") + "/copyright.txt";
+        } else {
+            filename = locateSystemLog();
+        }
+
         // Create variants
         try {
             inputs.create(filename);
