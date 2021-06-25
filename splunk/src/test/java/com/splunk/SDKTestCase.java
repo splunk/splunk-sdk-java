@@ -375,7 +375,7 @@ public abstract class SDKTestCase {
         if (osName.equals("Windows"))
             filename = "C:\\Windows\\WindowsUpdate.log";
         else if (osName.equals("Linux")) {
-            filename = "/etc/fstab";
+            filename = "/etc/hosts";
         }
         else if (osName.equals("Darwin")) {
             filename = "/var/log/system.log";
