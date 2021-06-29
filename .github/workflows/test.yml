@@ -48,9 +48,8 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-          ${{ runner.os }}-maven-
-      - name: Maven Test
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Test using maven
         run: mvn test --file pom.xml
         env:
           SPLUNK_PASSWORD: changed!
