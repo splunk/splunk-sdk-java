@@ -59,4 +59,6 @@ jobs:
       - name: Test using maven
         run: make test
         env:
-          SPLUNK_HOME: /opt/splunk
+          SPLUNK_HOME: "/opt/splunk"
+          TEST_TCP_PORT: 10667
+          TEST_UDP_PORT: 10668
