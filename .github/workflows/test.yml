@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java SDK Test
 
 on:
   [push, pull_request]
@@ -7,13 +7,14 @@ jobs:
   test:
     strategy:
       matrix:
+        os:
+          - ubuntu-latest
         java-version:
           - 1.8
         splunk-version:
           - "8.0"
           - "latest"
-    runs-on: ubuntu-latest
-    container: maven:3-jdk-8
+    runs-on: ${{ matrix.os }}
 
     services:
       splunk:
@@ -25,11 +26,11 @@ jobs:
           TEST_UDP_PORT: 10668
           SPLUNK_HOME: "/opt/splunk"
         ports:
-          - 8000
-          - 8089
-          - 8088
-          - 10667
-          - 10668/udp
+          - 8000:8000
+          - 8089:8089
+          - 8088:8088
+          - 10667:10667
+          - 10668:10668/udp
 
     steps:
       - uses: actions/checkout@v2
@@ -37,18 +38,25 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: SplunkRC file
-        run: echo host=localhost >> $HOME/.splunkrc
-          echo username=admin >> $HOME/.splunkrc
-          echo password=changed! >> $HOME/.splunkrc
+
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
+
+      - name: Create .splunkrc file
+        run: |
+          cd ~
+          echo host=localhost >> .splunkrc
+          echo port=8089 >> .splunkrc
+          echo username=admin >> .splunkrc
+          echo password=changed! >> .splunkrc
+          echo scheme=https >> .splunkrc
+          echo version=${{ matrix.splunk }} >> .splunkrc
+
       - name: Test using maven
-        run: mvn test --file pom.xml
+        run: make test
         env:
-          SPLUNK_PASSWORD: changed!
-          SPLUNK_HOST: splunk
+          SPLUNK_HOME: /opt/splunk
