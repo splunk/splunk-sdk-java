@@ -42,7 +42,7 @@ jobs:
           echo username=admin >> $HOME/.splunkrc
           echo password=changed! >> $HOME/.splunkrc
       - name: Spin-up Docker instance
-        run: docker-compose -f "docker-compose.yml" up
+        run: docker-compose -f "../../docker-compose.yml" up
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
