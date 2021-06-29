@@ -1,0 +1,57 @@
+name: Java CI with Maven
+
+on:
+  [push, pull_request]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        java-version:
+          - 1.8
+        splunk-version:
+          - "8.0"
+          - "latest"
+    runs-on: ubuntu-latest
+    container: maven:3-jdk-8
+
+    services:
+      splunk:
+        image: splunk/splunk:${{matrix.splunk-version}}
+        env:
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_PASSWORD: changed!
+          TEST_TCP_PORT: 10667
+          TEST_UDP_PORT: 10668
+          SPLUNK_HOME: "/opt/splunk"
+        ports:
+          - 8000
+          - 8089
+          - 8088
+          - 10667
+          - 10668/udp
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: SplunkRC file
+        run: echo host=localhost >> $HOME/.splunkrc
+          echo username=admin >> $HOME/.splunkrc
+          echo password=changed! >> $HOME/.splunkrc
+      - name: Spin-up Docker instance
+        run: docker-compose -f "docker-compose.yml" up
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+          ${{ runner.os }}-maven-
+      - name: Maven Test
+        run: mvn test --file pom.xml
+        env:
+          SPLUNK_PASSWORD: changed!
+          SPLUNK_HOST: splunk
