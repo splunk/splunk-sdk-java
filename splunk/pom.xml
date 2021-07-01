@@ -12,9 +12,7 @@
         <version>1.0.0</version>
     </parent>
     <properties>
-        <!-- <jvm.arg.https.protocol>-Dhttps.protocols=TLSv1.1,TLSv1.2</jvm.arg.https.protocol> -->
         <https.protocols>TLSv1.2</https.protocols>
-<!--        <maven.javadoc.skip>true</maven.javadoc.skip>-->
     </properties>
     <dependencies>
         <dependency>
@@ -65,7 +63,6 @@
                 <configuration>
                     <skipTests>${skipTests}</skipTests>
                     <runOrder>alphabetical</runOrder>
-                    <!-- <argLine>${jvm.arg.https.protocol}</argLine> -->
                     <systemProperties>
                         <https.protocols>${https.protocols}</https.protocols>
                     </systemProperties>
@@ -97,6 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
                 <configuration>
                     <skip>false</skip>
                 </configuration>
