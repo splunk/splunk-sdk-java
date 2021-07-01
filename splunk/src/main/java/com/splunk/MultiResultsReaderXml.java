@@ -34,7 +34,7 @@ public class MultiResultsReaderXml
      * may occur if you try to parse a stream with a different format.
      *
      * @param inputStream The XML stream to parse.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public MultiResultsReaderXml(InputStream inputStream) throws IOException {
         super(new ResultsReaderXml(inputStream, true));

@@ -102,6 +102,7 @@ public class EventWriter {
      * {@code EventWriter} does not throw {@code IOException} errors, but does not ignore them entirely either. Instead it operates
      * the same way as {@code PrintStream} in the standard library. You can always check if an {@code IOException} has been thrown
      * by calling {@code checkError}.
+     * @return boolean value
      */
     public boolean checkError() {
         return hadIOException;
@@ -110,6 +111,8 @@ public class EventWriter {
     /**
      * Thread safe version of {@code writeEvent}.
      * @see #writeEvent
+     * @param event The Event instance
+     * @throws MalformedDataException The MalformedDataException instance
      */
     public synchronized void synchronizedWriteEvent(Event event) throws MalformedDataException {
         writeEvent(event);
@@ -123,7 +126,7 @@ public class EventWriter {
      *
      * @see #synchronizedWriteEvent
      * @param event The {@code Event} object to write.
-     * @throws MalformedDataException
+     * @throws MalformedDataException The MalformedDataException instance
      */
     public void writeEvent(Event event) throws MalformedDataException {
         try {
@@ -144,6 +147,8 @@ public class EventWriter {
     /**
      * Thread safe version of {@code log}.
      * @see #log
+     * @param severity String value
+     * @param errorMessage String value
      */
     public synchronized void synchronizedLog(String severity, String errorMessage) {
         log(severity, errorMessage);

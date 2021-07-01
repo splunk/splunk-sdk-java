@@ -17,6 +17,7 @@ package com.splunk;
 
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -42,6 +43,7 @@ public class ModularInputKindsTest extends SDKTestCase {
 
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testListInputKinds() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -56,6 +58,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         }
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testInputByName() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -71,6 +74,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         checkModularInputKind(m);
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testNonexistantArg() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -84,6 +88,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         Assert.assertNull(test1.getArgument("nonexistant_argument"));
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testInputKindDescriptionAndTitle() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -102,6 +107,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         Assert.assertEquals("test2", test2.getTitle());
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testArgDescription() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -129,6 +135,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         }
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testArgDataType() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -155,6 +162,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         }
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testRequiredOnCreate() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -179,6 +187,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         }
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testRequiredOnEdit() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {
@@ -203,6 +212,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         }
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testGetArguments() {
         if (service.versionIsEarlierThan("5.0") || !hasTestData()) {

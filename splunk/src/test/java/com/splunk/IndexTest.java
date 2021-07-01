@@ -276,7 +276,13 @@ public class IndexTest extends SDKTestCase {
         index.setMaxConcurrentOptimizes(newMaxConcurrentOptimizes);
         String newMaxDataSize = "auto";
         index.setMaxDataSize(newMaxDataSize);
-        int newMaxHotBuckets = index.getMaxHotBuckets()+1;
+        String newMaxHotBuckets = null;
+        if (service.versionIsEarlierThan("8.1.0")) {
+            int newMaxHotBucketsInt = Integer.parseInt(index.getMaxHotBuckets())+1;
+            newMaxHotBuckets = String.valueOf(newMaxHotBucketsInt);
+        } else {
+            newMaxHotBuckets = "auto";
+        }
         index.setMaxHotBuckets(newMaxHotBuckets);
         int newMaxHotIdleSecs = index.getMaxHotIdleSecs()+1;
         index.setMaxHotIdleSecs(newMaxHotIdleSecs);
@@ -682,6 +688,7 @@ public class IndexTest extends SDKTestCase {
         });
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testUploadArgs() throws Exception {
         if (!hasTestData()) {
@@ -725,6 +732,7 @@ public class IndexTest extends SDKTestCase {
         });
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testUploadArgsFailure() throws Exception{
         if (!hasTestData()) {
@@ -756,7 +764,7 @@ public class IndexTest extends SDKTestCase {
 
     }
 
-
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testUpload() throws Exception {
         if (!hasTestData()) {

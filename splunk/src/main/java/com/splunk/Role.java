@@ -290,14 +290,14 @@ public class Role extends Entity {
      * allowed indexes to search. In combining multiple roles, the effective 
      * value for each attribute is the value with the broadest permissions. 
      * <p>
-     * Default Splunk roles are:
-     * <p><ul>
+     * Default Splunk roles are:</p>
+     * <ul>
      * <li>admin</li>
      * <li>can_delete</li>
      * <li>power</li>
      * <li>user</li>
      * </ul><p>
-     * You also can specify additional roles that have been created. 
+     * You also can specify additional roles that have been created.</p>
      *
      * @param importedRoles An array of roles from which to import attributes.
      */
@@ -309,16 +309,16 @@ public class Role extends Entity {
      * Sets a role to import attributes from, such as capabilities and allowed 
      * indexes to search. Use this method to set a single role.
      * <p>Importing other roles imports all aspects of that role, such as 
-     * capabilities and allowed indexes to search. 
+     * capabilities and allowed indexes to search. </p>
      * <p>
-     * Default Splunk roles are:
-     * <p><ul>
+     * Default Splunk roles are:</p>
+     * <ul>
      * <li>admin</li>
      * <li>can_delete</li>
      * <li>power</li>
      * <li>user</li>
      * </ul><p>
-     * You also can specify additional roles that have been created. 
+     * You also can specify additional roles that have been created.</p>
      *
      * @param importedRole A role from which to import attributes.
      */

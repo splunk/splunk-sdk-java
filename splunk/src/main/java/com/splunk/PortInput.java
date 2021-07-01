@@ -39,6 +39,7 @@ abstract class PortInput extends Input {
     
     /**
      * Returns the port that this input is listening on.
+     * @return int value
      */
     public int getPort() {
         String[] nameComponents = this.getName().split(":");

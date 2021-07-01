@@ -61,7 +61,7 @@ abstract class StreamIterableBase<T> implements Iterable<T> {
     /**
      * Get the next element.
      * @return null if the end is reached.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     abstract T getNextElement() throws IOException;
 

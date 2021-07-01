@@ -16,10 +16,7 @@
 
 package com.splunk;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -79,6 +76,7 @@ public class ApplicationTest extends SDKTestCase {
         Assert.assertTrue(setupXml.contains("stub"));
     }
 
+    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testForSetupPresent() throws Exception {
         if (!hasTestData()) {
@@ -88,18 +86,18 @@ public class ApplicationTest extends SDKTestCase {
         installApplicationFromTestData("has_setup_xml");
         Assert.assertTrue(service.getApplications().containsKey("has_setup_xml"));
         Application applicationWithSetupXml = service.getApplications().get("has_setup_xml");
-        
+
         ApplicationSetup applicationSetup = applicationWithSetupXml.setup();
         Assert.assertEquals("has_setup_xml", applicationSetup.getName());
         Assert.assertFalse(applicationSetup.getRefresh());
-        
+
         String setupXml = applicationSetup.getSetupXml();
         Document parsedSetupXml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
             new ByteArrayInputStream(setupXml.getBytes("UTF-8")));
         parsedSetupXml.getDocumentElement().normalize();
-        
+
         Assert.assertEquals(parsedSetupXml.getDocumentElement().getNodeName(), "SetupInfo");
-        
+
         NodeList blocks = parsedSetupXml.getDocumentElement().getElementsByTagName("block");
         Assert.assertEquals(1, blocks.getLength());
         Node block = blocks.item(0);

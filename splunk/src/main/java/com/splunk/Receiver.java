@@ -43,7 +43,7 @@ public class Receiver {
      * Creates a writable socket to this index.
      *
      * @return The socket.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public Socket attach() throws IOException {
         return attach(null, null);
@@ -54,7 +54,7 @@ public class Receiver {
      *
      * @param indexName The index to write to.
      * @return The socket.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public Socket attach(String indexName) throws IOException {
         return attach(indexName, null);
@@ -66,7 +66,7 @@ public class Receiver {
      * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public Socket attach(Args args) throws IOException {
         return attach(null, args);
@@ -79,7 +79,7 @@ public class Receiver {
      * @param args Optional arguments for this stream. Valid parameters are:
      * "host", "host_regex", "source", and "sourcetype".
      * @return The socket.
-     * @throws IOException
+     * @throws IOException The IOException instance
      */
     public Socket attach(String indexName, Args args) throws IOException {
         Socket socket = service.open();
