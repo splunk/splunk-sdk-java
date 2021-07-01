@@ -46,11 +46,11 @@ public class HttpService {
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
-            if(s.equals(HOSTNAME)){
-                return  true;
-            }else{
+            if (s.equals(HOSTNAME)) {
+                return true;
+            } else {
                 HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-                return hv.verify(s,sslSession);
+                return hv.verify(s, sslSession);
             }
         }
     };
@@ -537,14 +537,14 @@ public class HttpService {
         };
         try {
             String contextStr = "";
-            if(sslSecurityProtocol != null){
-                contextStr = sslSecurityProtocol.toString().contains("SSL")?"SSL":"TLSv1.2";
-            }else if(useTLS||System.getProperty("java.version").compareTo("1.8")>=0){
-                contextStr = "TLSv1.2";
-            }else{
+            if (sslSecurityProtocol != null) {
+                contextStr = sslSecurityProtocol.toString().contains("SSL") ? "SSL" : "TLS";
+            } else if (useTLS || System.getProperty("java.version").compareTo("1.8") >= 0) {
+                contextStr = "TLS";
+            } else {
                 contextStr = "SSL";
             }
-            SSLContext context = SSLContext.getInstance("TLSv1.2");
+            SSLContext context = SSLContext.getInstance(contextStr);
 
             context.init(null, trustAll, new java.security.SecureRandom());
             return new SplunkHttpsSocketFactory(context.getSocketFactory());
@@ -557,7 +557,7 @@ public class HttpService {
         private final SSLSocketFactory delegate;
 
         public static String[] PROTOCOLS = {"SSLv3"};
-        public static String[] PROTOCOLS_TLS = {"TLSv1.2","TLSv1.1","TLSv1"};
+        public static String[] PROTOCOLS_TLS = {"TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1"};
 
         private SplunkHttpsSocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
@@ -565,12 +565,12 @@ public class HttpService {
 
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
-                if(sslSecurityProtocol != null){
-                    String[] protocols={sslSecurityProtocol.toString()};
+                if (sslSecurityProtocol != null) {
+                    String[] protocols = {sslSecurityProtocol.toString()};
                     ((SSLSocket) socket).setEnabledProtocols(protocols);
-                }else if(useTLS||System.getProperty("java.version").compareTo("1.8")>=0){
+                } else if (useTLS || System.getProperty("java.version").compareTo("1.8") >= 0) {
                     ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS_TLS);
-                }else{
+                } else {
                     ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
                 }
             }
