@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <version.number>0.0.1-BETA</version.number>
+        <version.number>1.6.5</version.number>
         <maven.resources.overwrite>true</maven.resources.overwrite>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>
@@ -60,10 +60,12 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.0.0-M1</version>
                 <configuration>
-                    <!--<altDeploymentRepository>
-&lt;!&ndash;                        local::file:./target/local-deploy&ndash;&gt;
+                    <!-- Below altDeploymentRepository is used for local deployment. Commented out for now. -->
+                    <!--
+                    <altDeploymentRepository>
                         localRepository::default::file:./target/local-deploy
-                    </altDeploymentRepository>-->
+                    </altDeploymentRepository>
+                    -->
                     <skip>true</skip>
                 </configuration>
             </plugin>
@@ -78,7 +80,6 @@
         </repository>
     </repositories>
 
-    <!-- Distribution Management is commented for now as we are focusing on local deployment only. -->
     <distributionManagement>
         <repository>
             <id>splunk-artifactory</id>
