@@ -18,7 +18,7 @@ jobs:
           server-password: MAVEN_PASSWORD
           server-id: splunk-artifactory
       - name: build
-        run: mvn -B package --file pom.xml
+        run: mvn package --file pom.xml -DskipTests=true
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
