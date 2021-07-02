@@ -60,10 +60,10 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.0.0-M1</version>
                 <configuration>
-                    <altDeploymentRepository>
-<!--                        local::file:./target/local-deploy-->
+                    <!--<altDeploymentRepository>
+&lt;!&ndash;                        local::file:./target/local-deploy&ndash;&gt;
                         localRepository::default::file:./target/local-deploy
-                    </altDeploymentRepository>
+                    </altDeploymentRepository>-->
                     <skip>true</skip>
                 </configuration>
             </plugin>
@@ -79,13 +79,13 @@
     </repositories>
 
     <!-- Distribution Management is commented for now as we are focusing on local deployment only. -->
-   <!-- <distributionManagement>
+    <distributionManagement>
         <repository>
             <id>splunk-artifactory</id>
             <name>Splunk Releases</name>
             <url>https://splunk.jfrog.io/splunk/ext-releases-local</url>
         </repository>
-    </distributionManagement>-->
+    </distributionManagement>
 
     <licenses>
         <license>
