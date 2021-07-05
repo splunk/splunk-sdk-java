@@ -36,14 +36,21 @@ import java.util.Map.Entry;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-    protected static SSLSecurityProtocol sslSecurityProtocol = SSLSecurityProtocol.SSLv3;
+    public static boolean useTLS=false;
+    protected static SSLSecurityProtocol sslSecurityProtocol = null;
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
+    private static String HOSTNAME = "localhost";
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
-            return true;
+            if (s.equals(HOSTNAME)) {
+                return true;
+            } else {
+                HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+                return hv.verify(s, sslSession);
+            }
         }
     };
 
@@ -204,7 +211,7 @@ public class HttpService {
         // Only update the SSL_SOCKET_FACTORY if changing protocols
         if (sslSecurityProtocol != securityProtocol) {
             sslSecurityProtocol = securityProtocol;
-            sslSocketFactory = new SplunkHttpsSocketFactory(createSSLFactory(), securityProtocol);
+            sslSocketFactory = new SplunkHttpsSocketFactory(createSSLFactory());
         }
     }
 
@@ -528,19 +535,18 @@ public class HttpService {
                 }
         };
         try {
-            SSLContext context;
-            switch (HttpService.sslSecurityProtocol) {
-                case TLSv1_2:
-                case TLSv1_1:
-                case TLSv1:
-                    context = SSLContext.getInstance("TLS");
-                    break;
-                default:
-                    context = SSLContext.getInstance("SSL");
+            String contextStr = "";
+            if (sslSecurityProtocol != null) {
+                contextStr = sslSecurityProtocol.toString().contains("SSL") ? "SSL" : "TLS";
+            } else if (useTLS || System.getProperty("java.version").compareTo("1.8") >= 0) {
+                contextStr = "TLS";
+            } else {
+                contextStr = "SSL";
             }
+            SSLContext context = SSLContext.getInstance(contextStr);
 
             context.init(null, trustAll, new java.security.SecureRandom());
-            return new SplunkHttpsSocketFactory(context.getSocketFactory(), HttpService.sslSecurityProtocol);
+            return new SplunkHttpsSocketFactory(context.getSocketFactory());
         } catch (Exception e) {
             throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
         }
@@ -548,21 +554,24 @@ public class HttpService {
 
     private static final class SplunkHttpsSocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
-        private SSLSecurityProtocol sslSecurityProtocol;
+
+        public static String[] PROTOCOLS = {"SSLv3"};
+        public static String[] PROTOCOLS_TLS = {"TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1"};
 
         private SplunkHttpsSocketFactory(SSLSocketFactory delegate) {
             this.delegate = delegate;
-            this.sslSecurityProtocol = HttpService.sslSecurityProtocol;
-        }
-
-        private SplunkHttpsSocketFactory(SSLSocketFactory delegate, SSLSecurityProtocol securityProtocol) {
-            this.delegate = delegate;
-            this.sslSecurityProtocol = securityProtocol;
         }
 
         private Socket configure(Socket socket) {
             if (socket instanceof SSLSocket) {
-                ((SSLSocket) socket).setEnabledProtocols(new String[]{sslSecurityProtocol.toString()});
+                if (sslSecurityProtocol != null) {
+                    String[] protocols = {sslSecurityProtocol.toString()};
+                    ((SSLSocket) socket).setEnabledProtocols(protocols);
+                } else if (useTLS || System.getProperty("java.version").compareTo("1.8") >= 0) {
+                    ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS_TLS);
+                } else {
+                    ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
+                }
             }
             return socket;
         }
