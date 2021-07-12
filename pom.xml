@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <version.number>1.6.4</version.number>
+        <version.number>1.6.5</version.number>
         <maven.resources.overwrite>true</maven.resources.overwrite>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>
@@ -58,11 +58,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
                 <configuration>
+                    <!-- Below altDeploymentRepository is used for local deployment. Commented out for now. -->
+                    <!--
                     <altDeploymentRepository>
-<!--                        local::file:./target/local-deploy-->
                         localRepository::default::file:./target/local-deploy
                     </altDeploymentRepository>
+                    -->
                     <skip>true</skip>
                 </configuration>
             </plugin>
@@ -77,14 +80,13 @@
         </repository>
     </repositories>
 
-    <!-- Distribution Management is commented for now as we are focusing on local deployment only. -->
-   <!-- <distributionManagement>
+    <distributionManagement>
         <repository>
             <id>splunk-artifactory</id>
             <name>Splunk Releases</name>
             <url>https://splunk.jfrog.io/splunk/ext-releases-local</url>
         </repository>
-    </distributionManagement>-->
+    </distributionManagement>
 
     <licenses>
         <license>
