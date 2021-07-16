@@ -248,10 +248,12 @@ public abstract class SDKTestCase {
         String appPath = Util.join(separator, pathComponents);
 
         Args args = new Args();
-        args.put("name", appPath);
+        // Application name is used here instead of appPath. As folder name in appPath should not contain special characters & spaces.
+        args.put("name", applicationName);
+        args.put("filename", false);
         args.put("update", "1");
-        service.post("apps/appinstall", args);
-        
+        service.post("apps/local", args);
+
         installedApps.add(applicationName);
     }
     
