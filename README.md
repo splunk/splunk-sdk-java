@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/splunk/splunk-sdk-java.svg?branch=master)](https://travis-ci.org/splunk/splunk-sdk-java)
+![Build Status](https://github.com/splunk/splunk-sdk-java/actions/workflows/release.yml/badge.svg?branch=master)
 # The Splunk Software Development Kit for Java
 
-#### Version 1.6.4
+#### Version 1.7.0
 
 The Splunk Software Development Kit (SDK) for Java contains library code and
 examples designed to enable developers to build applications using Splunk.
@@ -40,7 +40,7 @@ Here's what you need to get going with the Splunk SDK for Java.
 If you haven't already installed Splunk, download it
 [here](http://www.splunk.com/download). For more about installing and running
 Splunk and system requirements, see
-[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 7.0 and 7.2.
+[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 8.0 and 8.2.0.
 
 #### Splunk SDK for Java
 
@@ -48,32 +48,7 @@ Splunk and system requirements, see
 
 If you want to contribute to the SDK, clone the repository from [GitHub](https://github.com/splunk/splunk-sdk-java).
 
-
-#### Java and Ant
-
-You'll need Java version 8 or higher, from [OpenJDK](https://openjdk.java.net) or [Oracle](https://www.oracle.com/technetwork/java). The Splunk SDK for Java has been tested with OpenJDK v8 and v11.
-
-You'll also need Ant, which you can install from the
-[Apache website](http://ant.apache.org/bindownload.cgi).
-
-The Splunk SDK for Java is compatible with Java 8. Be aware that **Java 8 disables Secure Sockets Layer version 3 (SSLv3) by default**, so you will need to use Transport Layer Security (TLS) instead. To see an example of how to do this, see the [`ssl_protocols`](https://github.com/splunk/splunk-sdk-java/blob/master/examples/com/splunk/examples/ssl_protocols/Pro...) example. Alternatively, you can re-enable SSLv3 in Java settings, but this is not recommended.
-
-If you are using Windows, you'll need to make sure the following system
-variables are created and set:
-
-*   **ANT_HOME** should be set to the location where Ant is installed.
-
-*   **JAVA_HOME** should be set to the directory where the JDK is installed.
-
-*   **PATH** should include the path to the **%ANT_HOME%\bin** directory.
-
-For full installation instructions, you can find more information here:
-
-*   [Java Platform Installation](http://www.oracle.com/technetwork/java/javase/index-137561.html)
-
-*   [Installing Apache Ant](http://ant.apache.org/manual/install.html)
-
-#### Using Maven
+#### Java using Maven
 
 You can use [Apache Maven](http://maven.apache.org/) to build your Splunk SDK for Java projects. With a few updates to your project's `pom.xml` file, it will retrieve all necessary dependencies and seamlessly build your project.
 
@@ -100,42 +75,43 @@ To add the Splunk SDK for Java `.JAR` file as a dependency:
   <dependency>
     <groupId>com.splunk</groupId>
     <artifactId>splunk</artifactId>
-    <version>1.6.4.0</version>
+    <version>1.7.0</version>
   </dependency>
 </dependencies>
 ```
 
 Be sure to update the version number to match the version of the Splunk SDK for Java that you are using.
 
-> Note: You can make similar changes to use [Ivy](http://ant.apache.org/ivy/history/latest-milestone/tutorial/start.html) or [Gradle](http://www.gradle.org/) as well.
+> Note: You can make similar changes to use [Gradle](http://www.gradle.org/) as well.
 
 ### Building the SDK and documentation
 
 To build the SDK, open a command prompt in the **/splunk-sdk-java**
 directory and enter:
 
-    ant
+    mvn
 
 or
 
-    ant dist
+    mvn package
 
 This command builds all of the .class and .jar files. If you just want to build
 the .class files, enter:
 
-    ant build
+    mvn compile
 
 To remove all build artifacts from the repository, enter:
 
-    ant clean
+    mvn clean
 
-To build the documentation for the SDK, enter:
+To build the documentation for the SDK, it is being automatically generated with <b>mvn package</b>, otherwise enter:
 
-    ant javadoc
+    cd splunk
+    mvn javadoc:javadoc
 
-### Examples and unit tests
+### Unit tests
 
-The Splunk SDK for Java includes several examples and unit tests that are run at
+The Splunk SDK for Java includes several unit tests that are run at
 the command line.
 
 #### Set up the .splunkrc file
@@ -187,56 +163,24 @@ shouldn't be used for storing user credentials for production. And, if you're
 at all concerned about the security of your credentials, just enter them at
 the command line rather than saving them in this file.
 
-
-#### Run examples
-
-After you build the SDK, examples are put in the **/splunk-sdk-
-java/dist/examples** directory. To run the examples, run the Java interpreter
-at the command line using the `-jar` flag to specify the target example jar
-file, and include any arguments that are required by the example. To get help
-for an example, use the `--help` argument with an example.
-
-For example, to see the command-line arguments for the Search example, open a
-command prompt in the **/splunk-sdk-java** directory and enter:
-
-    java -jar dist/examples/search.jar --help
-
-To run the Search example, open a command prompt in the **/splunk-sdk-java**
-directory and enter:
-
-    java -jar dist/examples/search.jar "search * | head 10" --output_mode=csv
-
-There is also a helper script called run in the root of the repository that
-simplifies running the SDK examples. For example, on Mac OS X you could
-simply enter:
-
-    ./run search "search * | head 10" --output_mode=csv
-
-All the the example jars are completely self contained. They can be used
-completely independently of the SDK's repository.
-
 #### Run unit tests
 
 To run the SDK unit tests, open a command prompt in the **/splunk-sdk-java**
 directory and enter:
 
-    ant test
+    mvn test
 
-To run the units from anywhere in the repository, enter:
-
-    ant test -find
-
-You can also run specific test classes by passing the class to the -Dtestcase=
+You can also run specific test classes by passing the class to the -Dtest=
 option, e.g.,
 
-    ant test -Dtestcase=AtomFeedTest
+    mvn test -Dtest=AtomFeedTest
 
-The ant configuration can also produce a single HTML report of all the tests run
-using the target testreport (which also understands the -Dtestcase= option), e.g.
+The maven configuration can also produce an HTML report of all the tests automatically when **mvn package / mvn test** are executed.
+Alternate way to generate report is using below command under splunk directory:
 
-    ant testreport
+    mvn jacoco:report
 
-The report will be written in build/reports/tests/index.html.
+The report will be written in **/splunk-sdk-java/splunk/target/site/surefire-report.html**.
 
 It's also possible to run the units within Java IDEs such as IntelliJ and
 Eclipse. For example, to open the Splunk SDK for Java project in Eclipse:
@@ -249,17 +193,12 @@ Eclipse. For example, to open the Splunk SDK for Java project in Eclipse:
 
 #### Measure code coverage
 
-To measure the code coverage of the test suite, open a
-command prompt in the **/splunk-sdk-java** directory and enter:
+Measurement of code coverage is generated along with <b>mvn package / mvn test</b>:
 
-    ant coverage
-
-To run code coverage from anywhere in the repository, enter:
-
-    ant coverage -find
+    mvn jacoco:report
 
 To view the coverage report, open
-**/splunk-sdk-java/build/reports/coverage/index.html** in your web browser.
+**/splunk-sdk-java/splunk/target/test-report/index.html** in your web browser.
 
 ## Repository
 
@@ -271,41 +210,21 @@ ouputs</td>
 </tr>
 
 <tr>
-<td><b>/build</b></td>
+<td><b>/splunk/target</b></td>
 <td>This directory is created by the build and contains intermediate build
 ouputs</td>
 </tr>
 
 <tr>
-<td><b>/dist</b></td>
-<td>This directory is created by the build and contains final build
-outputs</td>
-</tr>
-
-<tr>
-<td><b>/examples</b></td>
-<td>Examples demonstrating various SDK features</td>
-</tr>
-
-<tr>
-<td><b>/lib</b></td>
-<td>Third-party libraries used by examples and unit tests</td>
-</tr>
-
-<tr>
-<td><b>/splunk</b></td>
+<td><b>/splunk/src/main</b></td>
 <td>Source for <code>com.splunk</code></td>
 </tr>
 
 <tr>
-<td><b>/tests</b></td>
+<td><b>/splunk/src/test</b></td>
 <td>Source for unit tests</td>
 </tr>
 
-<tr>
-<td><b>/util</b></td>
-<td>Utilities shared by examples and units</td>
-</tr>
 </table>
 
 ### Changelog
