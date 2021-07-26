@@ -9,8 +9,8 @@ deploy \<repository-name>
 
 ##DESCRIPTION
 
-Deploy transmits **dist/splunk-1.7.0.jar**, **dist/splunk-1.7.0-javadoc.jar**, and
-**dist/splunk-1.7.0-sources.jar** to the **local**, **staging**, or **production**
+Deploy transmits **target/splunk-1.7.0.jar**, **target/splunk-1.7.0-javadoc.jar**, and
+**target/splunk-1.7.0-sources.jar** to the **local**, **staging**, or **production**
 maven repository. Repository names are mapped to locations as follows.
 
 | repository-name | location                                                       |

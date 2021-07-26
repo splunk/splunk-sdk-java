@@ -2,11 +2,11 @@ on:
   release:
     types: [published]
 
-name: Create Release
+name: Release
 
 jobs:
   build:
-    name: Create Release
+    name: Java SDK Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
