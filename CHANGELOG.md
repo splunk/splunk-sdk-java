@@ -1,5 +1,18 @@
 # Splunk SDK for Java Changelog
 
+## Version 1.7.0
+
+### New Features and APIs
+* Added Credits.md file along with licences. (Github PR [#162](https://github.com/splunk/splunk-sdk-java/pull/162)).
+* Improved SSL/TLS implementation and hostname verification. (Github PR [#158](https://github.com/splunk/splunk-sdk-java/pull/158)).
+
+### Minor changes
+* Replaced Travis CI with Github actions (Github PR [#161](https://github.com/splunk/splunk-sdk-java/pull/161)).
+* Fixed Javadoc generation while packaging. (Github PR [#159](https://github.com/splunk/splunk-sdk-java/pull/159)).
+* SDK build is migrated from ant build tool to maven build tool (Github PR [#157](https://github.com/splunk/splunk-sdk-java/pull/157)).
+  * Dependencies directory for ant build is removed and maven dependencies are added using pom.xml.
+  * Dependencies are upgraded to its LTS version.
+
 ## Version 1.6.4
 
 ### Bug Fixes
