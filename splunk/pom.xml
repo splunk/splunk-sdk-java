@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>splunk</artifactId>
-    <version>1.7.0</version>
+    <version>${version.number}</version>
     <parent>
         <artifactId>splunk-sdk-java</artifactId>
         <groupId>com.splunk</groupId>
