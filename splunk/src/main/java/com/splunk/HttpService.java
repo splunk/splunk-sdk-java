@@ -38,7 +38,6 @@ public class HttpService {
     private static final boolean VERBOSE_REQUESTS = false;
     public static boolean useTLS=false;
     protected static SSLSecurityProtocol sslSecurityProtocol = null;
-
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
