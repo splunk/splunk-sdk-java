@@ -17,7 +17,7 @@ maven repository. Repository names are mapped to locations as follows.
 |-----------------|----------------------------------------------------------------|
 | local           | file:///${HOME}/.m2/repository/                                |
 | staging         | http://stg-artifactory:8081/artifactory/devplat-staging/       |                                             |
-| production      | http://splunk.artifactoryonline.com/splunk/ext-releases-local/ |
+| production      | https://splunk.jfrog.io/artifactory/ext-releases-local/ |
 
 After deployment you should find this tree structure at the location of your repository
 
