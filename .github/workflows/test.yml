@@ -1,0 +1,65 @@
+name: Java SDK Test
+
+on:
+  [push, pull_request]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        java-version:
+          - 1.8
+        splunk-version:
+          - "8.0"
+          - "8.2.0"
+    runs-on: ${{ matrix.os }}
+
+    services:
+      splunk:
+        image: splunk/splunk:${{matrix.splunk-version}}
+        env:
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_PASSWORD: changed!
+          TEST_TCP_PORT: 10667
+          TEST_UDP_PORT: 10668
+          SPLUNK_HOME: "/opt/splunk"
+        ports:
+          - 8000:8000
+          - 8089:8089
+          - 8088:8088
+          - 10667:10667
+          - 10668:10668/udp
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Create .splunkrc file
+        run: |
+          cd ~
+          echo host=localhost >> .splunkrc
+          echo port=8089 >> .splunkrc
+          echo username=admin >> .splunkrc
+          echo password=changed! >> .splunkrc
+          echo scheme=https >> .splunkrc
+          echo version=${{ matrix.splunk }} >> .splunkrc
+
+      - name: Test using maven
+        run: make test
+        env:
+          SPLUNK_HOME: "/opt/splunk"
+          TEST_TCP_PORT: 10667
+          TEST_UDP_PORT: 10668

@@ -1,5 +1,20 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.7.0
+
+### New Features and APIs
+* Added Credits.md file along with licences. (Github PR [#162](https://github.com/splunk/splunk-sdk-java/pull/162)).
+* Improved TLS implementation as default behavior and turned on hostname verification for all hosts. (Github PR [#158](https://github.com/splunk/splunk-sdk-java/pull/158)).
+
+### Minor changes
+* Replaced Travis CI with Github actions (Github PR [#161](https://github.com/splunk/splunk-sdk-java/pull/161)).
+* Fixed Javadoc generation while project packaging. (Github PR [#159](https://github.com/splunk/splunk-sdk-java/pull/159)).
+* Fixed breaking change of **Index.getMaxHotBuckets()** method behavior to return as String instead of int.
+* SDK build is migrated from ant build tool to maven build tool (Github PR [#157](https://github.com/splunk/splunk-sdk-java/pull/157)).
+  * Dependencies directory for ant build is removed and maven dependencies are added using pom.xml.
+  * Dependencies are upgraded to its LTS version.
+  * Project structure is re-organized with respect to Maven.
+
 ## Version 1.6.5
 
 ### Bug Fixes
