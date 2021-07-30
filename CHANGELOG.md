@@ -1,4 +1,25 @@
-# Splunk SDK for Java Changelog
+# Splunk Enterprise SDK for Java Changelog
+
+## Version 1.7.0
+
+### New Features and APIs
+* Added Credits.md file along with licences. (Github PR [#162](https://github.com/splunk/splunk-sdk-java/pull/162)).
+* Improved TLS implementation as default behavior and turned on hostname verification for all hosts. (Github PR [#158](https://github.com/splunk/splunk-sdk-java/pull/158)).
+
+### Minor changes
+* Replaced Travis CI with Github actions (Github PR [#161](https://github.com/splunk/splunk-sdk-java/pull/161)).
+* Fixed Javadoc generation while project packaging. (Github PR [#159](https://github.com/splunk/splunk-sdk-java/pull/159)).
+* Fixed breaking change of **Index.getMaxHotBuckets()** method behavior to return as String instead of int.
+* SDK build is migrated from ant build tool to maven build tool (Github PR [#157](https://github.com/splunk/splunk-sdk-java/pull/157)).
+  * Dependencies directory for ant build is removed and maven dependencies are added using pom.xml.
+  * Dependencies are upgraded to its LTS version.
+  * Project structure is re-organized with respect to Maven.
+
+## Version 1.6.5
+
+### Bug Fixes
+
+* Fixed bug for push back buffer is full when exporting data in XML (GitHub PR [#125](https://github.com/splunk/splunk-sdk-java/pull/125)).
 
 ## Version 1.6.4
 
@@ -124,7 +145,7 @@
 
 ### New features and APIs
 
-* The Splunk SDK for Java is fully compatible with Splunk Enterprise 6.0 as of this release.
+* The Splunk Enterprise SDK for Java is fully compatible with Splunk Enterprise 6.0 as of this release.
 
 ### Bug fixes
 
@@ -146,14 +167,14 @@
   OS X v10.9 Mavericks running Splunk 6.0.0. This issue is not present when running Splunk Enterprise on earlier
   versions of OS X. This will be fixed in a future release.
 
-* The modular input support in the Splunk SDK for Java is not compatible with Windows Server 2003 or Windows Server
+* The modular input support in the Splunk Enterprise SDK for Java is not compatible with Windows Server 2003 or Windows Server
   2003 R2.
 
 ## Version 1.2
 
 ### New features and APIs
 
-* Added support for building modular input scripts in Java using the Splunk SDK for Java.
+* Added support for building modular input scripts in Java using the Splunk Enterprise SDK for Java.
 
 ### Bug fixes
 
@@ -473,7 +494,7 @@ changes are not included):
 * Added a namespacing feature as optional arguments (`app`, `owner`, `sharing`)
   to the collection's `create` and `get` methods. For more information about
   namespaces, see
-  ["Overview of the Splunk SDK for Java"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN)
+  ["Overview of the Splunk Enterprise SDK for Java"](http://dev.splunk.com/view/java-sdk/SP-CAAAECN)
   on the Developer Portal.
 
   The following example shows how to use the optional namespace to restrict
@@ -579,4 +600,4 @@ changes are not included):
 
 ## Version 0.1.0 (preview)
 
-Initial Splunk SDK for Java release.
+Initial Splunk Enterprise SDK for Java release.
