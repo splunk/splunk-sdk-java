@@ -1,5 +1,10 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.7.1
+
+### Minor Changes
+* Dependency breaking changes are resolved.
+
 ## Version 1.7.0
 
 ### New Features and APIs
