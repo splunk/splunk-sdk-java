@@ -1,7 +1,7 @@
 ![Build Status](https://github.com/splunk/splunk-sdk-java/actions/workflows/release.yml/badge.svg?branch=master)
 # The Splunk Software Development Kit for Java
 
-#### Version 1.7.0
+#### Version 1.7.1
 
 The Splunk Software Development Kit (SDK) for Java contains library code and
 examples designed to enable developers to build applications using Splunk.
@@ -75,7 +75,7 @@ To add the Splunk SDK for Java `.JAR` file as a dependency:
   <dependency>
     <groupId>com.splunk</groupId>
     <artifactId>splunk</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
   </dependency>
 </dependencies>
 ```
