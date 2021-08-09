@@ -314,7 +314,15 @@ public class SavedSearchTest extends SDKTestCase {
         
         savedSearch.remove();
     }
-    
+
+    @Test
+    public void testGetSavedSearchByTitle(){
+        try{
+            SavedSearch fetchedSavedSearch = this.savedSearches.getService().getSavedSearch(savedSearchName);
+            Assert.assertEquals(fetchedSavedSearch.getName(),savedSearch.getName());
+        }catch (Exception e) { }
+    }
+
     @Test
     public void testCreateWithNoSearch() {
         try {
