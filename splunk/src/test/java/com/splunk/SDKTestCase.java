@@ -252,6 +252,7 @@ public abstract class SDKTestCase {
         args.put("name", appPath);
         args.put("filename", true);
         args.put("update", true);
+
         service.post("apps/local", args);
 
         installedApps.add(applicationName);
