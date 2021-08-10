@@ -26,6 +26,7 @@ jobs:
           TEST_TCP_PORT: 10667
           TEST_UDP_PORT: 10668
           SPLUNK_HOME: "/opt/splunk"
+          SPLUNK_APPS_URL: https://github.com/splunk/sdk-app-collection/releases/download/v1.2.0/sdkappcollection.tgz
         ports:
           - 8000:8000
           - 8089:8089
