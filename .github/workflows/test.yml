@@ -59,7 +59,7 @@ jobs:
           echo version=${{ matrix.splunk }} >> .splunkrc
 
       - name: Test using maven
-        run: make test
+        run: mvn test -fae
         env:
           SPLUNK_HOME: "/opt/splunk"
           TEST_TCP_PORT: 10667
