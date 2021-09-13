@@ -21,6 +21,7 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+            <!-- Deploy plugin is overridden here because we are skipping deployment in case of examples module. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
