@@ -219,7 +219,7 @@ public class ServiceTest extends SDKTestCase {
     }
 
     @Test
-    public void testWithOnlyToken() {
+    public void testLoginWithOnlyTokenValue() {
         String validToken = service.getToken();
 
         ServiceArgs args = new ServiceArgs();
