@@ -1320,6 +1320,26 @@ public class Service extends BaseService {
     }
 
     /**
+     * Provides a session token having <b>Splunk</b> added before token.
+     * This method is specifically used when user just have token value.
+     *
+     * @param value The token value
+     */
+    public void setSplunkToken(String value) {
+        this.token = value.contains("Splunk") ? value : "Splunk " + value;
+    }
+
+    /**
+     * Provides a session token having <b>Bearer</b> added before token.
+     * This method is specifically used when user just have token value.
+     *
+     * @param value The token value
+     */
+    public void setBearerToken(String value) {
+        this.token = value.contains("Splunk") || value.contains("Bearer") ? value : "Bearer " + value;
+    }
+
+    /**
      * Returns true if this Splunk instance's version is no earlier than
      * the version specified in {@code version}.
      *
