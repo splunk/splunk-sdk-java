@@ -38,7 +38,15 @@ public class HttpService {
     private static final boolean VERBOSE_REQUESTS = false;
     public static boolean useTLS=false;
     protected static SSLSecurityProtocol sslSecurityProtocol = null;
-    private static SSLSocketFactory sslSocketFactory = createSSLFactory();
+
+    /**
+     * Boolean flag for validating certificates at either of the sides (client/server).
+     * If true, then it will check and validate relevant certificates otherwise, in case of false, it will accept all certificates by default.
+     * While working in localhost OR development environment, FALSE is set. But for PROD environment, TRUE is strongly recommended.
+     */
+    protected static boolean validateCertificates = false;
+
+    private static SSLSocketFactory sslSocketFactory = createSSLFactory(validateCertificates);
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
     private static String HOSTNAME = "localhost";
@@ -211,7 +219,7 @@ public class HttpService {
         // Only update the SSL_SOCKET_FACTORY if changing protocols
         if (sslSecurityProtocol != securityProtocol) {
             sslSecurityProtocol = securityProtocol;
-            sslSocketFactory = new SplunkHttpsSocketFactory(createSSLFactory());
+            sslSocketFactory = new SplunkHttpsSocketFactory(createSSLFactory(validateCertificates));
         }
     }
 
@@ -415,6 +423,7 @@ public class HttpService {
             throw new RuntimeException(e.getMessage(), e);
         }
         if (cn instanceof HttpsURLConnection) {
+            // sslSocketFactory instance will be created based on the above flag "validateCertificate".
             ((HttpsURLConnection) cn).setSSLSocketFactory(sslSocketFactory);
             ((HttpsURLConnection) cn).setHostnameVerifier(HOSTNAME_VERIFIER);
         }
@@ -520,20 +529,8 @@ public class HttpService {
         return HttpService.sslSocketFactory;
     }
 
-    public static SSLSocketFactory createSSLFactory() {
-        TrustManager[] trustAll = new TrustManager[]{
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
+    public static SSLSocketFactory createSSLFactory(boolean validateCertificate) {
 
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                    }
-
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                    }
-                }
-        };
         try {
             String contextStr = "";
             if (sslSecurityProtocol != null) {
@@ -545,7 +542,25 @@ public class HttpService {
             }
             SSLContext context = SSLContext.getInstance(contextStr);
 
-            context.init(null, trustAll, new java.security.SecureRandom());
+            if (validateCertificate) {
+                // TODO: Validate certificates.
+            } else {
+                TrustManager[] trustAll = new TrustManager[]{
+                        new X509TrustManager() {
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return null;
+                            }
+
+                            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                            }
+                        }
+                };
+                context.init(null, trustAll, new java.security.SecureRandom());
+            }
+
             return new SplunkHttpsSocketFactory(context.getSocketFactory());
         } catch (Exception e) {
             throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
