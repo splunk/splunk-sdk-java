@@ -415,7 +415,6 @@ public class HttpService {
     public ResponseMessage send(String path, RequestMessage request) {
         // Construct a full URL to the resource
         URL url = getUrl(path);
-
         // Create and initialize the connection object
         HttpURLConnection cn;
         try {
@@ -529,6 +528,10 @@ public class HttpService {
 
     public static SSLSocketFactory getSSLSocketFactory() {
         return HttpService.sslSocketFactory;
+    }
+
+    public static void setValidateCertificates(boolean validateCertificates) {
+        HttpService.validateCertificates = validateCertificates;
     }
 
     public static SSLSocketFactory createSSLFactory() {
