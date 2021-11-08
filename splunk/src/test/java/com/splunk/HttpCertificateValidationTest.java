@@ -31,8 +31,11 @@ import java.security.cert.X509Certificate;
 public class HttpCertificateValidationTest extends SDKTestCase {
     private HttpService httpService;
 
+    /**
+     * This method will be executed when class is loaded.
+     */
     @BeforeClass
-    public static void ignoreCertificateValidation() {
+    public static void preClassLoadActions() {
         // Bypass the certification validation here.
         HttpService.setValidateCertificates(false);
     }
