@@ -23,10 +23,16 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
@@ -79,11 +85,20 @@ public class HttpService {
 
     private String prefix = null;
 
+    private static final Set<String> filtertHttpHeaderKeys = Collections.unmodifiableSet(
+    		new HashSet<String>(Arrays.asList(
+    				"User-Agent",
+    				"Accept"
+    		))
+    );
+    
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
         put("User-Agent", "splunk-sdk-java/1.7.1");
         put("Accept", "*/*");
     }};
-
+    
+    protected Map<String, String> customHeaders = new HashMap<>();
+    
     protected SimpleCookieStore cookieStore = new SimpleCookieStore();
 
     /**
@@ -193,6 +208,21 @@ public class HttpService {
     public int getPort() {
         return this.port;
     }
+    
+    /**
+     * Sets Custom Headers of this service
+     * 
+     * @param headers
+     */
+    public void setCustomHeaders(Map<String, String> headers) {
+    	if (Objects.nonNull(headers) && !headers.isEmpty()) {
+    		Map<String, String> fitleredCustomHeaders = headers.entrySet()
+    				.stream()
+    				.filter(e -> !filtertHttpHeaderKeys.contains(e.getKey()))
+    				.collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
+    		customHeaders.putAll(fitleredCustomHeaders);
+    	}
+    }
 
     /**
      * Returns the SSL security protocol of this service.
@@ -257,6 +287,15 @@ public class HttpService {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+    
+    /**
+     * Returns all the stored custom headers
+     * 
+     * @return customHeaders The custom headers
+     */
+    public Map<String, String> getCustomHeaders() {
+    	return customHeaders;
     }
 
     /**
@@ -440,6 +479,13 @@ public class HttpService {
             String key = entry.getKey();
             if (header.containsKey(key)) continue;
             cn.setRequestProperty(key, entry.getValue());
+        }
+        // Add Custom Headers
+        for (Entry<String, String> entry: customHeaders.entrySet()) {
+        	String key = entry.getKey();
+        	if (!header.containsKey(key)) {
+        		cn.setRequestProperty(key, entry.getValue());
+        	}
         }
 
         // Add cookies to header

@@ -17,6 +17,7 @@
 package com.splunk;
 
 import java.net.URLStreamHandler;
+import java.util.Map;
 
 /**
  * The {@code ServiceArgs} class contains a collection of arguments that are
@@ -163,5 +164,13 @@ public class ServiceArgs extends Args {
      */
     public void setCookie(String cookie) {
         this.put("cookie", cookie);
+    }
+    
+    /**
+     * @param httpHeaders
+     *     A map of customHeaders.
+     */
+    public void setHttpHeaders(Map<String, String> httpHeaders) {
+    	this.put("customHeaders", httpHeaders);
     }
 }

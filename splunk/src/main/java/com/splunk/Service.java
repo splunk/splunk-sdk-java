@@ -152,6 +152,7 @@ public class Service extends BaseService {
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
         this.addCookie((String)args.get("cookie"));
+        this.setCustomHeaders((Map<String, String>) args.get("customHeaders"));
     }
 
     /**
