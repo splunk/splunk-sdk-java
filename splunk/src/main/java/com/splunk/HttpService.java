@@ -23,16 +23,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.Set;
 
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
@@ -85,13 +80,6 @@ public class HttpService {
 
     private String prefix = null;
 
-    private static final Set<String> filtertHttpHeaderKeys = Collections.unmodifiableSet(
-    		new HashSet<String>(Arrays.asList(
-    				"User-Agent",
-    				"Accept"
-    		))
-    );
-    
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
         put("User-Agent", "splunk-sdk-java/1.7.1");
         put("Accept", "*/*");
@@ -215,12 +203,8 @@ public class HttpService {
      * @param headers
      */
     public void setCustomHeaders(Map<String, String> headers) {
-    	if (Objects.nonNull(headers) && !headers.isEmpty()) {
-    		Map<String, String> fitleredCustomHeaders = headers.entrySet()
-    				.stream()
-    				.filter(e -> !filtertHttpHeaderKeys.contains(e.getKey()))
-    				.collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
-    		customHeaders.putAll(fitleredCustomHeaders);
+    	if (Objects.nonNull(headers)) {
+    		customHeaders = headers;
     	}
     }
 
