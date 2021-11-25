@@ -109,6 +109,161 @@ To build the documentation for the SDK, it is being automatically generated with
     cd splunk
     mvn javadoc:javadoc
 
+### Usage
+#### Login using username and password
+```java
+import com.splunk.Service;
+import com.splunk.ServiceArgs;
+
+/**
+ * Login using username and password
+ */
+public class SplunkLogin {
+
+    static Service service = null;
+    public static void main(String args[]) {
+        ServiceArgs loginArgs = new ServiceArgs();
+        loginArgs.setPort(8089);
+        loginArgs.setHost("localhost");
+        loginArgs.setScheme("https");
+        loginArgs.setUsername("USERNAME"); // Use your username
+        loginArgs.setPassword("PASSWORD"); // Use your password
+
+        // Initialize the SDK client
+        service = Service.connect(loginArgs);
+    }
+}
+```
+
+#### Login using Session Token
+```java
+import com.splunk.Service;
+import com.splunk.ServiceArgs;
+
+/**
+ * Login using Session token
+ */
+public class SplunkLogin {
+
+    static Service service = null;
+    /**
+     * Session Token.
+     * Actual token length would be longer than this token length.
+     */
+    static String token = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
+    
+    public static void main(String args[]) {
+        ServiceArgs loginArgs = new ServiceArgs();
+        loginArgs.setPort(8089);
+        loginArgs.setHost("localhost");
+        loginArgs.setScheme("https");
+        loginArgs.setToken(String.format("Splunk %s", token));
+
+        // Initialize the SDK client
+        service = Service.connect(loginArgs);
+    }
+}
+```
+* Login using username and password will create Session token internally.
+* Login using Credentials (username & password) OR directly using Session token are similar.
+* In above two approaches, there is one limitation that expiration time of Session token cannot be extended. User has to re-login every time when token expires.
+* To overcome this limitation, **Authentication** token is used instead of Session token.
+* In **Authentication** token, user has a provision to set token expiration time. Splunk allows user to set relative/absolute time for token expiration.
+* In other words, **Authentication** token is configurable whereas Session token cannot be configured.
+
+#### Login using Authentication Token (RECOMMENDED)
+```java
+import com.splunk.Service;
+import com.splunk.ServiceArgs;
+
+/**
+ * Login using Authentication token
+ */
+public class SplunkLogin {
+
+    static Service service = null;
+    /**
+     * Authentication Token.
+     * Actual token length would be longer than this token length.
+     */
+    static String token = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
+    
+    public static void main(String args[]) {
+        ServiceArgs loginArgs = new ServiceArgs();
+        loginArgs.setPort(8089);
+        loginArgs.setHost("localhost");
+        loginArgs.setScheme("https");
+        loginArgs.setToken(String.format("Bearer %s", token));
+
+        // Initialize the SDK client
+        service = Service.connect(loginArgs);
+    }
+}
+```
+
+#### Example of running a simple search by first creating the search job
+```java
+import com.splunk.Job;
+import com.splunk.ResultsReader;
+import com.splunk.ResultsReaderXml;
+import com.splunk.Service;
+import com.splunk.ServiceArgs;
+
+/**
+ * Logged in using Authentication token.
+ * Assuming that authentication token is already created from Splunk web.
+ * Create Job using search creation.
+ * Read results and print _raw fields
+ */
+public class SearchExample {
+
+    static Service service = null;
+
+    /**
+     * Authentication Token.
+     * Actual token length would be longer than this token length.
+     */
+    static String token = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
+    
+    public static void main(String args[]) {
+
+        ServiceArgs loginArgs = new ServiceArgs();
+        loginArgs.setPort(8089);
+        loginArgs.setHost("localhost");
+        loginArgs.setScheme("https");
+        loginArgs.setToken(String.format("Bearer %s", token));
+
+        // Initialize the SDK client
+        service = Service.connect(loginArgs);
+
+        // Run a simple search by first creating the search job
+        Job job = service.getJobs().create("search index=_internal | head 10");
+
+        // Waiting for search results to be ready
+        while (!job.isReady()) {
+            try {
+                Thread.sleep(500); // 500 ms
+            } catch (Exception e) {
+                // Handle exception here.
+            }
+        }
+
+        // Read results
+        try {
+            ResultsReader reader = new ResultsReaderXml(job.getEvents());
+
+            // Iterate over events and print _raw field
+            reader.forEach(event -> System.out.println(event.get("_raw")));
+
+        } catch (Exception e) {
+            // Handle exception here.
+        }
+    }
+}
+```
+
+For more information on authentication using tokens, please visit [Splunk Docs](https://docs.splunk.com/Documentation/Splunk/latest/Security/Setupauthenticationwithtokens).
+
 ### Unit tests
 
 The Splunk SDK for Java includes several unit tests that are run at
