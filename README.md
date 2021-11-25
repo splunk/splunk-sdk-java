@@ -135,65 +135,65 @@ public class SplunkLogin {
 }
 ```
 
-#### Login using Splunk Token
+#### Login using Session Token
 ```java
 import com.splunk.Service;
 import com.splunk.ServiceArgs;
 
 /**
- * Login using Splunk token
+ * Login using Session token
  */
 public class SplunkLogin {
 
     static Service service = null;
     /**
-     * Splunk Token.
+     * Session Token.
      * Actual token length would be longer than this token length.
      */
-    static String splunkToken = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
+    static String token = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
     
     public static void main(String args[]) {
         ServiceArgs loginArgs = new ServiceArgs();
         loginArgs.setPort(8089);
         loginArgs.setHost("localhost");
         loginArgs.setScheme("https");
-        loginArgs.setToken(String.format("Splunk %s", splunkToken));
+        loginArgs.setToken(String.format("Splunk %s", token));
 
         // Initialize the SDK client
         service = Service.connect(loginArgs);
     }
 }
 ```
-* Login using username and password will create Splunk token internally.
-* Login using Credentials (username & password) OR directly using Splunk token are similar.
-* In above two approaches, there is one limitation that expiration time of Splunk token cannot be extended. User has to re-login every time when token expires.
-* To overcome this limitation, **Bearer** token is used instead of Splunk token.
-* In **Bearer** token, user has a provision to set token expiration time. Splunk allows user to set relative/absolute time for token expiration.
-* In other words, **Bearer** token is configurable whereas Splunk token cannot be configured.
+* Login using username and password will create Session token internally.
+* Login using Credentials (username & password) OR directly using Session token are similar.
+* In above two approaches, there is one limitation that expiration time of Session token cannot be extended. User has to re-login every time when token expires.
+* To overcome this limitation, **Authentication** token is used instead of Session token.
+* In **Authentication** token, user has a provision to set token expiration time. Splunk allows user to set relative/absolute time for token expiration.
+* In other words, **Authentication** token is configurable whereas Session token cannot be configured.
 
-#### Login using Bearer Token (RECOMMENDED)
+#### Login using Authentication Token (RECOMMENDED)
 ```java
 import com.splunk.Service;
 import com.splunk.ServiceArgs;
 
 /**
- * Login using Bearer token
+ * Login using Authentication token
  */
 public class SplunkLogin {
 
     static Service service = null;
     /**
-     * Bearer Token.
+     * Authentication Token.
      * Actual token length would be longer than this token length.
      */
-    static String bearerToken = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
+    static String token = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
     
     public static void main(String args[]) {
         ServiceArgs loginArgs = new ServiceArgs();
         loginArgs.setPort(8089);
         loginArgs.setHost("localhost");
         loginArgs.setScheme("https");
-        loginArgs.setToken(String.format("Bearer %s", bearerToken));
+        loginArgs.setToken(String.format("Bearer %s", token));
 
         // Initialize the SDK client
         service = Service.connect(loginArgs);
@@ -210,8 +210,8 @@ import com.splunk.Service;
 import com.splunk.ServiceArgs;
 
 /**
- * Logged in using Bearer token.
- * Assuming that bearer token is already created from Splunk web.
+ * Logged in using Authentication token.
+ * Assuming that authentication token is already created from Splunk web.
  * Create Job using search creation.
  * Read results and print _raw fields
  */
@@ -220,10 +220,10 @@ public class SearchExample {
     static Service service = null;
 
     /**
-     * Bearer Token.
+     * Authentication Token.
      * Actual token length would be longer than this token length.
      */
-    static String bearerToken = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
+    static String token = "1k_Ostpl6NBe4iVQ5d6I3Ohla_U5";
     
     public static void main(String args[]) {
 
@@ -231,7 +231,7 @@ public class SearchExample {
         loginArgs.setPort(8089);
         loginArgs.setHost("localhost");
         loginArgs.setScheme("https");
-        loginArgs.setToken(String.format("Bearer %s", bearerToken));
+        loginArgs.setToken(String.format("Bearer %s", token));
 
         // Initialize the SDK client
         service = Service.connect(loginArgs);
@@ -262,7 +262,7 @@ public class SearchExample {
 }
 ```
 
-For more information on authentication using tokens, please visit [Splunk Docs](https://docs.splunk.com/Documentation/Splunk/8.2.3/Security/Setupauthenticationwithtokens).
+For more information on authentication using tokens, please visit [Splunk Docs](https://docs.splunk.com/Documentation/Splunk/latest/Security/Setupauthenticationwithtokens).
 
 ### Unit tests
 
