@@ -146,7 +146,23 @@ public class ServiceTest extends SDKTestCase {
         service.logout();
         checkNotLoggedIn(service);
     }
-
+    
+    @Test
+    public void testServiceWithCustomHeaders() {
+    	ServiceArgs args = new ServiceArgs();
+    	args.setHost((String) command.opts.get("host"));
+    	args.setPort((Integer) command.opts.get("port"));
+    	args.setScheme((String) command.opts.get("scheme"));
+    	args.setUsername((String) command.opts.get("username"));
+    	args.setPassword((String) command.opts.get("password"));
+    	args.setHttpHeaders(new HashMap<String, String>() {{
+    		put("some header key", "some value");
+    	}});
+        Service service = new Service(args);
+        Map<String, String> customHeaders = service.getCustomHeaders();
+        Assert.assertEquals(customHeaders.get("some header key"), "some value");
+    }
+    
     @Test
     public void testLoginWithoutArguments() {
         ServiceArgs args = new ServiceArgs();

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
@@ -83,7 +84,9 @@ public class HttpService {
         put("User-Agent", "splunk-sdk-java/1.7.1");
         put("Accept", "*/*");
     }};
-
+    
+    protected Map<String, String> customHeaders = new HashMap<>();
+    
     protected SimpleCookieStore cookieStore = new SimpleCookieStore();
 
     /**
@@ -193,6 +196,17 @@ public class HttpService {
     public int getPort() {
         return this.port;
     }
+    
+    /**
+     * Sets Custom Headers of this service
+     * 
+     * @param headers
+     */
+    public void setCustomHeaders(Map<String, String> headers) {
+    	if (Objects.nonNull(headers)) {
+    		customHeaders = headers;
+    	}
+    }
 
     /**
      * Returns the SSL security protocol of this service.
@@ -257,6 +271,15 @@ public class HttpService {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+    
+    /**
+     * Returns all the stored custom headers
+     * 
+     * @return customHeaders The custom headers
+     */
+    public Map<String, String> getCustomHeaders() {
+    	return customHeaders;
     }
 
     /**
@@ -440,6 +463,13 @@ public class HttpService {
             String key = entry.getKey();
             if (header.containsKey(key)) continue;
             cn.setRequestProperty(key, entry.getValue());
+        }
+        // Add Custom Headers
+        for (Entry<String, String> entry: customHeaders.entrySet()) {
+        	String key = entry.getKey();
+        	if (!header.containsKey(key)) {
+        		cn.setRequestProperty(key, entry.getValue());
+        	}
         }
 
         // Add cookies to header
