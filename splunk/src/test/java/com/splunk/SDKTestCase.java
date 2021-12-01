@@ -19,6 +19,7 @@ package com.splunk;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -88,6 +89,12 @@ public abstract class SDKTestCase {
             }
         }
         return Integer.parseInt(version);
+    }
+
+    @BeforeClass
+    public static void preClassLoadActions() {
+        // Bypass the certification validation here.
+        HttpService.setValidateCertificates(false);
     }
 
     @Before
