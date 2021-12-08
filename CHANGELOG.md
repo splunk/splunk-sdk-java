@@ -1,5 +1,29 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.7.2
+
+### New Features and APIs
+* Added a support to add custom headers in Service class. (Github PR [#176](https://github.com/splunk/splunk-sdk-java/pull/176)).
+* SSL Certificate validation (default implementation) added. (Github PR [#175](https://github.com/splunk/splunk-sdk-java/pull/175)).
+  * Boolean flag is introduced to skip/validate certificate.
+  * Implementation is modified to validate certificate(s) of local and non-local environments.
+* Apps/app-install replaced with **apps/local**. (Github PR [#168](https://github.com/splunk/splunk-sdk-java/pull/168))
+
+### Minor Changes
+
+* External Entities restricted in XML factory. (Github PR [#180](https://github.com/splunk/splunk-sdk-java/pull/180)).
+  * Prevent expansion of external entities in Document Builder factory.
+* Headers modified in Socket creation. (Github PR [#179](https://github.com/splunk/splunk-sdk-java/pull/179)).
+  * Http Request uses raw request headers by including escape characters which seems vulnerable. It was replaced with PrintWriter methods to avoid escape characters.
+  * Host parameter used in Socket is omitted to prevent exposing it to external users.
+* README.md file modified with all login methods along with Splunk Search creation example. (Github PR [#177](https://github.com/splunk/splunk-sdk-java/pull/177)).
+* Deploy plugin is removed from Splunk module pom to avoid redundancy. (Github PR [#172](https://github.com/splunk/splunk-sdk-java/pull/172)).
+* Setter methods for Session and Bearer token added along with test case. (Github PR [#171](https://github.com/splunk/splunk-sdk-java/pull/171))
+* Modular input folder name renamed based on newer splunk folder name validation. (Github PR [#168](https://github.com/splunk/splunk-sdk-java/pull/168))
+* SDK app collection URL has been updated to v1.1.0 in docker compose file. (Github PR [#168](https://github.com/splunk/splunk-sdk-java/pull/168))
+  * Test files in sdk app collections are modified based on python v3 syntax.
+* Added Saved Search test case based on title. (Github PR [#166](https://github.com/splunk/splunk-sdk-java/pull/166))
+
 ## Version 1.7.1
 
 ### Minor Changes
