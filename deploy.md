@@ -9,8 +9,8 @@ deploy \<repository-name>
 
 ##DESCRIPTION
 
-Deploy transmits **target/splunk-1.7.2.jar**, **target/splunk-1.7.2-javadoc.jar**, and
-**target/splunk-1.7.2-sources.jar** to the **local**, **staging**, or **production**
+Deploy transmits **target/splunk-1.8.0.jar**, **target/splunk-1.8.0-javadoc.jar**, and
+**target/splunk-1.8.0-sources.jar** to the **local**, **staging**, or **production**
 maven repository. Repository names are mapped to locations as follows.
 
 | repository-name | location                                                       |
@@ -21,18 +21,18 @@ maven repository. Repository names are mapped to locations as follows.
 
 After deployment you should find this tree structure at the location of your repository
 
-    com/splunk/splunk/1.7.2/
-    ├── splunk-1.7.2-javadoc.jar
-    ├── splunk-1.7.2-javadoc.jar.md5
-    ├── splunk-1.7.2-javadoc.jar.sha1
-    ├── splunk-1.7.2-sources.jar
-    ├── splunk-1.7.2-sources.jar.md5
-    ├── splunk-1.7.2-sources.jar.sha1
-    ├── splunk-1.7.2.jar
-    ├── splunk-1.7.2.jar.md5
-    ├── splunk-1.7.2.jar.sha1
-    ├── splunk-1.7.2.pom
-    ├── splunk-1.7.2.pom.md5
-    └── splunk-1.7.2.pom.sha1
+    com/splunk/splunk/1.8.0/
+    ├── splunk-1.8.0-javadoc.jar
+    ├── splunk-1.8.0-javadoc.jar.md5
+    ├── splunk-1.8.0-javadoc.jar.sha1
+    ├── splunk-1.8.0-sources.jar
+    ├── splunk-1.8.0-sources.jar.md5
+    ├── splunk-1.8.0-sources.jar.sha1
+    ├── splunk-1.8.0.jar
+    ├── splunk-1.8.0.jar.md5
+    ├── splunk-1.8.0.jar.sha1
+    ├── splunk-1.8.0.pom
+    ├── splunk-1.8.0.pom.md5
+    └── splunk-1.8.0.pom.sha1
 
 Verify this structure prior to release.

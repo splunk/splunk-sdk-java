@@ -1,13 +1,14 @@
 # Splunk Enterprise SDK for Java Changelog
 
-## Version 1.7.2
+## Version 1.8.0
 
 ### New Features and APIs
 * Added a support to add custom headers in Service class. (Github PR [#176](https://github.com/splunk/splunk-sdk-java/pull/176)).
 * SSL Certificate validation (default implementation) added. (Github PR [#175](https://github.com/splunk/splunk-sdk-java/pull/175)).
-  * Boolean flag is introduced to skip/validate certificate.
-  * Implementation is modified to validate certificate(s) of local and non-local environments.
+  * Boolean flag is introduced to skip/validate certificate. Use _HttpService.setValidateCertificates()_ to enable/disable certificate validation.
+  * Breaking change: Certificate validation is now enforced by default, for local or non-production use cases use _HttpService.setValidateCertificates(false)_.
 * Apps/app-install replaced with **apps/local**. (Github PR [#168](https://github.com/splunk/splunk-sdk-java/pull/168))
+* Breaking change: HttpService.useTLS flag removed, please use _HttpService.setSslSecurityProtocol()_ to set a specific SSL/TLS implementation or else TLS v1.2 is used by default for Java 1.8.
 
 ### Minor Changes
 
@@ -19,6 +20,7 @@
 * README.md file modified with all login methods along with Splunk Search creation example. (Github PR [#177](https://github.com/splunk/splunk-sdk-java/pull/177)).
 * Deploy plugin is removed from Splunk module pom to avoid redundancy. (Github PR [#172](https://github.com/splunk/splunk-sdk-java/pull/172)).
 * Setter methods for Session and Bearer token added along with test case. (Github PR [#171](https://github.com/splunk/splunk-sdk-java/pull/171))
+  * **Use:** service.setSplunkToken() for session tokens and service.setBearerToken() for long-lived tokens.
 * Modular input folder name renamed based on newer splunk folder name validation. (Github PR [#168](https://github.com/splunk/splunk-sdk-java/pull/168))
 * SDK app collection URL has been updated to v1.1.0 in docker compose file. (Github PR [#168](https://github.com/splunk/splunk-sdk-java/pull/168))
   * Test files in sdk app collections are modified based on python v3 syntax.
