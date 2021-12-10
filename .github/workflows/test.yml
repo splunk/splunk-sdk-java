@@ -14,7 +14,7 @@ jobs:
           - 1.8
         splunk-version:
           - "8.0"
-          - "8.2.0"
+          - "latest"
     runs-on: ${{ matrix.os }}
 
     services:
@@ -26,6 +26,7 @@ jobs:
           TEST_TCP_PORT: 10667
           TEST_UDP_PORT: 10668
           SPLUNK_HOME: "/opt/splunk"
+          SPLUNK_APPS_URL: https://github.com/splunk/sdk-app-collection/releases/download/v1.1.0/sdkappcollection.tgz
         ports:
           - 8000:8000
           - 8089:8089
@@ -58,7 +59,7 @@ jobs:
           echo version=${{ matrix.splunk }} >> .splunkrc
 
       - name: Test using maven
-        run: make test
+        run: mvn test -fae
         env:
           SPLUNK_HOME: "/opt/splunk"
           TEST_TCP_PORT: 10667

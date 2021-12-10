@@ -37,8 +37,16 @@ import java.util.Objects;
 public class HttpService {
     // For debugging purposes
     private static final boolean VERBOSE_REQUESTS = false;
-    public static boolean useTLS=false;
     protected static SSLSecurityProtocol sslSecurityProtocol = null;
+
+    /**
+     * Boolean flag for validating certificates at either of the sides (client/server).
+     * If true, then it will check and validate relevant certificates otherwise, in case of false, it will accept all certificates.
+     * For PROD environment, TRUE is strongly recommended, whereas working in localhost OR development environment, FALSE is used.
+     * Default Value: TRUE
+     */
+    protected static boolean validateCertificates = true;
+
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
@@ -81,7 +89,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.7.1");
+        put("User-Agent", "splunk-sdk-java/1.8.0");
         put("Accept", "*/*");
     }};
     
@@ -225,7 +233,7 @@ public class HttpService {
         // Only update the SSL_SOCKET_FACTORY if changing protocols
         if (sslSecurityProtocol != securityProtocol) {
             sslSecurityProtocol = securityProtocol;
-            sslSocketFactory = new SplunkHttpsSocketFactory(createSSLFactory());
+            sslSocketFactory = createSSLFactory();
         }
     }
 
@@ -429,7 +437,6 @@ public class HttpService {
     public ResponseMessage send(String path, RequestMessage request) {
         // Construct a full URL to the resource
         URL url = getUrl(path);
-
         // Create and initialize the connection object
         HttpURLConnection cn;
         try {
@@ -550,100 +557,47 @@ public class HttpService {
         return HttpService.sslSocketFactory;
     }
 
-    public static SSLSocketFactory createSSLFactory() {
-        TrustManager[] trustAll = new TrustManager[]{
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                    }
-
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                    }
-                }
-        };
-        try {
-            String contextStr = "";
-            if (sslSecurityProtocol != null) {
-                contextStr = sslSecurityProtocol.toString().contains("SSL") ? "SSL" : "TLS";
-            } else if (useTLS || System.getProperty("java.version").compareTo("1.8") >= 0) {
-                contextStr = "TLS";
-            } else {
-                contextStr = "SSL";
-            }
-            SSLContext context = SSLContext.getInstance(contextStr);
-
-            context.init(null, trustAll, new java.security.SecureRandom());
-            return new SplunkHttpsSocketFactory(context.getSocketFactory());
-        } catch (Exception e) {
-            throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
-        }
+    public static void setValidateCertificates(boolean validateCertificates) {
+        HttpService.validateCertificates = validateCertificates;
     }
 
-    private static final class SplunkHttpsSocketFactory extends SSLSocketFactory {
-        private final SSLSocketFactory delegate;
+    public static SSLSocketFactory createSSLFactory() {
 
-        public static String[] PROTOCOLS = {"SSLv3"};
-        public static String[] PROTOCOLS_TLS = {"TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1"};
-
-        private SplunkHttpsSocketFactory(SSLSocketFactory delegate) {
-            this.delegate = delegate;
-        }
-
-        private Socket configure(Socket socket) {
-            if (socket instanceof SSLSocket) {
-                if (sslSecurityProtocol != null) {
-                    String[] protocols = {sslSecurityProtocol.toString()};
-                    ((SSLSocket) socket).setEnabledProtocols(protocols);
-                } else if (useTLS || System.getProperty("java.version").compareTo("1.8") >= 0) {
-                    ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS_TLS);
-                } else {
-                    ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS);
-                }
+        try {
+            SSLContext context;
+            if (sslSecurityProtocol != null) {
+                String contextStr = sslSecurityProtocol.toString().contains("SSL") ? "SSL" : "TLS";
+                context = SSLContext.getInstance(contextStr);
+            } else if (System.getProperty("java.version").compareTo("1.8") >= 0) {
+                context = SSLContext.getInstance("TLS");
+            } else {
+                context = SSLContext.getDefault();
             }
-            return socket;
-        }
 
-        @Override
-        public String[] getDefaultCipherSuites() {
-            return delegate.getDefaultCipherSuites();
-        }
+            if (validateCertificates) {
+                context.init(null, null, null);
+                // For now this check is set as null.
+                // TODO: Implementation logic for validating client certificate.
+            } else {
+                TrustManager[] trustAll = new TrustManager[]{
+                        new X509TrustManager() {
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return null;
+                            }
 
-        @Override
-        public String[] getSupportedCipherSuites() {
-            return delegate.getSupportedCipherSuites();
-        }
+                            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                            }
 
-        @Override
-        public Socket createSocket(Socket socket, String s, int i, boolean b) throws IOException {
-            return configure(delegate.createSocket(socket, s, i, b));
-        }
+                            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                            }
+                        }
+                };
+                context.init(null, trustAll, null);
+            }
 
-        @Override
-        public Socket createSocket() throws IOException {
-            return configure(delegate.createSocket());
-        }
-
-        @Override
-        public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
-            return configure(delegate.createSocket(s, i));
-        }
-
-        @Override
-        public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
-            return configure(delegate.createSocket(s, i, inetAddress, i1));
-        }
-
-        @Override
-        public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
-            return configure(delegate.createSocket(inetAddress, i));
-        }
-
-        @Override
-        public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
-            return configure(delegate.createSocket(inetAddress, i, inetAddress1, i1));
+            return context.getSocketFactory();
+        } catch (Exception e) {
+            throw new RuntimeException("Error setting up SSL socket factory: " + e, e);
         }
     }
 

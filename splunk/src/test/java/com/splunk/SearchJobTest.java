@@ -656,7 +656,6 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testEnablePreview() throws InterruptedException {
         if (!hasTestData()) {
@@ -709,7 +708,6 @@ public class SearchJobTest extends SDKTestCase {
         waitForSleepingJobToDie(job);
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testDisablePreview() throws InterruptedException {
         if (!hasTestData()) {
@@ -782,7 +780,6 @@ public class SearchJobTest extends SDKTestCase {
         } catch (InterruptedException e) {}
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testSetPriority() throws InterruptedException {
         if (!hasTestData()) {
@@ -833,7 +830,6 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testPause() throws InterruptedException {
         if (!hasTestData()) {
@@ -867,7 +863,6 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testUnpause() throws InterruptedException {
         if (!hasTestData()) {
@@ -901,7 +896,6 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testFinalize() throws InterruptedException {
         if (!hasTestData()) {
@@ -932,7 +926,6 @@ public class SearchJobTest extends SDKTestCase {
         job.cancel();
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testDone() throws InterruptedException {
         if (!hasTestData()) {

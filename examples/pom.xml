@@ -8,7 +8,7 @@
     <parent>
         <artifactId>splunk-sdk-java</artifactId>
         <groupId>com.splunk</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <build>
@@ -21,6 +21,7 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+            <!-- Deploy plugin is overridden here because we are skipping deployment in case of examples module. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -36,7 +37,7 @@
         <dependency>
             <groupId>com.splunk</groupId>
             <artifactId>splunk</artifactId>
-            <version>1.7.1</version>
+            <version>1.8.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

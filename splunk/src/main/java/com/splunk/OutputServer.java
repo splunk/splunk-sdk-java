@@ -90,6 +90,15 @@ public class OutputServer extends Entity {
     }
 
     /**
+     *  Returns client certificate path.
+     *
+     * @return
+     */
+    public String getClientCert() {
+        return getString("clientCert", "");
+    }
+
+    /**
      * Sets the type of data distribution method when two or more servers
      * exist in the same forwarder group. Valid values are: "clone", "balance", 
      * and "autobalance".
@@ -170,6 +179,15 @@ public class OutputServer extends Entity {
      */
     public void setSslVerifyServerCert(boolean sslVerifyServerCert) {
         setCacheValue("sslVerifyServerCert", sslVerifyServerCert);
+    }
+
+    /**
+     * Sets the client certificate path which is being supported in recent versions.
+     *
+     * @param clientCert The path for client certificate.
+     */
+    public void setClientCert(String clientCert) {
+        setCacheValue("clientCert", clientCert);
     }
 
     /**

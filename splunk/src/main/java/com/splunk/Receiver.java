@@ -16,12 +16,12 @@
 
 package com.splunk;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.net.Socket;
 import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The {@code Receiver} class represents a named index and unnamed index
  * receivers.
@@ -83,8 +83,7 @@ public class Receiver {
      */
     public Socket attach(String indexName, Args args) throws IOException {
         Socket socket = service.open();
-        OutputStream ostream = socket.getOutputStream();
-        Writer out = new OutputStreamWriter(ostream, "UTF-8");
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
         String postUrl = "POST /services/receivers/stream";
         if (indexName != null) {
             postUrl = postUrl + "?index=" + indexName;
@@ -94,26 +93,19 @@ public class Receiver {
             postUrl = postUrl + args.encode();
         }
 
-        StringBuilder header = new StringBuilder(String.format(
-                "%s HTTP/1.1\r\n" +
-                "Host: %s:%d\r\n" +
-                "Accept-Encoding: identity\r\n" +
-                "X-Splunk-Input-Mode: Streaming\r\n",
-                postUrl,
-                service.getHost(), service.getPort()
-                ));
+        List<String> headers = new ArrayList<>();
+        headers.add(String.format("%s HTTP/1.1", postUrl));
+        headers.add("Accept-Encoding: identity");
+        headers.add("X-Splunk-Input-Mode: Streaming");
 
         if (service.hasCookies()) {
-            header.append("Cookie: ");
-            header.append(service.stringifyCookies());
+            headers.add(String.format("Cookie: %s", service.stringifyCookies()));
         } else {
-            header.append("Authorization: ");
-            header.append(service.getToken());
+            headers.add(String.format("Authorization: %s", service.getToken()));
         }
-        header.append("\r\n\r\n");
-
-        out.write(header.toString());
-        out.flush();
+        headers.add("");
+        headers.forEach(header -> writer.println(header));
+        writer.flush();
         return socket;
     }
 

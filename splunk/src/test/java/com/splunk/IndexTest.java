@@ -688,7 +688,6 @@ public class IndexTest extends SDKTestCase {
         });
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testUploadArgs() throws Exception {
         if (!hasTestData()) {
@@ -732,7 +731,6 @@ public class IndexTest extends SDKTestCase {
         });
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testUploadArgsFailure() throws Exception{
         if (!hasTestData()) {
@@ -764,7 +762,6 @@ public class IndexTest extends SDKTestCase {
 
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testUpload() throws Exception {
         if (!hasTestData()) {

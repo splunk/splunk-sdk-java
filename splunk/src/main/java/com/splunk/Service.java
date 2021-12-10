@@ -1015,6 +1015,16 @@ public class Service extends BaseService {
     }
 
     /**
+     * Returns a Saved Search by the provided title key.
+     *
+     * @param title The title for a job.
+     * @return A SavedSearch.
+     */
+    public SavedSearch getSavedSearch(String title) {
+        return new SavedSearch(this, JobCollection.REST_PATH + "/" + title);
+    }
+
+    /**
      * Returns service configuration information for an instance of Splunk.
      *
      * @return Service configuration information.
@@ -1308,6 +1318,26 @@ public class Service extends BaseService {
      */
     public void setToken(String value) {
         this.token = value;
+    }
+
+    /**
+     * Provides a session token having <b>Splunk</b> added before token.
+     * This method is specifically used when user just have token value.
+     *
+     * @param value The token value
+     */
+    public void setSplunkToken(String value) {
+        this.token = value.contains("Splunk") ? value : "Splunk " + value;
+    }
+
+    /**
+     * Provides a session token having <b>Bearer</b> added before token.
+     * This method is specifically used when user just have token value.
+     *
+     * @param value The token value
+     */
+    public void setBearerToken(String value) {
+        this.token = value.contains("Splunk") || value.contains("Bearer") ? value : "Bearer " + value;
     }
 
     /**

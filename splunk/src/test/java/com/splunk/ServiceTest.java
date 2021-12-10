@@ -235,6 +235,29 @@ public class ServiceTest extends SDKTestCase {
     }
 
     @Test
+    public void testLoginWithOnlyTokenValue() {
+        String validToken = service.getToken();
+
+        ServiceArgs args = new ServiceArgs();
+        args.setHost((String) command.opts.get("host"));
+        args.setUsername((String) command.opts.get("username"));
+        args.setPassword((String) command.opts.get("password"));
+        args.setPort((Integer) command.opts.get("port"));
+        args.setScheme((String) command.opts.get("scheme"));
+
+        Service service2 = new Service(args);
+        service2.login();
+
+        // Manually removing Splunk keyword from preset token.
+        String modifiedToken = (service2.getToken().replace("Splunk", "")).trim();
+        service2.setSplunkToken(modifiedToken);
+
+        service2.getSettings().refresh();
+
+        Assert.assertEquals(service2.getToken(), validToken);
+    }
+
+    @Test
     public void testLoginGetters() {
         Service s = new Service("theHost");
         try {

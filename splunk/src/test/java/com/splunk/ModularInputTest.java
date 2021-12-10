@@ -21,13 +21,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class ModularInputTest extends InputTest {
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testModularInputKinds() {
         if (service.versionCompare("5.0") < 0 || !hasTestData()) {
             return;
         } else {
-            installApplicationFromTestData("modular-inputs");
+            installApplicationFromTestData("modular_inputs");
             // Will not pick up the new inputs unless a restart is done.
             // Nevertheless Splunk does not request a restart after app installation.
             uncheckedSplunkRestart();
@@ -43,13 +42,12 @@ public class ModularInputTest extends InputTest {
         Assert.assertTrue(hasTest2);
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testListModularInputs() {
         if (service.versionCompare("5.0") < 0 || !hasTestData()) {
             return;
         } else {
-            installApplicationFromTestData("modular-inputs");
+            installApplicationFromTestData("modular_inputs");
             // Will not pick up the new inputs unless a restart is done.
             // Nevertheless Splunk does not request a restart after app installation.
             uncheckedSplunkRestart();

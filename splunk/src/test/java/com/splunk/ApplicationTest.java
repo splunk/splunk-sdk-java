@@ -76,7 +76,6 @@ public class ApplicationTest extends SDKTestCase {
         Assert.assertTrue(setupXml.contains("stub"));
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testForSetupPresent() throws Exception {
         if (!hasTestData()) {

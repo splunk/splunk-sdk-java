@@ -19,6 +19,7 @@ package com.splunk;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -88,6 +89,12 @@ public abstract class SDKTestCase {
             }
         }
         return Integer.parseInt(version);
+    }
+
+    @BeforeClass
+    public static void preClassLoadActions() {
+        // Bypass the certification validation here.
+        HttpService.setValidateCertificates(false);
     }
 
     @Before
@@ -213,13 +220,13 @@ public abstract class SDKTestCase {
     // === Test Data Installation ===
 
     public boolean hasTestData() {
-        String collectionName = "sdk-app-collection";
-        return service.getApplications().containsKey("sdk-app-collection");
+        String collectionName = "sdkappcollection";
+        return service.getApplications().containsKey("sdkappcollection");
     }
 
     public void installApplicationFromTestData(String applicationName) {
-        String collectionName = "sdk-app-collection";
-        if (!service.getApplications().containsKey("sdk-app-collection")) {
+        String collectionName = "sdkappcollection";
+        if (!service.getApplications().containsKey("sdkappcollection")) {
             throw new TestDataNotInstalledException();
         }
 
@@ -248,10 +255,13 @@ public abstract class SDKTestCase {
         String appPath = Util.join(separator, pathComponents);
 
         Args args = new Args();
+
         args.put("name", appPath);
-        args.put("update", "1");
-        service.post("apps/appinstall", args);
-        
+        args.put("filename", true);
+        args.put("update", true);
+
+        service.post("apps/local", args);
+
         installedApps.add(applicationName);
     }
     

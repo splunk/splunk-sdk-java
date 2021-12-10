@@ -248,7 +248,6 @@ public class InputCrudTest extends InputTest {
         });
     }
 
-    @Ignore("apps/appinstall endpoint is removed in version 8.1.0")
     @Test
     public void testScriptInputCrud() {
         if (!hasTestData()) {
@@ -256,16 +255,16 @@ public class InputCrudTest extends InputTest {
             return;
         }
 
-        installApplicationFromTestData("modular-inputs");
+        installApplicationFromTestData("modular_inputs");
 
         // Determine what script to use for the input
         String filename;
         if (service.getInfo().getOsName().equals("Windows")) {
             // Windows
-            filename = "etc\\apps\\modular-inputs\\bin\\echo.bat";
+            filename = "etc\\apps\\modular_inputs\\bin\\echo.bat";
         } else {
             // Linux or Mac OS X
-            filename = "etc/apps/modular-inputs/bin/echo.sh";
+            filename = "etc/apps/modular_inputs/bin/echo.sh";
         }
 
         // Create
