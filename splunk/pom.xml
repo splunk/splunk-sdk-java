@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>splunk</artifactId>
-    <version>1.7.1</version>
+    <version>1.8.0</version>
     <parent>
         <artifactId>splunk-sdk-java</artifactId>
         <groupId>com.splunk</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
     <properties>
         <https.protocols>TLSv1.2</https.protocols>

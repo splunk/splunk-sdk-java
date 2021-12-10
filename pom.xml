@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <version.number>1.7.1</version.number>
+        <version.number>1.8.0</version.number>
         <maven.resources.overwrite>true</maven.resources.overwrite>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>
@@ -15,7 +15,7 @@
 
     <groupId>com.splunk</groupId>
     <artifactId>splunk-sdk-java</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <name>Splunk SDK for Java</name>
     <url>https://dev.splunk.com/enterprise/docs/devtools/java/sdk-java</url>
