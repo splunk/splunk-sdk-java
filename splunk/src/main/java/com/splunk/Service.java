@@ -223,7 +223,7 @@ public class Service extends BaseService {
         if (!args.containsKey("segmentation")) {
             args.put("segmentation", "none");
         }
-        ResponseMessage response = get(JobCollection.REST_PATH + "/export", args);
+        ResponseMessage response = post(JobCollection.REST_PATH + "/export", args);
         return new ExportResultsStream(response.getContent());
     }
 
