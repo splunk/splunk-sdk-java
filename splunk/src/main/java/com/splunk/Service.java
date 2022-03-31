@@ -1251,7 +1251,7 @@ public class Service extends BaseService {
      */
     public ResponseMessage parse(String query, Map args) {
         args = Args.create(args).add("q", query);
-        return get("search/parser", args);
+        return post("search/parser", args);
     }
 
     /**
