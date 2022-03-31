@@ -366,6 +366,10 @@ public class Job extends Entity {
             // search terms (i.e., <sg> elements in XML output).
             args.put("segmentation", "none");
         }
+        if (args.containsKey("search")) {
+            // Remove the search request parameter if it exists
+            args.remove("search");
+        }
 
         ResponseMessage response = service.get(path + methodPath, args);
         return response.getContent();
