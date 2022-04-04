@@ -29,15 +29,18 @@ import java.util.Map;
 public class Job extends Entity {
 
     private boolean isReady = false;
+    private String sid;
 
     /**
      * Class constructor.
      *
      * @param service The connected {@code Service} instance.
      * @param path The search jobs endpoint.
+     * @param sid The sid of the job.
      */
-    Job(Service service, String path) {
+    Job(Service service, String path, String sid) {
         super(service, path);
+        this.sid = sid;
     }
 
     /**
@@ -366,12 +369,17 @@ public class Job extends Entity {
             // search terms (i.e., <sg> elements in XML output).
             args.put("segmentation", "none");
         }
-        if (args.containsKey("search")) {
-            // Remove the search request parameter if it exists
-            args.remove("search");
+
+        // Splunk version doesn't support v2 (pre-9.0) or the 'search' arg is included (which is v1 specific)
+        String fullPath;
+        if (service.versionIsEarlierThan("9.0") || args.containsKey("search")) {
+            fullPath = JobCollection.REST_PATH + sid + methodPath;
+        }
+        else {
+            fullPath = JobCollection.REST_PATH_V2 + sid + methodPath;
         }
 
-        ResponseMessage response = service.get(path + methodPath, args);
+        ResponseMessage response = service.get(fullPath, args);
         return response.getContent();
     }
 
