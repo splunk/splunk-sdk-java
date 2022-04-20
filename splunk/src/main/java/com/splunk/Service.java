@@ -651,7 +651,7 @@ public class Service extends BaseService {
      * @return A Job.
      */
     public Job getJob(String sid) {
-        return new Job(this, JobCollection.REST_PATH + "/" + sid, sid);
+        return new Job(this, JobCollection.REST_PATH + "/" + sid);
     }
 
     /**

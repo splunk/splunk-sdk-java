@@ -88,7 +88,7 @@ public class JobCollection extends EntityCollection<Job> {
             .getTextContent();
 
         String path = service.versionIsAtLeast("9.0") ? REST_PATH_V2 : REST_PATH;
-        Job job = new Job(service, path + "/" + sid, sid);
+        Job job = new Job(service, path + "/" + sid);
         job.refresh();
 
         return job;

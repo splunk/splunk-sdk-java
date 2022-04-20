@@ -29,7 +29,6 @@ import java.util.Map;
 public class Job extends Entity {
 
     private boolean isReady = false;
-    private String sid;
 
     /**
      * Class constructor.
@@ -38,9 +37,8 @@ public class Job extends Entity {
      * @param path The search jobs endpoint.
      * @param sid The sid of the job.
      */
-    Job(Service service, String path, String sid) {
+    Job(Service service, String path) {
         super(service, path);
-        this.sid = sid;
     }
 
     /**
@@ -373,10 +371,10 @@ public class Job extends Entity {
         // Splunk version doesn't support v2 (pre-9.0) or the 'search' arg is included (which is v1 specific)
         String fullPath;
         if (service.versionIsEarlierThan("9.0") || args.containsKey("search")) {
-            fullPath = JobCollection.REST_PATH + sid + methodPath;
+            fullPath = path.replace(JobCollection.REST_PATH_V2, JobCollection.REST_PATH) + methodPath;
         }
         else {
-            fullPath = JobCollection.REST_PATH_V2 + sid + methodPath;
+            fullPath = path.replace(JobCollection.REST_PATH, JobCollection.REST_PATH_V2) + methodPath;
         }
 
         ResponseMessage response = service.get(fullPath, args);
