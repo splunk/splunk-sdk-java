@@ -63,7 +63,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testEventsFromJobV1Fallback() {
+    public void testEventsWithSearchParams() {
         Job job = jobs.create(QUERY);
         waitUntilDone(job);
 
@@ -85,7 +85,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testResultsFromJobV1Fallback() {
+    public void testResultsWithSearchParams() {
         Job job = jobs.create(QUERY);
         waitUntilDone(job);
 
@@ -609,7 +609,7 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
-    public void testPreviewV1Fallback() throws InterruptedException {
+    public void testPreviewWithSearchParams() throws InterruptedException {
         JobArgs args = new JobArgs();
         args.put("field_list", "source,host,sourcetype");
         args.setStatusBuckets(100);
