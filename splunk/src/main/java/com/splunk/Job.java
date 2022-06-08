@@ -368,16 +368,19 @@ public class Job extends Entity {
             args.put("segmentation", "none");
         }
 
-        // Splunk version doesn't support v2 (pre-9.0) or the 'search' arg is included (which is v1 specific)
+        // Splunk version pre-9.0 doesn't support v2
+        // v1(GET), v2(POST)
         String fullPath;
-        if (service.versionIsEarlierThan("9.0") || args.containsKey("search")) {
+        ResponseMessage response;
+        if (service.versionIsEarlierThan("9.0")) {
             fullPath = path.replace(JobCollection.REST_PATH_V2, JobCollection.REST_PATH) + methodPath;
+            response = service.get(fullPath, args);
         }
         else {
             fullPath = path.replace(JobCollection.REST_PATH, JobCollection.REST_PATH_V2) + methodPath;
+            response = service.post(fullPath, args);
         }
 
-        ResponseMessage response = service.get(fullPath, args);
         return response.getContent();
     }
 
