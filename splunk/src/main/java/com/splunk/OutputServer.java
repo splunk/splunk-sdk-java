@@ -92,7 +92,7 @@ public class OutputServer extends Entity {
     /**
      *  Returns client certificate path.
      *
-     * @return
+     * @return Path of client certificate.
      */
     public String getClientCert() {
         return getString("clientCert", "");

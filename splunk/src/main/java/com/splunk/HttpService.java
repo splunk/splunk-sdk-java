@@ -208,7 +208,7 @@ public class HttpService {
     /**
      * Sets Custom Headers of this service
      * 
-     * @param headers
+     * @param headers The custom headers.
      */
     public void setCustomHeaders(Map<String, String> headers) {
     	if (Objects.nonNull(headers)) {
