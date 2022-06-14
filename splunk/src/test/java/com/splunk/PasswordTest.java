@@ -132,7 +132,7 @@ public class PasswordTest extends SDKTestCase {
         Assert.assertNull(passwords.get(username));
     }
     @Test
-    public void testPasswordsCrudWithWildCards(){
+    public void testPasswordsWithWildCards(){
         HashMap<String, Object> args = new HashMap<String, Object>();
         args = Command.defaultValues;
         args.put("owner", "-");
