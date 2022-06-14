@@ -144,7 +144,7 @@ public class PasswordCollection extends EntityCollection<Password> {
 
     private Boolean checkForWildcards(){
         Boolean isWildCard = false;
-        if(service.getOwner().equals("-") || service.getApp().equals("-")){
+        if(("-").equals(service.getOwner()) || ("-").equals(service.getApp())){
             isWildCard = true;
         }
         return isWildCard;
