@@ -50,6 +50,9 @@ public class PasswordCollection extends EntityCollection<Password> {
      * @return The new credential.
      */
     public Password create(String name, String password) {
+        if(checkForWildcards()){
+            throw new IllegalArgumentException("While creating StoragePasswords, namespace cannot have wildcards.");
+        }
         Args args = new Args("password", password);
         return create(name, args);
     }
@@ -63,6 +66,9 @@ public class PasswordCollection extends EntityCollection<Password> {
      * @return The new credential.
      */
     public Password create(String name, String password, String realm) {
+        if(checkForWildcards()){
+            throw new IllegalArgumentException("While creating StoragePasswords, namespace cannot have wildcards.");
+        }
         Args args = new Args();
         args.put("password", password);
         args.put("realm", realm);
@@ -97,11 +103,17 @@ public class PasswordCollection extends EntityCollection<Password> {
      * @return The removed credential, or null if not found.
      */
     public Password remove(String realm, String name) {
+        if(checkForWildcards()){
+            throw new IllegalArgumentException("app context must be specified when removing a password.");
+        }
         return super.remove(String.format("%s:%s:", realm, name));
     }
 
     @Override
     public Password remove(String key) {
+        if(checkForWildcards()){
+            throw new IllegalArgumentException("app context must be specified when removing a password.");
+        }
         // Make it compatible with the old way (low-efficient)
         if (!key.contains(":")) {
             Password password = getByUsername((String) key);
@@ -128,5 +140,13 @@ public class PasswordCollection extends EntityCollection<Password> {
             if (password.getUsername().equals(name)) return password;
         }
         return null;
+    }
+
+    private Boolean checkForWildcards(){
+        Boolean isWildCard = false;
+        if(service.getOwner().equals("-") || service.getApp().equals("-")){
+            isWildCard = true;
+        }
+        return isWildCard;
     }
 }
