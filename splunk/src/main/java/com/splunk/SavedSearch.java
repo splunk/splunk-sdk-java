@@ -68,13 +68,13 @@ public class SavedSearch extends Entity {
      * Runs the saved search using dispatch arguments.
      *
      * @param args Dispatch arguments: <ul>
-     * <li>"dispatch.now": A time string that is used to dispatch the search as 
+     * <li>"dispatch.now": A time string that is used to dispatch the search as
      * though the specified time were the current time.</li>
-     * <li>"dispatch.*": Overwrites the value of the search field specified in 
+     * <li>"dispatch.*": Overwrites the value of the search field specified in
      * "*".</li>
-     * <li>"trigger_actions": A Boolean that indicates whether to trigger alert 
+     * <li>"trigger_actions": A Boolean that indicates whether to trigger alert
      * actions.</li>
-     * <li>"force_dispatch": A Boolean that indicates whether to start a new 
+     * <li>"force_dispatch": A Boolean that indicates whether to start a new
      * search if another instance of this search is already running.</li></ul>
      * @return The search job.
      * @throws InterruptedException The InterruptedException instance
@@ -93,7 +93,7 @@ public class SavedSearch extends Entity {
 
         return job;
     }
-    
+
     /**
      * Runs the saved search using dispatch arguments.
      *
@@ -114,6 +114,28 @@ public class SavedSearch extends Entity {
      */
     public Job[] history() {
         ResponseMessage response = service.get(actionPath("history"));
+        AtomFeed feed;
+        return parseHistoryResponse(response);
+    }
+
+    /**
+     * Returns an array of search jobs based on passed search arguments
+     *
+     * @param args
+     * @return An array of search jobs
+     */
+    public Job[] history(Map<String, Object> args) {
+        ResponseMessage response = service.get(actionPath("history"), args);
+        return parseHistoryResponse(response);
+    }
+
+    /**
+     * Parses response message from history action path
+     *
+     * @param response
+     * @return result An array of Job
+     */
+    private Job[] parseHistoryResponse(final ResponseMessage response) {
         AtomFeed feed;
         try {
             feed = AtomFeed.parseStream(response.getContent());
@@ -170,7 +192,7 @@ public class SavedSearch extends Entity {
      * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * values, wrap them in "$". For example, use "$name$" to reference the
      * saved search name, or use "$search$" to reference the search query.
      *
      * @return The search command (or pipeline).
@@ -630,7 +652,7 @@ public class SavedSearch extends Entity {
      * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * values, wrap them in "$". For example, use "$name$" to reference the
      * saved search name, or use "$search$" to reference the search query.
      *
      * @return The search command (or pipeline).
@@ -906,7 +928,7 @@ public class SavedSearch extends Entity {
     public int getDispatchMaxTime() {
         return getInteger("dispatch.max_time");
     }
-    
+
     /**
      * Returns how frequently Splunk runs the MapReduce reduce phase
      * on accumulated map values.
@@ -928,7 +950,7 @@ public class SavedSearch extends Entity {
     public boolean getDispatchRtBackfill() {
         return getDispatchRealTimeBackfill();
     }
-    
+
     /**
      * Indicates whether to back fill the real-time window for this search.
      * This attribute only applies to real-time searches.
@@ -1235,7 +1257,7 @@ public class SavedSearch extends Entity {
      * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * values, wrap them in "$". For example, use "$name$" to reference the
      * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
@@ -1547,7 +1569,7 @@ public class SavedSearch extends Entity {
      * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * values, wrap them in "$". For example, use "$name$" to reference the
      * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
@@ -1614,7 +1636,7 @@ public class SavedSearch extends Entity {
      * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * values, wrap them in "$". For example, use "$name$" to reference the
      * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
@@ -1702,7 +1724,7 @@ public class SavedSearch extends Entity {
      * <p>
      * Generally, this command is a template search pipeline that is realized
      * with values from the saved search. To reference saved search field
-     * values, wrap them in "$". For example, use "$name$" to reference the 
+     * values, wrap them in "$". For example, use "$name$" to reference the
      * saved search name, or use "$search$" to reference the search query.
      *
      * @param command The search command (or pipeline).
@@ -1954,7 +1976,7 @@ public class SavedSearch extends Entity {
     public void setDispatchBuckets(String buckets) {
         setDispatchBuckets(Integer.parseInt(buckets));
     }
-    
+
     /**
      * Sets the maximum number of timeline buckets.
      *
@@ -2161,7 +2183,7 @@ public class SavedSearch extends Entity {
     public void setRestartOnSearchpeerAdd(boolean restart) {
         setRestartOnSearchPeerAdd(restart);
     }
-    
+
     /**
      * Sets whether a real-time search managed by the scheduler is
      * restarted when a search peer becomes available for this saved search.
