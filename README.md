@@ -40,7 +40,7 @@ Here's what you need to get going with the Splunk SDK for Java.
 If you haven't already installed Splunk, download it
 [here](http://www.splunk.com/download). For more about installing and running
 Splunk and system requirements, see
-[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 8.0 and 8.2.0.
+[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 9.0 and 8.2.
 
 #### Splunk SDK for Java
 

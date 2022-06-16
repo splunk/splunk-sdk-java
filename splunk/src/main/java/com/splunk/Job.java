@@ -35,6 +35,7 @@ public class Job extends Entity {
      *
      * @param service The connected {@code Service} instance.
      * @param path The search jobs endpoint.
+     * @param sid The sid of the job.
      */
     Job(Service service, String path) {
         super(service, path);
@@ -367,7 +368,19 @@ public class Job extends Entity {
             args.put("segmentation", "none");
         }
 
-        ResponseMessage response = service.get(path + methodPath, args);
+        // Splunk version pre-9.0 doesn't support v2
+        // v1(GET), v2(POST)
+        String fullPath;
+        ResponseMessage response;
+        if (service.versionIsEarlierThan("9.0")) {
+            fullPath = path.replace(JobCollection.REST_PATH_V2, JobCollection.REST_PATH) + methodPath;
+            response = service.get(fullPath, args);
+        }
+        else {
+            fullPath = path.replace(JobCollection.REST_PATH, JobCollection.REST_PATH_V2) + methodPath;
+            response = service.post(fullPath, args);
+        }
+
         return response.getContent();
     }
 
