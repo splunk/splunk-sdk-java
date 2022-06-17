@@ -1,7 +1,7 @@
 [![Java SDK Test](https://github.com/splunk/splunk-sdk-java/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/splunk/splunk-sdk-java/actions/workflows/test.yml)
 # The Splunk Software Development Kit for Java
 
-#### Version 1.8.0
+#### Version 1.9.0
 
 The Splunk Software Development Kit (SDK) for Java contains library code and
 examples designed to enable developers to build applications using Splunk.
@@ -40,7 +40,7 @@ Here's what you need to get going with the Splunk SDK for Java.
 If you haven't already installed Splunk, download it
 [here](http://www.splunk.com/download). For more about installing and running
 Splunk and system requirements, see
-[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 8.0 and 8.2.0.
+[Installing & Running Splunk](http://dev.splunk.com/view/SP-CAAADRV). The Splunk SDK for Java has been tested with Splunk Enterprise 9.0 and 8.2.
 
 #### Splunk SDK for Java
 
@@ -75,7 +75,7 @@ To add the Splunk SDK for Java `.JAR` file as a dependency:
   <dependency>
     <groupId>com.splunk</groupId>
     <artifactId>splunk</artifactId>
-    <version>1.8.0</version>
+    <version>1.9.0</version>
   </dependency>
 </dependencies>
 ```

@@ -89,7 +89,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.8.0");
+        put("User-Agent", "splunk-sdk-java/1.9.0");
         put("Accept", "*/*");
     }};
     
@@ -208,7 +208,7 @@ public class HttpService {
     /**
      * Sets Custom Headers of this service
      * 
-     * @param headers
+     * @param headers The custom headers.
      */
     public void setCustomHeaders(Map<String, String> headers) {
     	if (Objects.nonNull(headers)) {

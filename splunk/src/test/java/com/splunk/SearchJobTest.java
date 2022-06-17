@@ -63,11 +63,35 @@ public class SearchJobTest extends SDKTestCase {
     }
 
     @Test
+    public void testEventsWithSearchParams() {
+        Job job = jobs.create(QUERY);
+        waitUntilDone(job);
+
+        Map args = new HashMap<String, Object>();
+        args.put("search","| head 1");
+        Assert.assertEquals(1, countEvents(job.getEvents(args)));
+
+        job.cancel();
+    }
+
+    @Test
     public void testResultsFromJob() {
         Job job = jobs.create(QUERY);
         waitUntilDone(job);
 
         Assert.assertEquals(10, countEvents(job.getResults()));
+
+        job.cancel();
+    }
+
+    @Test
+    public void testResultsWithSearchParams() {
+        Job job = jobs.create(QUERY);
+        waitUntilDone(job);
+
+        Map args = new HashMap<String, Object>();
+        args.put("search","| head 1");
+        Assert.assertEquals(1, countEvents(job.getResults(args)));
 
         job.cancel();
     }
@@ -580,6 +604,26 @@ public class SearchJobTest extends SDKTestCase {
         }
 
         Assert.assertTrue(10 >= countEvents(job.getResultsPreview()));
+
+        job.cancel();
+    }
+
+    @Test
+    public void testPreviewWithSearchParams() throws InterruptedException {
+        JobArgs args = new JobArgs();
+        args.put("field_list", "source,host,sourcetype");
+        args.setStatusBuckets(100);
+
+        Job job = jobs.create(QUERY, args);
+
+        while (!job.isReady()) {
+            Thread.sleep(100);
+        }
+
+        Map argsSearchQuery = new HashMap<String, Object>();
+        argsSearchQuery.put("search","| head 1");
+        // Assert.assertTrue(1 >= countEvents(job.getResultsPreview(args)));
+        Assert.assertEquals(1, countEvents(job.getResultsPreview(argsSearchQuery)));
 
         job.cancel();
     }
