@@ -1,5 +1,13 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.9.0
+
+### New Features and APIs
+* SDK Support for splunkd search API changes, for Splunk 9.0+. (Github PR [#189](https://github.com/splunk/splunk-sdk-java/pull/189))
+
+### Minor Changes
+* Automated docs generation using GitHub actions. (Github PR [#184](https://github.com/splunk/splunk-sdk-java/pull/184))
+
 ## Version 1.8.0
 
 ### New Features and APIs
