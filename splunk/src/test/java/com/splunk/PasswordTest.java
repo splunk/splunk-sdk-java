@@ -19,6 +19,8 @@ package com.splunk;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class PasswordTest extends SDKTestCase {
     @Test
     public void testGettersOfDefaultPasswords() {
@@ -128,5 +130,47 @@ public class PasswordTest extends SDKTestCase {
 
         passwords.remove(username);
         Assert.assertNull(passwords.get(username));
+    }
+    @Test
+    public void testPasswordsWithWildCards(){
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args = Command.defaultValues;
+        args.put("owner", "-");
+        args.put("app", "-");
+        args.put("username", "admin");
+        args.put("password", "changed!");
+        Service service = Service.connect(args);
+        PasswordCollection passwords = service.getPasswords();
+        Assert.assertEquals(passwords.size(),0);
+
+        String name = "no-owner";
+        String value = "sdk-test-password";
+        String realm = "sdk-test-realm";
+
+        Password password;
+        // Create a password
+        try{
+            password = passwords.create(name, value);
+        }catch(IllegalArgumentException e){
+            Assert.assertEquals("While creating StoragePasswords, namespace cannot have wildcards.", e.getMessage());
+        }
+        try{
+            password = passwords.create(name, value, realm);
+        }catch(IllegalArgumentException e){
+            Assert.assertEquals("While creating StoragePasswords, namespace cannot have wildcards.", e.getMessage());
+        }
+        // Remove a password
+        try{
+            password = passwords.remove(name);
+        }catch(IllegalArgumentException e){
+            Assert.assertEquals("app context must be specified when removing a password.", e.getMessage());
+        }
+        try{
+            password = passwords.remove(realm, name);
+        }catch(IllegalArgumentException e){
+            Assert.assertEquals("app context must be specified when removing a password.", e.getMessage());
+        }
+        passwords = service.getPasswords();
+        Assert.assertEquals(passwords.size(),0);
     }
 }
