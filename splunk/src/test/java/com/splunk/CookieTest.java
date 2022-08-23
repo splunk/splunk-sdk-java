@@ -130,6 +130,7 @@ public class CookieTest extends SDKTestCase {
         service.cookieStore.add(otherCookies);
         service.login();
         service.getApplications();
+        service.cookieStore.removeAll();
     }
 
     @Ignore
@@ -154,7 +155,7 @@ public class CookieTest extends SDKTestCase {
         Map<String, Object> args = getStandardArgs();
 
         Service s  = new Service(args);
-
+        
         s.addCookie("bad=cookie");
         s.addCookie(validCookie);
         s.addCookie("another_bad=cookie");
