@@ -36,7 +36,7 @@ public class ReceiverTest extends SDKTestCase {
     @Test
     public void testReceiverWithCookie() {
         Assume.assumeTrue(service.versionIsAtLeast("6.2"));
-        Assert.assertTrue(service.hasCookies());
+        Assert.assertTrue(service.hasSplunkAuthCookies());
         testReceiver(service);
     }
     // Make a few simple requests and make sure the results look ok.

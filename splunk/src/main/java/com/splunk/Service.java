@@ -1112,7 +1112,8 @@ public class Service extends BaseService {
      * @return The current {@code Service} instance.
      */
     public Service login() {
-        if (!this.cookieStore.isEmpty() && (this.username == null || this.password == null)) {
+        //if (!this.cookieStore.isEmpty() && (this.username == null || this.password == null)) {
+        if (this.cookieStore.hasSplunkAuthCookie() && (this.username == null || this.password == null)) {
             return this;
         }
         else if (this.username == null || this.password == null) {
@@ -1312,7 +1313,8 @@ public class Service extends BaseService {
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
         // cookieStore is a protected member of HttpService
-        if (token != null && cookieStore.isEmpty()) {
+        //if (token != null && cookieStore.isEmpty() ) {
+        if (token != null && !cookieStore.hasSplunkAuthCookie() ) {
             request.getHeader().put("Authorization", token);
         }
         return super.send(fullpath(path), request);

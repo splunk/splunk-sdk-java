@@ -28,6 +28,8 @@ import java.lang.StringBuilder;
  */
 class SimpleCookieStore {
 
+    public static final String SPLUNK_AUTH_COOKIE = "splunkd_";
+
     private Map<String, String> cookieJar = new HashMap<String, String>();
     /**
      * Adds cookies from a "Set-Cookie" header to the cookie store.
@@ -67,6 +69,19 @@ class SimpleCookieStore {
      */
     public Boolean isEmpty() {
         return cookieJar.isEmpty();
+    }
+
+    public boolean hasSplunkAuthCookie(){
+        if(cookieJar.isEmpty()){
+            return false;
+        }
+        for(String cookie : cookieJar.keySet()){
+            if(cookie.startsWith(SPLUNK_AUTH_COOKIE)){
+                System.out.println("HELLO");
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

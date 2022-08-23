@@ -77,8 +77,8 @@ public class IndexTest extends SDKTestCase {
             // Cookies not implemented before version 6.2
             return;
         }
-        // Check that their are cookies at all
-        Assert.assertTrue(service.hasCookies());
+        // Check that their are Splunk Auth cookies at all
+        Assert.assertTrue(service.hasSplunkAuthCookies());
 
         // Make a service that only has that cookie
         String validCookie = service.stringifyCookies();
