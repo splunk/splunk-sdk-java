@@ -77,7 +77,6 @@ class SimpleCookieStore {
         }
         for(String cookie : cookieJar.keySet()){
             if(cookie.startsWith(SPLUNK_AUTH_COOKIE)){
-                System.out.println("HELLO");
                 return true;
             }
         }

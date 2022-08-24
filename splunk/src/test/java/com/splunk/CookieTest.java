@@ -133,17 +133,17 @@ public class CookieTest extends SDKTestCase {
         service.cookieStore.removeAll();
     }
 
-    @Ignore
     @Test
     public void testUsingAuthTokenAndOtherCookie(){
-        String bearerToken = "eyJraWQiOiJzcGx1bmsuc2VjcmV0IiwiYWxnIjoiSFM1MTIiLCJ2ZXIiOiJ2MiIsInR0eXAiOiJzdGF0aWMifQ.eyJpc3MiOiJhZG1pbiBmcm9tIDZiMjIzZWI5NmY4YiIsInN1YiI6InRlc3QiLCJhdWQiOiJ1c2VyIiwiaWRwIjoiU3BsdW5rIiwianRpIjoiMWE1MWNiZWMyY2Q0ZGQyMWFjODcxOGRmMTA2MjRjZDU1YTlmM2M3Y2E3NjRkNTgwYWU0YTVmOWRiMDAzZjIxOSIsImlhdCI6MTY2MTE2Mzk0OSwiZXhwIjoxNjYzNzU1OTQ5LCJuYnIiOjE2NjM3NTU5NDl9.CfG8pCqNyupge_AM8oX1GXiEDYVkflJuJ4UkeqAWwH3UpKXP1efDhWX57ee_PkhwXCDwQtvmUWd3gCDFZASg_Q";
+        String validToken = service.getToken();
+        Assert.assertTrue(validToken.startsWith("Splunk "));
         String otherCookies = "load=balancer;";
         Map<String, Object> args = new HashMap<>();
         args.put("cookie", otherCookies);
-        args.put("host","localhost");
-        args.put("port", 8089);
-        Service s  = new Service(args);
-        s.setBearerToken(bearerToken);
+        args.put("host",service.getHost());
+        args.put("port", service.getPort());
+        Service s = new Service(args);
+        s.setToken(validToken);
         s.getApplications();
         Assert.assertEquals(otherCookies.trim(),s.cookieStore.getCookies().trim());
     }
@@ -155,7 +155,7 @@ public class CookieTest extends SDKTestCase {
         Map<String, Object> args = getStandardArgs();
 
         Service s  = new Service(args);
-        
+
         s.addCookie("bad=cookie");
         s.addCookie(validCookie);
         s.addCookie("another_bad=cookie");
