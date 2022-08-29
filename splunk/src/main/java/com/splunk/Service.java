@@ -223,13 +223,13 @@ public class Service extends BaseService {
         if (!args.containsKey("segmentation")) {
             args.put("segmentation", "none");
         }
-        ResponseMessage response;
-
-        if (versionIsAtLeast("9.0"))
-            response = post(JobCollection.REST_PATH_V2 + "/export", args);
-        else {
-            response = post(JobCollection.REST_PATH + "/export", args);
-        }
+        ResponseMessage response = get(JobCollection.REST_PATH + "/export", args);
+//        ResponseMessage response;
+//        if (versionIsAtLeast("9.0"))
+//            response = post(JobCollection.REST_PATH_V2 + "/export", args);
+//        else {
+//            response = post(JobCollection.REST_PATH + "/export", args);
+//        }
         return new ExportResultsStream(response.getContent());
     }
 
@@ -1257,11 +1257,11 @@ public class Service extends BaseService {
      */
     public ResponseMessage parse(String query, Map args) {
         args = Args.create(args).add("q", query);
-
-        if (versionIsAtLeast("9.0"))
-            return post("search/v2/parser", args);
-        else
-            return get("search/parser", args);
+        return get("search/parser", args);
+//        if (versionIsAtLeast("9.0"))
+//            return post("search/v2/parser", args);
+//        else
+//            return get("search/parser", args);
     }
 
     /**
