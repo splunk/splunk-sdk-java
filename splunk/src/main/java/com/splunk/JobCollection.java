@@ -27,7 +27,7 @@ public class JobCollection extends EntityCollection<Job> {
     static String oneShotNotAllowed = String.format(
          "Oneshot not allowed, use service oneshot search method");
     static final String REST_PATH = "search/jobs";
-//    static final String REST_PATH_V2 = "search/v2/jobs";
+    //static final String REST_PATH_V2 = "search/v2/jobs";
     /**
      * Class constructor.
      *
@@ -35,7 +35,7 @@ public class JobCollection extends EntityCollection<Job> {
      */
     JobCollection(Service service) {
         super(service, REST_PATH, Job.class);
-//        super(service, service.versionIsAtLeast("9.0") ? REST_PATH_V2 : REST_PATH, Job.class);
+        //super(service, service.versionIsAtLeast("9.0") ? REST_PATH_V2 : REST_PATH, Job.class);
         this.refreshArgs.put("count", "0");
     }
 
@@ -48,7 +48,7 @@ public class JobCollection extends EntityCollection<Job> {
      */
     JobCollection(Service service, Args args) {
         super(service, REST_PATH, Job.class);
-//        super(service, service.versionIsAtLeast("9.0") ? REST_PATH_V2 : REST_PATH, Job.class, args);
+        //super(service, service.versionIsAtLeast("9.0") ? REST_PATH_V2 : REST_PATH, Job.class, args);
         this.refreshArgs.put("count", "0");
     }
 
@@ -90,8 +90,8 @@ public class JobCollection extends EntityCollection<Job> {
             .getTextContent();
 
         Job job = new Job(service, REST_PATH + "/" + sid);
-//        String path = service.versionIsAtLeast("9.0") ? REST_PATH_V2 : REST_PATH;
-//        Job job = new Job(service, path + "/" + sid);
+        //String path = service.versionIsAtLeast("9.0") ? REST_PATH_V2 : REST_PATH;
+        //Job job = new Job(service, path + "/" + sid);
         job.refresh();
 
         return job;
