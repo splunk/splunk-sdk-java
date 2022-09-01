@@ -225,7 +225,7 @@ public class Service extends BaseService {
         }
         ResponseMessage response;
 
-        if (versionIsAtLeast("9.0"))
+        if (versionIsAtLeast("9.0.2"))
             response = post(JobCollection.REST_PATH_V2 + "/export", args);
         else {
             response = post(JobCollection.REST_PATH + "/export", args);
@@ -1258,7 +1258,7 @@ public class Service extends BaseService {
     public ResponseMessage parse(String query, Map args) {
         args = Args.create(args).add("q", query);
 
-        if (versionIsAtLeast("9.0"))
+        if (versionIsAtLeast("9.0.2"))
             return post("search/v2/parser", args);
         else
             return get("search/parser", args);
@@ -1311,6 +1311,7 @@ public class Service extends BaseService {
      * @return The HTTP response.
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
+        System.out.println("Path: "+path);
         // cookieStore is a protected member of HttpService
         if (token != null && cookieStore.isEmpty()) {
             request.getHeader().put("Authorization", token);
