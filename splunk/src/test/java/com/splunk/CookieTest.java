@@ -16,13 +16,11 @@
 
 package com.splunk;
 
+import java.net.HttpCookie;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 public class CookieTest extends SDKTestCase {
 
@@ -122,6 +120,32 @@ public class CookieTest extends SDKTestCase {
         s.addCookie("bad=cookie");
 
         s.getSettings().refresh();
+    }
+
+    @Test
+    public void testLoginWithOtherCookies() {
+        String otherCookies = "load=balancer;";
+        service.logout();
+        service.cookieStore.removeAll();
+        service.cookieStore.add(otherCookies);
+        service.login();
+        service.getApplications();
+        service.cookieStore.removeAll();
+    }
+
+    @Test
+    public void testUsingAuthTokenAndOtherCookie(){
+        String validToken = service.getToken();
+        Assert.assertTrue(validToken.startsWith("Splunk "));
+        String otherCookies = "load=balancer;";
+        Map<String, Object> args = new HashMap<>();
+        args.put("cookie", otherCookies);
+        args.put("host",service.getHost());
+        args.put("port", service.getPort());
+        Service s = new Service(args);
+        s.setToken(validToken);
+        s.getApplications();
+        Assert.assertEquals(otherCookies.trim(),s.cookieStore.getCookies().trim());
     }
 
     @Test
