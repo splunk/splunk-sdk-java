@@ -155,6 +155,8 @@ public class ServiceInfo extends Entity {
         return getString("version");
     }
 
+    public String getInstanceType() {return  getString("instance_type", "");}
+
     /**
      * Indicates whether this Splunk instance is running under a free license.
      *
