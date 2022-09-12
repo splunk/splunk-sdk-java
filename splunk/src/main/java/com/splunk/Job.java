@@ -372,7 +372,7 @@ public class Job extends Entity {
         // v1(GET), v2(POST)
         String fullPath;
         ResponseMessage response;
-        if (service.versionIsEarlierThan("9.0.2")) {
+        if (!service.enableV2SearchApi()) {
             fullPath = path.replace(JobCollection.REST_PATH_V2, JobCollection.REST_PATH) + methodPath;
             response = service.get(fullPath, args);
         }
@@ -380,7 +380,7 @@ public class Job extends Entity {
             fullPath = path.replace(JobCollection.REST_PATH, JobCollection.REST_PATH_V2) + methodPath;
             response = service.post(fullPath, args);
         }
-
+        
         return response.getContent();
     }
 
