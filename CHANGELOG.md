@@ -1,5 +1,13 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.9.1
+
+### New Features and APIs
+* SDK Support for third-party (Load Balancer) "sticky sessions"(cookie persistence) (Github PR [#192](https://github.com/splunk/splunk-sdk-java/pull/192))
+
+### Minor Changes
+* Special handling related to the semantic versioning of specific Search APIs functional in Splunk Enterprise 9.0.2 and (Splunk Cloud 9.0.2209). These SDK changes will enable seamless transition between the APIs based on the version of the Splunk Enterprise/Cloud (Github PR [#193](https://github.com/splunk/splunk-sdk-java/pull/193))
+
 ## Version 1.9.0
 
 ### New Features and APIs
