@@ -4,9 +4,11 @@
 
 ### New Features and APIs
 * SDK Support for third-party (Load Balancer) "sticky sessions"(cookie persistence) (Github PR [#192](https://github.com/splunk/splunk-sdk-java/pull/192))
+* Added Args option for Saved Search history method (GitHub Issue [#126](https://github.com/splunk/splunk-sdk-java/issues/126) & PR [#188](https://github.com/splunk/splunk-sdk-java/pull/188) )
 
 ### Minor Changes
 * Special handling related to the semantic versioning of specific Search APIs functional in Splunk Enterprise 9.0.2 and (Splunk Cloud 9.0.2209). These SDK changes will enable seamless transition between the APIs based on the version of the Splunk Enterprise/Cloud (Github PR [#193](https://github.com/splunk/splunk-sdk-java/pull/193))
+* Updated checks to fetch Storage Passwords with wildcards in namespace. (GitHub PR [#187](https://github.com/splunk/splunk-sdk-java/pull/187))
 
 ## Version 1.9.0
 
