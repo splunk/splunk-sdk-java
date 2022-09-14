@@ -66,6 +66,9 @@ public class Service extends BaseService {
     /** The version of this Splunk instance, once logged in. */
     public String version = null;
 
+    /** The type of this Splunk instance, once logged in. */
+    public String instanceType = null;
+
     /** The default host name, which is used when a host name is not provided.*/
     public static String DEFAULT_HOST = "localhost";
 
@@ -225,7 +228,7 @@ public class Service extends BaseService {
         }
         ResponseMessage response;
 
-        if (versionIsAtLeast("9.0"))
+        if(enableV2SearchApi())
             response = post(JobCollection.REST_PATH_V2 + "/export", args);
         else {
             response = post(JobCollection.REST_PATH + "/export", args);
@@ -1112,7 +1115,7 @@ public class Service extends BaseService {
      * @return The current {@code Service} instance.
      */
     public Service login() {
-        if (!this.cookieStore.isEmpty() && (this.username == null || this.password == null)) {
+        if (this.cookieStore.hasSplunkAuthCookie() && (this.username == null || this.password == null)) {
             return this;
         }
         else if (this.username == null || this.password == null) {
@@ -1147,6 +1150,7 @@ public class Service extends BaseService {
             .getTextContent();
         this.token = "Splunk " + sessionKey;
         this.version = this.getInfo().getVersion();
+        this.instanceType = this.getInfo().getInstanceType();
         if (versionCompare("4.3") >= 0)
             this.passwordEndPoint = "storage/passwords";
 
@@ -1258,7 +1262,7 @@ public class Service extends BaseService {
     public ResponseMessage parse(String query, Map args) {
         args = Args.create(args).add("q", query);
 
-        if (versionIsAtLeast("9.0"))
+        if(enableV2SearchApi())
             return post("search/v2/parser", args);
         else
             return get("search/parser", args);
@@ -1312,7 +1316,7 @@ public class Service extends BaseService {
      */
     @Override public ResponseMessage send(String path, RequestMessage request) {
         // cookieStore is a protected member of HttpService
-        if (token != null && cookieStore.isEmpty()) {
+        if (token != null && !cookieStore.hasSplunkAuthCookie() ) {
             request.getHeader().put("Authorization", token);
         }
         return super.send(fullpath(path), request);
@@ -1348,6 +1352,15 @@ public class Service extends BaseService {
      */
     public void setBearerToken(String value) {
         this.token = value.contains("Splunk") || value.contains("Bearer") ? value : "Bearer " + value;
+    }
+
+
+    public boolean enableV2SearchApi(){
+        if(this.instanceType.equalsIgnoreCase("cloud")) {
+            return versionIsAtLeast("9.0.2209");
+        }else{
+            return versionIsAtLeast("9.0.2");
+        }
     }
 
     /**

@@ -24,6 +24,8 @@ import org.junit.Assume;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReceiverTest extends SDKTestCase {
 
@@ -36,9 +38,28 @@ public class ReceiverTest extends SDKTestCase {
     @Test
     public void testReceiverWithCookie() {
         Assume.assumeTrue(service.versionIsAtLeast("6.2"));
-        Assert.assertTrue(service.hasCookies());
+        Assert.assertTrue(service.hasSplunkAuthCookies());
         testReceiver(service);
     }
+
+    @Test
+    public void testReceiverWithoutSplunkCookie() {
+        String validToken = service.getToken();
+        Assert.assertTrue(validToken.startsWith("Splunk "));
+        String otherCookies = "load=balancer;";
+        Map<String, Object> args = new HashMap<>();
+        args.put("cookie", otherCookies);
+        args.put("host",service.getHost());
+        args.put("port", service.getPort());
+        Service s = new Service(args);
+        s.setToken(validToken);
+        s.version = s.getInfo().getVersion();
+        System.out.println(s.version);
+        Assume.assumeTrue(s.versionIsAtLeast("6.2"));
+        Assert.assertTrue(!s.cookieStore.isEmpty());
+        testReceiver(s);
+    }
+
     // Make a few simple requests and make sure the results look ok.
     public void testReceiver(Service passedService) {
         Receiver receiver = passedService.getReceiver();

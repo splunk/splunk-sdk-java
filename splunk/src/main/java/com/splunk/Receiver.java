@@ -98,9 +98,13 @@ public class Receiver {
         headers.add("Accept-Encoding: identity");
         headers.add("X-Splunk-Input-Mode: Streaming");
 
-        if (service.hasCookies()) {
+        if (service.hasSplunkAuthCookies()) {
             headers.add(String.format("Cookie: %s", service.stringifyCookies()));
         } else {
+            // to persist the cookies other than Splunk such as from Load Balancer
+            if(!service.cookieStore.isEmpty()){
+                headers.add(String.format("Cookie: %s", service.stringifyCookies()));
+            }
             headers.add(String.format("Authorization: %s", service.getToken()));
         }
         headers.add("");

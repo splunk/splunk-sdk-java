@@ -715,4 +715,24 @@ public class ServiceTest extends SDKTestCase {
         Assert.assertTrue(firstLineIsXmlDtd(response.getContent()));
     }
 
+    /*
+    Test whether the V2 and V1 Search APIs are switched properly based on the Type of Splunk Instance and Version.
+     */
+    @Test
+    public void testEnableV2Api(){
+        if(service.instanceType.equalsIgnoreCase("cloud")) {
+            if(service.versionIsEarlierThan("9.0.2209")){
+                Assert.assertFalse(service.enableV2SearchApi());
+            }else{
+                Assert.assertTrue(service.enableV2SearchApi());
+            }
+        }else{
+            if(service.versionIsEarlierThan("9.0.2")){
+                Assert.assertFalse(service.enableV2SearchApi());
+            }else{
+                Assert.assertTrue(service.enableV2SearchApi());
+            }
+        }
+    }
+
 }

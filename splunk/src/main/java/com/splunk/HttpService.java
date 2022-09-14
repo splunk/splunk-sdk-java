@@ -89,7 +89,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.9.0");
+        put("User-Agent", "splunk-sdk-java/1.9.1");
         put("Accept", "*/*");
     }};
     
@@ -316,12 +316,12 @@ public class HttpService {
     }
 
     /**
-     * Returns true if the cookeStore has any cookies, false otherwise
+     * Returns true if the cookieStore has any Splunk Authorization cookies, false otherwise
      *
      * @return True if there are cookies, false otherwise
      */
-    public Boolean hasCookies() {
-        return !cookieStore.isEmpty();
+    public Boolean hasSplunkAuthCookies() {
+        return cookieStore.hasSplunkAuthCookie();
     }
 
     /**

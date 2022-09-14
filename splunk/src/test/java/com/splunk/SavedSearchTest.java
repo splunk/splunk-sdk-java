@@ -21,6 +21,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class SavedSearchTest extends SDKTestCase {
     SavedSearchCollection savedSearches;
     String savedSearchName;
@@ -424,6 +426,36 @@ public class SavedSearchTest extends SDKTestCase {
                 }
             }
             Assert.assertTrue(isFound);
+
+        } catch (InterruptedException e) {
+            Assert.fail(e.toString());
+        }
+    }
+    
+    @Test
+    public void testHistoryWithArgs(){
+        savedSearch.refresh();
+        Assert.assertEquals(0, savedSearch.history().length);
+        try {
+            Job job;
+            for(int i = 0 ; i < 31 ; i++){
+                job = savedSearch.dispatch();
+                while(!job.isReady()){
+                    sleep(2);
+                }
+            }
+            //history without any argument, it will return max 30 jobs only.
+            Assert.assertEquals(30, savedSearch.history().length);
+
+            //history with argument 'count' set to '0' i.e it returns the whole history
+            HashMap<String, Object> args = new HashMap<String, Object>();
+            args.put("count", 0);
+            Assert.assertEquals(31, savedSearch.history(args).length);
+
+            //history with argument 'count' set to '10' i.e. it will return only 10 jobs from history
+            args.put("count", 10);
+            args.put("sort_dir", "desc");
+            Assert.assertEquals(10, savedSearch.history(args).length);
 
         } catch (InterruptedException e) {
             Assert.fail(e.toString());
