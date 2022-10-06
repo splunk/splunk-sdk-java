@@ -50,6 +50,8 @@ public class Entity extends Resource implements Map<String, Object> {
             return path + "/enable";
         if (action.equals("remove"))
             return path;
+        if (action.equals("acl"))
+            return path + "/acl";
         throw new IllegalArgumentException("Invalid action: " + action);
     }
 
@@ -448,6 +450,26 @@ public class Entity extends Resource implements Map<String, Object> {
     @SuppressWarnings("unchecked")
     public void update() {
         update(Collections.EMPTY_MAP);
+    }
+
+
+    /**
+     * Update the access control list (ACL) properties for this entity,
+     *
+     * @param args: Properties to update for this entity.
+     *      Required Properties in 'args'
+     *        - `owner`: The Splunk username, such as "admin". A value of "nobody" means no specific user.
+     *        - `sharing`: A mode that indicates how the resource is shared. The sharing mode can be "user", "app", "global", or "system".
+     */
+    public void aclUpdate(Map<String, Object> args){
+        if(!args.containsKey("sharing")){
+            throw new IllegalArgumentException("Required argument 'sharing' is missing.");
+        }
+        if(!args.containsKey("owner")){
+            throw new IllegalArgumentException("Required argument 'owner' is missing.");
+        }
+        service.post(actionPath("acl"), args);
+        invalidate();
     }
 
     /**

@@ -361,6 +361,38 @@ public class SavedSearchTest extends SDKTestCase {
     }
 
     @Test
+    public void testACLUpdates(){
+        Record aclInfo = savedSearch.getMetadata().getEaiAcl();
+        Assert.assertNotEquals(aclInfo.getString("sharing"), "app");
+        Assert.assertNotEquals(aclInfo.getString("owner"), "nobody");
+        Assert.assertNull(aclInfo.get("perms"));
+        Args args = new Args();
+        args.add("sharing","app");
+        args.add("owner","nobody");
+        args.add("app","search");
+        args.add("perms.read","admin, nobody");
+        savedSearch.aclUpdate(args);
+        aclInfo = savedSearch.getMetadata().getEaiAcl();
+        Assert.assertEquals(aclInfo.getString("sharing"), "app");
+        Assert.assertEquals(aclInfo.getString("owner"), "nobody");
+        Assert.assertNotNull(aclInfo.get("perms"));
+    }
+
+    @Test
+    public void testACLUpdateWithoutSharing(){
+        Args args = new Args();
+        args.add("owner","nobody");
+        args.add("app","search");
+        Assert.assertThrows("Required argument 'sharing' is missing.", IllegalArgumentException.class, () -> {savedSearch.aclUpdate(args);});
+    }
+
+    @Test
+    public void testACLUpdateWithoutOwner(){
+        Args args = new Args();
+        Assert.assertThrows("Required argument 'owner' is missing.", IllegalArgumentException.class, () -> {savedSearch.aclUpdate(args);});
+    }
+
+    @Test
     public void testDispatch() {
         final JobCollection jobs = service.getJobs();
 
