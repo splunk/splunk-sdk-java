@@ -1,6 +1,7 @@
 on:
-  release:
-    types: [published]
+  [push]
+#  release:
+#    types: [published]
 
 name: Release
 
@@ -21,28 +22,28 @@ jobs:
         run: mvn package --file pom.xml -DskipTests=true
       - name: Create temp artifacts apidocs folder
         run: mkdir apidocs
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-#          body_path: ${{ github.workflow }}-CHANGELOG.txt
-          files: ./target/*.jarln -s /data/to/zip/data.txt data.txt
-          draft: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy to Artifactory
-        run: mvn --batch-mode deploy -DskipTests=true
-        env:
-          MAVEN_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-
-      - name: Zip docs
-        run: |
-          cd splunk/target/apidocs
-          zip -r ./../../../apidocs/docs.zip ./*
-          cd ../../..
+#      - name: Create GitHub Release
+#        uses: softprops/action-gh-release@v1
+#        with:
+##          body_path: ${{ github.workflow }}-CHANGELOG.txt
+#          files: ./target/*.jarln -s /data/to/zip/data.txt data.txt
+#          draft: true
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Deploy to Artifactory
+#        run: mvn --batch-mode deploy -DskipTests=true
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+#
+#      - name: Zip docs
+#        run: |
+#          cd splunk/target/apidocs
+#          zip -r ./../../../apidocs/docs.zip ./*
+#          cd ../../..
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: apidocs
-          path: apidocs/docs.zip
+          path: splunk/target/apidocs
