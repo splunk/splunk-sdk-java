@@ -43,5 +43,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: docs-java-sdk
+          name: java_sdk_docs
           path: splunk/target/apidocs
