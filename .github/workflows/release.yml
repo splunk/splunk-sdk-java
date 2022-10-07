@@ -20,8 +20,6 @@ jobs:
           server-id: splunk-artifactory
       - name: build
         run: mvn package --file pom.xml -DskipTests=true
-      - name: Create temp artifacts apidocs folder
-        run: mkdir apidocs
 #      - name: Create GitHub Release
 #        uses: softprops/action-gh-release@v1
 #        with:
@@ -45,5 +43,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: apidocs
+          name: docs-java-sdk
           path: splunk/target/apidocs
