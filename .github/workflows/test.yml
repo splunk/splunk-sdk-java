@@ -1,7 +1,7 @@
 name: Java SDK Test
 
 on:
-  [ pull_request]
+  [push, pull_request]
 
 jobs:
   test:
