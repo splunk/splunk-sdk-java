@@ -23,7 +23,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
 #          body_path: ${{ github.workflow }}-CHANGELOG.txt
-          files: ./target/*.jarln -s /data/to/zip/data.txt data.txt
+          files: ./target/*.jar
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
