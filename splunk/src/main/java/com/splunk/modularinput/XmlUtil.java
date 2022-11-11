@@ -35,10 +35,12 @@ class XmlUtil {
      */
     static String textInNode(Node node, String errorMessage) throws MalformedDataException {
         Node child = node.getFirstChild();
-        if (child.getNodeType() != Node.TEXT_NODE) {
+        if (null == child) {
+            return "";
+        } else if (child.getNodeType() != Node.TEXT_NODE) {
             throw new MalformedDataException(errorMessage);
         } else {
-            return ((Text)child).getData();
+            return ((Text) child).getData();
         }
     }
 
