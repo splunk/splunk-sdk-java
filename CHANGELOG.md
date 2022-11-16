@@ -1,5 +1,13 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.9.2
+
+### New Features and APIs
+* Added feature that allows to update ACL properties of an entity (GitHub PR [#196](https://github.com/splunk/splunk-sdk-java/pull/196))
+
+### Minor Changes
+* Added null check for child to handle error when no value is passed for a parameter in modular-inputs (Ref issue [#198](https://github.com/splunk/splunk-sdk-java/issues/198) & GitHub PR [#199](https://github.com/splunk/splunk-sdk-java/pull/199))
+
 ## Version 1.9.1
 
 ### New Features and APIs
