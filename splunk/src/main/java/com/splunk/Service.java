@@ -1356,6 +1356,9 @@ public class Service extends BaseService {
 
 
     public boolean enableV2SearchApi(){
+        if(null == this.instanceType){
+            this.instanceType = this.getInfo().getInstanceType();
+        }
         if(this.instanceType.equalsIgnoreCase("cloud")) {
             return versionIsAtLeast("9.0.2209");
         }else{
@@ -1411,6 +1414,9 @@ public class Service extends BaseService {
      *         or 1 if this version is greater than the given version.
      */
     public int versionCompare(String otherVersion) {
+        if(null == this.version){
+            this.version = this.getInfo().getVersion();
+        }
         String[] components1 = this.version.split("\\.");
         String[] components2 = otherVersion.split("\\.");
         int numComponents = Math.max(components1.length, components2.length);
