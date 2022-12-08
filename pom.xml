@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <version.number>1.9.2</version.number>
+        <version.number>1.9.3</version.number>
         <maven.resources.overwrite>true</maven.resources.overwrite>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>

@@ -51,10 +51,11 @@ public class HttpService {
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
     private static String HOSTNAME = "localhost";
+    private static String HOSTIP = "127.0.0.1";
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
-            if (s.equals(HOSTNAME)) {
+            if (s.equals(HOSTNAME) || s.equals(HOSTIP)) {
                 return true;
             } else {
                 HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
@@ -89,7 +90,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.9.2");
+        put("User-Agent", "splunk-sdk-java/1.9.3");
         put("Accept", "*/*");
     }};
     

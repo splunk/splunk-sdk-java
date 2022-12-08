@@ -735,4 +735,19 @@ public class ServiceTest extends SDKTestCase {
         }
     }
 
+    /*
+    Test when Service instance is created using token, it doesn't result in Null Pointer while accessing instanceType and version
+     */
+    @Test
+    public void testServiceWithTokenAuth(){
+        Service newService = new Service(service.getHost());
+        newService.setToken(service.getToken());
+        try{
+            newService.enableV2SearchApi();
+            newService.versionCompare("9.0.2");
+        }catch (Exception ex){
+            Assert.assertNull(ex);
+        }
+    }
+
 }
