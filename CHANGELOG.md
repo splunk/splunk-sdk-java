@@ -3,7 +3,7 @@
 ## Version 1.9.3
 
 ### Minor Changes
-* Re-fetch logic for instancetype and version fields if not set within Service instance to avoid NPE 
+* Re-fetch logic for instancetype and version fields if not set within Service instance to avoid NPE (GitHub PR [#202](https://github.com/splunk/splunk-sdk-java/pull/202))
 * Check for local IP as alternative to _localhost_ within HostnameVerifier, addressing issue with certain local workflows
 
 ## Version 1.9.2
