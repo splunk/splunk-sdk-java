@@ -1,5 +1,11 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.9.3
+
+### Minor Changes
+* Re-fetch logic for instancetype and version fields if not set within Service instance to avoid NPE 
+* Check for local IP as alternative to _localhost_ within HostnameVerifier, addressing issue with certain local workflows
+
 ## Version 1.9.2
 
 ### New Features and APIs
