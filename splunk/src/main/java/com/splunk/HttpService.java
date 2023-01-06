@@ -558,8 +558,12 @@ public class HttpService {
         return HttpService.sslSocketFactory;
     }
 
-    public static void setValidateCertificates(boolean validateCertificates) {
-        HttpService.validateCertificates = validateCertificates;
+    public static void setValidateCertificates(boolean validateCertificate) {
+        // update the SSL_SOCKET_FACTORY if validateCertificates flag is changed
+        if (validateCertificates != validateCertificate) {
+            validateCertificates = validateCertificate;
+            sslSocketFactory = createSSLFactory();
+        }
     }
 
     public static SSLSocketFactory createSSLFactory() {
