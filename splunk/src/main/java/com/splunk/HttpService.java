@@ -17,11 +17,10 @@
 package com.splunk;
 
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.*;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +45,7 @@ public class HttpService {
      * Default Value: TRUE
      */
     protected static boolean validateCertificates = true;
+    protected static byte[] sslCert = null;
 
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
@@ -566,6 +566,12 @@ public class HttpService {
         }
     }
 
+    public static void setSSLCert(byte[] sslCertificate) {
+        // update the SSL_SOCKET_FACTORY when sslCert is set
+        sslCert = sslCertificate;
+        sslSocketFactory = createSSLFactory();
+    }
+
     public static SSLSocketFactory createSSLFactory() {
 
         try {
@@ -578,12 +584,21 @@ public class HttpService {
             } else {
                 context = SSLContext.getDefault();
             }
-
-            if (validateCertificates) {
+            if (validateCertificates && sslCert == null) {
+                // On initialising before ssCert is set, TM and KM set to null
                 context.init(null, null, null);
-                // For now this check is set as null.
-                // TODO: Implementation logic for validating client certificate.
-            } else {
+            } else if(sslCert != null){
+                InputStream is = new ByteArrayInputStream(sslCert);
+                CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                X509Certificate cert = (X509Certificate)cf.generateCertificate(is);
+                TrustManagerFactory tmf = TrustManagerFactory
+                        .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+                ks.load(null); // You don't need the KeyStore instance to come from a file.
+                ks.setCertificateEntry("cert", cert);
+                tmf.init(ks);
+                context.init(null, tmf.getTrustManagers(), null);
+            } else{
                 TrustManager[] trustAll = new TrustManager[]{
                         new X509TrustManager() {
                             public X509Certificate[] getAcceptedIssuers() {

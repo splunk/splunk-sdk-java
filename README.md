@@ -109,6 +109,17 @@ To build the documentation for the SDK, it is being automatically generated with
     cd splunk
     mvn javadoc:javadoc
 
+###Using SSL Certificates
+SSL Certificate validation is turned ON by default. Set SSL Certificate using below code statement
+```java
+    HttpService.setSSLCert(<byte[] sslCert>);
+```
+Note:- For local/Non-production/any other use cases SSL Certificate validation can be disabled using below line of code.
+```java
+    HttpService.setValidateCertificates(false).
+```
+
+
 ### Usage
 #### Login using username and password
 ```java

@@ -92,9 +92,22 @@ public abstract class SDKTestCase {
     }
 
     @BeforeClass
-    public static void preClassLoadActions() {
-        // Bypass the certification validation here.
+    public static void preClassLoadActions() throws IOException {
+        // To Bypass the certification validation.
         HttpService.setValidateCertificates(false);
+        /*
+        // To Set SSL Certificate use below code block
+        InputStream sslCertificate = ResourceRoot.class.getResourceAsStream("/Certificate.pem");
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        // read bytes from the input stream and store them in the buffer
+        while ((len = sslCertificate.read(buffer)) != -1)
+        {
+            os.write(buffer, 0, len);
+        }
+        HttpService.setSSLCert(os.toByteArray());
+        */
     }
 
     @Before
