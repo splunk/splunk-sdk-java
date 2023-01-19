@@ -109,12 +109,12 @@ To build the documentation for the SDK, it is being automatically generated with
     cd splunk
     mvn javadoc:javadoc
 
-###Using SSL Certificates
-SSL Certificate validation is turned ON by default. Set SSL Certificate using below code statement
+###SSL Certificate Verification
+SSL Certificate validation is turned ON by default in Splunk Java SDK. Set SSL Certificate as shown below.
 ```java
     HttpService.setSSLCert(<byte[] sslCert>);
 ```
-Note:- For local/Non-production/any other use cases SSL Certificate validation can be disabled using below line of code.
+Note:- For local/Non-production/any other use cases SSL Certificate validation can be disabled as shown below.
 ```java
     HttpService.setValidateCertificates(false).
 ```
@@ -123,6 +123,7 @@ Note:- For local/Non-production/any other use cases SSL Certificate validation c
 ### Usage
 #### Login using username and password
 ```java
+import com.splunk.HttpService;
 import com.splunk.Service;
 import com.splunk.ServiceArgs;
 
@@ -140,6 +141,9 @@ public class SplunkLogin {
         loginArgs.setUsername("USERNAME"); // Use your username
         loginArgs.setPassword("PASSWORD"); // Use your password
 
+        //set SSL Certificate for verification
+        byte[] sslCert = <read Certificate file into byte array>
+        HttpService.setSSLCert(sslCert);
         // Initialize the SDK client
         service = Service.connect(loginArgs);
     }
@@ -148,6 +152,7 @@ public class SplunkLogin {
 
 #### Login using Session Token
 ```java
+import com.splunk.HttpService;
 import com.splunk.Service;
 import com.splunk.ServiceArgs;
 
@@ -170,6 +175,9 @@ public class SplunkLogin {
         loginArgs.setScheme("https");
         loginArgs.setToken(String.format("Splunk %s", token));
 
+        //set SSL Certificate for verification
+        byte[] sslCert = <read Certificate file into byte array>
+        HttpService.setSSLCert(sslCert);
         // Initialize the SDK client
         service = Service.connect(loginArgs);
     }
@@ -184,6 +192,7 @@ public class SplunkLogin {
 
 #### Login using Authentication Token (RECOMMENDED)
 ```java
+import com.splunk.HttpService;
 import com.splunk.Service;
 import com.splunk.ServiceArgs;
 
@@ -206,6 +215,9 @@ public class SplunkLogin {
         loginArgs.setScheme("https");
         loginArgs.setToken(String.format("Bearer %s", token));
 
+        //set SSL Certificate for verification
+        byte[] sslCert = <read Certificate file into byte array>
+        HttpService.setSSLCert(sslCert);
         // Initialize the SDK client
         service = Service.connect(loginArgs);
     }
@@ -217,6 +229,7 @@ public class SplunkLogin {
 import com.splunk.Job;
 import com.splunk.ResultsReader;
 import com.splunk.ResultsReaderXml;
+import com.splunk.HttpService;
 import com.splunk.Service;
 import com.splunk.ServiceArgs;
 
@@ -244,6 +257,9 @@ public class SearchExample {
         loginArgs.setScheme("https");
         loginArgs.setToken(String.format("Bearer %s", token));
 
+        //set SSL Certificate for verification
+        byte[] sslCert = <read Certificate file into byte array>
+        HttpService.setSSLCert(sslCert);
         // Initialize the SDK client
         service = Service.connect(loginArgs);
 

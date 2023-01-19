@@ -436,6 +436,11 @@ public class HttpService {
      * @return The HTTP response.
      */
     public ResponseMessage send(String path, RequestMessage request) {
+
+        if(HttpService.validateCertificates && HttpService.sslCert == null){
+            throw new RuntimeException("Set missing SSL Certificate for verification or Disable SSL verification and try again");
+        }
+
         // Construct a full URL to the resource
         URL url = getUrl(path);
         // Create and initialize the connection object
@@ -584,20 +589,22 @@ public class HttpService {
             } else {
                 context = SSLContext.getDefault();
             }
-            if (validateCertificates && sslCert == null) {
-                // On initialising before ssCert is set, TM and KM set to null
-                context.init(null, null, null);
-            } else if(sslCert != null){
-                InputStream is = new ByteArrayInputStream(sslCert);
-                CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                X509Certificate cert = (X509Certificate)cf.generateCertificate(is);
-                TrustManagerFactory tmf = TrustManagerFactory
-                        .getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                ks.load(null); // You don't need the KeyStore instance to come from a file.
-                ks.setCertificateEntry("cert", cert);
-                tmf.init(ks);
-                context.init(null, tmf.getTrustManagers(), null);
+            if (validateCertificates) {
+                if(sslCert == null){
+                    // On initialising before ssCert is set, TM and KM set to null
+                    context.init(null, null, null);
+                }else{
+                    InputStream is = new ByteArrayInputStream(sslCert);
+                    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                    X509Certificate cert = (X509Certificate)cf.generateCertificate(is);
+                    TrustManagerFactory tmf = TrustManagerFactory
+                            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                    KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+                    ks.load(null); // You don't need the KeyStore instance to come from a file.
+                    ks.setCertificateEntry("cert", cert);
+                    tmf.init(ks);
+                    context.init(null, tmf.getTrustManagers(), null);
+                }
             } else{
                 TrustManager[] trustAll = new TrustManager[]{
                         new X509TrustManager() {
