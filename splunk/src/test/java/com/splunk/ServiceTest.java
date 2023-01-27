@@ -773,7 +773,6 @@ public class ServiceTest extends SDKTestCase {
         loginArgs.add("port", command.opts.get("port"));
         Service autologinService = Service.connect(loginArgs);
         autologinService.logout();
-        autologinService.oneshotSearch(QUERY);
         try{
             autologinService.oneshotSearch(QUERY);//HTTPException should occur as session is logged out
         }catch (HttpException he){
