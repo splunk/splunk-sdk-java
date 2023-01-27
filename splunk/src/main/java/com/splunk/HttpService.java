@@ -525,7 +525,7 @@ public class HttpService {
         }
 
         // If user session has expired check for 'autologin' flag to either re-login or throw HTTPException
-        if(status == 401){
+        if(this instanceof Service && status == 401){
             return new ResponseMessage(401, input);
         }
         
