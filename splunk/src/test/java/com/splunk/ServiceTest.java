@@ -750,4 +750,35 @@ public class ServiceTest extends SDKTestCase {
         }
     }
 
+    @Test
+    public void testAutologin(){
+        Args loginArgs = new Args();
+        loginArgs.add("username", command.opts.get("username"));
+        loginArgs.add("password", command.opts.get("password"));
+        loginArgs.add("autologin", true);
+        loginArgs.add("host", command.opts.get("host"));
+        loginArgs.add("port", command.opts.get("port"));
+        Service autologinService = Service.connect(loginArgs);
+        autologinService.logout();
+        autologinService.oneshotSearch(QUERY);//re-login attempted and API called again. No error should be thrown
+    }
+
+    @Test
+    public void testAutologinDisabled(){
+        Args loginArgs = new Args();
+        loginArgs.add("username", command.opts.get("username"));
+        loginArgs.add("password", command.opts.get("password"));
+        loginArgs.add("autologin", false);
+        loginArgs.add("host", command.opts.get("host"));
+        loginArgs.add("port", command.opts.get("port"));
+        Service autologinService = Service.connect(loginArgs);
+        autologinService.logout();
+        autologinService.oneshotSearch(QUERY);
+        try{
+            autologinService.oneshotSearch(QUERY);//HTTPException should occur as session is logged out
+        }catch (HttpException he){
+            Assert.assertEquals(401,he.getStatus());
+        }
+    }
+
 }

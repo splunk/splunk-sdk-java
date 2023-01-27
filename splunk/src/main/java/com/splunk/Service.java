@@ -79,6 +79,9 @@ public class Service extends BaseService {
     /** The default scheme, which is used when a scheme is not provided. */
     public static String DEFAULT_SCHEME = "https";
 
+    /** Flag to notify SDK to try for re-login if the session has expired API call*/
+    protected boolean autologin = false;
+
     /**
      * Creates a new {@code Service} instance using a host.
      *
@@ -152,6 +155,7 @@ public class Service extends BaseService {
         this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
+        this.autologin = Args.<Boolean>get(args, "autologin", false);
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
         this.addCookie((String)args.get("cookie"));
@@ -173,6 +177,7 @@ public class Service extends BaseService {
         this.token = Args.<String>get(args, "token", null);
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
+        this.autologin = Args.<Boolean>get(args, "autologin", false);
         this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
         this.addCookie((String)args.get("cookie"));
@@ -1149,8 +1154,9 @@ public class Service extends BaseService {
             .item(0)
             .getTextContent();
         this.token = "Splunk " + sessionKey;
-        this.version = this.getInfo().getVersion();
-        this.instanceType = this.getInfo().getInstanceType();
+        ServiceInfo serviceInfoEntity = this.getInfo();
+        this.version = serviceInfoEntity.getVersion();
+        this.instanceType = serviceInfoEntity.getInstanceType();
         if (versionCompare("4.3") >= 0)
             this.passwordEndPoint = "storage/passwords";
 
@@ -1319,7 +1325,17 @@ public class Service extends BaseService {
         if (token != null && !cookieStore.hasSplunkAuthCookie() ) {
             request.getHeader().put("Authorization", token);
         }
-        return super.send(fullpath(path), request);
+        ResponseMessage responseMessage = super.send(fullpath(path), request);
+        if(responseMessage.getStatus() == 401 && (this.autologin && this.username!= null && this.password != null)){
+            // Executing re-login to renew the session token.
+            System.out.println("Re-login executed");
+            this.login(this.username, this.password);
+            responseMessage = super.send(fullpath(path), request);
+        }else if(responseMessage.getStatus() >= 400){
+            //if autologin is not set to true or username/password is not set, throw HTTPException
+            throw HttpException.create(responseMessage);
+        }
+        return responseMessage;
     }
 
     /**
