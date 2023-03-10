@@ -52,10 +52,11 @@ public class HttpService {
     private static String HTTP_SCHEME = "http";
     private static String HOSTNAME = "localhost";
     private static String HOSTIP = "127.0.0.1";
+    private static String HOSTIPv6 = "::1";
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
-            if (s.equals(HOSTNAME) || s.equals(HOSTIP)) {
+            if (s.equals(HOSTNAME) || s.equals(HOSTIP) || s.equals(HOSTIPv6)) {
                 return true;
             } else {
                 HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
