@@ -1,5 +1,11 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.9.4
+
+### Minor Changes
+* Added check for localhost IPv6 address, for IPv6 compatible apps (GitHub PR [#210](https://github.com/splunk/splunk-sdk-java/pull/210))
+* Updating SSL_SOCKET_FACTORY instance on changing _validateCertificates_ flag.  (GitHub PR [#206](https://github.com/splunk/splunk-sdk-java/pull/210))
+
 ## Version 1.9.3
 
 ### Minor Changes
