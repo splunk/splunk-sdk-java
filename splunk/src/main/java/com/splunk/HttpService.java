@@ -52,10 +52,11 @@ public class HttpService {
     private static String HTTP_SCHEME = "http";
     private static String HOSTNAME = "localhost";
     private static String HOSTIP = "127.0.0.1";
+    private static String HOSTIPv6 = "::1";
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
-            if (s.equals(HOSTNAME) || s.equals(HOSTIP)) {
+            if (s.equals(HOSTNAME) || s.equals(HOSTIP) || s.equals(HOSTIPv6)) {
                 return true;
             } else {
                 HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
@@ -90,7 +91,7 @@ public class HttpService {
     private String prefix = null;
 
     static Map<String, String> defaultHeader = new HashMap<String, String>() {{
-        put("User-Agent", "splunk-sdk-java/1.9.3");
+        put("User-Agent", "splunk-sdk-java/1.9.4");
         put("Accept", "*/*");
     }};
     
@@ -558,8 +559,12 @@ public class HttpService {
         return HttpService.sslSocketFactory;
     }
 
-    public static void setValidateCertificates(boolean validateCertificates) {
-        HttpService.validateCertificates = validateCertificates;
+    public static void setValidateCertificates(boolean validateCertificate) {
+        // update the SSL_SOCKET_FACTORY if validateCertificates flag is changed
+        if (validateCertificates != validateCertificate) {
+            validateCertificates = validateCertificate;
+            sslSocketFactory = createSSLFactory();
+        }
     }
 
     public static SSLSocketFactory createSSLFactory() {

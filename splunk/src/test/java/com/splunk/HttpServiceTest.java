@@ -42,6 +42,29 @@ public class HttpServiceTest extends SDKTestCase {
     }
 
     @Test
+    public void testHttpServiceWithHostIP(){
+        HttpService service = new HttpService("127.0.0.1");
+        ResponseMessage response = service.get("/");
+        Assert.assertEquals(200, response.getStatus());
+        Assert.assertTrue(firstLineIsXmlDtd(response.getContent()));
+    }
+
+    @Test
+    public void testHttpServiceWithHostIPv6(){
+        // IPv6 Host without the [] brackets
+        HttpService service = new HttpService("::1");
+        ResponseMessage response = service.get("/");
+        Assert.assertEquals(200, response.getStatus());
+        Assert.assertTrue(firstLineIsXmlDtd(response.getContent()));
+        
+        // IPv6 Host with the [] brackets
+        HttpService newService = new HttpService("[::1]");
+        ResponseMessage resp = newService.get("/");
+        Assert.assertEquals(200, resp.getStatus());
+        Assert.assertTrue(firstLineIsXmlDtd(resp.getContent()));
+    }
+
+    @Test
     public void testGet() {
         ResponseMessage response = httpService.get("/");
         Assert.assertEquals(200, response.getStatus());
