@@ -1,6 +1,10 @@
 on:
   release:
-    types: [published]
+    types: [prereleased]
+
+permissions:
+  actions: write
+  contents: write
 
 name: Release
 
@@ -14,24 +18,24 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          server-id: splunk-artifactory
+#          server-username: MAVEN_USERNAME
+#          server-password: MAVEN_PASSWORD
+#          server-id: splunk-artifactory
       - name: build
         run: mvn package --file pom.xml -DskipTests=true
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
 #          body_path: ${{ github.workflow }}-CHANGELOG.txt
-          files: ./target/*.jar
+          files: ./splunk/target/*.jar
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy to Artifactory
-        run: mvn --batch-mode deploy -DskipTests=true
-        env:
-          MAVEN_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+#      - name: Deploy to Artifactory
+#        run: mvn --batch-mode deploy -DskipTests=true
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
