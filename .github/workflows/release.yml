@@ -3,8 +3,7 @@ on:
     types: [prereleased]
 
 permissions:
-  actions: write
-#  contents: write
+  contents: write
 
 name: Release
 
