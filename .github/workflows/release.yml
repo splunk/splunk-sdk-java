@@ -2,9 +2,9 @@ on:
   release:
     types: [prereleased]
 
-permissions:
+#permissions:
 #  actions: write
-  contents: write
+#  contents: write
 
 name: Release
 
