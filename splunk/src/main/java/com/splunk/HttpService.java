@@ -47,7 +47,7 @@ public class HttpService {
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
-    public static List<String> VALID_HOSTS = new ArrayList<String>(Arrays.asList("localhost", "127.0.0.1", "::1"));
+    private static List<String> VALID_HOSTS = new ArrayList<String>(Arrays.asList("localhost", "127.0.0.1", "::1"));
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
