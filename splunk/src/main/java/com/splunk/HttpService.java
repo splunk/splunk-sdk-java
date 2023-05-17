@@ -23,11 +23,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 /**
  * The {@code HttpService} class represents a generic HTTP service at a given
@@ -50,13 +47,11 @@ public class HttpService {
     private static SSLSocketFactory sslSocketFactory = createSSLFactory();
     private static String HTTPS_SCHEME = "https";
     private static String HTTP_SCHEME = "http";
-    private static String HOSTNAME = "localhost";
-    private static String HOSTIP = "127.0.0.1";
-    private static String HOSTIPv6 = "::1";
+    public static List<String> VALID_HOSTS = new ArrayList<String>(Arrays.asList("localhost", "127.0.0.1", "::1"));
 
     private static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
         public boolean verify(String s, SSLSession sslSession) {
-            if (s.equals(HOSTNAME) || s.equals(HOSTIP) || s.equals(HOSTIPv6)) {
+            if(VALID_HOSTS.contains(s)){
                 return true;
             } else {
                 HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
@@ -237,6 +232,14 @@ public class HttpService {
             sslSecurityProtocol = securityProtocol;
             sslSocketFactory = createSSLFactory();
         }
+    }
+
+    /**
+     * Adds list of Cluster Master Hosts to the list of Valid Hosts for Hostname verification.
+     * @param searchHeadService Splunk SearchHead Service instance
+     */
+    public static void setClusterMasterUri(Service searchHeadService){
+        VALID_HOSTS.addAll(searchHeadService.getClusterMasters());
     }
 
     /**
