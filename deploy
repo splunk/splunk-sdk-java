@@ -2,7 +2,7 @@
 
 declare -r scriptDirectory="$(dirname $(readlink -e $0))"
 declare -r scriptName="$(basename $0)"
-declare -r version="1.9.4"
+declare -r version="1.9.5"
 
 if [[ $# -ne 1 ]]; then
     echo 1>&2 "Usage: ${scriptName} {local|staging||production}"
