@@ -238,7 +238,7 @@ public class HttpService {
      * Adds list of Cluster Master Hosts to the list of Valid Hosts for Hostname verification.
      * @param searchHeadService Splunk SearchHead Service instance
      */
-    public static void setClusterMasterUri(Service searchHeadService){
+    public static void addClusterMasterURIsToHosts(Service searchHeadService){
         VALID_HOSTS.addAll(searchHeadService.getClusterMasters());
     }
 
