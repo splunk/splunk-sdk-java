@@ -2,6 +2,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 name: Release
 
 jobs:
@@ -22,8 +25,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-#          body_path: ${{ github.workflow }}-CHANGELOG.txt
-          files: ./target/*.jar
+          files: ./splunk/target/*.jar
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

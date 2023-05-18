@@ -19,9 +19,9 @@ package com.splunk;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.Socket;
-import java.net.URLEncoder;
-import java.net.URLStreamHandler;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -592,6 +592,35 @@ public class Service extends BaseService {
      */
     public ServiceInfo getInfo() {
         return new ServiceInfo(this);
+    }
+
+    /**
+     * Returns list of all applicable Cluster Master Hosts for the SearchHead Service.
+     *
+     * @return List of Cluster Master Host(s).
+     */
+    public List<String> getClusterMasters(){
+        Entity caps = new Entity(this, "cluster/config");
+        List<String> hosts = new ArrayList<String>();
+        try {
+            String clusterMasterURIs = caps.getString("master_uri");
+            URL clusterMasterUrl;
+            //for multi-cluster environment, there might be more than cluster master for the searchHead
+            if(clusterMasterURIs.contains(",")){
+                String[] masterURIs = clusterMasterURIs.split(",");
+                for(String uri : masterURIs){
+                    clusterMasterUrl = new URL(uri);
+                    hosts.add(clusterMasterUrl.getHost());
+                }
+            }else {
+                clusterMasterUrl = new URL(clusterMasterURIs);
+                hosts.add(clusterMasterUrl.getHost());
+            }
+            return hosts;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return hosts;
     }
 
     /**
