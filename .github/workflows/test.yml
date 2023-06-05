@@ -11,7 +11,7 @@ jobs:
         os:
           - ubuntu-latest
         java-version:
-          - 1.8
+          - 1.17
         splunk-version:
           - "8.2"
           - "latest"
