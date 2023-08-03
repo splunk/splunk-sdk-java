@@ -47,7 +47,7 @@ public class ModularInputKind extends Entity {
      * @return A {@code Map} containing the argument key-value pairs.
      */
     public Map<String, ModularInputKindArgument> getArguments() {
-        Map<String, ModularInputKindArgument> arguments = new HashMap<String, ModularInputKindArgument>();
+        Map<String, ModularInputKindArgument> arguments = new HashMap<>();
         for (String argumentName : args.keySet()) {
             arguments.put(argumentName, getArgument(argumentName));
         }

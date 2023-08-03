@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class Entity extends Resource implements Map<String, Object> {
     protected Record content;
-    protected HashMap<String, Object> toUpdate = new LinkedHashMap<String, Object>();
+    protected HashMap<String, Object> toUpdate = new LinkedHashMap<>();
 
     /**
      * Class constructor.
@@ -429,7 +429,7 @@ public class Entity extends Resource implements Map<String, Object> {
         if (!toUpdate.isEmpty() || !args.isEmpty()) {
             // Merge cached setters and live args together before updating.
             Map<String, Object> mergedArgs = 
-                    new LinkedHashMap<String, Object>();
+                    new LinkedHashMap<>();
             mergedArgs.putAll(toUpdate);
             mergedArgs.putAll(args);
 

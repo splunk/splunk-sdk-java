@@ -30,7 +30,7 @@ class SimpleCookieStore {
 
     public static final String SPLUNK_AUTH_COOKIE = "splunkd_";
 
-    private Map<String, String> cookieJar = new HashMap<String, String>();
+    private Map<String, String> cookieJar = new HashMap<>();
     /**
      * Adds cookies from a "Set-Cookie" header to the cookie store.
      *

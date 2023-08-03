@@ -98,7 +98,7 @@ public abstract class DataModelCalculation {
         String type = null;
         String calculationId = null;
         List<LookupDataModelCalculation.LookupFieldMapping> lookupInputs =
-                new ArrayList<LookupDataModelCalculation.LookupFieldMapping>();
+                new ArrayList<>();
         String comment = null;
         String expression = null;
         String lookupName = null;
@@ -106,7 +106,7 @@ public abstract class DataModelCalculation {
         String inputField = null;  // where there is only one entry, and it's not in an array.
         String[] owner = new String[0]; // Should always be set below
         boolean editable = false;
-        Map<String, DataModelField> outputFields = new HashMap<String, DataModelField>();
+        Map<String, DataModelField> outputFields = new HashMap<>();
 
         String key;
         for (Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
@@ -122,10 +122,9 @@ public abstract class DataModelCalculation {
                 }
             } else if (key.equals("lookupInputs")) {
                 for (JsonElement lookupInputJsonElement : entry.getValue().getAsJsonArray()) {
-                    if (!(lookupInputJsonElement instanceof JsonObject)) {
+                    if (!(lookupInputJsonElement instanceof JsonObject lookupInputJson)) {
                         throw new RuntimeException("Expected a JSON object for lookupInput entry.");
                     }
-                    JsonObject lookupInputJson = (JsonObject)lookupInputJsonElement;
                     LookupDataModelCalculation.LookupFieldMapping mapping = new LookupDataModelCalculation.LookupFieldMapping();
                     mapping.inputField = lookupInputJson.get("inputField").getAsString();
                     mapping.lookupField = lookupInputJson.get("lookupField").getAsString();

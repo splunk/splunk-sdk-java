@@ -34,7 +34,7 @@ public class AtomObject {
     public String id;
 
     /** The value of the {@code <link>} elements in this {@code AtomObject}. */
-    public Map<String, String> links = new HashMap<String, String>();
+    public Map<String, String> links = new HashMap<>();
 
     /** The value of the Atom {@code <title>} element. */
     public String title;

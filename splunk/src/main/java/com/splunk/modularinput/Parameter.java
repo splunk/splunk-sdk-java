@@ -60,7 +60,7 @@ public abstract class Parameter {
      * @throws com.splunk.modularinput.MalformedDataException If the XML does not specify a valid parameter list.
      */
     public static List<Parameter> nodeToParameterList(Node node) throws MalformedDataException {
-        List<Parameter> parameters = new ArrayList<Parameter>();
+        List<Parameter> parameters = new ArrayList<>();
 
         for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
             if (child.getNodeType() == Node.TEXT_NODE) {

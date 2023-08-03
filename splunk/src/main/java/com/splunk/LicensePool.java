@@ -83,10 +83,10 @@ public class LicensePool extends Entity {
         @SuppressWarnings("unchecked")
         HashMap<String, Object> values = (HashMap<String, Object>)get("slaves_usage_bytes");
         if (values == null) {
-            values = new HashMap<String, Object>();
+            values = new HashMap<>();
         }
         
-        HashMap<String, Long> usageBytes = new HashMap<String, Long>();
+        HashMap<String, Long> usageBytes = new HashMap<>();
         
         for(String key : values.keySet()) {
             String value = (String)values.get(key);

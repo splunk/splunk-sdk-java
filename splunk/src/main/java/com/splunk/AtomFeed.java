@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamConstants;
  */
 public class AtomFeed extends AtomObject {
     /** The list of Atom entries contained in this {@code AtomFeed} object. */
-    public ArrayList<AtomEntry> entries = new ArrayList<AtomEntry>();
+    public ArrayList<AtomEntry> entries = new ArrayList<>();
 
     /** The value of the Atom feed's {@code <itemsPerPage>} element. */
     public String itemsPerPage = null;

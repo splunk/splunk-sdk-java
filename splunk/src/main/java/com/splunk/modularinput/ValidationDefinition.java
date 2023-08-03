@@ -47,7 +47,7 @@ public class ValidationDefinition {
     // Package private on purpose.
     ValidationDefinition() {
         super();
-        metadata = new HashMap<String, String>();
+        metadata = new HashMap<>();
     }
 
     /**
@@ -146,7 +146,7 @@ public class ValidationDefinition {
      * @param parameters A list of {@code Parameter} objects giving the proposed configuration.
      */
     public void setParameters(Collection<Parameter> parameters) {
-        Map<String, Parameter> paramMap = new HashMap<String, Parameter>();
+        Map<String, Parameter> paramMap = new HashMap<>();
         for (Parameter p : parameters) {
             paramMap.put(p.getName(), p);
         }
@@ -224,10 +224,9 @@ public class ValidationDefinition {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof ValidationDefinition)) {
+        if (!(other instanceof ValidationDefinition that)) {
             return false;
         }
-        ValidationDefinition that = (ValidationDefinition)other;
         return this.metadata.equals(that.metadata) && this.parameters.equals(that.parameters);
     }
 

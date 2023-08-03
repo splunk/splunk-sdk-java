@@ -37,7 +37,7 @@ public class FiredAlertGroup extends Entity {
      * @return The fired alerts in the group.
      */
     public EntityCollection<FiredAlert> getAlerts() {
-        return new EntityCollection<FiredAlert>(
+        return new EntityCollection<>(
             service, this.path, FiredAlert.class);
     }
 }

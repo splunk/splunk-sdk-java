@@ -30,7 +30,7 @@ public class ResourceCollection<T extends Resource>
     extends Resource implements Map<String, T>
 {
     protected LinkedHashMap<String, LinkedList<T>>
-            items = new LinkedHashMap<String, LinkedList<T>>();
+            items = new LinkedHashMap<>();
     protected Class itemClass;
 
     /**
@@ -97,7 +97,7 @@ public class ResourceCollection<T extends Resource>
     public boolean containsValue(Object value) {
         // value should be a non-linked-list value; values are stored as linked
         // lists inside our container.
-        LinkedList<Object> linkedList = new LinkedList<Object>();
+        LinkedList<Object> linkedList = new LinkedList<>();
         linkedList.add(value);
         return validate().items.containsValue(linkedList);
     }
@@ -262,7 +262,7 @@ public class ResourceCollection<T extends Resource>
         
         // If there is no ACL info, we just create an empty map
         if (entityMetadata == null) {
-            entityMetadata = new HashMap<String, String>();
+            entityMetadata = new HashMap<>();
         }
         
         if (entityMetadata.containsKey("owner"))
@@ -303,7 +303,7 @@ public class ResourceCollection<T extends Resource>
                 LinkedList<T> list = items.get(key);
                 list.add(item);
             } else {
-                LinkedList<T> list = new LinkedList<T>();
+                LinkedList<T> list = new LinkedList<>();
                 list.add(item);
                 items.put(key, list);
             }
@@ -359,7 +359,7 @@ public class ResourceCollection<T extends Resource>
 
     /** {@inheritDoc} */
     public Collection<T> values() {
-        LinkedList<T> collection = new LinkedList<T>();
+        LinkedList<T> collection = new LinkedList<>();
         validate();
         Set<String> keySet = items.keySet();
         for (String key: keySet) {

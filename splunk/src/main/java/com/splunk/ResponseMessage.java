@@ -65,7 +65,7 @@ public class ResponseMessage {
     public Map<String, String> getHeader() {
         if (this.header == null)
             this.header =
-                new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+                new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         return this.header;
     }
 

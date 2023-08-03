@@ -39,7 +39,7 @@ public class MultiValueParameter extends Parameter {
     // Note: package private constructor by design so parameters cannot be instantiated by the user.
     MultiValueParameter(String name) {
         this.name = name;
-        this.values = new ArrayList<String>();
+        this.values = new ArrayList<>();
     }
 
     /**
@@ -67,10 +67,9 @@ public class MultiValueParameter extends Parameter {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof MultiValueParameter)) {
+        if (!(other instanceof MultiValueParameter that)) {
             return false;
         } else {
-            MultiValueParameter that = (MultiValueParameter)other;
             return this.values.equals(that.values) && this.name.equals(that.name);
         }
     }

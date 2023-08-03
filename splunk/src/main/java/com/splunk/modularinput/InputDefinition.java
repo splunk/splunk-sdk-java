@@ -49,8 +49,8 @@ public class InputDefinition {
 
     // Package private on purpose
     InputDefinition() {
-        inputs = new HashMap<String, Map<String, Parameter>>();
-        metadata = new HashMap<String, String>();
+        inputs = new HashMap<>();
+        metadata = new HashMap<>();
     }
 
     /**
@@ -144,7 +144,7 @@ public class InputDefinition {
      * @param parameters A collection of {@code Parameter} objects giving the settings for this input.
      */
     public void addInput(String name, Collection<Parameter> parameters) {
-        Map<String, Parameter> paramMap = new HashMap<String, Parameter>();
+        Map<String, Parameter> paramMap = new HashMap<>();
 
         for (Parameter p : parameters) {
             paramMap.put(p.getName(), p);
@@ -211,10 +211,9 @@ public class InputDefinition {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof InputDefinition)) {
+        if (!(other instanceof InputDefinition that)) {
             return false;
         }
-        InputDefinition that = (InputDefinition)other;
         return this.metadata.equals(that.metadata) && this.inputs.equals(that.inputs);
     }
 

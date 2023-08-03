@@ -63,7 +63,7 @@ public class RequestMessage {
      */
     public Map<String, String> getHeader() {
         if (this.header == null)
-            this.header = new TreeMap<String, String>(
+            this.header = new TreeMap<>(
                 String.CASE_INSENSITIVE_ORDER);
         return this.header;
     }

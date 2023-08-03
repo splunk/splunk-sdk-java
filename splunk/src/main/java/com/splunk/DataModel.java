@@ -140,7 +140,7 @@ public class DataModel extends Entity {
      * @param input a String containing JSON.
      */
     private void parseDescription(String input) {
-        objects = new HashMap<String, DataModelObject>();
+        objects = new HashMap<>();
 
         JsonElement rootElement = jsonParser.parse(input);
 
@@ -284,7 +284,7 @@ public class DataModel extends Entity {
     public void update() {
         // We have to do some munging on the acceleration fields to pass them as JSON
         // to the server.
-        Map<String, Object> accelerationMap = new HashMap<String, Object>();
+        Map<String, Object> accelerationMap = new HashMap<>();
         for (String key : new String[] {"enabled", "earliest_time", "cron_schedule", "manual_rebuilds"}) {
             if (toUpdate.containsKey(key)) {
                 accelerationMap.put(key, toUpdate.get(key));

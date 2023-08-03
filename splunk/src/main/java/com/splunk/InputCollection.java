@@ -24,7 +24,7 @@ import java.util.*;
  * value that indicates the specific type of input.
  */
 public class InputCollection extends EntityCollection<Input> {
-    protected Set<InputKind> inputKinds = new HashSet<InputKind>();
+    protected Set<InputKind> inputKinds = new HashSet<>();
 
     /**
      * Class constructor.
@@ -239,7 +239,7 @@ public class InputCollection extends EntityCollection<Input> {
      * @return A set of available {@code InputKind}s.
      */
     private Set<InputKind> assembleInputKindSet(List<String> subPath) {
-        Set<InputKind> kinds = new HashSet<InputKind>();
+        Set<InputKind> kinds = new HashSet<>();
         ResponseMessage response = service.get(this.path + "/" + Util.join("/", subPath));
         AtomFeed feed = AtomFeed.parseStream(response.getContent());
         for (AtomEntry entry : feed.entries) {
@@ -252,7 +252,7 @@ public class InputCollection extends EntityCollection<Input> {
                 }
             }
 
-            List<String> thisSubPath = new ArrayList<String>(subPath);
+            List<String> thisSubPath = new ArrayList<>(subPath);
             thisSubPath.add(itemKeyName);
             
             String relpath = Util.join("/", thisSubPath);
@@ -276,7 +276,7 @@ public class InputCollection extends EntityCollection<Input> {
      * Refreshes the {@code inputKinds} field on this object.
      */
     private void refreshInputKinds() {
-        Set<InputKind> kinds = assembleInputKindSet(new ArrayList<String>());
+        Set<InputKind> kinds = assembleInputKindSet(new ArrayList<>());
         
         this.inputKinds.clear();
         this.inputKinds.addAll(kinds);

@@ -50,7 +50,7 @@ public enum FieldType {
         }
     };
 
-    private final static Map<String, FieldType> typeLookup = new HashMap<String, FieldType>() {{
+    private final static Map<String, FieldType> typeLookup = new HashMap<>() {{
         put("string", STRING);
         put("number", NUMBER);
         put("boolean", BOOLEAN);

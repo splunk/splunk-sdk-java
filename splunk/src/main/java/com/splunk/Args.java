@@ -154,8 +154,8 @@ public class Args extends LinkedHashMap<String, Object> {
             if (builder.length() > 0) builder.append('&');
             String key = entry.getKey();
             Object value = entry.getValue();
-            if (value instanceof String[]) {
-                encodeValues(builder, key, (String[])value);
+            if (value instanceof String[] valueInst) {
+                encodeValues(builder, key, valueInst);
             }
             else {
                 builder.append(encode(key));

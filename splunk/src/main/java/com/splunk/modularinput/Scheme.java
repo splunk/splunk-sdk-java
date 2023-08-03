@@ -63,7 +63,7 @@ public class Scheme {
 
     public Scheme(String title) {
         this.title = title;
-        this.arguments = new ArrayList<Argument>();
+        this.arguments = new ArrayList<>();
     }
 
     /**
@@ -182,7 +182,7 @@ public class Scheme {
      * list of arguments.
      */
     public void setArguments(List<Argument> arguments) {
-        this.arguments = new ArrayList<Argument>(arguments);
+        this.arguments = new ArrayList<>(arguments);
     }
 
     /**
