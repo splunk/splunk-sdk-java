@@ -38,11 +38,11 @@ public class ValidationDefinition {
 
     private Map<String, Parameter> parameters;
 
-    private final String serverHostField = "server_host";
-    private final String serverUriField = "server_uri";
-    private final String checkpointDirField = "checkpoint_dir";
-    private final String sessionKeyField = "session_key";
-    private final String nameField = "name";
+    private static final String serverHostField = "server_host";
+    private static final String serverUriField = "server_uri";
+    private static final String checkpointDirField = "checkpoint_dir";
+    private static final String sessionKeyField = "session_key";
+    private static final String nameField = "name";
 
     // Package private on purpose.
     ValidationDefinition() {

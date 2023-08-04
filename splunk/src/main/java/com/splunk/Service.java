@@ -290,28 +290,24 @@ public class Service extends BaseService {
         String localSharing = "";
 
         // override with invocation namespace if set.
-        if (namespace != null) {
-            // URL encode the owner and app.
-            if (namespace.containsKey("app")) {
-                try {
+        try{
+            if (namespace != null) {
+                // URL encode the owner and app.
+                if (namespace.containsKey("app")) {
                     localApp = URLEncoder.encode((String)namespace.get("app"), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    // This is unreachable, since UTF-8 is always supported.
-                    assert false;
                 }
-            }
-            if (namespace.containsKey("owner")) {
-                try {
+                if (namespace.containsKey("owner")) {
                     localOwner = URLEncoder.encode((String)namespace.get("owner"), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    // This is unreachable, since UTF-8 is always supported.
-                    assert false;
+                }
+                if (namespace.containsKey("sharing")) {
+                    localSharing = (String)namespace.get("sharing");
                 }
             }
-            if (namespace.containsKey("sharing")) {
-                localSharing = (String)namespace.get("sharing");
-            }
+        }catch (UnsupportedEncodingException e) {
+            // This is unreachable, since UTF-8 is always supported.
+            assert false;
         }
+
 
         // sharing, if set calls for special mapping, override here.
         // "user"    --> {user}/{app}
