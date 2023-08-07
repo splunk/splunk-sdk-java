@@ -49,7 +49,7 @@ public class IndexCollection extends EntityCollection<Index> {
                     "Indexes cannot be deleted via the REST API in versions " +
                     "prior to 5.0");
         } else {
-            return (Index)super.remove(key);
+            return super.remove(key);
         }
     }
 }

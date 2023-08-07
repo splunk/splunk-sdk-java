@@ -75,7 +75,7 @@ public class UtilTest extends SDKTestCase {
     @Test
     public void testArgs() {
         Args args = Args.create();
-        Assert.assertTrue(args != null);
+        Assert.assertNotNull(args);
         Assert.assertTrue(args instanceof Args);
         
         Assert.assertTrue(Args.encode((String) null).equals(""));

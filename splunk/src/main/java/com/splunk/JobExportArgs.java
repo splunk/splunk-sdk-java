@@ -25,7 +25,7 @@ public class JobExportArgs extends Args {
     /**
      * Specifies the format for the returned output.
      */
-    public static enum OutputMode {
+    public enum OutputMode {
         /** Returns output in Atom format. */
         ATOM("atom"),
         /** Returns output in CSV format. */
@@ -59,7 +59,7 @@ public class JobExportArgs extends Args {
      * Specifies how to create a job using the {@link JobCollection#create} 
      * method.
      */
-    public static enum SearchMode {
+    public enum SearchMode {
         /**
          * Searches historical data.
          */
@@ -98,7 +98,7 @@ public class JobExportArgs extends Args {
      * Specifies how to truncate lines to achieve the value in 
      * {@link #setMaximumLines}.
      */
-    public static enum TruncationMode {
+    public enum TruncationMode {
         /** Use the "abstract" truncation mode.*/
         ABSTRACT("abstract"),
         /** Use the "truncate" truncation mode.*/

@@ -116,7 +116,7 @@ public class PasswordCollection extends EntityCollection<Password> {
         }
         // Make it compatible with the old way (low-efficient)
         if (!key.contains(":")) {
-            Password password = getByUsername((String) key);
+            Password password = getByUsername(key);
             validate();
             if (password == null) return null;
             password.remove();
