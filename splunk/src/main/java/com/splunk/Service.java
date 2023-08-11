@@ -1328,7 +1328,6 @@ public class Service extends BaseService {
         ResponseMessage responseMessage = super.send(fullpath(path), request);
         if(responseMessage.getStatus() == 401 && (this.autologin && this.username!= null && this.password != null)){
             // Executing re-login to renew the session token.
-            System.out.println("Re-login executed");
             this.login(this.username, this.password);
             responseMessage = super.send(fullpath(path), request);
         }else if(responseMessage.getStatus() >= 400){
