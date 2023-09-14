@@ -527,6 +527,11 @@ public class HttpService {
         } catch (IOException e) {
             assert (false);
         }
+
+        // If user session has expired check for 'autologin' flag to either re-login or throw HTTPException
+        if(this instanceof Service && status == 401){
+            return new ResponseMessage(401, input);
+        }
         
         // Add cookies to cookie Store
         Map<String, List<String>> headers = cn.getHeaderFields();        
