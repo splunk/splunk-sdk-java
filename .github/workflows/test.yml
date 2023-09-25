@@ -64,3 +64,8 @@ jobs:
           SPLUNK_HOME: "/opt/splunk"
           TEST_TCP_PORT: 10667
           TEST_UDP_PORT: 10668
+      - name: OSS Scan
+        jobs:
+          fossa-scan:
+            uses: splunk/oss-scanning-public/.github/workflows/oss-scan.yml@main
+            secrets: inherit
