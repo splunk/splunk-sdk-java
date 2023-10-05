@@ -1,5 +1,11 @@
 # Splunk Enterprise SDK for Java Changelog
 
+## Version 1.9.5
+
+### New Features and APIs
+* Added static method _addClusterMasterURIsToHosts_ in HttpService class to update list of Valid Hosts with Cluster Master Hosts (GitHub PR [#215](https://github.com/splunk/splunk-sdk-java/pull/215))
+* Added instance method _getClusterMasters_ in Service class to get list of cluster master hosts
+
 ## Version 1.9.4
 
 ### Minor Changes
