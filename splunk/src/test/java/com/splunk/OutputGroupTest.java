@@ -24,7 +24,7 @@ public class OutputGroupTest extends SDKTestCase {
     public void testOutputGroup() throws Exception {
         EntityCollection<OutputGroup> outputGroups = service.getOutputGroups();
 
-        if (outputGroups.values().size() == 0) {
+        if (outputGroups.values().isEmpty()) {
             System.out.println("WARNING: No OutputGroups to test");
             return;
         }

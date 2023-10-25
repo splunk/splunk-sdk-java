@@ -117,9 +117,10 @@ public class HttpServiceTest extends SDKTestCase {
     public void testSSLSocketFactory() {
         try {
             SSLSocketFactory factory = Service.getSSLSocketFactory();
-            SSLSocket socket = (SSLSocket) factory.createSocket((String)command.opts.get("host"), 8089);
-            String[] protocols = socket.getEnabledProtocols();
-            Assert.assertTrue(protocols.length > 0);
+            try (SSLSocket socket = (SSLSocket) factory.createSocket((String)command.opts.get("host"), 8089)) {
+                String[] protocols = socket.getEnabledProtocols();
+                Assert.assertTrue(protocols.length > 0);
+            }
         }
         catch (Exception e) {
             Assert.assertNull(e);

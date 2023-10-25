@@ -155,7 +155,7 @@ public class ServiceTest extends SDKTestCase {
     	args.setScheme((String) command.opts.get("scheme"));
     	args.setUsername((String) command.opts.get("username"));
     	args.setPassword((String) command.opts.get("password"));
-    	args.setHttpHeaders(new HashMap<String, String>() {{
+    	args.setHttpHeaders(new HashMap<>() {{
     		put("some header key", "some value");
     	}});
         Service service = new Service(args);
@@ -706,7 +706,7 @@ public class ServiceTest extends SDKTestCase {
 
     @Test
     public void testPost() {
-        HashMap<String, Object> args = new HashMap<String, Object>();
+        HashMap<String, Object> args = new HashMap<>();
         args.put("foo", "bar");
 
         ResponseMessage response;

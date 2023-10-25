@@ -133,7 +133,7 @@ public class PasswordTest extends SDKTestCase {
     }
     @Test
     public void testPasswordsWithWildCards(){
-        HashMap<String, Object> args = new HashMap<String, Object>();
+        HashMap<String, Object> args = new HashMap<>();
         args = Command.defaultValues;
         args.put("owner", "-");
         args.put("app", "-");

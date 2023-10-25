@@ -83,7 +83,7 @@ public class ResourceCollection<T extends Resource>
         validate();
         
         LinkedList<T> entities = items.get(key);
-        if (entities == null || entities.size() == 0) return false;
+        if (entities == null || entities.isEmpty()) return false;
         String pathMatcher = service.fullpath("", namespace);
         for (T entity: entities) {
             if (entity.path.startsWith(pathMatcher)) {
@@ -162,7 +162,7 @@ public class ResourceCollection<T extends Resource>
     }
 
     /** {@inheritDoc} */
-    public Set<Map.Entry<String, T>> entrySet() {
+    public Set<Entry<String, T>> entrySet() {
         throw new UnsupportedOperationException();
     }
 
@@ -187,7 +187,7 @@ public class ResourceCollection<T extends Resource>
             throw new SplunkException(SplunkException.AMBIGUOUS,
                     "Key has multiple values, specify a namespace");
         }
-        if (entities == null || entities.size() == 0) return null;
+        if (entities == null || entities.isEmpty()) return null;
         return entities.get(0);
     }
 
@@ -205,7 +205,7 @@ public class ResourceCollection<T extends Resource>
         validate();
         
         LinkedList<T> entities = items.get(key);
-        if (entities == null || entities.size() == 0) return null;
+        if (entities == null || entities.isEmpty()) return null;
         String pathMatcher = service.fullpath("", namespace);
         for (T entity: entities) {
             if (entity.path.startsWith(pathMatcher)) {
@@ -380,7 +380,7 @@ public class ResourceCollection<T extends Resource>
     public int valueSize(Object key) {
         validate();
         LinkedList<T> entities = items.get(key);
-        if (entities == null || entities.size() == 0) return 0;
+        if (entities == null || entities.isEmpty()) return 0;
         return entities.size();
     }
 }

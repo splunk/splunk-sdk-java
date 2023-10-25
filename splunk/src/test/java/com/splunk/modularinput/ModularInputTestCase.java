@@ -33,11 +33,11 @@ public class ModularInputTestCase {
         // Iterate backwards through the collection since we're going to be removing elements
         for (int i = children.getLength() - 1; i >= 0; i--) {
             Node child = children.item(i);
-            if (child instanceof Text && ((Text)child).getData().trim().length() == 0) {
+            if (child instanceof Text txt && txt.getData().isBlank()) {
                 node.removeChild(child);
             }
-            else if (child instanceof Element) {
-                removeBlankTextNodes((Element) child);
+            else if (child instanceof Element elem) {
+                removeBlankTextNodes(elem);
             }
         }
     }
@@ -48,8 +48,8 @@ public class ModularInputTestCase {
      *
      * @param expected an org.w3c.dom.Node object containing the expected XML document.
      * @param found an org.w3c.dom.Node object containing the XML document actually produced.
-     * @throws javax.xml.transform.TransformerException
-     * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws TransformerException
+     * @throws ParserConfigurationException
      */
     public void assertXmlEqual(Node expected, Node found) throws TransformerException, ParserConfigurationException {
         try {
@@ -79,8 +79,8 @@ public class ModularInputTestCase {
      *
      * @param expected an org.w3c.dom.Document object containing the expected XML document.
      * @param found an org.w3c.dom.Document object containing the XML document actually produced.
-     * @throws javax.xml.transform.TransformerException
-     * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws TransformerException
+     * @throws ParserConfigurationException
      */
     public void assertXmlEqual(Document expected, Document found) throws TransformerException, ParserConfigurationException {
         removeBlankTextNodes(expected.getDocumentElement());
@@ -107,8 +107,7 @@ public class ModularInputTestCase {
             throw new AssertionError("Parser configuration failed: " + e.toString());
         }
 
-        InputStream resource = SDKTestCase.openResource(path);
-        try {
+        try (InputStream resource = SDKTestCase.openResource(path)) {
             Document doc = documentBuilder.parse(resource);
             return doc;
         } catch (SAXException e) {

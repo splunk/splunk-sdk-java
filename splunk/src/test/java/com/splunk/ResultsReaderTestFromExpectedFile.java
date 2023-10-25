@@ -75,11 +75,11 @@ public class ResultsReaderTestFromExpectedFile {
 
     @Parameterized.Parameters(name="{1} from version {0}")
     public static Collection<Object[]> testCases() {
-        Collection<Object[]> cases = new ArrayList<Object[]>();
-        for (String version : (Set<String>)expectedData.keySet()) {
+        Collection<Object[]> cases = new ArrayList<>();
+        for (String version : expectedData.keySet()) {
             Map<String, Object> casesForThisVersion =
                     (Map<String, Object>)expectedData.get(version);
-            for (String testName : (Set<String>)casesForThisVersion.keySet()) {
+            for (String testName : casesForThisVersion.keySet()) {
                 cases.add(new Object[] {version, testName});
             }
         }
@@ -141,9 +141,9 @@ public class ResultsReaderTestFromExpectedFile {
             assertEquals(expectedKeys, foundEvent.keySet());
             for (String key : expectedFields.keySet()) {
                 assertTrue(foundEvent.containsKey(key));
-                if (expectedFields.get(key) instanceof List) {
+                if (expectedFields.get(key) instanceof List value) {
                     assertEquals(
-                            expectedFields.get(key),
+                            value,
                             Arrays.asList(foundEvent.getArray(key)));
                 } else {
                     assertEquals(expectedFields.get(key), foundEvent.get(key));

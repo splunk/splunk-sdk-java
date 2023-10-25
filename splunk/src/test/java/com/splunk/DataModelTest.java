@@ -443,7 +443,7 @@ public class DataModelTest extends SDKTestCase {
         Assert.assertEquals("", lc.getComment());
         Assert.assertEquals(true, lc.isEditable());
         List<LookupDataModelCalculation.LookupFieldMapping> expectedFieldMappings =
-                new ArrayList<LookupDataModelCalculation.LookupFieldMapping>();
+                new ArrayList<>();
         expectedFieldMappings.add(new LookupDataModelCalculation.LookupFieldMapping() {{
             inputField = "host";
             lookupField = "a_lookup_field";

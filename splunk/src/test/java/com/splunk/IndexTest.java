@@ -478,7 +478,7 @@ public class IndexTest extends SDKTestCase {
     
     @Test
     public void testSubmitOneWithNamespacedService() {
-        Map<String, Object> opts = new HashMap<String, Object>(command.opts);
+        Map<String, Object> opts = new HashMap<>(command.opts);
         opts.put("app", "search");
         final Service service = Service.connect(opts);
         Assert.assertNotNull(service);
@@ -859,8 +859,7 @@ public class IndexTest extends SDKTestCase {
     }
     
     private int getResultCountOfIndex(Service s, String indexName) {
-        InputStream results = s.oneshotSearch("search index=" + indexName);
-        try {
+        try (InputStream results = s.oneshotSearch("search index=" + indexName)) {
             ResultsReaderXml resultsReader = new ResultsReaderXml(results);
 
             int numEvents = 0;

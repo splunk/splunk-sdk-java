@@ -29,7 +29,7 @@ public class DeploymentServerTest extends SDKTestCase {
 
         EntityCollection<DeploymentServer> deploymentServers =
                 service.getDeploymentServers();
-        if (deploymentServers.values().size() == 0) {
+        if (deploymentServers.values().isEmpty()) {
             System.out.println("WARNING: No DeploymentServer entities to test");
             return;
         }

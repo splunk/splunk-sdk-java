@@ -126,11 +126,9 @@ public class Command {
                 line = reader.readLine();
                 if (line == null)
                     break;
-                if (line.startsWith("#"))
+                if (line.startsWith("#") || line.isBlank())
                     continue;
                 line = line.trim();
-                if (line.length() == 0)
-                    continue;
                 if (!line.startsWith("-"))
                     line = "--" + line;
                 argList.add(line);

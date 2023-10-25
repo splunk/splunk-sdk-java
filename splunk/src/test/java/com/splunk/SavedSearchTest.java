@@ -480,7 +480,7 @@ public class SavedSearchTest extends SDKTestCase {
             Assert.assertEquals(30, savedSearch.history().length);
 
             //history with argument 'count' set to '0' i.e it returns the whole history
-            HashMap<String, Object> args = new HashMap<String, Object>();
+            HashMap<String, Object> args = new HashMap<>();
             args.put("count", 0);
             Assert.assertEquals(31, savedSearch.history(args).length);
 
