@@ -1021,6 +1021,15 @@ public class Service extends BaseService {
     }
 
     /**
+     * Returns a collection of KV Store Collections.
+     *
+     * @return A collection of KV Store Collections.
+     */
+    public KVStoreCollection getKVStores() {
+        return new KVStoreCollection(this);
+    }
+
+    /**
      * Returns a collection of saved searches.
      *
      * @return A collection of saved searches.

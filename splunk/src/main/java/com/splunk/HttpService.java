@@ -16,11 +16,11 @@
 
 package com.splunk;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.*;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -182,6 +182,20 @@ public class HttpService {
             path = path + "?" + Args.encode(args);
         RequestMessage request = new RequestMessage("GET");
         return send(path, request);
+    }
+
+    /**
+     * Issues an HTTP GET request against the service using a given path and
+     * query arguments.
+     *
+     * @param path The request path.
+     * @param args The query arguments.
+     * @return The HTTP response content as a JsonElement.
+     */
+    public JsonElement getJsonResponse(String path, Map<String, Object> args) {
+        ResponseMessage resp = this.get(path, args);
+        InputStream is = resp.getContent();
+        return JsonParser.parseReader(new InputStreamReader(is));
     }
 
     /**
@@ -389,6 +403,22 @@ public class HttpService {
                 "Content-Type", "application/x-www-form-urlencoded");
         if (count(args) > 0)
             request.setContent(Args.encode(args));
+        return send(path, request);
+    }
+
+    /**
+     * Issues a POST request against the service using a given path and
+     * the json content.
+     *
+     * @param path The request path.
+     * @param jsonContent The JSON content.
+     * @return The HTTP response.
+     */
+    public ResponseMessage postWithJsonContent(String path, String jsonContent) {
+        RequestMessage request = new RequestMessage("POST");
+        request.getHeader().put(
+                "Content-Type", "application/json");
+        request.setContent(jsonContent);
         return send(path, request);
     }
 
