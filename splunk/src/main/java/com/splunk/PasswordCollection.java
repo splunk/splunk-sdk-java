@@ -89,8 +89,8 @@ public class PasswordCollection extends EntityCollection<Password> {
     @Override
     public Password get(Object key) {
         // Make it compatible with the old way (low-efficient)
-        if (key instanceof String && !((String) key).contains(":")) {
-            return getByUsername((String) key);
+        if (key instanceof String keyInst && !keyInst.contains(":")) {
+            return getByUsername(keyInst);
         }
         return super.get(key);
     }
@@ -116,7 +116,7 @@ public class PasswordCollection extends EntityCollection<Password> {
         }
         // Make it compatible with the old way (low-efficient)
         if (!key.contains(":")) {
-            Password password = getByUsername((String) key);
+            Password password = getByUsername(key);
             validate();
             if (password == null) return null;
             password.remove();
@@ -129,8 +129,8 @@ public class PasswordCollection extends EntityCollection<Password> {
 
     @Override
     public boolean containsKey(Object key) {
-        if (key instanceof String && !((String) key).contains(":")) {
-            return getByUsername((String) key) != null;
+        if (key instanceof String keyInst && !keyInst.contains(":")) {
+            return getByUsername(keyInst) != null;
         }
         return super.containsKey(key);
     }

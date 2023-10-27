@@ -51,7 +51,7 @@ public abstract class SDKTestCase {
 
     protected Command command;
 
-    public static String streamToString(java.io.InputStream is) {
+    public static String streamToString(InputStream is) {
         Reader r = null;
         try {
             r = new InputStreamReader(is, "UTF-8");
@@ -114,7 +114,7 @@ public abstract class SDKTestCase {
             splunkRestart();
             System.out.println("Restart complete.");
         }
-        installedApps = new ArrayList<String>();
+        installedApps = new ArrayList<>();
     }
 
     @After
@@ -349,8 +349,7 @@ public abstract class SDKTestCase {
     }
 
     public boolean isPortInUse(int port) {
-        try {
-            Socket pingSocket = new Socket();
+        try (Socket pingSocket = new Socket()) {
             // On Windows, the firewall doesn't respond at all if you connect to an unbound port, so we need to
             // take lack of a connection as an empty port. Timeout is 1000ms.
             try {
@@ -358,7 +357,6 @@ public abstract class SDKTestCase {
             } catch (SocketTimeoutException ste) {
                 return false;
             }
-            pingSocket.close();
             if (VERBOSE_PORT_SCAN) {
                 System.out.println("IN-USE(" + port + ")");
             }
@@ -414,20 +412,20 @@ public abstract class SDKTestCase {
     }
 
     protected boolean firstLineIsXmlDtd(InputStream stream) {
-        InputStreamReader reader;
-        try {
-            reader = new InputStreamReader(stream, "UTF-8");
+        try (InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+             BufferedReader lineReader = new BufferedReader(reader)) {
+            try {
+                return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".equals(
+                        lineReader.readLine()
+                );
+            } catch (IOException e) {
+                Assert.fail(e.toString());
+                return false;
+            }
         } catch (UnsupportedEncodingException e) {
             throw new Error(e);
-        }
-        BufferedReader lineReader = new BufferedReader(reader);
-        try {
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".equals(
-                    lineReader.readLine()
-            );
         } catch (IOException e) {
-            Assert.fail(e.toString());
-            return false;
+            throw new RuntimeException(e);
         }
     }
 }

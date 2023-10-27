@@ -64,16 +64,10 @@ public class Index extends Entity {
      * @throws IOException The IOException class
      */
     public void attachWith(ReceiverBehavior behavior) throws IOException {
-        Socket socket = null;
-        OutputStream output = null;
-        try {
-            socket = attach();
-            output = socket.getOutputStream();
+        try (Socket socket = attach();
+             OutputStream output = socket.getOutputStream();) {
             behavior.run(output);
             output.flush();
-        } finally {
-            if (output != null) { output.close(); }
-            if (socket != null) { socket.close(); }
         }
     }
 

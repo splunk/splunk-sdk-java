@@ -40,4 +40,4 @@ public enum TimestampBinning {
     SECOND {
         public String toString() { return "second"; }
     }
-};
+}

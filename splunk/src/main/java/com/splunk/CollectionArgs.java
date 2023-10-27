@@ -26,7 +26,7 @@ public class CollectionArgs extends Args {
     /**
      * Indicates whether to sort entries in ascending or descending order.
      */
-    public static enum SortDirection {
+    public enum SortDirection {
         /** Sort entries in ascending order. */
         ASC("asc"),
         /** Sort entries in descending order. */
@@ -49,7 +49,7 @@ public class CollectionArgs extends Args {
     /**
      * Indicates the sorting mode for entries.
      */
-    public static enum SortMode {
+    public enum SortMode {
         /**
          * If all values of the field are numbers, collate numerically.
          * Otherwise, collate alphabetically. 

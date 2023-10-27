@@ -28,8 +28,8 @@ import java.util.Map;
  * data model objects, which specify structured views on Splunk data.
  */
 public class DataModel extends Entity {
-    private final static JsonParser jsonParser = new JsonParser();
-    private final static Gson gson = new Gson();
+    private static final JsonParser jsonParser = new JsonParser();
+    private static final Gson gson = new Gson();
 
     private static final String ACCELERATION_LABEL = "acceleration";
     private static final String MODEL_NAME_LABEL = "modelName";
@@ -140,7 +140,7 @@ public class DataModel extends Entity {
      * @param input a String containing JSON.
      */
     private void parseDescription(String input) {
-        objects = new HashMap<String, DataModelObject>();
+        objects = new HashMap<>();
 
         JsonElement rootElement = jsonParser.parse(input);
 
@@ -284,7 +284,7 @@ public class DataModel extends Entity {
     public void update() {
         // We have to do some munging on the acceleration fields to pass them as JSON
         // to the server.
-        Map<String, Object> accelerationMap = new HashMap<String, Object>();
+        Map<String, Object> accelerationMap = new HashMap<>();
         for (String key : new String[] {"enabled", "earliest_time", "cron_schedule", "manual_rebuilds"}) {
             if (toUpdate.containsKey(key)) {
                 accelerationMap.put(key, toUpdate.get(key));

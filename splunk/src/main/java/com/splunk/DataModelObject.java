@@ -185,7 +185,7 @@ public class DataModelObject {
      * @return a collection of DataModelField objects.
      */
     public Collection<DataModelField> getFields() {
-        Collection<DataModelField> fields = new ArrayList<DataModelField>();
+        Collection<DataModelField> fields = new ArrayList<>();
         fields.addAll(this.autoextractedFields.values());
         for (DataModelCalculation c : this.calculations.values()) {
             fields.addAll(c.getGeneratedFields());
@@ -297,18 +297,18 @@ public class DataModelObject {
         String comment = null;
         String[] lineage = new String[0];
         String parentName = null;
-        Map<String, DataModelField> fields = new HashMap<String, DataModelField>();
-        Collection<String> children = new ArrayList<String>();
-        Collection<DataModelConstraint> constraints = new ArrayList<DataModelConstraint>();
-        Map<String, DataModelCalculation> calculations = new HashMap<String, DataModelCalculation>();
+        Map<String, DataModelField> fields = new HashMap<>();
+        Collection<String> children = new ArrayList<>();
+        Collection<DataModelConstraint> constraints = new ArrayList<>();
+        Map<String, DataModelCalculation> calculations = new HashMap<>();
 
         // Fields specific to objects inheriting directly from BaseSearch.
         String baseSearch = null;
         // Fields specific to objects inheriting directly from BaseTransaction
         String transactionMaxPause = null;
         String transactionMaxTimeSpan = null;
-        Collection<String> groupByFields = new ArrayList<String>();
-        Collection<String> objectsToGroup = new ArrayList<String>();
+        Collection<String> groupByFields = new ArrayList<>();
+        Collection<String> objectsToGroup = new ArrayList<>();
 
         for (Entry<String, JsonElement> entry : object.getAsJsonObject().entrySet()) {
             if (entry.getKey().equals("objectName")) {

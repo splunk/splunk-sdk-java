@@ -138,7 +138,7 @@ public class EntityCollection<T extends Entity> extends ResourceCollection<T> {
         if (!containsKey(key)) return null;
         LinkedList<T> entities = items.get(key);
         String pathMatcher = service.fullpath("", namespace);
-        if (entities == null || entities.size() == 0) return null;
+        if (entities == null || entities.isEmpty()) return null;
         for (T entity: entities) {
             if (entity.path.startsWith(pathMatcher)) {
                 entity.remove();

@@ -18,7 +18,6 @@ package com.splunk;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Iterator;
 
 /**
@@ -60,7 +59,7 @@ public abstract class ResultsReader
      *         {@link Event} class to interpret multi-item values.
      * @throws IOException On IO exception.
      */
-    final public Event getNextEvent() throws IOException {
+    public final Event getNextEvent() throws IOException {
         return getNextElement();
     }
 

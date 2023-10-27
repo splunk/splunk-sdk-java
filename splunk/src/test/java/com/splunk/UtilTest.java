@@ -25,14 +25,14 @@ import java.util.List;
 public class UtilTest extends SDKTestCase {
     @Test
     public void testJoin() {
-        List<String> emptyList = new ArrayList<String>();
+        List<String> emptyList = new ArrayList<>();
         Assert.assertEquals("", Util.join("/", emptyList));
 
-        List<String> oneElementList = new ArrayList<String>();
+        List<String> oneElementList = new ArrayList<>();
         oneElementList.add("abcd");
         Assert.assertEquals("abcd", Util.join("/", oneElementList));
 
-        List<String> fullList = new ArrayList<String>();
+        List<String> fullList = new ArrayList<>();
         fullList.add("abcd");
         fullList.add("defg");
         Assert.assertEquals(
@@ -75,7 +75,7 @@ public class UtilTest extends SDKTestCase {
     @Test
     public void testArgs() {
         Args args = Args.create();
-        Assert.assertTrue(args != null);
+        Assert.assertNotNull(args);
         Assert.assertTrue(args instanceof Args);
         
         Assert.assertTrue(Args.encode((String) null).equals(""));

@@ -28,7 +28,7 @@ public class LicenseMessageTest extends SDKTestCase {
         EntityCollection<LicenseMessage> licenseMessages =
             service.getLicenseMessages();
         
-        if (licenseMessages.values().size() == 0) {
+        if (licenseMessages.values().isEmpty()) {
             System.out.println("WARNING: No license messages found to test.");
             return;
         }

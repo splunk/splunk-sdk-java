@@ -19,7 +19,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import java.net.Inet4Address;
 
 /**
  * Represents a filter on an IPv4 valued field in a pivot.

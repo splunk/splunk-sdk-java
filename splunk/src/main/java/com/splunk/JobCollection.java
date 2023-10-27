@@ -74,9 +74,8 @@ public class JobCollection extends EntityCollection<Job> {
      * @return The unique search identifier (SID).
      */
     public Job create(String query, Map args) {
-        if (args != null && args.containsKey("exec_mode")) {
-            if (args.get("exec_mode").equals("oneshot"))
-                throw new RuntimeException(oneShotNotAllowed);
+        if (args != null && args.containsKey("exec_mode") && args.get("exec_mode").equals("oneshot")) {
+            throw new RuntimeException(oneShotNotAllowed);
         }
         args = Args.create(args).add("search", query);
         ResponseMessage response = service.post(path, args);

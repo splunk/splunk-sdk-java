@@ -37,7 +37,7 @@ import java.util.List;
 public class Scheme {
     private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-    public enum StreamingMode { SIMPLE, XML };
+    public enum StreamingMode { SIMPLE, XML }
 
     // Name of this module input kind. <tt>title</tt> will be used as the URL scheme when
     // specifying particular modular inputs. For example, if <tt>title</tt> is <tt>"abc"</tt>,
@@ -63,7 +63,7 @@ public class Scheme {
 
     public Scheme(String title) {
         this.title = title;
-        this.arguments = new ArrayList<Argument>();
+        this.arguments = new ArrayList<>();
     }
 
     /**
@@ -182,7 +182,7 @@ public class Scheme {
      * list of arguments.
      */
     public void setArguments(List<Argument> arguments) {
-        this.arguments = new ArrayList<Argument>(arguments);
+        this.arguments = new ArrayList<>(arguments);
     }
 
     /**

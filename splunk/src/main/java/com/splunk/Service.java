@@ -147,16 +147,16 @@ public class Service extends BaseService {
         // NOTE: Must also read the underlying dictionary for forward compatibility.
         //       (Consider the case where the user calls Map.put() directly,
         //        rather than using the new setters.)
-        this.app = Args.<String>get(args,    "app",    args.app != null    ? args.app    : null);
-        this.host = Args.<String>get(args,   "host",   args.host != null   ? args.host   : DEFAULT_HOST);
-        this.owner = Args.<String>get(args,  "owner",  args.owner != null  ? args.owner  : null);
+        this.app = Args.get(args,    "app",    args.app != null    ? args.app    : null);
+        this.host = Args.get(args,   "host",   args.host != null   ? args.host   : DEFAULT_HOST);
+        this.owner = Args.get(args,  "owner",  args.owner != null  ? args.owner  : null);
         this.port = Args.<Integer>get(args,  "port",   args.port != null   ? args.port   : DEFAULT_PORT);
-        this.scheme = Args.<String>get(args, "scheme", args.scheme != null ? args.scheme : DEFAULT_SCHEME);
-        this.token = Args.<String>get(args,  "token",  args.token != null  ? args.token  : null);
+        this.scheme = Args.get(args, "scheme", args.scheme != null ? args.scheme : DEFAULT_SCHEME);
+        this.token = Args.get(args,  "token",  args.token != null  ? args.token  : null);
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
         this.autologin = Args.<Boolean>get(args, "autologin", false);
-        this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
+        this.httpsHandler = Args.get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
         this.addCookie((String)args.get("cookie"));
         this.setCustomHeaders((Map<String, String>) args.get("customHeaders"));
@@ -169,16 +169,16 @@ public class Service extends BaseService {
      */
     public Service(Map<String, Object> args) {
         super();
-        this.app = Args.<String>get(args, "app", null);
-        this.host = Args.<String>get(args, "host", DEFAULT_HOST);
-        this.owner = Args.<String>get(args, "owner", null);
+        this.app = Args.get(args, "app", null);
+        this.host = Args.get(args, "host", DEFAULT_HOST);
+        this.owner = Args.get(args, "owner", null);
         this.port = Args.<Integer>get(args, "port", DEFAULT_PORT);
-        this.scheme = Args.<String>get(args, "scheme", DEFAULT_SCHEME);
-        this.token = Args.<String>get(args, "token", null);
+        this.scheme = Args.get(args, "scheme", DEFAULT_SCHEME);
+        this.token = Args.get(args, "token", null);
         this.username = (String)args.get("username");
         this.password = (String)args.get("password");
         this.autologin = Args.<Boolean>get(args, "autologin", false);
-        this.httpsHandler = Args.<URLStreamHandler>get(args, "httpsHandler", null);
+        this.httpsHandler = Args.get(args, "httpsHandler", null);
         this.setSslSecurityProtocol(Args.get(args, "SSLSecurityProtocol", Service.getSslSecurityProtocol()));
         this.addCookie((String)args.get("cookie"));
         this.connectTimeout = Args.<Integer>get(args, "connectTimeout", null);
@@ -295,28 +295,24 @@ public class Service extends BaseService {
         String localSharing = "";
 
         // override with invocation namespace if set.
-        if (namespace != null) {
-            // URL encode the owner and app.
-            if (namespace.containsKey("app")) {
-                try {
+        try{
+            if (namespace != null) {
+                // URL encode the owner and app.
+                if (namespace.containsKey("app")) {
                     localApp = URLEncoder.encode((String)namespace.get("app"), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    // This is unreachable, since UTF-8 is always supported.
-                    assert false;
                 }
-            }
-            if (namespace.containsKey("owner")) {
-                try {
+                if (namespace.containsKey("owner")) {
                     localOwner = URLEncoder.encode((String)namespace.get("owner"), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    // This is unreachable, since UTF-8 is always supported.
-                    assert false;
+                }
+                if (namespace.containsKey("sharing")) {
+                    localSharing = (String)namespace.get("sharing");
                 }
             }
-            if (namespace.containsKey("sharing")) {
-                localSharing = (String)namespace.get("sharing");
-            }
+        }catch (UnsupportedEncodingException e) {
+            // This is unreachable, since UTF-8 is always supported.
+            assert false;
         }
+
 
         // sharing, if set calls for special mapping, override here.
         // "user"    --> {user}/{app}
@@ -353,7 +349,7 @@ public class Service extends BaseService {
      * @return The application collection.
      */
     public EntityCollection<Application> getApplications() {
-        return new EntityCollection<Application>(
+        return new EntityCollection<>(
             this, "/services/apps/local", Application.class);
     }
 
@@ -427,7 +423,7 @@ public class Service extends BaseService {
         } else {
             path = ""; // TODO: Find out what this should be and fix it.
         }
-        return new EntityCollection<DeploymentServer>(
+        return new EntityCollection<>(
             this, "deployment/server", DeploymentServer.class, args);
     }
 
@@ -455,7 +451,7 @@ public class Service extends BaseService {
         } else {
             path = "deployment/server/serverclasses";
         }
-        return new EntityCollection<DeploymentServerClass>(
+        return new EntityCollection<>(
             this, path, DeploymentServerClass.class, args);
     }
 
@@ -476,7 +472,7 @@ public class Service extends BaseService {
      * @return A collection of multi-tenant configurations.
      */
     public EntityCollection<DeploymentTenant> getDeploymentTenants(Args args) {
-        return new EntityCollection<DeploymentTenant>(
+        return new EntityCollection<>(
             this, "deployment/tenants", DeploymentTenant.class, args);
     }
 
@@ -512,7 +508,7 @@ public class Service extends BaseService {
      * @return A collection of search peers.
      */
     public EntityCollection<DistributedPeer> getDistributedPeers(Args args) {
-        return new EntityCollection<DistributedPeer>(
+        return new EntityCollection<>(
             this, "search/distributed/peers", DistributedPeer.class, args);
     }
 
@@ -606,7 +602,7 @@ public class Service extends BaseService {
      */
     public List<String> getClusterMasters(){
         Entity caps = new Entity(this, "cluster/config");
-        List<String> hosts = new ArrayList<String>();
+        List<String> hosts = new ArrayList<>();
         try {
             String clusterMasterURIs = caps.getString("master_uri");
             URL clusterMasterUrl;
@@ -708,7 +704,7 @@ public class Service extends BaseService {
      * @return A collection of license group configurations.
      */
     public EntityCollection<LicenseGroup> getLicenseGroups(Args args) {
-        return new EntityCollection<LicenseGroup>(
+        return new EntityCollection<>(
             this, "licenser/groups", LicenseGroup.class, args);
     }
 
@@ -729,7 +725,7 @@ public class Service extends BaseService {
      * @return A collection of licenser messages.
      */
     public EntityCollection<LicenseMessage> getLicenseMessages(Args args) {
-        return new EntityCollection<LicenseMessage>(
+        return new EntityCollection<>(
             this, "licenser/messages", LicenseMessage.class, args);
     }
 
@@ -781,7 +777,7 @@ public class Service extends BaseService {
      * @return A collection of licenser slaves.
      */
     public EntityCollection<LicenseSlave> getLicenseSlaves(Args args) {
-        return new EntityCollection<LicenseSlave>(
+        return new EntityCollection<>(
             this, "licenser/slaves", LicenseSlave.class, args);
     }
 
@@ -802,7 +798,7 @@ public class Service extends BaseService {
      * @return A collection of license stack configurations.
      */
     public EntityCollection<LicenseStack> getLicenseStacks(Args args) {
-        return new EntityCollection<LicenseStack>(
+        return new EntityCollection<>(
             this, "licenser/stacks", LicenseStack.class, args);
     }
 
@@ -823,7 +819,7 @@ public class Service extends BaseService {
      * @return A collection of licenses.
      */
     public EntityCollection<License> getLicenses(Args args) {
-        return new EntityCollection<License>(
+        return new EntityCollection<>(
             this, "licenser/licenses", License.class, args);
     }
 
@@ -844,7 +840,7 @@ public class Service extends BaseService {
      * @return A collection of logging categories.
      */
     public EntityCollection<Logger> getLoggers(Args args) {
-        return new EntityCollection<Logger>(
+        return new EntityCollection<>(
             this, "server/logger", Logger.class, args);
     }
 
@@ -885,7 +881,7 @@ public class Service extends BaseService {
      * @return A collection of modular inputs.
      */
     public ResourceCollection<ModularInputKind> getModularInputKinds(Args args) {
-        return new ResourceCollection<ModularInputKind>(
+        return new ResourceCollection<>(
                 this, "data/modular-inputs", ModularInputKind.class, args);
     }
 
@@ -915,7 +911,7 @@ public class Service extends BaseService {
      * @return A collection of output group configurations.
      */
     public EntityCollection<OutputGroup> getOutputGroups(Args args) {
-        return new EntityCollection<OutputGroup>(
+        return new EntityCollection<>(
             this, "data/outputs/tcp/group", OutputGroup.class, args);
     }
 
@@ -936,7 +932,7 @@ public class Service extends BaseService {
      * @return A collection of data-forwarding configurations.
      */
     public EntityCollection<OutputServer> getOutputServers(Args args) {
-        return new EntityCollection<OutputServer>(
+        return new EntityCollection<>(
             this, "data/outputs/tcp/server", OutputServer.class, args);
     }
 
@@ -959,7 +955,7 @@ public class Service extends BaseService {
      * @return A collection of syslog forwarders.
      */
     public EntityCollection<OutputSyslog> getOutputSyslogs(Args args) {
-        return new EntityCollection<OutputSyslog>(
+        return new EntityCollection<>(
             this, "data/outputs/tcp/syslog", OutputSyslog.class, args);
     }
 
@@ -1020,7 +1016,7 @@ public class Service extends BaseService {
      * @return A collection of user roles.
      */
     public EntityCollection<Role> getRoles(Args args) {
-        return new EntityCollection<Role>(
+        return new EntityCollection<>(
             this, "authorization/roles", Role.class, args);
     }
 
@@ -1103,7 +1099,7 @@ public class Service extends BaseService {
      * @return A collection of in-progress oneshot uploads
      */
     public EntityCollection<Upload> getUploads(Args namespace) {
-        return new EntityCollection<Upload>(
+        return new EntityCollection<>(
             this, "data/inputs/oneshot", Upload.class, namespace);
     }
 

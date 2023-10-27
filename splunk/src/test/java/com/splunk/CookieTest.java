@@ -224,7 +224,7 @@ public class CookieTest extends SDKTestCase {
     }
 
     private Map<String, Object> getStandardArgs() {
-        Map<String, Object> args = new HashMap<String, Object>();
+        Map<String, Object> args = new HashMap<>();
         args.put("host", (String)command.opts.get("host"));
         args.put("port", (Integer) command.opts.get("port"));
 

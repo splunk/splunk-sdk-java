@@ -90,8 +90,8 @@ public class AtomFeedTest {
 
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> testCases() {
-        Collection<Object[]> cases = new ArrayList<Object[]>();
-        for (String key : (Set<String>)expectedData.keySet()) {
+        Collection<Object[]> cases = new ArrayList<>();
+        for (String key : expectedData.keySet()) {
             cases.add(new Object[] { key });
         }
         return cases;

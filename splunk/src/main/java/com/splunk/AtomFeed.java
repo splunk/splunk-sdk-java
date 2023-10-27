@@ -20,14 +20,13 @@ import java.io.InputStream;
 import java.util.*;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamConstants;
 
 /**
  * The {@code AtomFeed} class represents an Atom feed.
  */
 public class AtomFeed extends AtomObject {
     /** The list of Atom entries contained in this {@code AtomFeed} object. */
-    public ArrayList<AtomEntry> entries = new ArrayList<AtomEntry>();
+    public ArrayList<AtomEntry> entries = new ArrayList<>();
 
     /** The value of the Atom feed's {@code <itemsPerPage>} element. */
     public String itemsPerPage = null;

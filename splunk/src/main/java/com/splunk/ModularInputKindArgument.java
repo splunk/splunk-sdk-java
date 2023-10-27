@@ -23,7 +23,7 @@ import java.util.Map;
  * specialized to represent arguments for modular input kinds.
  */
 public class ModularInputKindArgument extends HashMap<String,String> {
-    public enum Type { NUMBER, STRING, BOOLEAN };
+    public enum Type { NUMBER, STRING, BOOLEAN }
 
     /**
      * Class constructor.

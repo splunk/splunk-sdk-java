@@ -30,7 +30,7 @@ public class ValidationDefinitionTest extends ModularInputTestCase {
         expected.setCheckpointDir("/opt/splunk/var/lib/splunk/modinputs");
         expected.setSessionKey("123102983109283019283");
         expected.setName("aaa");
-        List<Parameter> parameters = new ArrayList<Parameter>();
+        List<Parameter> parameters = new ArrayList<>();
         parameters.add(new SingleValueParameter("param1", "value1"));
         parameters.add(new SingleValueParameter("param2", "value2"));
         parameters.add(new SingleValueParameter("disabled", "0"));
