@@ -44,7 +44,7 @@ public class DataModelField {
     /**
      * @return The name of this field.
      */
-    public String getName() { return this.name; };
+    public String getName() { return this.name; }
 
     /**
      * Return the name of the data model object on which this field is defined. That need not

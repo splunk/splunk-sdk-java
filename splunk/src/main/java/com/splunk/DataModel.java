@@ -28,8 +28,8 @@ import java.util.Map;
  * data model objects, which specify structured views on Splunk data.
  */
 public class DataModel extends Entity {
-    private final static JsonParser jsonParser = new JsonParser();
-    private final static Gson gson = new Gson();
+    private static final JsonParser jsonParser = new JsonParser();
+    private static final Gson gson = new Gson();
 
     private static final String ACCELERATION_LABEL = "acceleration";
     private static final String MODEL_NAME_LABEL = "modelName";

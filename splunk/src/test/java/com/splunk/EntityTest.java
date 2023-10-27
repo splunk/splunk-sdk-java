@@ -112,6 +112,6 @@ public class EntityTest extends SDKTestCase {
         Assert.assertTrue(indexes.equals(indexes.items));
         Assert.assertTrue(indexes.hashCode() != 0);
         Assert.assertTrue(indexes.keySet().contains("main"));
-        Assert.assertTrue(indexes.valueSize("main") == 1);
+        Assert.assertEquals(1, indexes.valueSize("main"));
     }
 }

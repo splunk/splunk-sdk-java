@@ -141,7 +141,7 @@ public class PasswordTest extends SDKTestCase {
         args.put("password", "changed!");
         Service service = Service.connect(args);
         PasswordCollection passwords = service.getPasswords();
-        Assert.assertEquals(passwords.size(),0);
+        Assert.assertEquals(0, passwords.size());
 
         String name = "no-owner";
         String value = "sdk-test-password";
@@ -171,6 +171,6 @@ public class PasswordTest extends SDKTestCase {
             Assert.assertEquals("app context must be specified when removing a password.", e.getMessage());
         }
         passwords = service.getPasswords();
-        Assert.assertEquals(passwords.size(),0);
+        Assert.assertEquals(0, passwords.size());
     }
 }

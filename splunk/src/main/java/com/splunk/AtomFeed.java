@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.util.*;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamConstants;
 
 /**
  * The {@code AtomFeed} class represents an Atom feed.

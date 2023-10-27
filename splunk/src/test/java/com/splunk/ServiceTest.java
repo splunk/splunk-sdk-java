@@ -160,7 +160,7 @@ public class ServiceTest extends SDKTestCase {
     	}});
         Service service = new Service(args);
         Map<String, String> customHeaders = service.getCustomHeaders();
-        Assert.assertEquals(customHeaders.get("some header key"), "some value");
+        Assert.assertEquals("some value", customHeaders.get("some header key"));
     }
     
     @Test
@@ -522,7 +522,7 @@ public class ServiceTest extends SDKTestCase {
         args.setToken("Splunk MY_SESSION_KEY");
 
         Assert.assertEquals("Arg setters didn't replicate value to deprecated fields.",
-                args.app, "myapp");
+                "myapp", args.app);
 
         Service service = new Service(args);
         Assert.assertEquals(args.app, service.getApp());

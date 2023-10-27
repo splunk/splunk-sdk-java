@@ -18,7 +18,6 @@ package com.splunk;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -190,7 +189,9 @@ public class Command {
                 java.lang.reflect.Field field = this.getClass().getField(name);
                 field.set(this, value);
             }
-            catch (NoSuchFieldException e) { continue; }
+            catch (NoSuchFieldException e) {
+                continue;
+            }
             catch (IllegalAccessException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }

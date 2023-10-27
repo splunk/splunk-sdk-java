@@ -85,7 +85,7 @@ public class HttpServiceTest extends SDKTestCase {
         Assert.assertTrue(request.checkMethod(request.getMethod()));
         request.setMethod("POST");
         Assert.assertTrue(request.checkMethod(request.getMethod()));
-        Assert.assertEquals(request.getMethod(), "POST");
+        Assert.assertEquals("POST", request.getMethod());
         
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
@@ -102,8 +102,8 @@ public class HttpServiceTest extends SDKTestCase {
     @Test
     public void testResponseMessage() {
         ResponseMessage response = new ResponseMessage(200);
-        Assert.assertEquals(response.getStatus(), 200);
-        Assert.assertTrue(response.getHeader() != null);
+        Assert.assertEquals(200, response.getStatus());
+        Assert.assertNotNull(response.getHeader());
     }
 
     @Test(expected = IllegalArgumentException.class)

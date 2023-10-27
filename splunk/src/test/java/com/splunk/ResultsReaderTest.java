@@ -341,7 +341,7 @@ public class ResultsReaderTest extends SDKTestCase {
         String[] fieldNameArray = new String[0];
         fieldNameArray = reader.getFields().toArray(fieldNameArray);
         Assert.assertEquals(101, fieldNameArray.length);
-        Assert.assertEquals(fieldNameArray[99], "useragent");
+        Assert.assertEquals("useragent", fieldNameArray[99]);
 
         int index = 0;
         Event lastEvent = null;
@@ -456,13 +456,13 @@ public class ResultsReaderTest extends SDKTestCase {
 
             switch (indexResultSet) {
                 case 0:
-                    Assert.assertEquals(indexEvent, 1);
+                    Assert.assertEquals(1, indexEvent);
                     break;
                 case 1:
-                    Assert.assertEquals(indexEvent, 3);
+                    Assert.assertEquals(3, indexEvent);
                     break;
                 default:
-                    Assert.assertEquals(indexEvent, 5);
+                    Assert.assertEquals(5, indexEvent);
                     break;
             }
             indexResultSet++;

@@ -31,7 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class Argument {
     private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-    public enum DataType { BOOLEAN, NUMBER, STRING };
+    public enum DataType { BOOLEAN, NUMBER, STRING }
 
     // Name used to identify this argument in Splunk.
     protected String name;

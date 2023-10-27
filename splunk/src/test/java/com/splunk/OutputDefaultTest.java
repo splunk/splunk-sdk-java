@@ -45,7 +45,7 @@ public class OutputDefaultTest extends SDKTestCase {
         // Probe
         {
             outputDefault.setMaxQueueSize("1MB");
-            Assert.assertEquals(outputDefault.getMaxQueueSize(), "1MB");
+            Assert.assertEquals("1MB", outputDefault.getMaxQueueSize());
             outputDefault.setMaxQueueSize(maxQueueSize);
             Assert.assertEquals(outputDefault.getMaxQueueSize(), maxQueueSize);
             

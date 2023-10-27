@@ -340,7 +340,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertEquals(1, found.get("_raw").split("\n").length);
                 Assert.assertFalse(found.containsKey("date_month"));
                 Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
@@ -367,7 +367,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertEquals(1, found.get("_raw").split("\n").length);
                 Assert.assertFalse(found.containsKey("date_month"));
                 Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
@@ -390,7 +390,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader2.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("count"), "10");
+                Assert.assertEquals("10", found.get("count"));
                 count2++;
             }
             else {
@@ -415,7 +415,7 @@ public class SearchJobTest extends SDKTestCase {
         while (true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertEquals(1, found.get("_raw").split("\n").length);
                 Assert.assertFalse(found.containsKey("date_month"));
                 Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
@@ -438,7 +438,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader2.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("count"), "10");
+                Assert.assertEquals("10", found.get("count"));
                 count2++;
             }
             else {

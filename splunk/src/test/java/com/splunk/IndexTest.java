@@ -757,7 +757,7 @@ public class IndexTest extends SDKTestCase {
             Assert.fail("Uploading to an index with an index argument? No need for redundancy!");
         }
         catch(Exception e){
-            Assert.assertEquals(e.getMessage(), "The 'index' parameter cannot be passed to an index's oneshot upload.");
+            Assert.assertEquals("The 'index' parameter cannot be passed to an index's oneshot upload.", e.getMessage());
         }
 
     }
