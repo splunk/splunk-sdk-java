@@ -59,7 +59,7 @@ public class KVStoreData {
      *
      * @param name The name of the KV Store Collection.
      * @param service The connected {@code Service} instance.
-     * @param key The key of the item in the KV Store Collection.
+     * @param key The key of the item to fetch from the KV Store Collection.
      * @return The item present in the KV Store Collection.
      */
     protected JsonObject getDataByKey(String name, Service service, String key) {
@@ -73,7 +73,7 @@ public class KVStoreData {
      *
      * @param name The name of the KV Store Collection.
      * @param service The connected {@code Service} instance.
-     * @param key The key of the item in the KV Store Collection.
+     * @param key The key of the item to update in the KV Store Collection.
      * @param jsonObject The updated item.
      */
     protected void updateDataByKey(String name, Service service, String key, JsonObject jsonObject){
@@ -98,7 +98,7 @@ public class KVStoreData {
      *
      * @param name The name of the KV Store Collection.
      * @param service The connected {@code Service} instance.
-     * @param key The key of the item in the KV Store Collection.
+     * @param key The key of the item to delete from the KV Store Collection.
      */
     protected void deleteDataByKey(String name, Service service, String key) {
         service.delete(DATA_PATH + name + "/" + key);

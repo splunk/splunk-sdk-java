@@ -75,7 +75,7 @@ public class KVStore extends Entity {
      * Return the item present in the KV Store Collection using
      * the key.
      *
-     * @param key The key of the item in the KV Store Collection.
+     * @param key The key of the item to fetch from the KV Store Collection.
      * @return The item present in the KV Store Collection.
      */
     public JsonObject getKVStoreDataByKey(String key) {
@@ -86,7 +86,7 @@ public class KVStore extends Entity {
      * Update the item present in the KV Store Collection using
      * the key.
      *
-     * @param key The key of the item in the KV Store Collection.
+     * @param key The key of the item to update in the KV Store Collection.
      * @param jsonObject The updated item.
      */
     public void updateKVStoreDataByKey(String key, JsonObject jsonObject) {
@@ -114,7 +114,7 @@ public class KVStore extends Entity {
      * Delete the item present in the KV Store Collection using
      * the key.
      *
-     * @param key The key of the item in the KV Store Collection.
+     * @param key The key of the item to delete from the KV Store Collection.
      */
     public void deleteKVStoreDataByKey(String key) {
         kvStoreData.deleteDataByKey(this.getName(), this.service, key);
@@ -141,7 +141,7 @@ public class KVStore extends Entity {
     }
 
     /**
-     * Update the accelerated fields of the KV Store Collection.
+     * Update the accelerated fields attribute of the KV Store Collection.
      *
      * @param acceleratedFields The updated accelerated fields.
      */
@@ -154,7 +154,7 @@ public class KVStore extends Entity {
     }
 
     /**
-     * Update the fields of the KV Store Collection.
+     * Update the fields attribute of the KV Store Collection.
      *
      * @param fields The updated fields.
      */
@@ -176,8 +176,7 @@ public class KVStore extends Entity {
      * Returns if data types are enforced when inserting data into
      * the collection. Defaults to false.
      *
-     * @return The boolean indicating if data types are enforced
-     * when inserting data into the collection.
+     * @return The enforceType of the KV Store Collection
      */
     public Boolean getEnforceTypes() {
         return getBoolean("enforceTypes");
@@ -209,8 +208,7 @@ public class KVStore extends Entity {
      * Returns whether the collection is replicated on indexers.
      * Defaults to false.
      *
-     * @return The boolean indicating whether the collection is
-     * replicated on indexers.
+     * @return The replicate attribute of the KV Store Collection.
      */
     public Boolean getReplicate() {
         return getBoolean("replicate");
@@ -239,7 +237,7 @@ public class KVStore extends Entity {
     /**
      * Returns the field name and its type.
      *
-     * @return The field name and its type.
+     * @return The Map of field names and their corresponding types.
      */
     public Map<String, String> getFields() {
         Map<String, String> fields = new HashMap<>();
@@ -252,7 +250,7 @@ public class KVStore extends Entity {
     /**
      * Returns the field acceleration name and JSON definition.
      *
-     * @return The field acceleration name and JSON definition.
+     * @return The Map of field acceleration names and their JSON definitions.
      */
     public Map<String, String> getAcceleratedFields() {
         Map<String, String> acceleratedFields = new HashMap<>();
