@@ -32,7 +32,6 @@ public class ApplicationTest extends SDKTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-
         removeTestApplications();
 
         applicationName = createTemporaryName();
