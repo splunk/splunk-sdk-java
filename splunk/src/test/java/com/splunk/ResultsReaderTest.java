@@ -41,7 +41,7 @@ public class ResultsReaderTest extends SDKTestCase {
         Assert.assertEquals("sum(kb)", fields[0]);
         Assert.assertEquals("series", fields[1]);
 
-        Map<String, String> expected = new HashMap<String, String>();
+        Map<String, String> expected = new HashMap<>();
 
         expected.put("series", "twitter");
         expected.put("sum(kb)", "14372242.758775");
@@ -65,7 +65,7 @@ public class ResultsReaderTest extends SDKTestCase {
                 "search index=_internal | head 1 | stats count",
                 Args.create("output_mode", "csv"));
         ResultsReaderCsv reader = new ResultsReaderCsv(input);
-        Map<String, String> expected = new HashMap<String, String>();
+        Map<String, String> expected = new HashMap<>();
 
         expected.put("count", "1");
         assertNextEventEquals(expected, reader);
@@ -124,7 +124,7 @@ public class ResultsReaderTest extends SDKTestCase {
     public void testReadJsonOnSplunk4() throws Exception {
         InputStream input = openResource("/results4.json");
         ResultsReaderJson reader = new ResultsReaderJson(input);
-        Map<String, String> expected = new HashMap<String, String>();
+        Map<String, String> expected = new HashMap<>();
 
         expected.put("series", "twitter");
         expected.put("sum(kb)", "14372242.758775");
@@ -148,7 +148,7 @@ public class ResultsReaderTest extends SDKTestCase {
         // from Splunk 4.3.
         InputStream input = openResource("/results5.json");
         ResultsReaderJson reader = new ResultsReaderJson(input);
-        Map<String, String> expected = new HashMap<String, String>();
+        Map<String, String> expected = new HashMap<>();
 
         expected.put("series", "twitter");
         expected.put("sum(kb)", "14372242.758775");
@@ -341,7 +341,7 @@ public class ResultsReaderTest extends SDKTestCase {
         String[] fieldNameArray = new String[0];
         fieldNameArray = reader.getFields().toArray(fieldNameArray);
         Assert.assertEquals(101, fieldNameArray.length);
-        Assert.assertEquals(fieldNameArray[99], "useragent");
+        Assert.assertEquals("useragent", fieldNameArray[99]);
 
         int index = 0;
         Event lastEvent = null;
@@ -456,13 +456,13 @@ public class ResultsReaderTest extends SDKTestCase {
 
             switch (indexResultSet) {
                 case 0:
-                    Assert.assertEquals(indexEvent, 1);
+                    Assert.assertEquals(1, indexEvent);
                     break;
                 case 1:
-                    Assert.assertEquals(indexEvent, 3);
+                    Assert.assertEquals(3, indexEvent);
                     break;
                 default:
-                    Assert.assertEquals(indexEvent, 5);
+                    Assert.assertEquals(5, indexEvent);
                     break;
             }
             indexResultSet++;

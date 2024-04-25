@@ -70,30 +70,22 @@ public class ReceiverTest extends SDKTestCase {
         final int versionCompare = passedService.versionCompare("6.0.0");
         final String osName = passedService.getInfo().getOsName();
 
-        try {
-            Socket socket1 = receiver.attach();
-            OutputStream stream = socket1.getOutputStream();
-
+        try (
+                Socket socket1 = receiver.attach();
+                OutputStream stream = socket1.getOutputStream();
+             ) {
             String s = createTimestamp() + " Boris the mad baboon1!\r\n";
             stream.write(s.getBytes("UTF-8"));
-            // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
-            // has been written.
-            stream.close();
-            socket1.close();
         } catch (IOException e) {
             Assert.fail("Exception on attach");
         }
 
-        try {
-            Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
-            OutputStream stream = socket1.getOutputStream();
-
+        try (
+                Socket socket1 = receiver.attach(Args.create("sourcetype", "mysourcetype"));
+                OutputStream stream = socket1.getOutputStream();
+             ) {
             String s = createTimestamp() + " Boris the mad baboon2!\r\n";
             stream.write(s.getBytes("UTF-8"));
-            // Splunk won't deterministically index these events until the socket is closed or greater than 1MB
-            // has been written.
-            stream.close();
-            socket1.close();
         } catch (IOException e) {
             Assert.fail("Exception on attach");
         }

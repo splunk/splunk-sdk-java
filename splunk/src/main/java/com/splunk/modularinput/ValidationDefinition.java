@@ -38,16 +38,16 @@ public class ValidationDefinition {
 
     private Map<String, Parameter> parameters;
 
-    private final String serverHostField = "server_host";
-    private final String serverUriField = "server_uri";
-    private final String checkpointDirField = "checkpoint_dir";
-    private final String sessionKeyField = "session_key";
-    private final String nameField = "name";
+    private static final String serverHostField = "server_host";
+    private static final String serverUriField = "server_uri";
+    private static final String checkpointDirField = "checkpoint_dir";
+    private static final String sessionKeyField = "session_key";
+    private static final String nameField = "name";
 
     // Package private on purpose.
     ValidationDefinition() {
         super();
-        metadata = new HashMap<String, String>();
+        metadata = new HashMap<>();
     }
 
     /**
@@ -146,7 +146,7 @@ public class ValidationDefinition {
      * @param parameters A list of {@code Parameter} objects giving the proposed configuration.
      */
     public void setParameters(Collection<Parameter> parameters) {
-        Map<String, Parameter> paramMap = new HashMap<String, Parameter>();
+        Map<String, Parameter> paramMap = new HashMap<>();
         for (Parameter p : parameters) {
             paramMap.put(p.getName(), p);
         }
@@ -224,10 +224,9 @@ public class ValidationDefinition {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof ValidationDefinition)) {
+        if (!(other instanceof ValidationDefinition that)) {
             return false;
         }
-        ValidationDefinition that = (ValidationDefinition)other;
         return this.metadata.equals(that.metadata) && this.parameters.equals(that.parameters);
     }
 

@@ -54,7 +54,7 @@ public class EventTypesTest extends SDKTestCase {
     @Test
     public void testList() {
         EntityCollection<EventType> eventTypes = service.getEventTypes();
-        Assert.assertFalse("No event types in system.", eventTypes.size() == 0);
+        Assert.assertFalse("No event types in system.", eventTypes.isEmpty());
 
         for (EventType eventType : eventTypes.values()) {
             eventType.getDescription();

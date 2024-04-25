@@ -17,7 +17,6 @@ package com.splunk;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
  * Split values of a field into rows by ranges of a numeric field.

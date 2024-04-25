@@ -105,10 +105,9 @@ public class SingleValueParameter extends Parameter {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof SingleValueParameter)) {
+        if (!(other instanceof SingleValueParameter that)) {
             return false;
         } else {
-            SingleValueParameter that = (SingleValueParameter)other;
             return this.getValue().equals(that.getValue()) && this.getName().equals(that.getName());
         }
     }

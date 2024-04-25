@@ -30,7 +30,7 @@ public class InputKind {
     private String relpath;
     private Class<? extends Input> inputClass;
 
-    private static Map<String, InputKind> knownRelpaths = new HashMap<String, InputKind>();
+    private static Map<String, InputKind> knownRelpaths = new HashMap<>();
 
     /** Unknown type of input. */
     public static final InputKind Unknown = new InputKind(null, Input.class, "unknown");

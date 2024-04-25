@@ -247,7 +247,7 @@ public class ResultsReaderJson extends ResultsReader {
     private Event readEvent() throws IOException {
         Event returnData = null;
         String name = null;
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
 
         if (jsonReader == null)
             return null;

@@ -521,7 +521,7 @@ public class InputCrudTest extends InputTest {
     
             Assert.assertEquals(1, windowsPerfmonInput.getCounters().length);
             Assert.assertTrue(contains(windowsPerfmonInput.getCounters(), "% Privileged Time"));
-            Assert.assertEquals(windowsPerfmonInput.getIndex(), "main");
+            Assert.assertEquals("main", windowsPerfmonInput.getIndex());
             Assert.assertTrue(contains(windowsPerfmonInput.getInstances(), "wininit"));
             Assert.assertEquals(1200, windowsPerfmonInput.getInterval());
             Assert.assertEquals("Process", windowsPerfmonInput.getObject());

@@ -52,8 +52,8 @@ public class ExportResultsReaderTest {
 
     @Parameterized.Parameters(name="from version {0}")
     public static Collection<Object[]> testCases() {
-        Collection<Object[]> cases = new ArrayList<Object[]>();
-        for (String version : (Set<String>)expectedData.keySet()) {
+        Collection<Object[]> cases = new ArrayList<>();
+        for (String version : expectedData.keySet()) {
             cases.add(new Object[] {version});
         }
         return cases;

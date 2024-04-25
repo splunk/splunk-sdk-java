@@ -18,7 +18,6 @@ package com.splunk;
 
 import java.io.*;
 import java.net.Socket;
-import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,7 +107,7 @@ public class Receiver {
             headers.add(String.format("Authorization: %s", service.getToken()));
         }
         headers.add("");
-        headers.forEach(header -> writer.println(header));
+        headers.forEach(writer::println);
         writer.flush();
         return socket;
     }

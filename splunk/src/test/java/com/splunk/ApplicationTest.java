@@ -32,7 +32,6 @@ public class ApplicationTest extends SDKTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-
         removeTestApplications();
 
         applicationName = createTemporaryName();
@@ -95,7 +94,7 @@ public class ApplicationTest extends SDKTestCase {
             new ByteArrayInputStream(setupXml.getBytes("UTF-8")));
         parsedSetupXml.getDocumentElement().normalize();
 
-        Assert.assertEquals(parsedSetupXml.getDocumentElement().getNodeName(), "SetupInfo");
+        Assert.assertEquals("SetupInfo", parsedSetupXml.getDocumentElement().getNodeName());
 
         NodeList blocks = parsedSetupXml.getDocumentElement().getElementsByTagName("block");
         Assert.assertEquals(1, blocks.getLength());
@@ -113,7 +112,7 @@ public class ApplicationTest extends SDKTestCase {
             Assert.assertTrue(filePath.endsWith(applicationName + ".spl"));
         }
         Assert.assertFalse(archive.getRefresh());
-        Assert.assertTrue(archive.getUrl() != null);
+        Assert.assertNotNull(archive.getUrl());
     }
 
     @Test

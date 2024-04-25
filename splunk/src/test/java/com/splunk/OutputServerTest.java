@@ -24,7 +24,7 @@ public class OutputServerTest extends SDKTestCase {
         EntityCollection<OutputServer> outputServers =
                 service.getOutputServers();
 
-        if (outputServers.values().size() == 0) {
+        if (outputServers.values().isEmpty()) {
             System.out.println("WARNING: No OutputServers to test");
             return;
         }

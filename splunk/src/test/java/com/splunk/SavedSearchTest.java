@@ -246,7 +246,7 @@ public class SavedSearchTest extends SDKTestCase {
         
         boolean isPre620 = service.versionIsEarlierThan("6.2.0");
         try {
-        	Assert.assertEquals(savedSearch.isEmbedEnabled(), false);
+        	Assert.assertEquals(false, savedSearch.isEmbedEnabled());
             Assert.assertNull(savedSearch.getEmbedToken());
             if (isPre620)
             	Assert.fail("Expected UnsupportedOperationException");
@@ -373,8 +373,8 @@ public class SavedSearchTest extends SDKTestCase {
         args.add("perms.read","admin, nobody");
         savedSearch.aclUpdate(args);
         aclInfo = savedSearch.getMetadata().getEaiAcl();
-        Assert.assertEquals(aclInfo.getString("sharing"), "app");
-        Assert.assertEquals(aclInfo.getString("owner"), "nobody");
+        Assert.assertEquals("app", aclInfo.getString("sharing"));
+        Assert.assertEquals("nobody", aclInfo.getString("owner"));
         Assert.assertNotNull(aclInfo.get("perms"));
     }
 
@@ -480,7 +480,7 @@ public class SavedSearchTest extends SDKTestCase {
             Assert.assertEquals(30, savedSearch.history().length);
 
             //history with argument 'count' set to '0' i.e it returns the whole history
-            HashMap<String, Object> args = new HashMap<String, Object>();
+            HashMap<String, Object> args = new HashMap<>();
             args.put("count", 0);
             Assert.assertEquals(31, savedSearch.history(args).length);
 

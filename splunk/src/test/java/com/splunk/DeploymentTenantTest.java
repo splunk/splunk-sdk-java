@@ -29,7 +29,7 @@ public class DeploymentTenantTest extends SDKTestCase {
 
         EntityCollection<DeploymentTenant> deploymentTenants =
                 service.getDeploymentTenants();
-        if (deploymentTenants.values().size() == 0) {
+        if (deploymentTenants.values().isEmpty()) {
             System.out.println("WARNING: No DeploymentTenant entities to test");
             return;
         }

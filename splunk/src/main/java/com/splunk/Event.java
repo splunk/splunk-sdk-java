@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  * {@link ResultsReaderXml} class, the delimiter is a comma (,).
  */
 public class Event extends HashMap<String, String> {
-    private Map<String, String[]> arrayValues = new HashMap<String, String[]>();
+    private Map<String, String[]> arrayValues = new HashMap<>();
     private String segmentedRaw;
     
     // Prevent non-SDK instantiation.

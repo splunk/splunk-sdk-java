@@ -66,7 +66,7 @@ public abstract class Resource {
         
         this.service = service;
         this.path = service.fullpath(
-            path, namespace.size() == 0 ? null : namespace);
+            path, namespace.isEmpty() ? null : namespace);
         this.refreshArgs = args;
     }
     

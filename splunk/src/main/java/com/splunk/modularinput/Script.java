@@ -66,7 +66,7 @@ public abstract class Script {
                 streamEvents(inputDefinition, eventWriter);
                 eventWriter.close();
                 return 0;
-            } else if (args[0].toLowerCase().equals("--scheme")) {
+            } else if (args[0].equalsIgnoreCase("--scheme")) {
                 // Splunk has requested XML specifying the scheme for this modular input. Return it and exit.
                 Scheme scheme = getScheme();
                 if (scheme == null) {
@@ -76,7 +76,7 @@ public abstract class Script {
                     eventWriter.writeXmlDocument(scheme.toXml());
                     return 0;
                 }
-            } else if (args[0].toLowerCase().equals("--validate-arguments")) {
+            } else if (args[0].equalsIgnoreCase("--validate-arguments")) {
                 NonblockingInputStream stream = new NonblockingInputStream(in);
                 ValidationDefinition validationDefinition = ValidationDefinition.parseDefinition(stream);
 

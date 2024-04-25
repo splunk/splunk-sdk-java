@@ -61,16 +61,10 @@ public class TcpInput extends PortInput {
      * @throws IOException The IOException instance
      */
     public void attachWith(ReceiverBehavior behavior) throws IOException {
-        Socket socket = null;
-        OutputStream output = null;
-        try {
-            socket = attach();
-            output = socket.getOutputStream();
+        try (Socket socket = attach();
+             OutputStream output = socket.getOutputStream();) {
             behavior.run(output);
             output.flush();
-        } finally {
-            if (output != null) { output.close(); }
-            if (socket != null) { socket.close(); }
         }
     }
 
@@ -256,18 +250,10 @@ public class TcpInput extends PortInput {
      * @throws IOException The IOException instance
      */
     public void submit(String eventBody) throws IOException {
-        Socket socket = null;
-        OutputStream output = null;
-        try {
-            socket = attach();
-            output = socket.getOutputStream();
+        try (Socket socket = attach();
+             OutputStream output = socket.getOutputStream();) {
             output.write(eventBody.getBytes("UTF-8"));
             output.flush();
-            output.close();
-            socket.close();
-        } finally {
-            if (output != null) { output.close(); }
-            if (socket != null) { socket.close(); }
         }
     }
 

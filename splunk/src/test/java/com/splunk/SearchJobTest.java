@@ -231,7 +231,7 @@ public class SearchJobTest extends SDKTestCase {
     public void testJobCanEnableSg() throws IOException {
         Job job = service.getJobs().create("search index=_internal GET | head 3");
         waitUntilDone(job);
-        Map<String, String> args = new HashMap<String, String>();
+        Map<String, String> args = new HashMap<>();
         args.put("segmentation", "raw");
         String data = streamToString(job.getResults(args));
         Assert.assertTrue(data.contains("<sg"));
@@ -340,7 +340,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertEquals(1, found.get("_raw").split("\n").length);
                 Assert.assertFalse(found.containsKey("date_month"));
                 Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
@@ -367,7 +367,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertEquals(1, found.get("_raw").split("\n").length);
                 Assert.assertFalse(found.containsKey("date_month"));
                 Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
@@ -390,7 +390,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader2.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("count"), "10");
+                Assert.assertEquals("10", found.get("count"));
                 count2++;
             }
             else {
@@ -415,7 +415,7 @@ public class SearchJobTest extends SDKTestCase {
         while (true) {
             HashMap<String, String> found = reader.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("_raw").split("\n").length, 1);
+                Assert.assertEquals(1, found.get("_raw").split("\n").length);
                 Assert.assertFalse(found.containsKey("date_month"));
                 Assert.assertEquals(Integer.parseInt(found.get("_serial")), count + 2);
                 count++;
@@ -438,7 +438,7 @@ public class SearchJobTest extends SDKTestCase {
         while(true) {
             HashMap<String, String> found = reader2.getNextEvent();
             if (found != null) {
-                Assert.assertEquals(found.get("count"), "10");
+                Assert.assertEquals("10", found.get("count"));
                 count2++;
             }
             else {
@@ -1031,15 +1031,14 @@ public class SearchJobTest extends SDKTestCase {
     private String inputStreamToString(InputStream stream) {
         try {
             StringBuilder b = new StringBuilder();
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(stream, "UTF-8")
-            );
-            String tmp;
-            while ((tmp = reader.readLine()) != null) {
-                b.append(tmp + "\n");
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));) {
+                String tmp;
+                while ((tmp = reader.readLine()) != null) {
+                    b.append(tmp + "\n");
+                }
+                return b.toString();
             }
 
-            return b.toString();
         } catch (IOException e) {
             Assert.fail(e.toString());
             return null;

@@ -24,7 +24,7 @@ public class OutputSyslogTest extends SDKTestCase {
     public void testOutputSyslog() throws Exception {
         EntityCollection<OutputSyslog> dos = service.getOutputSyslogs();
 
-        if (dos.values().size() == 0) {
+        if (dos.values().isEmpty()) {
             System.out.println("WARNING: No OutputSyslogs to test");
             return;
         }

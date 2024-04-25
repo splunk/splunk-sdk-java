@@ -115,7 +115,7 @@ public class ModularInputKindsTest extends SDKTestCase {
 
         ModularInputKindArgument arg;
 
-        Map<String,String> expectedValues = new HashMap<String,String>();
+        Map<String,String> expectedValues = new HashMap<>();
         expectedValues.put("key_id", "The key of the system");
         expectedValues.put("no_description", null);
         expectedValues.put("empty_description", null);
@@ -143,7 +143,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         ModularInputKindArgument arg;
 
         Map<String,ModularInputKindArgument.Type> expectedValues =
-                new HashMap<String,ModularInputKindArgument.Type>();
+                new HashMap<>();
         expectedValues.put("number_field", ModularInputKindArgument.Type.NUMBER);
         expectedValues.put("boolean_field", ModularInputKindArgument.Type.BOOLEAN);
         expectedValues.put("string_field", ModularInputKindArgument.Type.STRING);
@@ -168,7 +168,7 @@ public class ModularInputKindsTest extends SDKTestCase {
 
         ModularInputKindArgument arg;
 
-        Map<String,Boolean> expectedValues = new HashMap<String,Boolean>();
+        Map<String,Boolean> expectedValues = new HashMap<>();
         expectedValues.put("required_on_create", true);
         expectedValues.put("not_required_on_create", false);
 
@@ -192,7 +192,7 @@ public class ModularInputKindsTest extends SDKTestCase {
 
         ModularInputKindArgument arg;
 
-        Map<String,Boolean> expectedValues = new HashMap<String,Boolean>();
+        Map<String,Boolean> expectedValues = new HashMap<>();
         expectedValues.put("arg_required_on_edit", true);
         expectedValues.put("not_required_on_edit", false);
 
@@ -215,7 +215,7 @@ public class ModularInputKindsTest extends SDKTestCase {
         ModularInputKind test1 = inputKinds.get("test1");
         Map<String, ModularInputKindArgument> args = test1.getArguments();
 
-        Set<String> expectedKeys = new HashSet<String>();
+        Set<String> expectedKeys = new HashSet<>();
         expectedKeys.add("name");
         expectedKeys.add("resname");
         expectedKeys.add("key_id");

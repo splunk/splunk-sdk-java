@@ -16,7 +16,6 @@
 
 package com.splunk;
 
-import java.util.Map;
 
 /**
  * The {@code Input} class represents a data input. This class is the base for

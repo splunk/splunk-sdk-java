@@ -21,7 +21,6 @@ import java.util.List;
 import java.net.HttpCookie;
 import java.util.Map;
 import java.util.HashMap;
-import java.lang.StringBuilder;
 
 /**
  * The {@code SimpleCookieStore} class stores cookies for authentication.
@@ -30,7 +29,7 @@ class SimpleCookieStore {
 
     public static final String SPLUNK_AUTH_COOKIE = "splunkd_";
 
-    private Map<String, String> cookieJar = new HashMap<String, String>();
+    private Map<String, String> cookieJar = new HashMap<>();
     /**
      * Adds cookies from a "Set-Cookie" header to the cookie store.
      *

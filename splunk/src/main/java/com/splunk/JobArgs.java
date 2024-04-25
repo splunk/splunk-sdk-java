@@ -25,7 +25,7 @@ public class JobArgs extends Args {
      * Specifies how to create a job using the {@link JobCollection#create} 
      * method.
      */
-    public static enum ExecutionMode {
+    public enum ExecutionMode {
         /** Runs a search asynchronously and returns a search job immediately.*/
         NORMAL("normal"),
         /** Runs a search synchronously and does not return a search job until 
@@ -53,7 +53,7 @@ public class JobArgs extends Args {
      * Specifies how to create a job using the {@link JobCollection#create} 
      * method.
      */
-    public static enum SearchMode {
+    public enum SearchMode {
         /**
          * Searches historical data.
          */

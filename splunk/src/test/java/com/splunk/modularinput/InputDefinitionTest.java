@@ -45,14 +45,14 @@ public class InputDefinitionTest extends ModularInputTestCase {
         expectedDefinition.setCheckpointDir("/some/dir");
         expectedDefinition.setSessionKey("123102983109283019283");
 
-        List<Parameter> parameters = new ArrayList<Parameter>();
+        List<Parameter> parameters = new ArrayList<>();
         parameters.add(new SingleValueParameter("param1", "value1"));
         parameters.add(new SingleValueParameter("param2", "value2"));
         parameters.add(new SingleValueParameter("disabled", "0"));
         parameters.add(new SingleValueParameter("index", "default"));
         expectedDefinition.addInput("foobar://aaa", parameters);
 
-        parameters = new ArrayList<Parameter>();
+        parameters = new ArrayList<>();
         parameters.add(new SingleValueParameter("param1", "value11"));
         parameters.add(new SingleValueParameter("param2", "value22"));
         parameters.add(new SingleValueParameter("disabled", "0"));
@@ -78,8 +78,7 @@ public class InputDefinitionTest extends ModularInputTestCase {
      */
     @Test
     public void testParseMalformedInputDefinition() throws ParserConfigurationException, SAXException, IOException {
-        try {
-            InputStream stream = SDKTestCase.openResource("/modularinput/data/conf_with_invalid_inputs.xml");
+        try (InputStream stream = SDKTestCase.openResource("/modularinput/data/conf_with_invalid_inputs.xml")) {
             InputDefinition foundDefinition = InputDefinition.parseDefinition(stream);
         } catch (MalformedDataException e) {
             Assert.assertTrue(true);

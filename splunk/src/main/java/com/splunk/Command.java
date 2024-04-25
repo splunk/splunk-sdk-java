@@ -18,7 +18,6 @@ package com.splunk;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,12 +44,12 @@ public class Command {
     public String[] args = new String[0];
 
     // The parsed command line options (flags)
-    public HashMap<String, Object> opts = new HashMap<String, Object>();
+    public HashMap<String, Object> opts = new HashMap<>();
 
     // Whether or not this is a help request
     public Boolean help = false;
 
-    public static final HashMap<String, Object> defaultValues = new HashMap<String, Object>();
+    public static final HashMap<String, Object> defaultValues = new HashMap<>();
     {
         defaultValues.put("scheme", "https");
         defaultValues.put("host", "localhost");
@@ -117,29 +116,21 @@ public class Command {
 
     // Load a file of options and arguments
     public Command load(String path) {
-        ArrayList<String> argList = new ArrayList<String>();
+        ArrayList<String> argList = new ArrayList<>();
         
-        try {
-            FileReader fileReader = new FileReader(path);
-            try {
-                BufferedReader reader = new BufferedReader(fileReader);
-                while (true) {
-                    String line;
-                    line = reader.readLine();
-                    if (line == null)
-                        break;
-                    if (line.startsWith("#")) 
-                        continue;
-                    line = line.trim();
-                    if (line.length() == 0) 
-                        continue;
-                    if (!line.startsWith("-"))
-                        line = "--" + line;
-                    argList.add(line);
-                }
-            }
-            finally {
-                fileReader.close();
+        try (FileReader fileReader = new FileReader(path);
+             BufferedReader reader = new BufferedReader(fileReader);) {
+            while (true) {
+                String line;
+                line = reader.readLine();
+                if (line == null)
+                    break;
+                if (line.startsWith("#") || line.isBlank())
+                    continue;
+                line = line.trim();
+                if (!line.startsWith("-"))
+                    line = "--" + line;
+                argList.add(line);
             }
         }
         catch (IOException e) {
@@ -198,7 +189,9 @@ public class Command {
                 java.lang.reflect.Field field = this.getClass().getField(name);
                 field.set(this, value);
             }
-            catch (NoSuchFieldException e) { continue; }
+            catch (NoSuchFieldException e) {
+                continue;
+            }
             catch (IllegalAccessException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }

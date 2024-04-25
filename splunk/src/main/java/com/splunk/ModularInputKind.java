@@ -17,7 +17,6 @@ package com.splunk;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 
 /**
  * The {@code ModularInputKind} class represents a particular modular input. 
@@ -47,7 +46,7 @@ public class ModularInputKind extends Entity {
      * @return A {@code Map} containing the argument key-value pairs.
      */
     public Map<String, ModularInputKindArgument> getArguments() {
-        Map<String, ModularInputKindArgument> arguments = new HashMap<String, ModularInputKindArgument>();
+        Map<String, ModularInputKindArgument> arguments = new HashMap<>();
         for (String argumentName : args.keySet()) {
             arguments.put(argumentName, getArgument(argumentName));
         }
@@ -60,8 +59,7 @@ public class ModularInputKind extends Entity {
      * @return The streaming mode ("xml" or "simple"). 
      */
     public String getStreamingMode() {
-        String mode = getString("streaming_mode");
-        return mode;
+        return getString("streaming_mode");
     }
 
     /**

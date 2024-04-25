@@ -25,7 +25,7 @@ public class JobResultsPreviewArgs extends Args {
     /**
      * Specifies the format for the returned output.
      */
-    public static enum OutputMode {
+    public enum OutputMode {
         /** Returns output in Atom format. */
         ATOM("atom"),
         /** Returns output in CSV format. */

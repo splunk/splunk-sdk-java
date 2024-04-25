@@ -260,12 +260,12 @@ public class UdpInput extends PortInput {
      * @throws IOException The IOException instance
      */
     public void submit(String eventBody) throws IOException {
-        DatagramSocket socket = new DatagramSocket();
-        InetAddress address = InetAddress.getByName(this.service.getHost());
-        int port = this.getPort();
-        byte[] buffer = eventBody.getBytes("UTF-8");
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
-        socket.send(packet);
-        socket.close();
+        try(DatagramSocket socket = new DatagramSocket()){
+            InetAddress address = InetAddress.getByName(this.service.getHost());
+            int port = this.getPort();
+            byte[] buffer = eventBody.getBytes("UTF-8");
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
+            socket.send(packet);
+        }
     }
 }

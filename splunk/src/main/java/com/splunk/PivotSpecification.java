@@ -30,10 +30,10 @@ public class PivotSpecification {
     private DataModelObject dataModelObject;
     private String accelerationNamespace = null;
 
-    private List<PivotColumnSplit> columns = new ArrayList<PivotColumnSplit>();
-    private List<PivotFilter> filters = new ArrayList<PivotFilter>();
-    private List<PivotCellValue> cells = new ArrayList<PivotCellValue>();
-    private List<PivotRowSplit> rows = new ArrayList<PivotRowSplit>();
+    private List<PivotColumnSplit> columns = new ArrayList<>();
+    private List<PivotFilter> filters = new ArrayList<>();
+    private List<PivotCellValue> cells = new ArrayList<>();
+    private List<PivotRowSplit> rows = new ArrayList<>();
 
     PivotSpecification(DataModelObject dataModelObject) {
         this.dataModelObject = dataModelObject;

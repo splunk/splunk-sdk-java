@@ -22,7 +22,6 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,7 +37,7 @@ public class ResultsReaderXml
     extends ResultsReader {
 
     private XMLEventReader xmlReader = null;
-    private ArrayList<String> fields = new ArrayList<String>();
+    private ArrayList<String> fields = new ArrayList<>();
     private PushbackInputStream pushbackInputStream;
 
     /**
@@ -296,7 +295,7 @@ public class ResultsReaderXml
         XMLEvent xmlEvent;
         int eType;
         String key = null;
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         int level = 0;
 
         // Event results are flat, so extract k/v pairs based on XML indentation

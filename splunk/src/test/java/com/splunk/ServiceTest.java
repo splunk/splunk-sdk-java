@@ -155,12 +155,12 @@ public class ServiceTest extends SDKTestCase {
     	args.setScheme((String) command.opts.get("scheme"));
     	args.setUsername((String) command.opts.get("username"));
     	args.setPassword((String) command.opts.get("password"));
-    	args.setHttpHeaders(new HashMap<String, String>() {{
+    	args.setHttpHeaders(new HashMap<>() {{
     		put("some header key", "some value");
     	}});
         Service service = new Service(args);
         Map<String, String> customHeaders = service.getCustomHeaders();
-        Assert.assertEquals(customHeaders.get("some header key"), "some value");
+        Assert.assertEquals("some value", customHeaders.get("some header key"));
     }
     
     @Test
@@ -522,7 +522,7 @@ public class ServiceTest extends SDKTestCase {
         args.setToken("Splunk MY_SESSION_KEY");
 
         Assert.assertEquals("Arg setters didn't replicate value to deprecated fields.",
-                args.app, "myapp");
+                "myapp", args.app);
 
         Service service = new Service(args);
         Assert.assertEquals(args.app, service.getApp());
@@ -706,7 +706,7 @@ public class ServiceTest extends SDKTestCase {
 
     @Test
     public void testPost() {
-        HashMap<String, Object> args = new HashMap<String, Object>();
+        HashMap<String, Object> args = new HashMap<>();
         args.put("foo", "bar");
 
         ResponseMessage response;

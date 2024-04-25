@@ -271,7 +271,7 @@ public class Settings extends Entity {
      */
     @Override public void update(Map<String, Object> args) {
         // Merge cached setters and live args together before updating.
-        HashMap<String, Object> mergedArgs = new HashMap<String, Object>();
+        HashMap<String, Object> mergedArgs = new HashMap<>();
         mergedArgs.putAll(toUpdate);
         mergedArgs.putAll(args);
         service.post(path + "/settings", mergedArgs);

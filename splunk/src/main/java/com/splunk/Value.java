@@ -39,9 +39,9 @@ class Value {
             return false;
         if (value.equals("1"))
             return true;
-        if (value.toLowerCase().equals("false"))
+        if (value.equalsIgnoreCase("false"))
             return false;
-        if (value.toLowerCase().equals("true"))
+        if (value.equalsIgnoreCase("true"))
             return true;
         String message = String.format("Value error: '%s'", value);
         throw new RuntimeException(message);

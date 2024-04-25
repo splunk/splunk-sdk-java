@@ -12,11 +12,12 @@ jobs:
     name: Java SDK Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          java-version: 17
+          distribution: oracle
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           server-id: splunk-artifactory
@@ -36,7 +37,7 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: java_sdk_docs
           path: splunk/target/apidocs
