@@ -265,7 +265,9 @@ public class NamespaceTest extends SDKTestCase {
             Assert.assertEquals(query2, service.getSavedSearches(namespace2).get(savedSearchName).getSearch());
 
             service.getSavedSearches(wildcardNamespace).get(savedSearchName).getSearch();
-            Assert.fail("Expected SplunkException about multiple keys.");
+            Assert.fail("Expected SplunkException about multiple keys not Throwns");
+        } catch (SplunkException SE){
+            Assert.assertNotNull(SE);
         } finally {
             if (service.getSavedSearches(namespace1).containsKey(savedSearchName)) {
                 service.getSavedSearches(namespace1).remove(savedSearchName);
